@@ -1,0 +1,37 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "consumer.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "a7c7c86e1c4eb096a9d094b411082582d3832a88b5d6d94443357c37e2cd82f0",
+    "packageFileSetSha256": "6854104b65ba247ce299b3fd77e3a97accad1f44111eb0d0fea651ebc3485755",
+    "receiptSha256": "29154b5a2c170ca67c4f5081fd5bbde1c5c7c20910bf379e39fc5667bc394d0f",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "56e32d98e106c1aa6e3d2e896f3369c37cb6b3df3f37f82be0bbb72ad5fa08ee"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "checks": 1097,
+    "hostRejections": 82,
+    "module": "recursive",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 9,
+    "snapshots": 499
+  },
+  "cwd": "/tmp/lean-bridge-recursive-checked-record-php-d2dVDl/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1097,\"hostRejections\":82,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":9,\"snapshots\":499}\n"
+  },
+  "strictness": "weak"
+}

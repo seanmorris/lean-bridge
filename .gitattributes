@@ -31,3 +31,8 @@ docs/evidence/recursive-checked-record-wit-20261017/*/records/package/src/*_wasm
 # Preserve the byte-authenticated recursive Rust package outputs without normalizing producer whitespace.
 docs/evidence/recursive-checked-record-rust-20261017/*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol
 docs/evidence/recursive-checked-record-rust-20261017/*/records/package/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof
+# Preserve the byte-authenticated hosted recursive PHP package and installation outputs.
+docs/evidence/recursive-checked-record-php-20261017/*/records/installation/vendor/composer/autoload_static.php whitespace=-blank-at-eol
+docs/evidence/recursive-checked-record-php-20261017/*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol
+docs/evidence/recursive-checked-record-php-20261017/*/records/package/licenses/Lean-LICENSE whitespace=-blank-at-eof
+docs/evidence/recursive-checked-record-php-20261017/*/records/package/src/Internal/GraphNative.php whitespace=-blank-at-eof

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51420273,
+          "path": "archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "c52312e31c10ff8ae9c4a8ccd99e9a74f2d8024e5b0314cad26a83a540858965"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "bde88454c2f88c461b4c99c25c925994df4b7990d61c31d58c98a0e75756e2ac",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "918d1a1bd91709f1dbd26c83e737d457eb3410302c42bd713ba9f7e69e5e6892"
+  }
+}

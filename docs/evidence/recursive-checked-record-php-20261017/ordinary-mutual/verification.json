@@ -1,0 +1,264 @@
+{
+  "archiveSha256": "628c944169b39973812a9fa782c0e8676ae91ee5d2458f2a3dd60e75139a9e0c",
+  "composerVersion": "2.7.1",
+  "counts": {
+    "checks": 1114,
+    "hostRejections": 84,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 12,
+    "snapshots": 505
+  },
+  "dispatchObserved": false,
+  "executions": 4,
+  "fixture": "mutual",
+  "floor": "2.38",
+  "generatorPaths": [
+    "src/abi/component-copied.mjs",
+    "src/abi/component-records.mjs",
+    "src/abi/component-recursive.mjs",
+    "src/abi/component-scalars.mjs",
+    "src/abi/generic-specialization.mjs",
+    "src/backends/c/copied-graph-layout.mjs",
+    "src/backends/c/generate.mjs",
+    "src/backends/c/package-audit.mjs",
+    "src/backends/php/copied-assets.mjs",
+    "src/backends/php/copied-equality.mjs",
+    "src/backends/php/copied-graph-assets.mjs",
+    "src/backends/php/copied-graph-conversions.mjs",
+    "src/backends/php/copied-graph-native.mjs",
+    "src/backends/php/copied-graph-package.mjs",
+    "src/backends/php/copied-graph-scalars.mjs",
+    "src/backends/php/copied-graph-transfer.mjs",
+    "src/backends/php/copied-graph-values.mjs",
+    "src/backends/php/copied-graph-walk.mjs",
+    "src/backends/php/copied-names.mjs",
+    "src/backends/php/copied-support.mjs",
+    "src/binding-ir/canonical.mjs",
+    "src/binding-ir/contract.mjs",
+    "src/binding-ir/sha256.mjs",
+    "src/capsule/contract.mjs",
+    "src/capsule/node.mjs"
+  ],
+  "loadCeiling": 8,
+  "phpVersion": "8.3.6",
+  "producerCommit": "dd9af401088a52e701c8cfa684a56c4a6f9be2df",
+  "records": [
+    "build-0/MutualCheckedRecords.lean",
+    "build-0/author-inputs.json",
+    "build-0/lean-bridge.exports.json",
+    "build-0/model.json",
+    "build-0/package-set-receipt.json",
+    "build-1/MutualCheckedRecords.lean",
+    "build-1/author-inputs.json",
+    "build-1/lean-bridge.exports.json",
+    "build-1/model.json",
+    "build-1/package-set-receipt.json",
+    "configuration.json",
+    "consumer.php",
+    "environment.json",
+    "expected.binding-ir.json",
+    "handoff/archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip",
+    "handoff/package-set-receipt.json",
+    "handoff/package-set-receipt.json.sha256",
+    "installation/composer.json",
+    "installation/composer.lock",
+    "installation/consumer.php",
+    "installation/strict.php",
+    "installation/vendor/autoload.php",
+    "installation/vendor/composer/ClassLoader.php",
+    "installation/vendor/composer/InstalledVersions.php",
+    "installation/vendor/composer/LICENSE",
+    "installation/vendor/composer/autoload_classmap.php",
+    "installation/vendor/composer/autoload_files.php",
+    "installation/vendor/composer/autoload_namespaces.php",
+    "installation/vendor/composer/autoload_psr4.php",
+    "installation/vendor/composer/autoload_real.php",
+    "installation/vendor/composer/autoload_static.php",
+    "installation/vendor/composer/installed.json",
+    "installation/vendor/composer/installed.php",
+    "installation/vendor/composer/platform_check.php",
+    "installed-strict.json",
+    "installed-weak.json",
+    "package.json",
+    "package/README.md",
+    "package/binding-manifest.json",
+    "package/composer.json",
+    "package/lean-bridge/adapter/include/detail/mutualcheckedrecords-graph-types.h",
+    "package/lean-bridge/adapter/include/detail/mutualcheckedrecords-graph.h",
+    "package/lean-bridge/adapter/src/native.c",
+    "package/lean-bridge/adapter/src/php-graph-clear.c",
+    "package/lean-bridge/component/allocation-guard.h",
+    "package/lean-bridge/component/artifacts.json",
+    "package/lean-bridge/component/binding-ir.json",
+    "package/lean-bridge/component/component.h",
+    "package/lean-bridge/component/generated.lean",
+    "package/lean-bridge/component/metadata.json",
+    "package/lean-bridge/component/model.json",
+    "package/lean-bridge/component/native-component.json",
+    "package/lean-bridge/native-c-adapter.json",
+    "package/lean-bridge/package-receipt.json",
+    "package/lean-bridge/runtime.json",
+    "package/licenses/Lean-LICENSE",
+    "package/licenses/Lean-LICENSES",
+    "package/licenses/LeanBridge-LICENSE",
+    "package/licenses/source-notices.json",
+    "package/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "package/src/Api.php",
+    "package/src/Internal/GraphNative.php",
+    "package/src/Internal/GraphNativeTypes.php",
+    "package/src/Internal/GraphTypes.php",
+    "package/src/Internal/Native.php",
+    "package/src/Internal/Runtime.php",
+    "package/src/Internal/Values.php",
+    "relocated-strict.json",
+    "relocated-weak.json",
+    "report.json",
+    "resources.json",
+    "runtime.json",
+    "tools.json"
+  ],
+  "reportSha256": "3dc97797ba511989f2d0216fcd3c02beccf1f33c667360b3f1a7a0992ced365b",
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "tools": {
+    "command": "/usr/bin/php8.3",
+    "composer": "/usr/bin/composer",
+    "composerFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ctype.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/iconv.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/mbstring.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/phar.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/tokenizer.so"
+    ],
+    "composerVersion": {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ctype.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/iconv.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/mbstring.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/phar.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/tokenizer.so",
+        "/usr/bin/composer",
+        "--no-plugins",
+        "--no-scripts",
+        "--no-interaction",
+        "--version"
+      ],
+      "command": "/usr/bin/php8.3",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Composer version 2.7.1 2024-02-09 15:26:28\n"
+      }
+    },
+    "interpreter": {
+      "args": [
+        "-n",
+        "-r",
+        "echo json_encode([\"version\"=>PHP_VERSION,\"sapi\"=>PHP_SAPI,\"zts\"=>PHP_ZTS,\"integerBytes\"=>PHP_INT_SIZE,\"os\"=>PHP_OS_FAMILY,\"arch\"=>php_uname(\"m\"),\"directory\"=>ini_get(\"extension_dir\"),\"modules\"=>get_loaded_extensions()], JSON_THROW_ON_ERROR);"
+      ],
+      "command": "/usr/bin/php8.3",
+      "php": {
+        "arch": "x86_64",
+        "directory": "/usr/lib/php/20230831",
+        "integerBytes": 8,
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "zlib",
+          "filter",
+          "hash",
+          "json",
+          "pcntl",
+          "random",
+          "Reflection",
+          "SPL",
+          "session",
+          "standard",
+          "sodium"
+        ],
+        "os": "Linux",
+        "sapi": "cli",
+        "version": "8.3.6",
+        "zts": 0
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"version\":\"8.3.6\",\"sapi\":\"cli\",\"zts\":0,\"integerBytes\":8,\"os\":\"Linux\",\"arch\":\"x86_64\",\"directory\":\"\\/usr\\/lib\\/php\\/20230831\",\"modules\":[\"Core\",\"date\",\"libxml\",\"openssl\",\"pcre\",\"zlib\",\"filter\",\"hash\",\"json\",\"pcntl\",\"random\",\"Reflection\",\"SPL\",\"session\",\"standard\",\"sodium\"]}"
+      }
+    },
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "selected": {
+      "composer": "/usr/bin/composer",
+      "composerVersion": "2.7.1",
+      "php": "/usr/bin/php8.3",
+      "phpVersion": "8.3.6"
+    },
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.3": {
+        "bytes": 5784016,
+        "sha256": "1c564e6bafa56d03359c3774be6f4c77d0edecabd2075e18556940a56747c8d7"
+      },
+      "/usr/lib/php/20230831/ctype.so": {
+        "bytes": 14600,
+        "sha256": "2865fdd0589a6bf2029a1f436a06ac3072cdf50477f8384146181fe56ef5de51"
+      },
+      "/usr/lib/php/20230831/ffi.so": {
+        "bytes": 178440,
+        "sha256": "8202552d21044032e251383c3ffdc64cf2c5db3719a893dee0765d048a537263"
+      },
+      "/usr/lib/php/20230831/iconv.so": {
+        "bytes": 51464,
+        "sha256": "79ba2593b71ee8277b3a8e2a530c542f901129c78016b7a87d39fe4c2a50ea24"
+      },
+      "/usr/lib/php/20230831/mbstring.so": {
+        "bytes": 1209216,
+        "sha256": "a6086c078f33dfe34a25b2f9ceb33bae5e08e0d789f61af88c4298d2dbeb7a63"
+      },
+      "/usr/lib/php/20230831/phar.so": {
+        "bytes": 293128,
+        "sha256": "eec9a6756cfe51253b0aa53c7a2751236db2292c6ea4e7e599f3cbe7e930b3cb"
+      },
+      "/usr/lib/php/20230831/tokenizer.so": {
+        "bytes": 35080,
+        "sha256": "df382431be0c4ceb5cd99df184f40b7522b0718d6f9db1260097dd2c28fb95ee"
+      }
+    }
+  }
+}

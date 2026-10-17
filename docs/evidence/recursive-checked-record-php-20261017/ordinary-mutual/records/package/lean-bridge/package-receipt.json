@@ -1,0 +1,393 @@
+{
+  "bindingIrSha256": "7d6330a56f67ee344bdbdf6dadc8965797b1856f16d21e70438b2a0c01e450bf",
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "ecosystem": "composer",
+  "files": {
+    "README.md": {
+      "bytes": 2887,
+      "sha256": "4c95bc34be2ead1774f4f32c57a6194e28b249cbc3d88a2cb508f137902e79cb"
+    },
+    "binding-manifest.json": {
+      "bytes": 3585,
+      "sha256": "98ba8673ac7de1a246a8bd12b8791ad5239ce6ef0542087a55b5461d2e51f81d"
+    },
+    "composer.json": {
+      "bytes": 558,
+      "sha256": "304786c1aac85680e73130db843a0328a5b61673b1116208190d8b2aa7c7645d"
+    },
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph-types.h": {
+      "bytes": 5664,
+      "sha256": "62b8572826a58711f4fecaec5dc2a683edf1f0e8ad41c042d03e5eed3906f03b"
+    },
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph.h": {
+      "bytes": 1192,
+      "sha256": "d2f84a2fa9e52a6375af42a2534b8ca2cb424a9849389a81a6b8318f0b66ca05"
+    },
+    "lean-bridge/adapter/src/native.c": {
+      "bytes": 71953,
+      "sha256": "dd59669fdc1b471575486ec9b1813d6984e26546e3c7f9bf2120d0bf59e75d10"
+    },
+    "lean-bridge/adapter/src/php-graph-clear.c": {
+      "bytes": 477,
+      "sha256": "3ae0cb888eec4532d7394817b65ee407fd0fc630336811b65146544bb4105255"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1534,
+      "sha256": "34f6396c79f1be1c7252bac28ae83a97030cd2c6c6245ab44786c08fa2debd74"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 29172,
+      "sha256": "16d153443b63964ffaa85530250b91a058b939269e4705deca5187dca8ecb070"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 2621,
+      "sha256": "2cf4f4f52591f6f4534e13ab43fc8c259cf2ea8d2efd927739b78fdc879ec7ba"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 25327,
+      "sha256": "7ee4147011e55ca16504a80d4167adf916645f60ba0c056c538dce17fe55756d"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 80808,
+      "sha256": "78c82af463ef6cb143b6e72afb59f794087f0af9223e8283b1da2244c8863c97"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 111140,
+      "sha256": "da98856701cf4450fe56d56de3965f540781cc32aedf817553d7b74de687b10f"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 15633,
+      "sha256": "42ed306d39c61614856c3fce4b036599cbe5bedaeaf0b3562c574f3e4c5213da"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1289,
+      "sha256": "7b66ec3eebea97e2e1523106dc917301c4cad1fc15ff55c498f7f2a5c8d6e6b2"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 7685,
+      "sha256": "8974449ea4cdbfaa32b725aba7fc69a88a59256940c12db3f7b8ec625696b30b"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_4ca822048b1456593639.so": {
+      "bytes": 125528,
+      "sha256": "0a653afe4fbd821506805722622d3fd3074c0fd5e046e22b7f1beb4990125b42"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libmutualcheckedrecords.so": {
+      "bytes": 46904,
+      "sha256": "85b5eeaa8fcf54647edcc02b010a9e68392cb4a695cdd83e74c54d32b5fd5803"
+    },
+    "src/Api.php": {
+      "bytes": 6119,
+      "sha256": "44ee2568dd7d8352f0c52d081a7291d607ccbf8b735c2dfb6459148db3b932d7"
+    },
+    "src/Internal/GraphNative.php": {
+      "bytes": 21985,
+      "sha256": "36f39a2c2bed32faf50f6cd8d5c337e188f4408cee43d60ff178bf8c22200d5c"
+    },
+    "src/Internal/GraphNativeTypes.php": {
+      "bytes": 4624,
+      "sha256": "e1aec3cf92ffca6b9f2fbce2a883eef2968cb091d89a050f5461be9d17f56529"
+    },
+    "src/Internal/GraphTypes.php": {
+      "bytes": 1393,
+      "sha256": "b4e452c209fa703e0eb099649891b437308c75f7623244d3ec5182e702c40a29"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 4278,
+      "sha256": "4068d65fa47163fe2a051c47155789aeff60ec063bf92a938eb0cc9021a45ac5"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    },
+    "src/Internal/Values.php": {
+      "bytes": 10559,
+      "sha256": "c87bcee4cc095f7b18f0e1e93f0a5ef41f856a69e06251a434621a4b07750c78"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-php-package",
+  "name": "example/mutualcheckedrecords",
+  "namespace": "LeanMutualcheckedrecords",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "9d2b421a8f35608d368aa90310026acf18f9c4b67d4d239c74fa72a20ae00b56",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"MutualCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.echoGroups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"MutualCheckedRecords.normalizeEnvelope\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"MutualCheckedRecords.plusTwo\"\n                        }\n                      },\n                      {\n                        \"name\": \"mode\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"next\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"MutualCheckedRecords.Envelope\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.groups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"MutualCheckedRecords.plusOne\"\n                        }\n                      },\n                      {\n                        \"name\": \"mode\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"next\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"MutualCheckedRecords.Envelope\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.second\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.normalizeEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusTwo\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"MutualCheckedRecords.first\",\n    \"MutualCheckedRecords.second\",\n    \"MutualCheckedRecords.echo\",\n    \"MutualCheckedRecords.groups\",\n    \"MutualCheckedRecords.echoGroups\",\n    \"MutualCheckedRecords.produce\"\n  ],\n  \"modules\": [\n    \"MutualCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/mutualcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 185184,
+          "interfaceSha256": "82984a1b4c530269f7ef51721c733d2a01f60743453da107cdea57251f716530",
+          "sha256": "5987aed2a08e47a8ff8194b15df510027f2a7b4d72b42fdb1639299eaa39f39b"
+        },
+        "module": "MutualCheckedRecords",
+        "source": {
+          "bytes": 2197,
+          "path": "MutualCheckedRecords.lean",
+          "sha256": "1bf6a7aa60b9115672ecf901e85af5054c3a159f7d68ab80daec35eea29116ec"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "MutualCheckedRecords.echo": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "MutualCheckedRecords.mkEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusOne"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": null
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "MutualCheckedRecords.echoGroups": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "MutualCheckedRecords.plusTwo"
+                            }
+                          },
+                          {
+                            "name": "mode",
+                            "refinement": null
+                          },
+                          {
+                            "name": "next",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "MutualCheckedRecords.first": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "MutualCheckedRecords.mkEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusOne"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": null
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "MutualCheckedRecords.groups": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "MutualCheckedRecords.mkEnvelope",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "MutualCheckedRecords.plusOne"
+                            }
+                          },
+                          {
+                            "name": "mode",
+                            "refinement": null
+                          },
+                          {
+                            "name": "next",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "MutualCheckedRecords.second": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "MutualCheckedRecords.plusTwo"
+                    }
+                  },
+                  {
+                    "name": "mode",
+                    "refinement": null
+                  },
+                  {
+                    "name": "next",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "MutualCheckedRecords.Envelope"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "MutualCheckedRecords"
+      ],
+      "exports": [
+        "MutualCheckedRecords.first",
+        "MutualCheckedRecords.second",
+        "MutualCheckedRecords.echo",
+        "MutualCheckedRecords.groups",
+        "MutualCheckedRecords.echoGroups",
+        "MutualCheckedRecords.produce"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "1c03249179c7f338e16382c76b7057c0f42057a0fe7542c6f088bca457df5d03",
+        "modules": [
+          {
+            "interfaceSha256": "82984a1b4c530269f7ef51721c733d2a01f60743453da107cdea57251f716530",
+            "name": "MutualCheckedRecords",
+            "sourcePath": "MutualCheckedRecords.lean",
+            "sourceSha256": "1bf6a7aa60b9115672ecf901e85af5054c3a159f7d68ab80daec35eea29116ec"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "MutualCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "8974449ea4cdbfaa32b725aba7fc69a88a59256940c12db3f7b8ec625696b30b",
+    "sourceTreeSha256": "58e4745045ff4270d0d42b3c4be28a68f6878790a16b79bfdffe8fb5dd9305b6"
+  },
+  "version": "1.0.0"
+}

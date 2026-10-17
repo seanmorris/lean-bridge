@@ -1,0 +1,34 @@
+{
+  "bindingIrSha256": "027c0f5795aa76f30116f715b0490a1037a8d2adad779b86a30038a12067a848",
+  "componentReceiptSha256": "d1ae44558fdf74f8d3670e0c49f526f1934f646941f9622d89e022ce4a12c729",
+  "copiedGraph": {
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+    "schemaVersion": 1
+  },
+  "files": {
+    "include/detail/recursivecheckedrecords-graph-types.h": {
+      "bytes": 3956,
+      "sha256": "43259a459e122abb99ae6646560f75c74ce8c3fc43f5d42b8ee30329715f9236"
+    },
+    "include/detail/recursivecheckedrecords-graph.h": {
+      "bytes": 1251,
+      "sha256": "c77d8b9bb8501ef638e2ea37f5f5d2f8df07add4650a3d4084923625f6880251"
+    },
+    "lib/librecursivecheckedrecords.so": {
+      "bytes": 45912,
+      "sha256": "5e792d752f3c1e955642b48769c166c6819be326d8393d586c509f1e82676f4d"
+    },
+    "src/native.c": {
+      "bytes": 59705,
+      "sha256": "67ba7f70a734c5f9b90962591fdf36e3a43042a4d8a9c463ffa2a2c3c54a7956"
+    },
+    "src/php-graph-clear.c": {
+      "bytes": 480,
+      "sha256": "33f58764b82e4c4e7da0ad6772516d116a2cf62f1c3b90b3bc06751372222e8c"
+    }
+  },
+  "library": "librecursivecheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1
+}

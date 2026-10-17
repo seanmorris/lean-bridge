@@ -1,0 +1,25 @@
+{
+  "autoload": {
+    "files": [
+      "src/Api.php"
+    ]
+  },
+  "description": "Compiled Lean API with generated PHP copied-value conversions",
+  "extra": {
+    "lean-bridge": {
+      "glibcMinimumVersion": "2.38",
+      "licenses": "licenses/",
+      "namespace": "LeanMutualcheckedrecords",
+      "platform": "linux-x86_64",
+      "profile": "ordinary-php-cli-ffi-v1"
+    }
+  },
+  "name": "example/mutualcheckedrecords",
+  "require": {
+    "brick/math": "1.0.0",
+    "ext-ffi": "*",
+    "php": ">=8.2 <9"
+  },
+  "type": "library",
+  "version": "1.0.0"
+}

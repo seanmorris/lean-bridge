@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51406573,
+          "path": "archives/example-recursivecheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "e4d45f08c27bf85249416d8934ef2e8b4c7999a56677a99d96b7ac934e0e0268"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/recursivecheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d9b64a984fddaf76abe5c84133ca725f523b442274643a08f31f93c3ef969a24",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "4ad265e170664b3937ca135418e23418dfe4df1ba3cd88247663d94b2ce3d60f"
+  }
+}

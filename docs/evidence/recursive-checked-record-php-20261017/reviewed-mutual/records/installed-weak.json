@@ -1,0 +1,37 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "consumer.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "70a915509eead481f43371f2575f9d0e70e4e27c336d3ba72c59d2bf912c194d",
+    "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+    "receiptSha256": "fabfa9f8798d5ded25955d279ce96c6913ce696b29f02e07937be74e6e609446",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "7c40e62e87268fc231016f70c0838a212827db64b77b2ad2656c88093684f3f1"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "checks": 1114,
+    "hostRejections": 84,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 12,
+    "snapshots": 505
+  },
+  "cwd": "/tmp/lean-bridge-recursive-checked-record-php-Id5nlf/consumer",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+  },
+  "strictness": "weak"
+}

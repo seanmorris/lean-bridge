@@ -1,0 +1,88 @@
+{
+  "aliases": [
+    {
+      "id": "lean:RecursiveCheckedRecords.PacketAlias",
+      "name": "PacketAlias",
+      "phpType": "Packet",
+      "target": {
+        "id": "lean:RecursiveCheckedRecords.Packet",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "027c0f5795aa76f30116f715b0490a1037a8d2adad779b86a30038a12067a848",
+  "component": "recursivecheckedrecords@1.0.0",
+  "copiedGraph": {
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+    "schemaVersion": 1
+  },
+  "exports": [
+    "LeanRecursivecheckedrecords\\Bytes",
+    "LeanRecursivecheckedrecords\\LeanBridgeError",
+    "LeanRecursivecheckedrecords\\Some",
+    "LeanRecursivecheckedrecords\\Ok",
+    "LeanRecursivecheckedrecords\\Err",
+    "LeanRecursivecheckedrecords\\Packet",
+    "LeanRecursivecheckedrecords\\echo_",
+    "LeanRecursivecheckedrecords\\echo_groups",
+    "LeanRecursivecheckedrecords\\first",
+    "LeanRecursivecheckedrecords\\groups",
+    "LeanRecursivecheckedrecords\\produce",
+    "LeanRecursivecheckedrecords\\second"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Values.php",
+    "src/Internal/GraphTypes.php",
+    "src/Internal/GraphNativeTypes.php",
+    "src/Internal/GraphNative.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "13a071ea85387af19b7ba72f640b654c56c41fbb112a5e2ea4fa94c9686f40bb",
+    "src/Api.php": "4b6f403df1288309fdce4238932210d78cc94d2bbccbc483b05ec99c2151a635",
+    "src/Internal/GraphNative.php": "f0829359ea0d970f9a53eebe479ee9d1889394450e698f989a2a338398b50598",
+    "src/Internal/GraphNativeTypes.php": "2ca04184fe73422737ea9603cfd2193c8716a4b113f498be7f432b08b89c9f3e",
+    "src/Internal/GraphTypes.php": "9a5fda09f236475e4f2b39866e703c6ef482195713675e52e96e5b1088a068bb",
+    "src/Internal/Native.php": "5b851e879d50db2c390a1a597c0aaa94ce9112d2d3dc4c2b207c5daa2e1f7854",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14",
+    "src/Internal/Values.php": "cd5a0f6968bd9fd9fa414d973c56e47909fa5353ec95e244196e6bcdaff99a76"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied-graph",
+    "version": 1
+  },
+  "internalFiles": [
+    "src/Internal/Values.php",
+    "src/Internal/GraphTypes.php",
+    "src/Internal/GraphNativeTypes.php",
+    "src/Internal/GraphNative.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php"
+  ],
+  "namespace": "LeanRecursivecheckedrecords",
+  "nativeEvidence": {
+    "componentId": "recursivecheckedrecords@1.0.0",
+    "componentReceiptSha256": "d1ae44558fdf74f8d3670e0c49f526f1934f646941f9622d89e022ce4a12c729",
+    "copiedGraph": {
+      "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+      "schemaVersion": 1
+    },
+    "libraries": {
+      "libcomponent_a1d30b9a0f384ed52541.so": "9f4a6baad4cba0cd5a57730d6a225398f0a9ec36a1fe25cf766f92c64301afe0",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "librecursivecheckedrecords.so": "5e792d752f3c1e955642b48769c166c6819be326d8393d586c509f1e82676f4d"
+    },
+    "library": "librecursivecheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "refinementDiagnostics": true,
+  "schemaVersion": 1
+}

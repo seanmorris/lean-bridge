@@ -1,0 +1,59 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"modules\": [\n    \"RecursiveCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/recursivecheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "recursivecheckedrecords",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 20245,
+            "path": "api.binding-ir.json",
+            "sha256": "51e53dcdbff6e416b86e5f2760a3fbf76ad88a933f7bfb51d3ae3398b8c78213"
+          },
+          {
+            "bytes": 97,
+            "path": "lakefile.toml",
+            "sha256": "83b9a56e0430f12a17d936a07ce8d108de00873d2ac126a7faaba41a02295d29"
+          },
+          {
+            "bytes": 195,
+            "path": "lean-bridge.exports.json",
+            "sha256": "81245f1322a06b5ffa2e553a20e6798ca057bb1b8850436beef38b99769d1b2c"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 69,
+            "path": "package.json",
+            "sha256": "f84a9f3ca26558cdb99fd81620179ee9a6329c4a7751320a2c5f9874dcd74c50"
+          },
+          {
+            "bytes": 1953,
+            "path": "RecursiveCheckedRecords.lean",
+            "sha256": "6c905b0b62022ccb111c4f2d26b294b4f5d09e9977811045a083bf9742a04089"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "d774ca0da5d9db6f121e179ebfc836ca81306039d2a3c8b707aa36f5fb32cdc9"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}

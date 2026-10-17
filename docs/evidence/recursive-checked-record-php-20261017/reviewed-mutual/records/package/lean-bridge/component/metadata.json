@@ -1,0 +1,2160 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.EnvelopeAlias",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 32,
+            "endLine": 43,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.Groups",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 45,
+            "endLine": 44,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A positive word represented by its natural-number payload. ",
+          "effects": [],
+          "identity": "MutualCheckedRecords.Positive",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 47,
+            "endLine": 4,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 3
+          },
+          "theoremReferences": [
+            "MutualCheckedRecords.Envelope.mk.inj",
+            "MutualCheckedRecords.Envelope.mk.injEq",
+            "MutualCheckedRecords.Envelope.mk.sizeOf_spec",
+            "MutualCheckedRecords.positive.eq_1"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.echo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "MutualCheckedRecords.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "MutualCheckedRecords.mkEnvelope",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "MutualCheckedRecords.Envelope.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "MutualCheckedRecords.Envelope.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "MutualCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "projection": "MutualCheckedRecords.Envelope.mode",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "projection": "MutualCheckedRecords.Envelope.next",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "MutualCheckedRecords.Step",
+                              "name": "MutualCheckedRecords.Step"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "cases": [
+                        {
+                          "constructor": "MutualCheckedRecords.Step.stop",
+                          "fields": [],
+                          "name": "stop"
+                        },
+                        {
+                          "constructor": "MutualCheckedRecords.Step.more",
+                          "fields": [
+                            {
+                              "name": "packet",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "reference",
+                                "lean": "MutualCheckedRecords.Envelope",
+                                "name": "MutualCheckedRecords.Envelope"
+                              }
+                            }
+                          ],
+                          "name": "more"
+                        }
+                      ],
+                      "kind": "variant",
+                      "lean": "MutualCheckedRecords.Step",
+                      "name": "MutualCheckedRecords.Step"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "MutualCheckedRecords.Envelope",
+                "name": "MutualCheckedRecords.Envelope"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "MutualCheckedRecords.Envelope.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "MutualCheckedRecords.Envelope.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "projection": "MutualCheckedRecords.Envelope.mode",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "next",
+                      "projection": "MutualCheckedRecords.Envelope.next",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "MutualCheckedRecords.Step",
+                          "name": "MutualCheckedRecords.Step"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "MutualCheckedRecords.Envelope",
+                  "name": "MutualCheckedRecords.Envelope"
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "MutualCheckedRecords.Step.stop",
+                      "fields": [],
+                      "name": "stop"
+                    },
+                    {
+                      "constructor": "MutualCheckedRecords.Step.more",
+                      "fields": [
+                        {
+                          "name": "packet",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "reference",
+                            "lean": "MutualCheckedRecords.Envelope",
+                            "name": "MutualCheckedRecords.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "more"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "MutualCheckedRecords.Step",
+                  "name": "MutualCheckedRecords.Step"
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "MutualCheckedRecords.Envelope",
+          "selected": true,
+          "source": {
+            "endColumn": 59,
+            "endLine": 48,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 48
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Envelope → MutualCheckedRecords.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.echoGroups",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "MutualCheckedRecords.Groups"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "values",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "MutualCheckedRecords.EnvelopeAlias",
+                          "name": "MutualCheckedRecords.EnvelopeAlias"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                          "kind": "checked-record"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "MutualCheckedRecords.Envelope.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "MutualCheckedRecords.Envelope.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "MutualCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "projection": "MutualCheckedRecords.Envelope.mode",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "projection": "MutualCheckedRecords.Envelope.next",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "MutualCheckedRecords.Step",
+                              "name": "MutualCheckedRecords.Step"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "MutualCheckedRecords.EnvelopeAlias",
+                      "name": "MutualCheckedRecords.EnvelopeAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "MutualCheckedRecords.Envelope",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "cases": [
+                        {
+                          "constructor": "MutualCheckedRecords.Step.stop",
+                          "fields": [],
+                          "name": "stop"
+                        },
+                        {
+                          "constructor": "MutualCheckedRecords.Step.more",
+                          "fields": [
+                            {
+                              "name": "packet",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "reference",
+                                "lean": "MutualCheckedRecords.Envelope",
+                                "name": "MutualCheckedRecords.Envelope"
+                              }
+                            }
+                          ],
+                          "name": "more"
+                        }
+                      ],
+                      "kind": "variant",
+                      "lean": "MutualCheckedRecords.Step",
+                      "name": "MutualCheckedRecords.Step"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "reference",
+                    "lean": "MutualCheckedRecords.EnvelopeAlias",
+                    "name": "MutualCheckedRecords.EnvelopeAlias"
+                  },
+                  "kind": "option"
+                },
+                "kind": "array"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "MutualCheckedRecords.Envelope.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "MutualCheckedRecords.Envelope.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "projection": "MutualCheckedRecords.Envelope.mode",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "next",
+                      "projection": "MutualCheckedRecords.Envelope.next",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "MutualCheckedRecords.Step",
+                          "name": "MutualCheckedRecords.Step"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "MutualCheckedRecords.Envelope",
+                  "name": "MutualCheckedRecords.Envelope"
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "alias",
+                  "lean": "MutualCheckedRecords.EnvelopeAlias",
+                  "name": "MutualCheckedRecords.EnvelopeAlias",
+                  "target": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "reference",
+                    "lean": "MutualCheckedRecords.Envelope",
+                    "name": "MutualCheckedRecords.Envelope"
+                  }
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "MutualCheckedRecords.Step.stop",
+                      "fields": [],
+                      "name": "stop"
+                    },
+                    {
+                      "constructor": "MutualCheckedRecords.Step.more",
+                      "fields": [
+                        {
+                          "name": "packet",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "reference",
+                            "lean": "MutualCheckedRecords.Envelope",
+                            "name": "MutualCheckedRecords.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "more"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "MutualCheckedRecords.Step",
+                  "name": "MutualCheckedRecords.Step"
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "MutualCheckedRecords.Groups",
+          "selected": true,
+          "source": {
+            "endColumn": 63,
+            "endLine": 50,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Groups → MutualCheckedRecords.Groups",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.first",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "MutualCheckedRecords.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "MutualCheckedRecords.mkEnvelope",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "MutualCheckedRecords.Envelope.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "MutualCheckedRecords.Envelope.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "MutualCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "projection": "MutualCheckedRecords.Envelope.mode",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "projection": "MutualCheckedRecords.Envelope.next",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "MutualCheckedRecords.Step",
+                              "name": "MutualCheckedRecords.Step"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "cases": [
+                        {
+                          "constructor": "MutualCheckedRecords.Step.stop",
+                          "fields": [],
+                          "name": "stop"
+                        },
+                        {
+                          "constructor": "MutualCheckedRecords.Step.more",
+                          "fields": [
+                            {
+                              "name": "packet",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "reference",
+                                "lean": "MutualCheckedRecords.Envelope",
+                                "name": "MutualCheckedRecords.Envelope"
+                              }
+                            }
+                          ],
+                          "name": "more"
+                        }
+                      ],
+                      "kind": "variant",
+                      "lean": "MutualCheckedRecords.Step",
+                      "name": "MutualCheckedRecords.Step"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 65,
+            "endLine": 46,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Envelope → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.groups",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "MutualCheckedRecords.Groups"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "values",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "MutualCheckedRecords.EnvelopeAlias",
+                          "name": "MutualCheckedRecords.EnvelopeAlias"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "MutualCheckedRecords.mkEnvelope",
+                          "kind": "checked-record"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "MutualCheckedRecords.Envelope.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "MutualCheckedRecords.Envelope.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "MutualCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "projection": "MutualCheckedRecords.Envelope.mode",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "projection": "MutualCheckedRecords.Envelope.next",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "MutualCheckedRecords.Step",
+                              "name": "MutualCheckedRecords.Step"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "MutualCheckedRecords.EnvelopeAlias",
+                      "name": "MutualCheckedRecords.EnvelopeAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "MutualCheckedRecords.Envelope",
+                        "name": "MutualCheckedRecords.Envelope"
+                      }
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "cases": [
+                        {
+                          "constructor": "MutualCheckedRecords.Step.stop",
+                          "fields": [],
+                          "name": "stop"
+                        },
+                        {
+                          "constructor": "MutualCheckedRecords.Step.more",
+                          "fields": [
+                            {
+                              "name": "packet",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "reference",
+                                "lean": "MutualCheckedRecords.Envelope",
+                                "name": "MutualCheckedRecords.Envelope"
+                              }
+                            }
+                          ],
+                          "name": "more"
+                        }
+                      ],
+                      "kind": "variant",
+                      "lean": "MutualCheckedRecords.Step",
+                      "name": "MutualCheckedRecords.Step"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 61,
+            "endLine": 49,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 49
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Groups → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Validate every envelope with the constructor selected at this export site. ",
+          "effects": [],
+          "identity": "MutualCheckedRecords.mkEnvelope",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "MutualCheckedRecords.Positive"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "mode",
+              "typeExpression": "Fin 3"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "next",
+              "typeExpression": "Option.{0} MutualCheckedRecords.Step"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} MutualCheckedRecords.Envelope",
+          "selected": false,
+          "source": {
+            "endColumn": 82,
+            "endLine": 28,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 26
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Positive → Fin 3 → Option.{0} MutualCheckedRecords.Step → Option.{0} MutualCheckedRecords.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A distinct outer constructor with the same proof obligation. ",
+          "effects": [],
+          "identity": "MutualCheckedRecords.normalizeEnvelope",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "MutualCheckedRecords.Positive"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "mode",
+              "typeExpression": "Fin 3"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "next",
+              "typeExpression": "Option.{0} MutualCheckedRecords.Step"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} MutualCheckedRecords.Envelope",
+          "selected": false,
+          "source": {
+            "endColumn": 82,
+            "endLine": 32,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 30
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Positive → Fin 3 → Option.{0} MutualCheckedRecords.Step → Option.{0} MutualCheckedRecords.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Check and normalize a word by adding one. ",
+          "effects": [],
+          "identity": "MutualCheckedRecords.plusOne",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} MutualCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 72,
+            "endLine": 8,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 6
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} MutualCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A distinct per-site word constructor. ",
+          "effects": [],
+          "identity": "MutualCheckedRecords.plusTwo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} MutualCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 57,
+            "endLine": 12,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 10
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} MutualCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.positive",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "MutualCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 37,
+            "endLine": 53,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 52
+          },
+          "theoremReferences": [
+            "MutualCheckedRecords.positive.eq_1"
+          ],
+          "typeExpression": "Nat → MutualCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.produce",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "MutualCheckedRecords.Envelope",
+                "name": "MutualCheckedRecords.Envelope"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "MutualCheckedRecords.Envelope.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "MutualCheckedRecords.Envelope.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mode",
+                      "projection": "MutualCheckedRecords.Envelope.mode",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "next",
+                      "projection": "MutualCheckedRecords.Envelope.next",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "MutualCheckedRecords.Step",
+                          "name": "MutualCheckedRecords.Step"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "MutualCheckedRecords.Envelope",
+                  "name": "MutualCheckedRecords.Envelope"
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "MutualCheckedRecords.Step.stop",
+                      "fields": [],
+                      "name": "stop"
+                    },
+                    {
+                      "constructor": "MutualCheckedRecords.Step.more",
+                      "fields": [
+                        {
+                          "name": "packet",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "reference",
+                            "lean": "MutualCheckedRecords.Envelope",
+                            "name": "MutualCheckedRecords.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "more"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "MutualCheckedRecords.Step",
+                  "name": "MutualCheckedRecords.Step"
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "MutualCheckedRecords.Envelope",
+          "selected": true,
+          "source": {
+            "endColumn": 23,
+            "endLine": 58,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 55
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → MutualCheckedRecords.Envelope",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.second",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "MutualCheckedRecords.Envelope"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "MutualCheckedRecords.Envelope.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "MutualCheckedRecords.Envelope.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "MutualCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "projection": "MutualCheckedRecords.Envelope.mode",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "next",
+                          "projection": "MutualCheckedRecords.Envelope.next",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "MutualCheckedRecords.Step",
+                              "name": "MutualCheckedRecords.Step"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "MutualCheckedRecords.Envelope",
+                      "name": "MutualCheckedRecords.Envelope"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "cases": [
+                        {
+                          "constructor": "MutualCheckedRecords.Step.stop",
+                          "fields": [],
+                          "name": "stop"
+                        },
+                        {
+                          "constructor": "MutualCheckedRecords.Step.more",
+                          "fields": [
+                            {
+                              "name": "packet",
+                              "type": {
+                                "abi": {
+                                  "box": "lean_box",
+                                  "cType": "lean_object*",
+                                  "heap": true,
+                                  "unbox": "lean_unbox"
+                                },
+                                "kind": "reference",
+                                "lean": "MutualCheckedRecords.Envelope",
+                                "name": "MutualCheckedRecords.Envelope"
+                              }
+                            }
+                          ],
+                          "name": "more"
+                        }
+                      ],
+                      "kind": "variant",
+                      "lean": "MutualCheckedRecords.Step",
+                      "name": "MutualCheckedRecords.Step"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 66,
+            "endLine": 47,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 47
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Envelope → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.totalEnvelope",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "a._@._internal._hyg.0",
+              "typeExpression": "MutualCheckedRecords.Envelope"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 58,
+            "endLine": 37,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Envelope → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "MutualCheckedRecords.totalStep",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "a._@._internal._hyg.0",
+              "typeExpression": "MutualCheckedRecords.Step"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a top-level or structural-container parameter or result: Subtype fun value =>\n  instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Nat",
+          "selected": false,
+          "source": {
+            "endColumn": 40,
+            "endLine": 40,
+            "path": "MutualCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 38
+          },
+          "theoremReferences": [],
+          "typeExpression": "MutualCheckedRecords.Step → Nat",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "82984a1b4c530269f7ef51721c733d2a01f60743453da107cdea57251f716530",
+      "name": "MutualCheckedRecords",
+      "sourcePath": "MutualCheckedRecords.lean",
+      "sourceSha256": "1bf6a7aa60b9115672ecf901e85af5054c3a159f7d68ab80daec35eea29116ec"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "30619e0f140175391a23e4f2ce7f9ee322b8e6f03b5cff0ec07b7eed598036cf",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}

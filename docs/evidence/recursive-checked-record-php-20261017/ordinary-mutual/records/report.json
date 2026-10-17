@@ -1,0 +1,661 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip": "628c944169b39973812a9fa782c0e8676ae91ee5d2458f2a3dd60e75139a9e0c"
+      },
+      "bindingIrSha256": "7d6330a56f67ee344bdbdf6dadc8965797b1856f16d21e70438b2a0c01e450bf",
+      "modelSha256": "da98856701cf4450fe56d56de3965f540781cc32aedf817553d7b74de687b10f",
+      "receiptSha256": "c50677ae7812d7d818a367c19e565bc0cc264b5725641fce2577056971c15deb"
+    },
+    {
+      "archives": {
+        "archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip": "628c944169b39973812a9fa782c0e8676ae91ee5d2458f2a3dd60e75139a9e0c"
+      },
+      "bindingIrSha256": "7d6330a56f67ee344bdbdf6dadc8965797b1856f16d21e70438b2a0c01e450bf",
+      "modelSha256": "da98856701cf4450fe56d56de3965f540781cc32aedf817553d7b74de687b10f",
+      "receiptSha256": "c50677ae7812d7d818a367c19e565bc0cc264b5725641fce2577056971c15deb"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "contracts": {
+      "MutualCheckedRecords.echo": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "MutualCheckedRecords.mkEnvelope",
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": "MutualCheckedRecords.plusOne"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "refinement": null
+                },
+                {
+                  "name": "next",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "MutualCheckedRecords.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "MutualCheckedRecords.echoGroups": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "MutualCheckedRecords.normalizeEnvelope",
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": "MutualCheckedRecords.plusTwo"
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "refinement": null
+                        },
+                        {
+                          "name": "next",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "MutualCheckedRecords.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "MutualCheckedRecords.first": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "MutualCheckedRecords.mkEnvelope",
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": "MutualCheckedRecords.plusOne"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "refinement": null
+                },
+                {
+                  "name": "next",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "MutualCheckedRecords.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "MutualCheckedRecords.groups": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "MutualCheckedRecords.mkEnvelope",
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": "MutualCheckedRecords.plusOne"
+                          }
+                        },
+                        {
+                          "name": "mode",
+                          "refinement": null
+                        },
+                        {
+                          "name": "next",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "MutualCheckedRecords.Envelope"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "MutualCheckedRecords.second": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "MutualCheckedRecords.normalizeEnvelope",
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": "MutualCheckedRecords.plusTwo"
+                  }
+                },
+                {
+                  "name": "mode",
+                  "refinement": null
+                },
+                {
+                  "name": "next",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "MutualCheckedRecords.Envelope"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "MutualCheckedRecords.first",
+      "MutualCheckedRecords.second",
+      "MutualCheckedRecords.echo",
+      "MutualCheckedRecords.groups",
+      "MutualCheckedRecords.echoGroups",
+      "MutualCheckedRecords.produce"
+    ],
+    "modules": [
+      "MutualCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "php-native": {
+        "name": "example/mutualcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSourceRequired": true,
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No PHP constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "fixture": "mutual",
+  "independentBuilds": 2,
+  "loadCeiling": 8,
+  "observations": [
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+        "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+        "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "checks": 1114,
+        "hostRejections": 84,
+        "module": "mutual",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 12,
+        "snapshots": 505
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-php-LFlsxn/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+        "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+        "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "checks": 1114,
+        "hostRejections": 84,
+        "module": "mutual",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 12,
+        "snapshots": 505
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-php-LFlsxn/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+      },
+      "strictness": "strict"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+        "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+        "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "checks": 1114,
+        "hostRejections": 84,
+        "module": "mutual",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 12,
+        "snapshots": 505
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-php-LFlsxn/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+        "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+        "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "checks": 1114,
+        "hostRejections": 84,
+        "module": "mutual",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 12,
+        "snapshots": 505
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-php-LFlsxn/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+      },
+      "strictness": "strict"
+    }
+  ],
+  "offlineInstall": true,
+  "packageReceiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+  "producerCommit": "dd9af401088a52e701c8cfa684a56c4a6f9be2df",
+  "receipt": {
+    "component": {
+      "id": "mutualcheckedrecords@1.0.0",
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51416664,
+            "path": "archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip",
+            "sha256": "628c944169b39973812a9fa782c0e8676ae91ee5d2458f2a3dd60e75139a9e0c"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/mutualcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "php-native",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "7d6330a56f67ee344bdbdf6dadc8965797b1856f16d21e70438b2a0c01e450bf",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "58e4745045ff4270d0d42b3c4be28a68f6878790a16b79bfdffe8fb5dd9305b6"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15441903616,
+          "freeBytes": 79686098944,
+          "load": 1.01
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15432466432,
+          "freeBytes": 79686029312,
+          "load": 1.01
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15491874816,
+          "freeBytes": 79634497536,
+          "load": 1
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15508570112,
+          "freeBytes": 79582924800,
+          "load": 1.06
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15098204160,
+          "freeBytes": 79319121920,
+          "load": 1.06
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15243063296,
+          "freeBytes": 79319117824,
+          "load": 1.45
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15233056768,
+          "freeBytes": 79319113728,
+          "load": 1.42
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15232856064,
+          "freeBytes": 79319109632,
+          "load": 1.42
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/usr/bin/php8.3",
+    "composer": "/usr/bin/composer",
+    "composerFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ctype.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/iconv.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/mbstring.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/phar.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/tokenizer.so"
+    ],
+    "composerVersion": {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ctype.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/iconv.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/mbstring.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/phar.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/tokenizer.so",
+        "/usr/bin/composer",
+        "--no-plugins",
+        "--no-scripts",
+        "--no-interaction",
+        "--version"
+      ],
+      "command": "/usr/bin/php8.3",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Composer version 2.7.1 2024-02-09 15:26:28\n"
+      }
+    },
+    "interpreter": {
+      "args": [
+        "-n",
+        "-r",
+        "echo json_encode([\"version\"=>PHP_VERSION,\"sapi\"=>PHP_SAPI,\"zts\"=>PHP_ZTS,\"integerBytes\"=>PHP_INT_SIZE,\"os\"=>PHP_OS_FAMILY,\"arch\"=>php_uname(\"m\"),\"directory\"=>ini_get(\"extension_dir\"),\"modules\"=>get_loaded_extensions()], JSON_THROW_ON_ERROR);"
+      ],
+      "command": "/usr/bin/php8.3",
+      "php": {
+        "arch": "x86_64",
+        "directory": "/usr/lib/php/20230831",
+        "integerBytes": 8,
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "zlib",
+          "filter",
+          "hash",
+          "json",
+          "pcntl",
+          "random",
+          "Reflection",
+          "SPL",
+          "session",
+          "standard",
+          "sodium"
+        ],
+        "os": "Linux",
+        "sapi": "cli",
+        "version": "8.3.6",
+        "zts": 0
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"version\":\"8.3.6\",\"sapi\":\"cli\",\"zts\":0,\"integerBytes\":8,\"os\":\"Linux\",\"arch\":\"x86_64\",\"directory\":\"\\/usr\\/lib\\/php\\/20230831\",\"modules\":[\"Core\",\"date\",\"libxml\",\"openssl\",\"pcre\",\"zlib\",\"filter\",\"hash\",\"json\",\"pcntl\",\"random\",\"Reflection\",\"SPL\",\"session\",\"standard\",\"sodium\"]}"
+      }
+    },
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "selected": {
+      "composer": "/usr/bin/composer",
+      "composerVersion": "2.7.1",
+      "php": "/usr/bin/php8.3",
+      "phpVersion": "8.3.6"
+    },
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.3": {
+        "bytes": 5784016,
+        "sha256": "1c564e6bafa56d03359c3774be6f4c77d0edecabd2075e18556940a56747c8d7"
+      },
+      "/usr/lib/php/20230831/ctype.so": {
+        "bytes": 14600,
+        "sha256": "2865fdd0589a6bf2029a1f436a06ac3072cdf50477f8384146181fe56ef5de51"
+      },
+      "/usr/lib/php/20230831/ffi.so": {
+        "bytes": 178440,
+        "sha256": "8202552d21044032e251383c3ffdc64cf2c5db3719a893dee0765d048a537263"
+      },
+      "/usr/lib/php/20230831/iconv.so": {
+        "bytes": 51464,
+        "sha256": "79ba2593b71ee8277b3a8e2a530c542f901129c78016b7a87d39fe4c2a50ea24"
+      },
+      "/usr/lib/php/20230831/mbstring.so": {
+        "bytes": 1209216,
+        "sha256": "a6086c078f33dfe34a25b2f9ceb33bae5e08e0d789f61af88c4298d2dbeb7a63"
+      },
+      "/usr/lib/php/20230831/phar.so": {
+        "bytes": 293128,
+        "sha256": "eec9a6756cfe51253b0aa53c7a2751236db2292c6ea4e7e599f3cbe7e930b3cb"
+      },
+      "/usr/lib/php/20230831/tokenizer.so": {
+        "bytes": 35080,
+        "sha256": "df382431be0c4ceb5cd99df184f40b7522b0718d6f9db1260097dd2c28fb95ee"
+      }
+    }
+  }
+}

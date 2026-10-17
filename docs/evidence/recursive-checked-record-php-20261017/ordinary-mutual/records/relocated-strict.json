@@ -1,0 +1,37 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+    "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+    "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "checks": 1114,
+    "hostRejections": 84,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 12,
+    "snapshots": 505
+  },
+  "cwd": "/tmp/lean-bridge-recursive-checked-record-php-LFlsxn/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1114,\"hostRejections\":84,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":12,\"snapshots\":505}\n"
+  },
+  "strictness": "strict"
+}

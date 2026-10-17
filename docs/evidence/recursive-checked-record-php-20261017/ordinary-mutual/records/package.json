@@ -1,0 +1,202 @@
+{
+  "archive": {
+    "bytes": 51416664,
+    "path": "archives/example-mutualcheckedrecords-1.0.0-linux-x86_64.zip",
+    "sha256": "628c944169b39973812a9fa782c0e8676ae91ee5d2458f2a3dd60e75139a9e0c"
+  },
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "ba02ee5b41c36c3f0290f83990017a7c41af91a53d77541f4e0c1896077e5967",
+    "packageFileSetSha256": "32dd1846a383d047ddfcc5a56f6bab5b5f31ce49a96f2237ca27d6388ca9d240",
+    "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "6fbdb68fab719b4bf205cad7a9a2e4866f824e16c37f28dc28a89376115a84b8"
+  },
+  "evidence": {
+    "componentId": "mutualcheckedrecords@1.0.0",
+    "componentReceiptSha256": "42ed306d39c61614856c3fce4b036599cbe5bedaeaf0b3562c574f3e4c5213da",
+    "copiedGraph": {
+      "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2",
+      "schemaVersion": 1
+    },
+    "libraries": {
+      "libcomponent_4ca822048b1456593639.so": "0a653afe4fbd821506805722622d3fd3074c0fd5e046e22b7f1beb4990125b42",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libmutualcheckedrecords.so": "85b5eeaa8fcf54647edcc02b010a9e68392cb4a695cdd83e74c54d32b5fd5803"
+    },
+    "library": "libmutualcheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "README.md": {
+      "bytes": 2887,
+      "sha256": "4c95bc34be2ead1774f4f32c57a6194e28b249cbc3d88a2cb508f137902e79cb"
+    },
+    "binding-manifest.json": {
+      "bytes": 3585,
+      "sha256": "98ba8673ac7de1a246a8bd12b8791ad5239ce6ef0542087a55b5461d2e51f81d"
+    },
+    "composer.json": {
+      "bytes": 558,
+      "sha256": "304786c1aac85680e73130db843a0328a5b61673b1116208190d8b2aa7c7645d"
+    },
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph-types.h": {
+      "bytes": 5664,
+      "sha256": "62b8572826a58711f4fecaec5dc2a683edf1f0e8ad41c042d03e5eed3906f03b"
+    },
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph.h": {
+      "bytes": 1192,
+      "sha256": "d2f84a2fa9e52a6375af42a2534b8ca2cb424a9849389a81a6b8318f0b66ca05"
+    },
+    "lean-bridge/adapter/src/native.c": {
+      "bytes": 71953,
+      "sha256": "dd59669fdc1b471575486ec9b1813d6984e26546e3c7f9bf2120d0bf59e75d10"
+    },
+    "lean-bridge/adapter/src/php-graph-clear.c": {
+      "bytes": 477,
+      "sha256": "3ae0cb888eec4532d7394817b65ee407fd0fc630336811b65146544bb4105255"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1534,
+      "sha256": "34f6396c79f1be1c7252bac28ae83a97030cd2c6c6245ab44786c08fa2debd74"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 29172,
+      "sha256": "16d153443b63964ffaa85530250b91a058b939269e4705deca5187dca8ecb070"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 2621,
+      "sha256": "2cf4f4f52591f6f4534e13ab43fc8c259cf2ea8d2efd927739b78fdc879ec7ba"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 25327,
+      "sha256": "7ee4147011e55ca16504a80d4167adf916645f60ba0c056c538dce17fe55756d"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 80808,
+      "sha256": "78c82af463ef6cb143b6e72afb59f794087f0af9223e8283b1da2244c8863c97"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 111140,
+      "sha256": "da98856701cf4450fe56d56de3965f540781cc32aedf817553d7b74de687b10f"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 15633,
+      "sha256": "42ed306d39c61614856c3fce4b036599cbe5bedaeaf0b3562c574f3e4c5213da"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1289,
+      "sha256": "7b66ec3eebea97e2e1523106dc917301c4cad1fc15ff55c498f7f2a5c8d6e6b2"
+    },
+    "lean-bridge/package-receipt.json": {
+      "bytes": 19568,
+      "sha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 7685,
+      "sha256": "8974449ea4cdbfaa32b725aba7fc69a88a59256940c12db3f7b8ec625696b30b"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_4ca822048b1456593639.so": {
+      "bytes": 125528,
+      "sha256": "0a653afe4fbd821506805722622d3fd3074c0fd5e046e22b7f1beb4990125b42"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libmutualcheckedrecords.so": {
+      "bytes": 46904,
+      "sha256": "85b5eeaa8fcf54647edcc02b010a9e68392cb4a695cdd83e74c54d32b5fd5803"
+    },
+    "src/Api.php": {
+      "bytes": 6119,
+      "sha256": "44ee2568dd7d8352f0c52d081a7291d607ccbf8b735c2dfb6459148db3b932d7"
+    },
+    "src/Internal/GraphNative.php": {
+      "bytes": 21985,
+      "sha256": "36f39a2c2bed32faf50f6cd8d5c337e188f4408cee43d60ff178bf8c22200d5c"
+    },
+    "src/Internal/GraphNativeTypes.php": {
+      "bytes": 4624,
+      "sha256": "e1aec3cf92ffca6b9f2fbce2a883eef2968cb091d89a050f5461be9d17f56529"
+    },
+    "src/Internal/GraphTypes.php": {
+      "bytes": 1393,
+      "sha256": "b4e452c209fa703e0eb099649891b437308c75f7623244d3ec5182e702c40a29"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 4278,
+      "sha256": "4068d65fa47163fe2a051c47155789aeff60ec063bf92a938eb0cc9021a45ac5"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    },
+    "src/Internal/Values.php": {
+      "bytes": 10559,
+      "sha256": "c87bcee4cc095f7b18f0e1e93f0a5ef41f856a69e06251a434621a4b07750c78"
+    }
+  },
+  "receiptSha256": "3082709590636191736a7229696bb8a79e474aa4c60682966598aae8297a7182",
+  "retained": [
+    "README.md",
+    "binding-manifest.json",
+    "composer.json",
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph-types.h",
+    "lean-bridge/adapter/include/detail/mutualcheckedrecords-graph.h",
+    "lean-bridge/adapter/src/native.c",
+    "lean-bridge/adapter/src/php-graph-clear.c",
+    "lean-bridge/component/allocation-guard.h",
+    "lean-bridge/component/artifacts.json",
+    "lean-bridge/component/binding-ir.json",
+    "lean-bridge/component/component.h",
+    "lean-bridge/component/generated.lean",
+    "lean-bridge/component/metadata.json",
+    "lean-bridge/component/model.json",
+    "lean-bridge/component/native-component.json",
+    "lean-bridge/native-c-adapter.json",
+    "lean-bridge/package-receipt.json",
+    "lean-bridge/runtime.json",
+    "licenses/Lean-LICENSE",
+    "licenses/Lean-LICENSES",
+    "licenses/LeanBridge-LICENSE",
+    "licenses/source-notices.json",
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "src/Api.php",
+    "src/Internal/GraphNative.php",
+    "src/Internal/GraphNativeTypes.php",
+    "src/Internal/GraphTypes.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "src/Internal/Values.php"
+  ]
+}
