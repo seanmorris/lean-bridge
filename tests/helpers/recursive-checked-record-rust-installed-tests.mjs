@@ -22,12 +22,14 @@ import { nestedCheckedRecordRustDependencyManifests } from "./nested-checked-rec
 import { verifyNestedCheckedRecordRustDependencies } from "./nested-checked-record-rust-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import {
+	checkRecursiveCheckedRecordRustControls
+} from "./recursive-checked-record-rust-controls.mjs";
+import {
 	loadRecursiveCheckedRecordRustCaller, parseRecursiveCheckedRecordRustResult
 	, recursiveCheckedRecordRustConfiguration, recursiveCheckedRecordRustPackage
 	, recursiveCheckedRecordRustReview, recursiveCheckedRecordRustSelection
 } from "./recursive-checked-record-rust-fixture.mjs";
 import { installRecursiveCheckedRecordRust } from "./recursive-checked-record-rust-install.mjs";
-import { checkRecursiveCheckedRecordRustReport } from "./recursive-checked-record-rust-report.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 
 const { enabled, routes, fixtures, maxLoad } = recursiveCheckedRecordRustSelection(process.env);
@@ -42,7 +44,10 @@ for(const route of routes) for(const fixture of fixtures)
 			encoding: "utf8"
 		}).trim();
 		for(const path of [
-			"fixture.mjs"
+			"controls.mjs"
+			, "model-controls.mjs"
+			, "package-controls.mjs"
+			, "fixture.mjs"
 			, "resources.mjs"
 			, "package.mjs"
 			, "install.mjs"
@@ -266,7 +271,7 @@ for(const route of routes) for(const fixture of fixtures)
 			}
 			, resourceChecks, loadCeiling: maxLoad
 		}));
-		await checkRecursiveCheckedRecordRustReport(path => readFile(join(output, path)), {
+		await checkRecursiveCheckedRecordRustControls(path => readFile(join(output, path)), {
 			route, fixture, producerCommit, floor
 			, runtime: {
 				platform: runtime.platform, arch: runtime.arch
