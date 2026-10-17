@@ -1,0 +1,59 @@
+{
+  "counts": {
+    "c": {
+      "checks": 3340,
+      "rejections": 1286,
+      "rounds": 256
+    },
+    "cpp": {
+      "checks": 3340,
+      "rejections": 1286,
+      "rounds": 256
+    }
+  },
+  "executions": 4,
+  "floor": "2.38",
+  "initialExecutions": 2,
+  "maxLoad": 12,
+  "mode": "full",
+  "modelControls": 4,
+  "packageControls": 2,
+  "packages": [
+    {
+      "artifact": {
+        "bytes": 53861343,
+        "path": "archives/inheritedcheckedrecords-1.0.0-c.tar.gz",
+        "sha256": "d6d963822aa7e36c1b15c46e1d0aaf52d2fed19f60be54788953fc1ce5acebc0"
+      },
+      "files": 36,
+      "packageFileSetSha256": "24ace8beafcd320faeb636ad9ecf90ef3bdc2d2282425c1f24549499ac9aba28",
+      "profile": "c",
+      "receiptSha256": "87242730930e329ee7793d55adc0284957ffa9f705f1dff457c72277f3c31e6e"
+    },
+    {
+      "artifact": {
+        "bytes": 51789703,
+        "path": "archives/inheritedcheckedrecords-1.0.0-cpp.tar.gz",
+        "sha256": "5727c591919a60e642555e3cd8053d9ed48e67653fdcbb90da111a4be96efa8a"
+      },
+      "files": 226,
+      "packageFileSetSha256": "744487261fb06b8552148430943592ec6bc5eaea15be5792ab910267edd66cdc",
+      "profile": "cpp",
+      "receiptSha256": "7bd9327f000cca05fc7c57f538b3a9c7c55082cfafac6fe441cfc9b4b76e2c8a"
+    }
+  ],
+  "producerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "recordControls": 33,
+  "reportControls": 34,
+  "resourceControls": 5,
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  }
+}

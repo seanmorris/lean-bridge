@@ -1,0 +1,335 @@
+{
+  "contracts": {
+    "InheritedCheckedRecords.aliased": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.mkTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "InheritedCheckedRecords.echo": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.normalizeTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "InheritedCheckedRecords.first": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.mkTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "InheritedCheckedRecords.nested": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.mkStamped",
+            "fields": [
+              {
+                "name": "toTicket",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "name": "mark",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Stamped"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "InheritedCheckedRecords.normalized": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.normalizeTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "InheritedCheckedRecords.pair": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.mkTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        },
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "InheritedCheckedRecords.normalizeTicket",
+            "fields": [
+              {
+                "name": "toSpan",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeSpan",
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Span"
+                }
+              },
+              {
+                "name": "word",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeWord"
+                }
+              }
+            ],
+            "kind": "checked-record",
+            "name": "InheritedCheckedRecords.Ticket"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "InheritedCheckedRecords.first",
+    "InheritedCheckedRecords.normalized",
+    "InheritedCheckedRecords.pair",
+    "InheritedCheckedRecords.aliased",
+    "InheritedCheckedRecords.nested",
+    "InheritedCheckedRecords.echo",
+    "InheritedCheckedRecords.produce",
+    "InheritedCheckedRecords.produceStamped"
+  ],
+  "modules": [
+    "InheritedCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

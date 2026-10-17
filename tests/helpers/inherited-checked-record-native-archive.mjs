@@ -24,7 +24,8 @@ import {
 } from "./inherited-checked-record-native-evidence.mjs";
 
 /** Pinned to the index the archive script prints; null refuses every check. */
-export const inheritedCheckedRecordNativeArchiveSha256 = null;
+export const inheritedCheckedRecordNativeArchiveSha256
+	= "7729a17c7bfedc91ccdf2fa9e1eaa6fe0082ce5c3ec508cf539dd850e2daba25";
 
 const exactKeys = (value, keys, label = "record") => assert.deepEqual(
 	Object.keys(value).sort(), [...keys].sort(), label);

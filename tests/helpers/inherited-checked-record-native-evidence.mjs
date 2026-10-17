@@ -17,7 +17,8 @@ export const inheritedCheckedRecordNativeProducer
 /** The hosted runner checked each selection with the producer revision's own checker. */
 export const inheritedCheckedRecordNativeChecker = inheritedCheckedRecordNativeProducer;
 /** Clean tooling revision that generated the archive; null until the evidence is pinned. */
-export const inheritedCheckedRecordNativeArchiver = null;
+export const inheritedCheckedRecordNativeArchiver
+	= "decb369936acc758557534d3471d9c8eab96b027";
 /** The green hosted run that carried the original records. */
 export const inheritedCheckedRecordNativeRunId = 39069688253;
 /** The hosted run and artifact that carried the original records. */

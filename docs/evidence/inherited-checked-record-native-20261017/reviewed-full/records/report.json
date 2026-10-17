@@ -1,0 +1,186 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/inheritedcheckedrecords-1.0.0-c.tar.gz": "d6d963822aa7e36c1b15c46e1d0aaf52d2fed19f60be54788953fc1ce5acebc0",
+        "archives/inheritedcheckedrecords-1.0.0-cpp.tar.gz": "5727c591919a60e642555e3cd8053d9ed48e67653fdcbb90da111a4be96efa8a"
+      },
+      "bindingIrSha256": "858b2caca8b05a8d461c41072a5e4553f7de9f06db398825e288b079262e232b",
+      "modelSha256": "0889db80b31814150b47b1315aa4840851e443e8fb21343afcafa32413993801",
+      "receiptSha256": "54d491130a6d708f5967390474c92bb78dc89a75e74b54fd1ab98958acbf2098"
+    },
+    {
+      "archives": {
+        "archives/inheritedcheckedrecords-1.0.0-c.tar.gz": "d6d963822aa7e36c1b15c46e1d0aaf52d2fed19f60be54788953fc1ce5acebc0",
+        "archives/inheritedcheckedrecords-1.0.0-cpp.tar.gz": "5727c591919a60e642555e3cd8053d9ed48e67653fdcbb90da111a4be96efa8a"
+      },
+      "bindingIrSha256": "858b2caca8b05a8d461c41072a5e4553f7de9f06db398825e288b079262e232b",
+      "modelSha256": "0889db80b31814150b47b1315aa4840851e443e8fb21343afcafa32413993801",
+      "receiptSha256": "54d491130a6d708f5967390474c92bb78dc89a75e74b54fd1ab98958acbf2098"
+    }
+  ],
+  "configuration": {
+    "modules": [
+      "InheritedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "inheritedcheckedrecords",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "inheritedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "declaredGlibcFloor": "2.38",
+  "expectedBindingIrSha256": "409c72bb1e3ace8db466d1275a0be8d3ad98f82f2b59cdcfb40c65447dc919ce",
+  "independentBuilds": 2,
+  "mode": "full",
+  "producerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "reports": [
+    {
+      "checks": 3340,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "e48d46317c8923419c33554aaf50829db339b314077969c12c58566b160bac30",
+      "executableSha256": "a67e5a716a017332275a6d75bae726bfe352a1439f40d5577c2dc74d48a5d3a9",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53861343,
+              "path": "archives/inheritedcheckedrecords-1.0.0-c.tar.gz",
+              "sha256": "d6d963822aa7e36c1b15c46e1d0aaf52d2fed19f60be54788953fc1ce5acebc0"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "inheritedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 3340,
+        "rejections": 1286,
+        "rounds": 256
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "24ace8beafcd320faeb636ad9ecf90ef3bdc2d2282425c1f24549499ac9aba28",
+          "receiptSha256": "87242730930e329ee7793d55adc0284957ffa9f705f1dff457c72277f3c31e6e",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "24ace8beafcd320faeb636ad9ecf90ef3bdc2d2282425c1f24549499ac9aba28",
+          "receiptSha256": "87242730930e329ee7793d55adc0284957ffa9f705f1dff457c72277f3c31e6e",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "e48d46317c8923419c33554aaf50829db339b314077969c12c58566b160bac30"
+    },
+    {
+      "checks": 3340,
+      "compiler": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+      },
+      "compilerFreePath": true,
+      "compilerFreeReplay": true,
+      "consumerSha256": "c19f37931ff9bdf56164b60226f7d02f62b0abac093ce5b39185f925099063de",
+      "executableSha256": "516d9b350a35f3ba5bea76e81cecf12e7dd752e6f1afe99dcdfb34315351bb72",
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51789703,
+              "path": "archives/inheritedcheckedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "5727c591919a60e642555e3cd8053d9ed48e67653fdcbb90da111a4be96efa8a"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "inheritedcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedInstallation": true,
+      "result": {
+        "checks": 3340,
+        "rejections": 1286,
+        "rounds": 256
+      },
+      "runs": [
+        {
+          "code": 0,
+          "packageFileSetSha256": "744487261fb06b8552148430943592ec6bc5eaea15be5792ab910267edd66cdc",
+          "receiptSha256": "7bd9327f000cca05fc7c57f538b3a9c7c55082cfafac6fe441cfc9b4b76e2c8a",
+          "relocated": false,
+          "stderr": "",
+          "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+        },
+        {
+          "code": 0,
+          "packageFileSetSha256": "744487261fb06b8552148430943592ec6bc5eaea15be5792ab910267edd66cdc",
+          "receiptSha256": "7bd9327f000cca05fc7c57f538b3a9c7c55082cfafac6fe441cfc9b4b76e2c8a",
+          "relocated": true,
+          "stderr": "",
+          "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+        }
+      ],
+      "sourceRemovedBeforeInstallation": true,
+      "sourceSha256": "c19f37931ff9bdf56164b60226f7d02f62b0abac093ce5b39185f925099063de"
+    }
+  ],
+  "reproducible": true,
+  "resourceAdmission": {
+    "maxLoad": 12,
+    "samples": 5
+  },
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}

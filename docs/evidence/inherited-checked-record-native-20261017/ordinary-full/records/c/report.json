@@ -1,0 +1,60 @@
+{
+  "checks": 3340,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "6e78713af6d9a77d61b741cb96a735095380e615d4e62c1261b522facaaa47ab",
+  "executableSha256": "5c1aa3574ec0b76ee343bac1a473e96eb38896b8e968983559f5427c58f50682",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53859486,
+          "path": "archives/inheritedcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "cb4cfc934cc6a37c3a0b20ba95f9df51dd0d251928cd4079bc20595a1d434424"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "inheritedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "relocatedInstallation": true,
+  "result": {
+    "checks": 3340,
+    "rejections": 1286,
+    "rounds": 256
+  },
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "24ace8beafcd320faeb636ad9ecf90ef3bdc2d2282425c1f24549499ac9aba28",
+      "receiptSha256": "e20c52f7356857471a39373920d6fa4114c8388fb85e9d6537b9b0878372ed82",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "24ace8beafcd320faeb636ad9ecf90ef3bdc2d2282425c1f24549499ac9aba28",
+      "receiptSha256": "e20c52f7356857471a39373920d6fa4114c8388fb85e9d6537b9b0878372ed82",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "{\"checks\":3340,\"rejections\":1286,\"rounds\":256}\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "6e78713af6d9a77d61b741cb96a735095380e615d4e62c1261b522facaaa47ab"
+}
