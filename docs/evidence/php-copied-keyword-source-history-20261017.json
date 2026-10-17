@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-copied-keyword-source-v1",
+  "predecessorCommit": "f370d8ca6359885e6b2f8ab84e20b5a7c7727cc1",
+  "draftParentCommit": "7d564408dc07609e87c2cf60b39e396a2f58eb7c",
+  "pathsSha256": "72abe1a3ae382c2c52926a51157cde79da71fc33f521a3105cca553337d169db",
+  "additions": [
+    {
+      "path": "scripts/update-php-copied-keyword-source-history.mjs",
+      "currentSha256": "864765cfd6218ded93601000d1c15f9e4de96c514ce710ce8f85984bdd192117"
+    },
+    {
+      "path": "tests/helpers/php-copied-keyword-source-history.mjs",
+      "currentSha256": "887b00491068e996895a18645d0a45817136e12a45857c78febf2b1bbb46964f"
+    },
+    {
+      "path": "tests/php-copied-keyword-source-history.test.mjs",
+      "currentSha256": "f2dfb0453025a2cbfe0bdf02a2dcd51e657f4427d0a8fed7b9cc24e5546991ae"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "7c3ac3bce27462d77ddfee6d4cb2215c321c9f982fd773bff88ea77964fced3a",
+      "currentSha256": "e9d36535eb10e384016fcc45f5390078b5e5e6584d55a304f57e36e0fddcac29",
+      "edits": [
+        {
+          "start": 28269,
+          "previous": "",
+          "current": "\t\t, \"php-copied-keyword-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-model.mjs",
+      "previousSha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6",
+      "currentSha256": "eed0dc2bd9d087c487196b32da297ca4e40eb1b9af779800384556272709b7fb",
+      "edits": [
+        {
+          "start": 4837,
+          "previous": "\t\tif(names.has(fn.field.toLowerCase())) fail(fn.declaration, `PHP function name is reserved or duplicated: ${fn.field}`);\n\t\tnames.add(fn.field.toLowerCase());\n",
+          "current": "\t\t// Keyword names gain one trailing underscore, as class names and graph functions do;\n\t\t// every other reserved or duplicated name is still refused.\n\t\tfn.publicName = phpClassName(fn.field);\n\t\tif(names.has(fn.publicName.toLowerCase())) fail(fn.declaration, `PHP function name is reserved or duplicated: ${fn.publicName}`);\n\t\tnames.add(fn.publicName.toLowerCase());\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-values.mjs",
+      "previousSha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d",
+      "currentSha256": "9c2b0120141797def8a295a630de4468f7623c9eae37f4d224dcad7a53d152ce",
+      "edits": [
+        {
+          "start": 3432,
+          "previous": "function ${fn.field}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(\", \")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? \"LeanClosure\" : phpValue(model, fn.declaration.result.type).publicType} {\n",
+          "current": "function ${fn.publicName}(${fn.parameters.map(parameter => `mixed $${parameter.name}`).join(\", \")}): ${phpValue(model, fn.declaration.result.type).type?.callable ? \"LeanClosure\" : phpValue(model, fn.declaration.result.type).publicType} {\n"
+        },
+        {
+          "start": 5321,
+          "previous": "\t\t, \"README.md\": `# ${model.namespace}\\n\\nInstall the prepared Composer archive and require vendor/autoload.php. Call the generated ${model.namespace} functions. The package includes the compiled Lean libraries and loads its runtime automatically. Consumers do not compile Lean or configure a package-specific Zend extension.\\n\\nRequires PHP 8.2+ (below 9), NTS CLI, Linux x86-64, the packaged glibc floor, and FFI enabled. This copied-value profile does not cover FPM, Apache, cli-server, ZTS or PHP-Wasm. Compatible packages share one process runtime; post-fork calls and an already loaded foreign Lean runtime are rejected. No per-package or shared runtime files are written during use.\\n\\nUnit is null. Fixed-width integers use range-checked PHP int except UInt64, which uses BigInteger. Nat and Int also use Brick\\\\Math\\\\BigInteger::of with decimal text. Composer installs brick/math 1.0.0 automatically. Lean Bridge accepts integer objects up to 16384 decimal digits. String requires UTF-8, including NUL. ByteArray uses Bytes::fromString. Floats require PHP float; Float32 rounds to binary32 and preserves NaN classification, infinities and signed zero. Arrays are consecutive-key lists; records are final readonly value classes.\\n\\nInput parameters deliberately use mixed with precise PHPDoc: generated checks reject coercion even if the caller omits strict_types. Records and lists have independent copied results. Copied types must be pure and acyclic, at most 32 levels deep. Validation, FFI scratch/output conversion, and native input/output copies each have a 16 MiB limit; PHP lists account for at least 32 bytes per element. These budgets do not bound the Lean algorithm's working memory. Native output owners are released in finally.\\n\\n${model.surface.functions.map(fn => `- ${model.namespace}\\\\${fn.field}: ${fn.declaration.id}`).join(\"\\n\")}\\n` };\n",
+          "current": "\t\t, \"README.md\": `# ${model.namespace}\\n\\nInstall the prepared Composer archive and require vendor/autoload.php. Call the generated ${model.namespace} functions. The package includes the compiled Lean libraries and loads its runtime automatically. Consumers do not compile Lean or configure a package-specific Zend extension.\\n\\nRequires PHP 8.2+ (below 9), NTS CLI, Linux x86-64, the packaged glibc floor, and FFI enabled. This copied-value profile does not cover FPM, Apache, cli-server, ZTS or PHP-Wasm. Compatible packages share one process runtime; post-fork calls and an already loaded foreign Lean runtime are rejected. No per-package or shared runtime files are written during use.\\n\\nUnit is null. Fixed-width integers use range-checked PHP int except UInt64, which uses BigInteger. Nat and Int also use Brick\\\\Math\\\\BigInteger::of with decimal text. Composer installs brick/math 1.0.0 automatically. Lean Bridge accepts integer objects up to 16384 decimal digits. String requires UTF-8, including NUL. ByteArray uses Bytes::fromString. Floats require PHP float; Float32 rounds to binary32 and preserves NaN classification, infinities and signed zero. Arrays are consecutive-key lists; records are final readonly value classes.\\n\\nInput parameters deliberately use mixed with precise PHPDoc: generated checks reject coercion even if the caller omits strict_types. Records and lists have independent copied results. Copied types must be pure and acyclic, at most 32 levels deep. Validation, FFI scratch/output conversion, and native input/output copies each have a 16 MiB limit; PHP lists account for at least 32 bytes per element. These budgets do not bound the Lean algorithm's working memory. Native output owners are released in finally.\\n\\n${model.surface.functions.map(fn => `- ${model.namespace}\\\\${fn.publicName}: ${fn.declaration.id}`).join(\"\\n\")}\\n` };\n"
+        },
+        {
+          "start": 10336,
+          "previous": "\tif(finFunctions.length) files[\"README.md\"] += `\\n## Bounded integers\\n\\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\\\Math\\\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), \"native PHP packages\", model.ir.types)}`, \"native PHP packages\", model.ir.types)}\\n\\n${finFunctions.map(fn => `- ${model.namespace}\\\\${fn.field}: ${finBounds(fn, model.ir.types)}`).join(\"\\n\")}\\n`;\n",
+          "current": "\tif(finFunctions.length) files[\"README.md\"] += `\\n## Bounded integers\\n\\n${nativeRefinementReadme(finFunctions.map(fn => fn.declaration), `Lean Fin n parameters and results are Brick\\\\Math\\\\BigInteger values below n. The bundled native library compares each argument with its exact bound, including bounds wider than 64 bits, before any Lean code runs. A non-BigInteger argument throws TypeError and a negative value throws ValueError, as for Nat; a value at or above its bound throws LeanBridgeError with code 1 whose message names the Lean parameter and bound. Fin 0 has no values, so every call to a function taking one is rejected. Results are BigInteger values below their declared bound. ${nativeFinContainerNote(finFunctions.map(fn => fn.declaration), \"native PHP packages\", model.ir.types)}`, \"native PHP packages\", model.ir.types)}\\n\\n${finFunctions.map(fn => `- ${model.namespace}\\\\${fn.publicName}: ${finBounds(fn, model.ir.types)}`).join(\"\\n\")}\\n`;\n"
+        },
+        {
+          "start": 13067,
+          "previous": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion: 1, generator: { id: \"lean-wasm/php-copied\", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: [\"src/Api.php\"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: [\"Bytes\", \"LeanBridgeError\", ...model.branches, ...model.surface.callbacks.size ? [\"LeanClosure\"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.copies.filter(copy => copy.variant).flatMap(copy => [copy.publicName, ...copy.cases.map(branch => branch.publicName)]), ...model.surface.functions.map(fn => fn.field)].map(name => `${model.namespace}\\\\${name}`), files: [...Object.keys(files), \"binding-manifest.json\"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });\n",
+          "current": "\tfiles[\"binding-manifest.json\"] = canonicalJson({ schemaVersion: 1, generator: { id: \"lean-wasm/php-copied\", version: 1 }, component: model.ir.component.id, bindingIrSha256: hashBindingIr(model.ir), namespace: model.namespace, publicFiles: [\"src/Api.php\"], ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: [\"Bytes\", \"LeanBridgeError\", ...model.branches, ...model.surface.callbacks.size ? [\"LeanClosure\"] : [], ...model.surface.copies.filter(copy => copy.record).map(copy => copy.publicName), ...model.surface.copies.filter(copy => copy.variant).flatMap(copy => [copy.publicName, ...copy.cases.map(branch => branch.publicName)]), ...model.surface.functions.map(fn => fn.publicName)].map(name => `${model.namespace}\\\\${name}`), files: [...Object.keys(files), \"binding-manifest.json\"], filesSha256: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, sha256(source)])) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-zend.mjs",
+      "previousSha256": "3a4919ac406a0365868a90f6c44ad16460a79666995e507e76d00d68861d4599",
+      "currentSha256": "1296d8fc02dd00091eaaa2de467fb647b0ec59c8e6614dc3fd1fda089ecfd62e",
+      "edits": [
+        {
+          "start": 11231,
+          "previous": "\tfiles[\"copied-zend-manifest.json\"] = canonicalJson({ schemaVersion: 1, kind: \"lean-bridge-copied-zend-source\", component: ir.component.id, bindingIrSha256: identity, integerBits, extension: stem, transport, namespace: model.namespace, ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: model.surface.functions.map((fn, index) => ({ declaration: fn.declaration.id, function: `${model.namespace}\\\\${fn.field}`, transport: `${transport}\\\\call${index}`, cSymbol: fn.name })), files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { sha256: sha256(source), bytes: Buffer.byteLength(source) }])) });\n",
+          "current": "\tfiles[\"copied-zend-manifest.json\"] = canonicalJson({ schemaVersion: 1, kind: \"lean-bridge-copied-zend-source\", component: ir.component.id, bindingIrSha256: identity, integerBits, extension: stem, transport, namespace: model.namespace, ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: model.surface.functions.map((fn, index) => ({ declaration: fn.declaration.id, function: `${model.namespace}\\\\${fn.publicName}`, transport: `${transport}\\\\call${index}`, cSymbol: fn.name })), files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { sha256: sha256(source), bytes: Buffer.byteLength(source) }])) });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/php-native.php",
+      "previousSha256": "833f69f9160768b7bf28caa97d2f66415736ce853e662eebb7e4563e1b21487e",
+      "currentSha256": "22f4f36a2cd6ff9c51ee20fea2ef5460fe9b3537e4746aae22aa87b8272e4e08",
+      "edits": [
+        {
+          "start": 9459,
+          "previous": "",
+          "current": "    // PHP reserves echo, so the generated function carries one trailing underscore.\n"
+        },
+        {
+          "start": 9683,
+          "previous": "        $qualified = 'LeanInheritedcheckedrecords\\\\' . $name;\n",
+          "current": "        $qualified = 'LeanInheritedcheckedrecords\\\\' . ($name === 'echo' ? 'echo_' : $name);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5d7f8e1caa90f558acf2fa6d27ae843c0545c75b2985ab0a75858422b5d9bd99",
+      "currentSha256": "324f8fa930b284ab729587191974b3251e7e299c1dc47e33c9d87dfe8cbd30cb",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePhpCopiedKeywordSource, phpCopiedKeywordChangedPaths } from \"./php-copied-keyword-source-history.mjs\";\n"
+        },
+        {
+          "start": 73773,
+          "previous": "",
+          "current": "\tsource = beforePhpCopiedKeywordSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 83749,
+          "previous": "\t...inheritedCheckedRecordRubyChangedPaths\n",
+          "current": "\t...phpCopiedKeywordChangedPaths\n\t, ...inheritedCheckedRecordRubyChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-wasm-tests.mjs",
+      "previousSha256": "59510a103a1c30323230635fc27ead1bd0c60b53e44d1495e90f15fb8ed27c2d",
+      "currentSha256": "010f1f83df4ee17dbd7d532eba7d5803aa13bdf870971224162446d79c9c1b51",
+      "edits": [
+        {
+          "start": 171,
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\n",
+          "current": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 488,
+          "previous": "",
+          "current": "import { compileCopiedPhpModel } from \"../../src/backends/php/copied-model.mjs\";\nimport { copiedPhpPublicSource, renderCopiedPhpPackage } from \"../../src/backends/php/copied-values.mjs\";\nimport { generateCopiedPhpZendAdapter } from \"../../src/backends/php/copied-zend.mjs\";\n"
+        },
+        {
+          "start": 13994,
+          "previous": "",
+          "current": "});\n\ntest(\"inherited PHP-Wasm escapes the echo keyword like graph packages and keeps reserved names closed\", async () => {\n\tconst options = { integerBits: 32, structuredCallables: true, lists: true, variants: true };\n\tconst declaration = \"lean:InheritedCheckedRecords.echo\", symbol = \"LeanInheritedcheckedrecords\\\\echo_\";\n\tfor(const mode of inheritedCheckedRecordPhpWasmModes)\n\t{\n\t\tconst ir = inheritedCheckedRecordPhpWasmReview(mode), model = compileCopiedPhpModel(ir, options);\n\t\tconst full = mode === \"full\";\n\t\tassert.deepEqual(model.surface.functions.map(fn => [fn.field, fn.publicName]).filter(([field]) => field === \"echo\")\n\t\t\t, full ? [[\"echo\", \"echo_\"]] : []);\n\t\tassert.ok(model.surface.functions.every(fn => fn.publicName === fn.field || fn.field === \"echo\"));\n\t\tconst source = copiedPhpPublicSource(model);\n\t\tassert.equal(source.includes(\"function echo_(\"), full); assert.doesNotMatch(source, /function echo\\(/u);\n\t\tconst manifest = JSON.parse(renderCopiedPhpPackage(model)[\"binding-manifest.json\"]);\n\t\tassert.equal(manifest.exports.includes(symbol), full);\n\t\tassert.ok(!manifest.exports.includes(\"LeanInheritedcheckedrecords\\\\echo\"));\n\t\tconst zend = JSON.parse(generateCopiedPhpZendAdapter(ir, { integerBits: 32 })[\"copied-zend-manifest.json\"]);\n\t\tassert.deepEqual(zend.exports.filter(item => item.declaration === declaration).map(item => item.function)\n\t\t\t, full ? [symbol] : []);\n\t}\n\t// The independent caller reaches the escaped symbol exactly as the recursive caller does.\n\tconst caller = await readFile(\"tests/fixtures/inherited-checked-record-consumers/php-native.php\", \"utf8\");\n\tassert.equal(caller.split(\"($name === 'echo' ? 'echo_' : $name)\").length, 2);\n\t// Only keywords are escaped; other reserved or colliding names still fail closed.\n\tconst renamed = (pairs, types = []) => {\n\t\tconst ir = structuredClone(inheritedCheckedRecordPhpWasmReview(\"full\"));\n\t\tfor(const [from, to] of pairs)\n\t\t{\n\t\t\tconst item = ir.declarations.find(value => value.id.endsWith(`.${from}`));\n\t\t\titem.id = item.id.replace(new RegExp(`${from}$`, \"u\"), to); item.name = to;\n\t\t}\n\t\tfor(const [from, to] of types)\n\t\t{\n\t\t\tconst item = ir.types.find(value => value.kind === \"record\" && value.name.endsWith(from));\n\t\t\titem.name = item.name.replace(new RegExp(`${from}$`, \"u\"), to);\n\t\t}\n\t\treturn ir;\n\t};\n\tfor(const name of [\"internal\", \"bigint\"])\n\t\tassert.throws(() => compileCopiedPhpModel(renamed([[\"first\", name]]), options)\n\t\t\t, new RegExp(`PHP function name is reserved or duplicated: ${name}$`, \"u\"), name);\n\t// An escaped name never shares a symbol with another export or class, in either order.\n\t// The C surface already reserves every name_ form; the PHP check stays as a second guard.\n\tfor(const [label, pairs, types] of [\n\t\t[\"echo then echo_\", [[\"first\", \"echo_\"]]]\n\t\t, [\"Echo then echo_\", [[\"first\", \"Echo\"], [\"normalized\", \"echo_\"]]]\n\t\t, [\"echo_ then Echo\", [[\"first\", \"echo_\"], [\"normalized\", \"Echo\"]]]\n\t\t, [\"case-folded ECHO\", [[\"first\", \"ECHO\"]]]\n\t\t, [\"class echo_\", [], [[\"Span\", \"echo_\"]]]\n\t]) assert.throws(() => compileCopiedPhpModel(renamed(pairs, types), options)\n\t\t, /collides|reserved or duplicated/u, label);\n\tassert.deepEqual(compileCopiedPhpModel(renamed([[\"first\", \"print\"]]), options)\n\t\t.surface.functions.map(fn => [fn.field, fn.publicName]).slice(0, 1), [[\"print\", \"print_\"]]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-php.test.mjs",
+      "previousSha256": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36",
+      "currentSha256": "b8ae940ea7c75b363ed7d35ef4a6f662bb9febadea90f330ea1821c9091102db",
+      "edits": [
+        {
+          "start": 6286,
+          "previous": "\tfor(const name of [\"match\", \"Echo\", \"dispatch\"])\n",
+          "current": "\t// Keyword function names gain one trailing underscore; other reserved names are refused at their source.\n\tfor(const [name, escaped] of [[\"match\", \"match_\"], [\"Echo\", \"echo_\"]])\n\t{\n\t\tconst ir = synthetic(); ir.declarations[0].name = name;\n\t\tassert.deepEqual(compileCopiedPhpModel(ir).surface.functions.map(fn => fn.publicName), [escaped]);\n\t}\n\tfor(const name of [\"dispatch\", \"internal\"])\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "b1d91fea6ccb6792a46ae8655e3234784fa8af0cc1ecde7705e31e3dbb9758af",
+      "currentSha256": "7d1ffc409c23d0501d9e8be8775213738b0c7320f1c81bb7d402b557913f11b0",
+      "edits": [
+        {
+          "start": 1428,
+          "previous": "import { generateCopiedPhpPackage } from \"../src/backends/php/copied-values.mjs\";\n",
+          "current": "import { generateCopiedPhpPackage, renderCopiedPhpPackage } from \"../src/backends/php/copied-values.mjs\";\nimport { generateCopiedPhpZendAdapter } from \"../src/backends/php/copied-zend.mjs\";\n"
+        },
+        {
+          "start": 4712,
+          "previous": "",
+          "current": "\t// Keywords are now escaped, and the check below proves never becomes never_ before any long run.\n"
+        },
+        {
+          "start": 5663,
+          "previous": "\t// The same input under a reserved name is refused by both targets, so the check above can fail.\n\tconst reserved = { ...finProductSignatures, never: finProductSignatures.absentOnly };\n\tdelete reserved.absentOnly;\n\tconst input = finProductCompilerInput(reserved);\n\tassert.throws(() => generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: never/u);\n\tassert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true }), /PHP function name is reserved or duplicated: never/u);\n",
+          "current": "\t// The keyword never now gains one trailing underscore in both targets, as class names and graph functions do.\n\tconst renamed = name => {\n\t\tconst signatures = { ...finProductSignatures, [name]: finProductSignatures.absentOnly };\n\t\tdelete signatures.absentOnly;\n\t\treturn finProductCompilerInput(signatures);\n\t};\n\tconst options = { integerBits: 32, structuredCallables: true, lists: true, variants: true };\n\tconst keyword = renamed(\"never\"), nativeIr = createNativeModel(keyword, { refinements: true }).bindingIr, wasmIr = createPhpWasmCopiedModel(keyword).bindingIr;\n\tconst native = generateCopiedPhpPackage(nativeIr), wasm = compileCopiedPhpModel(wasmIr, options), wasmFiles = renderCopiedPhpPackage(wasm);\n\tconst declaration = wasmIr.declarations.find(item => item.name === \"never\").id, symbol = `${wasm.namespace}\\\\never_`;\n\tfor(const files of [native, wasmFiles])\n\t{\n\t\tassert.match(files[\"src/Api.php\"], /function never_\\(/u); assert.doesNotMatch(files[\"src/Api.php\"], /function never\\(/u);\n\t\tconst exports = JSON.parse(files[\"binding-manifest.json\"]).exports;\n\t\tassert.ok(exports.includes(symbol)); assert.ok(!exports.includes(`${wasm.namespace}\\\\never`));\n\t}\n\tassert.deepEqual(wasm.surface.functions.filter(fn => fn.field === \"never\").map(fn => fn.publicName), [\"never_\"]);\n\tconst zend = JSON.parse(generateCopiedPhpZendAdapter(wasmIr, { integerBits: 32 })[\"copied-zend-manifest.json\"]);\n\tassert.deepEqual(zend.exports.filter(item => item.declaration === declaration).map(item => item.function), [symbol]);\n\t// A reserved name that is not a keyword is still refused by both targets, so the check above can fail.\n\tconst reserved = renamed(\"internal\");\n\tassert.throws(() => generateCopiedPhpPackage(createNativeModel(reserved, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: internal/u);\n\tassert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(reserved).bindingIr, options), /PHP function name is reserved or duplicated: internal/u);\n"
+        }
+      ]
+    }
+  ]
+}

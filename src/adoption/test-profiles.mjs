@@ -767,6 +767,7 @@ const profileManifest = Object.freeze({
 		, "native-ruby"
 		, "native-python"
 		, "native-php"
+		, "php-copied-keyword-source-history"
 		, "php-copied-zend"
 		, "php-wasm-ordinary"
 		, "php-wasm-compiler-inputs"
