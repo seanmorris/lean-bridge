@@ -12,7 +12,7 @@ import test from "node:test";
 import "./helpers/inherited-checked-record-browser-evidence-tests.mjs";
 import "./helpers/inherited-checked-record-browser-ci-policy-tests.mjs";
 import "./helpers/inherited-checked-record-browser-ci-workflow-tests.mjs";
-import "./helpers/inherited-checked-record-php-wasm-tests.mjs";
+import "./helpers/inherited-checked-record-php-wasm-lane-tests.mjs";
 import "./helpers/inherited-checked-record-rust-tests.mjs";
 import "./helpers/inherited-checked-record-wit-tests.mjs";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
