@@ -53,8 +53,11 @@ export const copiedWitGraphAliases = (model, { reservedNames = [] } = {}) => {
  *
  * @param ir - Original compiler-checked Binding IR.
  * @param settings - Optional WIT name and version.
+ * @param options - Generated host features.
+ * @param options.refinementDiagnostics - Forward exact checked-refinement failures from the adapter.
  */
-export const compileCopiedWitGraphPackageModel = (ir, settings) => {
+export const compileCopiedWitGraphPackageModel = (ir, settings, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("WIT graph refinement diagnostics must be explicit");
 	const model = compileCopiedWitGraphModel(ir, settings);
 	const aliases = copiedWitGraphAliases(model);
 	const guard = `${model.layout.prefix.toUpperCase()}_WASMTIME_GRAPH_PACKAGE_H`;
@@ -65,8 +68,12 @@ static inline void ${alias.name}_init(${alias.name} *value) { ${alias.type}_init
 static inline void ${alias.name}_clear(${alias.name} *value) { ${alias.type}_clear(value); }`).join("\n")}
 #endif /* ${guard} */
 `;
-	const manifest = { ...model.manifest, cHost: { header: `${model.layout.prefix}_wasmtime.h`, aliases } };
-	return { ...model, manifest, hostHeader, prefix: model.layout.prefix, layoutSha256: model.manifest.graph.layoutSha256 };
+	// The wire interface is unchanged; only the host's error text gains the adapter diagnostic.
+	const manifest = { ...model.manifest
+		, ...refinementDiagnostics ? { graph: { ...model.manifest.graph, refinementDiagnostics: true } } : {}
+		, cHost: { header: `${model.layout.prefix}_wasmtime.h`, aliases } };
+	return { ...model, manifest, hostHeader, prefix: model.layout.prefix
+		, layoutSha256: model.manifest.graph.layoutSha256, refinementDiagnostics };
 };
 
 /**
@@ -97,7 +104,9 @@ WIT cannot declare recursive types directly. Each copied wire value contains a t
 
 Values permit 128 nested levels and 262,144 expanded node visits. Input and output conversions have separate 16 MiB copy budgets; the native carrier also checks its own bounded conversion scopes. Shared subgraphs count once per visit, not once per address. Canonical scratch memory is capped at 64 MiB. These limits do not bound Lean algorithm or Wasmtime engine working memory. Wasmtime's allocation API does not expose recoverable out-of-memory errors.
 
-Conversion limits and native scratch allocation failures return errors and free temporary storage. A trapped component store is replaced before the next session call. Custom Wasmtime embeddings must discard a trapped instance. Malformed native outputs retire the shared Lean runtime; subsequent native calls fail. Callbacks, closures and resource-containing aggregates require separate ownership contracts and are not admitted by this copied-graph package.
+${model.refinementDiagnostics ? `A rejected checked refinement returns an error whose final cause is the exact Lean diagnostic, such as a field path followed by "was rejected by" and the constructor, or "is not below its Fin n bound". The call leaves its output unchanged and later calls proceed normally. Malformed diagnostic text retires the shared Lean runtime.
+
+` : ""}Conversion limits and native scratch allocation failures return errors and free temporary storage. A trapped component store is replaced before the next session call. Custom Wasmtime embeddings must discard a trapped instance. Malformed native outputs retire the shared Lean runtime; subsequent native calls fail. Callbacks, closures and resource-containing aggregates require separate ownership contracts and are not admitted by this copied-graph package.
 
 ## Exports
 

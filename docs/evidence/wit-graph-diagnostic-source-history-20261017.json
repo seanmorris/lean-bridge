@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "milestone": "wit-graph-diagnostic-source-v1",
+  "predecessorCommit": "1ffbd65e3de77eb006a353502cd58ff59d0e8f13",
+  "draftParentCommit": "1ffbd65e3de77eb006a353502cd58ff59d0e8f13",
+  "pinCount": 13,
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c39ef7fc86336de2ce320e4f49583bcaac86def9eda235463efd6186575b84eb",
+      "currentSha256": "01b07c984b9cb2e3eedd2aae33f18dc19d0b3d0ef16ad3d34c15a37ee2dad092",
+      "edits": [
+        {
+          "start": 171534,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 278861,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 384671,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 476697,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 698910,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 903568,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 913935,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 1041126,
+          "previous": "          \"sha256\": \"93793adf3ad900a6884b6a81c0f4cb080c6164691fc9601a4ce81f7973dee14f\"\n",
+          "current": "          \"sha256\": \"15f08735ba9dcdad1446f7ef45e9d2a6238a73da3fefa82480a8480d328dc15c\"\n"
+        },
+        {
+          "start": 1041466,
+          "previous": "          \"sha256\": \"6b1a5055f89bbaf9bea60a7fbda42202033659b23aa50405690bfa7702a6e083\"\n",
+          "current": "          \"sha256\": \"8aa6f9f229b8c650f6a643fee21521a5dd4d66ffe7f94435f938c18be58194a3\"\n"
+        },
+        {
+          "start": 1050306,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 1420359,
+          "previous": "          \"sha256\": \"6b1a5055f89bbaf9bea60a7fbda42202033659b23aa50405690bfa7702a6e083\"\n",
+          "current": "          \"sha256\": \"8aa6f9f229b8c650f6a643fee21521a5dd4d66ffe7f94435f938c18be58194a3\"\n"
+        },
+        {
+          "start": 1420853,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        },
+        {
+          "start": 1515156,
+          "previous": "          \"sha256\": \"6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a\"\n",
+          "current": "          \"sha256\": \"1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/wit/copied-graph-host.mjs",
+      "previousSha256": "93793adf3ad900a6884b6a81c0f4cb080c6164691fc9601a4ce81f7973dee14f",
+      "currentSha256": "15f08735ba9dcdad1446f7ef45e9d2a6238a73da3fefa82480a8480d328dc15c",
+      "edits": [
+        {
+          "start": 4818,
+          "previous": "  if (status) { failure = wasmtime_error_new(\"Native Lean graph call failed\"); goto done; }\n",
+          "current": "${model.refinementDiagnostics ? `  if (status) {\n    /* The adapter resets this one-shot text at every call; missing text keeps the fixed failure. */\n    const char *specific = status == 1 ? ${model.layout.prefix}_graph_error() : NULL;\n    if (specific && (!*specific || !lb_utf8(specific, strlen(specific)))) {\n      lean_bridge_native_runtime_retire();\n      failure = wasmtime_error_new(\"Malformed native refinement diagnostic; runtime retired\"); goto done;\n    }\n    failure = wasmtime_error_new(specific ? specific : \"Native Lean graph call failed\"); goto done;\n  }` : '  if (status) { failure = wasmtime_error_new(\"Native Lean graph call failed\"); goto done; }'}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/wit/copied-graph-package.mjs",
+      "previousSha256": "6b1a5055f89bbaf9bea60a7fbda42202033659b23aa50405690bfa7702a6e083",
+      "currentSha256": "8aa6f9f229b8c650f6a643fee21521a5dd4d66ffe7f94435f938c18be58194a3",
+      "edits": [
+        {
+          "start": 3116,
+          "previous": "",
+          "current": " * @param options - Generated host features.\n * @param options.refinementDiagnostics - Forward exact checked-refinement failures from the adapter.\n"
+        },
+        {
+          "start": 3267,
+          "previous": "export const compileCopiedWitGraphPackageModel = (ir, settings) => {\n",
+          "current": "export const compileCopiedWitGraphPackageModel = (ir, settings, { refinementDiagnostics = false } = {}) => {\n\tif(typeof refinementDiagnostics !== \"boolean\") throw new TypeError(\"WIT graph refinement diagnostics must be explicit\");\n"
+        },
+        {
+          "start": 4138,
+          "previous": "\tconst manifest = { ...model.manifest, cHost: { header: `${model.layout.prefix}_wasmtime.h`, aliases } };\n\treturn { ...model, manifest, hostHeader, prefix: model.layout.prefix, layoutSha256: model.manifest.graph.layoutSha256 };\n",
+          "current": "\t// The wire interface is unchanged; only the host's error text gains the adapter diagnostic.\n\tconst manifest = { ...model.manifest\n\t\t, ...refinementDiagnostics ? { graph: { ...model.manifest.graph, refinementDiagnostics: true } } : {}\n\t\t, cHost: { header: `${model.layout.prefix}_wasmtime.h`, aliases } };\n\treturn { ...model, manifest, hostHeader, prefix: model.layout.prefix\n\t\t, layoutSha256: model.manifest.graph.layoutSha256, refinementDiagnostics };\n"
+        },
+        {
+          "start": 7905,
+          "previous": "Conversion limits and native scratch allocation failures return errors and free temporary storage. A trapped component store is replaced before the next session call. Custom Wasmtime embeddings must discard a trapped instance. Malformed native outputs retire the shared Lean runtime; subsequent native calls fail. Callbacks, closures and resource-containing aggregates require separate ownership contracts and are not admitted by this copied-graph package.\n",
+          "current": "${model.refinementDiagnostics ? `A rejected checked refinement returns an error whose final cause is the exact Lean diagnostic, such as a field path followed by \"was rejected by\" and the constructor, or \"is not below its Fin n bound\". The call leaves its output unchanged and later calls proceed normally. Malformed diagnostic text retires the shared Lean runtime.\n\n` : \"\"}Conversion limits and native scratch allocation failures return errors and free temporary storage. A trapped component store is replaced before the next session call. Custom Wasmtime embeddings must discard a trapped instance. Malformed native outputs retire the shared Lean runtime; subsequent native calls fail. Callbacks, closures and resource-containing aggregates require separate ownership contracts and are not admitted by this copied-graph package.\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-wit-artifacts.mjs",
+      "previousSha256": "6ba23b3b290a571e903db62dcfb22a2ead78c237fb06b9f71e155f7f50816d8a",
+      "currentSha256": "1410b9eed76e33354b861751ec699ae6866cab704e562b597e89d2e82192f261",
+      "edits": [
+        {
+          "start": 505,
+          "previous": "import { nativeGraphProjectionSources } from \"./native-graph-sources.mjs\";\n",
+          "current": "import { nativeGraphProjectionSources, nativeGraphRefinementDiagnostics } from \"./native-graph-sources.mjs\";\n"
+        },
+        {
+          "start": 1830,
+          "previous": "\t\t? (model.copiedGraph.callbacks ? compileCallableWitGraphPackageModel : compileCopiedWitGraphPackageModel)(model.bindingIr, settings)\n",
+          "current": "\t\t? model.copiedGraph.callbacks ? compileCallableWitGraphPackageModel(model.bindingIr, settings)\n\t\t\t: compileCopiedWitGraphPackageModel(model.bindingIr, settings\n\t\t\t\t, { refinementDiagnostics: nativeGraphRefinementDiagnostics(model) })\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "40e8545c86e7e964e72738700db8722a67fc04be5cc8fc117b57fa95ad8ec593",
+      "currentSha256": "4ac3d9938047dc3a71f028a9b51a1982548025854187f76cb4da16f4fb029c6c",
+      "edits": [
+        {
+          "start": 14132,
+          "previous": "",
+          "current": "import { beforeWitGraphDiagnosticSource, witGraphDiagnosticChangedPaths } from \"./wit-graph-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 65840,
+          "previous": "",
+          "current": "\tsource = beforeWitGraphDiagnosticSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 85376,
+          "previous": "",
+          "current": "\t, ...witGraphDiagnosticChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

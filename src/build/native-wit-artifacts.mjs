@@ -9,7 +9,7 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { compileCopiedWitModel } from "../backends/wit/copied-model.mjs";
 import { compileCopiedWitGraphPackageModel } from "../backends/wit/copied-graph-package.mjs";
 import { compileCallableWitGraphPackageModel } from "../backends/wit/callable-graph-package.mjs";
-import { nativeGraphProjectionSources } from "./native-graph-sources.mjs";
+import { nativeGraphProjectionSources, nativeGraphRefinementDiagnostics } from "./native-graph-sources.mjs";
 import { nativeArtifactPaths, readVerifiedNativeComponent, readVerifiedNativeRuntime, verifyNativeFiles } from "./native-artifacts.mjs";
 
 /** Official v42.0.1 archive, also pinned by flake.nix. */
@@ -32,7 +32,9 @@ export const ordinaryWitEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
 	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { copiedGraphs: true, nativeRefinements: true, nativeCheckedRecords: true });
 	const projection = model.copiedGraph
-		? (model.copiedGraph.callbacks ? compileCallableWitGraphPackageModel : compileCopiedWitGraphPackageModel)(model.bindingIr, settings)
+		? model.copiedGraph.callbacks ? compileCallableWitGraphPackageModel(model.bindingIr, settings)
+			: compileCopiedWitGraphPackageModel(model.bindingIr, settings
+				, { refinementDiagnostics: nativeGraphRefinementDiagnostics(model) })
 		: compileCopiedWitModel(model.bindingIr, settings, { callables: true });
 	const prefix = model.copiedGraph ? projection.prefix : projection.surface.prefix;
 	const copiedGraph = model.copiedGraph ? { schemaVersion: 1, layoutSha256: projection.layoutSha256 } : undefined;

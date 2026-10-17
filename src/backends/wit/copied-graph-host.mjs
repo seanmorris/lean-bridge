@@ -77,7 +77,15 @@ static wasmtime_error_t *lb_call_${index}(void *data, wasmtime_context_t *contex
 ${fn.parameters.map((node, position) => `  ${node.name} arg${position} = {0};`).join("\n")}
 ${fn.parameters.map((node, position) => `  if (!lb_graph_decode_${node.index}(&args[${position}], &input, &arg${position})) { failure = wasmtime_error_new("Invalid copied WIT graph, allocation failure or conversion limit"); goto done; }`).join("\n")}
   uint32_t status = ${fn.name}_graph(${fn.parameters.map((_, position) => `&arg${position}`).concat("&value").join(", ")});
-  if (status) { failure = wasmtime_error_new("Native Lean graph call failed"); goto done; }
+${model.refinementDiagnostics ? `  if (status) {
+    /* The adapter resets this one-shot text at every call; missing text keeps the fixed failure. */
+    const char *specific = status == 1 ? ${model.layout.prefix}_graph_error() : NULL;
+    if (specific && (!*specific || !lb_utf8(specific, strlen(specific)))) {
+      lean_bridge_native_runtime_retire();
+      failure = wasmtime_error_new("Malformed native refinement diagnostic; runtime retired"); goto done;
+    }
+    failure = wasmtime_error_new(specific ? specific : "Native Lean graph call failed"); goto done;
+  }` : '  if (status) { failure = wasmtime_error_new("Native Lean graph call failed"); goto done; }'}
   if (!lb_graph_encode_${fn.result.index}(&value, &output, &converted)) {
     if (!output.memory.failure) lean_bridge_native_runtime_retire();
     failure = wasmtime_error_new(output.memory.failure ? "WIT graph result conversion limit or allocation failure" : "Malformed native graph result; runtime retired"); goto done;
