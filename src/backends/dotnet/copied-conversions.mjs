@@ -125,20 +125,20 @@ ${copy.cases.map((branch, index) => `            ${index} => new ${branch.public
 			input = `ArgumentNullException.ThrowIfNull(value);
         var length = Utf8.GetByteCount(value);
         var data = scope.Allocate(length, 1);
-        Utf8.GetBytes(value, new Span<byte>((void*)data, length));
+        Utf8.GetBytes(value, new global::System.Span<byte>((void*)data, length));
         return new ${native} { Data = data, Length = (nuint)length };`;
 			output = "return Utf8.GetString(CheckedBuffer<byte>(value.Data, value.Length, 1));"; break;
 		case "bytes":
 			input = `ArgumentNullException.ThrowIfNull(value);
         var data = scope.Allocate(value.Length, 1);
-        value.AsSpan().CopyTo(new Span<byte>((void*)data, value.Length));
+        value.AsSpan().CopyTo(new global::System.Span<byte>((void*)data, value.Length));
         return new ${native} { Data = data, Length = (nuint)value.Length };`;
 			output = "return CheckedBuffer<byte>(value.Data, value.Length, 1).ToArray();"; break;
 		case "nat": case "int":
 			input = `${copy.scalarName === "nat" ? 'if (value.Sign < 0) throw new ArgumentOutOfRangeException(nameof(value), "Lean Nat cannot be negative");\n        ' : ""}var magnitude = global::System.Numerics.BigInteger.Abs(value);
         var limbs = value.IsZero ? 0 : checked((magnitude.GetByteCount(isUnsigned: true) + 3) / 4);
         var data = scope.Allocate(limbs, sizeof(uint));
-        if (limbs != 0 && !magnitude.TryWriteBytes(new Span<byte>((void*)data, checked(limbs * 4)), out _, isUnsigned: true, isBigEndian: false)) throw new InvalidOperationException("Integer conversion failed");
+        if (limbs != 0 && !magnitude.TryWriteBytes(new global::System.Span<byte>((void*)data, checked(limbs * 4)), out _, isUnsigned: true, isBigEndian: false)) throw new InvalidOperationException("Integer conversion failed");
         return new ${native} { Data = data, Length = (nuint)limbs${copy.scalarName === "int" ? ", Negative = value.Sign < 0 ? (byte)1 : (byte)0" : ""} };`;
 			output = `${copy.scalarName === "int" ? 'if (value.Negative > 1) throw new InvalidOperationException("Invalid native Int sign");\n        ' : ""}var digits = CheckedBuffer<uint>(value.Data, value.Length, 4);
         if (!digits.IsEmpty && digits[^1] == 0) throw new InvalidOperationException("Invalid native integer magnitude");
