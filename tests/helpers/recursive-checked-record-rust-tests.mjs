@@ -4,3 +4,4 @@
  * @file
  */
 import "./recursive-checked-record-rust-fixture-tests.mjs";
+import "./recursive-checked-record-rust-installed-tests.mjs";
