@@ -18,6 +18,11 @@ import {
 	, inheritedCheckedRecordJvmRoutes
 	, inheritedCheckedRecordJvmSelection
 } from "./inherited-checked-record-jvm-fixture.mjs";
+import {
+	inheritedCheckedRecordJvmInputNames
+	, inheritedCheckedRecordJvmProbeSource
+	, inheritedCheckedRecordKotlinNullSource
+} from "./inherited-checked-record-jvm-probe.mjs";
 
 test("inherited checked-record JVM selection is closed and explicit", () => {
 	assert.deepEqual(inheritedCheckedRecordJvmRoutes, ["ordinary", "reviewed"]);
@@ -124,4 +129,31 @@ test("inherited JVM callers select only route labels and API sections", async ()
 			}
 	assert.deepEqual(inheritedCheckedRecordJvmCounts.java
 		, inheritedCheckedRecordJvmCounts.kotlin);
+});
+
+test("inherited JVM probes distinguish API mode and nullability", () => {
+	assert.deepEqual(inheritedCheckedRecordJvmInputNames, [
+		"aliased", "echo", "first", "nested", "normalized", "pair"
+	]);
+	for(const profile of inheritedCheckedRecordJvmProfiles)
+	{
+		const source = inheritedCheckedRecordJvmProbeSource(profile);
+		for(const name of inheritedCheckedRecordJvmInputNames)
+			assert.equal(source.match(new RegExp(
+				profile === "java" ? `Api\\.${name}\\(` : `Api::${name}\\b`
+				, "gu"
+			))?.length, 1);
+		assert.doesNotMatch(source, /produce|produceStamped/u);
+	}
+	for(const mode of inheritedCheckedRecordJvmModes)
+	{
+		const valid = inheritedCheckedRecordKotlinNullSource(mode, false);
+		const invalid = inheritedCheckedRecordKotlinNullSource(mode, true);
+		assert.equal(valid.replaceAll(/Api\.\w+\([^\n]+\)/gu, "CALL")
+			, invalid.replaceAll(/Api\.\w+\([^\n]+\)/gu, "CALL"));
+		assert.equal(valid.includes("Api.first"), mode === "full");
+		assert.equal(invalid.includes("Api.first"), mode === "full");
+		assert.ok(valid.includes("Api.produce"));
+		assert.ok(invalid.includes("Api.produce(null)"));
+	}
 });
