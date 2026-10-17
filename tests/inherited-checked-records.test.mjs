@@ -9,6 +9,8 @@ import { cp, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import "./helpers/inherited-checked-record-browser-ci-policy-tests.mjs";
+import "./helpers/inherited-checked-record-browser-ci-workflow-tests.mjs";
 import { validateExportConfiguration } from "../src/analyze/export-configuration.mjs";
 import { reviewedContractDifference } from "../src/analyze/reviewed-source.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
