@@ -12,7 +12,8 @@ import { nominalSubtypeWitGenerator } from "./nominal-subtype-wit-generators.mjs
 
 const originals = new Map();
 const allowedRoots = [
-	".github/", "config/", "docs/", "schema/", "scripts/", "site/", "src/", "tests/"
+	".github/", "config/", "docs/", "schema/"
+	, "scripts/", "site/", "src/", "tests/"
 ];
 const allowedFiles = new Set(["lean-toolchain", "package-lock.json", "package.json"]);
 const sourceKey = (revision, path) => {
