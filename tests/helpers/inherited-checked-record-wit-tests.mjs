@@ -12,3 +12,4 @@ import "./inherited-checked-record-wit-ci-shell-tests.mjs";
 import "./inherited-checked-record-wit-ci-handoff-tests.mjs";
 import "./inherited-checked-record-wit-ci-workflow-tests.mjs";
 import "./inherited-checked-record-wit-installed-tests.mjs";
+import "./inherited-checked-record-wit-evidence-tests.mjs";
