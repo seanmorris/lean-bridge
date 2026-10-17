@@ -17,7 +17,8 @@ import {
 	, inheritedCheckedRecordName
 } from "./inherited-checked-record-fixture.mjs";
 import {
-	inheritedCheckedRecordNativeConfiguration, inheritedCheckedRecordNativeCounts
+	inheritedCheckedRecordNativeCallerDirectives
+	, inheritedCheckedRecordNativeConfiguration, inheritedCheckedRecordNativeCounts
 	, inheritedCheckedRecordNativeReview
 } from "./inherited-checked-record-native-fixture.mjs";
 import {
@@ -411,8 +412,7 @@ export const checkInheritedCheckedRecordNativeReport = async (read, options) => 
 			, "sourceRemovedBeforeInstallation", "compilerFreeReplay"])
 			assert.equal(item[key], true, key);
 		digest(item.executableSha256);
-		const source = (mode === "result-only" ? "#define INHERITED_CHECKED_RECORD_RESULT_ONLY\n" : "")
-			+ (route === "reviewed" ? '#define NESTED_PARAMETER_PREFIX "value"\n' : "")
+		const source = inheritedCheckedRecordNativeCallerDirectives(route, mode)
 			+ original(producerCommit
 				, `tests/fixtures/inherited-checked-record-consumers/${profile}.${profile}`).toString();
 		assert.equal((await read(`consumers/${profile}.${profile}`)).toString(), source);

@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -19,6 +19,7 @@ import { assertJsonSchema } from "./json-schema.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import {
 	inheritedCheckedRecordNativeCaller
+	, inheritedCheckedRecordNativeCallerDirectives
 	, inheritedCheckedRecordNativeConfiguration
 	, inheritedCheckedRecordNativeCounts
 	, inheritedCheckedRecordNativeModes
@@ -121,6 +122,36 @@ test("inherited checked-record native callers fix every route, mode and result t
 					));
 				}
 			}
+});
+
+test("inherited checked-record native callers share one exact directive spelling per selection", async () => {
+	// The producer and the independent report checker both prepend exactly these bytes.
+	const expected = {
+		"ordinary full": ""
+		, "ordinary result-only": "#define INHERITED_CHECKED_RECORD_RESULT_ONLY\n"
+		, "reviewed full": '#define INHERITED_PARAMETER_PREFIX "value"\n'
+		, "reviewed result-only": "#define INHERITED_CHECKED_RECORD_RESULT_ONLY\n"
+			+ '#define INHERITED_PARAMETER_PREFIX "value"\n'
+	};
+	for(const route of inheritedCheckedRecordNativeRoutes)
+		for(const mode of inheritedCheckedRecordNativeModes)
+			assert.equal(inheritedCheckedRecordNativeCallerDirectives(route, mode)
+				, expected[`${route} ${mode}`], `${route} ${mode}`);
+	for(const profile of inheritedCheckedRecordNativeProfiles)
+	{
+		const consumer = await readFile(
+			`tests/fixtures/inherited-checked-record-consumers/${profile}.${profile}`, "utf8");
+		// Every directive must name a macro the consumer actually reads.
+		for(const name of ["INHERITED_CHECKED_RECORD_RESULT_ONLY", "INHERITED_PARAMETER_PREFIX"])
+			assert.match(consumer, new RegExp(`^#ifn?def ${name}$`, "mu"), `${profile} ${name}`);
+		for(const route of inheritedCheckedRecordNativeRoutes)
+			for(const mode of inheritedCheckedRecordNativeModes)
+				assert.equal(await inheritedCheckedRecordNativeCaller(profile, route, mode)
+					, inheritedCheckedRecordNativeCallerDirectives(route, mode) + consumer
+					, `${profile} ${route} ${mode}`);
+	}
+	for(const [route, mode] of [["nested", "full"], ["ordinary", "partial"]])
+		assert.throws(() => inheritedCheckedRecordNativeCallerDirectives(route, mode));
 });
 
 test("independent inherited checked-record C and C++ callers compile against both APIs", async t => {

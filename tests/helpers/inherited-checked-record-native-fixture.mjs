@@ -123,11 +123,23 @@ export const inheritedCheckedRecordNativeCaller = async (profile, route, mode) =
 	const source = await readFile(
 		`tests/fixtures/inherited-checked-record-consumers/${profile}.${profile}`
 		, "utf8");
+	return inheritedCheckedRecordNativeCallerDirectives(route, mode) + source;
+};
+
+/**
+ * Prepend-only preprocessor directives that select one route and API mode.
+ * The producer and the independent report checker share this single spelling.
+ *
+ * @param route - Ordinary or reviewed source.
+ * @param mode - Full or result-only API.
+ */
+export const inheritedCheckedRecordNativeCallerDirectives = (route, mode) => {
+	assert.ok(inheritedCheckedRecordNativeRoutes.includes(route));
+	assert.ok(inheritedCheckedRecordNativeModes.includes(mode));
 	return (mode === "result-only"
 		? "#define INHERITED_CHECKED_RECORD_RESULT_ONLY\n" : "")
 		+ (route === "reviewed"
-			? '#define INHERITED_PARAMETER_PREFIX "value"\n' : "")
-		+ source;
+			? '#define INHERITED_PARAMETER_PREFIX "value"\n' : "");
 };
 
 /**
