@@ -18,6 +18,7 @@ test("inherited checked-record .NET workflow rejects skipped, unpinned, or narro
 	const source = await readFile(path, "utf8");
 	const replacements = [
 		["        if: always()\n", "        if: success()\n"]
+		, ["          include-hidden-files: true", "          include-hidden-files: false"]
 		, ["          if-no-files-found: error", "          if-no-files-found: ignore"]
 		, ["          retention-days: 30", "          retention-days: 1"]
 		, ["        timeout-minutes: 120", "        timeout-minutes: 1"]

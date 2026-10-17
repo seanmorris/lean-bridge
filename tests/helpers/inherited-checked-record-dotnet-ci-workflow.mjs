@@ -46,7 +46,7 @@ export const assertInheritedCheckedRecordDotnetWorkflow = source => {
 	assert.equal(step(names[2]), "        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n");
 	assert.equal(step(names[5]), "        timeout-minutes: 20\n        uses: actions/setup-dotnet@v6\n        env:\n          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-inherited-checked-record-dotnet-8.0.424\n        with:\n          dotnet-version: '8.0.424'\n");
 	assert.ok(step(names[6]).startsWith("        id: acceptance\n        timeout-minutes: 120\n        shell: bash\n"));
-	assert.equal(step(names[7]), "        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: inherited-checked-record-dotnet-${{ github.sha }}\n          path: |\n            build/inherited-checked-record-dotnet-ci/\n            build/inherited-checked-record-dotnet-toolchain.log\n          if-no-files-found: error\n          retention-days: 30\n");
+	assert.equal(step(names[7]), "        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: inherited-checked-record-dotnet-${{ github.sha }}\n          path: |\n            build/inherited-checked-record-dotnet-ci/\n            build/inherited-checked-record-dotnet-toolchain.log\n          include-hidden-files: true\n          if-no-files-found: error\n          retention-days: 30\n");
 	const commands = workflowRunScalars(source).map(run => run.source.trim());
 	assert.deepEqual(commands, [
 		"sudo apt-get update\nsudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd"
