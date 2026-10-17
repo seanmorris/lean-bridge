@@ -1,0 +1,21 @@
+package lean-bridge:inheritedcheckedrecords@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record span { lo: bridge-value-0, hi: bridge-value-0 }
+  record ticket { to-span: span, word: bridge-value-0 }
+  record stamped { to-ticket: ticket, mark: bridge-value-0 }
+  produce: func(arg0: bridge-value-0) -> ticket;
+  produce-stamped: func(arg0: bridge-value-0) -> stamped;
+}
+
+interface api {
+  use native.{bridge-value-0, span, ticket, stamped};
+  produce: func(arg0: bridge-value-0) -> ticket;
+  produce-stamped: func(arg0: bridge-value-0) -> stamped;
+}
+
+world inheritedcheckedrecords {
+  import native;
+  export api;
+}

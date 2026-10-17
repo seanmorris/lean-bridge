@@ -1,0 +1,304 @@
+{
+  "aliases": [
+    {
+      "id": "lean:InheritedCheckedRecords.TicketAlias",
+      "name": "TicketAlias",
+      "target": {
+        "id": "lean:InheritedCheckedRecords.Ticket",
+        "kind": "named"
+      },
+      "witName": "ticket-alias",
+      "witTarget": "ticket"
+    }
+  ],
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "b9d1c903e52cf6d6b094b6a553b47555782ccee9a940e28ac861d5948175f2de",
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "contracts": {
+    "declarations": [
+      {
+        "id": "lean:InheritedCheckedRecords.aliased",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.TicketAlias",
+              "kind": "named"
+            },
+            "witType": "ticket-alias"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.echo",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:InheritedCheckedRecords.Ticket",
+            "kind": "named"
+          },
+          "witType": "ticket"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.first",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.nested",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Stamped",
+              "kind": "named"
+            },
+            "witType": "stamped"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.normalized",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.pair",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          },
+          {
+            "name": "value1",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-0"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.produce",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:InheritedCheckedRecords.Ticket",
+            "kind": "named"
+          },
+          "witType": "ticket"
+        }
+      },
+      {
+        "id": "lean:InheritedCheckedRecords.produceStamped",
+        "parameters": [
+          {
+            "name": "value0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:InheritedCheckedRecords.Stamped",
+            "kind": "named"
+          },
+          "witType": "stamped"
+        }
+      }
+    ],
+    "records": [
+      {
+        "fields": [
+          {
+            "name": "lo",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          },
+          {
+            "name": "hi",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "id": "lean:InheritedCheckedRecords.Span",
+        "witName": "span"
+      },
+      {
+        "fields": [
+          {
+            "name": "toSpan",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Span",
+              "kind": "named"
+            },
+            "witType": "span"
+          },
+          {
+            "name": "word",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "id": "lean:InheritedCheckedRecords.Ticket",
+        "witName": "ticket"
+      },
+      {
+        "fields": [
+          {
+            "name": "toTicket",
+            "type": {
+              "id": "lean:InheritedCheckedRecords.Ticket",
+              "kind": "named"
+            },
+            "witType": "ticket"
+          },
+          {
+            "name": "mark",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-0"
+          }
+        ],
+        "id": "lean:InheritedCheckedRecords.Stamped",
+        "witName": "stamped"
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "id": "lean:InheritedCheckedRecords.aliased",
+      "witName": "aliased"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.echo",
+      "witName": "echo"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.first",
+      "witName": "first"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.nested",
+      "witName": "nested"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.normalized",
+      "witName": "normalized"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.pair",
+      "witName": "pair"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.produce",
+      "witName": "produce"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.produceStamped",
+      "witName": "produce-stamped"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:inheritedcheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:inheritedcheckedrecords/native@1.0.0",
+    "package": "lean-bridge:inheritedcheckedrecords@1.0.0",
+    "world": "inheritedcheckedrecords"
+  }
+}

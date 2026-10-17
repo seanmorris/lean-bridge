@@ -1,0 +1,662 @@
+{
+  "bindingIrSha256": "0d593028f673374d4876d96843b775db56252a401d7520feed6c7a337e20544c",
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "componentSha256": "d4b1de56e92d43be76a62c2c372a810dc99653eef73d3596df59c6a6b70f5eb2",
+  "ecosystem": "wit-wasi",
+  "files": {
+    "README.md": {
+      "bytes": 9319,
+      "sha256": "9982876391a44e251920712bece5ea5f513afcc6eed220aa9f05bcb31b8e3f08"
+    },
+    "binding-manifest.json": {
+      "bytes": 7317,
+      "sha256": "c08219bbe7dc1690bf19c8cd0b22734153d23dd3058ec6087c1cbb3a8d581f89"
+    },
+    "component/inheritedcheckedrecords.wasm": {
+      "bytes": 3083,
+      "sha256": "d4b1de56e92d43be76a62c2c372a810dc99653eef73d3596df59c6a6b70f5eb2"
+    },
+    "component/inheritedcheckedrecords.wat": {
+      "bytes": 11996,
+      "sha256": "5776c165c7093d959c6f3e6af43460f35c6262f4d1f18edf4fafd65e1967d14c"
+    },
+    "include/doc-wasm.h": {
+      "bytes": 79667,
+      "sha256": "7b66bccb05c26f62d73880f9db1b5dadd55ab9e93555bc80d2d38434336dfcea"
+    },
+    "include/inheritedcheckedrecords.h": {
+      "bytes": 4145,
+      "sha256": "24f3c0695feb145a56a9226d506d21ec385854e2cf1c9eaec8dd4ab18360f427"
+    },
+    "include/inheritedcheckedrecords_wasmtime.h": {
+      "bytes": 1197,
+      "sha256": "64427082255fba0ee6258767893552d96fdd36ebbf15c81748f417c706f286cf"
+    },
+    "include/wasi.h": {
+      "bytes": 9235,
+      "sha256": "06278fe344c9fb668439033b6fbdd11e53fe6065600dcc3a567f427331edd215"
+    },
+    "include/wasm.h": {
+      "bytes": 23219,
+      "sha256": "371ffb914950ebf5374555939dbeecbde35fd52b1c39b06ae9c84df6c8d431d6"
+    },
+    "include/wasmtime.h": {
+      "bytes": 9380,
+      "sha256": "c4a0b95cdd1d46b79e6e06eca71e436163ea226f8d8b15fa6d86a07da8a41ac2"
+    },
+    "include/wasmtime/async.h": {
+      "bytes": 13954,
+      "sha256": "414023002bf027fdcf1f32f97cb24241c9393ff272525f1d390de19100b027d8"
+    },
+    "include/wasmtime/component.h": {
+      "bytes": 324,
+      "sha256": "7230a0a2ef79976c079225a193006289d5538b2d6cb7e6180649c4526b9dd898"
+    },
+    "include/wasmtime/component/component.h": {
+      "bytes": 5709,
+      "sha256": "10508561342b18de23858dcb74945c395c8932bfbaf94ac00ff5d72b80e82e25"
+    },
+    "include/wasmtime/component/func.h": {
+      "bytes": 2856,
+      "sha256": "4129fe2706381e94b14d165f9f143faad30bafe135f46b26d857e729f1d9b3c9"
+    },
+    "include/wasmtime/component/instance.h": {
+      "bytes": 2428,
+      "sha256": "5f2928c0fa8a5b016560d2582b489ddeca28a1200227a7cd351ab4b16d2c8c3f"
+    },
+    "include/wasmtime/component/linker.h": {
+      "bytes": 7678,
+      "sha256": "f6cf1eb863c3d4bdc5743cb8b5fd8f7cba613d64c1c5daa6d685a7314772360c"
+    },
+    "include/wasmtime/component/types.h": {
+      "bytes": 419,
+      "sha256": "178795777a58f5ec7138a5932498904ed37fd37a1935b58f739fbd9e48a16614"
+    },
+    "include/wasmtime/component/types/component.h": {
+      "bytes": 6411,
+      "sha256": "92384d95d3f49c47c094e4da0f5fa2a4396c2ed012d46621171b02f446fdc7bc"
+    },
+    "include/wasmtime/component/types/func.h": {
+      "bytes": 2021,
+      "sha256": "217cb6fc6e86685dd5dc49604a47eb4b9b83e18ba3fd9dee11de54fc2f4d0e3d"
+    },
+    "include/wasmtime/component/types/instance.h": {
+      "bytes": 2065,
+      "sha256": "c1297d66711bfc896a969f8fed5f70c4ba1d8b43075b7ac19cf74a3aa1c3faba"
+    },
+    "include/wasmtime/component/types/module.h": {
+      "bytes": 1930,
+      "sha256": "705554a35f8fa35154e32b28d4c508a26739a594cbc38a3720193b5cdae2a48b"
+    },
+    "include/wasmtime/component/types/resource.h": {
+      "bytes": 2363,
+      "sha256": "29e8ea2ef512969f9bf82700d932d89cd78437c31c2a9c4b9919f2b0581fcdd9"
+    },
+    "include/wasmtime/component/types/val.h": {
+      "bytes": 21121,
+      "sha256": "a4e15d61ac405f5d08aa5d6fe7b69815a194d8b1f96496409d680a8cff64d706"
+    },
+    "include/wasmtime/component/val.h": {
+      "bytes": 19882,
+      "sha256": "c1080a34feea3711fb21c184e661376f76ac83853568b883ed734d69454353f3"
+    },
+    "include/wasmtime/conf.h": {
+      "bytes": 1190,
+      "sha256": "b63a6236773a02d4acc7d1b85433a3f90a65ed50ccbd4ff6c7a8c83a909d1da6"
+    },
+    "include/wasmtime/config.h": {
+      "bytes": 28137,
+      "sha256": "2bada4fe74d4d48b592a29c33462c2c2f22d00e7ece8eb3d9a73901c5ef06009"
+    },
+    "include/wasmtime/engine.h": {
+      "bytes": 1222,
+      "sha256": "026633dbd9328db187ccb86097479c02a7278de9eef59ae6d0eeb11d5b2868fa"
+    },
+    "include/wasmtime/error.h": {
+      "bytes": 2420,
+      "sha256": "6905acdfe81f5a7d31c49ac1af8221b3d98b61d5341b91a4a8232f2466dce8f0"
+    },
+    "include/wasmtime/extern.h": {
+      "bytes": 6028,
+      "sha256": "37e5062f8672ee07a9334f6e193a1875f194b9e2ea5a67dee75b708f28259d7c"
+    },
+    "include/wasmtime/func.h": {
+      "bytes": 12787,
+      "sha256": "9a4fee4a295a2b19a141cf84be4ceb9355bfc25394ae761d7f780ac49f2d65ad"
+    },
+    "include/wasmtime/global.h": {
+      "bytes": 2521,
+      "sha256": "0a328daecce4090157e99fbbf8398fce0ed78b30c9b7dbdfeb10f247a51e543d"
+    },
+    "include/wasmtime/instance.h": {
+      "bytes": 6356,
+      "sha256": "c476b65bee52ebf7bcbdd291e0c8c036496cff3c09e9ea61c7f4577fa7c736d2"
+    },
+    "include/wasmtime/linker.h": {
+      "bytes": 12873,
+      "sha256": "6549b3ee8d7264d4c8119682dc09e702ba2e0979fadff74f66b70c5d294159f3"
+    },
+    "include/wasmtime/memory.h": {
+      "bytes": 6005,
+      "sha256": "ebd6c718c6e9d2ee5beb1c32bdca401e281773586e43e5df8d2e02b7980f4ad2"
+    },
+    "include/wasmtime/module.h": {
+      "bytes": 5729,
+      "sha256": "b7ba6f0a0b15c5f252f63697707dbb9c0c854a65694b4b134bec13e7c43864e4"
+    },
+    "include/wasmtime/profiling.h": {
+      "bytes": 4400,
+      "sha256": "92ac5516a561bd062aaf302051373512970a0ea9641836a47993d32b1ab8b205"
+    },
+    "include/wasmtime/sharedmemory.h": {
+      "bytes": 3027,
+      "sha256": "521d632a5f5ee3e28125b22fdf4f517edb2965a49ebd838278d620368377a1fe"
+    },
+    "include/wasmtime/store.h": {
+      "bytes": 9653,
+      "sha256": "f96ef6fb062e8358d0a46a780283a8f7dc1733a14998b41d8aa8c536f45e5b51"
+    },
+    "include/wasmtime/table.h": {
+      "bytes": 3924,
+      "sha256": "1d4313d41a85989ae00c8c744c2e2415ac0694ea3bc3fb15d51cddf5fd74d1ba"
+    },
+    "include/wasmtime/trap.h": {
+      "bytes": 6726,
+      "sha256": "b786bf286f69b11c6b4e91ec9c40eb700b1791422d1bf501fa666c057e369106"
+    },
+    "include/wasmtime/val.h": {
+      "bytes": 18939,
+      "sha256": "4db26e438a8b66f237f19fc9e669f1d7f3f3a0a93cf49ca4fce977f3e16d7cd1"
+    },
+    "include/wasmtime/wat.h": {
+      "bytes": 1153,
+      "sha256": "7533f9c25ee267c88ea64e21a7550bf28585183184a29c575ceb419eb711fe9f"
+    },
+    "lib/libcomponent_95491bb762dabafaf0ed.so": {
+      "bytes": 74832,
+      "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+    },
+    "lib/libinheritedcheckedrecords.so": {
+      "bytes": 49328,
+      "sha256": "ed27e029cdd050b0559759e02c4904f4a3772d880b59c92f2b40066f429c4628"
+    },
+    "lib/libinheritedcheckedrecords_wasmtime.so": {
+      "bytes": 48296,
+      "sha256": "518565821711655b94a53f5bc83350d60143f8c581e0fd194cb0832c2c9ecabc"
+    },
+    "lib/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lib/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lib/libwasmtime.so": {
+      "bytes": 22277728,
+      "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+    },
+    "lib/pkgconfig/inheritedcheckedrecords-wit.pc": {
+      "bytes": 295,
+      "sha256": "90281dd91baaf106ab39b6f1539d593deb6f49c655b42943e1a90ee72d42654d"
+    },
+    "native-wit-adapter.json": {
+      "bytes": 14023,
+      "sha256": "7913efdcc39a5d4afcf3f5f9d0255259b99b09edbd452bdaf81ef84ee2909418"
+    },
+    "package-metadata.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "share/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "share/lean-bridge/component/artifacts.json": {
+      "bytes": 1534,
+      "sha256": "298629487bf18f23d25f2a24a8db8d505e03b0c1c1d0f086431b9bad232c5aeb"
+    },
+    "share/lean-bridge/component/binding-ir.json": {
+      "bytes": 42684,
+      "sha256": "bd768004c6adc93bc05d4ac59624d7bb0b848881fec451dbe83006ab2771fa22"
+    },
+    "share/lean-bridge/component/component.h": {
+      "bytes": 2990,
+      "sha256": "7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c"
+    },
+    "share/lean-bridge/component/generated.lean": {
+      "bytes": 15033,
+      "sha256": "1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89"
+    },
+    "share/lean-bridge/component/metadata.json": {
+      "bytes": 96880,
+      "sha256": "daa1e0a5d947fa395c1485e05fdfef257e4da8e81ee402c373c00d71b00dece5"
+    },
+    "share/lean-bridge/component/model.json": {
+      "bytes": 123198,
+      "sha256": "b3ef95defdf8807c745ca2a52ca57f8e50b9f57703bce390d34c9fd6202d98f9"
+    },
+    "share/lean-bridge/component/native-component.json": {
+      "bytes": 25103,
+      "sha256": "0bf70f42a9137726dbcb5a06c1319cef9ff220ff9e6d319c065eaa4d7d681d3d"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "share/lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/licenses/Wasmtime-LICENSE": {
+      "bytes": 12243,
+      "sha256": "268872b9816f90fd8e85db5a28d33f8150ebb8dd016653fb39ef1f94f2686bc5"
+    },
+    "share/lean-bridge/licenses/source-notices.json": {
+      "bytes": 12268,
+      "sha256": "dd9890da8e31d374dc4db3be588253a9f75fdd5a6ea8b8786b6230e7d5465a5b"
+    },
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/native-c-adapter.json": {
+      "bytes": 1423,
+      "sha256": "437464c5cae23ea1865e3588338b4a0409bfffb3dc1cb5f8c330d47af4f511a4"
+    },
+    "share/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "src/inheritedcheckedrecords_wasmtime.c": {
+      "bytes": 47867,
+      "sha256": "537eb8cfb3a771eaccab151d6fb5b756582c3fac120f42d5314d4dda78e31d4f"
+    },
+    "wit/inheritedcheckedrecords.wit": {
+      "bytes": 1281,
+      "sha256": "374bac1579499c80a2530de5c12c0591c879d04c83ba4baac95d65bd68c6f2be"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-wit-package",
+  "name": "inheritedcheckedrecords",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "d077f19379983a70cab024e344794fda179de7301ed9896440ab8f72e62f4001",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"InheritedCheckedRecords.aliased\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.nested\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkStamped\",\n            \"fields\": [\n              {\n                \"name\": \"toTicket\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                  \"fields\": [\n                    {\n                      \"name\": \"toSpan\",\n                      \"refinement\": {\n                        \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                        \"fields\": [\n                          {\n                            \"name\": \"lo\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"hi\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"kind\": \"checked-record\",\n                        \"name\": \"InheritedCheckedRecords.Span\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Ticket\"\n                }\n              },\n              {\n                \"name\": \"mark\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Stamped\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.normalized\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.pair\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"InheritedCheckedRecords.first\",\n    \"InheritedCheckedRecords.normalized\",\n    \"InheritedCheckedRecords.pair\",\n    \"InheritedCheckedRecords.aliased\",\n    \"InheritedCheckedRecords.nested\",\n    \"InheritedCheckedRecords.echo\",\n    \"InheritedCheckedRecords.produce\",\n    \"InheritedCheckedRecords.produceStamped\"\n  ],\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"wit-wasi\": {\n      \"name\": \"inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 141464,
+          "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+          "sha256": "e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48"
+        },
+        "module": "InheritedCheckedRecords",
+        "source": {
+          "bytes": 3011,
+          "path": "InheritedCheckedRecords.lean",
+          "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "InheritedCheckedRecords.aliased": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.echo": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.first": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.nested": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkStamped",
+                "fields": [
+                  {
+                    "name": "toTicket",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkTicket",
+                      "fields": [
+                        {
+                          "name": "toSpan",
+                          "refinement": {
+                            "constructor": "InheritedCheckedRecords.mkSpan",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "InheritedCheckedRecords.Span"
+                          }
+                        },
+                        {
+                          "name": "word",
+                          "refinement": {
+                            "constructor": "InheritedCheckedRecords.mkWord"
+                          }
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "mark",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Stamped"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.normalized": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.pair": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "InheritedCheckedRecords"
+      ],
+      "exports": [
+        "InheritedCheckedRecords.first",
+        "InheritedCheckedRecords.normalized",
+        "InheritedCheckedRecords.pair",
+        "InheritedCheckedRecords.aliased",
+        "InheritedCheckedRecords.nested",
+        "InheritedCheckedRecords.echo",
+        "InheritedCheckedRecords.produce",
+        "InheritedCheckedRecords.produceStamped"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "9689ff501b9d1784c108752ac6685b555772c993086b8f0a9df90ed9f9133c42",
+        "modules": [
+          {
+            "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+            "name": "InheritedCheckedRecords",
+            "sourcePath": "InheritedCheckedRecords.lean",
+            "sourceSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "InheritedCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "dd9890da8e31d374dc4db3be588253a9f75fdd5a6ea8b8786b6230e7d5465a5b",
+    "sourceTreeSha256": "1a16294d7f313da8fc934ca8b458dbf97c63e6d0f1d7c3278b270dd6aa01d1be"
+  },
+  "version": "1.0.0",
+  "wasmtime": "42.0.1"
+}

@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordWitEvidence
 	= "docs/evidence/inherited-checked-record-wit-20261017";
-export const inheritedCheckedRecordWitProducer = null;
-export const inheritedCheckedRecordWitChecker = null;
-export const inheritedCheckedRecordWitArchiver = null;
+export const inheritedCheckedRecordWitProducer
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordWitChecker
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordWitArchiver
+	= "e2d1879c521575dac34c4142e07cf4b9930e7a04";
 export const inheritedCheckedRecordWitLoadCeiling = 8;
 export const inheritedCheckedRecordWitSelections = Object.freeze([
 	["ordinary", "full"], ["reviewed", "full"]

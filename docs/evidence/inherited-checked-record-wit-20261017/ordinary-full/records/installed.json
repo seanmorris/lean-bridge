@@ -1,0 +1,35 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "4cebcf3a5abc45cc06894f3489fe698e5d9f7b10a7134900bc56b73359c3f33c",
+    "executable": {
+      "bytes": 30656,
+      "sha256": "1796ae9805180279d9ad9370eb85307b1019ae1bac56cc316dda8ba73b4691b0"
+    },
+    "packageFileSetSha256": "20320a89a50d0211d65d2562bab1126d6ffdc0ac47bbbed469e90efb0336dc70",
+    "receiptSha256": "ac8c2d8ef70a349ab7d6232fa2a8c150a648c12dae1f0d4eb4e4138f50e32945"
+  },
+  "command": "/home/runner/work/_temp/lean-bridge-inherited-wit-installed-liDkml/consumer/consumer",
+  "counts": {
+    "checks": 11592,
+    "hostRejections": 7,
+    "recoveries": 256,
+    "rejections": 1286,
+    "rounds": 256,
+    "snapshots": 3604
+  },
+  "cwd": "/home/runner/work/_temp/lean-bridge-inherited-wit-installed-liDkml/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":11592,\"rejections\":1286,\"hostRejections\":7,\"recoveries\":256,\"snapshots\":3604,\"rounds\":256}\n"
+  }
+}

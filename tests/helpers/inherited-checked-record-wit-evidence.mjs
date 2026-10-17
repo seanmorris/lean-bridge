@@ -25,7 +25,8 @@ import {
 
 export { inheritedCheckedRecordWitEvidence } from "./inherited-checked-record-wit-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordWitEvidenceSha256 = null;
+export const inheritedCheckedRecordWitEvidenceSha256
+	= "f3316695858e718babd2fed783cacef0f209a92f9a9e75f6a1b8ce97e85942ea";
 
 const safePath = path => typeof path === "string"
 	&& /^[A-Za-z0-9_@.+$/[\]-]+$/u.test(path) && !path.startsWith("/")

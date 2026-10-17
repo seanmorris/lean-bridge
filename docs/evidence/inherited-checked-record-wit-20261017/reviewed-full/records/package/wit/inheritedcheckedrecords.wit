@@ -1,0 +1,34 @@
+package lean-bridge:inheritedcheckedrecords@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record span { lo: bridge-value-0, hi: bridge-value-0 }
+  record ticket { to-span: span, word: bridge-value-0 }
+  record stamped { to-ticket: ticket, mark: bridge-value-0 }
+  type ticket-alias = ticket;
+  aliased: func(value0: ticket-alias) -> bridge-value-0;
+  echo: func(value0: ticket) -> ticket;
+  first: func(value0: ticket) -> bridge-value-0;
+  nested: func(value0: stamped) -> bridge-value-0;
+  normalized: func(value0: ticket) -> bridge-value-0;
+  pair: func(value0: ticket, value1: ticket) -> bridge-value-0;
+  produce: func(value0: bridge-value-0) -> ticket;
+  produce-stamped: func(value0: bridge-value-0) -> stamped;
+}
+
+interface api {
+  use native.{bridge-value-0, span, ticket, stamped, ticket-alias};
+  aliased: func(value0: ticket-alias) -> bridge-value-0;
+  echo: func(value0: ticket) -> ticket;
+  first: func(value0: ticket) -> bridge-value-0;
+  nested: func(value0: stamped) -> bridge-value-0;
+  normalized: func(value0: ticket) -> bridge-value-0;
+  pair: func(value0: ticket, value1: ticket) -> bridge-value-0;
+  produce: func(value0: bridge-value-0) -> ticket;
+  produce-stamped: func(value0: bridge-value-0) -> stamped;
+}
+
+world inheritedcheckedrecords {
+  import native;
+  export api;
+}

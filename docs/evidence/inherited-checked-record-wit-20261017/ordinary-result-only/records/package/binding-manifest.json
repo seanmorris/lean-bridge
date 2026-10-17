@@ -1,0 +1,28 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "5002fefd508b685a43788cfe10995b910bac3de405f5c8f56750f40cf96729b0",
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:InheritedCheckedRecords.produce",
+      "witName": "produce"
+    },
+    {
+      "id": "lean:InheritedCheckedRecords.produceStamped",
+      "witName": "produce-stamped"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:inheritedcheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:inheritedcheckedrecords/native@1.0.0",
+    "package": "lean-bridge:inheritedcheckedrecords@1.0.0",
+    "world": "inheritedcheckedrecords"
+  }
+}
