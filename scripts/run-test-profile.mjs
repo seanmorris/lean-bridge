@@ -49,7 +49,15 @@ if(selected.length === 0)
 }
 process.stderr.write(`test_profile=${requested}\ntest_count=${selected.length}\n`);
 
-const child = spawn(process.execPath, ["--test", ...selected], { cwd: root, env: process.env, stdio: "inherit" });
+const boundedHostedCore = requested === "contract" && process.env.CI === "true";
+const childEnvironment = boundedHostedCore ? {
+	...process.env
+	, NODE_OPTIONS: [process.env.NODE_OPTIONS, "--max-old-space-size=4096"]
+		.filter(Boolean).join(" ")
+} : process.env;
+const child = spawn(process.execPath, [
+	"--test", ...boundedHostedCore ? ["--test-concurrency=2"] : [], ...selected
+], { cwd: root, env: childEnvironment, stdio: "inherit" });
 child.once("error", error => {
 	process.stderr.write(`${error.stack ?? error.message}\n`);
 	process.exitCode = 1;

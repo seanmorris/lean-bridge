@@ -20,6 +20,23 @@ const assertCoreQualityBudget = source => {
 	assert.ok(!/^\s+continue-on-error:\s*true\s*$/mu.test(source), "Core quality failures must remain fatal");
 };
 
+const assertCoreProcessBudget = source => {
+	assert.equal([...source.matchAll(/requested === "contract" && process\.env\.CI === "true"/gu)].length, 1
+		, "Only the hosted Core profile must use the resource bound");
+	assert.equal([...source.matchAll(/"--test-concurrency=2"/gu)].length, 1
+		, "Hosted Core must run at most two contract files concurrently");
+	assert.equal([...source.matchAll(/"--max-old-space-size=4096"/gu)].length, 1
+		, "Each hosted Core process must have a visible 4 GiB heap failure bound");
+	assert.match(source, /const childEnvironment = boundedHostedCore \? \{\n\t\.\.\.process\.env\n\t, NODE_OPTIONS:/u
+		, "Hosted Core must bound only the hosted contract environment");
+	assert.match(source, /NODE_OPTIONS: \[process\.env\.NODE_OPTIONS, "--max-old-space-size=4096"\]\s*\.filter\(Boolean\)\.join\(" "\)/u
+		, "Hosted Core must preserve prior Node options and append its reviewed heap bound");
+	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \["--test-concurrency=2"\] : \[\], \.\.\.selected\s*\]/u
+		, "Hosted Core must execute every selected contract test under the bound");
+	assert.match(source, /\], \{ cwd: root, env: childEnvironment, stdio: "inherit" \}\);/u
+		, "Hosted Core must spawn the child with the bounded environment");
+};
+
 test("Core quality has a bounded budget for the complete evidence contract", async () => {
 	const source = await readFile(".github/workflows/quality.yml", "utf8");
 	assertCoreQualityBudget(source);
@@ -37,5 +54,24 @@ test("Core quality has a bounded budget for the complete evidence contract", asy
 	]) {
 		assert.notEqual(changed, source);
 		assert.throws(() => assertCoreQualityBudget(changed));
+	}
+});
+
+test("Hosted Core bounds concurrent history replay without truncating the profile", async () => {
+	const source = await readFile("scripts/run-test-profile.mjs", "utf8");
+	assertCoreProcessBudget(source);
+	for(const changed of [
+		source.replace("--test-concurrency=2", "--test-concurrency=3")
+		, source.replace("--max-old-space-size=4096", "--max-old-space-size=8192")
+		, source.replace(" && process.env.CI === \"true\"", "")
+		, source.replace("...selected", "...selected.slice(0, 10)")
+		, source.replace("env: childEnvironment", "env: process.env")
+		, source.replace("boundedHostedCore ? {", "!boundedHostedCore ? {")
+		, source.replace("[process.env.NODE_OPTIONS, \"--max-old-space-size=4096\"]"
+			, "[\"--max-old-space-size=4096\", process.env.NODE_OPTIONS]")
+		, source.replace("...boundedHostedCore ? [\"--test-concurrency=2\"] : []", "...[]")
+	]) {
+		assert.notEqual(changed, source);
+		assert.throws(() => assertCoreProcessBudget(changed));
 	}
 });
