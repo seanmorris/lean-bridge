@@ -291,6 +291,7 @@ const profileManifest = Object.freeze({
 		, "inherited-checked-record-dotnet-source-history"
 		, "dotnet-span-name-contract"
 		, "inherited-checked-record-jvm"
+		, "inherited-checked-record-jvm-source-history"
 		, "inherited-checked-record-native"
 		, "inherited-checked-record-npm-source"
 		, "inherited-checked-record-test-registration-history"
