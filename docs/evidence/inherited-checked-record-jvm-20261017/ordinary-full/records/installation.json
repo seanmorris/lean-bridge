@@ -1,0 +1,651 @@
+{
+  "artifact": {
+    "bytes": 51427942,
+    "path": "archives/inheritedcheckedrecords-1.0.0.jar",
+    "sha256": "7e3c9ff8e1073dd87f9f9258f6049c4290334c0b7155071f8c4b0b148f4f45d3"
+  },
+  "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+  "receipt": {
+    "bindingIrSha256": "9d8c76d5c8f126ed2b3ec0a68c31ecb56b160f3c2044932d421ccc8fe326282e",
+    "compiledProjectionSha256": "03477bf4a25464d8c653a6149dce293cd5c656c6e33abf05c7910b107dc2341c",
+    "component": {
+      "id": "inheritedcheckedrecords@1.0.0",
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "ecosystem": "maven",
+    "files": {
+      "META-INF/MANIFEST.MF": {
+        "bytes": 23,
+        "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+      },
+      "META-INF/lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "META-INF/lean-bridge/component/artifacts.json": {
+        "bytes": 1534,
+        "sha256": "34580aa0696664b3615e4d07b99db251c4cd277bcbfd237e685c9e4d16763f1c"
+      },
+      "META-INF/lean-bridge/component/binding-ir.json": {
+        "bytes": 42684,
+        "sha256": "684590267982b2cad2f9b3e1c4ae2cc33f500f03128f1ed99e333777f07c7e43"
+      },
+      "META-INF/lean-bridge/component/component.h": {
+        "bytes": 2990,
+        "sha256": "7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c"
+      },
+      "META-INF/lean-bridge/component/generated.lean": {
+        "bytes": 15033,
+        "sha256": "1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89"
+      },
+      "META-INF/lean-bridge/component/metadata.json": {
+        "bytes": 96880,
+        "sha256": "daa1e0a5d947fa395c1485e05fdfef257e4da8e81ee402c373c00d71b00dece5"
+      },
+      "META-INF/lean-bridge/component/model.json": {
+        "bytes": 123210,
+        "sha256": "e23d023b0fe010a70107e77b9003f343c69ee4a8db5386a7d9d0be7733c2e19b"
+      },
+      "META-INF/lean-bridge/component/native-component.json": {
+        "bytes": 25115,
+        "sha256": "d45ad7d38a7eb80f6de85473586bc42425f222bf2fcffa3484fd68fbd32e87d6"
+      },
+      "META-INF/lean-bridge/jvm/binding-manifest.json": {
+        "bytes": 4762,
+        "sha256": "53fe8a616c99bbcd738ac90983090931ae56fb6d63059ca82f861f0b9cb9b466"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java": {
+        "bytes": 4229,
+        "sha256": "d4d7b357d7699e7c7f0c015b11e95fb8e8436d2f0def3ae7f8d5f89c621cfc29"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java": {
+        "bytes": 1277,
+        "sha256": "b6d0488cae6be3f021826d8b842b5417df2b784f65ef38cc57a8f37046f2ec75"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java": {
+        "bytes": 13813,
+        "sha256": "17afe5143ffe1cac714cb83f446b432a7a9dc55b8abfc3aa1d28fffe1c06ac56"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java": {
+        "bytes": 253,
+        "sha256": "60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java": {
+        "bytes": 13599,
+        "sha256": "678fd355f676c5a983843184cb0d84ba155c57a15f6daf4e022d576852607983"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java": {
+        "bytes": 12927,
+        "sha256": "ec125bbb2184feb6f2e1a39264a1f56dc124e8ea81394963976ae6c26d515eae"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java": {
+        "bytes": 556,
+        "sha256": "5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java": {
+        "bytes": 638,
+        "sha256": "258ae323f4a10fc4a689bcb93721fecec9e40e047fe7ed49fa9563ca2e1fd0fa"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java": {
+        "bytes": 676,
+        "sha256": "fd6dbc0a50b513f26508ae29c34d03af8c099096ca640fae95caf3316a3bf015"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java": {
+        "bytes": 659,
+        "sha256": "3b7b1a0d3fc971522857e9423b2d2a75561184ccf84197177f5f00efe10694df"
+      },
+      "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java": {
+        "bytes": 78,
+        "sha256": "af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt": {
+        "bytes": 894,
+        "sha256": "cabdcd6846b37513bb0ee81771bf8338a7cb92bb2fa0cb4c2ec0eb2c484ea100"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt": {
+        "bytes": 2800,
+        "sha256": "81f70e58a6bc41252b708574e4d6e24d442e9f096a474d3df038d9b7d6a2c6e0"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt": {
+        "bytes": 160,
+        "sha256": "e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt": {
+        "bytes": 690,
+        "sha256": "12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt": {
+        "bytes": 831,
+        "sha256": "e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt": {
+        "bytes": 812,
+        "sha256": "37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522"
+      },
+      "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt": {
+        "bytes": 130,
+        "sha256": "dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/licenses/source-notices.json": {
+        "bytes": 12280,
+        "sha256": "b21728d64e3c183895cc49b5048a523e193dd42b5fc7804b1630124b3e31b63e"
+      },
+      "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "META-INF/lean-bridge/native-c-adapter.json": {
+        "bytes": 1423,
+        "sha256": "a4f4f4beaae65304ee7c9dd1a362fd18f2b038198d980868bef0e6c16afaa933"
+      },
+      "META-INF/lean-bridge/native-jvm.json": {
+        "bytes": 15059,
+        "sha256": "03477bf4a25464d8c653a6149dce293cd5c656c6e33abf05c7910b107dc2341c"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so": {
+        "bytes": 74832,
+        "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so": {
+        "bytes": 49328,
+        "sha256": "ed27e029cdd050b0559759e02c4904f4a3772d880b59c92f2b40066f429c4628"
+      },
+      "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+        "bytes": 21632,
+        "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+      },
+      "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "META-INF/lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      "META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module": {
+        "bytes": 104,
+        "sha256": "aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a"
+      },
+      "META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml": {
+        "bytes": 633,
+        "sha256": "f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30"
+      },
+      "README.md": {
+        "bytes": 8142,
+        "sha256": "d86520c2d102d4801e3a71ed68f28ae7ba6e910e06cdc99f037eacb9e016f55a"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Api.class": {
+        "bytes": 1201,
+        "sha256": "9cf9ce4098e2e07bf3f0caf055af84c25e9a3387183d05a5f27b37647c5c1123"
+      },
+      "org/leanbridge/inheritedcheckedrecords/KotlinBridge.class": {
+        "bytes": 1461,
+        "sha256": "d76e3fdedeba0d0a05de05e61b652aa7e019a153312ad614009ad267e5ec9b08"
+      },
+      "org/leanbridge/inheritedcheckedrecords/KotlinCalls.class": {
+        "bytes": 1869,
+        "sha256": "2261d3283cf55b50d28e388c47657c9f83bd96261f871d254498644d34660f7b"
+      },
+      "org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class": {
+        "bytes": 12802,
+        "sha256": "d1b244e62626b9382ea087657e2af27e0da86274a8f34424c89848aa6c95873b"
+      },
+      "org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class": {
+        "bytes": 288,
+        "sha256": "5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83"
+      },
+      "org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class": {
+        "bytes": 13420,
+        "sha256": "c93452952d0570880318d9e790807599115b01308a7b1d3109e57623a548cc28"
+      },
+      "org/leanbridge/inheritedcheckedrecords/NativeAssets.class": {
+        "bytes": 438,
+        "sha256": "b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Runtime.class": {
+        "bytes": 12649,
+        "sha256": "3d9bf01dec217f2d574761db67944e9513e7b941e3eb46b4a0bd7f4c1ac4aa76"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Scope.class": {
+        "bytes": 676,
+        "sha256": "13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Span.class": {
+        "bytes": 1398,
+        "sha256": "2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Stamped.class": {
+        "bytes": 1547,
+        "sha256": "60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Ticket.class": {
+        "bytes": 1535,
+        "sha256": "3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac"
+      },
+      "org/leanbridge/inheritedcheckedrecords/Unit.class": {
+        "bytes": 918,
+        "sha256": "faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class": {
+        "bytes": 3989,
+        "sha256": "813f8dcacdabdbe865e0c26fba1a2c1e2e37256a8ed05ce0f235917ab903c17a"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/Api.class": {
+        "bytes": 2745,
+        "sha256": "a1b746b0c16be093034489260c81534fe08954417b7c1a8a3556188c56442892"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class": {
+        "bytes": 481,
+        "sha256": "47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/Span.class": {
+        "bytes": 1907,
+        "sha256": "f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class": {
+        "bytes": 2082,
+        "sha256": "78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class": {
+        "bytes": 2071,
+        "sha256": "8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164"
+      },
+      "org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class": {
+        "bytes": 421,
+        "sha256": "8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2"
+      }
+    },
+    "glibcMinimumVersion": "2.38",
+    "kind": "lean-bridge-ordinary-maven-package",
+    "kotlin": {
+      "namespace": "org.leanbridge.inheritedcheckedrecords.kotlin",
+      "standardLibraryVersion": "2.2.0"
+    },
+    "name": "org.leanbridge:inheritedcheckedrecords",
+    "namespace": "org.leanbridge.inheritedcheckedrecords",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+    "schemaVersion": 1,
+    "sourceIdentity": {
+      "exportConfigurationSha256": "801f7b7100d31cf67268bef80579b279dfc743727cb0fa64d667aefc8fe357f3",
+      "exportConfigurationSource": "{\n  \"contracts\": {\n    \"InheritedCheckedRecords.aliased\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.nested\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkStamped\",\n            \"fields\": [\n              {\n                \"name\": \"toTicket\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                  \"fields\": [\n                    {\n                      \"name\": \"toSpan\",\n                      \"refinement\": {\n                        \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                        \"fields\": [\n                          {\n                            \"name\": \"lo\",\n                            \"refinement\": null\n                          },\n                          {\n                            \"name\": \"hi\",\n                            \"refinement\": null\n                          }\n                        ],\n                        \"kind\": \"checked-record\",\n                        \"name\": \"InheritedCheckedRecords.Span\"\n                      }\n                    },\n                    {\n                      \"name\": \"word\",\n                      \"refinement\": {\n                        \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                      }\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Ticket\"\n                }\n              },\n              {\n                \"name\": \"mark\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Stamped\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.normalized\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"InheritedCheckedRecords.pair\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        },\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n            \"fields\": [\n              {\n                \"name\": \"toSpan\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                  \"fields\": [\n                    {\n                      \"name\": \"lo\",\n                      \"refinement\": null\n                    },\n                    {\n                      \"name\": \"hi\",\n                      \"refinement\": null\n                    }\n                  ],\n                  \"kind\": \"checked-record\",\n                  \"name\": \"InheritedCheckedRecords.Span\"\n                }\n              },\n              {\n                \"name\": \"word\",\n                \"refinement\": {\n                  \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                }\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"InheritedCheckedRecords.Ticket\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"InheritedCheckedRecords.first\",\n    \"InheritedCheckedRecords.normalized\",\n    \"InheritedCheckedRecords.pair\",\n    \"InheritedCheckedRecords.aliased\",\n    \"InheritedCheckedRecords.nested\",\n    \"InheritedCheckedRecords.echo\",\n    \"InheritedCheckedRecords.produce\",\n    \"InheritedCheckedRecords.produceStamped\"\n  ],\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "extractorSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+      "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+      "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "leanVersion": "4.32.2",
+      "modules": [
+        {
+          "interface": {
+            "bytes": 141464,
+            "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+            "sha256": "e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48"
+          },
+          "module": "InheritedCheckedRecords",
+          "source": {
+            "bytes": 3011,
+            "path": "InheritedCheckedRecords.lean",
+            "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+          }
+        }
+      ],
+      "request": {
+        "arities": [],
+        "contracts": {
+          "InheritedCheckedRecords.aliased": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "InheritedCheckedRecords.echo": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "InheritedCheckedRecords.first": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "InheritedCheckedRecords.nested": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkStamped",
+                  "fields": [
+                    {
+                      "name": "toTicket",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkTicket",
+                        "fields": [
+                          {
+                            "name": "toSpan",
+                            "refinement": {
+                              "constructor": "InheritedCheckedRecords.mkSpan",
+                              "fields": [
+                                {
+                                  "name": "lo",
+                                  "refinement": null
+                                },
+                                {
+                                  "name": "hi",
+                                  "refinement": null
+                                }
+                              ],
+                              "kind": "checked-record",
+                              "name": "InheritedCheckedRecords.Span"
+                            }
+                          },
+                          {
+                            "name": "word",
+                            "refinement": {
+                              "constructor": "InheritedCheckedRecords.mkWord"
+                            }
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Ticket"
+                      }
+                    },
+                    {
+                      "name": "mark",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Stamped"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "InheritedCheckedRecords.normalized": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "InheritedCheckedRecords.pair": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.mkTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.mkWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "constructor": "InheritedCheckedRecords.normalizeTicket",
+                  "fields": [
+                    {
+                      "name": "toSpan",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeSpan",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "InheritedCheckedRecords.Span"
+                      }
+                    },
+                    {
+                      "name": "word",
+                      "refinement": {
+                        "constructor": "InheritedCheckedRecords.normalizeWord"
+                      }
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "InheritedCheckedRecords.Ticket"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          }
+        },
+        "exportModules": [
+          "InheritedCheckedRecords"
+        ],
+        "exports": [
+          "InheritedCheckedRecords.first",
+          "InheritedCheckedRecords.normalized",
+          "InheritedCheckedRecords.pair",
+          "InheritedCheckedRecords.aliased",
+          "InheritedCheckedRecords.nested",
+          "InheritedCheckedRecords.echo",
+          "InheritedCheckedRecords.produce",
+          "InheritedCheckedRecords.produceStamped"
+        ],
+        "metadata": {
+          "invocationIdentitySha256": "9689ff501b9d1784c108752ac6685b555772c993086b8f0a9df90ed9f9133c42",
+          "modules": [
+            {
+              "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+              "name": "InheritedCheckedRecords",
+              "sourcePath": "InheritedCheckedRecords.lean",
+              "sourceSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+            }
+          ],
+          "toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "modules": [
+          "InheritedCheckedRecords"
+        ],
+        "profile": "native-library-v1",
+        "resources": []
+      },
+      "sourceNoticesSha256": "b21728d64e3c183895cc49b5048a523e193dd42b5fc7804b1630124b3e31b63e",
+      "sourceTreeSha256": "1440e2e29d09b3baafd3ad947e7bcbc91b3f81c43cc0e9047a9983850f367cc3"
+    },
+    "version": "1.0.0"
+  },
+  "receiptBytes": "{\n  \"bindingIrSha256\": \"9d8c76d5c8f126ed2b3ec0a68c31ecb56b160f3c2044932d421ccc8fe326282e\",\n  \"compiledProjectionSha256\": \"03477bf4a25464d8c653a6149dce293cd5c656c6e33abf05c7910b107dc2341c\",\n  \"component\": {\n    \"id\": \"inheritedcheckedrecords@1.0.0\",\n    \"name\": \"inheritedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1534,\n      \"sha256\": \"34580aa0696664b3615e4d07b99db251c4cd277bcbfd237e685c9e4d16763f1c\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 42684,\n      \"sha256\": \"684590267982b2cad2f9b3e1c4ae2cc33f500f03128f1ed99e333777f07c7e43\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 2990,\n      \"sha256\": \"7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 15033,\n      \"sha256\": \"1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 96880,\n      \"sha256\": \"daa1e0a5d947fa395c1485e05fdfef257e4da8e81ee402c373c00d71b00dece5\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 123210,\n      \"sha256\": \"e23d023b0fe010a70107e77b9003f343c69ee4a8db5386a7d9d0be7733c2e19b\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 25115,\n      \"sha256\": \"d45ad7d38a7eb80f6de85473586bc42425f222bf2fcffa3484fd68fbd32e87d6\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4762,\n      \"sha256\": \"53fe8a616c99bbcd738ac90983090931ae56fb6d63059ca82f861f0b9cb9b466\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java\": {\n      \"bytes\": 4229,\n      \"sha256\": \"d4d7b357d7699e7c7f0c015b11e95fb8e8436d2f0def3ae7f8d5f89c621cfc29\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 1277,\n      \"sha256\": \"b6d0488cae6be3f021826d8b842b5417df2b784f65ef38cc57a8f37046f2ec75\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 13813,\n      \"sha256\": \"17afe5143ffe1cac714cb83f446b432a7a9dc55b8abfc3aa1d28fffe1c06ac56\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 253,\n      \"sha256\": \"60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13599,\n      \"sha256\": \"678fd355f676c5a983843184cb0d84ba155c57a15f6daf4e022d576852607983\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java\": {\n      \"bytes\": 12927,\n      \"sha256\": \"ec125bbb2184feb6f2e1a39264a1f56dc124e8ea81394963976ae6c26d515eae\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java\": {\n      \"bytes\": 556,\n      \"sha256\": \"5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java\": {\n      \"bytes\": 638,\n      \"sha256\": \"258ae323f4a10fc4a689bcb93721fecec9e40e047fe7ed49fa9563ca2e1fd0fa\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java\": {\n      \"bytes\": 676,\n      \"sha256\": \"fd6dbc0a50b513f26508ae29c34d03af8c099096ca640fae95caf3316a3bf015\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java\": {\n      \"bytes\": 659,\n      \"sha256\": \"3b7b1a0d3fc971522857e9423b2d2a75561184ccf84197177f5f00efe10694df\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java\": {\n      \"bytes\": 78,\n      \"sha256\": \"af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 894,\n      \"sha256\": \"cabdcd6846b37513bb0ee81771bf8338a7cb92bb2fa0cb4c2ec0eb2c484ea100\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 2800,\n      \"sha256\": \"81f70e58a6bc41252b708574e4d6e24d442e9f096a474d3df038d9b7d6a2c6e0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 160,\n      \"sha256\": \"e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt\": {\n      \"bytes\": 690,\n      \"sha256\": \"12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt\": {\n      \"bytes\": 831,\n      \"sha256\": \"e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt\": {\n      \"bytes\": 812,\n      \"sha256\": \"37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 130,\n      \"sha256\": \"dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 12280,\n      \"sha256\": \"b21728d64e3c183895cc49b5048a523e193dd42b5fc7804b1630124b3e31b63e\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1423,\n      \"sha256\": \"a4f4f4beaae65304ee7c9dd1a362fd18f2b038198d980868bef0e6c16afaa933\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 15059,\n      \"sha256\": \"03477bf4a25464d8c653a6149dce293cd5c656c6e33abf05c7910b107dc2341c\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so\": {\n      \"bytes\": 74832,\n      \"sha256\": \"53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so\": {\n      \"bytes\": 49328,\n      \"sha256\": \"ed27e029cdd050b0559759e02c4904f4a3772d880b59c92f2b40066f429c4628\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module\": {\n      \"bytes\": 104,\n      \"sha256\": \"aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a\"\n    },\n    \"META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml\": {\n      \"bytes\": 633,\n      \"sha256\": \"f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30\"\n    },\n    \"README.md\": {\n      \"bytes\": 8142,\n      \"sha256\": \"d86520c2d102d4801e3a71ed68f28ae7ba6e910e06cdc99f037eacb9e016f55a\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Api.class\": {\n      \"bytes\": 1201,\n      \"sha256\": \"9cf9ce4098e2e07bf3f0caf055af84c25e9a3387183d05a5f27b37647c5c1123\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 1461,\n      \"sha256\": \"d76e3fdedeba0d0a05de05e61b652aa7e019a153312ad614009ad267e5ec9b08\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1869,\n      \"sha256\": \"2261d3283cf55b50d28e388c47657c9f83bd96261f871d254498644d34660f7b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 12802,\n      \"sha256\": \"d1b244e62626b9382ea087657e2af27e0da86274a8f34424c89848aa6c95873b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 288,\n      \"sha256\": \"5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13420,\n      \"sha256\": \"c93452952d0570880318d9e790807599115b01308a7b1d3109e57623a548cc28\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 438,\n      \"sha256\": \"b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Runtime.class\": {\n      \"bytes\": 12649,\n      \"sha256\": \"3d9bf01dec217f2d574761db67944e9513e7b941e3eb46b4a0bd7f4c1ac4aa76\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Scope.class\": {\n      \"bytes\": 676,\n      \"sha256\": \"13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Span.class\": {\n      \"bytes\": 1398,\n      \"sha256\": \"2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Stamped.class\": {\n      \"bytes\": 1547,\n      \"sha256\": \"60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Ticket.class\": {\n      \"bytes\": 1535,\n      \"sha256\": \"3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Unit.class\": {\n      \"bytes\": 918,\n      \"sha256\": \"faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 3989,\n      \"sha256\": \"813f8dcacdabdbe865e0c26fba1a2c1e2e37256a8ed05ce0f235917ab903c17a\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 2745,\n      \"sha256\": \"a1b746b0c16be093034489260c81534fe08954417b7c1a8a3556188c56442892\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 481,\n      \"sha256\": \"47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Span.class\": {\n      \"bytes\": 1907,\n      \"sha256\": \"f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class\": {\n      \"bytes\": 2082,\n      \"sha256\": \"78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class\": {\n      \"bytes\": 2071,\n      \"sha256\": \"8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 421,\n      \"sha256\": \"8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.inheritedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.inheritedcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"801f7b7100d31cf67268bef80579b279dfc743727cb0fa64d667aefc8fe357f3\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"InheritedCheckedRecords.aliased\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.mkTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"InheritedCheckedRecords.echo\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"InheritedCheckedRecords.first\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.mkTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"InheritedCheckedRecords.nested\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.mkStamped\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toTicket\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkTicket\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"toSpan\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": \\\"InheritedCheckedRecords.mkSpan\\\",\\n                        \\\"fields\\\": [\\n                          {\\n                            \\\"name\\\": \\\"lo\\\",\\n                            \\\"refinement\\\": null\\n                          },\\n                          {\\n                            \\\"name\\\": \\\"hi\\\",\\n                            \\\"refinement\\\": null\\n                          }\\n                        ],\\n                        \\\"kind\\\": \\\"checked-record\\\",\\n                        \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                      }\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"word\\\",\\n                      \\\"refinement\\\": {\\n                        \\\"constructor\\\": \\\"InheritedCheckedRecords.mkWord\\\"\\n                      }\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"mark\\\",\\n                \\\"refinement\\\": null\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Stamped\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"InheritedCheckedRecords.normalized\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"InheritedCheckedRecords.pair\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.mkTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.mkWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        },\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\",\\n          \\\"refinement\\\": {\\n            \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeTicket\\\",\\n            \\\"fields\\\": [\\n              {\\n                \\\"name\\\": \\\"toSpan\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeSpan\\\",\\n                  \\\"fields\\\": [\\n                    {\\n                      \\\"name\\\": \\\"lo\\\",\\n                      \\\"refinement\\\": null\\n                    },\\n                    {\\n                      \\\"name\\\": \\\"hi\\\",\\n                      \\\"refinement\\\": null\\n                    }\\n                  ],\\n                  \\\"kind\\\": \\\"checked-record\\\",\\n                  \\\"name\\\": \\\"InheritedCheckedRecords.Span\\\"\\n                }\\n              },\\n              {\\n                \\\"name\\\": \\\"word\\\",\\n                \\\"refinement\\\": {\\n                  \\\"constructor\\\": \\\"InheritedCheckedRecords.normalizeWord\\\"\\n                }\\n              }\\n            ],\\n            \\\"kind\\\": \\\"checked-record\\\",\\n            \\\"name\\\": \\\"InheritedCheckedRecords.Ticket\\\"\\n          }\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"InheritedCheckedRecords.first\\\",\\n    \\\"InheritedCheckedRecords.normalized\\\",\\n    \\\"InheritedCheckedRecords.pair\\\",\\n    \\\"InheritedCheckedRecords.aliased\\\",\\n    \\\"InheritedCheckedRecords.nested\\\",\\n    \\\"InheritedCheckedRecords.echo\\\",\\n    \\\"InheritedCheckedRecords.produce\\\",\\n    \\\"InheritedCheckedRecords.produceStamped\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"InheritedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:inheritedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 141464,\n          \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n          \"sha256\": \"e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48\"\n        },\n        \"module\": \"InheritedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 3011,\n          \"path\": \"InheritedCheckedRecords.lean\",\n          \"sha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"InheritedCheckedRecords.aliased\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"InheritedCheckedRecords.echo\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"InheritedCheckedRecords.first\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"InheritedCheckedRecords.nested\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.mkStamped\",\n                \"fields\": [\n                  {\n                    \"name\": \"toTicket\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                      \"fields\": [\n                        {\n                          \"name\": \"toSpan\",\n                          \"refinement\": {\n                            \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                            \"fields\": [\n                              {\n                                \"name\": \"lo\",\n                                \"refinement\": null\n                              },\n                              {\n                                \"name\": \"hi\",\n                                \"refinement\": null\n                              }\n                            ],\n                            \"kind\": \"checked-record\",\n                            \"name\": \"InheritedCheckedRecords.Span\"\n                          }\n                        },\n                        {\n                          \"name\": \"word\",\n                          \"refinement\": {\n                            \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                          }\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Ticket\"\n                    }\n                  },\n                  {\n                    \"name\": \"mark\",\n                    \"refinement\": null\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Stamped\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"InheritedCheckedRecords.normalized\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"InheritedCheckedRecords.pair\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            },\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\",\n              \"refinement\": {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"InheritedCheckedRecords.first\",\n        \"InheritedCheckedRecords.normalized\",\n        \"InheritedCheckedRecords.pair\",\n        \"InheritedCheckedRecords.aliased\",\n        \"InheritedCheckedRecords.nested\",\n        \"InheritedCheckedRecords.echo\",\n        \"InheritedCheckedRecords.produce\",\n        \"InheritedCheckedRecords.produceStamped\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"9689ff501b9d1784c108752ac6685b555772c993086b8f0a9df90ed9f9133c42\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n            \"name\": \"InheritedCheckedRecords\",\n            \"sourcePath\": \"InheritedCheckedRecords.lean\",\n            \"sourceSha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"b21728d64e3c183895cc49b5048a523e193dd42b5fc7804b1630124b3e31b63e\",\n    \"sourceTreeSha256\": \"1440e2e29d09b3baafd3ad947e7bcbc91b3f81c43cc0e9047a9983850f367cc3\"\n  },\n  \"version\": \"1.0.0\"\n}\n"
+}

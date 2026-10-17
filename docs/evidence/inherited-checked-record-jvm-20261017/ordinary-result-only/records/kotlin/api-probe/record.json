@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "kotlin",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:25: error: [UNRESOLVED_REFERENCE] Unresolved reference 'aliased'.\nval probeAliased = Api::aliased\n                        ^^^^^^^\nprobe.kt:3:22: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echo'.\nval probeEcho = Api::echo\n                     ^^^^\nprobe.kt:4:23: error: [UNRESOLVED_REFERENCE] Unresolved reference 'first'.\nval probeFirst = Api::first\n                      ^^^^^\nprobe.kt:5:24: error: [UNRESOLVED_REFERENCE] Unresolved reference 'nested'.\nval probeNested = Api::nested\n                       ^^^^^^\nprobe.kt:6:28: error: [UNRESOLVED_REFERENCE] Unresolved reference 'normalized'.\nval probeNormalized = Api::normalized\n                           ^^^^^^^^^^\nprobe.kt:7:22: error: [UNRESOLVED_REFERENCE] Unresolved reference 'pair'.\nval probePair = Api::pair\n                     ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nval probeAliased = Api::aliased\nval probeEcho = Api::echo\nval probeFirst = Api::first\nval probeNested = Api::nested\nval probeNormalized = Api::normalized\nval probePair = Api::pair\n",
+  "sourceSha256": "1775f0e6cbe6ab6a208e59f54a00274ae139c240c92b7421e6a40edf0ebf36a0"
+}

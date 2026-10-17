@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordJvmEvidence
 	= "docs/evidence/inherited-checked-record-jvm-20261017";
-export const inheritedCheckedRecordJvmProducer = null;
-export const inheritedCheckedRecordJvmChecker = null;
-export const inheritedCheckedRecordJvmArchiver = null;
+export const inheritedCheckedRecordJvmProducer
+	= "93ccc14cde12ecaf3d171f308f85dadeffaf3033";
+export const inheritedCheckedRecordJvmChecker
+	= "78ecf12b8266c1b591a76deeff1aac7540e5bdfd";
+export const inheritedCheckedRecordJvmArchiver
+	= "78ecf12b8266c1b591a76deeff1aac7540e5bdfd";
 export const inheritedCheckedRecordJvmEvidenceLoadCeiling = 6;
 export const inheritedCheckedRecordJvmEvidenceFloor = "2.38";
 export const inheritedCheckedRecordJvmSelections = Object.freeze([

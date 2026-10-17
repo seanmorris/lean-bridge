@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "mode": "result-only",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 1413,
+      "sha256": "2041f6f10ba2e16a79da0bafeb3f6251710aa1b81273bf7ff5754bf79aa0878d"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(java.math.BigInteger.ONE)\nfun produceStampedNull() = Api.produceStamped(java.math.BigInteger.ONE)\n",
+  "sourceSha256": "56ee9a1780caf16821a02547362589609d5d11a0fcbededb87c05e9eb0032138"
+}

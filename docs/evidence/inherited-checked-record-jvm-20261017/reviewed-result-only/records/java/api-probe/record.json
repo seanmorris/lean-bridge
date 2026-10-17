@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "dcc130e5841d1f29ce885837ebcdea05f099f43b87bfc3569da34cd9134dd76d",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-Aga0Rx/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "result-only",
+  "outputs": {},
+  "profile": "java",
+  "run": {
+    "code": 1,
+    "stderr": "probe.java:3:41: compiler.err.cant.resolve.location.args: kindname.method, aliased, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:4:38: compiler.err.cant.resolve.location.args: kindname.method, echo, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:5:39: compiler.err.cant.resolve.location.args: kindname.method, first, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:6:40: compiler.err.cant.resolve.location.args: kindname.method, nested, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:7:44: compiler.err.cant.resolve.location.args: kindname.method, normalized, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:8:38: compiler.err.cant.resolve.location.args: kindname.method, pair, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\n6 errors\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.*;\nfinal class Probe {\n    static Object aliased() { return Api.aliased(null); }\n    static Object echo() { return Api.echo(null); }\n    static Object first() { return Api.first(null); }\n    static Object nested() { return Api.nested(null); }\n    static Object normalized() { return Api.normalized(null); }\n    static Object pair() { return Api.pair(null, null); }\n}\n",
+  "sourceSha256": "a7981137b7e362a74e8a98ea8d03f9b4f520dd390e15fe2519bd16b96065240b"
+}

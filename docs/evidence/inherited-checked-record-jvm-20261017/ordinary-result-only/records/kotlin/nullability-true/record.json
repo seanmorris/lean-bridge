@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "result-only",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceNull() = Api.produce(null)\n                                ^^^^\nNullProbe.kt:3:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceStampedNull() = Api.produceStamped(null)\n                                              ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(null)\nfun produceStampedNull() = Api.produceStamped(null)\n",
+  "sourceSha256": "491e4936ac27ab395a53d80689470582c14686fb61dad8d6af4c1d43bc1f9639"
+}

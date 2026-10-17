@@ -1,0 +1,866 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/inheritedcheckedrecords-1.0.0.jar": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "archives/inheritedcheckedrecords-1.0.0.pom": "f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30"
+      },
+      "bindingIrSha256": "e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb",
+      "compiledSha256": "a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051",
+      "modelSha256": "78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19",
+      "receiptSha256": "c7166790b96a29a8dc36be779df94c47f78edaff58475edb0fc1469c9b22542d"
+    },
+    {
+      "archives": {
+        "archives/inheritedcheckedrecords-1.0.0.jar": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "archives/inheritedcheckedrecords-1.0.0.pom": "f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30"
+      },
+      "bindingIrSha256": "e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb",
+      "compiledSha256": "a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051",
+      "modelSha256": "78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19",
+      "receiptSha256": "c7166790b96a29a8dc36be779df94c47f78edaff58475edb0fc1469c9b22542d"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumers": [
+    {
+      "apiProbe": {
+        "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "args": [
+          "--release",
+          "22",
+          "-Werror",
+          "-proc:none",
+          "-XDrawDiagnostics",
+          "-cp",
+          "component.jar",
+          "-d",
+          "classes",
+          "probe.java"
+        ],
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+        "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/java",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/unavailable"
+        },
+        "mode": "result-only",
+        "outputs": {},
+        "profile": "java",
+        "run": {
+          "code": 1,
+          "stderr": "probe.java:3:41: compiler.err.cant.resolve.location.args: kindname.method, aliased, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:4:38: compiler.err.cant.resolve.location.args: kindname.method, echo, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:5:39: compiler.err.cant.resolve.location.args: kindname.method, first, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:6:40: compiler.err.cant.resolve.location.args: kindname.method, nested, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:7:44: compiler.err.cant.resolve.location.args: kindname.method, normalized, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\nprobe.java:8:38: compiler.err.cant.resolve.location.args: kindname.method, pair, , compiler.misc.type.null,compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.inheritedcheckedrecords.Api, null)\n6 errors\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.inheritedcheckedrecords.*;\nfinal class Probe {\n    static Object aliased() { return Api.aliased(null); }\n    static Object echo() { return Api.echo(null); }\n    static Object first() { return Api.first(null); }\n    static Object nested() { return Api.nested(null); }\n    static Object normalized() { return Api.normalized(null); }\n    static Object pair() { return Api.pair(null, null); }\n}\n",
+        "sourceSha256": "a7981137b7e362a74e8a98ea8d03f9b4f520dd390e15fe2519bd16b96065240b"
+      },
+      "context": {
+        "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+        "files": {
+          "classes/Consumer$TicketPair.class": {
+            "bytes": 1462,
+            "sha256": "f7ee643fc975a0bacb4fe1d5a197017b2779d09d56fdac7c40455f2cf71a3b68"
+          },
+          "classes/Consumer.class": {
+            "bytes": 6493,
+            "sha256": "57743e89f0eb134896d59bc9f1943b817863f8ff75fcc3a6ce00d54d69b462d6"
+          },
+          "component.jar": {
+            "bytes": 51396373,
+            "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+          },
+          "consumer.java": {
+            "bytes": 4886,
+            "sha256": "0be853e760e8e9537abe51da92d882cdde09bdd9e06c37d713ab52f05f619226"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+        "profile": "java",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb\",\n  \"compiledProjectionSha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\",\n  \"component\": {\n    \"id\": \"inheritedcheckedrecords@1.0.0\",\n    \"name\": \"inheritedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"0aaf69b414a53b116052e4a33e35af0eb5299d55355c7385cc512ce68267a6a6\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 10990,\n      \"sha256\": \"fbf42d6fb262f3073f029d9c281fcbdc6e2d35b26ae07da0441062f648ada298\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1010,\n      \"sha256\": \"77799a6022e3323484920fa8801804ab06799aab253ff07b0c0ef2830221673f\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 3860,\n      \"sha256\": \"9f17e5c14a6f493eb4baaf5aeabea6d93f33ec7d664183a09098ebc92d6c5a0e\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 50941,\n      \"sha256\": \"9c78ad229add9c55cd46d4c231b66a55b2157fca4fa29d461c2638990d3ec99a\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 32550,\n      \"sha256\": \"78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 3620,\n      \"sha256\": \"100031f63a47de80d73715c1c04eb810ec6d13b509dbe4350d64eb62d9d64c9b\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4484,\n      \"sha256\": \"2ca2bb37d188eea25cd6ec009256c9a0506baae41106b764e94c6b774e1dc233\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java\": {\n      \"bytes\": 772,\n      \"sha256\": \"0c432f9d5c88951c0296bf5d17412880d1980c72c2ee37f027fcec84dbe2ad6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"29bc5a1061c7b42ac623851bc62bb0ebb139317c9f8239f3c508de66bf3cf2c6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 8401,\n      \"sha256\": \"57f328cc9dde7fd6f214d06a663f518f0ec5be28c5b072ff5eef04d859881a99\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 253,\n      \"sha256\": \"60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13599,\n      \"sha256\": \"4be3e49e66831cdf7f0e6c444a3d31975f6cd35859e60b97b34d7546a1fce234\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java\": {\n      \"bytes\": 7883,\n      \"sha256\": \"1db7731a28ded63b33d8000c34c828285ffbfc1370e0dff402b1ec378814b9d8\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java\": {\n      \"bytes\": 556,\n      \"sha256\": \"5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java\": {\n      \"bytes\": 538,\n      \"sha256\": \"2baab898576601e559355ff0388da7f07f471648fafaa1065d1b28465f93eb22\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"4db945f5265223351020af2ff6581bcfa5749b4e06dcc7e38ae8a47275758bc9\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java\": {\n      \"bytes\": 552,\n      \"sha256\": \"47888bb453cb5c9df066cea1140e49b809ef49e3f351a45d12d3084e2de048cd\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java\": {\n      \"bytes\": 78,\n      \"sha256\": \"af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 281,\n      \"sha256\": \"685abdc3342bd2ab48f79f3319d92e3a9b19f99440c22cd002585a61bfae346e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 827,\n      \"sha256\": \"7c78e2d8d6069cc170ae5a08001465b6060db8f480438f169132c3ff44ec4f9f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 160,\n      \"sha256\": \"e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt\": {\n      \"bytes\": 690,\n      \"sha256\": \"12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt\": {\n      \"bytes\": 831,\n      \"sha256\": \"e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt\": {\n      \"bytes\": 812,\n      \"sha256\": \"37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 130,\n      \"sha256\": \"dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2066,\n      \"sha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1421,\n      \"sha256\": \"094f660ade65417331cb546d7deb7825245ff2623b3413260ff894d72bc25e7d\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 15050,\n      \"sha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so\": {\n      \"bytes\": 36296,\n      \"sha256\": \"e183f646c9ebeddc2ef01799f4e7480c27b6bcba74b7b0b4e61025277eee15cf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so\": {\n      \"bytes\": 21912,\n      \"sha256\": \"78d759244f7cefb25951d4139e12d8ceb26217ac7b1b9201c4e364310ee32450\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module\": {\n      \"bytes\": 104,\n      \"sha256\": \"aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a\"\n    },\n    \"META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml\": {\n      \"bytes\": 633,\n      \"sha256\": \"f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30\"\n    },\n    \"README.md\": {\n      \"bytes\": 5469,\n      \"sha256\": \"d6c2752b8840e49456b6b3af3f4e062a3418aa016ea97b8ec6765d82fdccc87b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Api.class\": {\n      \"bytes\": 483,\n      \"sha256\": \"984019d6a48fd282d43166f06c35a18e58af2bf19ce6630db9fd91b87db9e2b4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 558,\n      \"sha256\": \"ea5ed20ff1aba148da90f89c53f47c7afc456f2a4c0d10986bf89bc0e0d22ae4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1107,\n      \"sha256\": \"8c0ee0d8e40f45681da34fbfd1ce3d8a9547b52fdf7fb1d1cdfd73a346745545\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 9541,\n      \"sha256\": \"a5426898eaee799d295246fbe024275829c283fbbd1ec2ec6542e11ee4d457cf\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 288,\n      \"sha256\": \"5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13420,\n      \"sha256\": \"c89937b777de1aad4082fcad58cbd09490a480dbe5df6e1ec342efdc9debfbbe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 438,\n      \"sha256\": \"b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Runtime.class\": {\n      \"bytes\": 9430,\n      \"sha256\": \"05a35c0a2516eacc3b909a773434ece031bb4e7d4973e07d6c1f93d5cee3bb6d\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Scope.class\": {\n      \"bytes\": 676,\n      \"sha256\": \"13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Span.class\": {\n      \"bytes\": 1398,\n      \"sha256\": \"2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Stamped.class\": {\n      \"bytes\": 1547,\n      \"sha256\": \"60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Ticket.class\": {\n      \"bytes\": 1535,\n      \"sha256\": \"3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Unit.class\": {\n      \"bytes\": 918,\n      \"sha256\": \"faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2340,\n      \"sha256\": \"d2ccdb756b47d3e445e9b9cff3c4bf6447e1e450741c370cd9d20d889c9de068\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1475,\n      \"sha256\": \"6e1d79f42d7b9fb9150ec7aaef0213e93a4a30193ca3eaa17ebfca530cbb5472\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 481,\n      \"sha256\": \"47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Span.class\": {\n      \"bytes\": 1907,\n      \"sha256\": \"f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class\": {\n      \"bytes\": 2082,\n      \"sha256\": \"78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class\": {\n      \"bytes\": 2071,\n      \"sha256\": \"8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 421,\n      \"sha256\": \"8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.inheritedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.inheritedcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"fbe807748a877e7090dcb2db8c748eff31b6c1da6567db9cf1ebf8f6a2cfac69\",\n    \"exportConfigurationSource\": \"{\\n  \\\"exports\\\": [\\n    \\\"InheritedCheckedRecords.produce\\\",\\n    \\\"InheritedCheckedRecords.produceStamped\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"InheritedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:inheritedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 141464,\n          \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n          \"sha256\": \"e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48\"\n        },\n        \"module\": \"InheritedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 3011,\n          \"path\": \"InheritedCheckedRecords.lean\",\n          \"sha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"InheritedCheckedRecords.produce\",\n        \"InheritedCheckedRecords.produceStamped\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"b739228870f4e9202176aa343370d45c2ad07d20b273331a2deb7b5bf9a966e4\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n            \"name\": \"InheritedCheckedRecords\",\n            \"sourcePath\": \"InheritedCheckedRecords.lean\",\n            \"sourceSha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\",\n    \"sourceTreeSha256\": \"846512e1cbde8044affa9f0c3fe46c1608373cf633ecf838915fbe6a6892d3e9\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/java"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "395ef78a33a27f19abf7b2639c80c7ce5cbdc4488d973b0ad44e039641d3df47",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+            "receiptSha256": "bc15e57dcb6cb6b3dc04e26cd6e8b817079da42ba0c6a98d79b2d0348697b0a2"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/java",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "395ef78a33a27f19abf7b2639c80c7ce5cbdc4488d973b0ad44e039641d3df47",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+            "receiptSha256": "bc15e57dcb6cb6b3dc04e26cd6e8b817079da42ba0c6a98d79b2d0348697b0a2"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/java-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "5cf1324ac6afecb2b21fcba730b5168b774e25928b02debcd92a3c6bccb973e9",
+            "files": {
+              "classes/Consumer$TicketPair.class": {
+                "bytes": 1462,
+                "sha256": "f7ee643fc975a0bacb4fe1d5a197017b2779d09d56fdac7c40455f2cf71a3b68"
+              },
+              "classes/Consumer.class": {
+                "bytes": 6493,
+                "sha256": "57743e89f0eb134896d59bc9f1943b817863f8ff75fcc3a6ce00d54d69b462d6"
+              },
+              "component.jar": {
+                "bytes": 51396373,
+                "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/java-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "java"
+    },
+    {
+      "apiProbe": {
+        "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "args": [
+          "-Werror",
+          "-jvm-target",
+          "22",
+          "-Xrender-internal-diagnostic-names",
+          "-cp",
+          "component.jar",
+          "probe.kt",
+          "-d",
+          "classes"
+        ],
+        "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+        "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/kotlin",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/usr/bin:/bin"
+        },
+        "mode": "result-only",
+        "outputs": {},
+        "profile": "kotlin",
+        "run": {
+          "code": 1,
+          "stderr": "probe.kt:2:25: error: [UNRESOLVED_REFERENCE] Unresolved reference 'aliased'.\nval probeAliased = Api::aliased\n                        ^^^^^^^\nprobe.kt:3:22: error: [UNRESOLVED_REFERENCE] Unresolved reference 'echo'.\nval probeEcho = Api::echo\n                     ^^^^\nprobe.kt:4:23: error: [UNRESOLVED_REFERENCE] Unresolved reference 'first'.\nval probeFirst = Api::first\n                      ^^^^^\nprobe.kt:5:24: error: [UNRESOLVED_REFERENCE] Unresolved reference 'nested'.\nval probeNested = Api::nested\n                       ^^^^^^\nprobe.kt:6:28: error: [UNRESOLVED_REFERENCE] Unresolved reference 'normalized'.\nval probeNormalized = Api::normalized\n                           ^^^^^^^^^^\nprobe.kt:7:22: error: [UNRESOLVED_REFERENCE] Unresolved reference 'pair'.\nval probePair = Api::pair\n                     ^^^^\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nval probeAliased = Api::aliased\nval probeEcho = Api::echo\nval probeFirst = Api::first\nval probeNested = Api::nested\nval probeNormalized = Api::normalized\nval probePair = Api::pair\n",
+        "sourceSha256": "1775f0e6cbe6ab6a208e59f54a00274ae139c240c92b7421e6a40edf0ebf36a0"
+      },
+      "context": {
+        "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+        "files": {
+          "component.jar": {
+            "bytes": 51396373,
+            "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+          },
+          "consumer.jar": {
+            "bytes": 5078852,
+            "sha256": "dbdce5b78d40c8cf8d3501eebdbb9f94db06a68304eed7552f0f8f2cc5da994e"
+          },
+          "consumer.kt": {
+            "bytes": 3836,
+            "sha256": "bacd7466344c88ba910a362bb25321b8abc7ab8c81ad6d26bcc6e57120fa7b41"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+        "profile": "kotlin",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb\",\n  \"compiledProjectionSha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\",\n  \"component\": {\n    \"id\": \"inheritedcheckedrecords@1.0.0\",\n    \"name\": \"inheritedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"0aaf69b414a53b116052e4a33e35af0eb5299d55355c7385cc512ce68267a6a6\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 10990,\n      \"sha256\": \"fbf42d6fb262f3073f029d9c281fcbdc6e2d35b26ae07da0441062f648ada298\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1010,\n      \"sha256\": \"77799a6022e3323484920fa8801804ab06799aab253ff07b0c0ef2830221673f\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 3860,\n      \"sha256\": \"9f17e5c14a6f493eb4baaf5aeabea6d93f33ec7d664183a09098ebc92d6c5a0e\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 50941,\n      \"sha256\": \"9c78ad229add9c55cd46d4c231b66a55b2157fca4fa29d461c2638990d3ec99a\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 32550,\n      \"sha256\": \"78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 3620,\n      \"sha256\": \"100031f63a47de80d73715c1c04eb810ec6d13b509dbe4350d64eb62d9d64c9b\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4484,\n      \"sha256\": \"2ca2bb37d188eea25cd6ec009256c9a0506baae41106b764e94c6b774e1dc233\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java\": {\n      \"bytes\": 772,\n      \"sha256\": \"0c432f9d5c88951c0296bf5d17412880d1980c72c2ee37f027fcec84dbe2ad6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"29bc5a1061c7b42ac623851bc62bb0ebb139317c9f8239f3c508de66bf3cf2c6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 8401,\n      \"sha256\": \"57f328cc9dde7fd6f214d06a663f518f0ec5be28c5b072ff5eef04d859881a99\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 253,\n      \"sha256\": \"60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13599,\n      \"sha256\": \"4be3e49e66831cdf7f0e6c444a3d31975f6cd35859e60b97b34d7546a1fce234\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java\": {\n      \"bytes\": 7883,\n      \"sha256\": \"1db7731a28ded63b33d8000c34c828285ffbfc1370e0dff402b1ec378814b9d8\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java\": {\n      \"bytes\": 556,\n      \"sha256\": \"5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java\": {\n      \"bytes\": 538,\n      \"sha256\": \"2baab898576601e559355ff0388da7f07f471648fafaa1065d1b28465f93eb22\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"4db945f5265223351020af2ff6581bcfa5749b4e06dcc7e38ae8a47275758bc9\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java\": {\n      \"bytes\": 552,\n      \"sha256\": \"47888bb453cb5c9df066cea1140e49b809ef49e3f351a45d12d3084e2de048cd\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java\": {\n      \"bytes\": 78,\n      \"sha256\": \"af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 281,\n      \"sha256\": \"685abdc3342bd2ab48f79f3319d92e3a9b19f99440c22cd002585a61bfae346e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 827,\n      \"sha256\": \"7c78e2d8d6069cc170ae5a08001465b6060db8f480438f169132c3ff44ec4f9f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 160,\n      \"sha256\": \"e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt\": {\n      \"bytes\": 690,\n      \"sha256\": \"12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt\": {\n      \"bytes\": 831,\n      \"sha256\": \"e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt\": {\n      \"bytes\": 812,\n      \"sha256\": \"37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 130,\n      \"sha256\": \"dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2066,\n      \"sha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1421,\n      \"sha256\": \"094f660ade65417331cb546d7deb7825245ff2623b3413260ff894d72bc25e7d\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 15050,\n      \"sha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so\": {\n      \"bytes\": 36296,\n      \"sha256\": \"e183f646c9ebeddc2ef01799f4e7480c27b6bcba74b7b0b4e61025277eee15cf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so\": {\n      \"bytes\": 21912,\n      \"sha256\": \"78d759244f7cefb25951d4139e12d8ceb26217ac7b1b9201c4e364310ee32450\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module\": {\n      \"bytes\": 104,\n      \"sha256\": \"aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a\"\n    },\n    \"META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml\": {\n      \"bytes\": 633,\n      \"sha256\": \"f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30\"\n    },\n    \"README.md\": {\n      \"bytes\": 5469,\n      \"sha256\": \"d6c2752b8840e49456b6b3af3f4e062a3418aa016ea97b8ec6765d82fdccc87b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Api.class\": {\n      \"bytes\": 483,\n      \"sha256\": \"984019d6a48fd282d43166f06c35a18e58af2bf19ce6630db9fd91b87db9e2b4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 558,\n      \"sha256\": \"ea5ed20ff1aba148da90f89c53f47c7afc456f2a4c0d10986bf89bc0e0d22ae4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1107,\n      \"sha256\": \"8c0ee0d8e40f45681da34fbfd1ce3d8a9547b52fdf7fb1d1cdfd73a346745545\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 9541,\n      \"sha256\": \"a5426898eaee799d295246fbe024275829c283fbbd1ec2ec6542e11ee4d457cf\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 288,\n      \"sha256\": \"5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13420,\n      \"sha256\": \"c89937b777de1aad4082fcad58cbd09490a480dbe5df6e1ec342efdc9debfbbe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 438,\n      \"sha256\": \"b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Runtime.class\": {\n      \"bytes\": 9430,\n      \"sha256\": \"05a35c0a2516eacc3b909a773434ece031bb4e7d4973e07d6c1f93d5cee3bb6d\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Scope.class\": {\n      \"bytes\": 676,\n      \"sha256\": \"13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Span.class\": {\n      \"bytes\": 1398,\n      \"sha256\": \"2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Stamped.class\": {\n      \"bytes\": 1547,\n      \"sha256\": \"60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Ticket.class\": {\n      \"bytes\": 1535,\n      \"sha256\": \"3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Unit.class\": {\n      \"bytes\": 918,\n      \"sha256\": \"faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2340,\n      \"sha256\": \"d2ccdb756b47d3e445e9b9cff3c4bf6447e1e450741c370cd9d20d889c9de068\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1475,\n      \"sha256\": \"6e1d79f42d7b9fb9150ec7aaef0213e93a4a30193ca3eaa17ebfca530cbb5472\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 481,\n      \"sha256\": \"47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Span.class\": {\n      \"bytes\": 1907,\n      \"sha256\": \"f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class\": {\n      \"bytes\": 2082,\n      \"sha256\": \"78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class\": {\n      \"bytes\": 2071,\n      \"sha256\": \"8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 421,\n      \"sha256\": \"8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.inheritedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.inheritedcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"fbe807748a877e7090dcb2db8c748eff31b6c1da6567db9cf1ebf8f6a2cfac69\",\n    \"exportConfigurationSource\": \"{\\n  \\\"exports\\\": [\\n    \\\"InheritedCheckedRecords.produce\\\",\\n    \\\"InheritedCheckedRecords.produceStamped\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"InheritedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:inheritedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 141464,\n          \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n          \"sha256\": \"e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48\"\n        },\n        \"module\": \"InheritedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 3011,\n          \"path\": \"InheritedCheckedRecords.lean\",\n          \"sha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"InheritedCheckedRecords.produce\",\n        \"InheritedCheckedRecords.produceStamped\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"b739228870f4e9202176aa343370d45c2ad07d20b273331a2deb7b5bf9a966e4\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n            \"name\": \"InheritedCheckedRecords\",\n            \"sourcePath\": \"InheritedCheckedRecords.lean\",\n            \"sourceSha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\",\n    \"sourceTreeSha256\": \"846512e1cbde8044affa9f0c3fe46c1608373cf633ecf838915fbe6a6892d3e9\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/kotlin"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [
+        {
+          "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/nullability-false",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": false,
+          "mode": "result-only",
+          "outputs": {
+            "META-INF/main.kotlin_module": {
+              "bytes": 41,
+              "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+            },
+            "NullProbeKt.class": {
+              "bytes": 1413,
+              "sha256": "2041f6f10ba2e16a79da0bafeb3f6251710aa1b81273bf7ff5754bf79aa0878d"
+            }
+          },
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(java.math.BigInteger.ONE)\nfun produceStampedNull() = Api.produceStamped(java.math.BigInteger.ONE)\n",
+          "sourceSha256": "56ee9a1780caf16821a02547362589609d5d11a0fcbededb87c05e9eb0032138"
+        },
+        {
+          "archiveSha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/probes/nullability-true",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": true,
+          "mode": "result-only",
+          "outputs": {},
+          "run": {
+            "code": 1,
+            "stderr": "NullProbe.kt:2:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceNull() = Api.produce(null)\n                                ^^^^\nNullProbe.kt:3:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceStampedNull() = Api.produceStamped(null)\n                                              ^^^^\n",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(null)\nfun produceStampedNull() = Api.produceStamped(null)\n",
+          "sourceSha256": "491e4936ac27ab395a53d80689470582c14686fb61dad8d6af4c1d43bc1f9639"
+        }
+      ],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "a2ad37aaebb2c176650bc75607e19e0c2c73fa1d7be48aec6a60c22c7f0739b5",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+            "receiptSha256": "bc15e57dcb6cb6b3dc04e26cd6e8b817079da42ba0c6a98d79b2d0348697b0a2"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/kotlin",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "a2ad37aaebb2c176650bc75607e19e0c2c73fa1d7be48aec6a60c22c7f0739b5",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+            "receiptSha256": "bc15e57dcb6cb6b3dc04e26cd6e8b817079da42ba0c6a98d79b2d0348697b0a2"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/kotlin-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "0309d3e1bcdbac79976573b917f77d6dc3c512df80f487503bce63a286165b1e",
+            "files": {
+              "component.jar": {
+                "bytes": 51396373,
+                "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+              },
+              "consumer.jar": {
+                "bytes": 5078852,
+                "sha256": "dbdce5b78d40c8cf8d3501eebdbb9f94db06a68304eed7552f0f8f2cc5da994e"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "checks": 1546,
+            "recoveries": 0,
+            "rejections": 0,
+            "rounds": 256,
+            "snapshotControls": 6,
+            "snapshots": 514
+          },
+          "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-r24FC0/kotlin-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"checks\":1546,\"rejections\":0,\"recoveries\":0,\"snapshots\":514,\"snapshotControls\":6,\"rounds\":256}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "kotlin"
+    }
+  ],
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No JVM constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "d375bbae81a5a7c5c46a60176931edcc3cd9b17e4922c01457c0c4880ae581d5",
+  "independentBuilds": 2,
+  "installation": {
+    "artifact": {
+      "bytes": 51396373,
+      "path": "archives/inheritedcheckedrecords-1.0.0.jar",
+      "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+    },
+    "packageFileSetSha256": "72729afa889fa830d2807ccb44a7d60fc61546f86c97b310432579ab1dadb635",
+    "receipt": {
+      "bindingIrSha256": "e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb",
+      "compiledProjectionSha256": "a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051",
+      "component": {
+        "id": "inheritedcheckedrecords@1.0.0",
+        "name": "inheritedcheckedrecords",
+        "version": "1.0.0"
+      },
+      "ecosystem": "maven",
+      "files": {
+        "META-INF/MANIFEST.MF": {
+          "bytes": 23,
+          "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+        },
+        "META-INF/lean-bridge/component/allocation-guard.h": {
+          "bytes": 1309,
+          "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+        },
+        "META-INF/lean-bridge/component/artifacts.json": {
+          "bytes": 1530,
+          "sha256": "0aaf69b414a53b116052e4a33e35af0eb5299d55355c7385cc512ce68267a6a6"
+        },
+        "META-INF/lean-bridge/component/binding-ir.json": {
+          "bytes": 10990,
+          "sha256": "fbf42d6fb262f3073f029d9c281fcbdc6e2d35b26ae07da0441062f648ada298"
+        },
+        "META-INF/lean-bridge/component/component.h": {
+          "bytes": 1010,
+          "sha256": "77799a6022e3323484920fa8801804ab06799aab253ff07b0c0ef2830221673f"
+        },
+        "META-INF/lean-bridge/component/generated.lean": {
+          "bytes": 3860,
+          "sha256": "9f17e5c14a6f493eb4baaf5aeabea6d93f33ec7d664183a09098ebc92d6c5a0e"
+        },
+        "META-INF/lean-bridge/component/metadata.json": {
+          "bytes": 50941,
+          "sha256": "9c78ad229add9c55cd46d4c231b66a55b2157fca4fa29d461c2638990d3ec99a"
+        },
+        "META-INF/lean-bridge/component/model.json": {
+          "bytes": 32550,
+          "sha256": "78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19"
+        },
+        "META-INF/lean-bridge/component/native-component.json": {
+          "bytes": 3620,
+          "sha256": "100031f63a47de80d73715c1c04eb810ec6d13b509dbe4350d64eb62d9d64c9b"
+        },
+        "META-INF/lean-bridge/jvm/binding-manifest.json": {
+          "bytes": 4484,
+          "sha256": "2ca2bb37d188eea25cd6ec009256c9a0506baae41106b764e94c6b774e1dc233"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java": {
+          "bytes": 772,
+          "sha256": "0c432f9d5c88951c0296bf5d17412880d1980c72c2ee37f027fcec84dbe2ad6f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java": {
+          "bytes": 357,
+          "sha256": "29bc5a1061c7b42ac623851bc62bb0ebb139317c9f8239f3c508de66bf3cf2c6"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java": {
+          "bytes": 8401,
+          "sha256": "57f328cc9dde7fd6f214d06a663f518f0ec5be28c5b072ff5eef04d859881a99"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java": {
+          "bytes": 253,
+          "sha256": "60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java": {
+          "bytes": 13599,
+          "sha256": "4be3e49e66831cdf7f0e6c444a3d31975f6cd35859e60b97b34d7546a1fce234"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java": {
+          "bytes": 7883,
+          "sha256": "1db7731a28ded63b33d8000c34c828285ffbfc1370e0dff402b1ec378814b9d8"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java": {
+          "bytes": 556,
+          "sha256": "5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java": {
+          "bytes": 538,
+          "sha256": "2baab898576601e559355ff0388da7f07f471648fafaa1065d1b28465f93eb22"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java": {
+          "bytes": 565,
+          "sha256": "4db945f5265223351020af2ff6581bcfa5749b4e06dcc7e38ae8a47275758bc9"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java": {
+          "bytes": 552,
+          "sha256": "47888bb453cb5c9df066cea1140e49b809ef49e3f351a45d12d3084e2de048cd"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java": {
+          "bytes": 78,
+          "sha256": "af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt": {
+          "bytes": 281,
+          "sha256": "685abdc3342bd2ab48f79f3319d92e3a9b19f99440c22cd002585a61bfae346e"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt": {
+          "bytes": 827,
+          "sha256": "7c78e2d8d6069cc170ae5a08001465b6060db8f480438f169132c3ff44ec4f9f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt": {
+          "bytes": 160,
+          "sha256": "e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt": {
+          "bytes": 690,
+          "sha256": "12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt": {
+          "bytes": 831,
+          "sha256": "e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt": {
+          "bytes": 812,
+          "sha256": "37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt": {
+          "bytes": 130,
+          "sha256": "dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/licenses/source-notices.json": {
+          "bytes": 2066,
+          "sha256": "5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211"
+        },
+        "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/native-c-adapter.json": {
+          "bytes": 1421,
+          "sha256": "094f660ade65417331cb546d7deb7825245ff2623b3413260ff894d72bc25e7d"
+        },
+        "META-INF/lean-bridge/native-jvm.json": {
+          "bytes": 15050,
+          "sha256": "a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so": {
+          "bytes": 36296,
+          "sha256": "e183f646c9ebeddc2ef01799f4e7480c27b6bcba74b7b0b4e61025277eee15cf"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so": {
+          "bytes": 21912,
+          "sha256": "78d759244f7cefb25951d4139e12d8ceb26217ac7b1b9201c4e364310ee32450"
+        },
+        "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 21632,
+          "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "META-INF/lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+        },
+        "META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module": {
+          "bytes": 104,
+          "sha256": "aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a"
+        },
+        "META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml": {
+          "bytes": 633,
+          "sha256": "f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30"
+        },
+        "README.md": {
+          "bytes": 5469,
+          "sha256": "d6c2752b8840e49456b6b3af3f4e062a3418aa016ea97b8ec6765d82fdccc87b"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Api.class": {
+          "bytes": 483,
+          "sha256": "984019d6a48fd282d43166f06c35a18e58af2bf19ce6630db9fd91b87db9e2b4"
+        },
+        "org/leanbridge/inheritedcheckedrecords/KotlinBridge.class": {
+          "bytes": 558,
+          "sha256": "ea5ed20ff1aba148da90f89c53f47c7afc456f2a4c0d10986bf89bc0e0d22ae4"
+        },
+        "org/leanbridge/inheritedcheckedrecords/KotlinCalls.class": {
+          "bytes": 1107,
+          "sha256": "8c0ee0d8e40f45681da34fbfd1ce3d8a9547b52fdf7fb1d1cdfd73a346745545"
+        },
+        "org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class": {
+          "bytes": 9541,
+          "sha256": "a5426898eaee799d295246fbe024275829c283fbbd1ec2ec6542e11ee4d457cf"
+        },
+        "org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class": {
+          "bytes": 288,
+          "sha256": "5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83"
+        },
+        "org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class": {
+          "bytes": 13420,
+          "sha256": "c89937b777de1aad4082fcad58cbd09490a480dbe5df6e1ec342efdc9debfbbe"
+        },
+        "org/leanbridge/inheritedcheckedrecords/NativeAssets.class": {
+          "bytes": 438,
+          "sha256": "b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Runtime.class": {
+          "bytes": 9430,
+          "sha256": "05a35c0a2516eacc3b909a773434ece031bb4e7d4973e07d6c1f93d5cee3bb6d"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Scope.class": {
+          "bytes": 676,
+          "sha256": "13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Span.class": {
+          "bytes": 1398,
+          "sha256": "2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Stamped.class": {
+          "bytes": 1547,
+          "sha256": "60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Ticket.class": {
+          "bytes": 1535,
+          "sha256": "3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac"
+        },
+        "org/leanbridge/inheritedcheckedrecords/Unit.class": {
+          "bytes": 918,
+          "sha256": "faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class": {
+          "bytes": 2340,
+          "sha256": "d2ccdb756b47d3e445e9b9cff3c4bf6447e1e450741c370cd9d20d889c9de068"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/Api.class": {
+          "bytes": 1475,
+          "sha256": "6e1d79f42d7b9fb9150ec7aaef0213e93a4a30193ca3eaa17ebfca530cbb5472"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class": {
+          "bytes": 481,
+          "sha256": "47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/Span.class": {
+          "bytes": 1907,
+          "sha256": "f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class": {
+          "bytes": 2082,
+          "sha256": "78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class": {
+          "bytes": 2071,
+          "sha256": "8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164"
+        },
+        "org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class": {
+          "bytes": 421,
+          "sha256": "8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2"
+        }
+      },
+      "glibcMinimumVersion": "2.38",
+      "kind": "lean-bridge-ordinary-maven-package",
+      "kotlin": {
+        "namespace": "org.leanbridge.inheritedcheckedrecords.kotlin",
+        "standardLibraryVersion": "2.2.0"
+      },
+      "name": "org.leanbridge:inheritedcheckedrecords",
+      "namespace": "org.leanbridge.inheritedcheckedrecords",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "schemaVersion": 1,
+      "sourceIdentity": {
+        "exportConfigurationSha256": "fbe807748a877e7090dcb2db8c748eff31b6c1da6567db9cf1ebf8f6a2cfac69",
+        "exportConfigurationSource": "{\n  \"exports\": [\n    \"InheritedCheckedRecords.produce\",\n    \"InheritedCheckedRecords.produceStamped\"\n  ],\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+        "extractorSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "interface": {
+              "bytes": 141464,
+              "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+              "sha256": "e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48"
+            },
+            "module": "InheritedCheckedRecords",
+            "source": {
+              "bytes": 3011,
+              "path": "InheritedCheckedRecords.lean",
+              "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+            }
+          }
+        ],
+        "request": {
+          "arities": [],
+          "exportModules": [
+            "InheritedCheckedRecords"
+          ],
+          "exports": [
+            "InheritedCheckedRecords.produce",
+            "InheritedCheckedRecords.produceStamped"
+          ],
+          "metadata": {
+            "invocationIdentitySha256": "b739228870f4e9202176aa343370d45c2ad07d20b273331a2deb7b5bf9a966e4",
+            "modules": [
+              {
+                "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+                "name": "InheritedCheckedRecords",
+                "sourcePath": "InheritedCheckedRecords.lean",
+                "sourceSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+              }
+            ],
+            "toolchain": "leanprover/lean4:v4.32.2"
+          },
+          "modules": [
+            "InheritedCheckedRecords"
+          ],
+          "profile": "native-library-v1",
+          "resources": []
+        },
+        "sourceNoticesSha256": "5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211",
+        "sourceTreeSha256": "846512e1cbde8044affa9f0c3fe46c1608373cf633ecf838915fbe6a6892d3e9"
+      },
+      "version": "1.0.0"
+    },
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb\",\n  \"compiledProjectionSha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\",\n  \"component\": {\n    \"id\": \"inheritedcheckedrecords@1.0.0\",\n    \"name\": \"inheritedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"0aaf69b414a53b116052e4a33e35af0eb5299d55355c7385cc512ce68267a6a6\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 10990,\n      \"sha256\": \"fbf42d6fb262f3073f029d9c281fcbdc6e2d35b26ae07da0441062f648ada298\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1010,\n      \"sha256\": \"77799a6022e3323484920fa8801804ab06799aab253ff07b0c0ef2830221673f\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 3860,\n      \"sha256\": \"9f17e5c14a6f493eb4baaf5aeabea6d93f33ec7d664183a09098ebc92d6c5a0e\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 50941,\n      \"sha256\": \"9c78ad229add9c55cd46d4c231b66a55b2157fca4fa29d461c2638990d3ec99a\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 32550,\n      \"sha256\": \"78249f6d12d0576b24ec82f8c9e65a97a0e3dec2132e27d19b201b8790bc2d19\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 3620,\n      \"sha256\": \"100031f63a47de80d73715c1c04eb810ec6d13b509dbe4350d64eb62d9d64c9b\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 4484,\n      \"sha256\": \"2ca2bb37d188eea25cd6ec009256c9a0506baae41106b764e94c6b774e1dc233\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Api.java\": {\n      \"bytes\": 772,\n      \"sha256\": \"0c432f9d5c88951c0296bf5d17412880d1980c72c2ee37f027fcec84dbe2ad6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"29bc5a1061c7b42ac623851bc62bb0ebb139317c9f8239f3c508de66bf3cf2c6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 8401,\n      \"sha256\": \"57f328cc9dde7fd6f214d06a663f518f0ec5be28c5b072ff5eef04d859881a99\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 253,\n      \"sha256\": \"60fc130851079cc883b9c9e083b7b19175811c2196b45cff522940db55a0aaa7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13599,\n      \"sha256\": \"4be3e49e66831cdf7f0e6c444a3d31975f6cd35859e60b97b34d7546a1fce234\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Runtime.java\": {\n      \"bytes\": 7883,\n      \"sha256\": \"1db7731a28ded63b33d8000c34c828285ffbfc1370e0dff402b1ec378814b9d8\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Scope.java\": {\n      \"bytes\": 556,\n      \"sha256\": \"5ae7cac777811865f5dcff49bf239bcc2e42c0c7baca694fb1e032c3c5a19cbc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Span.java\": {\n      \"bytes\": 538,\n      \"sha256\": \"2baab898576601e559355ff0388da7f07f471648fafaa1065d1b28465f93eb22\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Stamped.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"4db945f5265223351020af2ff6581bcfa5749b4e06dcc7e38ae8a47275758bc9\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Ticket.java\": {\n      \"bytes\": 552,\n      \"sha256\": \"47888bb453cb5c9df066cea1140e49b809ef49e3f351a45d12d3084e2de048cd\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/inheritedcheckedrecords/Unit.java\": {\n      \"bytes\": 78,\n      \"sha256\": \"af1baae1f35c741c32f2c71614afc1e3ebf1783f2d7adfdf7585bb2f0a93e8a7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 281,\n      \"sha256\": \"685abdc3342bd2ab48f79f3319d92e3a9b19f99440c22cd002585a61bfae346e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 827,\n      \"sha256\": \"7c78e2d8d6069cc170ae5a08001465b6060db8f480438f169132c3ff44ec4f9f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 160,\n      \"sha256\": \"e536050fc56c011145eba82f7b71cffd29e6b9af6044544d28456caa13dee04e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Span.kt\": {\n      \"bytes\": 690,\n      \"sha256\": \"12891df096774494aaefbb2a7a61af39ca3105873158008d2ae7f3a0c4b1d0f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.kt\": {\n      \"bytes\": 831,\n      \"sha256\": \"e3b62c0ec58c134c3f7d1db3c5e1ab1d22b5c3a7b991ca8b59fe5c67ed7da6d0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.kt\": {\n      \"bytes\": 812,\n      \"sha256\": \"37cdc1b01b225f49dce2d13733b6c2d4411b86f6c00196f9b249afe4029de522\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/inheritedcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 130,\n      \"sha256\": \"dd5a1cf6685805587aa1964bc7b24f98d4e1496690720c06ea6aaef3241eea52\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 2066,\n      \"sha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1421,\n      \"sha256\": \"094f660ade65417331cb546d7deb7825245ff2623b3413260ff894d72bc25e7d\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 15050,\n      \"sha256\": \"a46fb73358e0e02abdc3cfc3cc5ffd4f15c1f020c164073436b71d2f7b6ae051\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so\": {\n      \"bytes\": 36296,\n      \"sha256\": \"e183f646c9ebeddc2ef01799f4e7480c27b6bcba74b7b0b4e61025277eee15cf\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libinheritedcheckedrecords.so\": {\n      \"bytes\": 21912,\n      \"sha256\": \"78d759244f7cefb25951d4139e12d8ceb26217ac7b1b9201c4e364310ee32450\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_inheritedcheckedrecords.kotlin_module\": {\n      \"bytes\": 104,\n      \"sha256\": \"aa8251853625399f182e72aae4ee3aca87286d8a9d50ef2d39e3d9127a3b608a\"\n    },\n    \"META-INF/maven/org.leanbridge/inheritedcheckedrecords/pom.xml\": {\n      \"bytes\": 633,\n      \"sha256\": \"f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30\"\n    },\n    \"README.md\": {\n      \"bytes\": 5469,\n      \"sha256\": \"d6c2752b8840e49456b6b3af3f4e062a3418aa016ea97b8ec6765d82fdccc87b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Api.class\": {\n      \"bytes\": 483,\n      \"sha256\": \"984019d6a48fd282d43166f06c35a18e58af2bf19ce6630db9fd91b87db9e2b4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 558,\n      \"sha256\": \"ea5ed20ff1aba148da90f89c53f47c7afc456f2a4c0d10986bf89bc0e0d22ae4\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1107,\n      \"sha256\": \"8c0ee0d8e40f45681da34fbfd1ce3d8a9547b52fdf7fb1d1cdfd73a346745545\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 9541,\n      \"sha256\": \"a5426898eaee799d295246fbe024275829c283fbbd1ec2ec6542e11ee4d457cf\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 288,\n      \"sha256\": \"5a6f66ab6fdbe501793fbdc24d2798fdb384388eb9c311b1b7c2000bf7833c83\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13420,\n      \"sha256\": \"c89937b777de1aad4082fcad58cbd09490a480dbe5df6e1ec342efdc9debfbbe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 438,\n      \"sha256\": \"b6d7657b9ddc723d16b96f9e9b9765e6979469ee016d15b8f62fadb8c60e6411\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Runtime.class\": {\n      \"bytes\": 9430,\n      \"sha256\": \"05a35c0a2516eacc3b909a773434ece031bb4e7d4973e07d6c1f93d5cee3bb6d\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Scope.class\": {\n      \"bytes\": 676,\n      \"sha256\": \"13b3626019ff5306d0267a90ba477268a3befbae89b5abd03a964b09e03785fe\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Span.class\": {\n      \"bytes\": 1398,\n      \"sha256\": \"2baae21924a390d23a3e8acd1fc350cd685b7bd005fba4200386baeacbcb1b01\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Stamped.class\": {\n      \"bytes\": 1547,\n      \"sha256\": \"60d02603f7b8011052ca41078afedcffd172575b048b4fb7f14c5ec30829fd88\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Ticket.class\": {\n      \"bytes\": 1535,\n      \"sha256\": \"3aebe3106cb95923e87e57921d4ae39c215799a2fa5051554cc982cffc74fbac\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/Unit.class\": {\n      \"bytes\": 918,\n      \"sha256\": \"faea51584ad8152e4670353d1a90ba8a3324849ee792ab556b28a009b557aec3\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 2340,\n      \"sha256\": \"d2ccdb756b47d3e445e9b9cff3c4bf6447e1e450741c370cd9d20d889c9de068\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 1475,\n      \"sha256\": \"6e1d79f42d7b9fb9150ec7aaef0213e93a4a30193ca3eaa17ebfca530cbb5472\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 481,\n      \"sha256\": \"47fa0fac9dee339946cb4235c148e14ed755a41663b26bc32a22fd3243987cd9\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Span.class\": {\n      \"bytes\": 1907,\n      \"sha256\": \"f6156cad6b8f3a6646621088b016579e8e08bd328799a16eff8892c85c47f50b\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Stamped.class\": {\n      \"bytes\": 2082,\n      \"sha256\": \"78b68401dd454e9c434f23befc1673338e1dd29a52e32ffcf8b5570ac2c4ad61\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/Ticket.class\": {\n      \"bytes\": 2071,\n      \"sha256\": \"8873a82a8da59c9f6183fdcbf123bcbe5b967689a1d890c5dfaeacc6e8d0d164\"\n    },\n    \"org/leanbridge/inheritedcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 421,\n      \"sha256\": \"8f9e6f4a493009b1318066aa31b04a5c85979c78de751886bedbeb5d26aca6e2\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.inheritedcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:inheritedcheckedrecords\",\n  \"namespace\": \"org.leanbridge.inheritedcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"fbe807748a877e7090dcb2db8c748eff31b6c1da6567db9cf1ebf8f6a2cfac69\",\n    \"exportConfigurationSource\": \"{\\n  \\\"exports\\\": [\\n    \\\"InheritedCheckedRecords.produce\\\",\\n    \\\"InheritedCheckedRecords.produceStamped\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"InheritedCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:inheritedcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 141464,\n          \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n          \"sha256\": \"e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48\"\n        },\n        \"module\": \"InheritedCheckedRecords\",\n        \"source\": {\n          \"bytes\": 3011,\n          \"path\": \"InheritedCheckedRecords.lean\",\n          \"sha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"exportModules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"exports\": [\n        \"InheritedCheckedRecords.produce\",\n        \"InheritedCheckedRecords.produceStamped\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"b739228870f4e9202176aa343370d45c2ad07d20b273331a2deb7b5bf9a966e4\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328\",\n            \"name\": \"InheritedCheckedRecords\",\n            \"sourcePath\": \"InheritedCheckedRecords.lean\",\n            \"sourceSha256\": \"daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"InheritedCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"5e7780c70bf54b76923b19559cc72a93702edcd2ad424ff38fe83dc3cd6d3211\",\n    \"sourceTreeSha256\": \"846512e1cbde8044affa9f0c3fe46c1608373cf633ecf838915fbe6a6892d3e9\"\n  },\n  \"version\": \"1.0.0\"\n}\n"
+  },
+  "installerCommandLogs": "Closed installer retains package/source/output identities, not compiler stdout",
+  "loadCeiling": 6,
+  "mode": "result-only",
+  "offlineInstall": true,
+  "producerCommit": "93ccc14cde12ecaf3d171f308f85dadeffaf3033",
+  "receipt": {
+    "component": {
+      "id": "inheritedcheckedrecords@1.0.0",
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51396373,
+            "path": "archives/inheritedcheckedrecords-1.0.0.jar",
+            "sha256": "fbc88b8e6283fab8e894b709e814880c0ac13a33b680a4377ccfc890f306a4c8"
+          },
+          {
+            "bytes": 633,
+            "path": "archives/inheritedcheckedrecords-1.0.0.pom",
+            "sha256": "f7ca0151aa2133f900be200ed4bd955f3d85542d88c124be54b413d292fa5c30"
+          }
+        ],
+        "ecosystem": "maven",
+        "name": "org.leanbridge:inheritedcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "maven",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "e0838475d5697f7c90e34e89d2d415bcd0001cf047f5b2def0a898ddbc2e1ecb",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "846512e1cbde8044affa9f0c3fe46c1608373cf633ecf838915fbe6a6892d3e9"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15315918848,
+          "freeBytes": 75759128576,
+          "load": 1.34
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15315918848,
+          "freeBytes": 75759120384,
+          "load": 1.34
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15493390336,
+          "freeBytes": 75656216576,
+          "load": 1.19
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15229820928,
+          "freeBytes": 75656110080,
+          "load": 1.21
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15159472128,
+          "freeBytes": 75553239040,
+          "load": 1.17
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trustedToolchains": "Explicit JDK and Kotlin distributions; their complete contents are not authenticated"
+}

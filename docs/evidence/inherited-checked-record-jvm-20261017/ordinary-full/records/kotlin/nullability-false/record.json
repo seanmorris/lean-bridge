@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "7e3c9ff8e1073dd87f9f9258f6049c4290334c0b7155071f8c4b0b148f4f45d3",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-l4MgGN/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 3212,
+      "sha256": "23ed79054d61023421bedd7a3955b032c196201ca0d3a218804a76f9e8d76eaa"
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(java.math.BigInteger.ONE)\nfun produceStampedNull() = Api.produceStamped(java.math.BigInteger.ONE)\nfun aliasedNull() = Api.aliased(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\nfun echoNull() = Api.echo(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\nfun firstNull() = Api.first(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\nfun nestedNull() = Api.nested(Stamped(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE), java.math.BigInteger.ZERO))\nfun normalizedNull() = Api.normalized(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\nfun pairNull() = Api.pair(Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE), Ticket(Span(java.math.BigInteger.ONE, java.math.BigInteger.ONE), java.math.BigInteger.ONE))\n",
+  "sourceSha256": "14f237075819c9799f950de562a582910f8e7b01144e9abdb025b4f5072a03e3"
+}

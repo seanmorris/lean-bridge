@@ -1,0 +1,67 @@
+{
+  "archiveSha256": "11c7443681e940d805744d8999b9e1288aa746ec31e567bc1d542949fc46e209",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-8EUBa8/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "mode": "full",
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 37,
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    "ProbeKt$probeAliased$1.class": {
+      "bytes": 1641,
+      "sha256": "e9989288371851fdab0d8d4e29cbfc381ab01d6ee149e32c81d36545ae196a79"
+    },
+    "ProbeKt$probeEcho$1.class": {
+      "bytes": 1725,
+      "sha256": "8f33192f4114226fdd6ce2c9c76edb4f0722d6da03d945623360cdbd34823bd3"
+    },
+    "ProbeKt$probeFirst$1.class": {
+      "bytes": 1633,
+      "sha256": "0738268f6c4bcacf097a8d02e9ed3cf11f9a5238287e287419344fcc0dad997c"
+    },
+    "ProbeKt$probeNested$1.class": {
+      "bytes": 1642,
+      "sha256": "4ebb21fa9da62419bb88223d39ae03e8888bbdff0fb0fd831b9e81c7595d036a"
+    },
+    "ProbeKt$probeNormalized$1.class": {
+      "bytes": 1653,
+      "sha256": "a6d396d91443f7d6812df804b31d8d0278dd294488e274e020237f2cc1732bf3"
+    },
+    "ProbeKt$probePair$1.class": {
+      "bytes": 1848,
+      "sha256": "7fd65c528e0a36a36b2c44e56fed48f599b913d9d776a2a335e8a756f8a8b650"
+    },
+    "ProbeKt.class": {
+      "bytes": 2674,
+      "sha256": "d75daaa1b43c57852796340a9145fe88828cd300e5079ff316631e7079d9dd43"
+    }
+  },
+  "profile": "kotlin",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nval probeAliased = Api::aliased\nval probeEcho = Api::echo\nval probeFirst = Api::first\nval probeNested = Api::nested\nval probeNormalized = Api::normalized\nval probePair = Api::pair\n",
+  "sourceSha256": "1775f0e6cbe6ab6a208e59f54a00274ae139c240c92b7421e6a40edf0ebf36a0"
+}

@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "11c7443681e940d805744d8999b9e1288aa746ec31e567bc1d542949fc46e209",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-8EUBa8/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "mode": "full",
+  "outputs": {
+    "Probe.class": {
+      "bytes": 997,
+      "sha256": "0e8fca6b5dba171545c12b46ff892d1b134a4d0a9254143c796fafce838b68da"
+    }
+  },
+  "profile": "java",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.*;\nfinal class Probe {\n    static Object aliased() { return Api.aliased(null); }\n    static Object echo() { return Api.echo(null); }\n    static Object first() { return Api.first(null); }\n    static Object nested() { return Api.nested(null); }\n    static Object normalized() { return Api.normalized(null); }\n    static Object pair() { return Api.pair(null, null); }\n}\n",
+  "sourceSha256": "a7981137b7e362a74e8a98ea8d03f9b4f520dd390e15fe2519bd16b96065240b"
+}

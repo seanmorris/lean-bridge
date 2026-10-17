@@ -33,7 +33,8 @@ export {
 	inheritedCheckedRecordJvmEvidence
 } from "./inherited-checked-record-jvm-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordJvmEvidenceSha256 = null;
+export const inheritedCheckedRecordJvmEvidenceSha256
+	= "23ac619b52bc52b22f6a938783c2164ce89c5aa8bcec1c307862c92ab6aa79f7";
 
 const controlKeys = [
 	"recordControls", "executionControls", "probeControls"

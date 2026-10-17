@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "11c7443681e940d805744d8999b9e1288aa746ec31e567bc1d542949fc46e209",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-inherited-record-jvm-installed-8EUBa8/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "mode": "full",
+  "outputs": {},
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceNull() = Api.produce(null)\n                                ^^^^\nNullProbe.kt:3:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceStampedNull() = Api.produceStamped(null)\n                                              ^^^^\nNullProbe.kt:4:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun aliasedNull() = Api.aliased(null)\n                                ^^^^\nNullProbe.kt:5:27: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun echoNull() = Api.echo(null)\n                          ^^^^\nNullProbe.kt:6:29: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun firstNull() = Api.first(null)\n                            ^^^^\nNullProbe.kt:7:31: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Stamped'.\nfun nestedNull() = Api.nested(null)\n                              ^^^^\nNullProbe.kt:8:39: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun normalizedNull() = Api.normalized(null)\n                                      ^^^^\nNullProbe.kt:9:27: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun pairNull() = Api.pair(null, null)\n                          ^^^^\nNullProbe.kt:9:33: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ticket'.\nfun pairNull() = Api.pair(null, null)\n                                ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.inheritedcheckedrecords.kotlin.*\nfun produceNull() = Api.produce(null)\nfun produceStampedNull() = Api.produceStamped(null)\nfun aliasedNull() = Api.aliased(null)\nfun echoNull() = Api.echo(null)\nfun firstNull() = Api.first(null)\nfun nestedNull() = Api.nested(null)\nfun normalizedNull() = Api.normalized(null)\nfun pairNull() = Api.pair(null, null)\n",
+  "sourceSha256": "660ef408f73ccfb6a4fb1011c697905376bb53294ea75dd9e15d783d08f59db2"
+}
