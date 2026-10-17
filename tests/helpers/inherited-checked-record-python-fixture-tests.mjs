@@ -25,6 +25,12 @@ import {
 	, parseInheritedCheckedRecordPythonResult
 } from "./inherited-checked-record-python-fixture.mjs";
 import { inheritedCheckedRecordReview } from "./inherited-checked-record-fixture.mjs";
+import {
+	assertInheritedCheckedRecordPythonResources
+} from "./inherited-checked-record-python-resources.mjs";
+import {
+	assertInheritedCheckedRecordPythonIdentity
+} from "./inherited-checked-record-python-wheel.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 
 const fullNames = [
@@ -137,6 +143,73 @@ test("inherited checked-record Python gates close routes, modes, floors, and loa
 		assert.throws(() => inheritedCheckedRecordPythonSelection({
 			...enabled, [prefix + "MAX_LOAD"]: maxLoad
 		}));
+});
+
+test("inherited checked-record Python resource records preserve the selected load ceiling", () => {
+	const GiB = 1024 ** 3;
+	const admitted = {
+		freeBytes: 3 * GiB, availableBytes: 4 * GiB, load: 9.5
+	};
+	assertInheritedCheckedRecordPythonResources({
+		observations: [admitted], waits: 0
+	}, 10);
+	assertInheritedCheckedRecordPythonResources({
+		observations: [{ ...admitted, load: 12.5 }, admitted], waits: 1
+	}, 12);
+	for(const changed of [
+		{ observations: [{ ...admitted, freeBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, availableBytes: GiB }], waits: 0 }
+		, { observations: [{ ...admitted, load: 10 }], waits: 0 }
+		, { observations: [admitted], waits: 1 }
+		, { observations: [admitted], waits: 0, extra: true }
+	]) assert.throws(() => assertInheritedCheckedRecordPythonResources(
+		changed, 10));
+	for(const maxLoad of [4, 16, 24, Infinity])
+		assert.throws(() => assertInheritedCheckedRecordPythonResources({
+			observations: [admitted], waits: 0
+		}, maxLoad));
+});
+
+test("inherited checked-record Python wheel identity rejects changed authority", () => {
+	const model = {
+		bindingIrSha256: "a".repeat(64)
+		, component: { id: "synthetic" }, sourceIdentity: { fixture: true }
+	};
+	const pkg = {
+		target: "pypi", ecosystem: "pypi", role: "component"
+		, profile: "native-library-v1", runtimeDelivery: "embedded"
+		, requires: [], name: "inheritedcheckedrecords", version: "1.0.0"
+		, runtimeIdentity: "b".repeat(64)
+		, artifacts: [{
+			path: "archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl"
+		}]
+	};
+	const receipt = {
+		schemaVersion: 1, kind: "lean-bridge-ordinary-python-package"
+		, ecosystem: "pypi", moduleName: inheritedCheckedRecordPythonPackage
+		, name: pkg.name, version: pkg.version
+		, runtimeIdentity: pkg.runtimeIdentity
+		, ...model
+		, glibcMinimumVersion: "2.38"
+		, tag: "py3-none-manylinux_2_38_x86_64"
+	};
+	assertInheritedCheckedRecordPythonIdentity(receipt, pkg, model, "2.38");
+	for(const key of Object.keys(receipt))
+	{
+		assert.throws(() => assertInheritedCheckedRecordPythonIdentity({
+			...receipt, [key]: "changed"
+		}, pkg, model, "2.38"));
+		const missing = { ...receipt }; delete missing[key];
+		assert.throws(() => assertInheritedCheckedRecordPythonIdentity(
+			missing, pkg, model, "2.38"));
+	}
+	for(const key of Object.keys(pkg))
+		assert.throws(() => assertInheritedCheckedRecordPythonIdentity(
+			receipt, { ...pkg, [key]: "changed" }, model, "2.38"));
+	assert.throws(() => assertInheritedCheckedRecordPythonIdentity(
+		receipt, { ...pkg, artifacts: [] }, model, "2.38"));
+	assert.throws(() => assertInheritedCheckedRecordPythonIdentity(
+		receipt, pkg, model, "2.36"));
 });
 
 test("independent inherited checked-record Python caller covers every closed selection", async () => {
