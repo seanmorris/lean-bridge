@@ -87,11 +87,11 @@ export const inheritedCheckedRecordPythonEvidenceSources = async revisions => {
 		{
 			role: "producer", revision: revisions.producer
 			, paths: [
-					...closure(revisions.producer, [
-						"tests/helpers/inherited-checked-record-python-installed-tests.mjs"
-					])
-					, ...generator.paths, ...fixture, ...callers
-					, "tests/helpers/inherited-checked-record-python-resources.mjs"
+				...closure(revisions.producer, [
+					"tests/helpers/inherited-checked-record-python-installed-tests.mjs"
+				])
+				, ...generator.paths, ...fixture, ...callers
+				, "tests/helpers/inherited-checked-record-python-resources.mjs"
 				, ".github/actions/bounded-apt/action.yml"
 				, ".github/workflows/inherited-checked-record-python.yml"
 				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
