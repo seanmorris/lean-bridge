@@ -8,7 +8,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import {
-	access, cp, mkdir, mkdtemp, readFile, rename, rm
+	access, cp, mkdir, mkdtemp, readFile, realpath, rename, rm
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -78,8 +78,17 @@ for(const route of routes) for(const mode of modes) test(
 		);
 		await assert.rejects(access(output), { code: "ENOENT" });
 		await mkdir(output, { recursive: true });
+		const selectedEnvironment
+			= nativeFixtureEnvironment(inheritedCheckedRecordJvmProfiles);
 		const environment = {
-			...nativeFixtureEnvironment(inheritedCheckedRecordJvmProfiles)
+			...selectedEnvironment
+			, LEAN_BRIDGE_JAVA: await realpath(selectedEnvironment.LEAN_BRIDGE_JAVA)
+			, LEAN_BRIDGE_JAVAC: await realpath(
+				selectedEnvironment.LEAN_BRIDGE_JAVAC
+			)
+			, LEAN_BRIDGE_KOTLINC: await realpath(
+				selectedEnvironment.LEAN_BRIDGE_KOTLINC
+			)
 			, LEAN_NUM_THREADS: "1"
 		};
 		const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
