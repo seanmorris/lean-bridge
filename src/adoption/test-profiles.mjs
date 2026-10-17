@@ -298,6 +298,7 @@ const profileManifest = Object.freeze({
 		, "inherited-checked-record-python"
 		, "inherited-checked-record-python-evidence"
 		, "inherited-checked-record-python-source-history"
+		, "inherited-checked-record-ruby"
 		, "inherited-checked-record-native"
 		, "inherited-checked-record-npm-source"
 		, "inherited-checked-record-test-registration-history"
