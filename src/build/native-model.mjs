@@ -192,6 +192,18 @@ const containmentSafe = tree => {
 
 const nativeRefinements = (declaration, callbacks = false) => {
 	const unsupported = message => Object.assign(new TypeError(`${declaration.name}: ${message}`), { code: "native-refinements-unsupported", details: { declaration: declaration.name } });
+	const checkedRecordBase = value => {
+		const seen = new Set();
+		for(let depth = 0; depth <= 1024; depth++)
+		{
+			if(value?.kind !== "alias") return value;
+			if(typeof value.name !== "string" || seen.has(value.name))
+				throw unsupported("checked record refinements require a closed nominal base");
+			seen.add(value.name);
+			value = value.target;
+		}
+		throw unsupported("checked record alias chain exceeds the nominal type limit");
+	};
 	const tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === "result") => {
 		if(type.kind === "callback")
 		{
@@ -212,13 +224,16 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			if(type.predicate.kind === "checked-record")
 			{
 				if(!subtypeStructural || produced) throw unsupported("checked records require a structural parameter constructor");
-				const arguments_ = type.base.fields.map(field => tree(field.type, false, undefined, true, false));
-				if(Object.hasOwn(type.base, "provenance") && (!top || arguments_.some(Boolean)))
+				const base = checkedRecordBase(type.base);
+				if(base?.kind !== "record" || !Object.hasOwn(base, "erased"))
+					throw unsupported("checked record refinements require a record with erased proofs");
+				const arguments_ = base.fields.map(field => tree(field.type, false, undefined, true, false));
+				if(Object.hasOwn(base, "provenance") && (!top || arguments_.some(Boolean)))
 					throw unsupported("nested and field-refined generic checked records require another representation");
 				const value = {
-					kind: "checked-record", definition: type.base.lean
+					kind: "checked-record", definition: base.lean
 					, constructor: type.predicate.constructor
-					, fields: type.base.fields.map(field => field.name)
+					, fields: base.fields.map(field => field.name)
 				};
 				return !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;
 			}

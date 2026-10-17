@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-foundation-source-v1",
+  "predecessorCommit": "224550a6662d41a5a3f191ce25756426ed9ecc78",
+  "pathsSha256": "a1ba4ea710be7ef2635176bba0f2ac37ae9046a1cbae20b4c7fbac236dbbdaf4",
+  "pinCount": 496,
+  "pinUpdates": [
+    {
+      "path": "schema/elaborated-export-metadata.schema.json",
+      "previousSha256": "7a36901fff63f9a9b4a57fbf5b28f64914bf33b320d45b4140c6a62990f5530c",
+      "currentSha256": "713c700825b9aa1af805b9a4d22203f413f21eaa0bf4e63053304d4287781a33",
+      "count": 10
+    },
+    {
+      "path": "schema/native-metadata-type.schema.json",
+      "previousSha256": "f6a9f84633251a88a8fdf596798ba60bff144316b3b78f36ab2b276c09423a9d",
+      "currentSha256": "261915ea87dd1cd25934a75ae50f461f5607a59a227bdc167e5e28c6310628cf",
+      "count": 26
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+      "currentSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+      "count": 155
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "previousSha256": "deea3d624731af896ca6e80592f64eea7c9bbb755e503a17044fec87b36111aa",
+      "currentSha256": "e7420f8a7ff2d82f38a56b9db24b3df0b8fda3347bb1abbcfd95c4d7a2533e06",
+      "count": 98
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "7124641ea6d830e781005408d0a24e974e3062a5e10fb5ca3a5a5e1a4d79f47b",
+      "currentSha256": "65e5b7d3c6d0f01f04c4019f14b39b107cf56853bb003680f1b77bda296bc1c1",
+      "count": 60
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "d8354d26e831c2591bc583fcddd11f662008ae966a56142df00602413bdb4913",
+      "currentSha256": "1adc35468cda3adb5f2bc531d0cdb833cc0be0c193abea24521b380a6b52e73f",
+      "count": 146
+    },
+    {
+      "path": "tests/inherited-records.test.mjs",
+      "previousSha256": "68d8941419aba1e327f83db0c724913aa4d49dc0c41a0f8ee8ed9929d68ff3ce",
+      "currentSha256": "db366404e9f66322b8d4874efb1b1c637b287d08818cf23a7b676e8662570b6f",
+      "count": 1
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-foundation-history.mjs",
+      "currentSha256": "f98ee096062444cb6c63bb90710d846923caafd562b25e21ae81eb222fe4029b"
+    },
+    {
+      "path": "tests/fixtures/onboarding/inherited-checked-records/InheritedCheckedRecords.lean",
+      "currentSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+    },
+    {
+      "path": "tests/fixtures/onboarding/inherited-checked-records/LICENSE",
+      "currentSha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    {
+      "path": "tests/fixtures/onboarding/inherited-checked-records/lakefile.toml",
+      "currentSha256": "962eab239a85786d222c654c723b8d4b49407f2d5200c5233cdd1f6a535656d9"
+    },
+    {
+      "path": "tests/fixtures/onboarding/inherited-checked-records/lean-toolchain",
+      "currentSha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+    },
+    {
+      "path": "tests/fixtures/onboarding/inherited-checked-records/package.json",
+      "currentSha256": "8adfe8f7750b3cbf16f84197dcc42b6befcea05a5525ba587c0bf52f8b6f3432"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-fixture.mjs",
+      "currentSha256": "5b32e9e438148bcf69f1db94fdd2e8efbc8bc080ab9c954b421cca93c6dfec6d"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-foundation-history-tests.mjs",
+      "currentSha256": "982d902f6a4bfd63b0525ae8d6c2269e59795bb2834c65071eb8cdca288c3d6d"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-foundation-history.mjs",
+      "currentSha256": "d0ba0b29e44be9cbf9332f4f755457ce5f2516112aa21482213147f90ea53c9d"
+    },
+    {
+      "path": "tests/inherited-checked-records.test.mjs",
+      "currentSha256": "25227f243644616e92a0a4dea5166841bf1abf7f4a26d0586c4797db1691fd52"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e6d4a9cfa3e3889e7552f4901b783ba14103c9c9d30398d3c1a55cc7d450c774",
+      "currentSha256": "4557dc76956a58bb8683b06b9f43fbd203481003c98051d9205387dc12de139c",
+      "replacements": [
+        {
+          "previous": "7a36901fff63f9a9b4a57fbf5b28f64914bf33b320d45b4140c6a62990f5530c",
+          "current": "713c700825b9aa1af805b9a4d22203f413f21eaa0bf4e63053304d4287781a33",
+          "count": 10
+        },
+        {
+          "previous": "f6a9f84633251a88a8fdf596798ba60bff144316b3b78f36ab2b276c09423a9d",
+          "current": "261915ea87dd1cd25934a75ae50f461f5607a59a227bdc167e5e28c6310628cf",
+          "count": 26
+        },
+        {
+          "previous": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+          "current": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+          "count": 155
+        },
+        {
+          "previous": "deea3d624731af896ca6e80592f64eea7c9bbb755e503a17044fec87b36111aa",
+          "current": "e7420f8a7ff2d82f38a56b9db24b3df0b8fda3347bb1abbcfd95c4d7a2533e06",
+          "count": 98
+        },
+        {
+          "previous": "7124641ea6d830e781005408d0a24e974e3062a5e10fb5ca3a5a5e1a4d79f47b",
+          "current": "65e5b7d3c6d0f01f04c4019f14b39b107cf56853bb003680f1b77bda296bc1c1",
+          "count": 60
+        },
+        {
+          "previous": "d8354d26e831c2591bc583fcddd11f662008ae966a56142df00602413bdb4913",
+          "current": "1adc35468cda3adb5f2bc531d0cdb833cc0be0c193abea24521b380a6b52e73f",
+          "count": 146
+        },
+        {
+          "previous": "68d8941419aba1e327f83db0c724913aa4d49dc0c41a0f8ee8ed9929d68ff3ce",
+          "current": "db366404e9f66322b8d4874efb1b1c637b287d08818cf23a7b676e8662570b6f",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "schema/elaborated-export-metadata.schema.json",
+      "previousSha256": "7a36901fff63f9a9b4a57fbf5b28f64914bf33b320d45b4140c6a62990f5530c",
+      "currentSha256": "713c700825b9aa1af805b9a4d22203f413f21eaa0bf4e63053304d4287781a33",
+      "edits": [
+        {
+          "start": 11211,
+          "previous": "            \"base\": { \"allOf\": [{ \"$ref\": \"#/$defs/copiedType\" }, { \"required\": [\"erased\"], \"properties\": { \"kind\": { \"const\": \"record\" } } }] },\n",
+          "current": "            \"base\": { \"allOf\": [{ \"$ref\": \"#/$defs/copiedType\" }, { \"properties\": { \"kind\": { \"enum\": [\"record\", \"alias\", \"reference\"] } } }] },\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/native-metadata-type.schema.json",
+      "previousSha256": "f6a9f84633251a88a8fdf596798ba60bff144316b3b78f36ab2b276c09423a9d",
+      "currentSha256": "261915ea87dd1cd25934a75ae50f461f5607a59a227bdc167e5e28c6310628cf",
+      "edits": [
+        {
+          "start": 9941,
+          "previous": "        \"base\": { \"allOf\": [{ \"$ref\": \"#\" }, { \"required\": [\"erased\"], \"properties\": { \"kind\": { \"const\": \"record\" } } }] },\n",
+          "current": "        \"base\": { \"allOf\": [{ \"$ref\": \"#\" }, { \"properties\": { \"kind\": { \"enum\": [\"record\", \"alias\", \"reference\"] } } }] },\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+      "currentSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+      "edits": [
+        {
+          "start": 45742,
+          "previous": "        forallTelescopeReducing (← inferType constructor) fun binders _ => do\n",
+          "current": "        forallTelescopeReducing (← inferType constructor) fun binders result => do\n"
+        },
+        {
+          "start": 45959,
+          "previous": "",
+          "current": "          unless ← isDefEq result e do reject e \"inherited record constructor does not build the record\"\n"
+        },
+        {
+          "start": 46338,
+          "previous": "            if fieldType.hasLooseBVars then reject e \"inherited record fields cannot depend on the record value\"\n",
+          "current": "            -- A proof projection may mention inherited or earlier payload through the receiver.\n            -- Lean's constructor owns that binder and the bridge erases it below. A transported\n            -- value may not depend on the receiver: no host representation can reconstruct such\n            -- a dependent payload after proof erasure.\n            let proof ← withLocalDecl `value .default e fun receiver =>\n              isProp (fieldType.instantiate1 receiver)\n            if proof then continue\n            if fieldType.hasLooseBVars then reject e \"inherited record payload fields cannot depend on the record value\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/native-types.mjs",
+      "previousSha256": "deea3d624731af896ca6e80592f64eea7c9bbb755e503a17044fec87b36111aa",
+      "currentSha256": "e7420f8a7ff2d82f38a56b9db24b3df0b8fda3347bb1abbcfd95c4d7a2533e06",
+      "edits": [
+        {
+          "start": 10813,
+          "previous": "\t\trecurse(type.target, true);\n",
+          "current": "\t\t// Transparent alias spelling cannot discard the checked constructor that guards its\n\t\t// underlying proof-backed record. Other top-level site labels intentionally stop here:\n\t\t// only the checked-record marker describes the already validated inner conversion.\n\t\tvalidate(type.target, depth + 1, true, references, policy, owned, structural\n\t\t\t, site === \"checked-record\" ? site : undefined\n\t\t\t, subtypeStructural, subtypeResult, erasedTransport);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "7124641ea6d830e781005408d0a24e974e3062a5e10fb5ca3a5a5e1a4d79f47b",
+      "currentSha256": "65e5b7d3c6d0f01f04c4019f14b39b107cf56853bb003680f1b77bda296bc1c1",
+      "edits": [
+        {
+          "start": 4879,
+          "previous": "\t\t\tvalue.base = remember(type.base);\n",
+          "current": ""
+        },
+        {
+          "start": 4964,
+          "previous": "\t\t\tif(type.predicate.kind === \"subtype\") value.predicate = { kind: \"subtype\" };\n",
+          "current": "\t\t\t// Remove the complete site wrapper while comparing nominal facts: a Lean-produced\n\t\t\t// child has a bare checked parent, whereas an input child wraps that same parent in\n\t\t\t// its selected constructor. Both retain one compiler-owned parent layout.\n\t\t\tif([\"subtype\", \"checked-record\"].includes(type.predicate.kind))\n\t\t\t\treturn remember(type.base);\n\t\t\tvalue.base = remember(type.base);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "d8354d26e831c2591bc583fcddd11f662008ae966a56142df00602413bdb4913",
+      "currentSha256": "1adc35468cda3adb5f2bc531d0cdb833cc0be0c193abea24521b380a6b52e73f",
+      "edits": [
+        {
+          "start": 11369,
+          "previous": "",
+          "current": "\tconst checkedRecordBase = value => {\n\t\tconst seen = new Set();\n\t\tfor(let depth = 0; depth <= 1024; depth++)\n\t\t{\n\t\t\tif(value?.kind !== \"alias\") return value;\n\t\t\tif(typeof value.name !== \"string\" || seen.has(value.name))\n\t\t\t\tthrow unsupported(\"checked record refinements require a closed nominal base\");\n\t\t\tseen.add(value.name);\n\t\t\tvalue = value.target;\n\t\t}\n\t\tthrow unsupported(\"checked record alias chain exceeds the nominal type limit\");\n\t};\n"
+        },
+        {
+          "start": 13054,
+          "previous": "\t\t\t\tconst arguments_ = type.base.fields.map(field => tree(field.type, false, undefined, true, false));\n\t\t\t\tif(Object.hasOwn(type.base, \"provenance\") && (!top || arguments_.some(Boolean)))\n",
+          "current": "\t\t\t\tconst base = checkedRecordBase(type.base);\n\t\t\t\tif(base?.kind !== \"record\" || !Object.hasOwn(base, \"erased\"))\n\t\t\t\t\tthrow unsupported(\"checked record refinements require a record with erased proofs\");\n\t\t\t\tconst arguments_ = base.fields.map(field => tree(field.type, false, undefined, true, false));\n\t\t\t\tif(Object.hasOwn(base, \"provenance\") && (!top || arguments_.some(Boolean)))\n"
+        },
+        {
+          "start": 13562,
+          "previous": "\t\t\t\t\tkind: \"checked-record\", definition: type.base.lean\n",
+          "current": "\t\t\t\t\tkind: \"checked-record\", definition: base.lean\n"
+        },
+        {
+          "start": 13660,
+          "previous": "\t\t\t\t\t, fields: type.base.fields.map(field => field.name)\n",
+          "current": "\t\t\t\t\t, fields: base.fields.map(field => field.name)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "64e936f0d987311f9d2546ca00cf5a646e7adf5e584094a7c22a3e90b31e2a8f",
+      "currentSha256": "05e335c6a6cdabf48124a2d94241c42b65c219a555ac21a18e97dbbb15c8cb82",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordFoundationSource, inheritedCheckedRecordFoundationChangedPaths } from \"./inherited-checked-record-foundation-history.mjs\";\n"
+        },
+        {
+          "start": 72338,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordFoundationSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 81171,
+          "previous": "\t...checkedJavaScriptDispositionChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordFoundationChangedPaths\n\t, ...checkedJavaScriptDispositionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-records.test.mjs",
+      "previousSha256": "68d8941419aba1e327f83db0c724913aa4d49dc0c41a0f8ee8ed9929d68ff3ce",
+      "currentSha256": "db366404e9f66322b8d4874efb1b1c637b287d08818cf23a7b676e8662570b6f",
+      "edits": [
+        {
+          "start": 5851,
+          "previous": "test(\"inherited fields that depend on the record value, and a generic parent without a source alias, are refused at their source\", { skip: !lean, timeout: 900_000 }, async t => {\n",
+          "current": "test(\"inherited payload fields that depend on the record value, and a generic parent without a source alias, are refused at their source\", { skip: !lean, timeout: 900_000 }, async t => {\n"
+        },
+        {
+          "start": 6202,
+          "previous": "\t\t[\"a proof field over an inherited value\", \"structure Small extends Point where\\n  small : x < 10\\ndef keep (value : Small) : Nat := value.x\", \"keep\", /inherited record fields cannot depend on the record value/u]\n",
+          "current": "\t\t[\"a payload field over an inherited value\", \"structure Indexed extends Point where\\n  slot : Fin x\\ndef keep (value : Indexed) : Nat := value.slot.val\", \"keep\", /inherited record payload fields cannot depend on the record value/u]\n"
+        }
+      ]
+    }
+  ]
+}

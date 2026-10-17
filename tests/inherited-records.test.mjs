@@ -85,13 +85,13 @@ test("inherited records carry each subobject parent as its own field and compile
 	assert.deepEqual(ir.declarations.map(item => item.id).sort(), exports.map(name => `lean:${name}`).sort());
 });
 
-test("inherited fields that depend on the record value, and a generic parent without a source alias, are refused at their source", { skip: !lean, timeout: 900_000 }, async t => {
+test("inherited payload fields that depend on the record value, and a generic parent without a source alias, are refused at their source", { skip: !lean, timeout: 900_000 }, async t => {
 	const refused = (pattern, label) => error => {
 		assert.match(JSON.stringify(error.details ?? error.message), pattern, label);
 		return true;
 	};
 	const cases = [
-		["a proof field over an inherited value", "structure Small extends Point where\n  small : x < 10\ndef keep (value : Small) : Nat := value.x", "keep", /inherited record fields cannot depend on the record value/u]
+		["a payload field over an inherited value", "structure Indexed extends Point where\n  slot : Fin x\ndef keep (value : Indexed) : Nat := value.slot.val", "keep", /inherited record payload fields cannot depend on the record value/u]
 		, ["a generic parent with no source alias", "structure Base (α : Type) where\n  base : α\nstructure Child (α : Type) extends Base α where\n  child : Nat\nabbrev NatChild := Child Nat\ndef grow (value : NatChild) : Nat := value.child", "grow", /name this inherited generic parent with an abbrev in the compiled source/u]];
 	for(const [label, extra, name, pattern] of cases)
 		await assert.rejects(() => nativeModel(t, { extra, names: [`InheritedRecords.${name}`] }), refused(pattern, label), label);

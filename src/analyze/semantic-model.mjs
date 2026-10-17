@@ -89,9 +89,13 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		const value = { ...type };
 		if(type.kind === "refinement")
 		{
-			value.base = remember(type.base);
 			// A constructor is a site's decision, not part of the shared nominal definition.
-			if(type.predicate.kind === "subtype") value.predicate = { kind: "subtype" };
+			// Remove the complete site wrapper while comparing nominal facts: a Lean-produced
+			// child has a bare checked parent, whereas an input child wraps that same parent in
+			// its selected constructor. Both retain one compiler-owned parent layout.
+			if(["subtype", "checked-record"].includes(type.predicate.kind))
+				return remember(type.base);
+			value.base = remember(type.base);
 		}
 		if(type.kind === "alias") value.target = remember(type.target);
 		if(["array", "list", "option"].includes(type.kind)) value.element = remember(type.element);

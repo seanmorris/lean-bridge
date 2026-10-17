@@ -176,7 +176,12 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	} else if(type.kind === "alias")
 	{
 		if(typeof type.name !== "string" || !identifier.test(type.name) || type.name !== type.lean) fail("invalid alias identity");
-		recurse(type.target, true);
+		// Transparent alias spelling cannot discard the checked constructor that guards its
+		// underlying proof-backed record. Other top-level site labels intentionally stop here:
+		// only the checked-record marker describes the already validated inner conversion.
+		validate(type.target, depth + 1, true, references, policy, owned, structural
+			, site === "checked-record" ? site : undefined
+			, subtypeStructural, subtypeResult, erasedTransport);
 		if(["cType", "box", "unbox", "heap"].some(field => type.abi[field] !== type.target.abi[field])) fail("alias representation differs from its target");
 	} else if(["array", "list", "option"].includes(type.kind)) recurse(type.element, true);
 	else if(["result", "tuple"].includes(type.kind))

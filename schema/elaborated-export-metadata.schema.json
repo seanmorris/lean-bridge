@@ -339,7 +339,7 @@
           "type": "object", "additionalProperties": false, "required": ["kind", "base", "predicate"],
           "properties": {
             "kind": { "const": "refinement" },
-            "base": { "allOf": [{ "$ref": "#/$defs/copiedType" }, { "required": ["erased"], "properties": { "kind": { "const": "record" } } }] },
+            "base": { "allOf": [{ "$ref": "#/$defs/copiedType" }, { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } }] },
             "predicate": {
               "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
               "properties": {

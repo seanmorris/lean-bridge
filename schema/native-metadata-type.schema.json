@@ -315,7 +315,7 @@
       "required": ["kind", "base", "predicate", "abi"],
       "properties": {
         "kind": { "const": "refinement" },
-        "base": { "allOf": [{ "$ref": "#" }, { "required": ["erased"], "properties": { "kind": { "const": "record" } } }] },
+        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } }] },
         "predicate": { "$ref": "#/$defs/constructorPredicate", "properties": { "kind": { "const": "checked-record" } } },
         "abi": { "$ref": "#/$defs/abi" }
       }

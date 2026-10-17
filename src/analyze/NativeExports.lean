@@ -702,12 +702,20 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       -- toBase of the parent record, and the constructor takes exactly these closed fields in order.
       if !info.parentInfo.isEmpty then
         let constructor := mkConst induct.ctors.head! (induct.levelParams.map mkLevelParam)
-        forallTelescopeReducing (← inferType constructor) fun binders _ => do
+        forallTelescopeReducing (← inferType constructor) fun binders result => do
           unless binders.size == info.fieldNames.size do reject e "inherited record constructor arity disagrees with its projections"
+          unless ← isDefEq result e do reject e "inherited record constructor does not build the record"
           for binder in binders, index in [0:binders.size] do
             let some projection := info.getProjFn? index | reject e "missing record projection"
             let .forallE _ _ fieldType _ := (← getConstInfo projection).type | reject e "invalid record projection"
-            if fieldType.hasLooseBVars then reject e "inherited record fields cannot depend on the record value"
+            -- A proof projection may mention inherited or earlier payload through the receiver.
+            -- Lean's constructor owns that binder and the bridge erases it below. A transported
+            -- value may not depend on the receiver: no host representation can reconstruct such
+            -- a dependent payload after proof erasure.
+            let proof ← withLocalDecl `value .default e fun receiver =>
+              isProp (fieldType.instantiate1 receiver)
+            if proof then continue
+            if fieldType.hasLooseBVars then reject e "inherited record payload fields cannot depend on the record value"
             unless ← isDefEq (← inferType binder) fieldType do reject e "inherited record constructor and projection types disagree"
       let mut fields := #[]
       -- Proof fields are erased: they never cross, and only a checked constructor builds them.
