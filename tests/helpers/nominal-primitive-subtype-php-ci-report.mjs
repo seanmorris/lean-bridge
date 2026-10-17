@@ -24,6 +24,20 @@ export const nominalPrimitiveSubtypePhpCiTestName = (route, mode) => {
 };
 
 /**
+ * Require the retained record list to contain the Composer ZIP exactly once.
+ *
+ * @param records - Complete selection-relative paths returned by the report checker.
+ * @param archivePath - Independently authenticated Composer ZIP path.
+ */
+export const nominalPrimitiveSubtypePhpCiArtifactPaths = (records, archivePath) => {
+	assert.ok(Array.isArray(records));
+	assert.equal(typeof archivePath, "string");
+	assert.equal(records.filter(path => path === archivePath).length, 1);
+	assert.equal(new Set(records).size, records.length);
+	return [...records].sort();
+};
+
+/**
  * Refuse incomplete, duplicate or unknown checker selections.
  *
  * @param args - Arguments following the checker script name.

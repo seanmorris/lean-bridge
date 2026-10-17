@@ -84,10 +84,7 @@ export const checkNominalNativeSource = async options => {
 	await saveLakeFile(directory, "NominalAdapters.lean", adapter);
 	const compiled = await run(["NominalAdapters.lean"]);
 	assert.equal(compiled.stderr, "");
-	const warnings = [...compiled.stdout.matchAll(/^NominalAdapters\.lean:\d+:\d+: warning: (.+)$/gmu)].map(match => match[1]);
-	assert.equal(warnings.length, 6);
-	assert.ok(warnings.every(warning => warning === "Variable name `unit` is not explicitly referenced."
-		|| warning === "Local variable 'unit' resembles constructor 'PUnit.unit' - write '.unit' (with a dot) or 'PUnit.unit' to use the constructor."));
+	assert.equal(compiled.stdout, "");
 	for(const [path, source] of Object.entries(generateCBindingPackage(model.bindingIr))) await saveLakeFile(directory, path, source);
 	for(const [path, source] of Object.entries(generateCppBindingPackage(model.bindingIr))) await saveLakeFile(directory, path, source);
 	for(const [path, source] of Object.entries(boostSources())) await saveLakeFile(directory, path, source);

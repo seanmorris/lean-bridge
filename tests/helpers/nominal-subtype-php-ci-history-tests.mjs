@@ -21,7 +21,9 @@ test("nominal native PHP CI preserves exact historical producers and every suppo
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePhpCiSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypePhpCiUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePhpCiSource(update.path, current), previous);

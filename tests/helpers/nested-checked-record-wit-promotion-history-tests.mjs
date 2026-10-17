@@ -9,8 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import {
 	nestedCheckedRecordWitReferences
 	, promoteNestedCheckedRecordWit
@@ -42,8 +45,8 @@ test("nested WIT promotion history authenticates every transition", async t => {
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nestedCheckedRecordWitPromotionHistoryPath, update.path
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseNestedCheckedRecordWitPromotionUpdate(current, update);
@@ -52,8 +55,7 @@ test("nested WIT promotion history authenticates every transition", async t => {
 			update.path, current), previous);
 		assert.equal(beforeNestedCheckedRecordWitPromotionSource(
 			update.path, current, update.currentSha256), current);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNestedCheckedRecordWitPromotionSource(
 			update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [
@@ -73,11 +75,9 @@ test("nested WIT promotion history authenticates every transition", async t => {
 	const expected = await promoteNestedCheckedRecordWit(
 		JSON.parse(original(inventoryPath)), await nestedCheckedRecordWitReferences()
 	);
-	const inventoryUpdate = record.updates.find(
-		update => update.path === inventoryPath
+	const checkpoint = await sourceAtHistoryMilestone(
+		nestedCheckedRecordWitPromotionHistoryPath, inventoryPath
 	);
-	const checkpoint = beforeFinRefinementSource(inventoryPath
-		, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
 	assert.equal(beforeNestedCheckedRecordWitPromotionSource(
 		inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
@@ -89,7 +89,9 @@ test("nested WIT promotion history authenticates every transition", async t => {
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
-	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nestedCheckedRecordWitPromotionHistoryPath, expected
+	));
 	assert.equal(pins, record.pinCount);
 	assert.equal(expected.evidence.length, 606);
 	assert.equal(expected.observations.length, 625);

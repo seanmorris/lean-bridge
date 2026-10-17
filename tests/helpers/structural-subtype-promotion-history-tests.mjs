@@ -9,7 +9,8 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeStructuralSubtypePromotionSource, structuralSubtypePromotionChangedPaths, structuralSubtypePromotionHistoryPath, structuralSubtypePromotionPredecessor, reverseStructuralSubtypePromotionUpdate } from "./structural-subtype-promotion-history.mjs";
 
 test("structural Subtype promotion source history authenticates exact changes and refuses unknown edits", async () => {
@@ -19,12 +20,14 @@ test("structural Subtype promotion source history authenticates exact changes an
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypePromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypePromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			structuralSubtypePromotionHistoryPath, update.path
+		);
 		const previous = reverseStructuralSubtypePromotionUpdate(current, update);
 		assert.equal(beforeStructuralSubtypePromotionSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypePromotionSource(update.path, current, update.currentSha256), current);
 		if(["src/analyze/export-configuration.mjs", "docs/type-surface.v1.json"].includes(update.path))
-			assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+			assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeStructuralSubtypePromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }

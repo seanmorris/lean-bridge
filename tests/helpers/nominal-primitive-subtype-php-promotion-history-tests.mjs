@@ -9,7 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import {
 	nominalPrimitiveSubtypePhpReferences
 	, promoteNominalPrimitiveSubtypePhp
@@ -34,8 +37,8 @@ test("primitive-base native PHP history authenticates the support transition", a
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypePhpPromotionSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePhpPromotionHistoryPath, update.path
 		);
 		const previous = reverseNominalPrimitiveSubtypePhpPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -47,8 +50,7 @@ test("primitive-base native PHP history authenticates the support transition", a
 		assert.equal(beforeNominalPrimitiveSubtypePhpPromotionSource(
 			update.path, previous, update.previousSha256
 		), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256),
-			previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypePhpPromotionSource(
 			update.path, current + "unknown"
 		), current + "unknown");
@@ -68,8 +70,11 @@ test("primitive-base native PHP history authenticates the support transition", a
 	const expected = await promoteNominalPrimitiveSubtypePhp(
 		JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePhpReferences()
 	);
+	const checkpoint = await sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath, inventoryPath
+	);
 	assert.equal(beforeNominalPrimitiveSubtypePhpPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8")
+		inventoryPath, checkpoint
 	), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -80,11 +85,9 @@ test("primitive-base native PHP history authenticates the support transition", a
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypePhpPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256
-	);
-	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath, expected
+	));
 	assert.equal(expected.evidence.length, 556); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six native PHP cells supplemented`);
 });

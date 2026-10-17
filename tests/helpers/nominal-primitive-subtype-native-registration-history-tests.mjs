@@ -21,7 +21,9 @@ test("primitive-base native harness registration authenticates exact changes wit
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeNativeRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeNativeRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalPrimitiveSubtypeNativeRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeNativeRegistrationSource(update.path, current), previous);

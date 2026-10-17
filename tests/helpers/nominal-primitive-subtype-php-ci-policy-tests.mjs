@@ -11,6 +11,7 @@ import {
 	, parseNominalPrimitiveSubtypePhpCiArgs
 	, assertNominalPrimitiveSubtypePhpCiTap
 	, checkNominalPrimitiveSubtypePhpCiRecords
+	, nominalPrimitiveSubtypePhpCiArtifactPaths
 } from "./nominal-primitive-subtype-php-ci-report.mjs";
 
 const argsOf = options => Object.entries(options).flatMap(([key, value]) => ["--" + key, value]);
@@ -20,6 +21,19 @@ const options = {
 	, php: "/runtime/php", composer: "/runtime/composer"
 	, "php-version": "8.3.6", "composer-version": "2.7.1"
 };
+
+test("primitive-base native PHP CI counts the Composer ZIP once", () => {
+	const archive = "handoff/archives/example-nominalprimitivesubtypes-1.0.0-linux-x86_64.zip";
+	const records = ["report.json", archive, "package/src/Api.php"];
+	assert.deepEqual(nominalPrimitiveSubtypePhpCiArtifactPaths(records, archive)
+		, [...records].sort());
+	assert.throws(() => nominalPrimitiveSubtypePhpCiArtifactPaths(
+		["report.json", "package/src/Api.php"], archive));
+	assert.throws(() => nominalPrimitiveSubtypePhpCiArtifactPaths(
+		[...records, archive], archive));
+	assert.throws(() => nominalPrimitiveSubtypePhpCiArtifactPaths(
+		[...records, "report.json"], archive));
+});
 const syntheticTap = (route, mode) => {
 	const name = nominalPrimitiveSubtypePhpCiTestName(route, mode);
 	return `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 1\n`;

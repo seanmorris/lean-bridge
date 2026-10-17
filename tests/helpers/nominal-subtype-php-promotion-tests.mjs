@@ -9,9 +9,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypePhpArchive, nominalSubtypePhpReferences, promoteNominalSubtypePhp, nominalSubtypePhpConversion, nominalSubtypePhpLimit } from "./nominal-subtype-php-promotion.mjs";
-import { nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
-import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins } from "./nominal-subtype-wit-promotion-history.mjs";
+import { nominalSubtypePhpPromotionHistoryPath, nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
+import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins, nominalSubtypeWitPromotionHistoryPath } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -141,7 +142,11 @@ test("nominal PHP promotion adds two field cells and supplements four existing c
 
 test("nominal PHP documentation distinguishes native Nat records from pending PHP-Wasm combinations", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeWitPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypeWitPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypeWitPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -152,8 +157,13 @@ test("nominal PHP documentation distinguishes native Nat records from pending PH
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust, C#, Java, Kotlin and native PHP ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/php.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-php-20261013.md"), path);
-	const source = beforeNominalSubtypeWitPromotionSource("docs/php.md", await readFile("docs/php.md", "utf8"));
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypePhpPromotionHistoryPath, path
+		)).includes("nominal-subtype-php-20261013.md"), path);
+	const sourcePath = "docs/php.md";
+	const source = beforeNominalSubtypeWitPromotionSource(
+		sourcePath, await readFile(sourcePath, "utf8")
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.match(source, /PHP 8\.2\.33 and Composer 2\.5\.5/u);

@@ -7,13 +7,15 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionPins, beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypePythonPromotionSource, beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionPins, beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalSubtypePythonArchive, nominalSubtypePythonReferences, promoteNominalSubtypePython, nominalSubtypePythonConversion, nominalSubtypePythonLimit } from "./nominal-subtype-python-promotion.mjs";
+import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -132,7 +134,11 @@ test("nominal Python promotion adds two field cells and supplements four existin
 
 test("nominal Python documentation distinguishes verified packages from pending hosts and callbacks", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypeJvmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, authorPath
+		)
+	);
 	assert.doesNotMatch(author, /component builds still require that selection/u);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
@@ -144,8 +150,15 @@ test("nominal Python documentation distinguishes verified packages from pending 
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust and C# ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/python.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-python-acceptance-20261012.md"), path);
-	const source = beforeNominalPrimitiveSubtypePythonPromotionSource("docs/consume/python.md", await readFile("docs/consume/python.md", "utf8"));
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypePythonPromotionHistoryPath, path
+		)).includes("nominal-subtype-python-acceptance-20261012.md"), path);
+	const sourcePath = "docs/consume/python.md";
+	const source = beforeNominalPrimitiveSubtypePythonPromotionSource(
+		sourcePath, await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePythonPromotionHistoryPath, sourcePath
+		)
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

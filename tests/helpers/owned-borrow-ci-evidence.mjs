@@ -6,8 +6,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { ownedBorrowHistoricalBytes } from "./owned-borrow-history.mjs";
-import { beforeOwnedCppBorrow, ownedCppBorrowHistoricalBytes } from "./owned-cpp-borrow-history.mjs";
+import { ownedCppBorrowHistoricalBytes } from "./owned-cpp-borrow-history.mjs";
 import { ownedBorrowCiBaseline, ownedBorrowCiPrevious, ownedBorrowCiChangedPaths
 	, ownedBorrowCiAddedPaths, reverseOwnedBorrowCiUpdate } from "./owned-borrow-ci-history.mjs";
 
@@ -34,7 +35,9 @@ export const assertOwnedBorrowCiRepair = async record => {
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const current = beforeOwnedCppBorrow(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		assert.equal(sha256(reverseOwnedBorrowCiUpdate(current, update)), update.previousSha256);
 	}
 	assert.equal(record.sources["docs/type-surface.v1.json"], previous.sources["docs/type-surface.v1.json"]);

@@ -68,10 +68,23 @@ export const checkNestedCheckedRecordRubyArchive = ({ archive, artifact, files, 
 	const metadata = gunzipSync(outer.get("metadata.gz"), { maxOutputLength: 1024 ** 2 });
 	assert.deepEqual(Buffer.from(metadata.toString("utf8")), metadata); assert.ok(metadata.length > 0);
 	const checksumBytes = gunzipSync(outer.get("checksums.yaml.gz"), { maxOutputLength: 4096 });
-	const checksums = "---\n" + ["SHA256", "SHA512"].map(algorithm => algorithm + ":\n"
-		+ ["metadata.gz", "data.tar.gz"].map(name => "  " + name + ": "
-			+ createHash(algorithm.toLowerCase()).update(outer.get(name)).digest("hex") + "\n").join("")).join("");
-	assert.equal(checksumBytes.toString("utf8"), checksums);
+	// Psych quotes a hexadecimal digest when its scalar heuristics treat the
+	// leading digits as numeric. Both spellings encode the same exact digest.
+	const lines = checksumBytes.toString("utf8").split("\n");
+	const digest = (algorithm, name) =>
+		createHash(algorithm.toLowerCase()).update(outer.get(name)).digest("hex");
+	const section = algorithm => [
+		algorithm + ":"
+		, ...["metadata.gz", "data.tar.gz"].map(name => [name, digest(algorithm, name)])
+	];
+	const expected = ["---", ...section("SHA256"), ...section("SHA512"), ""];
+	assert.equal(lines.length, expected.length);
+	for(const [index, line] of lines.entries())
+	{
+		const item = expected[index];
+		if(typeof item === "string") assert.equal(line, item);
+		else assert.ok([`  ${item[0]}: ${item[1]}`, `  ${item[0]}: '${item[1]}'`].includes(line), line);
+	}
 	const payload = tarFiles(gunzipSync(outer.get("data.tar.gz"), { maxOutputLength: 512 * 1024 ** 2 }));
 	assert.deepEqual([...payload.keys()].sort(), Object.keys(files).sort());
 	assert.deepEqual(payload.get("lean-bridge/package-receipt.json"), receiptBytes);

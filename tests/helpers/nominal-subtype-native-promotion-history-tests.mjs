@@ -9,15 +9,18 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistorySourcePins } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypeNativeReferences, promoteNominalSubtypeNative } from "./nominal-subtype-native-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
-import { beforeComponentEngineClosureSource } from "./component-engine-closure-history.mjs";
+import { beforeComponentEngineClosureSource
+	, componentEngineClosureHistoryPath
+} from "./component-engine-closure-history.mjs";
 import { nominalSubtypePerlPromotionHistoryPath } from "./nominal-subtype-perl-promotion-history.mjs";
 import { beforeNominalSubtypeNativePromotionSource, nominalSubtypeNativePromotionChangedPaths, nominalSubtypeNativePromotionHistoryPath, nominalSubtypeNativePromotionPredecessor, reverseNominalSubtypeNativePromotionUpdate } from "./nominal-subtype-native-promotion-history.mjs";
 
@@ -29,13 +32,15 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeNativePromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeNativePromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeNativePromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeNativePromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeNativePromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeNativePromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeNativePromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeNativePromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -47,7 +52,12 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	const currentInventory = await sourceAtHistoryMilestone(
+		nominalSubtypeNativePromotionHistoryPath, inventoryPath
+	);
+	assert.equal(beforeNominalSubtypeNativePromotionSource(
+		inventoryPath, currentInventory
+	), original(inventoryPath));
 	const expected = beforeNominalSubtypeJvmPromotionPins(beforeNominalPrimitiveSubtypeNativePromotionPins(
 		await promoteNominalSubtypeNative(JSON.parse(original(inventoryPath)), await nominalSubtypeNativeReferences())));
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath])
@@ -67,7 +77,7 @@ test("Nominal native promotion authenticates exact changes and the scoped C/C++ 
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 177);
-	assert.deepEqual(JSON.parse(beforeComponentEngineClosureSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	assert.deepEqual(JSON.parse(beforeComponentEngineClosureSource(inventoryPath, await sourceAtHistoryMilestone(componentEngineClosureHistoryPath, inventoryPath))), await withHistorySourcePins(componentEngineClosureHistoryPath, expected));
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 });
 

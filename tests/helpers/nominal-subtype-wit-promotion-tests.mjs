@@ -11,9 +11,10 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeWitArchive, nominalSubtypeWitReferences, promoteNominalSubtypeWit, nominalSubtypeWitConversion, nominalSubtypeWitLimit } from "./nominal-subtype-wit-promotion.mjs";
-import { nominalSubtypeWitPromotionPredecessor } from "./nominal-subtype-wit-promotion-history.mjs";
+import { nominalSubtypeWitPromotionHistoryPath, nominalSubtypeWitPromotionPredecessor } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypeBrowserPromotionSource, beforeNominalSubtypeBrowserPromotionPins } from "./nominal-subtype-browser-promotion-history.mjs";
-import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionPins, beforeNominalSubtypePhpWasmPromotionSource, nominalSubtypePhpWasmPromotionHistoryPath } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeWitPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -155,7 +156,11 @@ test("nominal WIT promotion adds two field cells and supplements four existing c
 
 test("nominal WIT documentation describes tested Nat fields and the required native host", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypePhpWasmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypePhpWasmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypePhpWasmPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -166,8 +171,12 @@ test("nominal WIT documentation describes tested Nat fields and the required nat
 		assert.ok(row.includes("native PHP and WIT/WASI ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/wit-wasi.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-wit-promotion-20261013.md"), path);
-	const source = await readFile("docs/consume/wit-wasi.md", "utf8");
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypeWitPromotionHistoryPath, path
+		)).includes("nominal-subtype-wit-promotion-20261013.md"), path);
+	const source = await sourceAtHistoryMilestone(
+		nominalSubtypeWitPromotionHistoryPath, "docs/consume/wit-wasi.md"
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.match(source, /Wasmtime 42\.0\.1 and wasm-tools 1\.245\.1/u);
@@ -186,7 +195,9 @@ test("nominal WIT guides compile with visible type syntax and refuse unquoted HT
 		, "docs/lean/export-decisions.md", "docs/reference/types.md"]
 	) {
 		const page = docPages.find(item => item.source === path);
-		const source = await readFile(path, "utf8");
+		const source = await sourceAtHistoryMilestone(
+			nominalSubtypeWitPromotionHistoryPath, path
+		);
 		const options = { revision: nominalSubtypeWitPromotionPredecessor };
 		const compiled = await compileDocumentationPage(source, page, options);
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-subtype-wit-promotion-20261013.md")));

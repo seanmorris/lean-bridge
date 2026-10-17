@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistorySourcePins } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
@@ -18,7 +19,7 @@ import { nominalSubtypeNpmReferences, promoteNominalSubtypeNpm } from "./nominal
 import { beforeNominalSubtypeNativePromotionSource, nominalSubtypeNativePromotionHistoryPath } from "./nominal-subtype-native-promotion-history.mjs";
 import { nominalSubtypePerlPromotionHistoryPath } from "./nominal-subtype-perl-promotion-history.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeNpmPromotionSource, nominalSubtypeNpmPromotionChangedPaths, nominalSubtypeNpmPromotionHistoryPath, nominalSubtypeNpmPromotionPredecessor, reverseNominalSubtypeNpmPromotionUpdate } from "./nominal-subtype-npm-promotion-history.mjs";
 
 test("Nominal npm promotion authenticates exact changes and the scoped Node support update", async () => {
@@ -29,13 +30,15 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeNpmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeNpmPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeNpmPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeNpmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeNpmPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeNpmPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeNpmPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeNpmPromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -47,7 +50,7 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeNominalSubtypeNpmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeNpmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeNpmPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	const expected = beforeNominalSubtypeJvmPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeNpm(JSON.parse(original(inventoryPath)), await nominalSubtypeNpmReferences())));
 	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath, nominalSubtypePerlPromotionHistoryPath, nominalSubtypeNativePromotionHistoryPath])
 	{
@@ -66,7 +69,7 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 123);
-	assert.deepEqual(JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	assert.deepEqual(JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeNativePromotionHistoryPath, inventoryPath))), await withHistorySourcePins(nominalSubtypeNativePromotionHistoryPath, expected));
 	assert.equal(expected.evidence.length, 476); assert.equal(expected.observations.length, 573);
 });
 

@@ -25,7 +25,9 @@ test("primitive-base history repair authenticates its exact chain edits and make
 	const original = path => execFileSync("git", ["show", `${primitiveSubtypeHistoryRepairPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		assert.equal(beforePrimitiveSubtypeHistoryRepairSource(update.path, current, update.currentSha256), current);
 		const previous = reversePrimitiveSubtypeHistoryRepairUpdate(current, update);
 		assert.equal(previous, original(update.path));

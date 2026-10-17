@@ -11,8 +11,9 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeBrowserArchive, nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser, nominalSubtypeBrowserProfiles, nominalSubtypeBrowserConversion, nominalSubtypeBrowserLimit } from "./nominal-subtype-browser-promotion.mjs";
-import { nominalSubtypeBrowserPromotionPredecessor } from "./nominal-subtype-browser-promotion-history.mjs";
-import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { nominalSubtypeBrowserPromotionHistoryPath, nominalSubtypeBrowserPromotionPredecessor } from "./nominal-subtype-browser-promotion-history.mjs";
+import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins, nominalSubtypePhpWasmPromotionHistoryPath } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -152,7 +153,10 @@ test("nominal browser promotion changes exactly eighteen Subtype cells and adds 
 });
 
 test("nominal browser guides describe installed Nat fields without promoting Fin fields or callbacks", async () => {
-	const source = beforeNominalSubtypePhpWasmPromotionSource("docs/javascript-typescript.md", await readFile("docs/javascript-typescript.md", "utf8"));
+	const sourcePath = "docs/javascript-typescript.md";
+	const source = beforeNominalSubtypePhpWasmPromotionSource(
+		sourcePath, await readFile(sourcePath, "utf8")
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.match(source, /Use `bigint` for each payload/u);
 	for(const text of ["Chromium 151.0.7922.34", "153.0 and WebKit 26.5", "worker", "pending unmounts", "disposal"])
@@ -162,7 +166,12 @@ test("nominal browser guides describe installed Nat fields without promoting Fin
 		assert.ok(row.includes(`${route}: Installed checks passed (input, result, field)`));
 	assert.ok(row.includes("Not audited (callback input, callback result)"));
 	assert.ok(row.includes(nominalSubtypeBrowserConversion));
-	const author = beforeNominalSubtypePhpWasmPromotionSource("docs/lean/existing-package.md", await readFile("docs/lean/existing-package.md", "utf8"));
+	const authorPath = "docs/lean/existing-package.md";
+	const author = beforeNominalSubtypePhpWasmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypePhpWasmPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -181,7 +190,10 @@ test("nominal browser guides describe installed Nat fields without promoting Fin
 test("nominal browser consumer and author pages render the support links and visible payload syntax", async () => {
 	for(const path of ["docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const page = docPages.find(item => item.source === path), source = await readFile(path, "utf8");
+		const page = docPages.find(item => item.source === path);
+		const source = await sourceAtHistoryMilestone(
+			nominalSubtypeBrowserPromotionHistoryPath, path
+		);
 		const compiled = await compileDocumentationPage(source, page, { revision: nominalSubtypeBrowserPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-subtype-browser-promotion-20261014.md")), path);
 		assert.equal(compiled.searchText.includes("Browser and PHP-Wasm nominal acceptance remains pending"), false, path + ": stale browser acceptance claim");

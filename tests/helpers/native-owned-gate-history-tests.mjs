@@ -21,7 +21,9 @@ test("native owned CI repair preserves exact historical probes and the support i
 	const original = path => execFileSync("git", ["show", `${nativeOwnedGatePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNativeOwnedGateSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNativeOwnedGateUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNativeOwnedGateSource(update.path, current), previous);

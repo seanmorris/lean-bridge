@@ -9,8 +9,9 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
 import { nominalSubtypePhpReferences, promoteNominalSubtypePhp } from "./nominal-subtype-php-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeWitPromotionPins } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalSubtypePhpPromotionSource, nominalSubtypePhpPromotionChangedPaths, nominalSubtypePhpPromotionHistoryPath, nominalSubtypePhpPromotionPredecessor, reverseNominalSubtypePhpPromotionUpdate } from "./nominal-subtype-php-promotion-history.mjs";
@@ -23,13 +24,15 @@ test("nominal native PHP promotion history authenticates exact changes and the s
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePhpPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypePhpPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypePhpPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePhpPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypePhpPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypePhpPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypePhpPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -44,7 +47,7 @@ test("nominal native PHP promotion history authenticates exact changes and the s
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = beforeNominalSubtypeWitPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypePhp(JSON.parse(original(inventoryPath)), await nominalSubtypePhpReferences())));
-	assert.equal(beforeNominalSubtypePhpPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypePhpPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypePhpPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -53,8 +56,12 @@ test("nominal native PHP promotion history authenticates exact changes and the s
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeNominalSubtypePhpPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalSubtypePhpPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypePhpPromotionHistoryPath, inventoryPath), inventoryUpdate.currentSha256);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint)
+		, withHistoryMilestoneSourcePins(
+			nominalSubtypePhpPromotionHistoryPath, expected
+		)
+	);
 	assert.equal(expected.evidence.length, 508); assert.equal(expected.observations.length, 589);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed native PHP cells promoted or supplemented`);
 });

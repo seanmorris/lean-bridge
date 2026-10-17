@@ -21,7 +21,9 @@ test("CLI import repair history authenticates exact changes without changing sup
 	const original = path => execFileSync("git", ["show", `${cliImportRepairPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCliImportRepairSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseCliImportRepairUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCliImportRepairSource(update.path, current), previous);
@@ -41,7 +43,11 @@ test("CLI import repair history authenticates exact changes without changing sup
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json", expected = JSON.parse(original(inventoryPath));
-	assert.equal(beforeCliImportRepairSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	const inventoryUpdate = record.updates.find(item => item.path === inventoryPath);
+	const currentInventory = beforeFinRefinementSource(inventoryPath
+		, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
+	assert.equal(beforeCliImportRepairSource(inventoryPath, currentInventory)
+		, original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -49,7 +55,11 @@ test("CLI import repair history authenticates exact changes without changing sup
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeCoreContractRepairSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeCoreContractRepairSource(
+		inventoryPath, beforeFinRefinementSource(inventoryPath
+			, await readFile(inventoryPath, "utf8")
+			, record.updates.find(item => item.path === inventoryPath).currentSha256)
+	)), expected);
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 	t.diagnostic(`${pins} current-source pins refreshed; all support claims unchanged`);
 });

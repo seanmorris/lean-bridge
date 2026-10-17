@@ -22,6 +22,12 @@ const pack = (payload, metadata = Buffer.from("synthetic inert gem metadata\n"))
 		+ members.map(([name, bytes]) => "  " + name + ": " + createHash(algorithm.toLowerCase()).update(bytes).digest("hex") + "\n").join("")).join("");
 	members.push(["checksums.yaml.gz", gzipSync(Buffer.from(checksums))]); return { archive: tar(members), members };
 };
+const quoteDigests = members => members.map(([name, bytes]) => {
+	if(name !== "checksums.yaml.gz") return [name, bytes];
+	const source = gunzipSync(bytes).toString("utf8")
+		.replace(/: ([0-9a-f]+)$/gmu, ": '$1'");
+	return [name, gzipSync(Buffer.from(source))];
+});
 const fixture = () => {
 	const entries = [["lib/example.rb", Buffer.from("synthetic Ruby source\n")]
 		, ["lib/native/library.so", Buffer.from([127, 69, 76, 70, 0, 255])]];
@@ -39,8 +45,12 @@ const changeHeader = (input, change) => {
 };
 
 test("primitive-base Ruby archives reconcile every retained source, receipt and native byte", () => {
-	const { entries, options } = fixture();
+	const { entries, members, options } = fixture();
 	assert.deepEqual(checkNominalPrimitiveSubtypeRubyArchive(options), new Map(entries));
+	const quoted = tar(quoteDigests(members));
+	assert.deepEqual(checkNominalPrimitiveSubtypeRubyArchive({
+		...options, archive: quoted, artifact: identity(quoted)
+	}), new Map(entries));
 	for(const change of [
 		value => { value.artifact.bytes++; }
 		, value => { value.artifact.sha256 = "0".repeat(64); }

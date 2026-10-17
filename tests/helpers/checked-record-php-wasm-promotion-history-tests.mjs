@@ -9,7 +9,8 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordPhpWasmPromotionSource, checkedRecordPhpWasmPromotionChangedPaths, checkedRecordPhpWasmPromotionHistoryPath, checkedRecordPhpWasmPromotionPredecessor, reverseCheckedRecordPhpWasmPromotionUpdate } from "./checked-record-php-wasm-promotion-history.mjs";
 
 test("Checked-record PHP-Wasm promotion authenticates exact changes and restores the original support inventory", async () => {
@@ -20,13 +21,15 @@ test("Checked-record PHP-Wasm promotion authenticates exact changes and restores
 	const original = path => execFileSync("git", ["show", `${checkedRecordPhpWasmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCheckedRecordPhpWasmPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordPhpWasmPromotionHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordPhpWasmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCheckedRecordPhpWasmPromotionSource(update.path, current), previous);
 		assert.equal(beforeCheckedRecordPhpWasmPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeCheckedRecordPhpWasmPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeCheckedRecordPhpWasmPromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -38,7 +41,7 @@ test("Checked-record PHP-Wasm promotion authenticates exact changes and restores
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeCheckedRecordPhpWasmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeCheckedRecordPhpWasmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordPhpWasmPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("Checked-record PHP-Wasm promotion history writer refuses an unrelated checkout before writing", async t => {

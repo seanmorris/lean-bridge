@@ -541,6 +541,12 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
                   ((target.getObjVal? "predicate").toOption.bind fun predicate =>
                     (predicate.getObjValAs? String "kind").toOption) == some "checked-record" then
                 let base ← ofExcept <| target.getObjVal? "base"
+                -- A closed generic instantiation is already recorded under the
+                -- source alias that names it. Do not replace that definition with
+                -- a self-alias merely because the site selected a constructor.
+                if (base.getObjValAs? String "kind").toOption == some "reference" &&
+                    (base.getObjValAs? String "name").toOption == some name.toString then
+                  return target
                 let reference ← rememberShape e name <| obj [
                   ("kind", str "alias"), ("name", str name.toString),
                   ("lean", str name.toString), ("target", base), ("abi", ← abi e)]
@@ -919,7 +925,12 @@ mutual
     let some source := source?
       | throwError "missing copied type definition: {name}"
     modify fun state => { state with active := name :: state.active }
-    let normalized ← closeCopiedGraphNominal source (depth + 1)
+    -- Nominal definitions are graph nodes, not inline structural edges. Their
+    -- fields and container children consume the depth budget below; following
+    -- a named definition does not. This lets long acyclic alias chains fall
+    -- back from inline expansion to a finite graph without weakening the
+    -- structural nesting limit.
+    let normalized ← closeCopiedGraphNominal source depth
     modify fun state => { state with active := state.active.erase name }
     if let some existing := (← get).types.find? fun item =>
         (item.getObjValAs? String "name").toOption == some name then
@@ -934,7 +945,7 @@ mutual
     let kind := (value.getObjValAs? String "kind").toOption.getD ""
     if kind == "alias" then
       return value.setObjVal! "target"
-        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "target") (depth + 1))
+        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? "target") depth)
     let closeFields := fun (owner : Json) => do
       let fields ← ofExcept <| owner.getObjValAs? (Array Json) "fields"
       let fields ← fields.mapM fun (field : Json) => do

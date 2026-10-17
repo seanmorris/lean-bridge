@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordBrowserArchiveSource, checkedRecordBrowserArchiveChangedPaths, checkedRecordBrowserArchiveHistoryPath, checkedRecordBrowserArchivePredecessor, reverseCheckedRecordBrowserArchiveUpdate } from "./checked-record-browser-archive-history.mjs";
 
@@ -20,7 +21,9 @@ test("Checked-record browser archive repair authenticates exact test changes wit
 	const original = path => execFileSync("git", ["show", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCheckedRecordBrowserArchiveSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseCheckedRecordBrowserArchiveUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCheckedRecordBrowserArchiveSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("Checked-record browser archive repair authenticates exact test changes wit
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeCheckedRecordBrowserArchiveSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeCheckedRecordBrowserArchiveSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordBrowserArchiveHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("Checked-record browser archive history writer refuses an unrelated checkout before writing", async t => {

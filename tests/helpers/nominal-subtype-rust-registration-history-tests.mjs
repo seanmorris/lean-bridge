@@ -21,7 +21,9 @@ test("nominal Rust harness registration authenticates exact changes without addi
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeRustRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeRustRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypeRustRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeRustRegistrationSource(update.path, current), previous);

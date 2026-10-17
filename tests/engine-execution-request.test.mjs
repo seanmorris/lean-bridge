@@ -88,6 +88,7 @@ test("the filtered Nix engine imports its real module graph and refuses omitted 
 	assert.equal(complete.status, 0, complete.stderr); assert.equal(complete.stdout, ""); assert.equal(complete.stderr, "");
 	const dependencies = ["src/abi/generic-specialization.mjs"
 		, "src/build/component-fin-guards.mjs"
+		, "src/build/component-recursive-diagnostics.mjs"
 		, "src/build/component-refinement-mirrors.mjs"
 		, "src/build/refinement-mirrors.mjs"];
 	for(const path of dependencies)

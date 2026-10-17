@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "milestone": "test-profile-backlog-repair-source-v1",
+  "predecessorCommit": "cfb5534b43e62a6459f65638edd55af415b27263",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "8f445c19842f9af82440e639d6178a1f9aa0b3f3cd67f0556c8a3b6d05643a88",
+      "currentSha256": "4de2b2885fc656cf36343336ff603d37593313ae596dd3de323b655d8fd54b6b",
+      "replacements": [
+        {
+          "previous": "c6a9b2efa8fe6573cda56780f5fbdb01f7e9cd185e96d9003f51e2401f71e793",
+          "current": "01198c52172cba05cf8d944287e2ea2eccc9e644628ae36697461fedb44bb00b",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c6a9b2efa8fe6573cda56780f5fbdb01f7e9cd185e96d9003f51e2401f71e793",
+      "currentSha256": "01198c52172cba05cf8d944287e2ea2eccc9e644628ae36697461fedb44bb00b",
+      "addedTests": [
+        "closed-generic-checked-record-source-history",
+        "mutual-checked-record-browser",
+        "mutual-checked-record-dotnet-evidence",
+        "mutual-checked-record-dotnet-source-history",
+        "mutual-checked-record-dotnet",
+        "mutual-checked-record-jvm-evidence",
+        "mutual-checked-record-jvm-source-history",
+        "mutual-checked-record-jvm",
+        "mutual-checked-record-npm-archive-source-history",
+        "mutual-checked-record-npm-browser-archive",
+        "mutual-checked-records",
+        "nested-checked-record-browser-archive",
+        "nested-checked-record-browser-controls",
+        "nested-checked-record-browser",
+        "nested-checked-record-dotnet",
+        "nested-checked-record-foundation",
+        "nested-checked-record-jvm",
+        "nested-checked-record-native",
+        "nested-checked-record-perl",
+        "nested-checked-record-php",
+        "nested-checked-records",
+        "python-graph-refinement-diagnostics",
+        "recursive-checked-record-perl-diagnostic-source-history",
+        "recursive-checked-record-perl-package-history-repair",
+        "recursive-checked-record-perl",
+        "recursive-checked-record-python-ci",
+        "recursive-checked-record-python-evidence",
+        "recursive-checked-record-python",
+        "recursive-checked-record-ruby-ci",
+        "recursive-checked-record-ruby-evidence",
+        "recursive-checked-record-ruby",
+        "recursive-checked-record-rust",
+        "recursive-checked-records",
+        "recursive-subtype-php-wasm",
+        "ruby-graph-refinement-diagnostics",
+        "ruby-member-escape",
+        "rust-graph-refinement-diagnostics",
+        "test-profile-backlog-repair"
+      ],
+      "edits": [
+        {
+          "start": 10744,
+          "previous": "",
+          "current": "\t\t, \"closed-generic-checked-record-source-history\"\n\t\t, \"mutual-checked-record-browser\"\n\t\t, \"mutual-checked-record-dotnet-evidence\"\n\t\t, \"mutual-checked-record-dotnet-source-history\"\n\t\t, \"mutual-checked-record-dotnet\"\n\t\t, \"mutual-checked-record-jvm-evidence\"\n\t\t, \"mutual-checked-record-jvm-source-history\"\n\t\t, \"mutual-checked-record-jvm\"\n\t\t, \"mutual-checked-record-npm-archive-source-history\"\n\t\t, \"mutual-checked-record-npm-browser-archive\"\n\t\t, \"mutual-checked-records\"\n\t\t, \"nested-checked-record-browser-archive\"\n\t\t, \"nested-checked-record-browser-controls\"\n\t\t, \"nested-checked-record-browser\"\n\t\t, \"nested-checked-record-dotnet\"\n\t\t, \"nested-checked-record-foundation\"\n\t\t, \"nested-checked-record-jvm\"\n\t\t, \"nested-checked-record-native\"\n\t\t, \"nested-checked-record-perl\"\n\t\t, \"nested-checked-record-php\"\n\t\t, \"nested-checked-records\"\n\t\t, \"python-graph-refinement-diagnostics\"\n\t\t, \"recursive-checked-record-perl-diagnostic-source-history\"\n\t\t, \"recursive-checked-record-perl-package-history-repair\"\n\t\t, \"recursive-checked-record-perl\"\n\t\t, \"recursive-checked-record-python-ci\"\n\t\t, \"recursive-checked-record-python-evidence\"\n\t\t, \"recursive-checked-record-python\"\n\t\t, \"recursive-checked-record-ruby-ci\"\n\t\t, \"recursive-checked-record-ruby-evidence\"\n\t\t, \"recursive-checked-record-ruby\"\n\t\t, \"recursive-checked-record-rust\"\n\t\t, \"recursive-checked-records\"\n\t\t, \"recursive-subtype-php-wasm\"\n\t\t, \"ruby-graph-refinement-diagnostics\"\n\t\t, \"ruby-member-escape\"\n\t\t, \"rust-graph-refinement-diagnostics\"\n\t\t, \"test-profile-backlog-repair\"\n"
+        }
+      ]
+    }
+  ]
+}

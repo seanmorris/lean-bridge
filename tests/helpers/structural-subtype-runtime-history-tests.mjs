@@ -19,7 +19,9 @@ test("structural Subtype runtime source history authenticates exact changes and 
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeRuntimeChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypeRuntimeSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseStructuralSubtypeRuntimeUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeRuntimeSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypeRuntimeSource(update.path, current, update.currentSha256), current);

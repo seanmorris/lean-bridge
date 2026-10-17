@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinNixComparisonSource, finNixComparisonChangedPaths, finNixComparisonHistoryPath, finNixComparisonPredecessor, reverseFinNixComparisonUpdate } from "./native-fin-nix-comparison-history.mjs";
 
@@ -20,7 +21,9 @@ test("Nix comparison repair authenticates exact test changes without changing su
 	const original = path => execFileSync("git", ["show", `${finNixComparisonPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinNixComparisonSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseFinNixComparisonUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeFinNixComparisonSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("Nix comparison repair authenticates exact test changes without changing su
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeFinNixComparisonSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeFinNixComparisonSource(inventoryPath, await sourceAtHistoryMilestone(finNixComparisonHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("Nix comparison history writer refuses an unrelated checkout before writing", async t => {

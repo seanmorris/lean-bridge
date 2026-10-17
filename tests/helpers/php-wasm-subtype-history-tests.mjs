@@ -21,7 +21,9 @@ test("PHP-Wasm Subtype integration authenticates every transition and refuses un
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmSubtypeChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reversePhpWasmSubtypeUpdate(current, update);
 		assert.equal(beforePhpWasmSubtypeSource(update.path, current), previous);
 		assert.equal(beforePhpWasmSubtypeSource(update.path, current, update.currentSha256), current);

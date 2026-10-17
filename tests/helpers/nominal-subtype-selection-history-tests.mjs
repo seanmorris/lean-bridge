@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeSelectionSource, nominalSubtypeSelectionChangedPaths, nominalSubtypeSelectionHistoryPath, nominalSubtypeSelectionPredecessor, reverseNominalSubtypeSelectionUpdate } from "./nominal-subtype-selection-history.mjs";
 
@@ -20,7 +21,9 @@ test("Nominal Subtype selection authenticates exact changes and restores the ori
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeSelectionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeSelectionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypeSelectionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeSelectionSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("Nominal Subtype selection authenticates exact changes and restores the ori
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeNominalSubtypeSelectionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeSelectionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeSelectionHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("Nominal Subtype selection history writer refuses an unrelated checkout before writing", async t => {

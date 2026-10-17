@@ -9,9 +9,12 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionSource } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionSource
+	, nominalPrimitiveSubtypeRustPromotionHistoryPath
+} from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeCoreQualityBudgetSource, coreQualityBudgetChangedPaths, coreQualityBudgetHistoryPath, coreQualityBudgetPredecessor, reverseCoreQualityBudgetUpdate } from "./core-quality-budget-history.mjs";
 
 test("Core quality budget history authenticates the exact bounded workflow transition", async () => {
@@ -51,8 +54,10 @@ test("Core quality budget history authenticates the exact bounded workflow trans
 	}
 	assert.equal(pins, 4);
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeCoreQualityBudgetSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), inventoryUpdate.currentSha256);
-	assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeCoreQualityBudgetSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalPrimitiveSubtypeRustPromotionHistoryPath, inventoryPath))), inventoryUpdate.currentSha256);
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		coreQualityBudgetHistoryPath, expected
+	));
 	assert.equal(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.previousSha256), original(inventoryPath));
 });
 

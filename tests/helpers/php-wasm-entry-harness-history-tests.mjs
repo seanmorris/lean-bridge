@@ -21,7 +21,9 @@ test("PHP-Wasm Subtype installed probe harness integration authenticates every t
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryHarnessChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reversePhpWasmEntryHarnessUpdate(current, update);
 		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current), previous);
 		assert.equal(beforePhpWasmEntryHarnessSource(update.path, current, update.currentSha256), current);

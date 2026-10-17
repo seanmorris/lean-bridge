@@ -19,7 +19,9 @@ test("structural Subtype constructor selection source history authenticates exac
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeSelectionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypeSelectionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseStructuralSubtypeSelectionUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeSelectionSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypeSelectionSource(update.path, current, update.currentSha256), current);

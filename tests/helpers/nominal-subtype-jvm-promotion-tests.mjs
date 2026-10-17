@@ -9,7 +9,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeJvmArchive, nominalSubtypeJvmReferences, promoteNominalSubtypeJvm, nominalSubtypeJvmConversion, nominalSubtypeJvmLimit } from "./nominal-subtype-jvm-promotion.mjs";
-import { beforeNominalSubtypePhpPromotionSource, beforeNominalSubtypePhpPromotionPins } from "./nominal-subtype-php-promotion-history.mjs";
+import { nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypePhpPromotionSource, beforeNominalSubtypePhpPromotionPins, nominalSubtypePhpPromotionHistoryPath } from "./nominal-subtype-php-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "58777508091f0e6b9b574cbfa2561c2c019b1570:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -137,7 +139,11 @@ test("nominal JVM promotion adds four field cells and supplements eight existing
 
 test("nominal JVM documentation distinguishes verified Nat records from pending combinations", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypePhpPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypePhpPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypePhpPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -148,10 +154,14 @@ test("nominal JVM documentation distinguishes verified Nat records from pending 
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust, C#, Java and Kotlin ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/java.md", "docs/consume/kotlin.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-jvm-20261013.md"), path);
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, path
+		)).includes("nominal-subtype-jvm-20261013.md"), path);
 	for(const profile of ["java", "kotlin"])
 	{
-		const source = await readFile(`docs/consume/${profile}.md`, "utf8");
+		const source = await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, `docs/consume/${profile}.md`
+		);
 		assert.ok(source.includes("### Subtypes in copied records\n"));
 		assert.ok(source.includes("Linux x64/glibc 2.36"));
 		assert.ok(source.includes("JDK 22.0.2 and Kotlin 2.2.0"));

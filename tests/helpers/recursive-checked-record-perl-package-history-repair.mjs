@@ -9,7 +9,12 @@ import { readFileSync } from "node:fs";
 import {
 	beforeMutualCheckedRecordJvmSource
 } from "./mutual-checked-record-jvm-source-history.mjs";
+import {
+	recursiveCheckedRecordPerlArchiveChangedPaths
+	, throughRecursiveCheckedRecordPerlArchiveSource
+} from "./recursive-checked-record-perl-archive-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeTestProfileBacklogRepairSource } from "./test-profile-backlog-repair-history.mjs";
 
 export const recursiveCheckedRecordPerlPackageHistoryRepairPath
 	= "docs/evidence/recursive-checked-record-perl-package-history-repair-20261017.json";
@@ -118,9 +123,17 @@ export const withoutRecursiveCheckedRecordPerlPackageHistoryRepair = (
 export const beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource = (
 	path, source, expected
 ) => {
+	source = beforeTestProfileBacklogRepairSource(path, source, expected);
+	if(typeof source === "string" && sha256(source) === expected) return source;
 	if(typeof source !== "string"
-		|| !recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths.includes(path))
+		|| !recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths.includes(path)) {
+		if(typeof source === "string"
+			&& recursiveCheckedRecordPerlArchiveChangedPaths.includes(path))
+			return throughRecursiveCheckedRecordPerlArchiveSource(
+				path, source, expected
+			);
 		return source;
+		}
 	if(sha256(source) === expected) return source;
 	return withoutRecursiveCheckedRecordPerlPackageHistoryRepair(path, source);
 };
@@ -137,8 +150,14 @@ export const beforeRecursiveCheckedRecordPerlPackageHistoricalSource = (
 	path, source, expected
 ) => {
 	if(typeof source !== "string"
-		|| !recursiveCheckedRecordPerlPackageHistoricalPaths.includes(path))
+		|| !recursiveCheckedRecordPerlPackageHistoricalPaths.includes(path)) {
+		if(typeof source === "string"
+			&& recursiveCheckedRecordPerlArchiveChangedPaths.includes(path))
+			return throughRecursiveCheckedRecordPerlArchiveSource(
+				path, source, expected
+			);
 		return beforeMutualCheckedRecordJvmSource(path, source, expected);
+		}
 	let digest = sha256(source);
 	if(digest === expected) return source;
 	const update = record().historicalUpdates.find(item => item.path === path);

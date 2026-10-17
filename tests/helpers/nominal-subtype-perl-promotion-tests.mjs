@@ -14,9 +14,11 @@ import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-p
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { nominalSubtypePerlArchive, nominalSubtypePerlReferences, promoteNominalSubtypePerl, nominalSubtypePerlConversion, nominalSubtypePerlLimit } from "./nominal-subtype-perl-promotion.mjs";
+import { nominalSubtypePerlPromotionHistoryPath } from "./nominal-subtype-perl-promotion-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "7c9fbfee9c31b60dc7433ca6945be62e39810754:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const beforeHistoryTransition = async (historyPath, path) => {
@@ -144,7 +146,9 @@ test("nominal Perl promotion adds two field cells and supplements four existing 
 
 test("nominal Perl documentation distinguishes verified packages from pending hosts and callbacks", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = await beforeHistoryTransition(nominalSubtypeJvmPromotionHistoryPath, authorPath);
+	const author = await beforeHistoryTransition(
+		nominalSubtypeJvmPromotionHistoryPath, authorPath
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -155,8 +159,12 @@ test("nominal Perl documentation distinguishes verified packages from pending ho
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust and C# ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/perl.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-perl-acceptance-20261012.md"), path);
-	const source = await beforeHistoryTransition(nominalPrimitiveSubtypePerlPromotionHistoryPath, "docs/consume/perl.md");
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypePerlPromotionHistoryPath, path
+		)).includes("nominal-subtype-perl-acceptance-20261012.md"), path);
+	const source = await beforeHistoryTransition(
+		nominalPrimitiveSubtypePerlPromotionHistoryPath, "docs/consume/perl.md"
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

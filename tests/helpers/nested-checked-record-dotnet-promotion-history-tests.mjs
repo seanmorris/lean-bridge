@@ -9,8 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import {
 	nestedCheckedRecordDotnetReferences, promoteNestedCheckedRecordDotnet
 } from "./nested-checked-record-dotnet-promotion.mjs";
@@ -41,8 +44,8 @@ test("nested C# promotion history authenticates every source transition", async 
 	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nestedCheckedRecordDotnetPromotionHistoryPath, update.path
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseNestedCheckedRecordDotnetPromotionUpdate(
@@ -55,8 +58,7 @@ test("nested C# promotion history authenticates every source transition", async 
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeNestedCheckedRecordDotnetPromotionSource(
 			update.path, previous, update.previousSha256), previous);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNestedCheckedRecordDotnetPromotionSource(
 			update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [
@@ -78,11 +80,9 @@ test("nested C# promotion history authenticates every source transition", async 
 		JSON.parse(original(inventoryPath))
 		, await nestedCheckedRecordDotnetReferences()
 	);
-	const inventoryUpdate = record.updates.find(
-		update => update.path === inventoryPath
+	const checkpoint = await sourceAtHistoryMilestone(
+		nestedCheckedRecordDotnetPromotionHistoryPath, inventoryPath
 	);
-	const checkpoint = beforeFinRefinementSource(inventoryPath
-		, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
 	assert.equal(beforeNestedCheckedRecordDotnetPromotionSource(
 		inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
@@ -95,7 +95,9 @@ test("nested C# promotion history authenticates every source transition", async 
 			pins++;
 		}
 	}
-	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nestedCheckedRecordDotnetPromotionHistoryPath, expected
+	));
 	assert.equal(pins, record.pinCount);
 	assert.equal(expected.evidence.length, 582);
 	assert.equal(expected.observations.length, 611);

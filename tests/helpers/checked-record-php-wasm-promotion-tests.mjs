@@ -14,6 +14,16 @@ import { checkedRecordPhpWasmReferences, promoteCheckedRecordPhpWasm, checkedRec
 import { checkedRecordPhpWasmPromotionPredecessor, checkedRecordPhpWasmPromotionHistoryPath } from "./checked-record-php-wasm-promotion-history.mjs";
 
 const baseline = () => JSON.parse(execFileSync("git", ["show", `${checkedRecordPhpWasmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const promotionSource = async path => {
+	const history = JSON.parse(await readFile(
+		checkedRecordPhpWasmPromotionHistoryPath, "utf8"
+	));
+	const update = history.updates.find(item => item.path === path);
+	const source = await readFile(path, "utf8");
+	return update === undefined ? source : beforeFinRefinementSource(
+		path, source, update.currentSha256
+	);
+};
 
 test("PHP-Wasm checked-record promotion authenticates all four original installed routes", async () => {
 	const references = await checkedRecordPhpWasmReferences();
@@ -126,7 +136,7 @@ test("PHP-Wasm promotion refuses forged references, overlapping positions and re
 });
 
 test("PHP checked-record documentation matches installed payloads and keeps untested positions open", async () => {
-	const guide = await readFile("docs/php.md", "utf8");
+	const guide = await promotionSource("docs/php.md");
 	const row = guide.split("\n").find(line => line.startsWith("| `Checked records and closed Nat indices`"));
 	assert.ok(row.includes("Ordinary source: Installed checks passed (input, result)"));
 	assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"));
@@ -134,7 +144,7 @@ test("PHP checked-record documentation matches installed payloads and keeps unte
 	assert.ok(row.includes(checkedRecordPhpWasmConversion));
 	assert.ok(!row.includes("PHP-Wasm: Not audited"));
 	for(const path of ["docs/php.md", "docs/lean/existing-package.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("checked-record-php-wasm-promotion-20261011.md"));
+		assert.ok((await promotionSource(path)).includes("checked-record-php-wasm-promotion-20261011.md"));
 	assert.ok(guide.includes("standalone result-only packages"));
 	assert.ok(guide.includes("PHP 8.4.1"));
 	assert.ok(guide.includes("Nested, refined, recursive or inherited checked records"));

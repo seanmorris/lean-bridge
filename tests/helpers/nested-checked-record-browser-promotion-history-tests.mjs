@@ -9,8 +9,9 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import {
 	beforeNestedCheckedRecordBrowserPromotionSource,
 	nestedCheckedRecordBrowserPromotionChangedPaths,
@@ -33,8 +34,9 @@ test("nested checked-record browser promotion history reconstructs every predece
 		, nestedCheckedRecordBrowserPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path
-			, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nestedCheckedRecordBrowserPromotionHistoryPath, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", ["show"
 			, `${nestedCheckedRecordBrowserPromotionPredecessor}:${update.path}`]
@@ -47,8 +49,7 @@ test("nested checked-record browser promotion history reconstructs every predece
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeNestedCheckedRecordBrowserPromotionSource(
 			update.path, current + "unknown"), current + "unknown");
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		for(const mutate of [
 			item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }

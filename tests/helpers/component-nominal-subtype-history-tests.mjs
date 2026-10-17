@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeComponentNominalSubtypeSource, componentNominalSubtypeChangedPaths, componentNominalSubtypeHistoryPath, componentNominalSubtypePredecessor, reverseComponentNominalSubtypeUpdate } from "./component-nominal-subtype-history.mjs";
 
@@ -20,7 +21,9 @@ test("Component nominal Subtype authenticates exact changes and restores the ori
 	const original = path => execFileSync("git", ["show", `${componentNominalSubtypePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeComponentNominalSubtypeSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseComponentNominalSubtypeUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeComponentNominalSubtypeSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("Component nominal Subtype authenticates exact changes and restores the ori
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeComponentNominalSubtypeSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeComponentNominalSubtypeSource(inventoryPath, await sourceAtHistoryMilestone(componentNominalSubtypeHistoryPath, inventoryPath)), original(inventoryPath));
 	const expected = JSON.parse(original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -48,7 +51,7 @@ test("Component nominal Subtype authenticates exact changes and restores the ori
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 315);
-	const currentInventory = beforeComponentNominalSubtypeSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	const currentInventory = beforeComponentNominalSubtypeSource(inventoryPath, await sourceAtHistoryMilestone(componentNominalSubtypeHistoryPath, inventoryPath), record.updates.find(item => item.path === inventoryPath).currentSha256);
 	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 });

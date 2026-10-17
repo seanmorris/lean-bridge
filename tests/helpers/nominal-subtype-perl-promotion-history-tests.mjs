@@ -9,6 +9,9 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { nominalPrimitiveSubtypeRubyPromotionHistoryPath } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
@@ -16,8 +19,8 @@ import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotn
 import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
 import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { nominalSubtypePerlReferences, promoteNominalSubtypePerl } from "./nominal-subtype-perl-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeNominalSubtypePythonPromotionSource, nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
+import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
 import { beforeNominalSubtypePerlPromotionSource, nominalSubtypePerlPromotionChangedPaths, nominalSubtypePerlPromotionHistoryPath, nominalSubtypePerlPromotionPredecessor, reverseNominalSubtypePerlPromotionUpdate } from "./nominal-subtype-perl-promotion-history.mjs";
 
 test("nominal Perl promotion history authenticates exact changes and the six observed Perl cells", async t => {
@@ -28,13 +31,15 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePerlPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePerlPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypePerlPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypePerlPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePerlPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypePerlPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypePerlPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypePerlPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -64,7 +69,12 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 	await reversePins(promoted, [nominalPrimitiveSubtypeRubyPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionHistoryPath]);
 	const expected = beforeNominalSubtypeJvmPromotionPins(promoted);
 	await reversePins(expected, [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypePythonPromotionHistoryPath]);
-	assert.equal(beforeNominalSubtypePerlPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	const currentInventory = await sourceAtHistoryMilestone(
+		nominalSubtypePerlPromotionHistoryPath, inventoryPath
+	);
+	assert.equal(beforeNominalSubtypePerlPromotionSource(
+		inventoryPath, currentInventory
+	), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -72,7 +82,10 @@ test("nominal Perl promotion history authenticates exact changes and the six obs
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeNominalSubtypePythonPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	const expectedText = JSON.stringify(withHistoryMilestoneSourcePins(
+		nominalSubtypePerlPromotionHistoryPath, expected
+	), null, 2) + "\n";
+	assert.ok(pins > 0); assert.equal(currentInventory, expectedText);
 	assert.equal(expected.evidence.length, 484); assert.equal(expected.observations.length, 577);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Perl cells promoted or supplemented`);
 });

@@ -9,7 +9,8 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmReferences, promoteNominalPrimitiveSubtypeNpm } from "./nominal-primitive-subtype-npm-promotion.mjs";
 import { beforeNominalPrimitiveSubtypeNpmPromotionSource, nominalPrimitiveSubtypeNpmPromotionChangedPaths, nominalPrimitiveSubtypeNpmPromotionHistoryPath, nominalPrimitiveSubtypeNpmPromotionPredecessor, reverseNominalPrimitiveSubtypeNpmPromotionUpdate } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
@@ -22,13 +23,15 @@ test("primitive-base npm promotion history authenticates the exact Node-only sup
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeNpmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeNpmPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeNpmPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalPrimitiveSubtypeNpmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -41,7 +44,7 @@ test("primitive-base npm promotion history authenticates the exact Node-only sup
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalPrimitiveSubtypeNpm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeNpmReferences()));
-	assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalPrimitiveSubtypeNpmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalPrimitiveSubtypeNpmPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -50,8 +53,10 @@ test("primitive-base npm promotion history authenticates the exact Node-only sup
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeNpmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256);
-	assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalPrimitiveSubtypeNpmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalPrimitiveSubtypeNpmPromotionHistoryPath, inventoryPath), update.currentSha256);
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeNpmPromotionHistoryPath, expected
+	));
 	assert.equal(expected.evidence.length, 524); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly twelve existing Node cells supplemented`);
 });

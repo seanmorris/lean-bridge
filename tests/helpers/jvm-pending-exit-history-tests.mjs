@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeJvmPendingExitSource, jvmPendingExitChangedPaths, jvmPendingExitHistoryPath, jvmPendingExitPredecessor, reverseJvmPendingExitUpdate } from "./jvm-pending-exit-history.mjs";
 
@@ -20,7 +21,9 @@ test("JVM pending exit authenticates exact changes and restores the original sup
 	const original = path => execFileSync("git", ["show", `${jvmPendingExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeJvmPendingExitSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseJvmPendingExitUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeJvmPendingExitSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("JVM pending exit authenticates exact changes and restores the original sup
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeJvmPendingExitSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeJvmPendingExitSource(inventoryPath, await sourceAtHistoryMilestone(jvmPendingExitHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("JVM pending exit history writer refuses an unrelated checkout before writing", async t => {

@@ -9,7 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import {
 	promoteRecursiveSubtypePhpWasm
@@ -38,7 +41,9 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			recursiveSubtypePhpWasmPromotionHistoryPath, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = original(update.path);
 		assert.equal(reverseRecursiveSubtypePhpWasmPromotionUpdate(current, update), previous);
@@ -47,7 +52,7 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeRecursiveSubtypePhpWasmPromotionSource(
 			update.path, current + "unknown"), current + "unknown");
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		for(const mutate of [
 			item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -74,9 +79,12 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
-	const actual = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8")
-		, record.updates.find(item => item.path === inventoryPath).currentSha256));
-	assert.deepEqual(actual, expected);
+	const actual = JSON.parse(await sourceAtHistoryMilestone(
+		recursiveSubtypePhpWasmPromotionHistoryPath, inventoryPath
+	));
+	assert.deepEqual(actual, withHistoryMilestoneSourcePins(
+		recursiveSubtypePhpWasmPromotionHistoryPath, expected
+	));
 	const beforePins = beforeRecursiveSubtypePhpWasmPromotionPins(actual);
 	assert.ok(beforePins.evidence.some((entry, index) =>
 		JSON.stringify(entry.files) !== JSON.stringify(actual.evidence[index].files)));

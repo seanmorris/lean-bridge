@@ -21,7 +21,9 @@ test("nominal PHP-Wasm harness registration authenticates exact changes without 
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpWasmRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePhpWasmRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypePhpWasmRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePhpWasmRegistrationSource(update.path, current), previous);

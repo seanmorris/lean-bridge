@@ -21,7 +21,9 @@ test("nominal Python harness registration authenticates exact changes without ad
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePythonRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePythonRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypePythonRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePythonRegistrationSource(update.path, current), previous);

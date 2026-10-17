@@ -22,7 +22,9 @@ test("nominal C# ceiling history authenticates the exact C# test transition and 
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeDotnetCeilingPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		assert.equal(beforeNominalSubtypeDotnetCeilingSource(update.path, current, update.currentSha256), current);
 		const previous = reverseNominalSubtypeDotnetCeilingUpdate(current, update);
 		assert.equal(previous, original(update.path));

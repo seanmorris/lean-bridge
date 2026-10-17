@@ -11,8 +11,9 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypePhpWasmArchive, nominalSubtypePhpWasmReferences, promoteNominalSubtypePhpWasm, nominalSubtypePhpWasmProfiles, nominalSubtypePhpWasmConversion, nominalSubtypePhpWasmLimit } from "./nominal-subtype-php-wasm-promotion.mjs";
-import { nominalSubtypePhpWasmPromotionPredecessor } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { nominalSubtypePhpWasmPromotionHistoryPath, nominalSubtypePhpWasmPromotionPredecessor } from "./nominal-subtype-php-wasm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNpmPromotionSource, beforeNominalPrimitiveSubtypeNpmPromotionPins } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpWasmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -156,7 +157,9 @@ test("nominal PHP-Wasm promotion changes exactly six Subtype cells and adds two 
 });
 
 test("nominal PHP-Wasm guides describe installed Nat fields and keep other combinations pending", async () => {
-	const source = await readFile("docs/php.md", "utf8");
+	const source = await sourceAtHistoryMilestone(
+		nominalSubtypePhpWasmPromotionHistoryPath, "docs/php.md"
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	for(const text of ["Native PHP and PHP-Wasm packages accept"
 		, "Brick\\Math\\BigInteger"
@@ -168,7 +171,9 @@ test("nominal PHP-Wasm guides describe installed Nat fields and keep other combi
 		assert.ok(row.includes(route + ": Installed checks passed (input, result, field)"));
 	assert.ok(row.includes("Not audited (callback input, callback result)"));
 	assert.ok(row.includes(nominalSubtypePhpWasmConversion));
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const author = await sourceAtHistoryMilestone(
+		nominalSubtypePhpWasmPromotionHistoryPath, "docs/lean/existing-package.md"
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -187,7 +192,10 @@ test("nominal PHP-Wasm guides describe installed Nat fields and keep other combi
 test("nominal PHP-Wasm consumer and author pages render the evidence links and remove stale support claims", async () => {
 	for(const path of ["docs/php.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const page = docPages.find(item => item.source === path), source = await readFile(path, "utf8");
+		const page = docPages.find(item => item.source === path);
+		const source = await sourceAtHistoryMilestone(
+			nominalSubtypePhpWasmPromotionHistoryPath, path
+		);
 		const compiled = await compileDocumentationPage(source, page, { revision: nominalSubtypePhpWasmPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-subtype-php-wasm-promotion-20261014.md")), path);
 		assert.doesNotMatch(compiled.searchText, /PHP-Wasm nominal (?:acceptance|fields and results) (?:remains pending|still need)|PHP-Wasm installed acceptance for these nominal additions remains pending/u);

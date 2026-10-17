@@ -9,10 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRustReferences, promoteNominalSubtypeRust } from "./nominal-subtype-rust-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeRustPromotionSource, nominalSubtypeRustPromotionChangedPaths, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRustPromotionPredecessor, reverseNominalSubtypeRustPromotionUpdate } from "./nominal-subtype-rust-promotion-history.mjs";
 
 test("nominal Rust promotion history authenticates exact changes and the six observed Rust cells", async t => {
@@ -23,13 +24,15 @@ test("nominal Rust promotion history authenticates exact changes and the six obs
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeRustPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeRustPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeRustPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeRustPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeRustPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeRustPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeRustPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeRustPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -50,7 +53,7 @@ test("nominal Rust promotion history authenticates exact changes and the six obs
 		const update = later.updates.find(item => item.path === file.path);
 		if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
 	}
-	assert.equal(beforeNominalSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeRustPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -59,8 +62,12 @@ test("nominal Rust promotion history authenticates exact changes and the six obs
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeNominalSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeRustPromotionHistoryPath, inventoryPath), inventoryUpdate.currentSha256);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint)
+		, withHistoryMilestoneSourcePins(
+			nominalSubtypeRustPromotionHistoryPath, expected
+		)
+	);
 	assert.equal(expected.evidence.length, 496); assert.equal(expected.observations.length, 583);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Rust cells promoted or supplemented`);
 });

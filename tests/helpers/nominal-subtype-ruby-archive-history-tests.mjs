@@ -21,7 +21,9 @@ test("nominal Ruby archive registration authenticates exact changes without addi
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeRubyArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeRubyArchiveSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypeRubyArchiveUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeRubyArchiveSource(update.path, current), previous);

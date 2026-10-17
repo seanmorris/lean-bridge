@@ -21,7 +21,9 @@ test("nominal PHP harness registration authenticates exact changes without addin
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePhpRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypePhpRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePhpRegistrationSource(update.path, current), previous);

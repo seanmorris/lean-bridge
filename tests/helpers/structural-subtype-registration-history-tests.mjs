@@ -35,7 +35,9 @@ test("structural Subtype test registration source history authenticates exact ch
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeRegistrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypeRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseStructuralSubtypeRegistrationUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeRegistrationSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypeRegistrationSource(update.path, current, update.currentSha256), current);

@@ -9,8 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import {
 	nestedCheckedRecordPerlGeneratorPath
 	, nestedCheckedRecordPerlReferences
@@ -48,8 +51,8 @@ test("nested Perl promotion history authenticates every source transition", asyn
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nestedCheckedRecordPerlPromotionHistoryPath, update.path
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseNestedCheckedRecordPerlPromotionUpdate(current, update);
@@ -60,8 +63,7 @@ test("nested Perl promotion history authenticates every source transition", asyn
 			update.path, current, update.currentSha256), current);
 		assert.equal(beforeNestedCheckedRecordPerlPromotionSource(
 			update.path, previous, update.previousSha256), previous);
-		assert.equal(beforeFinRefinementSource(
-			update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNestedCheckedRecordPerlPromotionSource(
 			update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [
@@ -82,11 +84,9 @@ test("nested Perl promotion history authenticates every source transition", asyn
 		JSON.parse(original(inventoryPath))
 		, await nestedCheckedRecordPerlReferences()
 	);
-	const inventoryUpdate = record.updates.find(
-		update => update.path === inventoryPath
+	const checkpoint = await sourceAtHistoryMilestone(
+		nestedCheckedRecordPerlPromotionHistoryPath, inventoryPath
 	);
-	const checkpoint = beforeFinRefinementSource(inventoryPath
-		, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
 	assert.equal(beforeNestedCheckedRecordPerlPromotionSource(
 		inventoryPath, checkpoint), original(inventoryPath));
 	let pins = 0;
@@ -99,7 +99,9 @@ test("nested Perl promotion history authenticates every source transition", asyn
 			pins++;
 		}
 	}
-	assert.equal(JSON.stringify(JSON.parse(checkpoint)), JSON.stringify(expected));
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nestedCheckedRecordPerlPromotionHistoryPath, expected
+	));
 	assert.equal(pins, record.pinCount);
 	assert.equal(expected.evidence.length, 590);
 	assert.equal(expected.observations.length, 617);

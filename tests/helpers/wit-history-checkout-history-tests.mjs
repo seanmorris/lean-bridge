@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import "./wit-history-checkout-repair-history-tests.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeWitHistoryCheckoutSource, witHistoryCheckoutChangedPaths, witHistoryCheckoutHistoryPath, witHistoryCheckoutPredecessor, reverseWitHistoryCheckoutUpdate } from "./wit-history-checkout-history.mjs";
@@ -21,7 +22,9 @@ test("WIT history checkout authenticates exact changes without changing support 
 	const original = path => execFileSync("git", ["show", `${witHistoryCheckoutPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeWitHistoryCheckoutSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseWitHistoryCheckoutUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeWitHistoryCheckoutSource(update.path, current), previous);
@@ -39,7 +42,7 @@ test("WIT history checkout authenticates exact changes without changing support 
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeWitHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeWitHistoryCheckoutSource(inventoryPath, await sourceAtHistoryMilestone(witHistoryCheckoutHistoryPath, inventoryPath)), original(inventoryPath));
 	const expected = JSON.parse(original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -49,7 +52,7 @@ test("WIT history checkout authenticates exact changes without changing support 
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 92);
-	const currentInventory = beforeWitHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	const currentInventory = beforeWitHistoryCheckoutSource(inventoryPath, await sourceAtHistoryMilestone(witHistoryCheckoutHistoryPath, inventoryPath), record.updates.find(item => item.path === inventoryPath).currentSha256);
 	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 	const workflowPath = ".github/workflows/consumer-matrix.yml";

@@ -21,7 +21,9 @@ test("checked-record browser foundation source history authenticates exact chang
 	const gitSource = path => execFileSync("git", ["show", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCheckedRecordBrowserSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseCheckedRecordBrowserUpdate(current, update);
 		assert.equal(previous, gitSource(update.path));
 		assert.equal(beforeCheckedRecordBrowserSource(update.path, current), previous);

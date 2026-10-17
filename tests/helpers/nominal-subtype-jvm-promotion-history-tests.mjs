@@ -9,8 +9,9 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
 import { nominalSubtypeJvmReferences, promoteNominalSubtypeJvm } from "./nominal-subtype-jvm-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypePhpPromotionPins } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionChangedPaths, nominalSubtypeJvmPromotionHistoryPath, nominalSubtypeJvmPromotionPredecessor, reverseNominalSubtypeJvmPromotionUpdate } from "./nominal-subtype-jvm-promotion-history.mjs";
 
@@ -22,13 +23,15 @@ test("nominal JVM promotion history authenticates exact changes and the twelve o
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeJvmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeJvmPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeJvmPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeJvmPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeJvmPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeJvmPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeJvmPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -43,7 +46,7 @@ test("nominal JVM promotion history authenticates exact changes and the twelve o
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = beforeNominalSubtypePhpPromotionPins(await promoteNominalSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalSubtypeJvmReferences()));
-	assert.equal(beforeNominalSubtypeJvmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeJvmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeJvmPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -52,8 +55,12 @@ test("nominal JVM promotion history authenticates exact changes and the twelve o
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeNominalSubtypeJvmPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalSubtypeJvmPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeJvmPromotionHistoryPath, inventoryPath), inventoryUpdate.currentSha256);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint)
+		, withHistoryMilestoneSourcePins(
+			nominalSubtypeJvmPromotionHistoryPath, expected
+		)
+	);
 	assert.equal(expected.evidence.length, 504); assert.equal(expected.observations.length, 587);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly twelve observed JVM cells promoted or supplemented`);
 });

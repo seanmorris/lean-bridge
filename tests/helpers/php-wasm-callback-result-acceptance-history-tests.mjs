@@ -36,7 +36,9 @@ test("PHP-Wasm callback-result history reconstructs integration and prior source
 	}
 	for(const update of record.readerUpdates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reversePhpWasmCallbackResultUpdate(current, update, "readerUpdates");
 		assert.equal(sha256(previous), update.previousSha256, update.path);
 	}

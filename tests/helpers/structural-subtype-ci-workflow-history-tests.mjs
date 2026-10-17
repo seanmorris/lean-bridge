@@ -19,7 +19,9 @@ test("structural Subtype ci-workflow source history authenticates exact changes 
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeCiWorkflowChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypeCiWorkflowSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseStructuralSubtypeCiWorkflowUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeCiWorkflowSource(update.path, current), previous);
 		assert.equal(beforeStructuralSubtypeCiWorkflowSource(update.path, current, update.currentSha256), current);

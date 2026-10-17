@@ -23,7 +23,9 @@ test("Fin Core repair integration authenticates every transition and refuses unr
 	assert.deepEqual(history.updates.map(update => update.path), finCoreRepairChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePhpWasmDirectPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseFinCoreRepairUpdate(current, update);
 		assert.equal(beforeFinCoreRepairSource(update.path, current), previous);
 		assert.equal(beforeFinCoreRepairSource(update.path, current, update.currentSha256), current);

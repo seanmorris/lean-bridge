@@ -21,7 +21,9 @@ test("primitive-base browser harness registration authenticates exact changes wi
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeBrowserRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalPrimitiveSubtypeBrowserRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeBrowserRegistrationSource(update.path, current), previous);

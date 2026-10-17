@@ -9,9 +9,9 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinZeroCiSource } from "./fin-record-zero-ci-history.mjs";
 import { beforeFinHostedPromotionSource, finHostedPromotionChangedPaths, finHostedPromotionHistoryPath, finHostedPromotionPredecessor, reverseFinHostedPromotionUpdate } from "./fin-native-hosted-promotion-history.mjs";
 
 test("hosted Fin promotion authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +22,9 @@ test("hosted Fin promotion authenticates every transition and refuses unrecorded
 	assert.deepEqual(history.updates.map(update => update.path), finHostedPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinZeroCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinHostedPromotionUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finHostedPromotionHistoryPath, update.path
+		), previous = reverseFinHostedPromotionUpdate(current, update);
 		assert.equal(beforeFinHostedPromotionSource(update.path, current), previous);
 		assert.equal(beforeFinHostedPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinHostedPromotionSource(update.path, previous), previous);

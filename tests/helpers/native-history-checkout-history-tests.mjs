@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeHistoryCheckoutSource, nativeHistoryCheckoutChangedPaths, nativeHistoryCheckoutHistoryPath, nativeHistoryCheckoutPredecessor, reverseNativeHistoryCheckoutUpdate } from "./native-history-checkout-history.mjs";
 
@@ -20,7 +21,9 @@ test("Native history checkout authenticates exact changes and restores the origi
 	const original = path => execFileSync("git", ["show", `${nativeHistoryCheckoutPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNativeHistoryCheckoutSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNativeHistoryCheckoutUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNativeHistoryCheckoutSource(update.path, current), previous);
@@ -38,7 +41,7 @@ test("Native history checkout authenticates exact changes and restores the origi
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeNativeHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNativeHistoryCheckoutSource(inventoryPath, await sourceAtHistoryMilestone(nativeHistoryCheckoutHistoryPath, inventoryPath)), original(inventoryPath));
 	const expected = JSON.parse(original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -48,7 +51,7 @@ test("Native history checkout authenticates exact changes and restores the origi
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 110);
-	const currentInventory = beforeNativeHistoryCheckoutSource(inventoryPath, await readFile(inventoryPath, "utf8"), record.updates.find(item => item.path === inventoryPath).currentSha256);
+	const currentInventory = beforeNativeHistoryCheckoutSource(inventoryPath, await sourceAtHistoryMilestone(nativeHistoryCheckoutHistoryPath, inventoryPath), record.updates.find(item => item.path === inventoryPath).currentSha256);
 	assert.deepEqual(JSON.parse(currentInventory), expected);
 	assert.equal(expected.evidence.length, 472); assert.equal(expected.observations.length, 571);
 	const boundaryPath = "nix/perl-engine-source-boundary.json";

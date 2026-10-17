@@ -21,7 +21,9 @@ test("nominal Rust harness archive authenticates exact changes without adding su
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeRustArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeRustArchiveSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypeRustArchiveUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeRustArchiveSource(update.path, current), previous);

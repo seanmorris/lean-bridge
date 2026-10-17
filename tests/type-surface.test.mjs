@@ -16,8 +16,9 @@ import test from "node:test";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells } from "./helpers/historical-type-surface-cells.mjs";
-import { beforeCheckedRecordPromotionSource } from "./helpers/checked-record-promotion-source-history.mjs";
-import { beforeCallbackFinPromotionSource } from "./helpers/callback-fin-promotion-source-history.mjs";
+import { beforeCheckedRecordPromotionSource, checkedRecordPromotionHistoryPath } from "./helpers/checked-record-promotion-source-history.mjs";
+import { beforeCallbackFinPromotionSource, callbackFinPromotionHistoryPath } from "./helpers/callback-fin-promotion-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./helpers/source-history-test-source.mjs";
 import { reviewedSubtypeNativeProfiles, reviewedSubtypeNativeReferences } from "./helpers/reviewed-subtype-native-promotion.mjs";
 import { nominalSubtypeNpmProfiles, nominalSubtypeNpmHostSuffix } from "./helpers/nominal-subtype-npm-promotion.mjs";
 import { nominalSubtypeNativeProfiles, nominalSubtypeNativeHostSuffix } from "./helpers/nominal-subtype-native-promotion.mjs";
@@ -37,48 +38,13 @@ import { nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserF
 import { nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeField } from "./helpers/nominal-primitive-subtype-native-promotion.mjs";
 import { nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlField } from "./helpers/nominal-primitive-subtype-perl-promotion.mjs";
 import { nominalPrimitiveSubtypeRubyProfiles, nominalPrimitiveSubtypeRubyField } from "./helpers/nominal-primitive-subtype-ruby-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./helpers/nominal-primitive-subtype-ruby-promotion-history.mjs";
 import { nominalPrimitiveSubtypeRustProfiles, nominalPrimitiveSubtypeRustField } from "./helpers/nominal-primitive-subtype-rust-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionSource } from "./helpers/nominal-primitive-subtype-rust-promotion-history.mjs";
 import { nominalPrimitiveSubtypeDotnetProfiles, nominalPrimitiveSubtypeDotnetField } from "./helpers/nominal-primitive-subtype-dotnet-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeDotnetPromotionSource } from "./helpers/nominal-primitive-subtype-dotnet-promotion-history.mjs";
 import { nominalPrimitiveSubtypePhpProfiles, nominalPrimitiveSubtypePhpField } from "./helpers/nominal-primitive-subtype-php-promotion.mjs";
-import { beforeNominalPrimitiveSubtypePhpPromotionSource } from "./helpers/nominal-primitive-subtype-php-promotion-history.mjs";
 import { nominalPrimitiveSubtypePhpWasmProfiles } from "./helpers/nominal-primitive-subtype-php-wasm-promotion.mjs";
-import { beforeNominalPrimitiveSubtypePhpWasmPromotionSource } from "./helpers/nominal-primitive-subtype-php-wasm-promotion-history.mjs";
-import { beforeRecursiveSubtypePhpWasmSource } from "./helpers/recursive-subtype-php-wasm-source-history.mjs";
 import { recursiveSubtypePhpWasmField, recursiveSubtypePhpWasmParameter, recursiveSubtypePhpWasmResult } from "./helpers/recursive-subtype-php-wasm-promotion.mjs";
-import { beforeRecursiveSubtypePhpWasmPromotionSource } from "./helpers/recursive-subtype-php-wasm-promotion-history.mjs";
-import { beforeNestedCheckedRecordBrowserPromotionSource } from "./helpers/nested-checked-record-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeWitProfiles, nominalPrimitiveSubtypeWitField, nominalPrimitiveSubtypeWitParameter, nominalPrimitiveSubtypeWitResult } from "./helpers/nominal-primitive-subtype-wit-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeWitPromotionSource } from "./helpers/nominal-primitive-subtype-wit-promotion-history.mjs";
 import { nominalPrimitiveSubtypeJvmProfiles, nominalPrimitiveSubtypeJvmField } from "./helpers/nominal-primitive-subtype-jvm-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeJvmPromotionSource } from "./helpers/nominal-primitive-subtype-jvm-promotion-history.mjs";
-import { withoutNestedCheckedRecordNativeCorrection } from "./helpers/nested-checked-record-native-correction-source-history.mjs";
-import { withoutNestedCheckedRecordNativePromotion } from "./helpers/nested-checked-record-native-promotion-history.mjs";
-import { withoutNestedCheckedRecordQuality } from "./helpers/nested-checked-record-quality-source-history.mjs";
-import { withoutNestedCheckedRecordDotnetPromotion } from "./helpers/nested-checked-record-dotnet-promotion-history.mjs";
-import { withoutNestedCheckedRecordJvmPromotion } from "./helpers/nested-checked-record-jvm-promotion-history.mjs";
-import { withoutNestedCheckedRecordPerlPromotion } from "./helpers/nested-checked-record-perl-promotion-history.mjs";
-import { withoutNestedCheckedRecordPhpPromotion } from "./helpers/nested-checked-record-php-promotion-history.mjs";
-import { withoutNestedCheckedRecordPythonPromotion } from "./helpers/nested-checked-record-python-promotion-history.mjs";
-import { withoutNestedCheckedRecordRubyPromotion } from "./helpers/nested-checked-record-ruby-promotion-history.mjs";
-import { withoutNestedCheckedRecordWitPromotion } from "./helpers/nested-checked-record-wit-promotion-history.mjs";
-import { withoutNestedCheckedRecordPhpWasmPromotion } from "./helpers/nested-checked-record-php-wasm-promotion-history.mjs";
-import { withoutNestedCheckedRecordRustPromotion } from "./helpers/nested-checked-record-rust-promotion-history.mjs";
-import { withoutNestedCheckedRecordMatrixClosure } from "./helpers/nested-checked-record-matrix-closure-source-history.mjs";
-import { withoutMutualCheckedRecord } from "./helpers/mutual-checked-record-source-history.mjs";
-import { withoutMutualCheckedRecordNpm } from "./helpers/mutual-checked-record-npm-source-history.mjs";
-import { withoutMutualCheckedRecordNpmArchive } from "./helpers/mutual-checked-record-npm-archive-source-history.mjs";
-import { withoutMutualCheckedRecordDotnet } from "./helpers/mutual-checked-record-dotnet-source-history.mjs";
-import { withoutMutualCheckedRecordJvm } from "./helpers/mutual-checked-record-jvm-source-history.mjs";
-import { withoutRecursiveCheckedRecordPerlDiagnostic } from "./helpers/recursive-checked-record-perl-diagnostic-source-history.mjs";
-import { withoutRecursiveCheckedRecordPerlPackageHistoryRepair } from "./helpers/recursive-checked-record-perl-package-history-repair.mjs";
-import { withoutPythonGraphDiagnostic } from "./helpers/python-graph-diagnostic-source-history.mjs";
-import { withoutRubyGraphDiagnostic } from "./helpers/ruby-graph-diagnostic-source-history.mjs";
-import { withoutRubyGraphKeywordField } from "./helpers/ruby-graph-keyword-field-source-history.mjs";
-import { withoutRubyMemberEscape } from "./helpers/ruby-member-escape-source-history.mjs";
-import { withoutRustGraphDiagnostic } from "./helpers/rust-graph-diagnostic-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -118,53 +84,21 @@ const observationFixture = () => {
 	return candidate;
 };
 
-test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
+test("historical shape comparisons preserve old cells without weakening the live classifier", () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutRecursiveCheckedRecordPerlPackageHistoryRepair(
-		file, await readFile(file, "utf8")
+	const checkedRecordCurrent = sourceAtHistoryMilestone(
+		checkedRecordPromotionHistoryPath, file
 	);
-	current = withoutRustGraphDiagnostic(
-		file, current
-	);
-	current = withoutRubyMemberEscape(file, current);
-	current = withoutRubyGraphKeywordField(file, current);
-	current = withoutRubyGraphDiagnostic(file, current);
-	current = withoutPythonGraphDiagnostic(file, current);
-	current = withoutRecursiveCheckedRecordPerlDiagnostic(file, current);
-	current = withoutMutualCheckedRecordJvm(file, current);
-	current = withoutMutualCheckedRecordDotnet(file, current);
-	current = withoutMutualCheckedRecordNpmArchive(file, current);
-	current = withoutMutualCheckedRecordNpm(file, current);
-	current = withoutMutualCheckedRecord(file, current);
-	current = withoutNestedCheckedRecordMatrixClosure(file
-		, current);
-	current = withoutNestedCheckedRecordRustPromotion(file, current);
-	current = withoutNestedCheckedRecordPhpWasmPromotion(file
-		, current);
-	current = withoutNestedCheckedRecordWitPromotion(file, current);
-	current = withoutNestedCheckedRecordRubyPromotion(file, current);
-	current = withoutNestedCheckedRecordPythonPromotion(file, current);
-	current = withoutNestedCheckedRecordPhpPromotion(file, current);
-	current = withoutNestedCheckedRecordPerlPromotion(file, current);
-	current = withoutNestedCheckedRecordJvmPromotion(file, current);
-	current = withoutNestedCheckedRecordDotnetPromotion(file, current);
-	current = withoutNestedCheckedRecordQuality(file
-		, current);
-	current = withoutNestedCheckedRecordNativePromotion(file, current);
-	current = withoutNestedCheckedRecordNativeCorrection(file, current);
-	current = beforeNominalPrimitiveSubtypeJvmPromotionSource(file, current);
-	current = beforeNominalPrimitiveSubtypeWitPromotionSource(file, current);
-	current = beforeNestedCheckedRecordBrowserPromotionSource(file, current);
-	current = beforeRecursiveSubtypePhpWasmPromotionSource(file, current);
-	current = beforeRecursiveSubtypePhpWasmSource(file, current);
-	current = beforeNominalPrimitiveSubtypePhpWasmPromotionSource(file, current);
-	current = beforeNominalPrimitiveSubtypePhpPromotionSource(file, current);
-	current = beforeNominalPrimitiveSubtypeDotnetPromotionSource(file, current);
-	current = beforeNominalPrimitiveSubtypeRustPromotionSource(file, current);
-	current = beforeNominalPrimitiveSubtypeRubyPromotionSource(file, current);
-	const previous = JSON.parse(beforeCheckedRecordPromotionSource(file, current));
+	const previous = JSON.parse(beforeCheckedRecordPromotionSource(
+		file, checkedRecordCurrent
+	));
 	// Compare shape introduction at its own inventory epoch; later callback observations are separate.
-	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(file, current));
+	const callbackFinCurrent = sourceAtHistoryMilestone(
+		callbackFinPromotionHistoryPath, file
+	);
+	const withCheckedRecords = JSON.parse(beforeCallbackFinPromotionSource(
+		file, callbackFinCurrent
+	));
 	const unchanged = clone(previous);
 	assert.equal(previous.shapes.length, 48);
 	assert.throws(() => typeSurfaceCells(previous, contracts), /IR and source shapes/u);

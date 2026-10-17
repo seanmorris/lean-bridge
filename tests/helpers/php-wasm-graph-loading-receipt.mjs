@@ -34,6 +34,13 @@ export const phpWasmGraphLoadingEvidenceSources = [...new Set([
 ])].sort();
 
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
+const beforeUnusedUnitBinderRename = (source, current, previous) => {
+	const occurrences = source.split(current).length - 1;
+	assert.equal(occurrences, 1, "historical plain PHP-Wasm adapter has one warning-only Unit binder rename");
+	const historical = source.replace(current, previous);
+	assert.equal(historical.length, source.length - 1);
+	return historical;
+};
 const completeLog = (record, name) => {
 	assert.equal(record.sha256, sha256(record.text));
 	assert.ok(record.text.includes(` - ${name}\n`));
@@ -71,8 +78,17 @@ const assertInstalledLoading = async report => {
 			assert.deepEqual(pkg.componentFiles[`compiled/${path}`], identity(source));
 			if(path.startsWith("src/") && path.endsWith(".php")) assert.deepEqual(pkg.composerFiles[path], identity(source));
 		}
-		assert.deepEqual(pkg.componentFiles["compiled/generated.lean"], identity(adapters.leanSource));
-		assert.deepEqual(pkg.componentFiles["compiled/component.h"], identity(adapters.header));
+		// Graph adapters are reconstructed by their frozen generator. The plain peer's
+		// only later byte change renamed an unused Unit binder to silence Lean; replay
+		// that exact one-byte predecessor before comparing the immutable receipt.
+		const leanSource = pkg.graph ? adapters.leanSource : beforeUnusedUnitBinderRename(
+			adapters.leanSource, "(_unit : _root_.Unit)", "(unit : _root_.Unit)"
+		);
+		const header = pkg.graph ? adapters.header : beforeUnusedUnitBinderRename(
+			adapters.header, "lean_object * _unit", "lean_object * unit"
+		);
+		assert.deepEqual(pkg.componentFiles["compiled/generated.lean"], identity(leanSource));
+		assert.deepEqual(pkg.componentFiles["compiled/component.h"], identity(header));
 		assert.deepEqual(pkg.componentFiles[`compiled/${receipt.library}`], receipt.wasmLibrary);
 		for(const [prefix, inventory] of [["component/package/", pkg.componentFiles], ["runtime/package/", pkg.runtimeFiles], ["composer/", pkg.composerFiles]])
 			for(const [path, hash] of Object.entries(inventory)) assert.deepEqual(pkg.report.files[prefix + path], hash);

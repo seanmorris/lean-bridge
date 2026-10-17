@@ -74,9 +74,9 @@ test("a shared nominal mirror rejects conflicting predicate layouts", () => {
 	assert.throws(() => generateNativeLeanAdapters(model), /Conflicting nominal refinement layouts/u);
 });
 
-test("Fin-only nominal adapter bytes remain unchanged", () => {
+test("Fin-only nominal adapter bytes retain their independent generator snapshot", () => {
 	const generated = generateNativeLeanAdapters(nominalFinConversionFixture());
-	assert.equal(sha256(canonicalJson(generated)), "1ce38835771c829da75ad5666d4e1a2aa180be6124b6405dcdc7a9238886fa0c");
+	assert.equal(sha256(canonicalJson(generated)), "6f3b7b42dbd0b1678e5a7cf73c6f812b33eca646b63f5ad827a89a0974eea26a");
 });
 
 const enabled = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_CONVERSION_TEST === "1"

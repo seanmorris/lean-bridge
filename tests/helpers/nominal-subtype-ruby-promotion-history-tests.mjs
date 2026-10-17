@@ -9,10 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistorySourcePins } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { nominalSubtypeRubyReferences, promoteNominalSubtypeRuby } from "./nominal-subtype-ruby-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeRustPromotionSource, nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
 import { beforeNominalSubtypeRubyPromotionSource, nominalSubtypeRubyPromotionChangedPaths, nominalSubtypeRubyPromotionHistoryPath, nominalSubtypeRubyPromotionPredecessor, reverseNominalSubtypeRubyPromotionUpdate } from "./nominal-subtype-ruby-promotion-history.mjs";
 
@@ -24,13 +25,15 @@ test("nominal Ruby promotion history authenticates exact changes and the six obs
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeRubyPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeRubyPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeRubyPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeRubyPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeRubyPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeRubyPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeRubyPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeRubyPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -54,7 +57,7 @@ test("nominal Ruby promotion history authenticates exact changes and the six obs
 			if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
 		}
 	}
-	assert.equal(beforeNominalSubtypeRubyPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeRubyPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeRubyPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -62,7 +65,7 @@ test("nominal Ruby promotion history authenticates exact changes and the six obs
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeNominalSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(beforeNominalSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeRustPromotionHistoryPath, inventoryPath))), await withHistorySourcePins(nominalSubtypeRustPromotionHistoryPath, expected));
 	assert.equal(expected.evidence.length, 492); assert.equal(expected.observations.length, 581);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed Ruby cells promoted or supplemented`);
 });

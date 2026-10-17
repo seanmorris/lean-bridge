@@ -21,7 +21,9 @@ test("scalar JVM exit repair preserves exact historical producers and support cl
 	const original = path => execFileSync("git", ["show", `${nativeFinJvmExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNativeFinJvmExitSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNativeFinJvmExitUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNativeFinJvmExitSource(update.path, current), previous);

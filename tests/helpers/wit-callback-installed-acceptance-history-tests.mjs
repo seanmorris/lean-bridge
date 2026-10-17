@@ -8,6 +8,7 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { assertWitCallbackInstalledHistory, beforeWitCallbackInstalledAcceptance
 	, readWitCallbackInstalledHistory, reverseWitCallbackInstalledUpdate
 	, witCallbackInstalledBaseline, witCallbackInstalledIntegration
@@ -39,7 +40,9 @@ test("installed WIT callback history reconstructs integration and prior source b
 	}
 	for(const update of record.readerUpdates)
 	{
-		const current = beforeWitCallbackInstalledAcceptance(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = at(witCallbackInstalledIntegration, update.path);
 		assert.equal(reverseWitCallbackInstalledUpdate(current, update, "readerUpdates")
 			, previous, update.path);

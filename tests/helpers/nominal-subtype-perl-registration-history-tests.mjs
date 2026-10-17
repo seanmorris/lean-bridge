@@ -9,8 +9,11 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistorySourcePins } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
+import { beforeCliImportRepairSource
+	, cliImportRepairHistoryPath
+} from "./cli-import-repair-history.mjs";
 import { beforeNominalSubtypePerlRegistrationSource, nominalSubtypePerlRegistrationChangedPaths, nominalSubtypePerlRegistrationHistoryPath, nominalSubtypePerlRegistrationPredecessor, reverseNominalSubtypePerlRegistrationUpdate } from "./nominal-subtype-perl-registration-history.mjs";
 
 test("nominal Perl registration history authenticates exact changes without changing support claims", async t => {
@@ -21,7 +24,9 @@ test("nominal Perl registration history authenticates exact changes without chan
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePerlRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypePerlRegistrationSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseNominalSubtypePerlRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypePerlRegistrationSource(update.path, current), previous);
@@ -41,7 +46,7 @@ test("nominal Perl registration history authenticates exact changes without chan
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json", expected = JSON.parse(original(inventoryPath));
-	assert.equal(beforeNominalSubtypePerlRegistrationSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypePerlRegistrationSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypePerlRegistrationHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -49,7 +54,7 @@ test("nominal Perl registration history authenticates exact changes without chan
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
-	assert.equal(pins, 0); assert.deepEqual(JSON.parse(beforeCliImportRepairSource(inventoryPath, await readFile(inventoryPath, "utf8"))), expected);
+	assert.equal(pins, 0); assert.deepEqual(JSON.parse(beforeCliImportRepairSource(inventoryPath, await sourceAtHistoryMilestone(cliImportRepairHistoryPath, inventoryPath))), await withHistorySourcePins(cliImportRepairHistoryPath, expected));
 	assert.equal(expected.evidence.length, 480); assert.equal(expected.observations.length, 575);
 	t.diagnostic(`${pins} current-source pins refreshed; all support claims unchanged`);
 });

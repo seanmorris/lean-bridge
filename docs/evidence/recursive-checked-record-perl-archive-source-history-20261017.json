@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-checked-record-perl-archive-source-v1",
+  "transitionCommit": "e77239ad65a8cb7e1db1dfdd8a04174214ee404b",
+  "transitionParent": "c8ac44f43022c7fd49d4bb98a17cf4ae43371909",
+  "updates": [
+    {
+      "path": "docs/evidence/README.md",
+      "previousSha256": "c25e49c1f33196fe969d8fdcb9a922532e6a895a6e40471590de30e8759133eb",
+      "currentSha256": "a83968df04137d5a9409ba335f45ac0e16154049e258ac54fe7b89cdf2b9a71c",
+      "edits": [
+        {
+          "start": 5399,
+          "previous": "",
+          "current": "- [Recursive checked records in Perl, 16 October 2026](recursive-checked-record-perl-20261016.md)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/recursive-checked-record-perl.test.mjs",
+      "previousSha256": "67f5c92c713371f8f0095d8442723ba2464e5c406dd95fda1c592db91e14fc48",
+      "currentSha256": "539a84c64a9d6f3f7072cc2c1be8a3c9ebca55ecbfc8279ab78e04c81b845dfc",
+      "edits": [
+        {
+          "start": 917,
+          "previous": "",
+          "current": "import \"./helpers/recursive-checked-record-perl-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "transitionCommit": "3bb253425cd6bced5dd8fec93a3cf9d25e7f6327",
+      "transitionParent": "902e5a399b777c466844b3fc09add71742e149b2",
+      "updates": [
+        {
+          "path": "docs/evidence/README.md",
+          "previousSha256": "19c08c071849984cd377b8c1d9a3a86285315be02d3e53e102145e3afbf9f26d",
+          "currentSha256": "8aed04937f5e063d7d641fd855af9d2fc922b8a74ea769bc7af59ca400b3d98f",
+          "edits": [
+            {
+              "start": 4687,
+              "previous": "",
+              "current": "- [Nested checked records in Perl, 16 October 2026](nested-checked-record-perl-20261016.md)\n"
+            }
+          ]
+        },
+        {
+          "path": "tests/nested-checked-record-perl.test.mjs",
+          "previousSha256": "cabf6e9624b756aa815215f89569b57619707abe2362e938aa6da29039d8780f",
+          "currentSha256": "fc7aaa66874f9700d1ceb32380f13854cc16ff72626d425de00ba3e4540a9be6",
+          "edits": [
+            {
+              "start": 460,
+              "previous": "",
+              "current": "import \"./helpers/nested-checked-record-perl-evidence-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "transitionCommit": "8008ae87eef3585b00421098eda67b558f6e31f3",
+      "transitionParent": "ef8876ba067e29197b32a21eb708b394f4df3568",
+      "updates": [
+        {
+          "path": "docs/evidence/README.md",
+          "previousSha256": "ab837765e1ac0a978059c3961075ea68cf287322e67558e95e3b576a1585c1a6",
+          "currentSha256": "19c08c071849984cd377b8c1d9a3a86285315be02d3e53e102145e3afbf9f26d",
+          "edits": [
+            {
+              "start": 4585,
+              "previous": "",
+              "current": "- [Nested checked records in Java and Kotlin, 16 October 2026](nested-checked-record-jvm-20261016.md)\n"
+            }
+          ]
+        },
+        {
+          "path": "tests/helpers/nested-checked-record-jvm-generators.mjs",
+          "previousSha256": "b799cbb51d3e1e7c94263b141ca8fd407f030d63e7a98721c953469fc045a845",
+          "currentSha256": "d252baf8024aedf27384a4aeae86f09f36cab04c873394582102c370b3055075",
+          "edits": [
+            {
+              "start": 117,
+              "previous": "export {\n\tnominalSubtypeJvmGenerator as nestedCheckedRecordJvmGenerator\n\t, nominalSubtypeJvmOriginal as nestedCheckedRecordJvmOriginal\n} from \"./nominal-subtype-jvm-generators.mjs\"",
+              "current": "import assert from \"node:assert/strict\";\nimport { execFileSync } from \"node:child_process\";\nimport { posix } from \"node:path\";\nimport { nominalSubtypeJvmGenerator } from \"./nominal-subtype-jvm-generators.mjs\";\n\nexport { nominalSubtypeJvmGenerator as nestedCheckedRecordJvmGenerator };\n\nconst sources = new Map();\n\n/**\n * Read a normalized repository path at a full immutable revision.\n *\n * @param revision - Full producer commit.\n * @param path - Repository-relative source path.\n */\nexport const nestedCheckedRecordJvmOriginal = (revision, path) => {\n\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\tassert.ok(/^[A-Za-z0-9_.+/-]+$/u.test(path)\n\t\t&& !path.startsWith(\"/\") && posix.normalize(path) === path\n\t\t&& path.split(\"/\").every(part => part && part !== \".\" && part !== \"..\"), path);\n\tconst key = `${revision}:${path}`;\n\tif(!sources.has(key))\n\t\tsources.set(key, execFileSync(\"git\", [\"show\", key], { maxBuffer: 16 * 1024 * 1024 }));\n\treturn Buffer.from(sources.get(key));\n}"
+            }
+          ]
+        },
+        {
+          "path": "tests/nested-checked-record-jvm.test.mjs",
+          "previousSha256": "eb96c91f83e0e416db6835296100ec31ef304484bce24e40481161633fbaa890",
+          "currentSha256": "14e477857ed9a59eeab2c9496146f69ab9b947fde4d69707ebabdf303938d4be",
+          "edits": [
+            {
+              "start": 264,
+              "previous": "",
+              "current": "import \"./helpers/nested-checked-record-jvm-evidence-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

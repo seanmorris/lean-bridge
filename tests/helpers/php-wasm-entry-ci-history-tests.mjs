@@ -21,7 +21,9 @@ test("PHP-Wasm Subtype installed entry CI integration authenticates every transi
 	assert.deepEqual(history.updates.map(update => update.path), phpWasmEntryCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reversePhpWasmEntryCiUpdate(current, update);
 		assert.equal(beforePhpWasmEntryCiSource(update.path, current), previous);
 		assert.equal(beforePhpWasmEntryCiSource(update.path, current, update.currentSha256), current);

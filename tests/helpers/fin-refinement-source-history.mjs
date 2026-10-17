@@ -6,6 +6,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeCiContractRepairSource, ciContractRepairChangedPaths } from "./ci-contract-repair-source-history.mjs";
+import { beforeClosedGenericCheckedRecordSource, closedGenericCheckedRecordChangedPaths } from "./closed-generic-checked-record-source-history.mjs";
 import { checkedRecordPerlPromotionChangedPaths } from "./checked-record-perl-promotion-history.mjs";
 import { structuralSubtypeSelectionChangedPaths } from "./structural-subtype-selection-history.mjs";
 import { structuralSubtypeRuntimeChangedPaths } from "./structural-subtype-runtime-history.mjs";
@@ -778,6 +780,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCiContractRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	source = beforeClosedGenericCheckedRecordSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource(
 		path, source, expected
 	);
@@ -880,7 +886,9 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 });
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	extractorPath, typeSurfacePath, ...Object.keys(transitions)
+	...ciContractRepairChangedPaths
+	, ...closedGenericCheckedRecordChangedPaths
+	, extractorPath, typeSurfacePath, ...Object.keys(transitions)
 	, ...Object.keys(verifierEdits), ...subtypeRefinementChangedPaths
 	, ...subtypeHeapChangedPaths, ...subtypeComponentChangedPaths
 	, ...nestedFinChangedPaths, ...refinementClosureChangedPaths

@@ -7,10 +7,16 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNpmArchive, nominalSubtypeNpmProfiles, nominalSubtypeNpmReferences, promoteNominalSubtypeNpm, nominalSubtypeNpmConversion, nominalSubtypeNpmLimit } from "./nominal-subtype-npm-promotion.mjs";
-import { beforeNominalSubtypeNativePromotionSource } from "./nominal-subtype-native-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionSource
+	, nominalSubtypeJvmPromotionHistoryPath
+} from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypeNativePromotionSource
+	, nominalSubtypeNativePromotionHistoryPath
+} from "./nominal-subtype-native-promotion-history.mjs";
+import { nominalSubtypeNpmPromotionHistoryPath } from "./nominal-subtype-npm-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "d5aedc154ed94073c85c0087c466b426c7991d56:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -75,7 +81,7 @@ test("nominal npm promotion adds four Node field cells and supplements eight exi
 	const original = predecessor(), references = await nominalSubtypeNpmReferences();
 	const proposed = await promoteNominalSubtypeNpm(original, references), { document: current, ...contracts } = await readTypeSurface();
 	const inventoryPath = "docs/type-surface.v1.json";
-	const document = JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")));
+	const document = JSON.parse(beforeNominalSubtypeNativePromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeNativePromotionHistoryPath, inventoryPath)));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 472); assert.equal(proposed.evidence.length, 476);
 	assert.equal(original.observations.length, 571); assert.equal(proposed.observations.length, 573);
@@ -109,7 +115,11 @@ test("nominal npm promotion adds four Node field cells and supplements eight exi
 
 test("nominal npm docs separate Node acceptance from pending browser, native and callback contexts", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypeJvmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -119,9 +129,13 @@ test("nominal npm docs separate Node acceptance from pending browser, native and
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust and C# ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/javascript-typescript.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-npm-acceptance-20261011.md"), path);
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypeNpmPromotionHistoryPath, path
+		)).includes("nominal-subtype-npm-acceptance-20261011.md"), path);
 	const javascriptPath = "docs/javascript-typescript.md";
-	const javascript = beforeNominalSubtypeJvmPromotionSource(javascriptPath, await readFile(javascriptPath, "utf8"));
+	const javascript = beforeNominalSubtypeJvmPromotionSource(
+		javascriptPath, await readFile(javascriptPath, "utf8")
+	);
 	assert.ok(javascript.includes("### Subtypes in copied records\n"));
 	assert.ok(javascript.includes("Node 22.23.2"));
 	assert.doesNotMatch(javascript, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

@@ -21,7 +21,9 @@ test("structural Subtype Core CI repair source history authenticates exact chang
 	const gitSource = path => execFileSync("git", ["show", `${structuralSubtypeCoreCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeStructuralSubtypeCoreCiSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reverseStructuralSubtypeCoreCiUpdate(current, update);
 		assert.equal(previous, gitSource(update.path));
 		assert.equal(beforeStructuralSubtypeCoreCiSource(update.path, current), previous);

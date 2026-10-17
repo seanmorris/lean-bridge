@@ -21,7 +21,9 @@ test("PHP-Wasm corpus partition authenticates exact changes without adding suppo
 	const original = path => execFileSync("git", ["show", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforePhpWasmCorpusPartitionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		const previous = reversePhpWasmCorpusPartitionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforePhpWasmCorpusPartitionSource(update.path, current), previous);

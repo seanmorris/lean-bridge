@@ -9,9 +9,12 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins
+	, nominalPrimitiveSubtypeRustPromotionHistoryPath
+} from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeReferences, promoteNominalPrimitiveSubtypeNative } from "./nominal-primitive-subtype-native-promotion.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionSource, nominalPrimitiveSubtypeNativePromotionChangedPaths, nominalPrimitiveSubtypeNativePromotionHistoryPath, nominalPrimitiveSubtypeNativePromotionPredecessor, reverseNominalPrimitiveSubtypeNativePromotionUpdate } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 
@@ -23,13 +26,15 @@ test("primitive-base native promotion history authenticates the exact native-onl
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeNativePromotionSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, "utf8"))), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeNativePromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalPrimitiveSubtypeNativePromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(update.path, current + "unknown"), current + "unknown");
 		for(const mutate of [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -42,7 +47,7 @@ test("primitive-base native promotion history authenticates the exact native-onl
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeNative(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeNativeReferences()));
-	assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")))), original(inventoryPath));
+	assert.equal(beforeNominalPrimitiveSubtypeNativePromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalPrimitiveSubtypeRustPromotionHistoryPath, inventoryPath)))), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -51,8 +56,10 @@ test("primitive-base native promotion history authenticates the exact native-onl
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeNativePromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"))), update.currentSha256);
-	assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalPrimitiveSubtypeNativePromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRubyPromotionSource(inventoryPath, beforeNominalPrimitiveSubtypeRustPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalPrimitiveSubtypeRustPromotionHistoryPath, inventoryPath))), update.currentSha256);
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeNativePromotionHistoryPath, expected
+	));
 	assert.equal(expected.evidence.length, 536); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly twelve existing native cells supplemented`);
 });

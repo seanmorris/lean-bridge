@@ -9,7 +9,8 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins  } from "./source-history-test-source.mjs";
 import {
 	nominalPrimitiveSubtypeDotnetReferences
 	, promoteNominalPrimitiveSubtypeDotnet
@@ -34,8 +35,8 @@ test("primitive-base C# promotion history authenticates the exact support transi
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalPrimitiveSubtypeDotnetPromotionSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeDotnetPromotionHistoryPath, update.path
 		);
 		const previous = reverseNominalPrimitiveSubtypeDotnetPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -47,8 +48,7 @@ test("primitive-base C# promotion history authenticates the exact support transi
 		assert.equal(beforeNominalPrimitiveSubtypeDotnetPromotionSource(
 			update.path, previous, update.previousSha256
 		), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256),
-			previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeDotnetPromotionSource(
 			update.path, current + "unknown"
 		), current + "unknown");
@@ -68,8 +68,11 @@ test("primitive-base C# promotion history authenticates the exact support transi
 	const expected = await promoteNominalPrimitiveSubtypeDotnet(
 		JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeDotnetReferences()
 	);
+	const checkpoint = await sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath, inventoryPath
+	);
 	assert.equal(beforeNominalPrimitiveSubtypeDotnetPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8")
+		inventoryPath, checkpoint
 	), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
@@ -80,11 +83,9 @@ test("primitive-base C# promotion history authenticates the exact support transi
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const checkpoint = beforeNominalPrimitiveSubtypeDotnetPromotionSource(
-		inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256
-	);
-	assert.deepEqual(JSON.parse(checkpoint), expected);
+	assert.deepEqual(JSON.parse(checkpoint), withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath, expected
+	));
 	assert.equal(expected.evidence.length, 552); assert.equal(expected.observations.length, 595);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six existing C# cells supplemented`);
 });

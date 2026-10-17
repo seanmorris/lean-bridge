@@ -1,7 +1,23 @@
-/** Strict public types for the mutually recursive proof-free package. */
+/**
+ * Strict public types for the mutually recursive proof-free package.
+ *
+ * @file
+ */
 import * as api from "mutualcheckedrecords";
 
-const none: Readonly<{ tag: "none" }> = { tag: "none" };
+/** An inhabited optional carrier preserves its exact recursive payload. */
+type Some<T> = Readonly<{
+	/** Public present-value discriminator. */
+	tag: "some";
+	/** Proof-free recursive payload. */
+	value: T;
+}>;
+/** An absent optional carrier has no payload. */
+type None = Readonly<{
+	/** Public absent-value discriminator. */
+	tag: "none";
+}>;
+const none: None = { tag: "none" };
 const child: api.Envelope = { value: 80n, mode: 1n, next: none };
 const step: api.Step = { kind: "more", packet: child };
 const value: api.EnvelopeAlias = {
@@ -13,8 +29,7 @@ const stopped: api.Envelope = {
 const first: bigint = api.first(value) + api.second(stopped);
 const echoed: api.Envelope = api.echo(value);
 const grouped: bigint = api.groups([{ tag: "some", value }, none]);
-const echoedGroups: ReadonlyArray<Readonly<{ tag: "none" }>
-	| Readonly<{ tag: "some"; value: api.EnvelopeAlias }>>
+const echoedGroups: ReadonlyArray<None | Some<api.EnvelopeAlias>>
 	= api.echoGroups([{ tag: "some", value }]);
 const produced: api.Envelope = api.produce(5n);
 // @ts-expect-error The erased proof is never a public record field.

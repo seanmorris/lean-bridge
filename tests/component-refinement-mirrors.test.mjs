@@ -204,8 +204,8 @@ test("the shared mirror emitter retains the native generator's exact source pref
 		};
 		const generated = generateNativeLeanAdapters(model), lines = renderRefinementMirrors(model, names, typeName);
 		assert.equal(sha256(canonicalJson(generated)), create === nominalSubtypeConversionFixture
-			? "7a2aa0280a7ce3f29aa1b2638c965530ce7a4b3abfb11eb9297710c2b26f7095"
-			: "1ce38835771c829da75ad5666d4e1a2aa180be6124b6405dcdc7a9238886fa0c");
+			? "446dd25e399a8ac099c1bce0433c7ba019be2c0abd1be997db28f75169df9459"
+			: "6f3b7b42dbd0b1678e5a7cf73c6f812b33eca646b63f5ad827a89a0974eea26a");
 		const prefix = ["import NominalConversion", "", `namespace ${generated.module}`, "", ...lines].join("\n");
 		assert.ok(generated.leanSource.startsWith(prefix));
 	}

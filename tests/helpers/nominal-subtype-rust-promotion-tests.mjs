@@ -7,10 +7,12 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionPins, beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalSubtypeDotnetPromotionSource, nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeRustArchive, nominalSubtypeRustReferences, promoteNominalSubtypeRust, nominalSubtypeRustConversion, nominalSubtypeRustLimit } from "./nominal-subtype-rust-promotion.mjs";
+import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "d2d819205189ceaaf80d7e2cc80901111c778de2:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -127,7 +129,11 @@ test("nominal Rust promotion adds two field cells and supplements four existing 
 
 test("nominal Rust documentation distinguishes verified packages from pending hosts and callbacks", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath, await readFile(authorPath, "utf8"));
+	const author = beforeNominalSubtypeJvmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, authorPath
+		)
+	);
 	assert.doesNotMatch(author, /component builds still require that selection/u);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
@@ -139,8 +145,12 @@ test("nominal Rust documentation distinguishes verified packages from pending ho
 		assert.ok(row.includes("Node, C/C++, Perl, Python, Ruby, Rust and C# ordinary/reviewed installed"));
 	}
 	for(const path of ["docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/consume/rust.md", "docs/reference/types.md"])
-		assert.ok((await readFile(path, "utf8")).includes("nominal-subtype-rust-acceptance-20261012.md"), path);
-	const source = await readFile("docs/consume/rust.md", "utf8");
+		assert.ok((await sourceAtHistoryMilestone(
+			nominalSubtypeRustPromotionHistoryPath, path
+		)).includes("nominal-subtype-rust-acceptance-20261012.md"), path);
+	const source = await sourceAtHistoryMilestone(
+		nominalSubtypeRustPromotionHistoryPath, "docs/consume/rust.md"
+	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));
 	assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

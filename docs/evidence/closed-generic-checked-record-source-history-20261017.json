@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "milestone": "closed-generic-checked-record-source-v1",
+  "predecessorCommit": "cfb5534b43e62a6459f65638edd55af415b27263",
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4de2b2885fc656cf36343336ff603d37593313ae596dd3de323b655d8fd54b6b",
+      "currentSha256": "7c3415ed82b1b311e243899f758b07de7c5995882c47cf0b37ba3258bfe9708e",
+      "replacements": [
+        {
+          "previous": "e79da3a39ad70f36944cd7052c5d488673bde7f5519790182ef557380d1bf57d",
+          "current": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+          "count": 155
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "e79da3a39ad70f36944cd7052c5d488673bde7f5519790182ef557380d1bf57d",
+      "currentSha256": "c2b9aaa1e4f2d84bd4670645cc11f3a9143dbf5d2e8531c6d05afba2bf626978",
+      "replacements": [
+        {
+          "previous": "",
+          "current": "                -- A closed generic instantiation is already recorded under the\n                -- source alias that names it. Do not replace that definition with\n                -- a self-alias merely because the site selected a constructor.\n                if (base.getObjValAs? String \"kind\").toOption == some \"reference\" &&\n                    (base.getObjValAs? String \"name\").toOption == some name.toString then\n                  return target\n",
+          "count": 1
+        },
+        {
+          "previous": "    let normalized ← closeCopiedGraphNominal source (depth + 1)\n",
+          "current": "    -- Nominal definitions are graph nodes, not inline structural edges. Their\n    -- fields and container children consume the depth budget below; following\n    -- a named definition does not. This lets long acyclic alias chains fall\n    -- back from inline expansion to a finite graph without weakening the\n    -- structural nesting limit.\n    let normalized ← closeCopiedGraphNominal source depth\n",
+          "count": 1
+        },
+        {
+          "previous": "        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? \"target\") (depth + 1))\n",
+          "current": "        (← closeCopiedGraphValue (← ofExcept <| value.getObjVal? \"target\") depth)\n",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "14aa2b402ba2bb6643808c00727c2d60b9e291f7d6686bcdabe85f1adb6d2b88",
+      "currentSha256": "cc8a4d0a62a97d0b33badd799cd0ed74f4f5956bc615fe7151c52655a9e2a9c9",
+      "replacements": [
+        {
+          "previous": "",
+          "current": "import { beforeClosedGenericCheckedRecordSource, closedGenericCheckedRecordChangedPaths } from \"./closed-generic-checked-record-source-history.mjs\";\n",
+          "count": 1
+        },
+        {
+          "previous": "",
+          "current": "\tsource = beforeClosedGenericCheckedRecordSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n",
+          "count": 1
+        },
+        {
+          "previous": "\textractorPath, typeSurfacePath, ...Object.keys(transitions)\n",
+          "current": "\t...closedGenericCheckedRecordChangedPaths\n\t, extractorPath, typeSurfacePath, ...Object.keys(transitions)\n",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

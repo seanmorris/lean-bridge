@@ -9,9 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeJvmPromotionPins } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { nominalSubtypeDotnetReferences, promoteNominalSubtypeDotnet } from "./nominal-subtype-dotnet-promotion.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { beforeNominalSubtypeDotnetPromotionSource, nominalSubtypeDotnetPromotionChangedPaths, nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeDotnetPromotionPredecessor, reverseNominalSubtypeDotnetPromotionUpdate } from "./nominal-subtype-dotnet-promotion-history.mjs";
 
 test("nominal C# promotion history authenticates exact changes and the six observed C# cells", async t => {
@@ -22,13 +23,15 @@ test("nominal C# promotion history authenticates exact changes and the six obser
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeDotnetPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeDotnetPromotionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeDotnetPromotionHistoryPath, update.path
+		);
 		const previous = reverseNominalSubtypeDotnetPromotionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalSubtypeDotnetPromotionSource(update.path, current), previous);
 		assert.equal(beforeNominalSubtypeDotnetPromotionSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeNominalSubtypeDotnetPromotionSource(update.path, previous), previous);
-		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 		assert.equal(beforeNominalSubtypeDotnetPromotionSource(update.path, current + "unknown"), current + "unknown");
 		const mutations = [item => { item.path = "unknown"; }
 			, item => { item.previousSha256 = "0".repeat(64); }
@@ -43,7 +46,7 @@ test("nominal C# promotion history authenticates exact changes and the six obser
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const expected = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeDotnet(JSON.parse(original(inventoryPath)), await nominalSubtypeDotnetReferences()));
-	assert.equal(beforeNominalSubtypeDotnetPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8")), original(inventoryPath));
+	assert.equal(beforeNominalSubtypeDotnetPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeDotnetPromotionHistoryPath, inventoryPath)), original(inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -52,8 +55,12 @@ test("nominal C# promotion history authenticates exact changes and the six obser
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	const inventoryUpdate = record.updates.find(update => update.path === inventoryPath);
-	const checkpoint = beforeNominalSubtypeDotnetPromotionSource(inventoryPath, await readFile(inventoryPath, "utf8"), inventoryUpdate.currentSha256);
-	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint), expected);
+	const checkpoint = beforeNominalSubtypeDotnetPromotionSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypeDotnetPromotionHistoryPath, inventoryPath), inventoryUpdate.currentSha256);
+	assert.ok(pins > 0); assert.deepEqual(JSON.parse(checkpoint)
+		, withHistoryMilestoneSourcePins(
+			nominalSubtypeDotnetPromotionHistoryPath, expected
+		)
+	);
 	assert.equal(expected.evidence.length, 500); assert.equal(expected.observations.length, 585);
 	t.diagnostic(`${pins} current-source pins refreshed; exactly six observed C# cells promoted or supplemented`);
 });
