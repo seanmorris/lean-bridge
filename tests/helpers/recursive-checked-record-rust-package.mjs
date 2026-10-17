@@ -7,7 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { compiledPackageMetadata } from "../../src/analyze/package-metadata.mjs";
-import { generateCopiedRustGraphPackage } from "../../src/backends/rust/copied-graph-package.mjs";
+import {
+	compileCopiedRustGraphPackageModel, generateCopiedRustGraphPackage
+} from "../../src/backends/rust/copied-graph-package.mjs";
 import { copiedRustLock } from "../../src/backends/rust/copied-values.mjs";
 import { nativeGraphRefinementDiagnostics } from "../../src/build/native-graph-sources.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -56,14 +58,23 @@ export const assertRecursiveCheckedRecordRustIdentity = (receipt, pkg, model, fl
  * @param component - Native component receipt.
  * @param adapter - Native C adapter receipt.
  * @param runtime - Native runtime receipt.
+ * @param model - Independently reproduced compiler model.
  */
-export const recursiveCheckedRecordRustNativeEvidence = (receipt, component, adapter, runtime) => {
+export const recursiveCheckedRecordRustNativeEvidence = (
+	receipt, component, adapter, runtime, model
+) => {
 	assert.equal(sha256(canonicalJson(runtime)), receipt.runtimeIdentity);
+	assert.equal(adapter.schemaVersion, 1);
+	assert.equal(adapter.profile, "native-library-v1");
 	assert.equal(component.runtimeIdentity, receipt.runtimeIdentity);
 	assert.equal(adapter.runtimeIdentity, receipt.runtimeIdentity);
 	assert.equal(component.bindingIrSha256, receipt.bindingIrSha256);
 	assert.equal(adapter.bindingIrSha256, receipt.bindingIrSha256);
 	assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(component)));
+	const projection = compileCopiedRustGraphPackageModel(model.bindingIr);
+	const copiedGraph = { schemaVersion: 1, layoutSha256: projection.layoutSha256 };
+	assert.deepEqual(adapter.copiedGraph, copiedGraph);
+	assert.equal(adapter.library, `lib${projection.prefix}.so`);
 	const libraries = {
 		[adapter.library]: adapter.files[`lib/${adapter.library}`].sha256
 		, [component.library]: component.nativeLibrary.sha256
@@ -79,7 +90,7 @@ export const recursiveCheckedRecordRustNativeEvidence = (receipt, component, ada
 		runtimeIdentity: receipt.runtimeIdentity
 		, componentId: receipt.component.id
 		, componentReceiptSha256: sha256(canonicalJson(component))
-		, library: adapter.library, libraries
+		, copiedGraph, library: adapter.library, libraries
 	};
 };
 
@@ -111,7 +122,8 @@ export const inspectRecursiveCheckedRecordRustPackage = async ({
 	assert.deepEqual(await json("component/model.json"), model);
 	const component = await json("component/native-component.json");
 	const adapter = await json("native-c-adapter.json"), runtime = await json("runtime.json");
-	const evidence = recursiveCheckedRecordRustNativeEvidence(receipt, component, adapter, runtime);
+	const evidence = recursiveCheckedRecordRustNativeEvidence(
+		receipt, component, adapter, runtime, model);
 	const compiled = await json("native-rust.json");
 	assert.equal(sha256(canonicalJson(compiled)), receipt.compiledProjectionSha256);
 	assert.equal(compiled.schemaVersion, 1); assert.equal(compiled.profile, "native-library-v1");
