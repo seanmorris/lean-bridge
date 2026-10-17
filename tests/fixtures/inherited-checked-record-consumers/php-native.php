@@ -181,10 +181,11 @@ function check_inherited_checked_records_php(
 
 if (realpath($_SERVER['SCRIPT_FILENAME']) === __FILE__) {
     require 'vendor/autoload.php';
+    // PHP reserves echo, so the generated function carries one trailing underscore.
     $api = [];
     foreach (['first', 'normalized', 'pair', 'aliased', 'nested', 'echo',
         'produce', 'produce_stamped'] as $name) {
-        $qualified = 'LeanInheritedcheckedrecords\\' . $name;
+        $qualified = 'LeanInheritedcheckedrecords\\' . ($name === 'echo' ? 'echo_' : $name);
         if (function_exists($qualified)) $api[$name] = $qualified;
     }
     echo json_encode(check_inherited_checked_records_php(

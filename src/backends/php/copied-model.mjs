@@ -68,8 +68,11 @@ export const compileCopiedPhpModel = (ir, { integerBits = 64, wordBits = integer
 	}
 	for(const fn of surface.functions)
 	{
-		if(names.has(fn.field.toLowerCase())) fail(fn.declaration, `PHP function name is reserved or duplicated: ${fn.field}`);
-		names.add(fn.field.toLowerCase());
+		// Keyword names gain one trailing underscore, as class names and graph functions do;
+		// every other reserved or duplicated name is still refused.
+		fn.publicName = phpClassName(fn.field);
+		if(names.has(fn.publicName.toLowerCase())) fail(fn.declaration, `PHP function name is reserved or duplicated: ${fn.publicName}`);
+		names.add(fn.publicName.toLowerCase());
 		for(const parameter of fn.parameters) if(reserved.has(parameter.name.toLowerCase())) fail(fn.declaration, `PHP parameter name is reserved: ${parameter.name}`);
 	}
 	for(const [index, callback] of [...surface.callbacks.values()].entries())

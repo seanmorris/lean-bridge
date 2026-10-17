@@ -201,6 +201,6 @@ zend_module_entry ${stem}_module_entry = {
 };
 ZEND_GET_MODULE(${stem})
 ` };
-	files["copied-zend-manifest.json"] = canonicalJson({ schemaVersion: 1, kind: "lean-bridge-copied-zend-source", component: ir.component.id, bindingIrSha256: identity, integerBits, extension: stem, transport, namespace: model.namespace, ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: model.surface.functions.map((fn, index) => ({ declaration: fn.declaration.id, function: `${model.namespace}\\${fn.field}`, transport: `${transport}\\call${index}`, cSymbol: fn.name })), files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { sha256: sha256(source), bytes: Buffer.byteLength(source) }])) });
+	files["copied-zend-manifest.json"] = canonicalJson({ schemaVersion: 1, kind: "lean-bridge-copied-zend-source", component: ir.component.id, bindingIrSha256: identity, integerBits, extension: stem, transport, namespace: model.namespace, ...(model.surface.aliases.length ? { aliases: phpCopiedAliases(model) } : {}), exports: model.surface.functions.map((fn, index) => ({ declaration: fn.declaration.id, function: `${model.namespace}\\${fn.publicName}`, transport: `${transport}\\call${index}`, cSymbol: fn.name })), files: Object.fromEntries(Object.entries(files).map(([path, source]) => [path, { sha256: sha256(source), bytes: Buffer.byteLength(source) }])) });
 	return Object.freeze(files);
 };

@@ -5,12 +5,15 @@
  */
 import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
 import { validateExportConfiguration } from "../../src/analyze/export-configuration.mjs";
+import { compileCopiedPhpModel } from "../../src/backends/php/copied-model.mjs";
+import { copiedPhpPublicSource, renderCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
+import { generateCopiedPhpZendAdapter } from "../../src/backends/php/copied-zend.mjs";
 import {
 	inheritedCheckedRecordNpmSelection
 } from "./inherited-checked-record-npm-fixture.mjs";
@@ -311,4 +314,38 @@ test("inherited checked-record PHP-Wasm observations require every host context 
 	}
 	assert.equal(controls, 150);
 	t.diagnostic(`${controls} missing, duplicated, changed-width or changed-phase observations refused`);
+});
+
+test("inherited PHP-Wasm escapes the echo keyword like graph packages and keeps reserved names closed", async () => {
+	const options = { integerBits: 32, structuredCallables: true, lists: true, variants: true };
+	const declaration = "lean:InheritedCheckedRecords.echo", symbol = "LeanInheritedcheckedrecords\\echo_";
+	for(const mode of inheritedCheckedRecordPhpWasmModes)
+	{
+		const ir = inheritedCheckedRecordPhpWasmReview(mode), model = compileCopiedPhpModel(ir, options);
+		const full = mode === "full";
+		assert.deepEqual(model.surface.functions.map(fn => [fn.field, fn.publicName]).filter(([field]) => field === "echo")
+			, full ? [["echo", "echo_"]] : []);
+		assert.ok(model.surface.functions.every(fn => fn.publicName === fn.field || fn.field === "echo"));
+		const source = copiedPhpPublicSource(model);
+		assert.equal(source.includes("function echo_("), full); assert.doesNotMatch(source, /function echo\(/u);
+		const manifest = JSON.parse(renderCopiedPhpPackage(model)["binding-manifest.json"]);
+		assert.equal(manifest.exports.includes(symbol), full);
+		assert.ok(!manifest.exports.includes("LeanInheritedcheckedrecords\\echo"));
+		const zend = JSON.parse(generateCopiedPhpZendAdapter(ir, { integerBits: 32 })["copied-zend-manifest.json"]);
+		assert.deepEqual(zend.exports.filter(item => item.declaration === declaration).map(item => item.function)
+			, full ? [symbol] : []);
+	}
+	// The independent caller reaches the escaped symbol exactly as the recursive caller does.
+	const caller = await readFile("tests/fixtures/inherited-checked-record-consumers/php-native.php", "utf8");
+	assert.equal(caller.split("($name === 'echo' ? 'echo_' : $name)").length, 2);
+	// Only keywords are escaped; other reserved or colliding names still fail closed.
+	const rename = name => {
+		const ir = structuredClone(inheritedCheckedRecordPhpWasmReview("full"));
+		const item = ir.declarations.find(value => value.id.endsWith(".first"));
+		item.id = item.id.replace(/first$/u, name); item.name = name; return ir;
+	};
+	for(const name of ["internal", "bigint"])
+		assert.throws(() => compileCopiedPhpModel(rename(name), options), new RegExp(`PHP function name is reserved or duplicated: ${name}$`, "u"), name);
+	assert.throws(() => compileCopiedPhpModel(rename("echo_"), options), /collides/u);
+	assert.deepEqual(compileCopiedPhpModel(rename("print"), options).surface.functions.map(fn => fn.publicName).slice(0, 1), ["print_"]);
 });
