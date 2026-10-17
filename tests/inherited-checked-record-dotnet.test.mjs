@@ -4,3 +4,6 @@
  * @file
  */
 import "./helpers/inherited-checked-record-dotnet-fixture-tests.mjs";
+import "./helpers/inherited-checked-record-dotnet-package-tests.mjs";
+import "./helpers/inherited-checked-record-dotnet-probe-tests.mjs";
+import "./helpers/inherited-checked-record-dotnet-installed-tests.mjs";
