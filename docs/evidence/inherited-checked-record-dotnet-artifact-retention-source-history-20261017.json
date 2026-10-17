@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-dotnet-artifact-retention-source-v1",
+  "predecessorCommit": "3ead6e87aadde50772e29d21549d31ba15bf13da",
+  "draftParentCommit": "f57b68eae0866fed44b435907afc445be0aa8c76",
+  "pathsSha256": "d4bf27ac120e19c2a408126b57b8f9c1c86f6fb85af822d011a05f9b07fd94b5",
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-dotnet-artifact-retention-source-history.mjs",
+      "currentSha256": "d9b6813576d174c35c95a09b55cf5f0ae9e520717514fd8c85a3544b99160a16"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-artifact-retention-source-history.mjs",
+      "currentSha256": "64660d5833c1f3f82b5e924ca2c3748530f7c0e3e11e6e9b770e7ec3bc254eb4"
+    },
+    {
+      "path": "tests/inherited-checked-record-dotnet-artifact-retention-source-history.test.mjs",
+      "currentSha256": "46ed4df7ac4f51df34ba847c3dfa68be848fcb934274acc2dfa6813c062fb683"
+    }
+  ],
+  "updates": [
+    {
+      "path": ".github/workflows/inherited-checked-record-dotnet.yml",
+      "previousSha256": "cd1d0d28e38b593d85ff347a61f744626bdb32b8b6a5a6dca39a4b1b6543de8e",
+      "currentSha256": "43f08be7c2899999df19bc31f31d2b66080c65dcc3faffa36a2ee269307a6485",
+      "edits": [
+        {
+          "start": 2430,
+          "previous": "",
+          "current": "          include-hidden-files: true\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "28fb63ac64ee27eba4afa978726ef42247d07e76265c54b2b26df4ba6887efbd",
+      "currentSha256": "3c0350486dd34d03a50dd602b18377602a76a85e7b10335f76e4c65862e8f98d",
+      "edits": [
+        {
+          "start": 10797,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-dotnet-artifact-retention-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "30696d139ea21776f5a7393bd3ebae96c11ef3c704c11b0740f5abe4d0315416",
+      "currentSha256": "c720c091fe29e51322b28d328fd9c3fdab92752005313c9ef8bf4161ee07f58a",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordDotnetArtifactRetentionSource, inheritedCheckedRecordDotnetArtifactRetentionChangedPaths } from \"./inherited-checked-record-dotnet-artifact-retention-source-history.mjs\";\n"
+        },
+        {
+          "start": 73506,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordDotnetArtifactRetentionSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 83248,
+          "previous": "\t...inheritedCheckedRecordPythonChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordDotnetArtifactRetentionChangedPaths\n\t, ...inheritedCheckedRecordPythonChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-workflow-tests.mjs",
+      "previousSha256": "f8ad7718e3437e77507177cb61586b0fb3993984045e75565ad775ab1f89ccd2",
+      "currentSha256": "cbdc2ea25484e8590330442de7dab257fba98c7dab12d87ca9c6da3038dff107",
+      "edits": [
+        {
+          "start": 816,
+          "previous": "",
+          "current": "\t\t, [\"          include-hidden-files: true\", \"          include-hidden-files: false\"]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-workflow.mjs",
+      "previousSha256": "b60bcc78290ffb0066e766d198727e8f876d3ea3812e1bb4c0955086210e657b",
+      "currentSha256": "9700dddb931b6358568c390a55b57b106899d7b34b132b285a67c3238b893672",
+      "edits": [
+        {
+          "start": 3092,
+          "previous": "\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: inherited-checked-record-dotnet-${{ github.sha }}\\n          path: |\\n            build/inherited-checked-record-dotnet-ci/\\n            build/inherited-checked-record-dotnet-toolchain.log\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n",
+          "current": "\tassert.equal(step(names[7]), \"        if: always()\\n        uses: actions/upload-artifact@v7\\n        with:\\n          name: inherited-checked-record-dotnet-${{ github.sha }}\\n          path: |\\n            build/inherited-checked-record-dotnet-ci/\\n            build/inherited-checked-record-dotnet-toolchain.log\\n          include-hidden-files: true\\n          if-no-files-found: error\\n          retention-days: 30\\n\");\n"
+        }
+      ]
+    }
+  ]
+}
