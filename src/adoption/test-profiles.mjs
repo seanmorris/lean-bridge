@@ -769,6 +769,7 @@ const profileManifest = Object.freeze({
 		, "native-php"
 		, "php-copied-keyword-source-history"
 		, "php-copied-zend"
+		, "php-wasm-writer-guard-source-history"
 		, "php-wasm-ordinary"
 		, "php-wasm-compiler-inputs"
 		, "php-wasm-multi-profile"

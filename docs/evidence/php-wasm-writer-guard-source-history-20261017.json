@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-wasm-writer-guard-source-v1",
+  "predecessorCommit": "d0f239bba51c8e0e79fa33a0c21107734cf55a04",
+  "draftParentCommit": "6046a8c0b5a98df685cad0b044e49de6489ec6af",
+  "pathsSha256": "acdcf5012e377f4667fd2175f1cc1fbe67b7d870ed55dff132b3ce8de0b72414",
+  "additions": [
+    {
+      "path": "scripts/update-php-wasm-writer-guard-source-history.mjs",
+      "currentSha256": "6bdd995cbc226a4ce66d9bdf05e2e451e662b80bdbfb1bc096848bf1fcd6ca6b"
+    },
+    {
+      "path": "tests/helpers/php-wasm-writer-guard-source-history.mjs",
+      "currentSha256": "d6af188951a4e73765386a671b756576126015aaa8e43f4cffe0b1dc8ccaf419"
+    },
+    {
+      "path": "tests/php-wasm-writer-guard-source-history.test.mjs",
+      "currentSha256": "b11cb6f5de8bfe9d556a4d6ddf3f09c4b0f7f9c0b1990ac080c61cfac012f61a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/update-php-wasm-direct-fin-promotion-history.mjs",
+      "previousSha256": "421af04b77f0b54bb10fe705a85e3633a6aabfc268ef4d3e677f6143ed0d5e1b",
+      "currentSha256": "405fd91f2a2c67cd6a539415c8ea9134dad5fd4be5c253dec9fa571d46a85617",
+      "edits": [
+        {
+          "start": 576,
+          "previous": "import { phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from \"../tests/helpers/php-wasm-direct-fin-promotion.mjs\";\n\n",
+          "current": ""
+        },
+        {
+          "start": 1553,
+          "previous": "",
+          "current": "const {\n\tphpWasmDirectPromotionReferences, promotePhpWasmDirectFin\n} = await import(\"../tests/helpers/php-wasm-direct-fin-promotion.mjs\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "e9d36535eb10e384016fcc45f5390078b5e5e6584d55a304f57e36e0fddcac29",
+      "currentSha256": "d3de7ee67c3985d064d5360a5d83d4910ceb38e226941df178c00dd175f04632",
+      "edits": [
+        {
+          "start": 28331,
+          "previous": "",
+          "current": "\t\t, \"php-wasm-writer-guard-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "324f8fa930b284ab729587191974b3251e7e299c1dc47e33c9d87dfe8cbd30cb",
+      "currentSha256": "2a60bfa533c935050e2f6983229170c43ebd34797e5621372f5608b6c6fe85d7",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePhpWasmWriterGuardSource, phpWasmWriterGuardChangedPaths } from \"./php-wasm-writer-guard-source-history.mjs\";\n"
+        },
+        {
+          "start": 73898,
+          "previous": "",
+          "current": "\tsource = beforePhpWasmWriterGuardSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 83988,
+          "previous": "\t...phpCopiedKeywordChangedPaths\n",
+          "current": "\t...phpWasmWriterGuardChangedPaths\n\t, ...phpCopiedKeywordChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
