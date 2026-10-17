@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nested-checked-record-diagnostic-oracle-source-v1",
+  "predecessorCommit": "bd9ebbf14f05a8750364255bf2416890b79d373e",
+  "historicalCommit": "d6fe6dfffc8f6b94e11a3110f704ea98634a2c0f",
+  "historicalParent": "1e6f4c5983be741f2065cef7e703fe2ffe76d766",
+  "pathsSha256": "6f99f75fdec2ee6cdc4b0787144c18371166498824f68189eebf3702f9c341c9",
+  "pinCount": 0,
+  "unchanged": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "sha256": "314ff9f3cbb3f2b37a34e9ef43b91a9397285cdc2a40c1d94642889772bcba38"
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "sha256": "2a8b4e3728418a6345c4d20a7f8652e95fa2a56076c5e293642e60ad85971cc0"
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-nested-checked-record-diagnostic-oracle-history.mjs",
+      "currentSha256": "b136e1313ed4219fb2c7089df82c914702bcb0315ee737d0f0611e7023e272ca"
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-diagnostic-oracle-source-history-tests.mjs",
+      "currentSha256": "6b081ff881f11db8b04ca46fc3dbd104b814836bd73aad2899e99b3dbd510c23"
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-diagnostic-oracle-source-history.mjs",
+      "currentSha256": "fdb4514973e782b5bcd8724543afb81a1c079720c8abc8bcb328380ec9481ac1"
+    }
+  ],
+  "historicalUpdates": [
+    {
+      "path": "tests/nested-checked-records.test.mjs",
+      "previousSha256": "9e366669909565efb36424f7919c5330871ae9c231c582be1bf810d2fe15fdcb",
+      "currentSha256": "c71b896121a1c27e491938213407f9501b0db4e0a4f440bc7712f0de7ab5132f",
+      "edits": [
+        {
+          "start": 844,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-native-archive-tests.mjs\";\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/fixtures/nested-checked-record-consumers/javascript.mjs",
+      "previousSha256": "9f493c77d4187d02e6c280de584f7d21ba7c371af77fcdb343771123e9c67697",
+      "currentSha256": "abf9e5b9f2e2fe6622cdd39e1f594e3d14ca9a345b0bed435a50bfe8f308c751",
+      "edits": [
+        {
+          "start": 1560,
+          "previous": "",
+          "current": "const escapeRegExp = value => value.replace(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\");\n\n/**\n * Build one exact ordinary/reviewed checked-record constructor diagnostic.\n *\n * @param name - Public callable name.\n * @param suffix - Literal path below the parameter root.\n * @param constructor - Unqualified Lean constructor name.\n * @param parameter - Zero-based parameter position.\n */\nexport const nestedCheckedRecordConstructorRefusal = (\n\tname, suffix, constructor, parameter = 0\n) => {\n\tif(typeof name !== \"string\" || typeof suffix !== \"string\"\n\t\t|| typeof constructor !== \"string\" || !Number.isSafeInteger(parameter)\n\t\t|| parameter < 0)\n\t\tthrow new TypeError(\"Expected a checked-record diagnostic site\");\n\treturn new RegExp(\n\t\t`^${escapeRegExp(name)}\\\\.(?:arg${parameter}|value${parameter})${escapeRegExp(suffix)}`\n\t\t+ ` was rejected by NestedCheckedRecords\\\\.${escapeRegExp(constructor)}$`, \"u\"\n\t);\n};\n\n"
+        },
+        {
+          "start": 3472,
+          "previous": "\tconst refused = (name, arguments_, pattern = /failed \\(5\\)/u) => {\n",
+          "current": "\tconst refused = (name, arguments_, pattern) => {\n\t\tif(!(pattern instanceof RegExp)) throw new TypeError(\"Expected an exact refusal pattern\");\n"
+        },
+        {
+          "start": 4190,
+          "previous": "",
+          "current": "\tconst rejected = {\n\t\tfirstWord: nestedCheckedRecordConstructorRefusal(\"first\", \".word\", \"mkWord\")\n\t\t, firstPacket: nestedCheckedRecordConstructorRefusal(\"first\", \"\", \"mkPacket\")\n\t\t, pairPacket: nestedCheckedRecordConstructorRefusal(\"pair\", \"\", \"mkPacket\")\n\t\t, arrayWord: nestedCheckedRecordConstructorRefusal(\"inArray\", \"[1].word\", \"mkWord\")\n\t\t, arrayPacket: nestedCheckedRecordConstructorRefusal(\"inArray\", \"[1]\", \"mkPacket\")\n\t\t, optionPacket: nestedCheckedRecordConstructorRefusal(\"inOption\", \".value\", \"mkPacket\")\n\t\t, exceptPacket: nestedCheckedRecordConstructorRefusal(\"inExcept\", \".error\", \"mkPacket\")\n\t\t, choicePacket: nestedCheckedRecordConstructorRefusal(\"inChoice\", \".value\", \"mkPacket\")\n\t};\n"
+        },
+        {
+          "start": 6460,
+          "previous": "\trefused(\"first\", [packet(0n, 0n)]);\n\trefused(\"first\", [packet(4n, 2n)]);\n",
+          "current": "\trefused(\"first\", [packet(0n, 0n)], rejected.firstWord);\n\trefused(\"first\", [packet(4n, 2n)], rejected.firstPacket);\n"
+        },
+        {
+          "start": 6675,
+          "previous": "\trefused(\"pair\", [packet(4n, 2n), second]);\n",
+          "current": "\trefused(\"pair\", [packet(4n, 2n), second], rejected.pairPacket);\n"
+        },
+        {
+          "start": 6843,
+          "previous": "\trefused(\"inArray\", [[first, packet(1n, 0n)]]);\n\trefused(\"inArray\", [[first, packet(5n, 2n)]]);\n",
+          "current": "\trefused(\"inArray\", [[first, packet(1n, 0n)]], rejected.arrayWord);\n\trefused(\"inArray\", [[first, packet(5n, 2n)]], rejected.arrayPacket);\n"
+        },
+        {
+          "start": 7096,
+          "previous": "\trefused(\"inOption\", [some(packet(5n, 2n))]);\n",
+          "current": "\trefused(\"inOption\", [some(packet(5n, 2n))], rejected.optionPacket);\n"
+        },
+        {
+          "start": 7399,
+          "previous": "\trefused(\"inExcept\", [{ error: packet(3n, 1n) }]);\n",
+          "current": "\trefused(\"inExcept\", [{ error: packet(3n, 1n) }], rejected.exceptPacket);\n"
+        },
+        {
+          "start": 7606,
+          "previous": "\trefused(\"inChoice\", [{ kind: \"packet\", value: packet(3n, 1n) }]);\n",
+          "current": "\trefused(\"inChoice\", [{ kind: \"packet\", value: packet(3n, 1n) }], rejected.choicePacket);\n"
+        },
+        {
+          "start": 8172,
+          "previous": "\t\trefused(\"first\", [packet(2n, 1n)]);\n",
+          "current": "\t\trefused(\"first\", [packet(2n, 1n)], rejected.firstPacket);\n"
+        },
+        {
+          "start": 8317,
+          "previous": "\t\trefused(\"inArray\", [[valid, packet(1n, 0n)]]);\n",
+          "current": "\t\trefused(\"inArray\", [[valid, packet(1n, 0n)]], rejected.arrayWord);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8691fc8d50a2e773a93ccd6fdc348411dc1c6a872ce8faf48cb26a2a0396f0f5",
+      "currentSha256": "5ad22d333fa9f97af442c43ed05c34f95c134fe561849ddc2c6658d75d174f6f",
+      "edits": [
+        {
+          "start": 297,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordDiagnosticOracleSource, beforeNestedCheckedRecordNativeArchiveHistoricalSource, nestedCheckedRecordDiagnosticOracleChangedPaths, nestedCheckedRecordNativeArchiveHistoricalPaths } from \"./nested-checked-record-diagnostic-oracle-source-history.mjs\";\n"
+        },
+        {
+          "start": 66607,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordDiagnosticOracleSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 70576,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordNativeArchiveHistoricalSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 73461,
+          "previous": "\t...recursiveComponentRegressionRepairChangedPaths\n",
+          "current": "\t...nestedCheckedRecordDiagnosticOracleChangedPaths\n\t, ...nestedCheckedRecordNativeArchiveHistoricalPaths\n\t, ...recursiveComponentRegressionRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/nested-checked-record-foundation.test.mjs",
+      "previousSha256": "87a939749bdf669669f49f5ea47f65ab7dfdeec2d484332a4881b6f7523eb8e8",
+      "currentSha256": "610ca0727aa99d3cf0d86964f24db7f96e61f86c190439ab4a449a1e93e2034c",
+      "edits": [
+        {
+          "start": 1109,
+          "previous": "import { checkNestedCheckedRecords } from \"./fixtures/nested-checked-record-consumers/javascript.mjs\";\n",
+          "current": "import {\n\tcheckNestedCheckedRecords, nestedCheckedRecordConstructorRefusal\n} from \"./fixtures/nested-checked-record-consumers/javascript.mjs\";\n"
+        },
+        {
+          "start": 1426,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-diagnostic-oracle-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 4785,
+          "previous": "\tconst failed = () => { throw new Error(\"failed (5)\"); };\n",
+          "current": "\tconst failed = message => { throw new Error(message); };\n"
+        },
+        {
+          "start": 5167,
+          "previous": "\tconst packet = (value, path, outer, inner) => {\n",
+          "current": "\tconst packet = (value, path, outer, inner, finPath = path) => {\n"
+        },
+        {
+          "start": 5365,
+          "previous": "\t\tif(source.digit < 0n || source.digit >= 10n) throw new TypeError(`${path}.digit must be bigint below 10`);\n\t\tconst word = inner === \"normalize\" ? source.word + 1n : source.word > 0n ? source.word : failed();\n",
+          "current": "\t\tif(source.digit < 0n || source.digit >= 10n) throw new TypeError(`${finPath}.digit must be bigint below 10`);\n\t\tconst word = inner === \"normalize\" ? source.word + 1n : source.word > 0n ? source.word\n\t\t\t: failed(`${path}.word was rejected by NestedCheckedRecords.mkWord`);\n"
+        },
+        {
+          "start": 5724,
+          "previous": "\t\tif(source.digit > word) failed();\n",
+          "current": "\t\tif(source.digit > word) failed(`${path} was rejected by NestedCheckedRecords.mkPacket`);\n"
+        },
+        {
+          "start": 6471,
+          "previous": "\t\t, inArray: values => sum(values.map((value, index) => packet(value, `inArray.arg0.${index}`, \"keep\", \"keep\")))\n",
+          "current": "\t\t, inArray: values => sum(values.map((value, index) => packet(\n\t\t\tvalue, `inArray.arg0[${index}]`, \"keep\", \"keep\", `inArray.arg0.${index}`\n\t\t)))\n"
+        },
+        {
+          "start": 7053,
+          "previous": "\t\t\treturn packet(value[0], \"inProduct.arg0.0\", \"keep\", \"keep\").word\n",
+          "current": "\t\t\treturn packet(value[0], \"inProduct.arg0[0]\", \"keep\", \"keep\", \"inProduct.arg0.0\").word\n"
+        },
+        {
+          "start": 8009,
+          "previous": "\t\t\tvalue, `echoArray.arg0.${index}`, \"keep\", \"keep\"\n",
+          "current": "\t\t\tvalue, `echoArray.arg0[${index}]`, \"keep\", \"keep\", `echoArray.arg0.${index}`\n"
+        },
+        {
+          "start": 8395,
+          "previous": "",
+          "current": "});\n\ntest(\"the installed caller requires exact ordinary and reviewed constructor diagnostics\", () => {\n\tconst sites = [\n\t\t[\"first\", \".word\", \"mkWord\"], [\"first\", \"\", \"mkPacket\"]\n\t\t, [\"pair\", \"\", \"mkPacket\"], [\"inArray\", \"[1].word\", \"mkWord\"]\n\t\t, [\"inArray\", \"[1]\", \"mkPacket\"], [\"inOption\", \".value\", \"mkPacket\"]\n\t\t, [\"inExcept\", \".error\", \"mkPacket\"], [\"inChoice\", \".value\", \"mkPacket\"]\n\t];\n\tfor(const [name, suffix, constructor] of sites)\n\t{\n\t\tconst pattern = nestedCheckedRecordConstructorRefusal(name, suffix, constructor);\n\t\tfor(const root of [\"arg0\", \"value0\"])\n\t\t\tassert.match(`${name}.${root}${suffix} was rejected by NestedCheckedRecords.${constructor}`, pattern);\n\t\tassert.doesNotMatch(`${name}.arg1${suffix} was rejected by NestedCheckedRecords.${constructor}`, pattern);\n\t\tassert.doesNotMatch(`${name}.arg0${suffix} failed (5)`, pattern);\n\t}\n\tassert.throws(() => nestedCheckedRecordConstructorRefusal(\"first\", \"\", \"mkPacket\", -1));\n"
+        }
+      ]
+    }
+  ]
+}

@@ -15,9 +15,12 @@ import { compilePrimitiveCSurface } from "../src/backends/c/primitive-surface.mj
 import { nativeFinRefinements, nativeFinSummary, nativeRefinementReadme } from "../src/backends/native/fin-refinements.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { checkedRefinementSelection, projectionCheckedSelection, validateCheckedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
-import { checkNestedCheckedRecords } from "./fixtures/nested-checked-record-consumers/javascript.mjs";
+import {
+	checkNestedCheckedRecords, nestedCheckedRecordConstructorRefusal
+} from "./fixtures/nested-checked-record-consumers/javascript.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { nestedCheckedRecordReview } from "./helpers/nested-checked-record-fixture.mjs";
+import "./helpers/nested-checked-record-diagnostic-oracle-source-history-tests.mjs";
 
 const fixture = () => {
 	const nat = { kind: "primitive", name: "nat" };
@@ -96,20 +99,21 @@ const normalize = value => componentRefinementMirrors(value.abi, value.exports, 
 const site = (model, name) => model.sites.find(item => item.sourceDeclaration === `NestedChecked.${name}`);
 
 test("the installed caller oracle fixes full and result-only behavior and counts", () => {
-	const failed = () => { throw new Error("failed (5)"); };
+	const failed = message => { throw new Error(message); };
 	const shape = () => { throw new TypeError("value does not match the declared copied fields"); };
 	const exact = (value, fields) => {
 		if(value === null || typeof value !== "object" || Array.isArray(value)
 			|| JSON.stringify(Object.keys(value).sort()) !== JSON.stringify([...fields].sort())) shape();
 		return value;
 	};
-	const packet = (value, path, outer, inner) => {
+	const packet = (value, path, outer, inner, finPath = path) => {
 		const source = exact(value, ["digit", "word"]);
 		if(typeof source.digit !== "bigint" || typeof source.word !== "bigint") shape();
-		if(source.digit < 0n || source.digit >= 10n) throw new TypeError(`${path}.digit must be bigint below 10`);
-		const word = inner === "normalize" ? source.word + 1n : source.word > 0n ? source.word : failed();
+		if(source.digit < 0n || source.digit >= 10n) throw new TypeError(`${finPath}.digit must be bigint below 10`);
+		const word = inner === "normalize" ? source.word + 1n : source.word > 0n ? source.word
+			: failed(`${path}.word was rejected by NestedCheckedRecords.mkWord`);
 		if(outer === "normalize") return { digit: source.digit, word: source.digit + 1n };
-		if(source.digit > word) failed();
+		if(source.digit > word) failed(`${path} was rejected by NestedCheckedRecords.mkPacket`);
 		return { digit: source.digit, word };
 	};
 	const sum = values => values.reduce((total, value) => total + value.word, 0n);
@@ -123,7 +127,9 @@ test("the installed caller oracle fixes full and result-only behavior and counts
 		, second: value => packet(value, "second.arg0", "normalize", "normalize").word
 		, pair: (left, right) => packet(left, "pair.arg0", "keep", "keep").word
 			+ packet(right, "pair.arg1", "normalize", "normalize").word
-		, inArray: values => sum(values.map((value, index) => packet(value, `inArray.arg0.${index}`, "keep", "keep")))
+		, inArray: values => sum(values.map((value, index) => packet(
+			value, `inArray.arg0[${index}]`, "keep", "keep", `inArray.arg0.${index}`
+		)))
 		, inList: values => sum(values.map((value, index) => packet(value, `inList.arg0.${index}`, "normalize", "normalize")))
 		, inOption: value => {
 			const selected = exact(value, value?.tag === "none" ? ["tag"] : ["tag", "value"]);
@@ -131,7 +137,7 @@ test("the installed caller oracle fixes full and result-only behavior and counts
 		}
 		, inProduct: value => {
 			if(!Array.isArray(value) || value.length !== 2) shape();
-			return packet(value[0], "inProduct.arg0.0", "keep", "keep").word
+			return packet(value[0], "inProduct.arg0[0]", "keep", "keep", "inProduct.arg0.0").word
 				+ packet(value[1], "inProduct.arg0.1", "normalize", "normalize").word;
 		}
 		, inExcept: value => {
@@ -149,13 +155,31 @@ test("the installed caller oracle fixes full and result-only behavior and counts
 			return selected.kind === "empty" ? 0n : packet(selected.value, "inChoice.arg0.value", "keep", "normalize").word;
 		}
 		, echoArray: values => values.map((value, index) => packet(
-			value, `echoArray.arg0.${index}`, "keep", "keep"
+			value, `echoArray.arg0[${index}]`, "keep", "keep", `echoArray.arg0.${index}`
 		))
 	};
 	assert.deepEqual(checkNestedCheckedRecords(output, { resultOnly: true })
 		, { checks: 4023, rejections: 0, calls: 2006, snapshots: 2006, recoveries: 0 });
 	assert.deepEqual(checkNestedCheckedRecords(full)
 		, { checks: 10077, rejections: 2017, calls: 5037, snapshots: 5037, recoveries: 1000 });
+});
+
+test("the installed caller requires exact ordinary and reviewed constructor diagnostics", () => {
+	const sites = [
+		["first", ".word", "mkWord"], ["first", "", "mkPacket"]
+		, ["pair", "", "mkPacket"], ["inArray", "[1].word", "mkWord"]
+		, ["inArray", "[1]", "mkPacket"], ["inOption", ".value", "mkPacket"]
+		, ["inExcept", ".error", "mkPacket"], ["inChoice", ".value", "mkPacket"]
+	];
+	for(const [name, suffix, constructor] of sites)
+	{
+		const pattern = nestedCheckedRecordConstructorRefusal(name, suffix, constructor);
+		for(const root of ["arg0", "value0"])
+			assert.match(`${name}.${root}${suffix} was rejected by NestedCheckedRecords.${constructor}`, pattern);
+		assert.doesNotMatch(`${name}.arg1${suffix} was rejected by NestedCheckedRecords.${constructor}`, pattern);
+		assert.doesNotMatch(`${name}.arg0${suffix} failed (5)`, pattern);
+	}
+	assert.throws(() => nestedCheckedRecordConstructorRefusal("first", "", "mkPacket", -1));
 });
 
 test("JavaScript nested validators traverse checked-record result fields", async () => {

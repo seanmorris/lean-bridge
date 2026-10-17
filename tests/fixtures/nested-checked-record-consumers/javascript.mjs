@@ -39,6 +39,29 @@ const snapshot = value => {
 	return JSON.stringify(encode(value));
 };
 
+const escapeRegExp = value => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+
+/**
+ * Build one exact ordinary/reviewed checked-record constructor diagnostic.
+ *
+ * @param name - Public callable name.
+ * @param suffix - Literal path below the parameter root.
+ * @param constructor - Unqualified Lean constructor name.
+ * @param parameter - Zero-based parameter position.
+ */
+export const nestedCheckedRecordConstructorRefusal = (
+	name, suffix, constructor, parameter = 0
+) => {
+	if(typeof name !== "string" || typeof suffix !== "string"
+		|| typeof constructor !== "string" || !Number.isSafeInteger(parameter)
+		|| parameter < 0)
+		throw new TypeError("Expected a checked-record diagnostic site");
+	return new RegExp(
+		`^${escapeRegExp(name)}\\.(?:arg${parameter}|value${parameter})${escapeRegExp(suffix)}`
+		+ ` was rejected by NestedCheckedRecords\\.${escapeRegExp(constructor)}$`, "u"
+	);
+};
+
 /**
  * Exercise complete full or result-only nested checked-record APIs.
  *
@@ -58,7 +81,8 @@ export const checkNestedCheckedRecords = (api, { resultOnly = false } = {}) => {
 		check(snapshot(arguments_) === before, `${label} preserved every input`); snapshots++;
 		return result;
 	};
-	const refused = (name, arguments_, pattern = /failed \(5\)/u) => {
+	const refused = (name, arguments_, pattern) => {
+		if(!(pattern instanceof RegExp)) throw new TypeError("Expected an exact refusal pattern");
 		const before = snapshot(arguments_); let failure; calls++;
 		try
 		{ api[name](...arguments_); }
@@ -71,6 +95,16 @@ export const checkNestedCheckedRecords = (api, { resultOnly = false } = {}) => {
 	const packet = (digit, word) => ({ digit, word });
 	const some = value => ({ tag: "some", value }), none = { tag: "none" };
 	const produced = value => packet(0n, value + 1n);
+	const rejected = {
+		firstWord: nestedCheckedRecordConstructorRefusal("first", ".word", "mkWord")
+		, firstPacket: nestedCheckedRecordConstructorRefusal("first", "", "mkPacket")
+		, pairPacket: nestedCheckedRecordConstructorRefusal("pair", "", "mkPacket")
+		, arrayWord: nestedCheckedRecordConstructorRefusal("inArray", "[1].word", "mkWord")
+		, arrayPacket: nestedCheckedRecordConstructorRefusal("inArray", "[1]", "mkPacket")
+		, optionPacket: nestedCheckedRecordConstructorRefusal("inOption", ".value", "mkPacket")
+		, exceptPacket: nestedCheckedRecordConstructorRefusal("inExcept", ".error", "mkPacket")
+		, choicePacket: nestedCheckedRecordConstructorRefusal("inChoice", ".value", "mkPacket")
+	};
 	const huge = 1n << 100n;
 	for(const value of [0n, 4n, huge])
 	{
@@ -106,20 +140,20 @@ export const checkNestedCheckedRecords = (api, { resultOnly = false } = {}) => {
 	invoke("inChoice", [{ kind: "empty" }], 0n);
 	invoke("inChoice", [{ kind: "packet", value: packet(2n, 4n) }], 5n);
 	invoke("echoArray", [[first, packet(1n, huge)]], [first, packet(1n, huge)]);
-	refused("first", [packet(0n, 0n)]);
-	refused("first", [packet(4n, 2n)]);
+	refused("first", [packet(0n, 0n)], rejected.firstWord);
+	refused("first", [packet(4n, 2n)], rejected.firstPacket);
 	refused("first", [packet(10n, 12n)], /^first\.(?:arg0|value0)\.digit must be bigint below 10$/u);
-	refused("pair", [packet(4n, 2n), second]);
+	refused("pair", [packet(4n, 2n), second], rejected.pairPacket);
 	refused("pair", [first, packet(10n, 0n)], /^pair\.(?:arg1|value1)\.digit must be bigint below 10$/u);
-	refused("inArray", [[first, packet(1n, 0n)]]);
-	refused("inArray", [[first, packet(5n, 2n)]]);
+	refused("inArray", [[first, packet(1n, 0n)]], rejected.arrayWord);
+	refused("inArray", [[first, packet(5n, 2n)]], rejected.arrayPacket);
 	refused("inArray", [[first, packet(10n, 12n)]], /^inArray\.(?:arg0|value0)\.1\.digit must be bigint below 10$/u);
-	refused("inOption", [some(packet(5n, 2n))]);
+	refused("inOption", [some(packet(5n, 2n))], rejected.optionPacket);
 	refused("inProduct", [[first, packet(10n, 0n)]], /^inProduct\.(?:arg0|value0)\.1\.digit must be bigint below 10$/u);
 	refused("inExcept", [{ ok: packet(10n, 0n) }], /^inExcept\.(?:arg0|value0)\.ok\.digit must be bigint below 10$/u);
-	refused("inExcept", [{ error: packet(3n, 1n) }]);
+	refused("inExcept", [{ error: packet(3n, 1n) }], rejected.exceptPacket);
 	refused("inHolder", [{ packet: packet(10n, 0n), tag: 9n }], /^inHolder\.(?:arg0|value0)\.packet\.digit must be bigint below 10$/u);
-	refused("inChoice", [{ kind: "packet", value: packet(3n, 1n) }]);
+	refused("inChoice", [{ kind: "packet", value: packet(3n, 1n) }], rejected.choicePacket);
 	const shape = /does not match the declared copied fields/u;
 	refused("first", [{ digit: 2n, word: 3n, linked: true }], shape);
 	refused("first", [{ digit: 2n }], shape);
@@ -129,9 +163,9 @@ export const checkNestedCheckedRecords = (api, { resultOnly = false } = {}) => {
 	{
 		const valid = packet(round % 10n, round + 10n);
 		invoke("first", [valid], round + 10n, "round accepted");
-		refused("first", [packet(2n, 1n)]);
+		refused("first", [packet(2n, 1n)], rejected.firstPacket);
 		invoke("second", [packet(round % 10n, 0n)], round % 10n + 1n, "round normalized");
-		refused("inArray", [[valid, packet(1n, 0n)]]);
+		refused("inArray", [[valid, packet(1n, 0n)]], rejected.arrayWord);
 		invoke("inArray", [[valid, first]], round + 13n, "recovery after late rejection"); recoveries++;
 	}
 	equal(second, packet(7n, 0n), "all rounds preserved the reused caller value");
