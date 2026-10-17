@@ -177,3 +177,28 @@ final class GraphRuntime
     }
 }
 `;
+
+const statusMethod = "    private static function status(int $status): void {\n";
+const invocation = "            self::status($target->ffi->{$target->symbol}(...[...$inputs, $output]));\n";
+
+/**
+ * Read the adapter's one-shot checked-refinement text when a call rejects its input.
+ * The adapter resets the text at every call, so missing text keeps the fixed message.
+ *
+ * @param prefix - Native component prefix that owns the diagnostic symbol.
+ */
+export const phpGraphDiagnosticTransfer = prefix => {
+	if(!/^[A-Za-z_][A-Za-z0-9_]*$/u.test(prefix)) throw new TypeError("Invalid PHP graph diagnostic prefix");
+	if(phpGraphTransfer.split(statusMethod).length !== 2 || phpGraphTransfer.split(invocation).length !== 2)
+		throw new TypeError("PHP graph transfer no longer has one checked call site");
+	return phpGraphTransfer.replace(invocation, invocation.replace("self::status(", "self::checkedStatus(")
+		.replace("));\n", "), $target->ffi);\n"))
+		.replace(statusMethod, `    private static function checkedStatus(int $status, \\FFI $ffi): void {
+        if ($status !== 1) { self::status($status); return; }
+        $message = $ffi->${prefix}_graph_error();
+        if ($message === null) { self::status($status); return; }
+        if (!\\is_string($message) || \\preg_match('//u', $message) !== 1) throw new GraphInvalidNative('Malformed native refinement diagnostic');
+        throw new GRAPH_NAMESPACE\\LeanBridgeError($message, $status);
+    }
+${statusMethod}`);
+};

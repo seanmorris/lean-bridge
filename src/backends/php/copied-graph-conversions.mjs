@@ -7,7 +7,7 @@ import { generateCopiedCGraphTypes } from "../c/copied-graph-layout.mjs";
 import { generateCopiedPhpGraphValues } from "./copied-graph-values.mjs";
 import { copiedPhpHelpers } from "./copied-support.mjs";
 import { phpGraphNativeSupport } from "./copied-graph-native.mjs";
-import { phpGraphTransfer } from "./copied-graph-transfer.mjs";
+import { phpGraphDiagnosticTransfer, phpGraphTransfer } from "./copied-graph-transfer.mjs";
 
 const literal = value => value === null ? "null" : typeof value === "boolean" || typeof value === "number" ? String(value)
 	: typeof value === "string" ? `'${value.replaceAll("\\", "\\\\").replaceAll("'", "\\'")}'`
@@ -20,8 +20,11 @@ const literal = value => value === null ? "null" : typeof value === "boolean" ||
  * lazy target; all inputs are validated and copied before that target is loaded.
  *
  * @param ir - Pure copied Binding IR, including finite recursive nominal types.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Report exact checked-refinement failures.
  */
-export const generateCopiedPhpGraphConversions = ir => {
+export const generateCopiedPhpGraphConversions = (ir, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("PHP graph refinement diagnostics must be explicit");
 	const model = generateCopiedPhpGraphValues(ir), nodes = new Map(model.types.map(node => [node.id, node]));
 	// These declarations are the actual public C graph header, without its
 	// preprocessor directives or inline init/clear functions. No native symbol is
@@ -57,7 +60,7 @@ export const generateCopiedPhpGraphConversions = ir => {
 	const functions = model.layout.roots.map(root => ({ parameters: root.parameters.map(id => nodes.get(id).index), result: nodes.get(root.result).index }));
 	const files = { ...model.files
 		, "src/Internal/GraphNativeTypes.php": `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\n\nfinal class GraphNativeTypes\n{\n    public const DEFINITIONS = <<<'CDEFS'\n${definitions}\nCDEFS;\n    public const NODES = [\n${descriptors.map(node => `        ${literal(node)},`).join("\n")}\n    ];\n    public const FUNCTIONS = ${literal(functions)};\n}\n`
-		, "src/Internal/GraphNative.php": `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\n\nrequire_once __DIR__ . '/Values.php';\nrequire_once __DIR__ . '/GraphNativeTypes.php';\n${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${phpGraphNativeSupport}\n${phpGraphTransfer}\n`.replaceAll("GRAPH_NAMESPACE", `\\${model.namespace}`) };
+		, "src/Internal/GraphNative.php": `<?php\ndeclare(strict_types=1);\nnamespace ${model.namespace}\\Internal;\n\nrequire_once __DIR__ . '/Values.php';\nrequire_once __DIR__ . '/GraphNativeTypes.php';\n${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf("final class ScalarCodec"))}\n${phpGraphNativeSupport}\n${refinementDiagnostics ? phpGraphDiagnosticTransfer(model.layout.prefix) : phpGraphTransfer}\n`.replaceAll("GRAPH_NAMESPACE", `\\${model.namespace}`) };
 	if(Object.values(files).reduce((sum, source) => sum + Buffer.byteLength(source), 0) > 8 * 1024 * 1024)
 		throw new TypeError("PHP graph converters exceed 8 MiB");
 	const nativeReleaseSource = `#include <stdint.h>

@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "milestone": "php-graph-diagnostic-source-v1",
+  "predecessorCommit": "5945275186d718c2bd70dad042ce0ff52b4ce0b6",
+  "draftParentCommit": "5945275186d718c2bd70dad042ce0ff52b4ce0b6",
+  "pinCount": 18,
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "85244ecca3e221daadc5427f19ef51d7ff0d530757da1b859514acbdf4247c8a",
+      "currentSha256": "c39ef7fc86336de2ce320e4f49583bcaac86def9eda235463efd6186575b84eb",
+      "edits": [
+        {
+          "start": 200196,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 301487,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 403253,
+          "previous": "          \"sha256\": \"0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2\"\n",
+          "current": "          \"sha256\": \"41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958\"\n"
+        },
+        {
+          "start": 498211,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 507900,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 597066,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 720259,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 877879,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 878202,
+          "previous": "          \"sha256\": \"0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2\"\n",
+          "current": "          \"sha256\": \"41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958\"\n"
+        },
+        {
+          "start": 995946,
+          "previous": "          \"sha256\": \"0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2\"\n",
+          "current": "          \"sha256\": \"41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958\"\n"
+        },
+        {
+          "start": 1030859,
+          "previous": "          \"sha256\": \"136ae8baed8a8775a5f1e6935216abf02bd50470555faffb01e1dd3b55691d9c\"\n",
+          "current": "          \"sha256\": \"0c054ae6059e804d1853539f11b55d99fe3fe10f3fed9d8063108408583422d3\"\n"
+        },
+        {
+          "start": 1031034,
+          "previous": "          \"sha256\": \"923eeb4cb161c992327080cd88f4cc6e6a4fb041492e1945fa11a6c7029b094c\"\n",
+          "current": "          \"sha256\": \"e641835546f7ec9dbe636ded7b905ef5be7fcf7c6c54f105b31ab5dc69f9d13e\"\n"
+        },
+        {
+          "start": 1031375,
+          "previous": "          \"sha256\": \"b16cbf73540331c7b5e1e1cc1b3eb3dc0cb650d3c647852b5bb3c587dbdc4651\"\n",
+          "current": "          \"sha256\": \"e43a70269bfd67a6f8a3179ea9a5257428548d78ade673c325ec3d0c05afc323\"\n"
+        },
+        {
+          "start": 1031718,
+          "previous": "          \"sha256\": \"1c7cfa5fbb1fc204e7116f435336d5b5dc6c4388c020f80cc41243efa5e9b299\"\n",
+          "current": "          \"sha256\": \"d7584daf554ccc91a3f8f30ec08fdfe30dcd4b1bc7be6f13e53ca746252a8280\"\n"
+        },
+        {
+          "start": 1034230,
+          "previous": "          \"sha256\": \"0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2\"\n",
+          "current": "          \"sha256\": \"41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958\"\n"
+        },
+        {
+          "start": 1055380,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        },
+        {
+          "start": 1380158,
+          "previous": "          \"sha256\": \"0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2\"\n",
+          "current": "          \"sha256\": \"41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958\"\n"
+        },
+        {
+          "start": 1380971,
+          "previous": "          \"sha256\": \"40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816\"\n",
+          "current": "          \"sha256\": \"cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-graph-assets.mjs",
+      "previousSha256": "136ae8baed8a8775a5f1e6935216abf02bd50470555faffb01e1dd3b55691d9c",
+      "currentSha256": "0c054ae6059e804d1853539f11b55d99fe3fe10f3fed9d8063108408583422d3",
+      "edits": [
+        {
+          "start": 2060,
+          "previous": "${model.functions.map(fn => `uint32_t ${fn.name}_graph(${[...fn.parameters.map(() => \"const void *\"), \"void *\"].join(\", \")});`).join(\"\\n\")}\n",
+          "current": "${model.refinementDiagnostics ? `const char *${p}_graph_error(void);\\n` : \"\"}${model.functions.map(fn => `uint32_t ${fn.name}_graph(${[...fn.parameters.map(() => \"const void *\"), \"void *\"].join(\", \")});`).join(\"\\n\")}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-graph-conversions.mjs",
+      "previousSha256": "923eeb4cb161c992327080cd88f4cc6e6a4fb041492e1945fa11a6c7029b094c",
+      "currentSha256": "e641835546f7ec9dbe636ded7b905ef5be7fcf7c6c54f105b31ab5dc69f9d13e",
+      "edits": [
+        {
+          "start": 369,
+          "previous": "import { phpGraphTransfer } from \"./copied-graph-transfer.mjs\";\n",
+          "current": "import { phpGraphDiagnosticTransfer, phpGraphTransfer } from \"./copied-graph-transfer.mjs\";\n"
+        },
+        {
+          "start": 1185,
+          "previous": "",
+          "current": " * @param options - Generated call features.\n * @param options.refinementDiagnostics - Report exact checked-refinement failures.\n"
+        },
+        {
+          "start": 1318,
+          "previous": "export const generateCopiedPhpGraphConversions = ir => {\n",
+          "current": "export const generateCopiedPhpGraphConversions = (ir, { refinementDiagnostics = false } = {}) => {\n\tif(typeof refinementDiagnostics !== \"boolean\") throw new TypeError(\"PHP graph refinement diagnostics must be explicit\");\n"
+        },
+        {
+          "start": 4510,
+          "previous": "\t\t, \"src/Internal/GraphNative.php\": `<?php\\ndeclare(strict_types=1);\\nnamespace ${model.namespace}\\\\Internal;\\n\\nrequire_once __DIR__ . '/Values.php';\\nrequire_once __DIR__ . '/GraphNativeTypes.php';\\n${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf(\"final class ScalarCodec\"))}\\n${phpGraphNativeSupport}\\n${phpGraphTransfer}\\n`.replaceAll(\"GRAPH_NAMESPACE\", `\\\\${model.namespace}`) };\n",
+          "current": "\t\t, \"src/Internal/GraphNative.php\": `<?php\\ndeclare(strict_types=1);\\nnamespace ${model.namespace}\\\\Internal;\\n\\nrequire_once __DIR__ . '/Values.php';\\nrequire_once __DIR__ . '/GraphNativeTypes.php';\\n${copiedPhpHelpers.slice(copiedPhpHelpers.indexOf(\"final class ScalarCodec\"))}\\n${phpGraphNativeSupport}\\n${refinementDiagnostics ? phpGraphDiagnosticTransfer(model.layout.prefix) : phpGraphTransfer}\\n`.replaceAll(\"GRAPH_NAMESPACE\", `\\\\${model.namespace}`) };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-graph-package.mjs",
+      "previousSha256": "b16cbf73540331c7b5e1e1cc1b3eb3dc0cb650d3c647852b5bb3c587dbdc4651",
+      "currentSha256": "e43a70269bfd67a6f8a3179ea9a5257428548d78ade673c325ec3d0c05afc323",
+      "edits": [
+        {
+          "start": 565,
+          "previous": "",
+          "current": " * @param options - Generated call features.\n * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.\n"
+        },
+        {
+          "start": 713,
+          "previous": "export const compileCopiedPhpGraphPackageModel = ir => {\n\tconst model = generateCopiedPhpGraphConversions(ir), prefix = model.layout.prefix;\n",
+          "current": "export const compileCopiedPhpGraphPackageModel = (ir, { refinementDiagnostics = false } = {}) => {\n\tconst model = generateCopiedPhpGraphConversions(ir, { refinementDiagnostics }), prefix = model.layout.prefix;\n"
+        },
+        {
+          "start": 1126,
+          "previous": "\treturn { ...model, ir, prefix, layoutSha256: sha256(canonicalJson(model.layout)) };\n",
+          "current": "\treturn { ...model, ir, prefix, refinementDiagnostics, layoutSha256: sha256(canonicalJson(model.layout)) };\n"
+        },
+        {
+          "start": 1459,
+          "previous": "",
+          "current": " * @param options - Generated call features.\n * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.\n"
+        },
+        {
+          "start": 1607,
+          "previous": "export const generateCopiedPhpGraphPackage = (ir, evidence = null) => {\n\tconst model = compileCopiedPhpGraphPackageModel(ir), nodes = new Map(model.types.map(node => [node.id, node]));\n",
+          "current": "export const generateCopiedPhpGraphPackage = (ir, evidence = null, { refinementDiagnostics = false } = {}) => {\n\tconst model = compileCopiedPhpGraphPackageModel(ir, { refinementDiagnostics }), nodes = new Map(model.types.map(node => [node.id, node]));\n"
+        },
+        {
+          "start": 6252,
+          "previous": "",
+          "current": "\t\t, ...refinementDiagnostics ? { refinementDiagnostics: true } : {}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/copied-graph-transfer.mjs",
+      "previousSha256": "1c7cfa5fbb1fc204e7116f435336d5b5dc6c4388c020f80cc41243efa5e9b299",
+      "currentSha256": "d7584daf554ccc91a3f8f30ec08fdfe30dcd4b1bc7be6f13e53ca746252a8280",
+      "edits": [
+        {
+          "start": 11511,
+          "previous": "",
+          "current": "\nconst statusMethod = \"    private static function status(int $status): void {\\n\";\nconst invocation = \"            self::status($target->ffi->{$target->symbol}(...[...$inputs, $output]));\\n\";\n\n/**\n * Read the adapter's one-shot checked-refinement text when a call rejects its input.\n * The adapter resets the text at every call, so missing text keeps the fixed message.\n *\n * @param prefix - Native component prefix that owns the diagnostic symbol.\n */\nexport const phpGraphDiagnosticTransfer = prefix => {\n\tif(!/^[A-Za-z_][A-Za-z0-9_]*$/u.test(prefix)) throw new TypeError(\"Invalid PHP graph diagnostic prefix\");\n\tif(phpGraphTransfer.split(statusMethod).length !== 2 || phpGraphTransfer.split(invocation).length !== 2)\n\t\tthrow new TypeError(\"PHP graph transfer no longer has one checked call site\");\n\treturn phpGraphTransfer.replace(invocation, invocation.replace(\"self::status(\", \"self::checkedStatus(\")\n\t\t.replace(\"));\\n\", \"), $target->ffi);\\n\"))\n\t\t.replace(statusMethod, `    private static function checkedStatus(int $status, \\\\FFI $ffi): void {\n        if ($status !== 1) { self::status($status); return; }\n        $message = $ffi->${prefix}_graph_error();\n        if ($message === null) { self::status($status); return; }\n        if (!\\\\is_string($message) || \\\\preg_match('//u', $message) !== 1) throw new GraphInvalidNative('Malformed native refinement diagnostic');\n        throw new GRAPH_NAMESPACE\\\\LeanBridgeError($message, $status);\n    }\n${statusMethod}`);\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/php/package-audit.mjs",
+      "previousSha256": "0bbe293a5080cda59886baab73f908635c6a303d29a56bed7e74ff9796d6ade2",
+      "currentSha256": "41885da5f6648573fc9e7c62bffa390467c630b55d81f6080166e0a4b719d958",
+      "edits": [
+        {
+          "start": 4946,
+          "previous": "\t\tconst expected = (manifest.generator.id === \"lean-wasm/php-callable-graph\" ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(ir, manifest.nativeEvidence);\n",
+          "current": "\t\tif(manifest.refinementDiagnostics !== undefined && (manifest.refinementDiagnostics !== true || manifest.generator.id !== \"lean-wasm/php-copied-graph\"))\n\t\t\tfail(\"copied-graph-source-drift\", \"PHP graph refinement diagnostics must be absent or exactly true\");\n\t\tconst expected = manifest.generator.id === \"lean-wasm/php-callable-graph\" ? generateCallablePhpGraphPackage(ir, manifest.nativeEvidence)\n\t\t\t: generateCopiedPhpGraphPackage(ir, manifest.nativeEvidence, { refinementDiagnostics: manifest.refinementDiagnostics === true });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/release/native-composer.mjs",
+      "previousSha256": "40f64a230fafb4ddb477d99df2ce357532ff4448511ddd68276a83e16a0a8816",
+      "currentSha256": "cce836eb2c27c9abccffd3e8929734cc2c6324e12bd6a82e8bf9326cad8a4b74",
+      "edits": [
+        {
+          "start": 850,
+          "previous": "",
+          "current": "import { nativeGraphRefinementDiagnostics } from \"../build/native-graph-sources.mjs\";\n"
+        },
+        {
+          "start": 2324,
+          "previous": "\t\t? (model.copiedGraph.callbacks ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(model.bindingIr, evidence) : generateCopiedPhpPackage(model.bindingIr, evidence);\n",
+          "current": "\t\t? model.copiedGraph.callbacks ? generateCallablePhpGraphPackage(model.bindingIr, evidence)\n\t\t\t: generateCopiedPhpGraphPackage(model.bindingIr, evidence, { refinementDiagnostics: nativeGraphRefinementDiagnostics(model) })\n\t\t: generateCopiedPhpPackage(model.bindingIr, evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6f3cbf5f0dd34a99d5ccfd4449e3a92136b2f37a9a18fa16c37bce9c39dc2ba5",
+      "currentSha256": "40e8545c86e7e964e72738700db8722a67fc04be5cc8fc117b57fa95ad8ec593",
+      "edits": [
+        {
+          "start": 14008,
+          "previous": "",
+          "current": "import { beforePhpGraphDiagnosticSource, phpGraphDiagnosticChangedPaths } from \"./php-graph-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 65716,
+          "previous": "",
+          "current": "\tsource = beforePhpGraphDiagnosticSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 85101,
+          "previous": "",
+          "current": "\t, ...phpGraphDiagnosticChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

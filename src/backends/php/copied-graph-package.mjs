@@ -13,12 +13,14 @@ import { phpGraphAssets } from "./copied-graph-assets.mjs";
  * Validate the full PHP graph projection before compiling a native package.
  *
  * @param ir - Compiler-checked copied graph contract.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.
  */
-export const compileCopiedPhpGraphPackageModel = ir => {
-	const model = generateCopiedPhpGraphConversions(ir), prefix = model.layout.prefix;
+export const compileCopiedPhpGraphPackageModel = (ir, { refinementDiagnostics = false } = {}) => {
+	const model = generateCopiedPhpGraphConversions(ir, { refinementDiagnostics }), prefix = model.layout.prefix;
 	if(["gmp", "lean_bridge_native", "leanshared"].includes(prefix) || ir.component.id.length >= 160)
 		throw new TypeError("PHP graph component name collides with a dependency or exceeds its name limit");
-	return { ...model, ir, prefix, layoutSha256: sha256(canonicalJson(model.layout)) };
+	return { ...model, ir, prefix, refinementDiagnostics, layoutSha256: sha256(canonicalJson(model.layout)) };
 };
 
 /**
@@ -26,9 +28,11 @@ export const compileCopiedPhpGraphPackageModel = ir => {
  *
  * @param ir - Compiler-checked copied graph contract.
  * @param evidence - Verified native inventories, or null for source inspection.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.
  */
-export const generateCopiedPhpGraphPackage = (ir, evidence = null) => {
-	const model = compileCopiedPhpGraphPackageModel(ir), nodes = new Map(model.types.map(node => [node.id, node]));
+export const generateCopiedPhpGraphPackage = (ir, evidence = null, { refinementDiagnostics = false } = {}) => {
+	const model = compileCopiedPhpGraphPackageModel(ir, { refinementDiagnostics }), nodes = new Map(model.types.map(node => [node.id, node]));
 	const files = { ...model.files };
 	files["src/Api.php"] += `\nrequire_once __DIR__ . '/Internal/Native.php';\n\n${model.functions.map((fn, index) => {
 		const root = model.layout.roots[index], result = nodes.get(root.result);
@@ -66,6 +70,7 @@ All arguments validate before FFI schema creation. Combined copy budgets are che
 		, component: ir.component.id, bindingIrSha256: hashBindingIr(ir)
 		, namespace: model.namespace
 		, copiedGraph: { schemaVersion: 1, layoutSha256: model.layoutSha256 }
+		, ...refinementDiagnostics ? { refinementDiagnostics: true } : {}
 		, nativeEvidence: evidence, aliases: model.aliases, exports
 		, publicFiles: model.publicFiles
 		, internalFiles: Object.keys(files).filter(path => path.startsWith("src/Internal/"))

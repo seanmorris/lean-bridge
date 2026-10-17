@@ -42,7 +42,7 @@ uint32_t ${p}_graph_initialize(void);
 int ${p}_graph_ready(void);
 void ${p}_graph_retire(void);
 void ${p}_php_graph_clear(void *);
-${model.functions.map(fn => `uint32_t ${fn.name}_graph(${[...fn.parameters.map(() => "const void *"), "void *"].join(", ")});`).join("\n")}
+${model.refinementDiagnostics ? `const char *${p}_graph_error(void);\n` : ""}${model.functions.map(fn => `uint32_t ${fn.name}_graph(${[...fn.parameters.map(() => "const void *"), "void *"].join(", ")});`).join("\n")}
 CDEFS;
     private static ?array $targets = null;
     private static function load(): \\FFI {

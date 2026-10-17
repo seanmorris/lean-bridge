@@ -116,7 +116,10 @@ export const auditPhpPackage = (ir, files, options = {}) => {
 		if(options.integerBits !== undefined && options.integerBits !== 64)
 			fail("unsupported-copied-php-profile", "Native PHP copied graphs require the 64-bit profile");
 		const manifest = parseJson(files, "binding-manifest.json");
-		const expected = (manifest.generator.id === "lean-wasm/php-callable-graph" ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(ir, manifest.nativeEvidence);
+		if(manifest.refinementDiagnostics !== undefined && (manifest.refinementDiagnostics !== true || manifest.generator.id !== "lean-wasm/php-copied-graph"))
+			fail("copied-graph-source-drift", "PHP graph refinement diagnostics must be absent or exactly true");
+		const expected = manifest.generator.id === "lean-wasm/php-callable-graph" ? generateCallablePhpGraphPackage(ir, manifest.nativeEvidence)
+			: generateCopiedPhpGraphPackage(ir, manifest.nativeEvidence, { refinementDiagnostics: manifest.refinementDiagnostics === true });
 		if(JSON.stringify(sorted(Object.keys(files))) !== JSON.stringify(sorted(Object.keys(expected)))
 			|| Object.entries(expected).some(([path, source]) => files[path] !== source))
 			fail("copied-graph-source-drift", "PHP graph package differs from its complete generated source");

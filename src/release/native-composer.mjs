@@ -14,6 +14,7 @@ import { ordinaryPhpEvidence } from "../build/native-php-artifacts.mjs";
 import { processBuildRunner } from "../build/process-runner.mjs";
 import { generateCopiedPhpPackage } from "../backends/php/copied-values.mjs";
 import { generateCopiedPhpGraphPackage } from "../backends/php/copied-graph-package.mjs";
+import { nativeGraphRefinementDiagnostics } from "../build/native-graph-sources.mjs";
 import { generateCallablePhpGraphPackage } from "../backends/php/callable-graph-package.mjs";
 import { validateOrdinaryPhpSettings } from "../backends/php/copied-model.mjs";
 import { auditPhpPackage } from "../backends/php/package-audit.mjs";
@@ -35,7 +36,9 @@ export const packageOrdinaryPhp = async options => {
 	const version = settings.version ?? (model.component.version === "0.0.0-local" ? "0.0.0" : model.component.version);
 	validateOrdinaryPhpSettings({ name, version });
 	const root = join(working, "packages/php-native/composer"), files = model.copiedGraph
-		? (model.copiedGraph.callbacks ? generateCallablePhpGraphPackage : generateCopiedPhpGraphPackage)(model.bindingIr, evidence) : generateCopiedPhpPackage(model.bindingIr, evidence);
+		? model.copiedGraph.callbacks ? generateCallablePhpGraphPackage(model.bindingIr, evidence)
+			: generateCopiedPhpGraphPackage(model.bindingIr, evidence, { refinementDiagnostics: nativeGraphRefinementDiagnostics(model) })
+		: generateCopiedPhpPackage(model.bindingIr, evidence);
 	auditPhpPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	const copy = async (source, path) => save(path, await readFile(source));

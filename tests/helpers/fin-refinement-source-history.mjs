@@ -122,6 +122,7 @@ import { beforeMutualCheckedRecordDotnetSource, mutualCheckedRecordDotnetChanged
 import { beforeMutualCheckedRecordJvmSource, mutualCheckedRecordJvmChangedPaths } from "./mutual-checked-record-jvm-source-history.mjs";
 import { beforeRecursiveCheckedRecordPerlDiagnosticSource, recursiveCheckedRecordPerlDiagnosticChangedPaths } from "./recursive-checked-record-perl-diagnostic-source-history.mjs";
 import { beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource, recursiveCheckedRecordPerlPackageHistoricalPaths, recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths } from "./recursive-checked-record-perl-package-history-repair.mjs";
+import { beforePhpGraphDiagnosticSource, phpGraphDiagnosticChangedPaths } from "./php-graph-diagnostic-source-history.mjs";
 import { beforePythonGraphDiagnosticSource, pythonGraphDiagnosticChangedPaths } from "./python-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphDiagnosticSource, rubyGraphDiagnosticChangedPaths } from "./ruby-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphKeywordFieldSource, rubyGraphKeywordFieldChangedPaths } from "./ruby-graph-keyword-field-source-history.mjs";
@@ -780,6 +781,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforePhpGraphDiagnosticSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCiContractRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeClosedGenericCheckedRecordSource(path, source, expected);
@@ -1201,6 +1204,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...recursiveCheckedRecordPerlDiagnosticChangedPaths
 	, ...recursiveCheckedRecordPerlPackageHistoricalPaths
 	, ...recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths
+	, ...phpGraphDiagnosticChangedPaths
 	, ...pythonGraphDiagnosticChangedPaths
 	, ...rubyGraphDiagnosticChangedPaths
 	, ...rubyGraphKeywordFieldChangedPaths
