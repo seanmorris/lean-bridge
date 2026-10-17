@@ -13,10 +13,9 @@ export const inheritedCheckedRecordHostedEvidenceHistoryPath
 export const inheritedCheckedRecordHostedEvidencePredecessor
 	= "93ccc14cde12ecaf3d171f308f85dadeffaf3033";
 export const inheritedCheckedRecordHostedEvidenceDraftParent
-	= "93ccc14cde12ecaf3d171f308f85dadeffaf3033";
+	= "31a2cdee4b87889111760a1e46371ecf95b26522";
 export const inheritedCheckedRecordHostedEvidenceChangedPaths = Object.freeze([
-	"docs/type-surface.v1.json"
-	, "src/adoption/test-profiles.mjs"
+	"src/adoption/test-profiles.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
 	, "tests/inherited-checked-record-dotnet.test.mjs"
 ]);

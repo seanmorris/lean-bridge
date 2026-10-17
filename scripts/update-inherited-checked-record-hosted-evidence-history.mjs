@@ -19,7 +19,6 @@ import {
 	, reverseInheritedCheckedRecordHostedEvidenceUpdate
 } from "../tests/helpers/inherited-checked-record-hosted-evidence-history.mjs";
 
-const inventoryPath = "docs/type-surface.v1.json";
 const profilePath = "src/adoption/test-profiles.mjs";
 const hubPath = "tests/helpers/fin-refinement-source-history.mjs";
 const dotnetRoot = "tests/inherited-checked-record-dotnet.test.mjs";
@@ -65,36 +64,6 @@ for(const spec of specs)
 for(const name of addedTests)
 	assert.equal(sources.get(profilePath).current
 		.split(`\t\t, "${name}"\n`).length, 2, name);
-
-const inventoryPrevious = git(["show"
-	, `${inheritedCheckedRecordHostedEvidencePredecessor}:${inventoryPath}`]);
-const inventory = JSON.parse(inventoryPrevious);
-const pinUpdates = [];
-let pinCount = 0;
-for(const { path, previous, current } of sources.values())
-{
-	const previousSha256 = sha256(previous);
-	const currentSha256 = sha256(current);
-	let count = 0;
-	for(const entry of inventory.evidence) for(const file of entry.files)
-		if(file.path === path && file.sha256 === previousSha256)
-		{
-			file.sha256 = currentSha256;
-			count++;
-		}
-	if(count > 0)
-	{
-		pinCount += count;
-		pinUpdates.push({ path, previousSha256, currentSha256, count });
-	}
-}
-assert.ok(pinCount > 0);
-const inventoryCurrent = JSON.stringify(inventory, null, 2) + "\n";
-sources.set(inventoryPath, {
-	path: inventoryPath
-	, previousRevision: inheritedCheckedRecordHostedEvidencePredecessor
-	, previous: inventoryPrevious, current: inventoryCurrent
-});
 
 const directory = await mkdtemp(join(
 	tmpdir(), "lean-bridge-inherited-hosted-evidence-history-"
@@ -148,11 +117,7 @@ try
 			, previousSha256: sha256(source.previous)
 			, currentSha256: sha256(source.current)
 		};
-		if(path === inventoryPath) update.replacements = pinUpdates.map(pin => ({
-			previous: pin.previousSha256, current: pin.currentSha256
-			, count: pin.count
-		}));
-		else update.edits = await edits(source.previous, source.current);
+		update.edits = await edits(source.previous, source.current);
 		if(path === profilePath) update.addedTests = addedTests;
 		assert.equal(reverseInheritedCheckedRecordHostedEvidenceUpdate(
 			source.current, update), source.previous, path);
@@ -163,13 +128,12 @@ try
 		, milestone: "inherited-checked-record-hosted-evidence-source-v1"
 		, predecessorCommit: inheritedCheckedRecordHostedEvidencePredecessor
 		, draftParentCommit: inheritedCheckedRecordHostedEvidenceDraftParent
-		, pinCount, pinUpdates, updates
+		, updates
 	}, null, 2) + "\n";
-	await writeFile(inventoryPath, inventoryCurrent);
 	await writeFile(inheritedCheckedRecordHostedEvidenceHistoryPath, record
 		, { flag: "wx" });
 	process.stdout.write(
-		`Recorded ${updates.length} transitions and refreshed ${pinCount} pins.\n`
+		`Recorded ${updates.length} hosted evidence transitions.\n`
 	);
 }
 finally

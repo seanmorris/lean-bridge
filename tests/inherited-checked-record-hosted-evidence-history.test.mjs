@@ -89,29 +89,6 @@ test("hosted inherited-record evidence has one exact reversible lineage", async 
 	}
 });
 
-test("hosted evidence registration refreshes only matching source pins", async () => {
-	const record = JSON.parse(await readFile(
-		inheritedCheckedRecordHostedEvidenceHistoryPath, "utf8"));
-	assert.ok(record.pinCount > 0);
-	assert.equal(record.pinCount, record.pinUpdates.reduce(
-		(total, pin) => total + pin.count, 0));
-	const inventoryUpdate = record.updates.find(
-		update => update.path === "docs/type-surface.v1.json");
-	const inventory = JSON.parse(beforeFinRefinementSource(
-		inventoryUpdate.path, await readFile(inventoryUpdate.path, "utf8")
-		, inventoryUpdate.currentSha256
-	));
-	const files = inventory.evidence.flatMap(entry => entry.files);
-	for(const pin of record.pinUpdates)
-	{
-		const matching = files.filter(file => file.path === pin.path);
-		assert.equal(matching.filter(file =>
-			file.sha256 === pin.currentSha256).length, pin.count);
-		assert.equal(matching.filter(file =>
-			file.sha256 === pin.previousSha256).length, 0);
-	}
-});
-
 test("hosted evidence history writer refuses another checkout", async t => {
 	const root = await mkdtemp(join(
 		tmpdir(), "lean-bridge-inherited-hosted-evidence-guard-"

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-hosted-evidence-source-v1",
+  "predecessorCommit": "93ccc14cde12ecaf3d171f308f85dadeffaf3033",
+  "draftParentCommit": "31a2cdee4b87889111760a1e46371ecf95b26522",
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousRevision": "93ccc14cde12ecaf3d171f308f85dadeffaf3033",
+      "previousSha256": "fa00a0ae64b55cb40105b75263c5b79a2f3aa5e678de062306138c07efa78819",
+      "currentSha256": "8568b1fb57f64ce972113740dfd8066c31689d9dd11637071b27b7ac2506c28e",
+      "edits": [
+        {
+          "start": 10917,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-jvm-evidence\"\n"
+        },
+        {
+          "start": 11011,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-hosted-evidence-history\"\n"
+        }
+      ],
+      "addedTests": [
+        "inherited-checked-record-hosted-evidence-history",
+        "inherited-checked-record-jvm-evidence"
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousRevision": "93ccc14cde12ecaf3d171f308f85dadeffaf3033",
+      "previousSha256": "17a10292bd7d61726183a73fdc2b7f81904835f0e1c03cbf25106ac451bbda87",
+      "currentSha256": "c44ce6e3f198653d325bb27d46de35b840f2227b8b5bcf6bbfc446f86f8ba785",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordHostedEvidenceSource, inheritedCheckedRecordHostedEvidenceChangedPaths } from \"./inherited-checked-record-hosted-evidence-history.mjs\";\n"
+        },
+        {
+          "start": 73143,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordHostedEvidenceSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82615,
+          "previous": "\t...inheritedCheckedRecordJvmChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordHostedEvidenceChangedPaths\n\t, ...inheritedCheckedRecordJvmChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-dotnet.test.mjs",
+      "previousRevision": "88362988165976dfc3e080a8ec9387cf7b2a92dd",
+      "previousSha256": "fc78a84bcbefae2ae008f29604da6e0502366a004a121c57aa9ef49bb89deb3a",
+      "currentSha256": "79d51640bc22d22ba630babca2d935ba0b8dcab40f3d79954e46f54feb1b72d1",
+      "edits": [
+        {
+          "start": 488,
+          "previous": "",
+          "current": "import \"./helpers/inherited-checked-record-dotnet-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
