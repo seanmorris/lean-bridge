@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { beforeInheritedCheckedRecordHostedEvidenceSource, inheritedCheckedRecordHostedEvidenceChangedPaths } from "./inherited-checked-record-hosted-evidence-history.mjs";
+import { beforeInheritedCheckedRecordPythonSource, inheritedCheckedRecordPythonChangedPaths } from "./inherited-checked-record-python-source-history.mjs";
 import { beforeInheritedCheckedRecordJvmSource, inheritedCheckedRecordJvmChangedPaths } from "./inherited-checked-record-jvm-source-history.mjs";
 import { beforeInheritedCheckedRecordDotnetSource, inheritedCheckedRecordDotnetChangedPaths } from "./inherited-checked-record-dotnet-source-history.mjs";
 import { beforeCheckedRecordAliasAdmissionSource, checkedRecordAliasAdmissionChangedPaths } from "./checked-record-alias-admission-source-history.mjs";
@@ -934,6 +935,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeInheritedCheckedRecordPythonSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordHostedEvidenceSource(
 		path, source, expected
 	);
@@ -1112,7 +1115,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedCheckedRecordHostedEvidenceChangedPaths
+	...inheritedCheckedRecordPythonChangedPaths
+	, ...inheritedCheckedRecordHostedEvidenceChangedPaths
 	, ...inheritedCheckedRecordJvmChangedPaths
 	, ...inheritedCheckedRecordDotnetChangedPaths
 	, ...checkedRecordAliasAdmissionChangedPaths

@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-python-source-v1",
+  "predecessorCommit": "501a922eada6102d8343bdccbde16abe77220e01",
+  "draftParentCommit": "9806148d5b62be9b2c1bde2f5793be032ea63574",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-python.yml",
+      "currentSha256": "75398cf8ec9a1c5fa4fbdbfd25f2b7a4bc5817155ee20c521138b5a4405b0a04"
+    },
+    {
+      "path": "scripts/archive-inherited-checked-record-python-evidence.mjs",
+      "currentSha256": "b0293386cacc29b7788b309566a4be36928b01b0b2eb6a2916ddcca8fbee87b0"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-python-ci.mjs",
+      "currentSha256": "7b769c327ca5817f97bcf30e5245aa491086c161b4c00ca0e9002db8c67f088b"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-python-ci.sh",
+      "currentSha256": "33aa17392c5a61f3d574cc2e0feffe1af8ab8e430244d31a43d048f280320529"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-python-source-history.mjs",
+      "currentSha256": "27cfe222c2ed9dc8b4907f8f60f521d61bbd5a70ebc87ae5ee99ce8098231f56"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/python.py",
+      "currentSha256": "4a8a8f46651e0bddd9376d8a05bf867c5f90620afd31055b0ea1ea3f7306c05f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-ci-policy-tests.mjs",
+      "currentSha256": "f4d5cd9e1a47bbbfe56f51abdf98edf0600b84cbf216d2a3973ee9a050d9d79a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-ci-report.mjs",
+      "currentSha256": "7ce4ec620406e5fd258a35b39a1ce3b344f09887f62f7bd4e0cf8fc3181b04f7"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-ci-shell-tests.mjs",
+      "currentSha256": "c590d76c53cb97013f7f6cd0f6501b22030cb89824beef390eb914d8b10bcf2c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-ci-workflow-tests.mjs",
+      "currentSha256": "cb1d5d31a875357c660e532d34cc52037290073e5e4d910904c6332fceac51c5"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-ci-workflow.mjs",
+      "currentSha256": "4fe7e9ac619320e56842cf6de1b5ab0c78d2379e87d2370648192475cfe00f3c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-controls-tests.mjs",
+      "currentSha256": "d9c8a6973b1fbee62226634de6ea5c2e0cbeea9edc40eeda881b5ae56e6028ee"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-controls.mjs",
+      "currentSha256": "5a55ec861eec6e41bf026e6b9734cccd4f82ca3a85f9dfa2145ebcc4d7343d98"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-environment-records.mjs",
+      "currentSha256": "0df5ea4731fb7262ae89ebb35bf2b8e66b7ac6ca1bea18c2bfcc348011cfa647"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-evidence-sources.mjs",
+      "currentSha256": "6b893bb36d4fab1d9a2e28637845c21840d7e1275650b95c5fb6ad1c32a125bc"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-evidence-tests.mjs",
+      "currentSha256": "41f8f89ad889e9d74426963d0463ea273099d75ce09464fea904ba5c8c44fa27"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-evidence.mjs",
+      "currentSha256": "d90ce79b584e42fb75e3918b3023e53180258852eb072176d74bcf1350c37df7"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-fixture-tests.mjs",
+      "currentSha256": "18fd2c644d594df92113697e03d6cc05073d36470a9a0f7426c467552df9820f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-fixture.mjs",
+      "currentSha256": "ac710744034368a3aebba11fbc12b67ed9cf1f4e422661da975ab1c25db17d75"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-handoff-tests.mjs",
+      "currentSha256": "e4594fb7cb34dfce21c3a81a513abde657935d80f2d78136a7c01c8f68740a65"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-handoff.mjs",
+      "currentSha256": "06cb8f373335ddf8e370661c586a7d9a16fe15a3b557de6ca595c23d5100f19a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-install.mjs",
+      "currentSha256": "51e88c9e7a9fb9c70d61401a50623f8ae0a32b12640ffb92b2a3757019de4bf7"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-installed-tests.mjs",
+      "currentSha256": "f5df93963c28ef4eaf14d0d7b640243bb7174de695724790a9053bb45500d900"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-model-records.mjs",
+      "currentSha256": "7bcc94f3d150440923e456a0a5139610c7e824e9c97fe3033937439cd2eb1741"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-model.py",
+      "currentSha256": "909a435fc73e6c0ea35574dbc3fe8128ca9b7524759813d59000b44da3fcfa49"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-package-records.mjs",
+      "currentSha256": "e709c1ce350c301284f9f364ecd4a8de7c1a651e5b9639413feff772933d9929"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-provenance.mjs",
+      "currentSha256": "dd034a13e33dcff6c9bef840adf699b6b41da5984c1d562414db619c9aaf3c35"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-report.mjs",
+      "currentSha256": "c46fcd4e18054878e65cb31e74ee2d55ad42eaccfb15701f31b3b8b669ad0f39"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-resources.mjs",
+      "currentSha256": "83dbe472171560766f37561c710c160397271ffec74e8ecf1175d68873ed1110"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-source-history.mjs",
+      "currentSha256": "c153ecf2372cc5bea10173d602487ab16e7ad529ee2f73aa9468fcd25801d787"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-wheel.mjs",
+      "currentSha256": "77a82c32755506206bfc9221f5bcd44b4994e47a97966e379fb515e577bc400c"
+    },
+    {
+      "path": "tests/inherited-checked-record-python-evidence.test.mjs",
+      "currentSha256": "fbade50a295d8d86852d7501b160561a19a9e7d39287284efca98f95a7279d86"
+    },
+    {
+      "path": "tests/inherited-checked-record-python-source-history.test.mjs",
+      "currentSha256": "c86658141e4b1487eb3f0c789af7b9c104ea114ffe33f4fae010ff34f7105b12"
+    },
+    {
+      "path": "tests/inherited-checked-record-python.test.mjs",
+      "currentSha256": "e689c8c0cc400976a03053a65a745114856ab584eba8e235654a12db16dce8ec"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "8568b1fb57f64ce972113740dfd8066c31689d9dd11637071b27b7ac2506c28e",
+      "currentSha256": "28fb63ac64ee27eba4afa978726ef42247d07e76265c54b2b26df4ba6887efbd",
+      "edits": [
+        {
+          "start": 11066,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-python\"\n\t\t, \"inherited-checked-record-python-evidence\"\n\t\t, \"inherited-checked-record-python-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c44ce6e3f198653d325bb27d46de35b840f2227b8b5bcf6bbfc446f86f8ba785",
+      "currentSha256": "30696d139ea21776f5a7393bd3ebae96c11ef3c704c11b0740f5abe4d0315416",
+      "edits": [
+        {
+          "start": 523,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPythonSource, inheritedCheckedRecordPythonChangedPaths } from \"./inherited-checked-record-python-source-history.mjs\";\n"
+        },
+        {
+          "start": 73298,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPythonSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82894,
+          "previous": "\t...inheritedCheckedRecordHostedEvidenceChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPythonChangedPaths\n\t, ...inheritedCheckedRecordHostedEvidenceChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
