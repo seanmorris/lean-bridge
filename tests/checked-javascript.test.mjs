@@ -9,6 +9,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { relative, resolve } from "node:path";
 import test from "node:test";
 import "./helpers/core-contract-repair-history-tests.mjs";
+import "./helpers/checked-javascript-disposition-history-tests.mjs";
 
 const root = resolve(".");
 

@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeInheritedRecordPromotionSource } from "./inherited-record-promotion-source-history.mjs";
 import { beforeGenericRefusalFixSource, genericRefusalFixChangedPaths, genericRefusalFixHistoryPath, genericRefusalFixPredecessor, reverseGenericRefusalFixUpdate } from "./generic-refusal-fix-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Generic refusal fix history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(genericRefusalFixHistoryPath, "utf8"));
@@ -21,7 +22,9 @@ test("Generic refusal fix history authenticates exact predecessors and rejects u
 	assert.deepEqual(record.updates.map(update => update.path), genericRefusalFixChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeInheritedRecordPromotionSource(update.path, await readFile(update.path, "utf8")), previous = reverseGenericRefusalFixUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			genericRefusalFixHistoryPath, update.path, beforeInheritedRecordPromotionSource
+		), previous = reverseGenericRefusalFixUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeGenericRefusalFixSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +40,9 @@ test("Generic refusal fix history authenticates exact predecessors and rejects u
 });
 
 test("Generic refusal fix refreshes exactly 11 source pins without changing coverage", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeInheritedRecordPromotionSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await sourceAtFinHistoryRecord(
+			genericRefusalFixHistoryPath, path, beforeInheritedRecordPromotionSource
+	);
 	const current = JSON.parse(text), previous = JSON.parse(beforeGenericRefusalFixSource(path, text));
 	const record = JSON.parse(await readFile(genericRefusalFixHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -47,7 +52,9 @@ test("Generic refusal fix refreshes exactly 11 source pins without changing cove
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeInheritedRecordPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAtFinHistoryRecord(
+			genericRefusalFixHistoryPath, file.path, beforeInheritedRecordPromotionSource
+			)), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

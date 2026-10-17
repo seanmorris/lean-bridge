@@ -7,11 +7,11 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeDotnetCiSource } from "./nominal-subtype-dotnet-ci-history.mjs";
 import { nominalSubtypePythonCiBlock, enableNominalSubtypePythonWorkflow, disableNominalSubtypePythonWorkflow, assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 import { withoutNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-workflow.mjs";
-import { withoutNominalSubtypeRustWorkflow } from "./nominal-subtype-rust-ci-workflow.mjs";
+import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30";
@@ -19,7 +19,9 @@ const predecessor = "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30";
 test("nominal Python CI preserves older jobs and requires four complete two-floor selections", async () => {
 	const current = await readFile(path, "utf8");
 	assertNominalSubtypePythonWorkflow(current);
-	const source = withoutNominalSubtypeRustWorkflow(beforeNominalSubtypeDotnetCiSource(path, current));
+	const source = sourceAtHistoryMilestone(
+		nominalSubtypePythonPromotionHistoryPath, path
+	);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
 	assert.equal(disableNominalSubtypePythonWorkflow(withoutNominalSubtypeRubyWorkflow(source)), previous);
 	assert.equal(enableNominalSubtypePythonWorkflow(previous), withoutNominalSubtypeRubyWorkflow(source));

@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
 import { beforeNominalFinSource, nominalFinChangedPaths
 	, nominalFinHistoryPath, reverseNominalFinUpdate } from "./nominal-fin-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("nominal Fin history authenticates predecessors and rejects unrelated edits", async () => {
 	const record = JSON.parse(await readFile(nominalFinHistoryPath, "utf8"));
@@ -18,7 +19,9 @@ test("nominal Fin history authenticates predecessors and rejects unrelated edits
 	assert.deepEqual(record.updates.map(item => item.path), nominalFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeCallbackFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeCallbackFinSource
+		);
 		assert.equal(sha256(reverseNominalFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNominalFinSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);

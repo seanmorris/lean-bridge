@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeGenericRecordsSource } from "./generic-records-source-history.mjs";
 import { beforeReviewedSemanticDecisionsSource, reviewedSemanticDecisionsChangedPaths
 	, reviewedSemanticDecisionsHistoryPath, reverseReviewedSemanticDecisionsUpdate } from "./reviewed-semantic-decisions-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("reviewed semantic decisions history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(reviewedSemanticDecisionsHistoryPath, "utf8"));
@@ -18,7 +19,9 @@ test("reviewed semantic decisions history authenticates exact predecessors and r
 	assert.deepEqual(record.updates.map(item => item.path), reviewedSemanticDecisionsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericRecordsSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryRecord(
+			reviewedSemanticDecisionsHistoryPath, update.path, beforeGenericRecordsSource
+		);
 		assert.equal(sha256(reverseReviewedSemanticDecisionsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedSemanticDecisionsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedSemanticDecisionsSource(update.path, source, update.currentSha256), source);
@@ -31,7 +34,9 @@ test("reviewed semantic decisions history authenticates exact predecessors and r
 });
 
 test("semantic comparison adds no support claims or rewritten archived observations", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeGenericRecordsSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtFinHistoryRecord(
+			reviewedSemanticDecisionsHistoryPath, path, beforeGenericRecordsSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSemanticDecisionsSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -45,7 +50,9 @@ test("semantic comparison adds no support claims or rewritten archived observati
 		{
 			if(now.files[position].sha256 === file.sha256) continue;
 			assert.ok(reviewedSemanticDecisionsChangedPaths.includes(file.path));
-			const bytes = beforeGenericRecordsSource(file.path, await readFile(file.path, "utf8"));
+			const bytes = await sourceAtFinHistoryRecord(
+			reviewedSemanticDecisionsHistoryPath, file.path, beforeGenericRecordsSource
+			);
 			assert.equal(file.sha256, sha256(beforeReviewedSemanticDecisionsSource(file.path, bytes)));
 			assert.equal(now.files[position].sha256, sha256(bytes));
 			refreshed++;

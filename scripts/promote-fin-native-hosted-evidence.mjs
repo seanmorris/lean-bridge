@@ -8,13 +8,15 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { sha256 } from "../src/capsule/node.mjs";
-import { finHostedPromotionReferences } from "../tests/helpers/fin-native-hosted-promotion-references.mjs";
-import { promoteFinHostedCoverage } from "../tests/helpers/fin-native-hosted-promotion.mjs";
 import { finHostedPromotionChangedPaths, finHostedPromotionHistoryPath, finHostedPromotionPredecessor, reverseFinHostedPromotionUpdate } from "../tests/helpers/fin-native-hosted-promotion-history.mjs";
 
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 assert.equal(git(["rev-parse", "HEAD"]).trim(), finHostedPromotionPredecessor, "Hosted Fin promotion history is draft-only at its exact predecessor");
 assert.ok(!git(["ls-tree", "--name-only", "HEAD", "--", finHostedPromotionHistoryPath]).trim(), "Never rewrite a committed hosted Fin promotion ledger");
+const [{ finHostedPromotionReferences }, { promoteFinHostedCoverage }] = await Promise.all([
+	import("../tests/helpers/fin-native-hosted-promotion-references.mjs")
+	, import("../tests/helpers/fin-native-hosted-promotion.mjs")
+]);
 const inventoryPath = "docs/type-surface.v1.json";
 const baselineText = git(["show", finHostedPromotionPredecessor + ":" + inventoryPath]);
 const baseline = JSON.parse(baselineText), candidateText = await readFile(inventoryPath, "utf8");

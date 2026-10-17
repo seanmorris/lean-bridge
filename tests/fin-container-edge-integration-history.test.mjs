@@ -14,6 +14,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeFinEdgeCiSource } from "./helpers/fin-container-edge-ci-history.mjs";
 import { beforeFinEdgeIntegrationSource, finEdgeIntegrationBranch, finEdgeIntegrationChangedPaths, finEdgeIntegrationHistoryPath, finEdgeIntegrationPredecessor, reverseFinEdgeIntegrationUpdate } from "./helpers/fin-container-edge-integration-history.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("container observer integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finEdgeIntegrationHistoryPath, "utf8"));
@@ -24,7 +25,9 @@ test("container observer integration authenticates every transition and refuses 
 	assert.deepEqual(history.updates.map(update => update.path), finEdgeIntegrationChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinEdgeCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinEdgeIntegrationUpdate(current, update);
+		const current = await sourceAtFinHistoryRecord(
+			finEdgeIntegrationHistoryPath, update.path, beforeFinEdgeCiSource
+		), previous = reverseFinEdgeIntegrationUpdate(current, update);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, current), previous);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinEdgeIntegrationSource(update.path, previous), previous);
@@ -49,7 +52,10 @@ test("container observer integration authenticates every transition and refuses 
 
 test("container integration refreshes exact source pins without changing support claims or old ledgers", async () => {
 	const history = JSON.parse(await readFile(finEdgeIntegrationHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", source = beforeFinEdgeCiSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		finEdgeIntegrationHistoryPath, path, beforeFinEdgeCiSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinEdgeIntegrationSource(path, source));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -15,6 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlRefinementHostedSource } from "./perl-refinement-hosted-source-history.mjs";
 import { beforeGenericNpmClosureSource, genericNpmClosureChangedPaths, genericNpmClosureHistoryPath, genericNpmClosurePredecessor, reverseGenericNpmClosureUpdate } from "./generic-record-npm-closure-source-history.mjs";
 import { genericNpmClosureCells, genericNpmClosureEvidence, genericNpmEvidenceId, reconcileGenericNpmEarlierEvidence, reconcileGenericNpmObservations } from "./generic-record-npm-closure.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("hosted npm closure retains exact predecessors and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(genericNpmClosureHistoryPath));
@@ -23,7 +24,9 @@ test("hosted npm closure retains exact predecessors and refuses unknown edits", 
 	assert.deepEqual(history.updates.map(update => update.path), genericNpmClosureChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforePerlRefinementHostedSource(update.path, await readFile(update.path, "utf8")), previous = reverseGenericNpmClosureUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			genericNpmClosureHistoryPath, update.path, beforePerlRefinementHostedSource
+		), previous = reverseGenericNpmClosureUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeGenericNpmClosureSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -41,8 +44,11 @@ test("hosted npm closure retains exact predecessors and refuses unknown edits", 
 test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and no stage states", async () => {
 	const contracts = await readTypeSurface();
 	const path = "docs/type-surface.v1.json";
-	const document = JSON.parse(beforePerlRefinementHostedSource(path, await readFile(path, "utf8")));
-	const previous = JSON.parse(beforeGenericNpmClosureSource(path, await readFile(path, "utf8")));
+	const source = await sourceAtFinHistoryRecord(
+		genericNpmClosureHistoryPath, path, beforePerlRefinementHostedSource
+	);
+	const document = JSON.parse(source);
+	const previous = JSON.parse(beforeGenericNpmClosureSource(path, source));
 	assert.deepEqual(document.observations, reconcileGenericNpmObservations(previous.observations));
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts), changed = [];
 	assert.equal(after.length, 6732); assert.equal(before.length, after.length);
@@ -72,7 +78,9 @@ test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and 
 	}
 	const hosted = await genericNpmClosureEvidence();
 	for(const file of hosted.files)
-		file.sha256 = sha256(beforePerlRefinementHostedSource(file.path, await readFile(file.path, "utf8")));
+		file.sha256 = sha256(await sourceAtFinHistoryMilestone(
+			file.path, file.sha256, beforePerlRefinementHostedSource
+		));
 	assert.deepEqual(document.evidence, [...reconcileGenericNpmEarlierEvidence(expected), hosted]);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);
@@ -118,7 +126,11 @@ test("earlier npm originals remain exact while current isolation claims distingu
 });
 
 test("hosted npm reconciliation refuses duplicate, redirected and unpassed baselines", async () => {
-	const path = "docs/type-surface.v1.json", previous = JSON.parse(beforeGenericNpmClosureSource(path, await readFile(path, "utf8")));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		genericNpmClosureHistoryPath, path, beforePerlRefinementHostedSource
+	);
+	const previous = JSON.parse(beforeGenericNpmClosureSource(path, source));
 	for(const mutate of [
 		values => { values.push({ id: "npm-record-specializations-ordinary-source" }); }
 		, values => { values.find(item => item.id === "npm-finite-specializations-ordinary-source").profiles.push("browser-javascript"); }

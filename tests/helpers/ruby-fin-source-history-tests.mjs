@@ -28,6 +28,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeRubyFinSource, rubyFinChangedPaths
 	, rubyFinHistoryPath, reverseRubyFinUpdate } from "./ruby-fin-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Ruby scalar Fin history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(rubyFinHistoryPath, "utf8"));
@@ -35,7 +36,9 @@ test("Ruby scalar Fin history authenticates exact predecessors and rejects unkno
 	assert.deepEqual(record.updates.map(item => item.path), rubyFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeDotnetFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeDotnetFinSource
+		);
 		assert.equal(sha256(reverseRubyFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRubyFinSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRubyFinSource(update.path, source, update.currentSha256), source);
@@ -48,8 +51,14 @@ test("Ruby scalar Fin history authenticates exact predecessors and rejects unkno
 });
 
 test("Ruby scalar Fin changes only evidence source pins, not support or archives", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforeDotnetFinSource(path, text)), previous = JSON.parse(beforeRubyFinSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(rubyFinHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeDotnetFinSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeRubyFinSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -62,9 +71,11 @@ test("Ruby scalar Fin changes only evidence source pins, not support or archives
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforeDotnetFinSource
+			);
 			assert.equal(file.sha256, sha256(beforeRubyFinSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforeDotnetFinSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

@@ -90,7 +90,9 @@ test("nominal C# promotion refuses missing originals and substituted scope or re
 test("nominal C# promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeDotnetReferences();
 	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeDotnet(original, references)), { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalSubtypeJvmPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeDotnetPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 496); assert.equal(proposed.evidence.length, 500);

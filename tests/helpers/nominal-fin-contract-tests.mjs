@@ -16,6 +16,7 @@ import { assertJsonSchema } from "./json-schema.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import "./callback-coverage-repair-source-history-tests.mjs";
 
 const fin = bound => ({ kind: "fin", bound });
@@ -105,8 +106,11 @@ test("nominal Fin installed evidence promotes only the two ordinary Node field c
 	const { irSchema, consumers } = await readTypeSurface();
 	// Check this milestone's authenticated inventory, not the support added later.
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCallbackFinSource(path, await readFile(path, "utf8"));
-	assert.equal(sha256(source), "63ad1461dd5ba00fe766618308441c7fc1fe3a8c2d19d80c8a091f4435a7e103");
+	const milestone = "63ad1461dd5ba00fe766618308441c7fc1fe3a8c2d19d80c8a091f4435a7e103";
+	const current = beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), milestone);
+	const source = beforeCallbackFinSource(path, current, milestone);
+	assert.equal(sha256(source), milestone);
 	const document = JSON.parse(source);
 	const cells = typeSurfaceCells(document, { irSchema, consumers }).filter(cell => cell.shape === "fin");
 	const fields = cells.filter(cell => cell.position === "field" && cell.stages.installedExecution.state === "passed");

@@ -14,6 +14,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCppFinDispatchIntegrationSource } from "./cpp-fin-dispatch-integration-source-history.mjs";
 import { nativeCiCommands, nativeCiRecordScript, nativeCiSteps } from "./native-ci-isolation.mjs";
 import { beforeReviewedFinRefusalCiSource, reviewedFinRefusalCiChangedPaths, reviewedFinRefusalCiHistoryPath, reviewedFinRefusalCiPredecessor, reverseReviewedFinRefusalCiUpdate } from "./reviewed-fin-refusal-ci-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const command = "LEAN_BRIDGE_REVIEWED_FIN_REFUSALS=native-fin,fin-containers LEAN_BRIDGE_REVIEWED_FIN_REFUSAL_REPORT_DIR=build/reviewed-fin-refusals node --test --test-reporter=tap --test-concurrency=1 tests/reviewed-fin-refusals.test.mjs";
 const transcript = "build/reviewed-fin-refusals/acceptance.tap";
@@ -89,7 +90,11 @@ test("native refusal CI history authenticates exact predecessors and rejects unr
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinRefusalCiChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeCppFinDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedFinRefusalCiUpdate(source, update);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCppFinDispatchIntegrationSource
+		);
+		const previous = reverseReviewedFinRefusalCiUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeReviewedFinRefusalCiSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -105,14 +110,21 @@ test("native refusal CI history authenticates exact predecessors and rejects unr
 });
 
 test("native refusal CI refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeCppFinDispatchIntegrationSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedFinRefusalCiSource(path, source));
 	const history = JSON.parse(await readFile(reviewedFinRefusalCiHistoryPath));
+	const updates = new Map(history.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const inventoryUpdate = updates.get(path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, inventoryUpdate.currentSha256
+		, beforeCppFinDispatchIntegrationSource
+	);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeReviewedFinRefusalCiSource(path, source));
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
-		const update = history.updates.find(update => update.path === file.path && update.previousSha256 === file.sha256);
-		if(update)
+		const update = updates.get(file.path);
+		if(update && update.previousSha256 === file.sha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 117); assert.deepEqual(current, previous);

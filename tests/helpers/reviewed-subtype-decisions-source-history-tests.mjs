@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeWitDependencySource } from "./wit-dependency-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedSubtypeDecisionsSource, reviewedSubtypeDecisionsChangedPaths, reviewedSubtypeDecisionsHistoryPath, reverseReviewedSubtypeDecisionsUpdate } from "./reviewed-subtype-decisions-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Reviewed Subtype decisions authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(reviewedSubtypeDecisionsHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Reviewed Subtype decisions authenticates each exact source predecessor", a
 	assert.deepEqual(record.updates.map(update => update.path), reviewedSubtypeDecisionsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeWitDependencySource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeWitDependencySource
+		);
 		assert.equal(sha256(reverseReviewedSubtypeDecisionsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedSubtypeDecisionsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedSubtypeDecisionsSource(update.path, source, update.currentSha256), source);

@@ -33,6 +33,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeTestProfileRegistrationSource, testProfileRegistrationChangedPaths
 	, testProfileRegistrationHistoryPath, reverseTestProfileRegistrationUpdate } from "./test-profile-registration-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Test-profile registration history authenticates predecessors and rejects unrelated edits", async () => {
 	const record = JSON.parse(await readFile(testProfileRegistrationHistoryPath, "utf8"));
@@ -43,7 +44,9 @@ test("Test-profile registration history authenticates predecessors and rejects u
 		, [["", '\t\t, "component-engine-failure"\n'], ["", '\t\t, "native-fin"\n']]);
 	for(const update of record.updates)
 	{
-		const source = beforeRuntimeReceiptSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeRuntimeReceiptSource
+		);
 		assert.equal(sha256(reverseTestProfileRegistrationUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeTestProfileRegistrationSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
@@ -57,8 +60,15 @@ test("Test-profile registration history authenticates predecessors and rejects u
 // The repair adds no support claim: only source pins of this layer's files move.
 test("Test-profile registration changes no inventory claim, receipt or archive", async () => {
 	const path = "docs/type-surface.v1.json";
-	const current = JSON.parse(beforeRuntimeReceiptSource(path, await readFile(path, "utf8")));
-	const previous = JSON.parse(beforeTestProfileRegistrationSource(path, await readFile(path, "utf8")));
+	const record = JSON.parse(await readFile(
+		testProfileRegistrationHistoryPath, "utf8"
+	));
+	const update = record.updates.find(item => item.path === path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeRuntimeReceiptSource
+	);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeTestProfileRegistrationSource(path, source));
 	assert.deepEqual(current.observations, previous.observations);
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -72,8 +82,13 @@ test("Test-profile registration changes no inventory claim, receipt or archive",
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			assert.equal(file.sha256, sha256(beforeTestProfileRegistrationSource(file.path, await readFile(file.path, "utf8"))));
-			assert.equal(now.files[index].sha256, sha256(beforeRuntimeReceiptSource(file.path, await readFile(file.path, "utf8"))));
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforeRuntimeReceiptSource
+			);
+			assert.equal(file.sha256, sha256(
+				beforeTestProfileRegistrationSource(file.path, source)
+			));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

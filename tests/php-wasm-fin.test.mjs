@@ -46,7 +46,8 @@ import "./helpers/php-wasm-refinement-readme-tests.mjs";
 import "./helpers/php-wasm-subtype-entry-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-history-tests.mjs";
-import { beforePhpWasmCorpusPartitionSource } from "./helpers/php-wasm-corpus-partition-history.mjs";
+import { beforePhpWasmCorpusPartitionSource, phpWasmCorpusPartitionHistoryPath } from "./helpers/php-wasm-corpus-partition-history.mjs";
+import { sourceAtHistoryMilestone } from "./helpers/source-history-test-source.mjs";
 
 const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 const refinedError = pattern => error => error.code === "native-refinements-unsupported" && pattern.test(error.message);
@@ -267,7 +268,10 @@ test("independently reviewed PHP-Wasm packages check Fin before Lean in Node and
 });
 
 test("CI runs the reviewed PHP-Wasm Fin reconciliation and installed gates and keeps their report", async () => {
-	const path = ".github/workflows/consumer-matrix.yml", workflow = beforePhpWasmCorpusPartitionSource(path, await readFile(path, "utf8"));
+	const path = ".github/workflows/consumer-matrix.yml";
+	const workflow = beforePhpWasmCorpusPartitionSource(
+		path, sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, path)
+	);
 	const command = "          LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_LEAN_TEST=1 LEAN_BRIDGE_PHP_WASM_REVIEWED_FIN_TEST=1 node --test --test-concurrency=1 --test-name-pattern='independent Fin reviews reconcile|independently reviewed PHP-Wasm packages' tests/php-wasm-fin.test.mjs\n          test -s build/php-wasm-fin/reviewed.json\n";
 	const validate = workflow => {
 		const job = name => workflow.match(new RegExp(`^ {2}${name}:\\n[^]*?(?=^ {2}[a-z][a-z0-9-]*:\\n)`, "mu"))?.[0];

@@ -9,6 +9,7 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { assertOwnedJavaScriptReceiverExecution } from "./helpers/owned-javascript-receiver-evidence.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import { beforeOwnedWitReceiver, ownedWitReceiverHistoricalBytes } from "./helpers/wit-owned-receiver-history.mjs";
 import { ownedJavaScriptReceiverPath, ownedJavaScriptReceiverBaseline, ownedJavaScriptReceiverPrevious
 	, ownedJavaScriptReceiverChangedPaths, ownedJavaScriptReceiverAddedPaths
@@ -30,7 +31,9 @@ test("JavaScript receiver history authenticates exact sources without inflating 
 	{
 		assert.equal(update.previousSha256, previous.sources[update.path]);
 		assert.equal(update.currentSha256, record.sources[update.path]);
-		const source = beforeOwnedWitReceiver(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeOwnedWitReceiver
+		);
 		const prior = beforeOwnedJavaScriptReceiver(update.path, source);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforeOwnedJavaScriptReceiver(update.path, prior), prior);

@@ -13,7 +13,11 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalSubtypeBrowserArchive, nominalSubtypeBrowserReferences, promoteNominalSubtypeBrowser, nominalSubtypeBrowserProfiles, nominalSubtypeBrowserConversion, nominalSubtypeBrowserLimit } from "./nominal-subtype-browser-promotion.mjs";
 import { nominalSubtypeBrowserPromotionHistoryPath, nominalSubtypeBrowserPromotionPredecessor } from "./nominal-subtype-browser-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionSource, beforeNominalSubtypePhpWasmPromotionPins, nominalSubtypePhpWasmPromotionHistoryPath } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
+import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
+import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -117,9 +121,18 @@ test("nominal browser promotion refuses missing originals, invented scope and ov
 
 test("nominal browser promotion changes exactly eighteen Subtype cells and adds six field cells", async () => {
 	const original = predecessor(), references = await nominalSubtypeBrowserReferences();
-	const proposed = beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypeBrowser(original, references));
-	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalSubtypePhpWasmPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
+	const proposed = beforeNominalSubtypePhpWasmPromotionPins(
+		beforeNominalPrimitiveSubtypeBrowserPromotionPins(
+			beforeCiContractRepairPins(beforeCheckedJavaScriptDispositionPins(
+				await promoteNominalSubtypeBrowser(original, references)
+			))
+		)
+	);
+	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
+		nominalSubtypePhpWasmPromotionHistoryPath, "docs/type-surface.v1.json"
+		, beforeNominalSubtypePhpWasmPromotionSource
+	));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 512); assert.equal(proposed.evidence.length, 516);
 	assert.equal(original.observations.length, 591); assert.equal(proposed.observations.length, 593);
@@ -154,8 +167,8 @@ test("nominal browser promotion changes exactly eighteen Subtype cells and adds 
 
 test("nominal browser guides describe installed Nat fields without promoting Fin fields or callbacks", async () => {
 	const sourcePath = "docs/javascript-typescript.md";
-	const source = beforeNominalSubtypePhpWasmPromotionSource(
-		sourcePath, await readFile(sourcePath, "utf8")
+	const source = sourceAtHistoryMilestone(
+		nominalSubtypeBrowserPromotionHistoryPath, sourcePath
 	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.match(source, /Use `bigint` for each payload/u);

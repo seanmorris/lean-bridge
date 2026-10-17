@@ -11,6 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementCiRepairSource, refinementCiRepairChangedPaths
 	, refinementCiRepairHistoryPath, reverseRefinementCiRepairUpdate } from "./refinement-ci-repair-source-history.mjs";
 import { beforePythonRefinementEvidenceSource, pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Refinement CI repair history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(refinementCiRepairHistoryPath, "utf8"));
@@ -18,7 +19,10 @@ test("Refinement CI repair history authenticates exact predecessors and rejects 
 	assert.deepEqual(record.updates.map(item => item.path), refinementCiRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePythonRefinementEvidenceSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforePythonRefinementEvidenceSource
+		);
 		assert.equal(sha256(reverseRefinementCiRepairUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementCiRepairSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRefinementCiRepairSource(update.path, source, update.currentSha256), source);
@@ -32,8 +36,16 @@ test("Refinement CI repair history authenticates exact predecessors and rejects 
 
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Refinement CI repair changes only refreshed source pins, no claim, receipt scope or archive", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforePythonRefinementEvidenceSource(path, text)), previous = JSON.parse(beforeRefinementCiRepairSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(
+		refinementCiRepairHistoryPath, "utf8"
+	));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforePythonRefinementEvidenceSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeRefinementCiRepairSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -46,9 +58,12 @@ test("Refinement CI repair changes only refreshed source pins, no claim, receipt
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256
+				, beforePythonRefinementEvidenceSource
+			);
 			assert.equal(file.sha256, sha256(beforeRefinementCiRepairSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforePythonRefinementEvidenceSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

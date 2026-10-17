@@ -20,7 +20,10 @@ test("Callback coverage repair integration authenticates each exact source prede
 	assert.deepEqual(record.updates.map(update => update.path), callbackCoverageRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeFinReplyArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const current = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = beforeNativeFinReplyArchiveSource(
+			update.path, current, update.currentSha256);
 		assert.equal(sha256(reverseCallbackCoverageRepairUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackCoverageRepairSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCallbackCoverageRepairSource(update.path, source, update.currentSha256), source);
@@ -33,17 +36,27 @@ test("Callback coverage repair integration authenticates each exact source prede
 });
 
 test("Callback coverage repair source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeNativeFinReplyArchiveSource(path, await readFile(path, "utf8"));
-	const document = JSON.parse(text), previous = JSON.parse(beforeCallbackCoverageRepairSource(path, text));
 	const record = JSON.parse(await readFile(callbackCoverageRepairHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json", target = byPath.get(path);
+	assert.ok(target);
+	const current = beforeFinRefinementSource(path
+		, await readFile(path, "utf8"), target.currentSha256);
+	const text = beforeNativeFinReplyArchiveSource(
+		path, current, target.currentSha256);
+	const document = JSON.parse(text);
+	const previous = JSON.parse(beforeCallbackCoverageRepairSource(path, text));
 	let refreshed = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(beforeNativeFinReplyArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			const currentFile = beforeFinRefinementSource(file.path
+				, await readFile(file.path, "utf8"), update.currentSha256);
+			const milestoneFile = beforeNativeFinReplyArchiveSource(
+				file.path, currentFile, update.currentSha256);
+			assert.equal(sha256(milestoneFile), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

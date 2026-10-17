@@ -12,8 +12,8 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { perlFinOptionNote, perlFinOptionNoteIds, restorePerlFinOptionNotes } from "./fin-core-repair-notes.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmDirectPromotionSource } from "./php-wasm-direct-fin-promotion-history.mjs";
 import { beforeFinCoreRepairSource, finCoreRepairChangedPaths, finCoreRepairHistoryPath, finCoreRepairPredecessor, reverseFinCoreRepairUpdate } from "./fin-core-repair-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("Fin Core repair integration authenticates every transition and refuses unrecorded edits", async () => {
 	const history = JSON.parse(await readFile(finCoreRepairHistoryPath, "utf8"));
@@ -23,8 +23,8 @@ test("Fin Core repair integration authenticates every transition and refuses unr
 	assert.deepEqual(history.updates.map(update => update.path), finCoreRepairChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = sourceAtHistoryMilestone(
+			finCoreRepairHistoryPath, update.path
 		);
 		const previous = reverseFinCoreRepairUpdate(current, update);
 		assert.equal(beforeFinCoreRepairSource(update.path, current), previous);
@@ -79,7 +79,8 @@ test("Fin Core repair integration history writer refuses an unrelated HEAD befor
 });
 
 test("Fin Core repair integration changes exact source pins and Perl option guidance only", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePhpWasmDirectPromotionSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = sourceAtHistoryMilestone(finCoreRepairHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinCoreRepairSource(path, source));
 	const expected = restorePerlFinOptionNotes(previous), history = JSON.parse(await readFile(finCoreRepairHistoryPath, "utf8"));
 	let refreshed = 0;
@@ -118,7 +119,8 @@ test("historical Buffer reads stop at authenticated identities and preserve unkn
 });
 
 test("Perl option guidance repairs only four notes and refuses an altered predecessor", async () => {
-	const path = "docs/type-surface.v1.json", current = JSON.parse(await readFile(path));
+	const path = "docs/type-surface.v1.json";
+	const current = JSON.parse(sourceAtHistoryMilestone(finCoreRepairHistoryPath, path));
 	const previous = JSON.parse(beforeFinCoreRepairSource(path, JSON.stringify(current, null, 2) + "\n"));
 	const repaired = restorePerlFinOptionNotes(previous), restored = structuredClone(repaired);
 	for(const id of perlFinOptionNoteIds)

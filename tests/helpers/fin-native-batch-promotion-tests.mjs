@@ -4,21 +4,28 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeCheckedRecordPromotionSource } from "./checked-record-promotion-source-history.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { finNativeBatchPromotionReferences } from "./fin-native-batch-promotion-references.mjs";
-import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
+import { beforeFinNativeBatchPromotionSource, finNativeBatchPromotionHistoryPath } from "./fin-native-batch-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 import "./fin-native-batch-promotion-source-history-tests.mjs";
 
-const previousSurface = async () => JSON.parse(beforeFinNativeBatchPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const batchSurfaceSource = () => sourceAtFinHistoryRecord(
+	finNativeBatchPromotionHistoryPath, "docs/type-surface.v1.json"
+	, beforeCheckedRecordPromotionSource
+);
+
+const previousSurface = async () => JSON.parse(beforeFinNativeBatchPromotionSource(
+	"docs/type-surface.v1.json", await batchSurfaceSource()
+));
 
 const readPromotedSurface = async () => {
 	const result = await readTypeSurface();
-	result.document = JSON.parse(beforeCheckedRecordPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	result.document = JSON.parse(await batchSurfaceSource());
 	return result;
 };
 
@@ -34,7 +41,11 @@ test("native Fin batch promotion retains fourteen original selections and their 
 		assert.equal(item.command, reference.command);
 		assert.ok(item.scope.includes(reference.environment)); assert.ok(item.scope.includes(`${reference.checks} checks`));
 		assert.match(item.scope, /Dispatch is unmeasured/u);
-		for(const file of item.files) assert.equal(sha256(beforeCheckedRecordPromotionSource(file.path, await readFile(file.path, "utf8"))), file.sha256, file.path);
+		for(const file of item.files) assert.equal(sha256(
+			await sourceAtFinHistoryMilestone(
+				file.path, file.sha256, beforeCheckedRecordPromotionSource
+			)
+		), file.sha256, file.path);
 		for(const file of [reference.report, ...reference.executionFiles])
 			assert.ok(item.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256), file.path);
 		assert.ok(item.files.some(pin => pin.path === reference.receiptPath));

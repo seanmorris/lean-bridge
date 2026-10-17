@@ -21,6 +21,7 @@ import {
 	, reverseRecursiveComponentRegressionRepairUpdate
 } from "./helpers/recursive-component-regression-repair-source-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
@@ -42,7 +43,10 @@ test("recursive component regression repair has one exact reversible lineage", a
 		, sha256(JSON.stringify(recursiveComponentRegressionRepairChangedPaths)));
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeRecursiveComponentRegressionRepairSource
+		);
 		const previous = git(["show"
 			, `${recursiveComponentRegressionRepairPredecessor}:${update.path}`]);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -79,7 +83,11 @@ test("regression repair additions and test registration are closed", async () =>
 		recursiveComponentRegressionRepairHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+			, beforeRecursiveComponentRegressionRepairSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${recursiveComponentRegressionRepairPredecessor}:${addition.path}`]
@@ -96,8 +104,13 @@ test("regression repair refreshes only matching live source pins", async () => {
 	assert.equal(record.pinCount, record.pinUpdates.reduce(
 		(count, pin) => count + pin.count, 0));
 	assert.ok(record.pinCount > 0);
-	const inventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"));
+	const inventoryUpdate = record.updates.find(
+		update => update.path === "docs/type-surface.v1.json"
+	);
+	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
+		, beforeRecursiveComponentRegressionRepairSource
+	));
 	for(const update of record.pinUpdates)
 	{
 		const files = inventory.evidence.flatMap(entry => entry.files)

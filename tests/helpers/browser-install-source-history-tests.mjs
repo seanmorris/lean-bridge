@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeBrowserInstallSource, browserInstallChangedPaths, browserInstallHistoryPath, reverseBrowserInstallUpdate } from "./browser-install-source-history.mjs";
 import { beforeFinWitArchiveSource } from "./fin-wit-archive-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Bounded browser installation authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(browserInstallHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Bounded browser installation authenticates each exact source predecessor",
 	assert.deepEqual(record.updates.map(update => update.path), browserInstallChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinWitArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeFinWitArchiveSource
+		);
 		assert.equal(sha256(reverseBrowserInstallUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeBrowserInstallSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeBrowserInstallSource(update.path, source, update.currentSha256), source);

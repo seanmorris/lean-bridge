@@ -11,6 +11,7 @@ import { finContainerRefinements } from "./fin-container-install.mjs";
 import { finContainerDispatchColumns, finContainerDispatchExpected } from "./fin-container-dispatch.mjs";
 import { finContainerReviewedIr } from "./reviewed-fin-container-fixture.mjs";
 import { beforeFinDiagnosticSource } from "./native-fin-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const directory = "docs/evidence/reviewed-fin-hosts-20261007";
 const expected = [
@@ -54,7 +55,11 @@ test("reviewed Fin host archives preserve source-free executions and distinguish
 			assert.equal(item.reviewedSourceSha256, sha256(canonicalJson(finContainerReviewedIr())));
 			assert.deepEqual(item.refinements, finContainerRefinements);
 			const consumer = `tests/fixtures/fin-container-consumers/${item.profile}.${extensions[item.profile]}`;
-			assert.equal(item.consumerSha256, sha256(beforeFinDiagnosticSource(consumer, await readFile(consumer, "utf8"))));
+			assert.equal(item.consumerSha256, sha256(
+				await sourceAtFinHistoryMilestone(
+					consumer, item.consumerSha256, beforeFinDiagnosticSource
+				)
+			));
 			for(const pkg of item.packages) for(const artifact of pkg.artifacts) assert.equal(report.archives[artifact.path], artifact.sha256);
 			if(reference.observedDispatch.includes(item.profile))
 			{

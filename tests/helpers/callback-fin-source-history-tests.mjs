@@ -18,7 +18,10 @@ test("callback Fin history authenticates predecessors and rejects unrelated edit
 	assert.deepEqual(record.updates.map(item => item.path), callbackFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePerlEvidenceRepairSource(update.path, await readFile(update.path, "utf8"));
+		const current = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = beforePerlEvidenceRepairSource(
+			update.path, current, update.currentSha256);
 		assert.equal(sha256(reverseCallbackFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackFinSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);

@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforePhpWasmCorpusPartitionSource, phpWasmCorpusPartitionChangedPaths, phpWasmCorpusPartitionHistoryPath, phpWasmCorpusPartitionPredecessor, reversePhpWasmCorpusPartitionUpdate } from "./php-wasm-corpus-partition-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("PHP-Wasm corpus partition authenticates exact changes without adding support claims", async () => {
 	const record = JSON.parse(await readFile(phpWasmCorpusPartitionHistoryPath));
@@ -21,8 +22,8 @@ test("PHP-Wasm corpus partition authenticates exact changes without adding suppo
 	const original = path => execFileSync("git", ["show", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = sourceAtHistoryMilestone(
+			phpWasmCorpusPartitionHistoryPath, update.path
 		);
 		const previous = reversePhpWasmCorpusPartitionUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -54,7 +55,8 @@ test("PHP-Wasm corpus partition authenticates exact changes without adding suppo
 	}
 	assert.equal(pins, 117);
 	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	assert.deepEqual(JSON.parse(beforePhpWasmCorpusPartitionSource(path, await readFile(path, "utf8"), checkpoint)), inventory);
+	const current = sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, path);
+	assert.deepEqual(JSON.parse(beforePhpWasmCorpusPartitionSource(path, current, checkpoint)), inventory);
 });
 
 test("PHP-Wasm corpus partition writer refuses an unrelated checkout before writing", async t => {

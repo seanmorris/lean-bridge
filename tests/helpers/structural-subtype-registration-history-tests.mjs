@@ -12,13 +12,16 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeStructuralSubtypeRegistrationSource, structuralSubtypeRegistrationChangedPaths, structuralSubtypeRegistrationHistoryPath, structuralSubtypeRegistrationPredecessor, reverseStructuralSubtypeRegistrationUpdate } from "./structural-subtype-registration-history.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("structural Subtype registration adds all eight roots without changing any previous profile", async () => {
 	const path = "src/adoption/test-profiles.mjs";
 	const history = JSON.parse(await readFile(structuralSubtypeRegistrationHistoryPath));
 	const update = history.updates.find(item => item.path === path);
 	assert.ok(update);
-	let source = beforeStructuralSubtypeRegistrationSource(path, await readFile(path, "utf8"), update.currentSha256);
+	let source = sourceAtHistoryMilestone(
+		structuralSubtypeRegistrationHistoryPath, path
+	);
 	for(const name of ["entry-evidence", "entry-installed", "entry", "installed", "native-evidence", "npm-evidence", "npm-installed", "npm"])
 	{
 		assert.equal(classifyRepositoryTest(`tests/structural-subtype-${name}.test.mjs`), "contract");
@@ -35,8 +38,8 @@ test("structural Subtype test registration source history authenticates exact ch
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeRegistrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = sourceAtHistoryMilestone(
+			structuralSubtypeRegistrationHistoryPath, update.path
 		);
 		const previous = reverseStructuralSubtypeRegistrationUpdate(current, update);
 		assert.equal(beforeStructuralSubtypeRegistrationSource(update.path, current), previous);

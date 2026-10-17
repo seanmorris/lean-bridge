@@ -27,6 +27,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeDotnetFinSource, dotnetFinChangedPaths
 	, dotnetFinHistoryPath, reverseDotnetFinUpdate } from "./dotnet-fin-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test(".NET scalar Fin history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(dotnetFinHistoryPath, "utf8"));
@@ -34,7 +35,9 @@ test(".NET scalar Fin history authenticates exact predecessors and rejects unkno
 	assert.deepEqual(record.updates.map(item => item.path), dotnetFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeJvmFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeJvmFinSource
+		);
 		assert.equal(sha256(reverseDotnetFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeDotnetFinSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeDotnetFinSource(update.path, source, update.currentSha256), source);
@@ -47,8 +50,14 @@ test(".NET scalar Fin history authenticates exact predecessors and rejects unkno
 });
 
 test(".NET scalar Fin changes only evidence source pins, not support or archives", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforeJvmFinSource(path, text)), previous = JSON.parse(beforeDotnetFinSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(dotnetFinHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeJvmFinSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeDotnetFinSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -61,9 +70,11 @@ test(".NET scalar Fin changes only evidence source pins, not support or archives
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforeJvmFinSource
+			);
 			assert.equal(file.sha256, sha256(beforeDotnetFinSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforeJvmFinSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

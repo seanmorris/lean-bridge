@@ -12,7 +12,6 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinEntryIntegrationSource, finEntryIntegrationChangedPaths, finEntryIntegrationHistoryPath, finEntryIntegrationPredecessor, reverseFinEntryIntegrationUpdate } from "./fin-entry-integration-source-history.mjs";
-import { beforeFinContainerEvidenceCiSource } from "./fin-container-evidence-ci-source-history.mjs";
 
 test("Fin entry integration history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(finEntryIntegrationHistoryPath));
@@ -21,7 +20,9 @@ test("Fin entry integration history authenticates exact predecessors and rejects
 	assert.deepEqual(record.updates.map(update => update.path), finEntryIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeFinContainerEvidenceCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinEntryIntegrationUpdate(source, update);
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const previous = reverseFinEntryIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeFinEntryIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,9 +38,13 @@ test("Fin entry integration history authenticates exact predecessors and rejects
 });
 
 test("Fin entry integration refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeFinContainerEvidenceCiSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(source), previous = JSON.parse(beforeFinEntryIntegrationSource(path, source));
 	const history = JSON.parse(await readFile(finEntryIntegrationHistoryPath));
+	const path = "docs/type-surface.v1.json";
+	const target = history.updates.find(update => update.path === path);
+	const source = beforeFinRefinementSource(path
+		, await readFile(path, "utf8"), target.currentSha256);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeFinEntryIntegrationSource(path, source));
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{

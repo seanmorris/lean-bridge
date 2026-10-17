@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeReviewedSpecializationAdmissionSource } from "./reviewed-specialization-admission-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeGenericRecordBrowserSource, genericRecordBrowserChangedPaths, genericRecordBrowserHistoryPath, reverseGenericRecordBrowserUpdate } from "./generic-record-browser-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Browser generic-record acceptance authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(genericRecordBrowserHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Browser generic-record acceptance authenticates each exact source predeces
 	assert.deepEqual(record.updates.map(update => update.path), genericRecordBrowserChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedSpecializationAdmissionSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeReviewedSpecializationAdmissionSource
+		);
 		assert.equal(sha256(reverseGenericRecordBrowserUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeGenericRecordBrowserSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeGenericRecordBrowserSource(update.path, source, update.currentSha256), source);

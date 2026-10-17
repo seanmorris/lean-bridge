@@ -9,13 +9,25 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { sha256 } from "../src/capsule/node.mjs";
-import { hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "../tests/helpers/hosted-container-inventory-source-history.mjs";
-import { hostedContainerReferences, supplementHostedContainerInventory } from "../tests/helpers/hosted-container-inventory.mjs";
 
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
-const predecessor = hostedContainerInventoryPredecessor;
+const predecessor = "298a9584fbb8d494418705534e89dafd4a6c5276";
+const hostedContainerInventoryHistoryPath
+	= "docs/evidence/hosted-container-inventory-source-history-20261009.json";
 assert.equal(git(["rev-parse", "HEAD"]).trim(), predecessor, "Hosted container inventory history is draft-only at its exact predecessor");
 assert.ok(!git(["ls-tree", "--name-only", "HEAD", "--", hostedContainerInventoryHistoryPath]).trim(), "Never rewrite a committed hosted container inventory ledger");
+const {
+	hostedContainerInventoryChangedPaths
+	, hostedContainerInventoryHistoryPath: recordedHistoryPath
+	, hostedContainerInventoryPredecessor
+	, reverseHostedContainerInventoryUpdate
+} = await import(
+	"../tests/helpers/hosted-container-inventory-source-history.mjs"
+);
+const { hostedContainerReferences, supplementHostedContainerInventory }
+	= await import("../tests/helpers/hosted-container-inventory.mjs");
+assert.equal(hostedContainerInventoryPredecessor, predecessor);
+assert.equal(recordedHistoryPath, hostedContainerInventoryHistoryPath);
 const inventoryPath = "docs/type-surface.v1.json", baselineText = git(["show", `${predecessor}:${inventoryPath}`]);
 const currentText = await readFile(inventoryPath, "utf8");
 const draft = await readFile(hostedContainerInventoryHistoryPath, "utf8").then(JSON.parse).catch(error => {

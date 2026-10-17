@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeRefinementCiFollowupSource } from "./refinement-ci-followup-source-history.mjs";
 import { beforeReviewedScalarHostsSource, reviewedScalarHostsChangedPaths, reviewedScalarHostsHistoryPath, reverseReviewedScalarHostsUpdate } from "./reviewed-scalar-hosts-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Reviewed scalar host gates authenticate each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(reviewedScalarHostsHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Reviewed scalar host gates authenticate each exact source predecessor", as
 	assert.deepEqual(record.updates.map(update => update.path), reviewedScalarHostsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeRefinementCiFollowupSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryRecord(
+			reviewedScalarHostsHistoryPath, update.path, beforeRefinementCiFollowupSource
+		);
 		assert.equal(sha256(reverseReviewedScalarHostsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedScalarHostsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedScalarHostsSource(update.path, source, update.currentSha256), source);
@@ -30,7 +33,9 @@ test("Reviewed scalar host gates authenticate each exact source predecessor", as
 });
 
 test("Reviewed scalar host gates change current source pins without inventing installed evidence", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeRefinementCiFollowupSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtFinHistoryRecord(
+			reviewedScalarHostsHistoryPath, path, beforeRefinementCiFollowupSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedScalarHostsSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -43,7 +48,9 @@ test("Reviewed scalar host gates change current source pins without inventing in
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(reviewedScalarHostsChangedPaths.includes(file.path));
-			const bytes = beforeRefinementCiFollowupSource(file.path, await readFile(file.path, "utf8"));
+			const bytes = await sourceAtFinHistoryRecord(
+			reviewedScalarHostsHistoryPath, file.path, beforeRefinementCiFollowupSource
+			);
 			assert.equal(sha256(beforeReviewedScalarHostsSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

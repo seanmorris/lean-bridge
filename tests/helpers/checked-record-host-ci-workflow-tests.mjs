@@ -10,6 +10,7 @@ import { assertCheckedRecordHostWorkflow as assertPreviousWorkflow, disableCheck
 import { beforeCheckedRecordHostCiSource, checkedRecordHostCiHistoryPath } from "./checked-record-host-ci-history.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { reviewedSubtypeHostCiBlock, reviewedSubtypeHostCiCommand } from "./reviewed-subtype-host-ci-workflow.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import "./checked-record-host-ci-history-tests.mjs";
 import { withoutStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
 
@@ -21,7 +22,7 @@ test("checked-record native CI preserves all previous commands and adds eight ex
 	const current = await readFile(path, "utf8");
 	const record = JSON.parse(await readFile(checkedRecordHostCiHistoryPath));
 	const update = record.updates.find(item => item.path === path);
-	const milestone = beforeCheckedRecordHostCiSource(path, current, update.currentSha256);
+	const milestone = sourceAtHistoryMilestone(checkedRecordHostCiHistoryPath, path);
 	assert.equal(sha256(milestone), update.currentSha256);
 	const previous = beforeCheckedRecordHostCiSource(path, milestone);
 	assertCheckedRecordHostWorkflow(current);
@@ -42,7 +43,8 @@ test("checked-record native CI preserves all previous commands and adds eight ex
 	assert.ok(runner.includes('--directory "$output/records/$route" --tap "$output/run.tap" --glibc 2.38'));
 	assert.ok(runner.includes('if [[ -v LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ]]; then'));
 	assert.ok((await readFile("tests/helpers/checked-record-host-ci-report-tests.mjs", "utf8")).includes('import "./checked-record-host-ci-workflow-tests.mjs";'));
-	assert.ok((await readFile("tests/checked-records.test.mjs", "utf8")).includes('import "./helpers/checked-record-host-ci-report-tests.mjs";'));
+	assert.ok((await readFile("tests/checked-record-native-ci.test.mjs", "utf8")).includes('import "./helpers/checked-record-host-ci-report-tests.mjs";'));
+	assert.ok(!(await readFile("tests/checked-records.test.mjs", "utf8")).includes('import "./helpers/checked-record-host-ci-report-tests.mjs";'));
 });
 
 test("checked-record native CI rejects missing or misplaced gates and lost failure records", async () => {

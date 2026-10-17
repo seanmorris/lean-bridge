@@ -5,14 +5,16 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
+import { beforePhpWasmReviewedFinSource, phpWasmReviewedFinHistoryPath } from "./php-wasm-reviewed-fin-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const workflow = async () => {
 	const path = ".github/workflows/consumer-matrix.yml";
-	return beforePhpWasmReviewedFinSource(path, await readFile(path, "utf8"));
+	return beforePhpWasmReviewedFinSource(
+		path, sourceAtHistoryMilestone(phpWasmReviewedFinHistoryPath, path)
+	);
 };
 
 // The former job's step lines, before the split.

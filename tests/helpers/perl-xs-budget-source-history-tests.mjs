@@ -11,12 +11,15 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeArrayRolloutSource } from "./generic-record-array-rollout-source-history.mjs";
+import { arrayRolloutHistoryPath, beforeArrayRolloutSource } from "./generic-record-array-rollout-source-history.mjs";
 import { beforePerlXsBudgetSource, perlXsBudgetChangedPaths, perlXsBudgetHistoryPath, perlXsBudgetPredecessor, reversePerlXsBudgetUpdate } from "./perl-xs-budget-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
-const sourceAt = async (path, expected) => beforeFinRefinementSource(
-	path, await readFile(path, "utf8"), expected
-);
+const sourceAt = async (path, expected) => {
+	const source = sourceAtHistoryMilestone(perlXsBudgetHistoryPath, path);
+	assert.equal(sha256(source), expected, path);
+	return source;
+};
 
 test("Perl XS budget history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(perlXsBudgetHistoryPath, "utf8"));
@@ -63,7 +66,10 @@ test("Perl XS budget refreshes exactly 40 source pins without changing coverage"
 });
 
 test("the Perl XS workflow changes only its job budget and explanation", async () => {
-	const path = ".github/workflows/perl-consumer.yml", text = beforeArrayRolloutSource(path, await readFile(path, "utf8"));
+	const path = ".github/workflows/perl-consumer.yml";
+	const text = beforeArrayRolloutSource(
+		path, sourceAtHistoryMilestone(arrayRolloutHistoryPath, path)
+	);
 	const before = "    # Copied and owned package families run sequentially on each Perl ABI.\n    timeout-minutes: 120";
 	const after = "    # Copied and owned package families run sequentially on each Perl ABI; the\n    # installed Compare and Verify chain alone took up to about 105 minutes.\n    timeout-minutes: 180";
 	assert.equal(text.split(after).length, 2);

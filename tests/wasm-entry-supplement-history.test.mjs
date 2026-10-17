@@ -16,6 +16,7 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout-source-history.mjs";
 import { supplementWasmEntryInventory, wasmEntrySupplementObservations } from "./helpers/wasm-entry-supplement.mjs";
 import { beforeWasmEntrySupplementSource, reverseWasmEntrySupplementUpdate, wasmEntrySupplementChangedPaths, wasmEntrySupplementHistoryPath, wasmEntrySupplementPredecessor } from "./helpers/wasm-entry-supplement-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Wasm entry supplement history authenticates exact source transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
@@ -24,7 +25,9 @@ test("Wasm entry supplement history authenticates exact source transitions and r
 	assert.deepEqual(history.updates.map(update => update.path), wasmEntrySupplementChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeArrayRolloutSource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmEntrySupplementUpdate(current, update);
+		const current = await sourceAtFinHistoryRecord(
+			wasmEntrySupplementHistoryPath, update.path, beforeArrayRolloutSource
+		), previous = reverseWasmEntrySupplementUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmEntrySupplementSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -40,7 +43,10 @@ test("Wasm entry supplement history authenticates exact source transitions and r
 });
 
 test("Wasm entry inventory adds sixteen reports, preserves older claims and authenticates every pin", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeArrayRolloutSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		wasmEntrySupplementHistoryPath, path, beforeArrayRolloutSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntrySupplementSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
 	const expected = await supplementWasmEntryInventory(previous);

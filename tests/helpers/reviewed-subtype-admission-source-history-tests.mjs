@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCallbackCodeCiRepairSource } from "./callback-code-ci-repair-source-history.mjs";
 import { beforeReviewedSubtypeAdmissionSource, reviewedSubtypeAdmissionChangedPaths, reviewedSubtypeAdmissionHistoryPath, reverseReviewedSubtypeAdmissionUpdate } from "./reviewed-subtype-admission-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Reviewed Subtype admission authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(reviewedSubtypeAdmissionHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Reviewed Subtype admission authenticates each exact source predecessor", a
 	assert.deepEqual(record.updates.map(update => update.path), reviewedSubtypeAdmissionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeCallbackCodeCiRepairSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeCallbackCodeCiRepairSource
+		);
 		assert.equal(sha256(reverseReviewedSubtypeAdmissionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedSubtypeAdmissionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedSubtypeAdmissionSource(update.path, source, update.currentSha256), source);

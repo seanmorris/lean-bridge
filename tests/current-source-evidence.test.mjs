@@ -16,6 +16,7 @@ import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-hi
 import { beforeRecursiveAcceptance, recursiveAcceptanceRecord, reverseAcceptanceUpdate } from "./helpers/recursive-acceptance-updates.mjs";
 import { assertRecursiveManagedAcceptance, assertRecursiveManagedAcceptanceIndex } from "./helpers/recursive-managed-acceptance.mjs";
 import { beforeJvmStructuredCallables } from "./helpers/jvm-structured-callable-source-history.mjs";
+import { finHistoryMilestoneSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const documentPath = "docs/evidence/recursive-documentation-updates-20260924.json";
 const receipt = async () => JSON.parse(await readFile(documentPath));
@@ -76,17 +77,21 @@ test("five recursive profiles have original installed evidence on both paths wit
 });
 
 test("acceptance table updates retain executed examples and reject unrelated source changes", async () => {
-	for(const update of recursiveAcceptanceRecord().updates)
+	const record = recursiveAcceptanceRecord();
+	const sourceAtMilestone = finHistoryMilestoneSource(
+		record.updates, beforeRecursiveAcceptance
+	);
+	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8");
+		const source = await sourceAtMilestone(update.path);
 		assert.equal(sha256(reverseAcceptanceUpdate(source, update)), update.previousSha256);
 		assert.throws(() => reverseAcceptanceUpdate(source + "\nunreviewed\n", update));
 		assert.throws(() => reverseAcceptanceUpdate(source, { ...update, edits: [] }));
 		assert.throws(() => reverseAcceptanceUpdate(source, { ...update, edits: [...update.edits, update.edits[0]] }));
 		assert.throws(() => beforeRecursiveAcceptance(update.path, source, "0".repeat(64)));
 	}
-	const update = recursiveAcceptanceRecord().updates[0];
-	const source = await readFile(update.path, "utf8");
+	const update = record.updates[0];
+	const source = await sourceAtMilestone(update.path);
 	assert.throws(() => reverseAcceptanceUpdate(source, { ...update, path: "src/build/native-project.mjs" }));
 });
 

@@ -9,8 +9,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { nominalSubtypePerlCiBlock, enableNominalSubtypePerlWorkflow, disableNominalSubtypePerlWorkflow, assertNominalSubtypePerlWorkflow } from "./nominal-subtype-perl-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
-import { beforeNativeConsumerPartitionSource } from "./native-consumer-partition-history.mjs";
+import { beforeNativeConsumerPartitionSource, nativeConsumerPartitionHistoryPath } from "./native-consumer-partition-history.mjs";
 import { extendPerlCompilerBudget } from "./native-consumer-partition.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const path = ".github/workflows/perl-consumer.yml";
 const predecessor = "7c9fbfee9c31b60dc7433ca6945be62e39810754";
@@ -25,7 +26,9 @@ test("nominal CPAN CI preserves all existing jobs and requires four selections w
 	const source = await readFile(path, "utf8");
 	assertNominalSubtypePerlWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8" });
-	assertWorkflowHistory(source, previous);
+	assertWorkflowHistory(sourceAtHistoryMilestone(
+		nativeConsumerPartitionHistoryPath, path
+	), previous);
 	assertStructuralSubtypeWorkflow(previous, "perl-consumer.yml");
 	const parent = await readFile(".github/workflows/consumer-matrix.yml", "utf8");
 	assert.match(parent, /\n {2}perl-consumer:\n {4}name: Perl\n {4}uses: \.\/\.github\/workflows\/perl-consumer\.yml\n/u);
@@ -33,7 +36,9 @@ test("nominal CPAN CI preserves all existing jobs and requires four selections w
 });
 
 test("nominal CPAN historical comparison accepts only the recorded compiler-budget change", async () => {
-	const source = await readFile(path, "utf8");
+	const source = sourceAtHistoryMilestone(
+		nativeConsumerPartitionHistoryPath, path
+	);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8" });
 	const changes = [source.replace("    timeout-minutes: 90\n", "    timeout-minutes: 60\n")
 		, source.replace("    timeout-minutes: 90\n", "    timeout-minutes: 91\n")

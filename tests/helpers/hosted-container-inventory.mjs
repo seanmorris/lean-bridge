@@ -67,8 +67,11 @@ export const assertHostedContainerReferences = async references => {
  * Build four evidence entries with byte hashes, including binary ZIPs without text decoding.
  *
  * @param references - Authenticated selections.
+ * @param sourceAtMilestone - Optional resolver for historical source pins.
  */
-export const hostedContainerInventoryEvidence = async references => {
+export const hostedContainerInventoryEvidence = async (
+	references, sourceAtMilestone
+) => {
 	await assertHostedContainerReferences(references);
 	const receipt = JSON.parse(await readFile(hostedContainerMembership.receipt.path));
 	const paths = ["tests/hosted-container-inventory.test.mjs"
@@ -84,7 +87,13 @@ export const hostedContainerInventoryEvidence = async references => {
 	const files = await Promise.all(paths.map(async path => {
 		const bytes = await readFile(path);
 		// Only text source files participate in history. ZIP identities always hash original bytes.
-		const source = path.endsWith(".mjs") ? beforeHostedContainerInventorySource(path, bytes.toString("utf8")) : bytes;
+		const source = path.endsWith(".mjs")
+			? sourceAtMilestone
+				? await sourceAtMilestone(path)
+				: beforeHostedContainerInventorySource(
+					path, bytes.toString("utf8")
+				)
+			: bytes;
 		return { path, sha256: sha256(source) };
 	}));
 	return references.map(reference => ({ id: reference.id, kind: "installed"
@@ -100,9 +109,15 @@ export const hostedContainerInventoryEvidence = async references => {
  *
  * @param previous - Inventory at the exact predecessor.
  * @param references - Authenticated hosted selections.
+ * @param sourceAtMilestone - Optional resolver for historical source pins.
  */
-export const supplementHostedContainerInventory = async (previous, references) => {
-	const added = await hostedContainerInventoryEvidence(references), inventory = structuredClone(previous);
+export const supplementHostedContainerInventory = async (
+	previous, references, sourceAtMilestone
+) => {
+	const added = await hostedContainerInventoryEvidence(
+		references, sourceAtMilestone
+	);
+	const inventory = structuredClone(previous);
 	for(const reference of references)
 	{
 		const observation = inventory.observations.find(item => item.id === reference.observationId);
@@ -126,9 +141,14 @@ export const supplementHostedContainerInventory = async (previous, references) =
  * @param previous - Authenticated predecessor inventory.
  * @param references - Authenticated selections.
  * @param updates - Exact source transitions.
+ * @param sourceAtMilestone - Optional resolver for historical source pins.
  */
-export const assertHostedContainerInventory = async (current, previous, references, updates) => {
-	const expected = await supplementHostedContainerInventory(previous, references);
+export const assertHostedContainerInventory = async (
+	current, previous, references, updates, sourceAtMilestone
+) => {
+	const expected = await supplementHostedContainerInventory(
+		previous, references, sourceAtMilestone
+	);
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)
 	{
 		const update = updates.find(update => update.path === file.path && update.previousSha256 === file.sha256);

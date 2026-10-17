@@ -50,7 +50,15 @@ test("checked-record browser foundation source history authenticates exact chang
 	}
 	assert.equal(pins, 10);
 	const inventoryUpdate = record.updates.find(update => update.path === "docs/type-surface.v1.json");
-	const inventory = beforeCheckedRecordBrowserSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), inventoryUpdate.currentSha256);
+	const inventoryCurrent = beforeFinRefinementSource(
+		"docs/type-surface.v1.json"
+		, await readFile("docs/type-surface.v1.json", "utf8")
+		, inventoryUpdate.currentSha256
+	);
+	const inventory = beforeCheckedRecordBrowserSource(
+		"docs/type-surface.v1.json", inventoryCurrent
+		, inventoryUpdate.currentSha256
+	);
 	assert.deepEqual(JSON.parse(inventory), expected);
 	assert.equal(beforeFinRefinementSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), sha256(JSON.stringify(original, null, 2) + "\n")), JSON.stringify(original, null, 2) + "\n");
 });

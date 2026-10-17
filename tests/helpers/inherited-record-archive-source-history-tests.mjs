@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlXsBudgetSource } from "./perl-xs-budget-source-history.mjs";
 import { beforeInheritedRecordArchiveSource, inheritedRecordArchiveChangedPaths, inheritedRecordArchiveHistoryPath, inheritedRecordArchivePredecessor, inheritedRecordArchiveProducer, inheritedRecordArchiveProducerPins, reverseInheritedRecordArchiveUpdate } from "./inherited-record-archive-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("inheritance archival restores four main predecessors without entering the plain producer branch by default", async () => {
 	const record = JSON.parse(await readFile(inheritedRecordArchiveHistoryPath, "utf8"));
@@ -24,7 +25,9 @@ test("inheritance archival restores four main predecessors without entering the 
 	assert.equal(record.updates.length, 4);
 	for(const update of record.updates)
 	{
-		const source = beforePerlXsBudgetSource(update.path, await readFile(update.path, "utf8")), previous = reverseInheritedRecordArchiveUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			inheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource
+		), previous = reverseInheritedRecordArchiveUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeInheritedRecordArchiveSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -39,7 +42,9 @@ test("plain inheritance producer identities require an explicit exact stopping d
 	assert.deepEqual(record.producerUpdates.map(update => update.path), Object.keys(inheritedRecordArchiveProducerPins));
 	for(const update of record.producerUpdates)
 	{
-		const source = beforePerlXsBudgetSource(update.path, await readFile(update.path, "utf8")), expected = inheritedRecordArchiveProducerPins[update.path];
+		const source = await sourceAtFinHistoryRecord(
+			inheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource
+		), expected = inheritedRecordArchiveProducerPins[update.path];
 		assert.equal(update.previousSha256, expected);
 		const producer = reverseInheritedRecordArchiveUpdate(source, update);
 		assert.equal(sha256(producer), expected);
@@ -55,7 +60,9 @@ test("inheritance history refuses unknown edits, altered hashes and overlapping 
 	const record = JSON.parse(await readFile(inheritedRecordArchiveHistoryPath, "utf8"));
 	for(const update of [...record.updates, ...record.producerUpdates])
 	{
-		const source = beforePerlXsBudgetSource(update.path, await readFile(update.path, "utf8")), changed = source + "\n// unknown edit\n";
+		const source = await sourceAtFinHistoryRecord(
+			inheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource
+		), changed = source + "\n// unknown edit\n";
 		assert.equal(beforeInheritedRecordArchiveSource(update.path, changed, update.previousSha256), changed);
 		assert.throws(() => reverseInheritedRecordArchiveUpdate(changed, update));
 		assert.throws(() => reverseInheritedRecordArchiveUpdate(source, { ...update, previousSha256: "0".repeat(64) }));

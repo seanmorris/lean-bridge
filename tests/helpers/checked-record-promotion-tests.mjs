@@ -4,21 +4,28 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { checkedRecordPromotionReferences } from "./checked-record-promotion-references.mjs";
-import { beforeCheckedRecordPromotionSource } from "./checked-record-promotion-source-history.mjs";
+import { beforeCheckedRecordPromotionSource, checkedRecordPromotionHistoryPath } from "./checked-record-promotion-source-history.mjs";
 import { beforeCallbackFinPromotionSource } from "./callback-fin-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 import "./checked-record-promotion-source-history-tests.mjs";
 
-const previousSurface = async () => JSON.parse(beforeCheckedRecordPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const promotionSurfaceSource = () => sourceAtFinHistoryRecord(
+	checkedRecordPromotionHistoryPath, "docs/type-surface.v1.json"
+	, beforeCallbackFinPromotionSource
+);
+
+const previousSurface = async () => JSON.parse(beforeCheckedRecordPromotionSource(
+	"docs/type-surface.v1.json", await promotionSurfaceSource()
+));
 
 const readPromotedSurface = async () => {
 	const result = await readTypeSurface();
-	result.document = JSON.parse(beforeCallbackFinPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	result.document = JSON.parse(await promotionSurfaceSource());
 	return result;
 };
 
@@ -65,7 +72,11 @@ test("checked-record promotion preserves six archived selections and their measu
 		assert.equal(entry.revision, reference.revision); assert.equal(entry.kind, "installed");
 		assert.equal(entry.command, reference.command); assert.match(entry.command, /taskset -c 3 node --test/u);
 		assert.ok(entry.scope.includes(reference.environment)); assert.ok(entry.scope.includes(reference.dispatch));
-		for(const file of entry.files) assert.equal(sha256(beforeCallbackFinPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(
+			await sourceAtFinHistoryMilestone(
+				file.path, file.sha256, beforeCallbackFinPromotionSource
+			)
+		), file.sha256, file.path);
 		assert.deepEqual(entry.artifacts, reference.artifacts.map(file => ({ ...file, path: `${reference.id}/${file.path}` })));
 		for(const file of [reference.report, ...reference.executionFiles]) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256));
 		assert.match(entry.scope, /No reconstructed analyzed-tree claim/u);

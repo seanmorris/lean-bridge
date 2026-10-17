@@ -8,9 +8,46 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedFinEvidenceSource } from "./reviewed-fin-evidence-source-history.mjs";
 import { beforeRefinementHistoryCacheSource, refinementHistoryCacheChangedPaths
 	, refinementHistoryCacheHistoryPath, reverseRefinementHistoryCacheUpdate } from "./refinement-history-cache-source-history.mjs";
+import { exactSourceHistoryCheckpoints } from "./source-history-memo.mjs";
+
+test("exact source-history checkpoints bound replay and reject ambiguous evidence", () => {
+	const hashes = Array.from({ length: 9 }, (_, index) =>
+		index.toString(16).repeat(64));
+	const transitions = hashes.slice(0, -1).map((currentSha256, index) => ({
+		currentSha256, previousSha256: hashes[index + 1]
+	}));
+	assert.deepEqual(exactSourceHistoryCheckpoints(
+		transitions, hashes[0], hashes[6], 3
+	), {
+		checkpoints: [hashes[3], hashes[6]]
+		, reachedExpected: true
+		, terminalSha256: hashes[6]
+	});
+	assert.deepEqual(exactSourceHistoryCheckpoints(
+		transitions, hashes[0], undefined, 3
+	), {
+		checkpoints: [hashes[3], hashes[6], hashes[8]]
+		, reachedExpected: false
+		, terminalSha256: hashes[8]
+	});
+	assert.deepEqual(exactSourceHistoryCheckpoints(
+		transitions, "f".repeat(64), hashes[0], 3
+	), {
+		checkpoints: [], reachedExpected: false
+		, terminalSha256: "f".repeat(64)
+	});
+	assert.throws(() => exactSourceHistoryCheckpoints([
+		...transitions, {
+			currentSha256: hashes[0], previousSha256: hashes[2]
+		}
+	], hashes[0], undefined), /Conflicting source history transition/u);
+	assert.throws(() => exactSourceHistoryCheckpoints([
+		{ currentSha256: hashes[0], previousSha256: hashes[1] }
+		, { currentSha256: hashes[1], previousSha256: hashes[0] }
+	], hashes[0], undefined), /Cyclic source history transition/u);
+});
 
 test("Fin cache integration authenticates every historical verifier edit", async () => {
 	const record = JSON.parse(await readFile(refinementHistoryCacheHistoryPath, "utf8"));
@@ -18,7 +55,8 @@ test("Fin cache integration authenticates every historical verifier edit", async
 	assert.deepEqual(record.updates.map(update => update.path), refinementHistoryCacheChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedFinEvidenceSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseRefinementHistoryCacheUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementHistoryCacheSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeRefinementHistoryCacheSource(update.path, source, update.currentSha256), source);

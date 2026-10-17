@@ -13,6 +13,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeNativeEdgeArrayHarnessSource } from "./helpers/native-edge-array-harness-source-history.mjs";
 import { beforeWasmEntryHarnessSource, wasmEntryHarnessChangedPaths, wasmEntryHarnessHistoryPath, wasmEntryHarnessPredecessor, reverseWasmEntryHarnessUpdate } from "./helpers/wasm-entry-harness-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Wasm entry harness history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(wasmEntryHarnessHistoryPath));
@@ -21,7 +22,9 @@ test("Wasm entry harness history authenticates exact predecessors and rejects un
 	assert.deepEqual(record.updates.map(update => update.path), wasmEntryHarnessChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeEdgeArrayHarnessSource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmEntryHarnessUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			wasmEntryHarnessHistoryPath, update.path, beforeNativeEdgeArrayHarnessSource
+		), previous = reverseWasmEntryHarnessUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmEntryHarnessSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +40,10 @@ test("Wasm entry harness history authenticates exact predecessors and rejects un
 });
 
 test("Wasm entry harness refresh source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeNativeEdgeArrayHarnessSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		wasmEntryHarnessHistoryPath, path, beforeNativeEdgeArrayHarnessSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntryHarnessSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntryHarnessHistoryPath));
 	let pins = 0;

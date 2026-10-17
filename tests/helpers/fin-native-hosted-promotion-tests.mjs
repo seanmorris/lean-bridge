@@ -15,14 +15,22 @@ import { finZeroCiHistoryPath } from "./fin-record-zero-ci-history.mjs";
 import { finNominalRefusalHistoryPath } from "./fin-nominal-refusal-history.mjs";
 import { finAliasClosureHistoryPath } from "./fin-alias-closure-history.mjs";
 import { phpWasmDirectFinHistoryPath } from "./php-wasm-fin-direct-history.mjs";
-import { finCoreRepairHistoryPath } from "./fin-core-repair-history.mjs";
+import { beforeFinCoreRepairSource, finCoreRepairHistoryPath } from "./fin-core-repair-history.mjs";
 import { restorePerlFinOptionNotes } from "./fin-core-repair-notes.mjs";
-import { beforePhpWasmDirectPromotionSource, phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { phpWasmDirectPromotionHistoryPath } from "./php-wasm-direct-fin-promotion-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
 import "./fin-native-hosted-promotion-history-tests.mjs";
 
 const references = finHostedPromotionReferences();
 const current = await readTypeSurface();
-const before = { ...current, document: JSON.parse(beforeFinHostedPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"))) };
+const hostedSurfaceSource = await sourceAtFinHistoryRecord(
+	finHostedPromotionHistoryPath, "docs/type-surface.v1.json"
+	, beforeFinHostedPromotionSource
+);
+const before = { ...current, document: JSON.parse(beforeFinHostedPromotionSource(
+	"docs/type-surface.v1.json", hostedSurfaceSource
+)) };
 const proposed = references.then(rows => promoteFinHostedCoverage(before.document, rows));
 
 test("hosted Fin promotion retains all native profiles, Python selections and four Perl ABIs", async () => {
@@ -71,7 +79,9 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 	for(const key of Object.keys(before.document).filter(key => !["evidence", "observations"].includes(key)))
 		assert.deepEqual(document[key], before.document[key], key);
 	validateTypeSurface(document, before);
-	const expected = restorePerlFinOptionNotes(document);
+	const expected = beforeCheckedJavaScriptDispositionPins(
+		restorePerlFinOptionNotes(document)
+	);
 	const history = JSON.parse(await readFile(finHostedPromotionHistoryPath, "utf8"));
 	for(const entry of expected.evidence.slice(0, before.document.evidence.length)) for(const file of entry.files)
 	{
@@ -94,7 +104,10 @@ test("hosted Fin promotion adds 78 evidence entries without rewriting an earlier
 		const update = later.updates.find(item => item.path === file.path && item.currentSha256 === file.sha256);
 		if(update) file.sha256 = update.previousSha256;
 	}
-	const comparison = JSON.parse(beforePhpWasmDirectPromotionSource("docs/type-surface.v1.json", JSON.stringify(current.document, null, 2) + "\n"));
+	const comparison = JSON.parse(await sourceAtFinHistoryRecord(
+		finCoreRepairHistoryPath, "docs/type-surface.v1.json"
+		, beforeFinCoreRepairSource
+	));
 	assert.deepEqual(comparison, expected, "Only the promotion, exact source pins and Perl option guidance may change this historical inventory");
 });
 

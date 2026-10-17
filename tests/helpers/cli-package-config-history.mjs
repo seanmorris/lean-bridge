@@ -7,36 +7,21 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { sha256 } from "./source-history-digest.mjs";
-import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
+import { beforeCliImportRepairSource, cliImportRepairHistoryPath } from "./cli-import-repair-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
-import { beforeCombinedLineageSource } from "./combined-lineage-source-history.mjs";
-import { beforeDiagnosticFollowupSource } from "./diagnostic-followup-source-history.mjs";
-import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
-import { beforeNativeFinSource } from "./native-fin-source-history.mjs";
-import { beforePerlEvidenceRepairSource } from "./perl-evidence-repair-source-history.mjs";
-import { beforeCallbackFinSource } from "./callback-fin-source-history.mjs";
-import { beforeNominalFinSource } from "./nominal-fin-source-history.mjs";
-import { beforeRefinementClosureSource } from "./refinement-closure-source-history.mjs";
-import { beforeNestedFinSource } from "./nested-fin-source-history.mjs";
+import { beforeFinDistributionSource, finDistributionHistoryPath } from "./fin-distribution-source-history.mjs";
+import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsHistoryPath } from "./npm-fin-diagnostics-source-history.mjs";
+import { beforeNestedFinSource, nestedFinHistoryPath } from "./nested-fin-source-history.mjs";
 
 export const cliPackageConfigPath = "config/cli-package.v1.json";
 // The ordinary CLI bundle adds only its generated README and manifest.
 export const cliPackageExtras = Object.freeze(["README.md", "package.json"]);
 // Newest first. Each step reverses only a transition whose current digest was recorded.
 const lineage = [
-	beforeCliImportRepairSource
-	, beforeFinDistributionSource
-	, beforeCombinedLineageSource
-	, beforeDiagnosticFollowupSource
-	, beforeNpmFinDiagnosticsSource
-	, beforeNativeFinSource
-	, beforePerlEvidenceRepairSource
-	, beforeCallbackFinSource
-	, beforeNominalFinSource
-	, beforeRefinementClosureSource
-	, beforeNestedFinSource
-	, (path, source) => beforeFinRefinementSource(path, source)
+	[beforeCliImportRepairSource, cliImportRepairHistoryPath]
+	, [beforeFinDistributionSource, finDistributionHistoryPath]
+	, [beforeNpmFinDiagnosticsSource, npmFinDiagnosticsHistoryPath]
+	, [beforeNestedFinSource, nestedFinHistoryPath]
 ];
 
 /**
@@ -45,14 +30,26 @@ const lineage = [
  * @param readSource - Current or authenticated historical source reader.
  */
 export const authenticatedCliPackageConfigs = async (readSource = readFile) => {
-	let text = (await readSource(cliPackageConfigPath)).toString();
+	const text = (await readSource(cliPackageConfigPath)).toString();
 	const candidates = new Map([[sha256(text), text]]);
-	for(const step of lineage)
+	for(const [step, historyPath] of lineage)
 	{
-		const previous = step(cliPackageConfigPath, text);
-		text = typeof previous === "string" ? previous : previous.toString();
-		if(!candidates.has(sha256(text))) candidates.set(sha256(text), text);
+		const history = JSON.parse(await readFile(historyPath, "utf8"));
+		const update = history.updates.find(
+			item => item.path === cliPackageConfigPath
+		);
+		assert.ok(update, `${historyPath}: ${cliPackageConfigPath}`);
+		const current = beforeFinRefinementSource(
+			cliPackageConfigPath, text, update.currentSha256
+		);
+		if(sha256(current) !== update.currentSha256) continue;
+		candidates.set(update.currentSha256, current);
+		const previous = step(cliPackageConfigPath, current);
+		assert.equal(sha256(previous), update.previousSha256, historyPath);
+		candidates.set(update.previousSha256, previous);
 	}
+	const oldest = beforeFinRefinementSource(cliPackageConfigPath, text);
+	candidates.set(sha256(oldest), oldest.toString());
 	return [...candidates].map(([digest, source]) => ({ sha256: digest, config: JSON.parse(source) }));
 };
 

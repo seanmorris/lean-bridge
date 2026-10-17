@@ -12,7 +12,10 @@ import { nominalSubtypePhpArchive, nominalSubtypePhpReferences, promoteNominalSu
 import { nominalSubtypePhpPromotionHistoryPath, nominalSubtypePhpPromotionPredecessor } from "./nominal-subtype-php-promotion-history.mjs";
 import { beforeNominalSubtypeWitPromotionSource, beforeNominalSubtypeWitPromotionPins, nominalSubtypeWitPromotionHistoryPath } from "./nominal-subtype-wit-promotion-history.mjs";
 import { beforeNominalSubtypePhpWasmPromotionPins } from "./nominal-subtype-php-wasm-promotion-history.mjs";
+import { sourceBeforeFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
+import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -105,9 +108,18 @@ test("nominal PHP promotion refuses missing originals, invented claims and overl
 
 test("nominal PHP promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePhpReferences();
-	const proposed = beforeNominalSubtypeWitPromotionPins(beforeNominalSubtypePhpWasmPromotionPins(await promoteNominalSubtypePhp(original, references)));
-	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalSubtypeWitPromotionSource("docs/type-surface.v1.json", JSON.stringify(current, null, 2) + "\n"));
+	const proposed = beforeNominalSubtypeWitPromotionPins(
+		beforeNominalSubtypePhpWasmPromotionPins(beforeCiContractRepairPins(
+			beforeCheckedJavaScriptDispositionPins(
+				await promoteNominalSubtypePhp(original, references)
+			)
+		))
+	);
+	const { document: current, ...contracts } = await readTypeSurface(); void current;
+	const document = JSON.parse(await sourceBeforeFinHistoryRecord(
+		nominalSubtypeWitPromotionHistoryPath, "docs/type-surface.v1.json"
+		, beforeNominalSubtypeWitPromotionSource
+	));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 504); assert.equal(proposed.evidence.length, 508);
 	assert.equal(original.observations.length, 587); assert.equal(proposed.observations.length, 589);
@@ -161,8 +173,8 @@ test("nominal PHP documentation distinguishes native Nat records from pending PH
 			nominalSubtypePhpPromotionHistoryPath, path
 		)).includes("nominal-subtype-php-20261013.md"), path);
 	const sourcePath = "docs/php.md";
-	const source = beforeNominalSubtypeWitPromotionSource(
-		sourcePath, await readFile(sourcePath, "utf8")
+	const source = sourceAtHistoryMilestone(
+		nominalSubtypePhpPromotionHistoryPath, sourcePath
 	);
 	assert.ok(source.includes("### Subtypes in copied records\n"));
 	assert.ok(source.includes("Linux x64/glibc 2.36"));

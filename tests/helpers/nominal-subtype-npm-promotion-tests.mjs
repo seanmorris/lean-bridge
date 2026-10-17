@@ -134,7 +134,9 @@ test("nominal npm docs separate Node acceptance from pending browser, native and
 		)).includes("nominal-subtype-npm-acceptance-20261011.md"), path);
 	const javascriptPath = "docs/javascript-typescript.md";
 	const javascript = beforeNominalSubtypeJvmPromotionSource(
-		javascriptPath, await readFile(javascriptPath, "utf8")
+		javascriptPath, sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, javascriptPath
+		)
 	);
 	assert.ok(javascript.includes("### Subtypes in copied records\n"));
 	assert.ok(javascript.includes("Node 22.23.2"));

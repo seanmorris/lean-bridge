@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeGenericRecordBrowserSource } from "./generic-record-browser-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeWitDependencySource, witDependencyChangedPaths, witDependencyHistoryPath, reverseWitDependencyUpdate } from "./wit-dependency-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("WIT dependency isolation authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(witDependencyHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("WIT dependency isolation authenticates each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), witDependencyChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericRecordBrowserSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeGenericRecordBrowserSource
+		);
 		assert.equal(sha256(reverseWitDependencyUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeWitDependencySource(update.path, source)), update.previousSha256);
 		assert.equal(beforeWitDependencySource(update.path, source, update.currentSha256), source);

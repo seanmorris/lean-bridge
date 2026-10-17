@@ -11,9 +11,10 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypePythonProducer } from "./nominal-primitive-subtype-python-archive.mjs";
-import { nominalPrimitiveSubtypePythonPromotionPredecessor } from "./nominal-primitive-subtype-python-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeBrowserPromotionSource, beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
+import { nominalPrimitiveSubtypePythonPromotionHistoryPath, nominalPrimitiveSubtypePythonPromotionPredecessor } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypePythonReferences, promoteNominalPrimitiveSubtypePython, nominalPrimitiveSubtypePythonProfiles, nominalPrimitiveSubtypePythonConversion, nominalPrimitiveSubtypePythonLimit, nominalPrimitiveSubtypePythonField } from "./nominal-primitive-subtype-python-promotion.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypePythonPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -81,7 +82,10 @@ test("primitive-base Python promotion supplements six existing Python cells and 
 	const original = predecessor(), references = await nominalPrimitiveSubtypePythonReferences();
 	const proposed = beforeNominalPrimitiveSubtypeBrowserPromotionPins(await promoteNominalPrimitiveSubtypePython(original, references));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypeBrowserPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePythonPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 528); assert.equal(proposed.observations.length, 595);

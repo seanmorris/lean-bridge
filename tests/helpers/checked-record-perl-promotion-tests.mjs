@@ -14,8 +14,14 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { checkedRecordPerlConversion, checkedRecordPerlLimit, checkedRecordPerlReferences, promoteCheckedRecordPerl } from "./checked-record-perl-promotion.mjs";
 import { beforeCheckedRecordPerlPromotionSource, checkedRecordPerlPromotionChangedPaths, checkedRecordPerlPromotionHistoryPath, checkedRecordPerlPromotionPredecessor, reverseCheckedRecordPerlPromotionUpdate } from "./checked-record-perl-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
-const predecessor = async () => JSON.parse(beforeCheckedRecordPerlPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const predecessor = async () => {
+	const path = "docs/type-surface.v1.json";
+	return JSON.parse(beforeCheckedRecordPerlPromotionSource(
+		path, sourceAtHistoryMilestone(checkedRecordPerlPromotionHistoryPath, path)
+	));
+};
 
 test("Perl checked-record support authenticates four installed routes and every ABI/mode pair", async () => {
 	const references = await checkedRecordPerlReferences();
@@ -77,8 +83,9 @@ test("Perl checked-record promotion changes exactly four cells and retains every
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
 	const recorded = history.updates.find(update => update.path === inventoryPath);
-	const atPromotion = beforeCheckedRecordPerlPromotionSource(inventoryPath,
-		await readFile(inventoryPath, "utf8"), recorded.currentSha256);
+	const atPromotion = sourceAtHistoryMilestone(
+		checkedRecordPerlPromotionHistoryPath, inventoryPath
+	);
 	assert.equal(sha256(atPromotion), recorded.currentSha256);
 	const milestone = JSON.parse(atPromotion);
 	// New references use today's validators; authenticate their exact promotion-era bytes.
@@ -90,7 +97,9 @@ test("Perl checked-record promotion changes exactly four cells and retains every
 			assert.ok(original, file.path);
 			const source = await readFile(file.path, "utf8");
 			assert.equal(sha256(source), file.sha256, file.path);
-			assert.equal(sha256(beforeCheckedRecordPerlPromotionSource(file.path, source, original.sha256)), original.sha256, file.path);
+			assert.equal(sha256(beforeFinRefinementSource(
+				file.path, source, original.sha256
+			)), original.sha256, file.path);
 			authenticated.push([file, original.sha256]);
 		}
 	// Validator objects are shared by all four references. Mutate only after checking every one.
@@ -132,8 +141,8 @@ test("Perl consumer and author guides distinguish installed checked records from
 	const row = perl.split("\n").find(line => line.startsWith("| `Checked records and closed Nat indices`"));
 	assert.ok(row.includes(checkedRecordPerlConversion));
 	for(const path of ["Ordinary source", "Reviewed IR"])
-		assert.ok(row.includes(`${path}: Installed checks passed (input, result)`));
-	assert.ok(row.includes("Not audited (field, callback input, callback result)"));
+		assert.ok(row.includes(`${path}: Installed checks passed (input, result, field)`));
+	assert.ok(row.includes("Not audited (callback input, callback result)"));
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
 	assert.ok(author.includes("[Installed Perl checks](../evidence/checked-record-perl-installed-20261011.md)"));
 	assert.ok(author.includes("[Installed browser checks](../evidence/checked-record-browser-promotion-20261011.md)"));
@@ -154,8 +163,9 @@ test("Perl checked-record promotion history authenticates exact transitions and 
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPerlPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforeCheckedRecordPerlPromotionSource(update.path,
-			await readFile(update.path, "utf8"), update.currentSha256);
+		const source = sourceAtHistoryMilestone(
+			checkedRecordPerlPromotionHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordPerlPromotionUpdate(source, update);
 		assert.equal(beforeCheckedRecordPerlPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);

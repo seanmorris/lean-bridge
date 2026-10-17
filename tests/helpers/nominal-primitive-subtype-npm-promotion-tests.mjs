@@ -11,9 +11,10 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeNpmProducer } from "./nominal-primitive-subtype-npm-archive.mjs";
-import { beforeNominalPrimitiveSubtypePythonPromotionSource, beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
-import { nominalPrimitiveSubtypeNpmPromotionPredecessor } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { nominalPrimitiveSubtypeNpmPromotionHistoryPath, nominalPrimitiveSubtypeNpmPromotionPredecessor } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmReferences, promoteNominalPrimitiveSubtypeNpm, nominalPrimitiveSubtypeNpmProfiles, nominalPrimitiveSubtypeNpmConversion, nominalPrimitiveSubtypeNpmLimit, nominalPrimitiveSubtypeNpmField } from "./nominal-primitive-subtype-npm-promotion.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeNpmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -73,7 +74,10 @@ test("primitive-base npm promotion supplements twelve existing Node cells and pr
 	const original = predecessor(), references = await nominalPrimitiveSubtypeNpmReferences();
 	const proposed = beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalPrimitiveSubtypeNpm(original, references));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypePythonPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeNpmPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 524); assert.equal(proposed.observations.length, 595);
@@ -114,7 +118,10 @@ test("primitive-base npm docs name the nineteen Node bases without claiming the 
 		if(path === "docs/javascript-typescript.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-npm.yml"));
 	}
-	const javascript = beforeNominalPrimitiveSubtypePythonPromotionSource("docs/javascript-typescript.md", await readFile("docs/javascript-typescript.md", "utf8"));
+	const javascript = sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeNpmPromotionHistoryPath
+		, "docs/javascript-typescript.md"
+	);
 	for(const text of ["nineteen primitive bases", "undefined", "void", "wasm32", "normalization"])
 		assert.ok(javascript.includes(text), text);
 	assert.doesNotMatch(javascript, /Other primitive-base nominal fixtures and callback/u);

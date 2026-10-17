@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalSubtypePhpWasmPathSource, beforeNominalSubtypePhpWasmPathPins, nominalSubtypePhpWasmPathChangedPaths, nominalSubtypePhpWasmPathHistoryPath, nominalSubtypePhpWasmPathPredecessor, reverseNominalSubtypePhpWasmPathUpdate } from "./nominal-subtype-php-wasm-path-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("PHP-Wasm report path and CI comparison repair authenticates exact changes without adding support claims", async () => {
 	const record = JSON.parse(await readFile(nominalSubtypePhpWasmPathHistoryPath));
@@ -21,8 +22,8 @@ test("PHP-Wasm report path and CI comparison repair authenticates exact changes 
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpWasmPathPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = sourceAtHistoryMilestone(
+			nominalSubtypePhpWasmPathHistoryPath, update.path
 		);
 		const previous = reverseNominalSubtypePhpWasmPathUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -55,7 +56,10 @@ test("PHP-Wasm report path and CI comparison repair authenticates exact changes 
 	assert.equal(pins, 4);
 	assert.deepEqual(beforeNominalSubtypePhpWasmPathPins(inventory), JSON.parse(original(path)));
 	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	assert.deepEqual(JSON.parse(beforeNominalSubtypePhpWasmPathSource(path, await readFile(path, "utf8"), checkpoint)), inventory);
+	assert.deepEqual(JSON.parse(beforeNominalSubtypePhpWasmPathSource(
+		path, sourceAtHistoryMilestone(nominalSubtypePhpWasmPathHistoryPath, path)
+		, checkpoint
+	)), inventory);
 });
 
 test("PHP-Wasm report path and CI comparison repair writer refuses an unrelated checkout before writing", async t => {

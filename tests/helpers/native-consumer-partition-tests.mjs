@@ -10,12 +10,15 @@ import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { assertNativeConsumerPartition, extendPerlCompilerBudget, nativeConsumerPartitionBaseline, nativeConsumerPartitionSummaryGate, nativeConsumerValueGate } from "./native-consumer-partition.mjs";
 import { assertWorkflowRunBudget, workflowRunScalars } from "./native-observation-split.mjs";
-import { beforeNominalSubtypeJvmCiSource } from "./nominal-subtype-jvm-ci-history.mjs";
+import { beforeNominalSubtypeJvmCiSource, nominalSubtypeJvmCiHistoryPath } from "./nominal-subtype-jvm-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const original = name => execFileSync("git", ["show", `${nativeConsumerPartitionBaseline}:${name}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
 const jobAt = (source, name) => `  ${name}:\n` + source.split(`  ${name}:\n`)[1].split(/^ {2}[a-z][a-z0-9-]*:\n/mu)[0];
-const partitionCheckpoint = async () => beforeNominalSubtypeJvmCiSource(path, await readFile(path, "utf8"));
+const partitionCheckpoint = async () => beforeNominalSubtypeJvmCiSource(
+	path, sourceAtHistoryMilestone(nominalSubtypeJvmCiHistoryPath, path)
+);
 
 test("native CI partition checkpoint preserves all 191 command lines, 77 artifact paths and other jobs", async () => {
 	const source = await partitionCheckpoint();

@@ -9,16 +9,30 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../../src/adoption/type-surface.mjs";
 import { callbackFinPromotionReferences } from "./callback-fin-promotion-references.mjs";
-import { beforeCallbackFinPromotionSource } from "./callback-fin-promotion-source-history.mjs";
-import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
+import { callbackFinPromotionHistoryPath } from "./callback-fin-promotion-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+
+const typeSurfacePath = "docs/type-surface.v1.json";
+let typeSurfaceUpdate;
+
+const callbackTypeSurface = async digestKey => {
+	const update = typeSurfaceUpdate ??= JSON.parse(await readFile(
+		callbackFinPromotionHistoryPath, "utf8"
+	)).updates.find(item => item.path === typeSurfacePath);
+	assert.ok(update);
+	return beforeFinRefinementSource(typeSurfacePath
+		, await readFile(typeSurfacePath, "utf8"), update[digestKey]);
+};
 
 const readPromotedSurface = async () => {
 	const result = await readTypeSurface();
-	result.document = JSON.parse(beforePhpWasmReviewedFinSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	result.document = JSON.parse(await callbackTypeSurface("currentSha256"));
 	return result;
 };
 
-const predecessor = async () => JSON.parse(beforeCallbackFinPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const predecessor = async () => JSON.parse(
+	await callbackTypeSurface("previousSha256")
+);
 const groups = [
 	["c", "ordinary-source"], ["cpp", "ordinary-source"]
 	, ["browser-javascript", "ordinary-source"]
@@ -84,7 +98,10 @@ test("callback promotion binds five original selections and their archive valida
 		for(const path of ["tests/helpers/callback-fin-promotion-references.mjs", ...reference.validators])
 			assert.ok(entry.files.some(file => file.path === path), path);
 		for(const file of reference.files) assert.ok(entry.files.some(pin => pin.path === file.path && pin.sha256 === file.sha256), file.path);
-		for(const file of entry.files) assert.equal(sha256(beforePhpWasmReviewedFinSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(
+			beforeFinRefinementSource(file.path
+				, await readFile(file.path, "utf8"), file.sha256)
+		), file.sha256, file.path);
 		assert.deepEqual(entry.artifacts, reference.artifacts.map(file => ({ ...file, path: `${reference.id}/${file.path}` })));
 	}
 });

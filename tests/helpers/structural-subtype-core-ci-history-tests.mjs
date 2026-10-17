@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import { beforeStructuralSubtypeCoreCiSource, structuralSubtypeCoreCiChangedPaths, structuralSubtypeCoreCiHistoryPath, structuralSubtypeCoreCiPredecessor, reverseStructuralSubtypeCoreCiUpdate } from "./structural-subtype-core-ci-history.mjs";
 
 test("structural Subtype Core CI repair source history authenticates exact changes and refuses unknown edits", async () => {
@@ -50,7 +51,10 @@ test("structural Subtype Core CI repair source history authenticates exact chang
 	}
 	assert.equal(pins, 4);
 	const inventoryUpdate = record.updates.find(update => update.path === "docs/type-surface.v1.json");
-	const inventory = beforeStructuralSubtypeCoreCiSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), inventoryUpdate.currentSha256);
+	const inventory = await sourceAtFinHistoryMilestone(
+		"docs/type-surface.v1.json", inventoryUpdate.currentSha256
+		, beforeStructuralSubtypeCoreCiSource
+	);
 	assert.deepEqual(JSON.parse(inventory), expected);
 	assert.equal(beforeFinRefinementSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), sha256(JSON.stringify(original, null, 2) + "\n")), JSON.stringify(original, null, 2) + "\n");
 });

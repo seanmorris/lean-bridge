@@ -26,6 +26,7 @@ import {
 	, reverseNestedCheckedRecordNativeArchiveHistoricalUpdate
 } from "./nested-checked-record-diagnostic-oracle-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
@@ -53,7 +54,10 @@ test("nested checked-record diagnostic oracle has one exact reversible lineage",
 		nestedCheckedRecordDiagnosticOracleChangedPaths)));
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeNestedCheckedRecordDiagnosticOracleSource
+		);
 		const previous = git(["show"
 			, `${nestedCheckedRecordDiagnosticOraclePredecessor}:${update.path}`]);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -121,7 +125,11 @@ test("diagnostic-oracle additions and unchanged boundaries are closed", async ()
 		nestedCheckedRecordDiagnosticOracleHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+			, beforeNestedCheckedRecordDiagnosticOracleSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${nestedCheckedRecordDiagnosticOraclePredecessor}:${addition.path}`]
@@ -130,14 +138,22 @@ test("diagnostic-oracle additions and unchanged boundaries are closed", async ()
 	assert.equal(record.pinCount, 0);
 	for(const boundary of record.unchanged)
 	{
-		const current = await readFile(boundary.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			boundary.path, boundary.sha256
+			, beforeNestedCheckedRecordDiagnosticOracleSource
+		);
 		const previous = git(["show"
 			, `${nestedCheckedRecordDiagnosticOraclePredecessor}:${boundary.path}`]);
 		assert.equal(current, previous, boundary.path);
 		assert.equal(sha256(current), boundary.sha256, boundary.path);
 	}
-	const inventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"));
+	const inventoryBoundary = record.unchanged.find(
+		item => item.path === "docs/type-surface.v1.json"
+	);
+	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryBoundary.path, inventoryBoundary.sha256
+		, beforeNestedCheckedRecordDiagnosticOracleSource
+	));
 	assert.deepEqual(inventory.evidence.flatMap(entry => entry.files)
 		.filter(file => nestedCheckedRecordDiagnosticOracleChangedPaths.includes(
 			file.path)), []);

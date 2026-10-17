@@ -18,6 +18,7 @@ import {
 } from "./helpers/ci-contract-repair-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import {
 	beforeTestProfileBacklogRepairSource
 	, reverseTestProfileBacklogRepairUpdate
@@ -138,8 +139,12 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 		].includes(update.path)) assert.equal(previous, original(update.path)
 			, update.path);
 	}
-	const inventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"
+	const inventoryUpdate = record.updates.find(
+		update => update.path === "docs/type-surface.v1.json"
+	);
+	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
+		, beforeCiContractRepairSource
 	));
 	let pinCount = 0;
 	for(const pin of record.pinUpdates)
@@ -154,7 +159,11 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 		pinCount += pin.count;
 	}
 	assert.equal(pinCount, record.pinCount);
-	const firstCurrent = await readFile(record.updates[0].path, "utf8");
+	const firstUpdate = record.updates[0];
+	const firstCurrent = await sourceAtFinHistoryMilestone(
+		firstUpdate.path, firstUpdate.currentSha256
+		, beforeCiContractRepairSource
+	);
 	for(const mutate of [
 		update => { update.path = "unknown"; }
 		, update => { update.previousSha256 = "0".repeat(64); }

@@ -16,13 +16,38 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeWasmEntryControlsSource } from "./helpers/wasm-entry-controls-source-history.mjs";
 import { assertHostedContainerInventory, assertHostedContainerReferences, hostedContainerCounterScope, hostedContainerObservationIds, hostedContainerReferences, hostedContainerSelectionIds, supplementHostedContainerInventory } from "./helpers/hosted-container-inventory.mjs";
 import { beforeHostedContainerInventorySource, hostedContainerInventoryChangedPaths, hostedContainerInventoryHistoryPath, hostedContainerInventoryPredecessor, reverseHostedContainerInventoryUpdate } from "./helpers/hosted-container-inventory-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const snapshot = async () => {
-	const path = "docs/type-surface.v1.json", source = beforeWasmEntryControlsSource(path, await readFile(path, "utf8"));
-	return { current: JSON.parse(source)
+	const history = JSON.parse(await readFile(hostedContainerInventoryHistoryPath));
+	const path = "docs/type-surface.v1.json";
+	const update = history.updates.find(item => item.path === path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeWasmEntryControlsSource
+	);
+	const current = JSON.parse(source);
+	const milestoneDigests = new Map();
+	for(const entry of current.evidence.filter(
+		item => hostedContainerSelectionIds.includes(item.id)
+	)) for(const file of entry.files.filter(item => item.path.endsWith(".mjs")))
+	{
+		if(milestoneDigests.has(file.path)) assert.equal(
+			milestoneDigests.get(file.path), file.sha256, file.path
+		);
+		milestoneDigests.set(file.path, file.sha256);
+	}
+	const sourceAtMilestone = async sourcePath => {
+		const expected = milestoneDigests.get(sourcePath);
+		assert.ok(expected, sourcePath);
+		return sourceAtFinHistoryMilestone(
+			sourcePath, expected, beforeHostedContainerInventorySource
+		);
+	};
+	return { current
 		, previous: JSON.parse(beforeHostedContainerInventorySource(path, source))
-		, history: JSON.parse(await readFile(hostedContainerInventoryHistoryPath))
-		, references: await hostedContainerReferences() };
+		, history
+		, references: await hostedContainerReferences()
+		, sourceAtMilestone };
 };
 
 test("hosted container inventory authenticates exact predecessors and refuses unknown history edits", async () => {
@@ -32,7 +57,10 @@ test("hosted container inventory authenticates exact predecessors and refuses un
 	assert.deepEqual(record.updates.map(update => update.path), hostedContainerInventoryChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeWasmEntryControlsSource(update.path, await readFile(update.path, "utf8")), previous = reverseHostedContainerInventoryUpdate(source, update);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeWasmEntryControlsSource
+		);
+		const previous = reverseHostedContainerInventoryUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeHostedContainerInventorySource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -47,8 +75,11 @@ test("hosted container inventory authenticates exact predecessors and refuses un
 });
 
 test("hosted container inventory supplements exactly four existing observations without promoting support cells", async () => {
-	const { current, previous, references, history } = await snapshot();
-	await assertHostedContainerInventory(current, previous, references, history.updates);
+	const { current, previous, references, history, sourceAtMilestone }
+		= await snapshot();
+	await assertHostedContainerInventory(
+		current, previous, references, history.updates, sourceAtMilestone
+	);
 	assert.equal(previous.observations.length, 499); assert.equal(current.observations.length, 499);
 	assert.equal(previous.evidence.length, 288); assert.equal(current.evidence.length, 292);
 	const changed = current.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(previous.observations[index]));
@@ -128,7 +159,8 @@ test("hosted selections refuse host, route, report, command, entry count and pro
 });
 
 test("hosted inventory refuses broader claims, altered historical evidence and unrelated coverage changes", async () => {
-	const { current, previous, references, history } = await snapshot();
+	const { current, previous, references, history, sourceAtMilestone }
+		= await snapshot();
 	const target = value => value.observations.find(item => item.id === hostedContainerObservationIds[0]);
 	for(const mutate of [
 		value => { value.evidence.at(-1).scope += " All exports measured."; }
@@ -145,9 +177,13 @@ test("hosted inventory refuses broader claims, altered historical evidence and u
 		, value => { value.observations[0].scope += " Unrelated edit."; }
 	]) {
 		const value = structuredClone(current); mutate(value);
-		await assert.rejects(() => assertHostedContainerInventory(value, previous, references, history.updates));
+		await assert.rejects(() => assertHostedContainerInventory(
+			value, previous, references, history.updates, sourceAtMilestone
+		));
 	}
-	await assert.rejects(() => supplementHostedContainerInventory(current, references), /Already supplemented/u);
+	await assert.rejects(() => supplementHostedContainerInventory(
+		current, references, sourceAtMilestone
+	), /Already supplemented/u);
 });
 
 test("hosted container guides name both measured exports and preserve the separate structural scope", async () => {

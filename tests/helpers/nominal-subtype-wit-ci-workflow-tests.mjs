@@ -9,18 +9,20 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 import { nominalSubtypeWitCiBlock, nominalSubtypeWitRequiredSteps, enableNominalSubtypeWitWorkflow, disableNominalSubtypeWitWorkflow, assertNominalSubtypeWitWorkflow } from "./nominal-subtype-wit-ci-workflow.mjs";
-import { nominalSubtypeWitCiPredecessor } from "./nominal-subtype-wit-ci-history.mjs";
+import { nominalSubtypeWitCiHistoryPath, nominalSubtypeWitCiPredecessor } from "./nominal-subtype-wit-ci-history.mjs";
 import { assertNominalSubtypePhpWorkflow } from "./nominal-subtype-php-ci-workflow.mjs";
 import { assertNominalSubtypeJvmWorkflow } from "./nominal-subtype-jvm-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
-import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 const path = ".github/workflows/consumer-matrix.yml";
 const bodyOf = source => /^ {2}wasi-consumer:\n[\s\S]*?(?=^ {2}[a-z][a-z0-9-]*:\n)/mu.exec(source)[0];
 
 test("nominal WIT CI preserves every previous job and enforces all four component selections", async () => {
 	const source = await readFile(path, "utf8"); assertNominalSubtypeWitWorkflow(source);
 	const previous = execFileSync("git", ["show", `${nominalSubtypeWitCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	const checkpoint = beforePhpWasmCorpusPartitionSource(path, source);
+	const checkpoint = sourceAtHistoryMilestone(
+		nominalSubtypeWitCiHistoryPath, path
+	);
 	assert.equal(disableNominalSubtypeWitWorkflow(checkpoint), previous);
 	assert.equal(enableNominalSubtypeWitWorkflow(previous), checkpoint);
 	assert.equal(checkpoint.replace(bodyOf(checkpoint), ""), previous.replace(bodyOf(previous), ""));

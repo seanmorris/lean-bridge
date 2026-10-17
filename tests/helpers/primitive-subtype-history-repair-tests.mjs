@@ -16,6 +16,7 @@ import { beforeNominalSubtypePythonRegistrationSource } from "./nominal-subtype-
 import { beforeNominalSubtypeDotnetCiSource } from "./nominal-subtype-dotnet-ci-history.mjs";
 import { nominalSubtypeDotnetCeilingChangedPaths, nominalSubtypeDotnetCeilingHistoryPath } from "./nominal-subtype-dotnet-ceiling-history.mjs";
 import { beforePrimitiveSubtypeHistoryRepairSource, primitiveSubtypeHistoryRepairChangedPaths, primitiveSubtypeHistoryRepairHistoryPath, primitiveSubtypeHistoryRepairPredecessor, reversePrimitiveSubtypeHistoryRepairUpdate } from "./primitive-subtype-history-repair.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("primitive-base history repair authenticates its exact chain edits and makes the Ruby promotion reachable", async () => {
 	const record = JSON.parse(await readFile(primitiveSubtypeHistoryRepairHistoryPath));
@@ -50,13 +51,25 @@ test("primitive-base history repair authenticates its exact chain edits and make
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforePrimitiveSubtypeHistoryRepairSource(inventoryPath, await readFile(inventoryPath, "utf8")), await readFile(inventoryPath, "utf8"));
+	const inventorySource = beforeFinRefinementSource(
+		inventoryPath, await readFile(inventoryPath, "utf8")
+	);
+	assert.equal(beforePrimitiveSubtypeHistoryRepairSource(
+		inventoryPath, inventorySource
+	), inventorySource);
 	assert.ok(!JSON.parse(await readFile(inventoryPath, "utf8")).evidence.some(entry => entry.files.some(file => primitiveSubtypeHistoryRepairChangedPaths.includes(file.path))), "no repaired file is pinned by the inventory");
 	// The C# ceiling ledger is reachable from the oldest C# chain only through this layer.
 	const ceiling = JSON.parse(await readFile(nominalSubtypeDotnetCeilingHistoryPath)).updates[0];
 	assert.deepEqual(nominalSubtypeDotnetCeilingChangedPaths, [ceiling.path]);
-	assert.equal(beforeNominalSubtypeDotnetCiSource(ceiling.path, await readFile(ceiling.path, "utf8"), ceiling.previousSha256).length > 0, true);
-	assert.notEqual(beforeNominalSubtypeDotnetCiSource(ceiling.path, await readFile(ceiling.path, "utf8")), await readFile(ceiling.path, "utf8"));
+	const ceilingSource = await sourceAtFinHistoryMilestone(
+		ceiling.path, ceiling.currentSha256, beforeNominalSubtypeDotnetCiSource
+	);
+	assert.equal(beforeNominalSubtypeDotnetCiSource(
+		ceiling.path, ceilingSource, ceiling.previousSha256
+	).length > 0, true);
+	assert.notEqual(beforeNominalSubtypeDotnetCiSource(
+		ceiling.path, ceilingSource
+	), ceilingSource);
 });
 
 test("primitive-base history repair writer refuses an unrelated checkout before writing", async t => {

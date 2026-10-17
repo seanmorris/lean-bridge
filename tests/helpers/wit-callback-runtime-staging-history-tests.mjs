@@ -16,6 +16,7 @@ import { assertWitCallbackRuntimeHistory, beforeWitCallbackRuntimeStaging
 	, witCallbackRuntimeHistoryPath, witCallbackRuntimeHistorySha256
 	, witCallbackRuntimeSourcePaths, witCallbackRuntimeReaderPaths
 	, witCallbackRuntimeIntroducedPaths, witCallbackRuntimeSuccessorPaths } from "./wit-callback-runtime-staging-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("WIT runtime staging closes both transition categories and rejects forged history", async t => {
 	const bytes = await readFile(witCallbackRuntimeHistoryPath), history = readWitCallbackRuntimeHistory();
@@ -97,8 +98,9 @@ test("WIT runtime staging authenticates complete source bytes and preserves stop
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		const bytes = beforeWitCallbackRuntimeStaging(path
-			, await readFile(path), identity.currentSha256);
+		const bytes = await sourceAtFinHistoryMilestone(
+			path, identity.currentSha256, beforeWitCallbackRuntimeStaging
+		);
 		assert.equal(sha256(bytes), identity.currentSha256);
 		assert.equal(identity.currentSha256, identity.integratedSha256);
 		assert.equal(beforeWitCallbackRuntimeStaging(path, bytes), bytes);

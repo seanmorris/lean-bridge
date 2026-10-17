@@ -10,7 +10,8 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { finProductRefinements } from "./fin-product-install.mjs";
 import { finProductDispatchColumns, finProductDispatchExpected } from "./fin-product-dispatch.mjs";
 import { finProductReviewedIr } from "./reviewed-fin-product-fixture.mjs";
-import { beforeFinProductPhpNameSource } from "./fin-product-php-name-source-history.mjs";
+import { beforeFinProductPhpNameSource, finProductPhpNameHistoryPath } from "./fin-product-php-name-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import "./fin-product-php-name-source-history-tests.mjs";
 import "./fin-product-array-evidence-tests.mjs";
 
@@ -23,7 +24,9 @@ const historicalFixture = async () => {
 	assert.equal(fixture.sourceRevision, "758c979e2151864fd6b044b648714cdd99c03fe8");
 	assert.equal(fixture.sources.length, 4);
 	for(const source of fixture.sources)
-		assert.equal(sha256(beforeFinProductPhpNameSource(source.path, await readFile(source.path, "utf8"), source.sha256)), source.sha256, source.path);
+		assert.equal(sha256(beforeFinProductPhpNameSource(
+			source.path, sourceAtHistoryMilestone(finProductPhpNameHistoryPath, source.path)
+		)), source.sha256, source.path);
 	return fixture;
 };
 const identities = [
@@ -67,7 +70,9 @@ test("C/C++ product archives bind both source paths to exact bounds and measured
 			assert.equal(item.checks, item.profile === "c" ? 2038 : 2039);
 			assert.deepEqual(item.refinements, fixture.refinements);
 			const consumerPath = `tests/fixtures/fin-product-consumers/${item.profile}.${item.profile === "c" ? "c" : "cpp"}`;
-			const source = beforeFinProductPhpNameSource(consumerPath, await readFile(consumerPath, "utf8"), item.consumerSha256);
+			const source = beforeFinProductPhpNameSource(
+				consumerPath, sourceAtHistoryMilestone(finProductPhpNameHistoryPath, consumerPath)
+			);
 			assert.equal(item.consumerSha256, sha256(source));
 			for(const flag of ["sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreePath"])
 				assert.equal(item[flag], true, flag);

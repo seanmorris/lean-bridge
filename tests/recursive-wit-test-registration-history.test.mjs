@@ -17,6 +17,7 @@ import {
 	, reverseRecursiveWitTestRegistrationUpdate
 } from "./helpers/recursive-wit-test-registration-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
+import { finHistoryMilestoneSource } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const expectedTests = [
 	"recursive-checked-record-wit-ci"
@@ -37,9 +38,12 @@ test("recursive WIT test registrations have one exact reversible lineage", async
 	const original = path => execFileSync("git", ["show"
 		, `${recursiveWitTestRegistrationPredecessor}:${path}`]
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	const sourceAtMilestone = finHistoryMilestoneSource(
+		record.updates, beforeRecursiveWitTestRegistrationSource
+	);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtMilestone(update.path);
 		const previous = original(update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

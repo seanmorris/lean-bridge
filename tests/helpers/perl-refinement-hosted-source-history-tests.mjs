@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlRelocatedConsumerSource } from "./perl-relocated-consumer-source-history.mjs";
 import { beforePerlRefinementHostedSource, perlRefinementHostedChangedPaths, perlRefinementHostedHistoryPath, perlRefinementHostedPredecessor, reversePerlRefinementHostedUpdate } from "./perl-refinement-hosted-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Perl hosted archive history authenticates exact predecessors and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(perlRefinementHostedHistoryPath));
@@ -21,7 +22,9 @@ test("Perl hosted archive history authenticates exact predecessors and refuses u
 	assert.deepEqual(record.updates.map(update => update.path), perlRefinementHostedChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePerlRelocatedConsumerSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlRefinementHostedUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			perlRefinementHostedHistoryPath, update.path, beforePerlRelocatedConsumerSource
+		), previous = reversePerlRefinementHostedUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlRefinementHostedSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +40,9 @@ test("Perl hosted archive history authenticates exact predecessors and refuses u
 });
 
 test("Perl archive registration refreshes exactly 95 source pins without promoting any support cell", async () => {
-	const path = "docs/type-surface.v1.json", text = beforePerlRelocatedConsumerSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await sourceAtFinHistoryRecord(
+			perlRefinementHostedHistoryPath, path, beforePerlRelocatedConsumerSource
+	);
 	const current = JSON.parse(text), previous = JSON.parse(beforePerlRefinementHostedSource(path, text));
 	const record = JSON.parse(await readFile(perlRefinementHostedHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
@@ -47,7 +52,9 @@ test("Perl archive registration refreshes exactly 95 source pins without promoti
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforePerlRelocatedConsumerSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAtFinHistoryRecord(
+			perlRefinementHostedHistoryPath, file.path, beforePerlRelocatedConsumerSource
+			)), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

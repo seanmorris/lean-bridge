@@ -13,9 +13,10 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import "./helpers/refinement-core-ci-history-tests.mjs";
-import { beforePerlClosureNativeBudgetSource } from "./helpers/perl-closure-native-budget-source-history.mjs";
+import { beforePerlClosureNativeBudgetSource, perlClosureNativeBudgetHistoryPath } from "./helpers/perl-closure-native-budget-source-history.mjs";
 import { perlRelocatedPromotionIds, perlRelocatedReviewedId, promotePerlRelocatedInventory, promotePerlRelocatedObservations } from "./helpers/perl-relocated-promotion.mjs";
 import { beforePerlRelocatedPromotionSource, perlRelocatedPromotionChangedPaths, perlRelocatedPromotionHistoryPath, perlRelocatedPromotionPredecessor, reversePerlRelocatedPromotionUpdate } from "./helpers/perl-relocated-promotion-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Perl relocated promotion authenticates all exact predecessors and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
@@ -24,7 +25,10 @@ test("Perl relocated promotion authenticates all exact predecessors and refuses 
 	assert.deepEqual(history.updates.map(update => update.path), perlRelocatedPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforePerlClosureNativeBudgetSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlRelocatedPromotionUpdate(current, update);
+		const current = await sourceAtFinHistoryRecord(
+			perlRelocatedPromotionHistoryPath, update.path
+			, beforePerlClosureNativeBudgetSource
+		), previous = reversePerlRelocatedPromotionUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlRelocatedPromotionSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -40,7 +44,11 @@ test("Perl relocated promotion authenticates all exact predecessors and refuses 
 });
 
 test("Perl inventory adds only two ordinary observations and reviewed-container relocation", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePerlClosureNativeBudgetSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		perlRelocatedPromotionHistoryPath, path
+		, beforePerlClosureNativeBudgetSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforePerlRelocatedPromotionSource(path, source));
 	const expected = await promotePerlRelocatedInventory(previous);
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
@@ -83,7 +91,11 @@ test("Perl promotion evidence binds four configurations per selection and does n
 	assert.match(evidence.find(item => item.id === "perl-relocated-container-hosted-installed").scope, /does not establish relocated scalar/u);
 	// This promotion predates the independently accepted reviewed Subtype rollout.
 	const path = "docs/consume/perl.md";
-	const consumer = beforePerlClosureNativeBudgetSource(path, await readFile(path, "utf8"));
+	const closureSource = await sourceAtFinHistoryRecord(
+		perlClosureNativeBudgetHistoryPath, path
+		, beforePerlClosureNativeBudgetSource
+	);
+	const consumer = beforePerlClosureNativeBudgetSource(path, closureSource);
 	assert.ok(consumer.includes("perl-refinements-20261009.md"));
 	const subtypeRow = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
 	const finRow = consumer.split("\n").find(line => line.startsWith("| `Fin n`"));

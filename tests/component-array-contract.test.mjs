@@ -23,6 +23,7 @@ import { componentRefinedCall } from "../src/build/component-refinements.mjs";
 import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
 import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/callback-compiler-identity-tests.mjs";
 import "./helpers/refinement-closure-source-history-tests.mjs";
 import "./helpers/nominal-fin-contract-tests.mjs";
@@ -164,7 +165,9 @@ test("Subtype component history preserves predecessors and rejects altered sourc
 	assert.deepEqual(history.updates.map(item => item.path), subtypeComponentChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforeNestedFinSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeNestedFinSource
+		);
 		assert.equal(sha256(reverseSubtypeComponentUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeSubtypeComponentSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeSubtypeComponentSource(update.path, source, update.currentSha256), source);
@@ -184,7 +187,9 @@ test("nested Fin history authenticates complete source transitions and stopping 
 	assert.deepEqual(history.updates.map(item => item.path), nestedFinChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforeRefinementClosureSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeRefinementClosureSource
+		);
 		assert.equal(sha256(reverseNestedFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNestedFinSource(update.path, source)), update.previousSha256);
 		const bytes = Buffer.from(source);

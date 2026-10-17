@@ -10,8 +10,9 @@ import test from "node:test";
 import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { beforeNominalPrimitiveSubtypeNativePromotionSource } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { beforeNominalSubtypePerlPromotionSource } from "./nominal-subtype-perl-promotion-history.mjs";
 import { nominalSubtypeNativeArchive, nominalSubtypeNativeProfiles, nominalSubtypeNativeReferences, promoteNominalSubtypeNative, nominalSubtypeNativeConversion, nominalSubtypeNativeLimit } from "./nominal-subtype-native-promotion.mjs";
+import { nominalSubtypeNativePromotionHistoryPath } from "./nominal-subtype-native-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "4d9424e6c1fa551d0c6802d39ee7c5d469ed8c23:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -76,7 +77,9 @@ test("nominal native promotion refuses missing originals and substituted scope o
 test("nominal native promotion adds four C/C++ field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeNativeReferences();
 	const proposed = await promoteNominalSubtypeNative(original, references), { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalSubtypePerlPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeNativePromotionHistoryPath, "docs/type-surface.v1.json"
+	));
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 476); assert.equal(proposed.evidence.length, 480);
 	assert.equal(original.observations.length, 573); assert.equal(proposed.observations.length, 575);

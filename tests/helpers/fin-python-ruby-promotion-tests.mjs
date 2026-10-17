@@ -4,21 +4,28 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { finPythonRubyPromotionReferences, finPythonRubyReceiptPath } from "./fin-python-ruby-promotion-references.mjs";
-import { beforeFinPythonRubyPromotionSource } from "./fin-python-ruby-promotion-source-history.mjs";
+import { beforeFinPythonRubyPromotionSource, finPythonRubyPromotionHistoryPath } from "./fin-python-ruby-promotion-source-history.mjs";
 import "./fin-python-ruby-promotion-source-history-tests.mjs";
 import "./fin-python-ruby-host-notes-source-history-tests.mjs";
 import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
-const previousSurface = async () => JSON.parse(beforeFinPythonRubyPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const promotedSurfaceSource = () => sourceAtFinHistoryRecord(
+	finPythonRubyPromotionHistoryPath, "docs/type-surface.v1.json"
+	, beforeFinNativeBatchPromotionSource
+);
+
+const previousSurface = async () => JSON.parse(beforeFinPythonRubyPromotionSource(
+	"docs/type-surface.v1.json", await promotedSurfaceSource()
+));
 const readPromotedSurface = async () => {
 	const result = await readTypeSurface();
-	result.document = JSON.parse(beforeFinNativeBatchPromotionSource("docs/type-surface.v1.json", JSON.stringify(result.document, null, 2) + "\n"));
+	result.document = JSON.parse(await promotedSurfaceSource());
 	return result;
 };
 
@@ -63,7 +70,11 @@ test("Python/Ruby promotion authenticates 18 reports with separate interpreter e
 		assert.ok(entry.files.some(file => file.path === finPythonRubyReceiptPath));
 		for(const execution of reference.executionFiles)
 			assert.ok(entry.files.some(file => file.path === execution.path && file.sha256 === execution.sha256), execution.path);
-		for(const file of entry.files) assert.equal(sha256(beforeFinNativeBatchPromotionSource(file.path, await readFile(file.path, "utf8"), file.sha256)), file.sha256, file.path);
+		for(const file of entry.files) assert.equal(sha256(
+			await sourceAtFinHistoryMilestone(
+				file.path, file.sha256, beforeFinNativeBatchPromotionSource
+			)
+		), file.sha256, file.path);
 		assert.ok(entry.scope.includes(reference.version));
 		assert.match(entry.scope, /consumer did not print its version/u);
 		assert.match(entry.scope, /host glibc and Lean version were not measured/u);

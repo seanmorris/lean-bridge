@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeInheritedRecordArchiveSource } from "./inherited-record-archive-source-history.mjs";
 import { beforeWitDispatchIntegrationSource, witDispatchIntegrationChangedPaths, witDispatchIntegrationHistoryPath, witDispatchIntegrationPredecessor, reverseWitDispatchIntegrationUpdate } from "./wit-dispatch-integration-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import { witDispatchSnapshot, witDispatchSources } from "./wit-fin-dispatch-evidence.mjs";
 
 test("WIT dispatch integration restores exact predecessors and refuses unknown source edits", async () => {
@@ -24,7 +25,10 @@ test("WIT dispatch integration restores exact predecessors and refuses unknown s
 	assert.deepEqual(record.updates.map(update => update.path), witDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeInheritedRecordArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeInheritedRecordArchiveSource
+		);
 		const restored = reverseWitDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforeWitDispatchIntegrationSource(update.path, source), restored);
@@ -41,17 +45,31 @@ test("WIT dispatch integration restores exact predecessors and refuses unknown s
 });
 
 test("WIT dispatch integration refreshes exactly 97 source pins and preserves every earlier claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeInheritedRecordArchiveSource(path, await readFile(path, "utf8"));
-	const document = JSON.parse(source), previous = JSON.parse(beforeWitDispatchIntegrationSource(path, source));
 	const record = JSON.parse(await readFile(witDispatchIntegrationHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const inventoryUpdate = updates.get(path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, inventoryUpdate.currentSha256
+		, beforeInheritedRecordArchiveSource
+	);
+	const document = JSON.parse(source);
+	const previous = JSON.parse(beforeWitDispatchIntegrationSource(path, source));
+	const milestoneSources = new Map([[path, source]]);
 	let pins = 0;
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeInheritedRecordArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			if(!milestoneSources.has(file.path)) milestoneSources.set(
+				file.path, await sourceAtFinHistoryMilestone(
+					file.path, update.currentSha256
+					, beforeInheritedRecordArchiveSource
+				)
+			);
+			assert.equal(sha256(milestoneSources.get(file.path))
+				, update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

@@ -13,6 +13,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlRelocatedPromotionSource } from "./perl-relocated-promotion-source-history.mjs";
 import { beforeCppFinDispatchIntegrationSource, cppFinDispatchIntegrationChangedPaths, cppFinDispatchIntegrationHistoryPath, cppFinDispatchIntegrationPredecessor, reverseCppFinDispatchIntegrationUpdate } from "./cpp-fin-dispatch-integration-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("C++ Fin dispatch integration history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(cppFinDispatchIntegrationHistoryPath));
@@ -21,7 +22,11 @@ test("C++ Fin dispatch integration history authenticates exact predecessors and 
 	assert.deepEqual(record.updates.map(update => update.path), cppFinDispatchIntegrationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePerlRelocatedPromotionSource(update.path, await readFile(update.path, "utf8")), previous = reverseCppFinDispatchIntegrationUpdate(source, update);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforePerlRelocatedPromotionSource
+		);
+		const previous = reverseCppFinDispatchIntegrationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeCppFinDispatchIntegrationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,14 +42,21 @@ test("C++ Fin dispatch integration history authenticates exact predecessors and 
 });
 
 test("C++ Fin dispatch integration refreshes source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePerlRelocatedPromotionSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(source), previous = JSON.parse(beforeCppFinDispatchIntegrationSource(path, source));
 	const history = JSON.parse(await readFile(cppFinDispatchIntegrationHistoryPath));
+	const updates = new Map(history.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const inventoryUpdate = updates.get(path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, inventoryUpdate.currentSha256
+		, beforePerlRelocatedPromotionSource
+	);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeCppFinDispatchIntegrationSource(path, source));
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
-		const update = history.updates.find(update => update.path === file.path && update.previousSha256 === file.sha256);
-		if(update)
+		const update = updates.get(file.path);
+		if(update && update.previousSha256 === file.sha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
 	assert.equal(pins, 2); assert.deepEqual(current, previous);

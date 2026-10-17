@@ -16,6 +16,7 @@ import { beforeRubyGdbCiSource } from "./ruby-gdb-ci-source-history.mjs";
 import { assertInheritedRecordArchive } from "./inherited-record-evidence.mjs";
 import { beforeInheritedRecordPromotionSource, inheritedRecordPromotionChangedPaths, inheritedRecordPromotionHistoryPath, inheritedRecordPromotionPredecessor, reverseInheritedRecordPromotionUpdate } from "./inherited-record-promotion-source-history.mjs";
 import { inheritedRecordEvidenceIds, inheritedRecordPromotedCells, inheritedRecordPromotedEvidence, inheritedRecordReceiptPath, reconcileInheritedRecordObservations } from "./inherited-record-promotion.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("inherited record promotion authenticates exact predecessors and rejects unrecorded source edits", async () => {
 	const history = JSON.parse(await readFile(inheritedRecordPromotionHistoryPath, "utf8"));
@@ -24,7 +25,9 @@ test("inherited record promotion authenticates exact predecessors and rejects un
 	assert.deepEqual(history.updates.map(update => update.path), inheritedRecordPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforeRubyGdbCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseInheritedRecordPromotionUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			inheritedRecordPromotionHistoryPath, update.path, beforeRubyGdbCiSource
+		), previous = reverseInheritedRecordPromotionUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeInheritedRecordPromotionSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -40,10 +43,14 @@ test("inherited record promotion authenticates exact predecessors and rejects un
 });
 
 test("inherited record reconciliation changes exactly fourteen scopes without changing stage states", async () => {
-	const { document: currentDocument, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeRubyGdbCiSource("docs/type-surface.v1.json", JSON.stringify(currentDocument, null, 2) + "\n"));
+	const contracts = await readTypeSurface();
+	delete contracts.document;
 	const path = "docs/type-surface.v1.json";
-	const previous = JSON.parse(beforeInheritedRecordPromotionSource(path, await readFile(path, "utf8")));
+	const source = await sourceAtFinHistoryRecord(
+		inheritedRecordPromotionHistoryPath, path, beforeRubyGdbCiSource
+	);
+	const document = JSON.parse(source);
+	const previous = JSON.parse(beforeInheritedRecordPromotionSource(path, source));
 	assert.deepEqual(document.observations, reconcileInheritedRecordObservations(previous.observations));
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts);
 	const changed = [];
@@ -85,7 +92,9 @@ test("inherited record reconciliation changes exactly fourteen scopes without ch
 	assert.deepEqual(document.evidence.slice(0, previous.evidence.length), previous.evidence);
 	const evidence = await inheritedRecordPromotedEvidence();
 	for(const entry of evidence) for(const file of entry.files)
-		file.sha256 = sha256(beforeRubyGdbCiSource(file.path, await readFile(file.path, "utf8")));
+		file.sha256 = sha256(await sourceAtFinHistoryMilestone(
+			file.path, file.sha256, beforeRubyGdbCiSource
+		));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length), evidence);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);
@@ -119,7 +128,11 @@ test("inherited record evidence preserves original producer identities, selector
 });
 
 test("inherited record promotion rejects duplicate, redirected, broadened or unpassed baseline observations", async () => {
-	const path = "docs/type-surface.v1.json", previous = JSON.parse(beforeInheritedRecordPromotionSource(path, await readFile(path, "utf8")));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		inheritedRecordPromotionHistoryPath, path, beforeRubyGdbCiSource
+	);
+	const previous = JSON.parse(beforeInheritedRecordPromotionSource(path, source));
 	for(const mutate of [
 		values => { values.find(item => item.id === "native-c-copied").shapes.push("fin"); }
 		, values => { values.find(item => item.id === "native-c-copied").profiles.push("ruby"); }

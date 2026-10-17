@@ -11,8 +11,8 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeRubyProducer } from "./nominal-primitive-subtype-ruby-provenance.mjs";
-import { nominalPrimitiveSubtypeRubyPromotionPredecessor } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionPins, beforeNominalPrimitiveSubtypeRustPromotionSource } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { nominalPrimitiveSubtypeRubyPromotionHistoryPath, nominalPrimitiveSubtypeRubyPromotionPredecessor } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import {
 	nominalPrimitiveSubtypeRubyConversion
 	, nominalPrimitiveSubtypeRubyField
@@ -21,6 +21,7 @@ import {
 	, nominalPrimitiveSubtypeRubyReferences
 	, promoteNominalPrimitiveSubtypeRuby
 } from "./nominal-primitive-subtype-ruby-promotion.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeRubyPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -102,7 +103,10 @@ test("primitive-base Ruby promotion supplements six existing Ruby cells and pres
 	const original = predecessor(), references = await nominalPrimitiveSubtypeRubyReferences();
 	const proposed = beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeRuby(original, references));
 	const { document: current, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalPrimitiveSubtypeRustPromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeRubyPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4); assert.equal(proposed.observations.length, original.observations.length);

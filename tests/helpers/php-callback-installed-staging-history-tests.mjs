@@ -13,6 +13,7 @@ import { assertPhpCallbackInstalledHistory, beforePhpCallbackInstalledStaging
 	, phpCallbackInstalledChangedPaths, phpCallbackInstalledHistoryPath
 	, phpCallbackInstalledHistorySha256, readPhpCallbackInstalledHistory
 	, reversePhpCallbackInstalledUpdate } from "./php-callback-installed-staging-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("PHP installed callback history rejects forged chronology, scope and schemas", async t => {
 	const history = readPhpCallbackInstalledHistory(), mutations = [
@@ -52,8 +53,9 @@ test("PHP installed callback staging reverses exact sources and rejects drift", 
 	let rejected = 0;
 	for(const update of history.updates)
 	{
-		const current = Buffer.from(beforePhpCallbackAcceptance(update.path
-			, await readFile(update.path), update.currentSha256));
+		const current = Buffer.from(await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforePhpCallbackAcceptance
+		));
 		const previous = beforePhpCallbackInstalledStaging(update.path, current);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(previous), update.previousSha256, update.path);

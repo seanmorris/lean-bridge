@@ -19,6 +19,8 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { beforeCheckedJavaScriptDispositionPins } from "./checked-javascript-disposition-history.mjs";
+import { beforeCiContractRepairPins } from "./ci-contract-repair-source-history.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "7c9fbfee9c31b60dc7433ca6945be62e39810754:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const beforeHistoryTransition = async (historyPath, path) => {
@@ -100,7 +102,13 @@ test("nominal Perl promotion refuses missing originals and substituted scope or 
 
 test("nominal Perl promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePerlReferences();
-	const proposed = beforeNominalSubtypeJvmPromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalSubtypePerl(original, references)));
+	const proposed = beforeNominalSubtypeJvmPromotionPins(
+		beforePrimitiveSubtypeRustPromotionPins(beforeCiContractRepairPins(
+			beforeCheckedJavaScriptDispositionPins(
+				await promoteNominalSubtypePerl(original, references)
+			)
+		))
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(await beforeHistoryTransition(nominalSubtypePythonPromotionHistoryPath, "docs/type-surface.v1.json"));
 	assert.ok(current.evidence.length >= document.evidence.length);

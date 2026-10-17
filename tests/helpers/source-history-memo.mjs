@@ -3,6 +3,7 @@
  *
  * @file
  */
+import assert from "node:assert/strict";
 
 /**
  * Memoize a synchronous source normalizer by full text, path and stopping hash.
@@ -45,4 +46,56 @@ export const memoizeSourceHistory = (normalize, { maxEntries = 1024, maxBytes = 
 		entries.set(key, { source, expected, result, bytes }); retained += bytes;
 		return result;
 	};
+};
+
+const sha256Pattern = /^[0-9a-f]{64}$/u;
+
+/**
+ * Select bounded stopping hashes from an exact, singly linked source history.
+ * Conflicting or cyclic evidence is rejected rather than choosing a branch.
+ *
+ * @param transitions - Authenticated current-to-previous digest transitions.
+ * @param current - Digest of the source that will be normalized.
+ * @param expected - Optional digest at which normalization should stop.
+ * @param chunkSize - Maximum number of transitions in one normalization call.
+ */
+export const exactSourceHistoryCheckpoints = (
+	transitions, current, expected, chunkSize = 4
+) => {
+	if(!Array.isArray(transitions))
+		throw new TypeError("Source history transitions must be an array");
+	if(!sha256Pattern.test(current)
+		|| (expected !== undefined && !sha256Pattern.test(expected)))
+		throw new TypeError("Source history digests must be lowercase SHA-256 values");
+	if(!Number.isSafeInteger(chunkSize) || chunkSize < 1)
+		throw new TypeError("Source history chunk size must be a positive safe integer");
+	const edges = new Map();
+	for(const transition of transitions)
+	{
+		if(!transition || !sha256Pattern.test(transition.currentSha256)
+			|| !sha256Pattern.test(transition.previousSha256))
+			throw new TypeError("Source history transitions require exact SHA-256 values");
+		assert.notEqual(transition.currentSha256, transition.previousSha256
+			, "Source history transitions must change the digest");
+		const previous = edges.get(transition.currentSha256);
+		const consistent = previous === undefined
+			|| previous === transition.previousSha256;
+		assert.ok(consistent
+			, `Conflicting source history transition for ${transition.currentSha256}`);
+		edges.set(transition.currentSha256, transition.previousSha256);
+	}
+	const chain = [], seen = new Set();
+	let digest = current;
+	while(digest !== expected && edges.has(digest))
+	{
+		assert.ok(!seen.has(digest), `Cyclic source history transition at ${digest}`);
+		seen.add(digest); digest = edges.get(digest); chain.push(digest);
+	}
+	const checkpoints = chain.filter((_, index) =>
+		(index + 1) % chunkSize === 0 || index === chain.length - 1);
+	return Object.freeze({
+		checkpoints: Object.freeze(checkpoints)
+		, reachedExpected: expected !== undefined && digest === expected
+		, terminalSha256: digest
+	});
 };

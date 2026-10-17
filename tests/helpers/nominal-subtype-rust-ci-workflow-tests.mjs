@@ -7,11 +7,12 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeDotnetCiSource } from "./nominal-subtype-dotnet-ci-history.mjs";
 import { nominalSubtypeRustCiBlock, enableNominalSubtypeRustWorkflow, disableNominalSubtypeRustWorkflow, assertNominalSubtypeRustWorkflow } from "./nominal-subtype-rust-ci-workflow.mjs";
 import { assertNominalSubtypeRubyWorkflow } from "./nominal-subtype-ruby-ci-workflow.mjs";
 import { assertNominalSubtypePythonWorkflow } from "./nominal-subtype-python-ci-workflow.mjs";
 import { assertStructuralSubtypeWorkflow } from "./structural-subtype-ci-workflow.mjs";
+import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const predecessor = "d2d819205189ceaaf80d7e2cc80901111c778de2";
@@ -20,7 +21,9 @@ test("nominal Rust CI preserves older jobs and requires four complete pinned-too
 	const source = await readFile(path, "utf8");
 	assertNominalSubtypeRustWorkflow(source);
 	const previous = execFileSync("git", ["show", `${predecessor}:${path}`], { encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
-	const checkpoint = beforeNominalSubtypeDotnetCiSource(path, source);
+	const checkpoint = sourceAtHistoryMilestone(
+		nominalSubtypeRustPromotionHistoryPath, path
+	);
 	assert.equal(disableNominalSubtypeRustWorkflow(checkpoint), previous);
 	assert.equal(enableNominalSubtypeRustWorkflow(previous), checkpoint);
 	assertNominalSubtypePythonWorkflow(source);

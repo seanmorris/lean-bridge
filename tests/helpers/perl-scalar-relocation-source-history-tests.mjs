@@ -10,9 +10,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeJvmDispatchIntegrationSource } from "./jvm-dispatch-integration-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlScalarRelocationSource, perlScalarRelocationChangedPaths, perlScalarRelocationHistoryPath, perlScalarRelocationPredecessor, reversePerlScalarRelocationUpdate } from "./perl-scalar-relocation-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("Perl scalar relocation history authenticates exact predecessors and refuses unknown edits", async () => {
 	const record = JSON.parse(await readFile(perlScalarRelocationHistoryPath));
@@ -21,7 +21,8 @@ test("Perl scalar relocation history authenticates exact predecessors and refuse
 	assert.deepEqual(record.updates.map(update => update.path), perlScalarRelocationChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeJvmDispatchIntegrationSource(update.path, await readFile(update.path, "utf8")), previous = reversePerlScalarRelocationUpdate(source, update);
+		const source = sourceAtHistoryMilestone(perlScalarRelocationHistoryPath, update.path);
+		const previous = reversePerlScalarRelocationUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlScalarRelocationSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +38,9 @@ test("Perl scalar relocation history authenticates exact predecessors and refuse
 });
 
 test("Perl scalar relocation preserves the inventory without refreshing pins or promoting support", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeJvmDispatchIntegrationSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const text = execFileSync("git", ["show", `${perlScalarRelocationPredecessor}:${path}`]
+		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	assert.equal(sha256(text), "61a1e5cc72f8736bf7f26a2a4b6d729678956419b951e4013a1d3868269ac833", "the 0bc379f inventory is unchanged");
 	const current = JSON.parse(text), previous = JSON.parse(beforePerlScalarRelocationSource(path, text));
 	const record = JSON.parse(await readFile(perlScalarRelocationHistoryPath));
@@ -48,7 +51,9 @@ test("Perl scalar relocation preserves the inventory without refreshing pins or 
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeJvmDispatchIntegrationSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(sourceAtHistoryMilestone(
+				perlScalarRelocationHistoryPath, file.path
+			)), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

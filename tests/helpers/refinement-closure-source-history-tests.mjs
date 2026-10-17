@@ -18,7 +18,10 @@ test("refinement closure repair authenticates predecessors and rejects unrelated
 	assert.deepEqual(record.updates.map(item => item.path), refinementClosureChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNominalFinSource(update.path, await readFile(update.path, "utf8"));
+		const current = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = beforeNominalFinSource(
+			update.path, current, update.currentSha256);
 		assert.equal(sha256(reverseRefinementClosureUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeRefinementClosureSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);

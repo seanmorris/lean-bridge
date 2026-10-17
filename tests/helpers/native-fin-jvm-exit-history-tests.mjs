@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeFinJvmExitSource, nativeFinJvmExitChangedPaths, nativeFinJvmExitHistoryPath, nativeFinJvmExitPredecessor, reverseNativeFinJvmExitUpdate } from "./native-fin-jvm-exit-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("scalar JVM exit repair preserves exact historical producers and support claims", async () => {
 	const record = JSON.parse(await readFile(nativeFinJvmExitHistoryPath));
@@ -46,7 +47,9 @@ test("scalar JVM exit repair preserves exact historical producers and support cl
 	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 500); assert.equal(inventory.observations.length, 585);
 	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	const currentInventory = JSON.parse(beforeNativeFinJvmExitSource(path, await readFile(path, "utf8"), checkpoint));
+	const currentInventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		path, checkpoint, beforeNativeFinJvmExitSource
+	));
 	const pin = currentInventory.evidence.find(entry => entry.id === "jvm-fin-installed").files
 		.find(file => file.path === "tests/jvm-fin.test.mjs");
 	assert.equal(pin.sha256, sha256(await readFile(pin.path)));

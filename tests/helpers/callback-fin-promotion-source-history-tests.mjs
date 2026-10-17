@@ -8,7 +8,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmReviewedFinSource } from "./php-wasm-reviewed-fin-source-history.mjs";
 import { beforeCallbackFinPromotionSource, callbackFinPromotionChangedPaths, callbackFinPromotionHistoryPath, reverseCallbackFinPromotionUpdate } from "./callback-fin-promotion-source-history.mjs";
 
 test("Callback Fin promotion authenticates each exact source predecessor", async () => {
@@ -19,7 +18,8 @@ test("Callback Fin promotion authenticates each exact source predecessor", async
 	assert.deepEqual(record.updates.map(update => update.path), callbackFinPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpWasmReviewedFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = beforeFinRefinementSource(update.path
+			, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reverseCallbackFinPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCallbackFinPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCallbackFinPromotionSource(update.path, source, update.currentSha256), source);
@@ -32,16 +32,23 @@ test("Callback Fin promotion authenticates each exact source predecessor", async
 });
 
 test("callback promotion preserves every earlier evidence claim except authenticated source pins", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePhpWasmReviewedFinSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(source), previous = JSON.parse(beforeCallbackFinPromotionSource(path, source));
 	const record = JSON.parse(await readFile(callbackFinPromotionHistoryPath, "utf8"));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const surfaceUpdate = updates.get(path);
+	assert.ok(surfaceUpdate);
+	const source = beforeFinRefinementSource(path
+		, await readFile(path, "utf8"), surfaceUpdate.currentSha256);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeCallbackFinPromotionSource(path, source));
 	let pins = 0;
 	for(const entry of previous.evidence) for(const file of entry.files)
 	{
 		const update = updates.get(file.path);
 		if(!update || file.sha256 !== update.previousSha256) continue;
-		assert.equal(sha256(beforePhpWasmReviewedFinSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+		assert.equal(sha256(beforeFinRefinementSource(file.path
+			, await readFile(file.path, "utf8"), update.currentSha256))
+		, update.currentSha256);
 		file.sha256 = update.currentSha256; pins++;
 	}
 	assert.ok(pins > 0);

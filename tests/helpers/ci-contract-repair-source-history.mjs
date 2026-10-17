@@ -75,3 +75,19 @@ export const beforeCiContractRepairSource = (path, source, expected) => {
 	return update?.currentSha256 === digest
 		? reverseCiContractRepairUpdate(source, update) : source;
 };
+
+/**
+ * Restore only source pins refreshed by this exact repair transition.
+ *
+ * @param inventory - Earlier inventory recomputed with current source hashes.
+ */
+export const beforeCiContractRepairPins = inventory => {
+	const previous = structuredClone(inventory);
+	for(const entry of previous.evidence) for(const file of entry.files)
+	{
+		const update = history.pinUpdates.find(item => item.path === file.path);
+		if(update?.currentSha256 === file.sha256)
+			file.sha256 = update.previousSha256;
+	}
+	return previous;
+};

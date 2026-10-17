@@ -13,6 +13,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforePerlScalarPromotionSource } from "./helpers/perl-scalar-promotion-source-history.mjs";
 import { beforeWasmCiArraySource, wasmCiArrayChangedPaths, wasmCiArrayHistoryPath, wasmCiArrayPredecessor, reverseWasmCiArrayUpdate } from "./helpers/wasm-ci-array-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Wasm CI and Array archive history authenticates exact predecessors and rejects unrecorded edits", async () => {
 	const record = JSON.parse(await readFile(wasmCiArrayHistoryPath));
@@ -21,7 +22,9 @@ test("Wasm CI and Array archive history authenticates exact predecessors and rej
 	assert.deepEqual(record.updates.map(update => update.path), wasmCiArrayChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePerlScalarPromotionSource(update.path, await readFile(update.path, "utf8")), previous = reverseWasmCiArrayUpdate(source, update);
+		const source = await sourceAtFinHistoryRecord(
+			wasmCiArrayHistoryPath, update.path, beforePerlScalarPromotionSource
+		), previous = reverseWasmCiArrayUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeWasmCiArraySource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -37,7 +40,10 @@ test("Wasm CI and Array archive history authenticates exact predecessors and rej
 });
 
 test("Wasm CI and Array archive refresh source pins without changing any observation or support claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforePerlScalarPromotionSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		wasmCiArrayHistoryPath, path, beforePerlScalarPromotionSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmCiArraySource(path, source));
 	const history = JSON.parse(await readFile(wasmCiArrayHistoryPath));
 	let pins = 0;

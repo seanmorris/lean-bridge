@@ -12,6 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeConsumerPartitionSource, nativeConsumerPartitionChangedPaths, nativeConsumerPartitionHistoryPath, nativeConsumerPartitionPredecessor, reverseNativeConsumerPartitionUpdate } from "./native-consumer-partition-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("native CI partition history authenticates every exact predecessor and preserves all support claims", async t => {
 	const record = JSON.parse(await readFile(nativeConsumerPartitionHistoryPath));
@@ -21,7 +22,9 @@ test("native CI partition history authenticates every exact predecessor and pres
 	const original = path => execFileSync("git", ["show", `${nativeConsumerPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const source = beforeNativeConsumerPartitionSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const source = sourceAtHistoryMilestone(
+			nativeConsumerPartitionHistoryPath, update.path
+		);
 		const previous = reverseNativeConsumerPartitionUpdate(source, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNativeConsumerPartitionSource(update.path, source), previous);
@@ -50,7 +53,10 @@ test("native CI partition history authenticates every exact predecessor and pres
 	}
 	assert.ok(pins > 0);
 	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	assert.deepEqual(JSON.parse(beforeNativeConsumerPartitionSource(path, await readFile(path, "utf8"), checkpoint)), expected);
+	assert.deepEqual(JSON.parse(beforeNativeConsumerPartitionSource(
+		path, sourceAtHistoryMilestone(nativeConsumerPartitionHistoryPath, path)
+		, checkpoint
+	)), expected);
 	for(const evidence of expected.evidence) for(const file of evidence.files)
 		assert.equal(sha256(beforeFinRefinementSource(file.path, await readFile(file.path), file.sha256)), file.sha256, file.path);
 	t.diagnostic(`${pins} source pins refreshed; every support claim and observation unchanged`);

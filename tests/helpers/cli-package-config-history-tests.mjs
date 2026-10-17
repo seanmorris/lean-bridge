@@ -8,9 +8,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { authenticatedCliPackageConfigs, cliPackageConfigPath, retargetCliInventory, selectCliPackageConfig } from "./cli-package-config-history.mjs";
-import { beforeNpmFinDiagnosticsSource } from "./npm-fin-diagnostics-source-history.mjs";
-import { beforeFinDistributionSource } from "./fin-distribution-source-history.mjs";
-import { beforeCliImportRepairSource } from "./cli-import-repair-history.mjs";
+import { beforeNpmFinDiagnosticsSource, npmFinDiagnosticsHistoryPath } from "./npm-fin-diagnostics-source-history.mjs";
+import { beforeFinDistributionSource, finDistributionHistoryPath } from "./fin-distribution-source-history.mjs";
+import { beforeCliImportRepairSource, cliImportRepairHistoryPath } from "./cli-import-repair-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const inventory = config => {
 	const files = [...config.files, "README.md", "package.json"].map(path => ({ path }));
@@ -22,18 +23,42 @@ test("CLI package configurations come only from the current source and its recor
 	const candidates = await authenticatedCliPackageConfigs();
 	assert.equal(candidates[0].sha256, sha256(current));
 	assert.equal(new Set(candidates.map(item => item.sha256)).size, candidates.length);
-	const previous = candidates.find(item => item.sha256 === sha256(beforeCliImportRepairSource(cliPackageConfigPath, current)));
+	const sourceAt = async (historyPath, reader) => {
+		const history = JSON.parse(await readFile(historyPath, "utf8"));
+		const update = history.updates.find(
+			item => item.path === cliPackageConfigPath
+		);
+		return sourceAtFinHistoryMilestone(
+			cliPackageConfigPath, update.currentSha256, reader
+		);
+	};
+	const cliImport = await sourceAt(
+		cliImportRepairHistoryPath, beforeCliImportRepairSource
+	);
+	const previous = candidates.find(item => item.sha256 === sha256(
+		beforeCliImportRepairSource(cliPackageConfigPath, cliImport)
+	));
 	assert.ok(previous);
 	assert.ok(!previous.config.files.includes("src/build/component-refinement-mirrors.mjs"));
 	assert.ok(candidates[0].config.files.includes("src/build/component-refinement-mirrors.mjs"));
 	// Registering the Fin documentation modules reconstructs its predecessor exactly.
 	const finModule = "src/backends/native/fin-refinements.mjs";
-	const beforeFin = candidates.find(item => item.sha256 === sha256(beforeFinDistributionSource(cliPackageConfigPath, current)));
+	const distribution = await sourceAt(
+		finDistributionHistoryPath, beforeFinDistributionSource
+	);
+	const beforeFin = candidates.find(item => item.sha256 === sha256(
+		beforeFinDistributionSource(cliPackageConfigPath, distribution)
+	));
 	assert.ok(beforeFin);
 	assert.ok(candidates[0].config.files.includes(finModule));
 	assert.ok(!beforeFin.config.files.includes(finModule));
 	// The #1419 module transition reconstructs its predecessor exactly.
-	const beforeDiagnostics = candidates.find(item => item.sha256 === sha256(beforeNpmFinDiagnosticsSource(cliPackageConfigPath, current)));
+	const diagnostics = await sourceAt(
+		npmFinDiagnosticsHistoryPath, beforeNpmFinDiagnosticsSource
+	);
+	const beforeDiagnostics = candidates.find(item => item.sha256 === sha256(
+		beforeNpmFinDiagnosticsSource(cliPackageConfigPath, diagnostics)
+	));
 	assert.ok(beforeDiagnostics);
 	assert.ok(beforeFin.config.files.includes("src/build/component-engine-failure.mjs"));
 	assert.ok(!beforeDiagnostics.config.files.includes("src/build/component-engine-failure.mjs"));

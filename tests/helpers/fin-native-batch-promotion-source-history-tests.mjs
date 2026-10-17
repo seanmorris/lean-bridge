@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePhpShardSource } from "./php-shard-source-history.mjs";
 import { beforeFinNativeBatchPromotionSource, finNativeBatchPromotionChangedPaths, finNativeBatchPromotionHistoryPath, reverseFinNativeBatchPromotionUpdate } from "./fin-native-batch-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Rust/.NET structural and WIT field promotion authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(finNativeBatchPromotionHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Rust/.NET structural and WIT field promotion authenticates each exact sour
 	assert.deepEqual(record.updates.map(update => update.path), finNativeBatchPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpShardSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforePhpShardSource
+		);
 		assert.equal(sha256(reverseFinNativeBatchPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeFinNativeBatchPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeFinNativeBatchPromotionSource(update.path, source, update.currentSha256), source);

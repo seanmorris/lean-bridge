@@ -14,6 +14,7 @@ import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { beforeReviewedFinRefusalCiSource } from "./helpers/reviewed-fin-refusal-ci-source-history.mjs";
 import { beforeReviewedFinRefusalSource, reviewedFinRefusalChangedPaths, reviewedFinRefusalHistoryPath, reviewedFinRefusalPredecessor, reverseReviewedFinRefusalUpdate } from "./helpers/reviewed-fin-refusal-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/reviewed-fin-native-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-wasm-refusal-evidence-tests.mjs";
 import "./helpers/reviewed-fin-refusal-ci-tests.mjs";
@@ -26,7 +27,11 @@ test("reviewed Fin refusal history authenticates exact predecessors and refuses 
 	assert.deepEqual(record.updates.map(update => update.path), reviewedFinRefusalChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedFinRefusalCiSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedFinRefusalUpdate(source, update);
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeReviewedFinRefusalCiSource
+		);
+		const previous = reverseReviewedFinRefusalUpdate(source, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeReviewedFinRefusalSource(update.path, source), previous);
 		assert.equal(beforeFinRefinementSource(update.path, source, update.previousSha256), previous);
@@ -42,17 +47,31 @@ test("reviewed Fin refusal history authenticates exact predecessors and refuses 
 });
 
 test("reviewed Fin refusal integration changes only exact inventory source pins", async () => {
-	const path = "docs/type-surface.v1.json", text = beforeReviewedFinRefusalCiSource(path, await readFile(path, "utf8"));
-	const current = JSON.parse(text), previous = JSON.parse(beforeReviewedFinRefusalSource(path, text));
 	const record = JSON.parse(await readFile(reviewedFinRefusalHistoryPath));
 	const updates = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json";
+	const inventoryUpdate = updates.get(path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, inventoryUpdate.currentSha256
+		, beforeReviewedFinRefusalCiSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeReviewedFinRefusalSource(path, text));
+	const milestoneSources = new Map([[path, text]]);
 	let pins = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeReviewedFinRefusalCiSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			if(!milestoneSources.has(file.path)) milestoneSources.set(
+				file.path, await sourceAtFinHistoryMilestone(
+					file.path, update.currentSha256
+					, beforeReviewedFinRefusalCiSource
+				)
+			);
+			assert.equal(sha256(milestoneSources.get(file.path))
+				, update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

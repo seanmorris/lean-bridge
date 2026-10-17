@@ -15,6 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiation-archive-source-history.mjs";
 import { beforeBrowserGenericPromotionSource, browserGenericPromotionChangedPaths, browserGenericPromotionHistoryPath, browserGenericPromotionPredecessor, reverseBrowserGenericPromotionUpdate } from "./browser-generic-promotion-source-history.mjs";
 import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("browser generic promotion authenticates every source predecessor and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(browserGenericPromotionHistoryPath, "utf8"));
@@ -22,7 +23,9 @@ test("browser generic promotion authenticates every source predecessor and rejec
 	assert.deepEqual(record.updates.map(update => update.path), browserGenericPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedInstantiationArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryRecord(
+			browserGenericPromotionHistoryPath, update.path, beforeReviewedInstantiationArchiveSource
+		);
 		const restored = reverseBrowserGenericPromotionUpdate(source, update);
 		assert.equal(sha256(restored), update.previousSha256);
 		assert.equal(beforeBrowserGenericPromotionSource(update.path, source), restored);
@@ -37,7 +40,9 @@ test("browser generic promotion authenticates every source predecessor and rejec
 });
 
 test("browser generic promotion changes exactly six ordinary signature cells and no earlier claim", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeReviewedInstantiationArchiveSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtFinHistoryRecord(
+			browserGenericPromotionHistoryPath, path, beforeReviewedInstantiationArchiveSource
+	);
 	const previous = JSON.parse(beforeBrowserGenericPromotionSource(path, source));
 	const { document: live, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(source);
@@ -50,7 +55,9 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 	assert.ok(evidence.scope.endsWith(browserGenericCommandQualification));
 	evidence.scope = evidence.scope.slice(0, -browserGenericCommandQualification.length);
 	for(const file of evidence.files)
-		file.sha256 = sha256(beforeReviewedInstantiationArchiveSource(file.path, await readFile(file.path, "utf8")));
+		file.sha256 = sha256(await sourceAtFinHistoryRecord(
+			browserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource
+		));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length), [evidence]);
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts);
 	assert.equal(before.length, after.length);
@@ -80,7 +87,9 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 		const update = updates.get(file.path);
 		if(update && file.sha256 === update.previousSha256)
 		{
-			assert.equal(sha256(beforeReviewedInstantiationArchiveSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAtFinHistoryRecord(
+			browserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource
+			)), update.currentSha256);
 			file.sha256 = update.currentSha256; pins++;
 		}
 	}

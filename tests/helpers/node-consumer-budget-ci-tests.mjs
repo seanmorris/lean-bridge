@@ -4,10 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNodeConsumerBudgetSource } from "./node-consumer-budget-source-history.mjs";
-import { beforeScalarFinSourceEntryCiSource } from "./scalar-fin-source-entry-ci-source-history.mjs";
+import { beforeNodeConsumerBudgetSource, nodeConsumerBudgetHistoryPath } from "./node-consumer-budget-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const path = ".github/workflows/consumer-matrix.yml";
 const oldBudget = "    # The full type corpus plus installed multi-profile/CLI acceptance exceeds\n    # two hours on cold runners. Keep the final registry/browser gate enabled.\n    timeout-minutes: 180\n";
@@ -37,12 +36,13 @@ const validate = (current, previous) => {
 };
 
 test("Node consumers retain every cold-run acceptance gate with a 330-minute budget", async () => {
-	const current = beforeScalarFinSourceEntryCiSource(path, await readFile(path, "utf8"));
+	const current = sourceAtHistoryMilestone(nodeConsumerBudgetHistoryPath, path);
 	validate(current, beforeNodeConsumerBudgetSource(path, current));
 });
 
 test("Node budget guards reject shorter or unbounded runs, lost gates and changes to other jobs", async () => {
-	const current = beforeScalarFinSourceEntryCiSource(path, await readFile(path, "utf8")), previous = beforeNodeConsumerBudgetSource(path, current);
+	const current = sourceAtHistoryMilestone(nodeConsumerBudgetHistoryPath, path);
+	const previous = beforeNodeConsumerBudgetSource(path, current);
 	const changedJob = update => current.replace(nodeJob(current), update(nodeJob(current)));
 	const mutations = [
 		changedJob(job => job.replace("timeout-minutes: 330", "timeout-minutes: 180"))

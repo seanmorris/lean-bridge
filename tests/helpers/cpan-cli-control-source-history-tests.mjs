@@ -31,6 +31,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeCpanCliControlSource, cpanCliControlChangedPaths
 	, cpanCliControlHistoryPath, reverseCpanCliControlUpdate } from "./cpan-cli-control-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("CPAN CLI control history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(cpanCliControlHistoryPath, "utf8"));
@@ -38,7 +39,9 @@ test("CPAN CLI control history authenticates exact predecessors and rejects unkn
 	assert.deepEqual(record.updates.map(item => item.path), cpanCliControlChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePythonFinSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforePythonFinSource
+		);
 		assert.equal(sha256(reverseCpanCliControlUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeCpanCliControlSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeCpanCliControlSource(update.path, source, update.currentSha256), source);
@@ -51,8 +54,14 @@ test("CPAN CLI control history authenticates exact predecessors and rejects unkn
 });
 
 test("CPAN CLI control repair changes only evidence source pins, not support or archives", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforePythonFinSource(path, text)), previous = JSON.parse(beforeCpanCliControlSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(cpanCliControlHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforePythonFinSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeCpanCliControlSource(path, text));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
 	let refreshed = 0;
@@ -65,9 +74,11 @@ test("CPAN CLI control repair changes only evidence source pins, not support or 
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforePythonFinSource
+			);
 			assert.equal(file.sha256, sha256(beforeCpanCliControlSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforePythonFinSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

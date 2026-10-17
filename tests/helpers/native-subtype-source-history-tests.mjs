@@ -18,6 +18,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeNativeSubtypeSource, nativeSubtypeChangedPaths
 	, nativeSubtypeHistoryPath, reverseNativeSubtypeUpdate } from "./native-subtype-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Native Subtype history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(nativeSubtypeHistoryPath, "utf8"));
@@ -25,7 +26,9 @@ test("Native Subtype history authenticates exact predecessors and rejects unknow
 	assert.deepEqual(record.updates.map(item => item.path), nativeSubtypeChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeRefinementAuditSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeRefinementAuditSource
+		);
 		assert.equal(sha256(reverseNativeSubtypeUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeSubtypeSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeSubtypeSource(update.path, source, update.currentSha256), source);
@@ -51,8 +54,14 @@ const acceptedRevision = "8ff62bf224300418a4748dd3209bb607e963f140";
 
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Native Subtype evidence adds one receipt and one Subtype cell per host group, and changes no other claim", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforeRefinementAuditSource(path, text)), previous = JSON.parse(beforeNativeSubtypeSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(nativeSubtypeHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeRefinementAuditSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeNativeSubtypeSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), groups.map(([key]) => `native-subtype-${key}-installed`));
 	const cells = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -89,9 +98,11 @@ test("Native Subtype evidence adds one receipt and one Subtype cell per host gro
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforeRefinementAuditSource
+			);
 			assert.equal(file.sha256, sha256(beforeNativeSubtypeSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforeRefinementAuditSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

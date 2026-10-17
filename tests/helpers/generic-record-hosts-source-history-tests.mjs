@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeGenericRecordSpecializationSource } from "./generic-record-specialization-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeGenericRecordHostsSource, genericRecordHostsChangedPaths, genericRecordHostsHistoryPath, reverseGenericRecordHostsUpdate } from "./generic-record-hosts-source-history.mjs";
+import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("native generic host gates authenticate each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(genericRecordHostsHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("native generic host gates authenticate each exact source predecessor", asy
 	assert.deepEqual(record.updates.map(update => update.path), genericRecordHostsChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeGenericRecordSpecializationSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryRecord(
+			genericRecordHostsHistoryPath, update.path, beforeGenericRecordSpecializationSource
+		);
 		assert.equal(sha256(reverseGenericRecordHostsUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeGenericRecordHostsSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeGenericRecordHostsSource(update.path, source, update.currentSha256), source);
@@ -30,7 +33,9 @@ test("native generic host gates authenticate each exact source predecessor", asy
 });
 
 test("native generic host gates change current source pins without inventing installed evidence", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeGenericRecordSpecializationSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtFinHistoryRecord(
+			genericRecordHostsHistoryPath, path, beforeGenericRecordSpecializationSource
+	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeGenericRecordHostsSource(path, source));
 	for(const key of Object.keys(previous).filter(key => key !== "evidence")) assert.deepEqual(current[key], previous[key], key);
 	assert.deepEqual(current.evidence.map(entry => entry.id), previous.evidence.map(entry => entry.id));
@@ -43,7 +48,9 @@ test("native generic host gates change current source pins without inventing ins
 		{
 			if(file.sha256 === now.files[position].sha256) continue;
 			assert.ok(genericRecordHostsChangedPaths.includes(file.path));
-			const bytes = beforeGenericRecordSpecializationSource(file.path, await readFile(file.path, "utf8"));
+			const bytes = await sourceAtFinHistoryRecord(
+			genericRecordHostsHistoryPath, file.path, beforeGenericRecordSpecializationSource
+			);
 			assert.equal(sha256(beforeGenericRecordHostsSource(file.path, bytes)), file.sha256);
 			assert.equal(sha256(bytes), now.files[position].sha256); refreshed++;
 		}

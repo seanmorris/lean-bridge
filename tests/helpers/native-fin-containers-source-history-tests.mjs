@@ -19,6 +19,7 @@ import { refinementCiRepairChangedPaths } from "./refinement-ci-repair-source-hi
 import { pythonRefinementEvidenceChangedPaths } from "./python-refinement-evidence-source-history.mjs";
 import { beforeNativeFinContainersSource, nativeFinContainersChangedPaths
 	, nativeFinContainersHistoryPath, reverseNativeFinContainersUpdate } from "./native-fin-containers-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Native Fin container history authenticates exact predecessors and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(nativeFinContainersHistoryPath, "utf8"));
@@ -26,7 +27,9 @@ test("Native Fin container history authenticates exact predecessors and rejects 
 	assert.deepEqual(record.updates.map(item => item.path), nativeFinContainersChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeSubtypeSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeNativeSubtypeSource
+		);
 		assert.equal(sha256(reverseNativeFinContainersUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinContainersSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinContainersSource(update.path, source, update.currentSha256), source);
@@ -52,8 +55,16 @@ const acceptedRevision = "f68cf7da2f428be1255fa298d37d5ec65510636e";
 
 // Audit the inventory against its exact predecessor, reconstructed without Git.
 test("Native Fin container evidence adds one receipt per host group and extends only the existing Fin cells", async () => {
-	const path = "docs/type-surface.v1.json", text = await readFile(path, "utf8");
-	const current = JSON.parse(beforeNativeSubtypeSource(path, text)), previous = JSON.parse(beforeNativeFinContainersSource(path, text));
+	const path = "docs/type-surface.v1.json";
+	const record = JSON.parse(await readFile(
+		nativeFinContainersHistoryPath, "utf8"
+	));
+	const update = record.updates.find(item => item.path === path);
+	const text = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeNativeSubtypeSource
+	);
+	const current = JSON.parse(text);
+	const previous = JSON.parse(beforeNativeFinContainersSource(path, text));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), groups.map(([key]) => `native-fin-containers-${key}-installed`));
 	assert.deepEqual(current.observations.map(entry => entry.id), previous.observations.map(entry => entry.id));
@@ -94,9 +105,11 @@ test("Native Fin container evidence adds one receipt per host group and extends 
 		{
 			if(now.files[index].sha256 === file.sha256) continue;
 			assert.ok(nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
-			const source = await readFile(file.path, "utf8");
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256, beforeNativeSubtypeSource
+			);
 			assert.equal(file.sha256, sha256(beforeNativeFinContainersSource(file.path, source)));
-			assert.equal(now.files[index].sha256, sha256(beforeNativeSubtypeSource(file.path, source)));
+			assert.equal(now.files[index].sha256, sha256(source));
 			++refreshed;
 		}
 	}

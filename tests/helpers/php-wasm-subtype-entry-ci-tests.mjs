@@ -12,15 +12,15 @@ import test from "node:test";
 import { assertPhpWasmEntryWorkflow, disablePhpWasmEntryWorkflow, enablePhpWasmEntryWorkflow, phpWasmEntryCiBlock, phpWasmEntryCiCapture, phpWasmEntryCiCheck, phpWasmEntryCiInvocation, phpWasmEntryCiOutput, phpWasmEntryCiPrepare, phpWasmEntryCiRecord, phpWasmEntryCiRuntime, phpWasmEntryCiUpload } from "./php-wasm-subtype-entry-ci.mjs";
 import { assertPhpWasmSubtypeEntryTap, phpWasmSubtypeEntryTestPattern } from "./php-wasm-subtype-entry-ci-tap.mjs";
 import { assertPhpWasmSubtypeWorkflow } from "./php-wasm-subtype-ci.mjs";
-import { beforePhpWasmEntryCiSource } from "./php-wasm-entry-ci-history.mjs";
-import { beforeReviewedSubtypeHostCiSource } from "./reviewed-subtype-host-ci-history.mjs";
-import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
+import { beforePhpWasmEntryCiSource, phpWasmEntryCiHistoryPath } from "./php-wasm-entry-ci-history.mjs";
+import { beforePhpWasmCorpusPartitionSource, phpWasmCorpusPartitionHistoryPath } from "./php-wasm-corpus-partition-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const workflowPath = ".github/workflows/consumer-matrix.yml";
 const originalTap = () => readFile("docs/evidence/php-wasm-subtype-entry-installed-20261010/run/tap", "utf8");
 
 test("installed PHP-Wasm entry CI preserves the prior workflow and enforces both source routes", async () => {
-	const current = beforeReviewedSubtypeHostCiSource(workflowPath, await readFile(workflowPath, "utf8"));
+	const current = sourceAtHistoryMilestone(phpWasmEntryCiHistoryPath, workflowPath);
 	const previous = beforePhpWasmEntryCiSource(workflowPath, current);
 	assertPhpWasmEntryWorkflow(current); assertPhpWasmSubtypeWorkflow(previous);
 	assert.notEqual(current, previous); assert.equal(disablePhpWasmEntryWorkflow(current), previous);
@@ -32,7 +32,9 @@ test("installed PHP-Wasm entry CI preserves the prior workflow and enforces both
 });
 
 test("installed PHP-Wasm entry CI refuses changed gates, discarded originals and suppressed failures", async () => {
-	const current = beforePhpWasmCorpusPartitionSource(workflowPath, await readFile(workflowPath, "utf8"));
+	const current = beforePhpWasmCorpusPartitionSource(
+		workflowPath, sourceAtHistoryMilestone(phpWasmCorpusPartitionHistoryPath, workflowPath)
+	);
 	for(const changed of [
 		current.replace(phpWasmEntryCiBlock, "")
 		, current.replace(`          ${phpWasmEntryCiPrepare}\n`, "")

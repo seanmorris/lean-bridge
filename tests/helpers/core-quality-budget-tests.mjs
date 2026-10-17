@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -36,6 +37,74 @@ const assertCoreProcessBudget = source => {
 	assert.match(source, /\], \{ cwd: root, env: childEnvironment, stdio: "inherit" \}\);/u
 		, "Hosted Core must spawn the child with the bounded environment");
 };
+
+const checkedRecordEvidencePartitions = Object.freeze({
+	"tests/checked-record-native-history.test.mjs": [
+		"checked-record-native-host-tests.mjs"
+		, "checked-record-native-host-history-tests.mjs"
+		, "checked-record-native-fixture-tests.mjs"
+		, "checked-record-native-installed-tests.mjs"
+		, "checked-record-native-installed-history-tests.mjs"
+	]
+	, "tests/checked-record-native-archives.test.mjs": [
+		"checked-record-python-archive-tests.mjs"
+		, "checked-record-python-history-tests.mjs"
+		, "checked-record-ruby-jvm-archive-tests.mjs"
+		, "checked-record-ruby-jvm-history-tests.mjs"
+		, "checked-record-remaining-hosts-archive-tests.mjs"
+	]
+	, "tests/checked-record-native-ci.test.mjs": [
+		"checked-record-remaining-hosts-history-tests.mjs"
+		, "checked-record-host-ci-report-tests.mjs"
+		, "checked-record-host-ci-shell-tests.mjs"
+		, "checked-record-native-promotion-tests.mjs"
+	]
+	, "tests/checked-record-perl-acceptance.test.mjs": [
+		"checked-record-perl-source-tests.mjs"
+		, "checked-record-perl-fixture-tests.mjs"
+		, "checked-record-perl-history-tests.mjs"
+		, "checked-record-perl-installed-source-tests.mjs"
+		, "checked-record-perl-installed-tests.mjs"
+		, "checked-record-perl-installed-history-tests.mjs"
+	]
+	, "tests/checked-record-browser-foundation.test.mjs": [
+		"checked-record-browser-tests.mjs"
+		, "checked-record-browser-installed-tests.mjs"
+		, "checked-record-browser-history-tests.mjs"
+		, "checked-record-browser-evidence-tests.mjs"
+		, "checked-record-browser-archive-history-tests.mjs"
+	]
+	, "tests/checked-record-browser-ci.test.mjs": [
+		"checked-record-browser-ci-tests.mjs"
+		, "checked-record-browser-ci-shell-tests.mjs"
+		, "checked-record-browser-ci-workflow-tests.mjs"
+		, "checked-record-browser-ci-history-tests.mjs"
+	]
+	, "tests/checked-record-browser-promotion.test.mjs": [
+		"checked-record-browser-promotion-tests.mjs"
+		, "checked-record-browser-promotion-history-tests.mjs"
+	]
+	, "tests/checked-record-php-wasm-foundation.test.mjs": [
+		"checked-record-php-wasm-tests.mjs"
+		, "checked-record-php-wasm-caller-control-tests.mjs"
+		, "checked-record-php-wasm-lean-tests.mjs"
+		, "checked-record-php-wasm-reconcile-tests.mjs"
+		, "checked-record-php-wasm-installed-tests.mjs"
+	]
+	, "tests/checked-record-php-wasm-evidence-ci.test.mjs": [
+		"checked-record-php-wasm-history-tests.mjs"
+		, "checked-record-php-wasm-evidence-tests.mjs"
+		, "checked-record-php-wasm-archive-history-tests.mjs"
+		, "checked-record-php-wasm-ci-tests.mjs"
+		, "checked-record-php-wasm-ci-shell-tests.mjs"
+	]
+	, "tests/checked-record-php-wasm-promotion.test.mjs": [
+		"checked-record-php-wasm-ci-workflow-tests.mjs"
+		, "checked-record-php-wasm-ci-history-tests.mjs"
+		, "checked-record-php-wasm-promotion-tests.mjs"
+		, "checked-record-php-wasm-promotion-history-tests.mjs"
+	]
+});
 
 test("Core quality has a bounded budget for the complete evidence contract", async () => {
 	const source = await readFile(".github/workflows/quality.yml", "utf8");
@@ -74,4 +143,50 @@ test("Hosted Core bounds concurrent history replay without truncating the profil
 		assert.notEqual(changed, source);
 		assert.throws(() => assertCoreProcessBudget(changed));
 	}
+});
+
+test("checked-record evidence runs in bounded process-isolated partitions", async () => {
+	const aggregate = await readFile("tests/checked-records.test.mjs", "utf8");
+	assert.doesNotMatch(aggregate, /import "\.\/helpers\/checked-record-/u);
+	const observed = [];
+	for(const [path, expected] of Object.entries(
+		checkedRecordEvidencePartitions
+	)) {
+		const source = await readFile(path, "utf8");
+		const imports = [...source.matchAll(
+			/^import "\.\/helpers\/(checked-record-[^"]+-tests\.mjs)";$/gmu
+		)].map(match => match[1]);
+		assert.deepEqual(imports, expected, path);
+		assert.ok(imports.length > 0 && imports.length <= 6, path);
+		observed.push(...imports);
+	}
+	assert.equal(new Set(observed).size, observed.length);
+	assert.equal(observed.length, 45);
+});
+
+test("recursive checked-record whitespace rules stay inside each archive", async () => {
+	const root = await readFile(".gitattributes", "utf8");
+	assert.doesNotMatch(root, /recursive-checked-record-(?:wit|rust|php)-20261017/u);
+	const attributes = {
+		"docs/evidence/recursive-checked-record-wit-20261017/.gitattributes": "# Preserve byte-authenticated package outputs without normalizing producer whitespace.\n*-mutual/records/package/share/lean-bridge/component/generated.lean whitespace=-blank-at-eol\n*/records/package/share/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof\n*/records/package/share/lean-bridge/licenses/Wasmtime-LICENSE whitespace=-blank-at-eof\n*/records/package/src/*_wasmtime.c whitespace=-blank-at-eof\n"
+		, "docs/evidence/recursive-checked-record-rust-20261017/.gitattributes": "# Preserve byte-authenticated package outputs without normalizing producer whitespace.\n*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol\n*/records/package/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof\n"
+		, "docs/evidence/recursive-checked-record-php-20261017/.gitattributes": "# Preserve byte-authenticated package and installation outputs.\n*/records/installation/vendor/composer/autoload_static.php whitespace=-blank-at-eol\n*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol\n*/records/package/licenses/Lean-LICENSE whitespace=-blank-at-eof\n*/records/package/src/Internal/GraphNative.php whitespace=-blank-at-eof\n"
+	};
+	for(const [path, expected] of Object.entries(attributes))
+		assert.equal(await readFile(path, "utf8"), expected, path);
+	const paths = [
+		"docs/evidence/recursive-checked-record-wit-20261017/ordinary-mutual/records/package/share/lean-bridge/component/generated.lean"
+		, "docs/evidence/recursive-checked-record-wit-20261017/ordinary-mutual/records/package/share/lean-bridge/licenses/Lean-LICENSE"
+		, "docs/evidence/recursive-checked-record-wit-20261017/ordinary-mutual/records/package/src/mutualcheckedrecords_wasmtime.c"
+		, "docs/evidence/recursive-checked-record-rust-20261017/ordinary-mutual/records/package/lean-bridge/component/generated.lean"
+		, "docs/evidence/recursive-checked-record-php-20261017/ordinary-mutual/records/installation/vendor/composer/autoload_static.php"
+		, "docs/evidence/recursive-checked-record-php-20261017/ordinary-mutual/records/package/src/Internal/GraphNative.php"
+		, "docs/evidence/recursive-checked-record-php-20261017/index.json"
+	];
+	const values = ["-blank-at-eol", "-blank-at-eof", "-blank-at-eof"
+		, "-blank-at-eol", "-blank-at-eol", "-blank-at-eof", "unspecified"];
+	const output = execFileSync("git", ["check-attr", "whitespace", "--", ...paths]
+		, { encoding: "utf8" }).trim().split("\n");
+	assert.deepEqual(output, paths.map((path, index) =>
+		`${path}: whitespace: ${values[index]}`));
 });

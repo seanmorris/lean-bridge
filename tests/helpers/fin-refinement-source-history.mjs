@@ -6,6 +6,8 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedJavaScriptDispositionSource, checkedJavaScriptDispositionChangedPaths } from "./checked-javascript-disposition-history.mjs";
 import { beforeNestedCheckedRecordDiagnosticOracleSource, beforeNestedCheckedRecordNativeArchiveHistoricalSource, nestedCheckedRecordDiagnosticOracleChangedPaths, nestedCheckedRecordNativeArchiveHistoricalPaths } from "./nested-checked-record-diagnostic-oracle-source-history.mjs";
 import { beforeRecursiveComponentRegressionRepairSource, recursiveComponentRegressionRepairChangedPaths } from "./recursive-component-regression-repair-source-history.mjs";
 import { beforeRecursiveWitTestRegistrationSource, recursiveWitTestRegistrationChangedPaths } from "./recursive-wit-test-registration-history.mjs";
@@ -336,12 +338,13 @@ import { phpWasmSubtypeEntryChangedPaths } from "./php-wasm-subtype-entry-histor
 import { phpWasmEntryHarnessChangedPaths } from "./php-wasm-entry-harness-history.mjs";
 import { phpWasmEntryCiChangedPaths } from "./php-wasm-entry-ci-history.mjs";
 import { reviewedSubtypeHostChangedPaths } from "./reviewed-subtype-host-history.mjs";
-import { memoizeSourceHistory } from "./source-history-memo.mjs";
+import { exactSourceHistoryCheckpoints, memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
 const currentExtractorSha256 = "ca8620672a1a19eea8a665f75efbb6c500df0f095ed1fc09b7cd92d393f29221";
 const typeSurfacePath = "docs/type-surface.v1.json";
+const typeSurfaceEvidenceDirectory = new URL("../../docs/evidence/", import.meta.url);
 const currentTypeSurfaceSha256 = "0a7ecf85d5b272a1615b3144d5ec6b6e4e1b54d0a4ce3c4da9f76dc1e4913f3b";
 const previousTypeSurfaceSha256 = "6ef586e9ed2dfd5735051dc5ec7c1c9ef34f860e10a1672d20aebaa3c8d6e0d6";
 const typeSurfaceHashes = new Map(Object.entries({
@@ -363,6 +366,145 @@ const typeSurfaceHashes = new Map(Object.entries({
 	, "tests/helpers/wit-package-source-history.mjs": ["82f1d54f96e72fac12d4f80ca81dc140e680d9af68aea52c71a432b615fba27d", "89a489e28268d8c7fa530a77dc0d14a0ce38a9ab3a5d8b5dbbfb6a910e20530d"]
 	, "tests/unlocked-component.test.mjs": ["b4f2fc8701dc311ca9252fa29facab79a8ee1365760f007691712ac7c634318c", "ddb9a9e934605f8b16161639b15ff92ed3334b470ac0c638cad04d09c8c3fe51"]
 }));
+let typeSurfaceHistoryTransitions;
+
+const exactTypeSurfaceHistoryTransitions = () => {
+	if(typeSurfaceHistoryTransitions) return typeSurfaceHistoryTransitions;
+	const transitions = [];
+	for(const name of readdirSync(typeSurfaceEvidenceDirectory).sort())
+	{
+		if(!name.endsWith(".json") || !name.includes("history")) continue;
+		const raw = readFileSync(new URL(name, typeSurfaceEvidenceDirectory), "utf8");
+		if(!raw.includes(`"${typeSurfacePath}"`) || !raw.includes('"updates"'))
+			continue;
+		const evidence = JSON.parse(raw);
+		const historical = evidence.historicalTransitions ?? [];
+		assert.ok(Array.isArray(historical), `${name} historical transitions`);
+		const updateGroups = [evidence.updates
+			, ...historical.map(item => item?.updates)];
+		for(const updates of updateGroups)
+		{
+			if(updates === undefined) continue;
+			assert.ok(Array.isArray(updates), `${name} source updates`);
+			for(const update of updates)
+				if(update?.path === typeSurfacePath)
+					transitions.push({
+						evidenceName: name
+						, currentSha256: update.currentSha256
+						, previousSha256: update.previousSha256
+					});
+		}
+	}
+	assert.ok(transitions.length > 0, "Type-surface source history is recorded");
+	typeSurfaceHistoryTransitions = Object.freeze(transitions);
+	return typeSurfaceHistoryTransitions;
+};
+
+const exactTypeSurfaceUpdate = transition => {
+	const evidence = JSON.parse(readFileSync(new URL(
+		transition.evidenceName, typeSurfaceEvidenceDirectory
+	), "utf8"));
+	const groups = [evidence.updates
+		, ...(evidence.historicalTransitions ?? []).map(item => item?.updates)];
+	const matches = groups.flatMap(updates => updates ?? []).filter(update =>
+		update?.path === typeSurfacePath
+		&& update.currentSha256 === transition.currentSha256
+		&& update.previousSha256 === transition.previousSha256
+	);
+	assert.equal(matches.length, 1
+		, `${transition.evidenceName} exact type-surface transition`);
+	return matches[0];
+};
+
+const directlyReversibleTypeSurfaceUpdate = update =>
+	Array.isArray(update.replacements)
+	&& update.replacements.length > 0
+	&& update.replacements.every(item =>
+		Object.keys(item).sort().join(",") === "count,current,previous"
+	)
+	|| Array.isArray(update.edits)
+	&& update.edits.length > 0
+	&& update.edits.every(item =>
+		Object.keys(item).sort().join(",") === "current,previous,start"
+	);
+
+const reverseExactTypeSurfaceTransition = (source, transition, update) => {
+	assert.equal(sha256(source), transition.currentSha256
+		, transition.evidenceName);
+	assert.ok(directlyReversibleTypeSurfaceUpdate(update)
+		, `${transition.evidenceName} direct type-surface transition`);
+	const optionalPreviousCommit = update.previousCommit === undefined
+		? [] : ["previousCommit"];
+	if(update.replacements !== undefined)
+	{
+		assert.deepEqual(Object.keys(update).sort(), [
+			"currentSha256", "path", "previousSha256", "replacements"
+		]);
+		assert.ok(Array.isArray(update.replacements)
+			&& update.replacements.length > 0);
+		for(const replacement of [...update.replacements].reverse())
+		{
+			assert.deepEqual(Object.keys(replacement).sort()
+				, ["count", "current", "previous"]);
+			assert.equal(typeof replacement.current, "string");
+			assert.equal(typeof replacement.previous, "string");
+			assert.notEqual(replacement.current, replacement.previous);
+			assert.ok(Number.isSafeInteger(replacement.count)
+				&& replacement.count > 0);
+			assert.equal(source.split(replacement.current).length - 1
+				, replacement.count, transition.evidenceName);
+			source = source.split(replacement.current).join(
+				replacement.previous
+			);
+		}
+	}
+	else
+	{
+		const keys = Object.keys(update).sort().join(",");
+		assert.ok(new Set([
+			"currentSha256,edits,path,previousSha256"
+			, "currentSha256,edits,path,previousCommit,previousSha256"
+			, "currentSha256,edits,path,previousSha256,strategy"
+			, "category,currentSha256,edits,path,previousSha256,strategy"
+		]).has(keys), `${transition.evidenceName} type-surface update keys`);
+		if(optionalPreviousCommit.length > 0)
+			assert.match(update.previousCommit, /^[0-9a-f]{40}$/u);
+		if(update.category === undefined)
+		{
+			if(update.strategy !== undefined)
+				assert.ok(["replacements", "spans"].includes(update.strategy));
+		}
+		else
+		{
+			assert.equal(update.category, "administrative");
+			assert.ok(["inventory", "replace-all", "source-hashes"]
+				.includes(update.strategy));
+		}
+		assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
+		let cursor = 0;
+		const parts = [];
+		for(const edit of update.edits)
+		{
+			assert.deepEqual(Object.keys(edit).sort()
+				, ["current", "previous", "start"]);
+			assert.ok(Number.isSafeInteger(edit.start)
+				&& edit.start >= cursor && edit.start <= source.length);
+			assert.equal(typeof edit.current, "string");
+			assert.equal(typeof edit.previous, "string");
+			assert.notEqual(edit.current, edit.previous);
+			assert.equal(source.slice(edit.start
+				, edit.start + edit.current.length), edit.current
+			, transition.evidenceName);
+			parts.push(source.slice(cursor, edit.start), edit.previous);
+			cursor = edit.start + edit.current.length;
+		}
+		parts.push(source.slice(cursor));
+		source = parts.join("");
+	}
+	assert.equal(sha256(source), transition.previousSha256
+		, transition.evidenceName);
+	return source;
+};
 const verifierPath = "tests/helpers/test-registration-history.mjs";
 const verifierEdits = {
 	[verifierPath]: [
@@ -786,6 +928,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordDiagnosticOracleSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeRecursiveComponentRegressionRepairSource(path, source, expected);
@@ -876,7 +1020,11 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypePhpPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeDotnetPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeRustPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
@@ -907,8 +1055,45 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	return previous;
 });
 
+const normalizeExactTypeSurfaceHistory = (source, expected) => {
+	const historyTransitions = exactTypeSurfaceHistoryTransitions();
+	const plan = exactSourceHistoryCheckpoints(
+		historyTransitions, sha256(source), expected, 1
+	);
+	const transitions = new Map();
+	for(const transition of historyTransitions)
+	{
+		const previous = transitions.get(transition.currentSha256);
+		if(previous !== undefined)
+			assert.equal(previous.previousSha256, transition.previousSha256
+				, `Type-surface history branch ${transition.currentSha256}`);
+		else transitions.set(transition.currentSha256, transition);
+	}
+	for(const checkpoint of plan.checkpoints)
+	{
+		const current = sha256(source);
+		const transition = transitions.get(current);
+		assert.ok(transition, `Type-surface transition ${current}`);
+		assert.equal(transition.previousSha256, checkpoint
+			, `Type-surface checkpoint ${checkpoint}`);
+		const update = exactTypeSurfaceUpdate(transition);
+		if(!directlyReversibleTypeSurfaceUpdate(update))
+			return normalizeFinRefinementSource(
+				typeSurfacePath, source, expected
+			);
+		source = reverseExactTypeSurfaceTransition(source, transition, update);
+		const flattened = Buffer.from(source, "utf8").toString("utf8");
+		assert.equal(flattened, source
+			, `Type-surface transition bytes ${checkpoint}`);
+		source = flattened;
+	}
+	if(expected !== undefined && sha256(source) === expected) return source;
+	return normalizeFinRefinementSource(typeSurfacePath, source, expected);
+};
+
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nestedCheckedRecordDiagnosticOracleChangedPaths
+	...checkedJavaScriptDispositionChangedPaths
+	, ...nestedCheckedRecordDiagnosticOracleChangedPaths
 	, ...nestedCheckedRecordNativeArchiveHistoricalPaths
 	, ...recursiveComponentRegressionRepairChangedPaths
 	, ...recursiveWitTestRegistrationChangedPaths
@@ -1246,6 +1431,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
  */
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
-	const text = source.toString(), previous = normalizeFinRefinementSource(path, text, expected);
+	const text = source.toString(), previous = path === typeSurfacePath
+		? normalizeExactTypeSurfaceHistory(text, expected)
+		: normalizeFinRefinementSource(path, text, expected);
 	return previous === text ? source : previous;
 };

@@ -7,9 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { beforeReviewedSubtypeDecisionsSource } from "./reviewed-subtype-decisions-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeNativeFinPromotionSource, nativeFinPromotionChangedPaths, nativeFinPromotionHistoryPath, reverseNativeFinPromotionUpdate } from "./native-fin-promotion-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 test("native Fin promotion authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(nativeFinPromotionHistoryPath, "utf8"));
@@ -17,7 +17,9 @@ test("native Fin promotion authenticates each exact source predecessor", async (
 	assert.deepEqual(record.updates.map(update => update.path), nativeFinPromotionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeReviewedSubtypeDecisionsSource(update.path, await readFile(update.path, "utf8"));
+		const source = sourceAtHistoryMilestone(
+			nativeFinPromotionHistoryPath, update.path
+		);
 		assert.equal(sha256(reverseNativeFinPromotionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinPromotionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeFinPromotionSource(update.path, source, update.currentSha256), source);

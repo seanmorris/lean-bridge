@@ -10,6 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeNativeFinCallbackArchiveSource } from "./native-fin-callback-archive-source-history.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedCallbackFinAdmissionSource, reviewedCallbackFinAdmissionChangedPaths, reviewedCallbackFinAdmissionHistoryPath, reverseReviewedCallbackFinAdmissionUpdate } from "./reviewed-callback-fin-admission-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Reviewed callback Fin admission authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(reviewedCallbackFinAdmissionHistoryPath, "utf8"));
@@ -17,7 +18,9 @@ test("Reviewed callback Fin admission authenticates each exact source predecesso
 	assert.deepEqual(record.updates.map(update => update.path), reviewedCallbackFinAdmissionChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNativeFinCallbackArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeNativeFinCallbackArchiveSource
+		);
 		assert.equal(sha256(reverseReviewedCallbackFinAdmissionUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeReviewedCallbackFinAdmissionSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeReviewedCallbackFinAdmissionSource(update.path, source, update.currentSha256), source);

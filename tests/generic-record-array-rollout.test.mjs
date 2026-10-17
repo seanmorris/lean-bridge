@@ -6,10 +6,17 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout-source-history.mjs";
+import { arrayRolloutHistoryPath, beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout-source-history.mjs";
 import { arrayRolloutEvidence, arrayRolloutNote, arrayRolloutObservations, arrayRolloutReceipts, supplementArrayRolloutInventory } from "./helpers/generic-record-array-rollout.mjs";
+import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
-const baseline = async () => JSON.parse(beforeArrayRolloutSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const baseline = async () => {
+	const path = "docs/type-surface.v1.json";
+	const source = await sourceAtFinHistoryRecord(
+		arrayRolloutHistoryPath, path, beforeArrayRolloutSource
+	);
+	return JSON.parse(beforeArrayRolloutSource(path, source));
+};
 
 test("Array rollout binds thirteen successful selections to fifteen exact host observations", async () => {
 	const { references, entries } = await arrayRolloutEvidence();

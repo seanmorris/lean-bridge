@@ -12,11 +12,17 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordHostCiSource } from "./checked-record-host-ci-history.mjs";
+import { beforeCheckedRecordHostCiSource, checkedRecordHostCiHistoryPath } from "./checked-record-host-ci-history.mjs";
 import { checkedRecordNativeProfiles, checkedRecordNativeReferences, promoteCheckedRecordNative, checkedRecordNativeLimit, checkedRecordNativeConversion } from "./checked-record-native-promotion.mjs";
 import { beforeCheckedRecordNativePromotionSource, checkedRecordNativePromotionChangedPaths, checkedRecordNativePromotionHistoryPath, checkedRecordNativePromotionPredecessor, reverseCheckedRecordNativePromotionUpdate } from "./checked-record-native-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
-const predecessor = async () => JSON.parse(beforeCheckedRecordNativePromotionSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8")));
+const predecessor = async () => {
+	const path = "docs/type-surface.v1.json";
+	return JSON.parse(beforeCheckedRecordNativePromotionSource(
+		path, sourceAtHistoryMilestone(checkedRecordNativePromotionHistoryPath, path)
+	));
+};
 
 test("native checked-record promotion authenticates all sixteen run groups and both Python floors", async () => {
 	const references = await checkedRecordNativeReferences();
@@ -90,7 +96,9 @@ test("native checked-record promotion changes exactly thirty-two cells without b
 		if(update) file.sha256 = update.currentSha256;
 	}
 	const path = "docs/type-surface.v1.json";
-	const milestone = JSON.parse(beforeCheckedRecordHostCiSource(path, await readFile(path, "utf8")));
+	const milestone = JSON.parse(beforeCheckedRecordHostCiSource(
+		path, sourceAtHistoryMilestone(checkedRecordHostCiHistoryPath, path)
+	));
 	// Authenticate the validators at this promotion, even after later CI integration.
 	for(const entry of proposed.evidence.slice(previous.evidence.length))
 		for(const file of entry.files.filter(item => !item.path.startsWith("docs/evidence/")))
@@ -136,15 +144,15 @@ test("native checked-record consumer guides match the promoted routes and retain
 		const row = source.split("\n").find(line => line.startsWith("| `Checked records and closed Nat indices`"));
 		assert.ok(row, path);
 		assert.ok(row.includes(checkedRecordNativeConversion), path);
-		assert.ok(row.includes("Installed checks passed (input, result)"), path);
-		assert.ok(row.includes("Not audited (field, callback input, callback result)"), path);
+		assert.ok(row.includes("Installed checks passed (input, result, field)"), path);
+		assert.ok(row.includes("Not audited (callback input, callback result)"), path);
 		if(profile === "php-native")
 		{
 			assert.ok(source.includes("These results apply to native PHP, not PHP-Wasm."));
 			assert.ok(source.includes("checked-record-php-wasm-promotion-20261011.md"));
 			assert.ok(!row.includes("PHP-Wasm: Not audited"));
 		}
-		else assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result)"), path);
+		else assert.ok(row.includes("Reviewed IR: Installed checks passed (input, result, field)"), path);
 	}
 });
 
@@ -156,7 +164,9 @@ test("native checked-record promotion history authenticates exact transitions an
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordNativePromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const source = beforeCheckedRecordHostCiSource(update.path, await readFile(update.path, "utf8"));
+		const source = sourceAtHistoryMilestone(
+			checkedRecordNativePromotionHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordNativePromotionUpdate(source, update);
 		assert.equal(beforeCheckedRecordNativePromotionSource(update.path, source), previous);
 		const bytes = Buffer.from(source);

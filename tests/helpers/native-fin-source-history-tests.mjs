@@ -37,6 +37,7 @@ import { combinedLineageChangedPaths } from "./combined-lineage-source-history.m
 import { testProfileRegistrationChangedPaths } from "./test-profile-registration-source-history.mjs";
 import { beforeNativeFinSource, nativeFinChangedPaths
 	, nativeFinHistoryPath, reverseNativeFinUpdate } from "./native-fin-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("native Fin history authenticates predecessors and rejects unrelated edits", async () => {
 	const record = JSON.parse(await readFile(nativeFinHistoryPath, "utf8"));
@@ -44,7 +45,9 @@ test("native Fin history authenticates predecessors and rejects unrelated edits"
 	assert.deepEqual(record.updates.map(item => item.path), nativeFinChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforeNpmFinDiagnosticsSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeNpmFinDiagnosticsSource
+		);
 		assert.equal(sha256(reverseNativeFinUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeFinSource(update.path, source)), update.previousSha256);
 		assert.equal(sha256(beforeFinRefinementSource(update.path, source, update.previousSha256)), update.previousSha256);
@@ -60,8 +63,13 @@ test("native Fin history authenticates predecessors and rejects unrelated edits"
 // Audit the refreshed inventory against its exact predecessor, reconstructed without Git.
 test("native Fin inventory changes only source pins and the four evidenced C-family cells", async () => {
 	const path = "docs/type-surface.v1.json";
-	const current = JSON.parse(beforeNpmFinDiagnosticsSource(path, await readFile(path, "utf8")));
-	const previous = JSON.parse(beforeNativeFinSource(path, await readFile(path, "utf8")));
+	const record = JSON.parse(await readFile(nativeFinHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	const source = await sourceAtFinHistoryMilestone(
+		path, update.currentSha256, beforeNpmFinDiagnosticsSource
+	);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeNativeFinSource(path, source));
 	const added = current.evidence.filter(entry => !previous.evidence.some(item => item.id === entry.id));
 	assert.deepEqual(added.map(entry => entry.id), ["native-fin-installed"]);
 	const observation = current.observations.filter(entry => !previous.observations.some(item => item.id === entry.id));
@@ -86,10 +94,17 @@ test("native Fin inventory changes only source pins and the four evidenced C-fam
 			// Only branch-changed sources move, and only to their exact authenticated successor.
 			// Later layers may also refresh pins; each still reconstructs its exact predecessor.
 			assert.ok(nativeFinChangedPaths.includes(file.path) || npmFinDiagnosticsChangedPaths.includes(file.path) || diagnosticFollowupChangedPaths.includes(file.path) || combinedLineageChangedPaths.includes(file.path) || testProfileRegistrationChangedPaths.includes(file.path) || runtimeReceiptChangedPaths.includes(file.path) || cpanCliControlChangedPaths.includes(file.path) || pythonFinChangedPaths.includes(file.path) || rustFinChangedPaths.includes(file.path) || rubyFinChangedPaths.includes(file.path) || dotnetFinChangedPaths.includes(file.path) || jvmFinChangedPaths.includes(file.path) || phpFinChangedPaths.includes(file.path) || witFinChangedPaths.includes(file.path) || finDistributionChangedPaths.includes(file.path) || perlFinChangedPaths.includes(file.path) || hostFinEvidenceChangedPaths.includes(file.path) || nativeSpecializationsChangedPaths.includes(file.path) || nativeFinContainersChangedPaths.includes(file.path) || nativeSubtypeChangedPaths.includes(file.path) || refinementAuditChangedPaths.includes(file.path) || browserRefinementsChangedPaths.includes(file.path) || scalarFinRejectionChangedPaths.includes(file.path) || scalarFinWordingChangedPaths.includes(file.path) || perlRefinementsChangedPaths.includes(file.path) || perlIndexedErrorsChangedPaths.includes(file.path) || refinementCiRepairChangedPaths.includes(file.path) || pythonRefinementEvidenceChangedPaths.includes(file.path), `${entry.id}: ${file.path}`);
+			const source = await sourceAtFinHistoryMilestone(
+				file.path, now.files[index].sha256
+				, beforeNpmFinDiagnosticsSource
+			);
 			if(!predecessors.has(file.path))
-				predecessors.set(file.path, sha256(beforeNativeFinSource(file.path, await readFile(file.path, "utf8"))));
+				predecessors.set(file.path, sha256(beforeNativeFinSource(
+					file.path, source
+				)));
 			assert.equal(file.sha256, predecessors.get(file.path), `${entry.id}: ${file.path} predecessor`);
-			assert.equal(now.files[index].sha256, sha256(beforeNpmFinDiagnosticsSource(file.path, await readFile(file.path, "utf8"))), `${entry.id}: ${file.path} current`);
+			assert.equal(now.files[index].sha256, sha256(source)
+				, `${entry.id}: ${file.path} current`);
 			++refreshed;
 		}
 	}
