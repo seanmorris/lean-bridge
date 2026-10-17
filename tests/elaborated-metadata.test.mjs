@@ -250,6 +250,18 @@ test("Lean-produced checked records retain refined fields without weakening inpu
 		};
 		assert.equal(validateElaboratedMetadata(report, request), true);
 	}
+	{
+		const { request, report } = sample();
+		report.modules[0].declarations[0].projection.parameters[0].type = {
+			kind: "refinement"
+			, base: {
+				kind: "alias", name: "Sample.PacketAlias"
+				, target: record("Sample.checked")
+			}
+			, predicate: { kind: "checked-record", constructor: "Sample.mkPacket" }
+		};
+		assert.equal(validateElaboratedMetadata(report, request), true);
+	}
 });
 
 test("structural Subtype metadata retains checked leaves and refuses malformed constructors", async () => {

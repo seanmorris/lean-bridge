@@ -196,7 +196,8 @@ export const validateElaboratedMetadata = (report, request) => {
 					{
 						closed(type, ["kind", "name", "target"]);
 						if(typeof type.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(type.name)) fail("Invalid component alias");
-						recurse(type.target); return;
+						copied(type.target, depth + 1, references, refinements
+							, subtypeStructural, produced, checkedRecord); return;
 					}
 					if(type?.kind === "refinement")
 					{
