@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "milestone": "late-checked-record-test-registration-source-v1",
+  "predecessorCommit": "1f3664ccd4b9d102ab0222061853ac90c72e0985",
+  "pinCount": 94,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "01198c52172cba05cf8d944287e2ea2eccc9e644628ae36697461fedb44bb00b",
+      "currentSha256": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+      "count": 94
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "01b07c984b9cb2e3eedd2aae33f18dc19d0b3d0ef16ad3d34c15a37ee2dad092",
+      "currentSha256": "c74d504efd63875b8277c238ec42b2f88191356038c1d4911a1f0ce95862f879",
+      "replacements": [
+        {
+          "previous": "01198c52172cba05cf8d944287e2ea2eccc9e644628ae36697461fedb44bb00b",
+          "current": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "01198c52172cba05cf8d944287e2ea2eccc9e644628ae36697461fedb44bb00b",
+      "currentSha256": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+      "edits": [
+        {
+          "start": 10696,
+          "previous": "",
+          "current": "\t\t, \"late-checked-record-test-registration-history\"\n"
+        },
+        {
+          "start": 11624,
+          "previous": "",
+          "current": "\t\t, \"php-graph-refinement-diagnostics\"\n"
+        },
+        {
+          "start": 11862,
+          "previous": "",
+          "current": "\t\t, \"recursive-checked-record-php-ci\"\n\t\t, \"recursive-checked-record-php\"\n\t\t, \"recursive-checked-record-php-wasm\"\n"
+        },
+        {
+          "start": 12461,
+          "previous": "",
+          "current": "\t\t, \"wit-graph-refinement-diagnostics\"\n"
+        }
+      ],
+      "addedTests": [
+        "late-checked-record-test-registration-history",
+        "php-graph-refinement-diagnostics",
+        "recursive-checked-record-php-ci",
+        "recursive-checked-record-php",
+        "recursive-checked-record-php-wasm",
+        "wit-graph-refinement-diagnostics"
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4ac3d9938047dc3a71f028a9b51a1982548025854187f76cb4da16f4fb029c6c",
+      "currentSha256": "010b0edda2537b54eeedfda4adf16bb268cd70fb4b0fe3751c643b0d6a80d307",
+      "edits": [
+        {
+          "start": 297,
+          "previous": "",
+          "current": "import { beforeLateCheckedRecordTestRegistrationSource, lateCheckedRecordTestRegistrationChangedPaths } from \"./late-checked-record-test-registration-history.mjs\";\n"
+        },
+        {
+          "start": 66004,
+          "previous": "",
+          "current": "\tsource = beforeLateCheckedRecordTestRegistrationSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 72330,
+          "previous": "\t...ciContractRepairChangedPaths\n",
+          "current": "\t...lateCheckedRecordTestRegistrationChangedPaths\n\t, ...ciContractRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
