@@ -1,0 +1,37 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "8de5ee336e04d4488dda0303c0e7f615498f61b076d3e59228cc80db52c710e8",
+    "executable": {
+      "bytes": 35504,
+      "sha256": "8cd9a7389ee539a71d4833aa0cd3673d34d39f51655ca5503046f3861ac49150"
+    },
+    "packageFileSetSha256": "117cc7f92cbe9b556bf6cf70efc9b0f42defa8d9fbf70aab80587757ab98aa84",
+    "receiptSha256": "89343659e21f1720d4ef15d720730c1deb03c629eb1bf16c9fb5fc226be81c4d"
+  },
+  "command": "/tmp/lean-bridge-recursive-wit-installed-oSDIWt/consumer/consumer",
+  "counts": {
+    "checks": 1079,
+    "hostRejections": 76,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 6,
+    "snapshots": 356
+  },
+  "cwd": "/tmp/lean-bridge-recursive-wit-installed-oSDIWt/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1079,\"hostRejections\":76,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":6,\"snapshots\":356}\n"
+  }
+}

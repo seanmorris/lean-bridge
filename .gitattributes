@@ -23,3 +23,8 @@ docs/evidence/hosted-specializations-20261009/*/job.log whitespace=-blank-at-eol
 docs/evidence/wasm-entry-20261009/failed-ba282ec-node-smoke/run.tap whitespace=-blank-at-eol
 # Preserve the receipt-authenticated hosted Perl scalar job logs without rewriting whitespace.
 docs/evidence/perl-scalar-hosted-20261009/*/job.log whitespace=-blank-at-eol
+# Preserve the byte-authenticated recursive WIT package outputs without normalizing producer whitespace.
+docs/evidence/recursive-checked-record-wit-20261017/*-mutual/records/package/share/lean-bridge/component/generated.lean whitespace=-blank-at-eol
+docs/evidence/recursive-checked-record-wit-20261017/*/records/package/share/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof
+docs/evidence/recursive-checked-record-wit-20261017/*/records/package/share/lean-bridge/licenses/Wasmtime-LICENSE whitespace=-blank-at-eof
+docs/evidence/recursive-checked-record-wit-20261017/*/records/package/src/*_wasmtime.c whitespace=-blank-at-eof

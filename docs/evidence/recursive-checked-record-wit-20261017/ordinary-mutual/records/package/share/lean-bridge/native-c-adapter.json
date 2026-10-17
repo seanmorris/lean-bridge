@@ -1,0 +1,30 @@
+{
+  "bindingIrSha256": "ea4cfc10c9fca80f8c7c0a4bf5bf6e511ae17fd001c03988baeffdd2e01a734c",
+  "componentReceiptSha256": "0d62fe73df8ef70e06d16a2beabeacdad635630d7e87de47125d323043b8c783",
+  "copiedGraph": {
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2",
+    "schemaVersion": 1
+  },
+  "files": {
+    "include/detail/mutualcheckedrecords-graph-types.h": {
+      "bytes": 5664,
+      "sha256": "62b8572826a58711f4fecaec5dc2a683edf1f0e8ad41c042d03e5eed3906f03b"
+    },
+    "include/detail/mutualcheckedrecords-graph.h": {
+      "bytes": 1192,
+      "sha256": "d2f84a2fa9e52a6375af42a2534b8ca2cb424a9849389a81a6b8318f0b66ca05"
+    },
+    "lib/libmutualcheckedrecords.so": {
+      "bytes": 46512,
+      "sha256": "4c627dbbb57e9b78355774bcc2505f33695d5b3629ee9b51245f3a00adb1aee4"
+    },
+    "src/native.c": {
+      "bytes": 71953,
+      "sha256": "dd59669fdc1b471575486ec9b1813d6984e26546e3c7f9bf2120d0bf59e75d10"
+    }
+  },
+  "library": "libmutualcheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

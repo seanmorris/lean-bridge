@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: installed recursive checked-record WIT packages reproduce and relocate reviewed mutual
+not ok 1 - installed recursive checked-record WIT packages reproduce and relocate reviewed mutual
+  ---
+  duration_ms: 639298.585018
+  type: 'test'
+  location: '/app/build/worktrees/claude-wit-harness-vo1522/tests/helpers/recursive-checked-record-wit-installed-tests.mjs:33:59'
+  failureType: 'testCodeFailure'
+  error: 'C# producer host load remained at or above 8 for five minutes'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    waitNominalSubtypeDotnetResources (file:///app/build/worktrees/claude-wit-harness-vo1522/tests/helpers/nominal-subtype-dotnet-resources.mjs:40:10)
+    async resourceCheck (file:///app/build/worktrees/claude-wit-harness-vo1522/tests/helpers/recursive-checked-record-wit-installed-tests.mjs:47:23)
+    async TestContext.<anonymous> (file:///app/build/worktrees/claude-wit-harness-vo1522/tests/helpers/recursive-checked-record-wit-installed-tests.mjs:77:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# reviewed mutual author 0: reproducible WIT package
+# Waiting for host load below 8 before the next recursive WIT phase: 49.49
+# Waiting for host load below 8 before the next recursive WIT phase: 45.54
+# Waiting for host load below 8 before the next recursive WIT phase: 45.6
+# Waiting for host load below 8 before the next recursive WIT phase: 43.25
+# Waiting for host load below 8 before the next recursive WIT phase: 42.27
+# Waiting for host load below 8 before the next recursive WIT phase: 44.47
+# Waiting for host load below 8 before the next recursive WIT phase: 43.39
+# Waiting for host load below 8 before the next recursive WIT phase: 42.2
+# Waiting for host load below 8 before the next recursive WIT phase: 47.11
+# Waiting for host load below 8 before the next recursive WIT phase: 46.39
+# Waiting for host load below 8 before the next recursive WIT phase: 43.04
+# Waiting for host load below 8 before the next recursive WIT phase: 39.67
+# Waiting for host load below 8 before the next recursive WIT phase: 40.33
+# Waiting for host load below 8 before the next recursive WIT phase: 41.05
+# Waiting for host load below 8 before the next recursive WIT phase: 36.83
+# Waiting for host load below 8 before the next recursive WIT phase: 29.7
+# Waiting for host load below 8 before the next recursive WIT phase: 24.95
+# Waiting for host load below 8 before the next recursive WIT phase: 21.29
+# Waiting for host load below 8 before the next recursive WIT phase: 18.57
+# Waiting for host load below 8 before the next recursive WIT phase: 15.47
+# Retained failed recursive checked-record WIT inputs: /tmp/lean-bridge-recursive-wit-installed-mPIa90
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 640359.189721

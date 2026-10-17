@@ -1,0 +1,44 @@
+package lean-bridge:recursivecheckedrecords@1.0.0;
+
+interface native {
+  record lb-graph-ref2 { index: u32 }
+  record lb-graph-ref1 { index: u32 }
+  type bridge-value-3 = list<lb-graph-ref1>;
+  type bridge-value-4 = list<bridge-value-3>;
+  type bridge-value-5 = option<lb-graph-ref2>;
+  type bridge-value-6 = list<bridge-value-5>;
+  type bridge-value-7 = list<u32>;
+  record lb-graph-node2 { value: bridge-value-7, digit: bridge-value-7, tail: lb-graph-ref1 }
+  type bridge-value-9 = list<lb-graph-node2>;
+  type lb-graph-node0 = bridge-value-3;
+  type bridge-alias-value-15 = list<lb-graph-node0>;
+  type lb-graph-node1 = bridge-value-5;
+  type bridge-alias-value-17 = list<lb-graph-node1>;
+  record lb-graph-arena { nodes0: bridge-alias-value-15, nodes1: bridge-alias-value-17, nodes2: bridge-value-9 }
+  record lb-graph-value2 { root: lb-graph-ref2, nodes: lb-graph-arena }
+  record lb-graph-ref0 { index: u32 }
+  record lb-graph-value0 { root: lb-graph-ref0, nodes: lb-graph-arena }
+  type packet = lb-graph-value2;
+  type packet-alias = lb-graph-value2;
+  echo: func(value0: packet) -> packet;
+  echo-groups: func(value0: lb-graph-value0) -> lb-graph-value0;
+  first: func(value0: packet) -> bridge-value-7;
+  groups: func(value0: lb-graph-value0) -> bridge-value-7;
+  produce: func(value0: bridge-value-7) -> packet;
+  second: func(value0: packet) -> bridge-value-7;
+}
+
+interface api {
+  use native.{lb-graph-ref2, lb-graph-ref1, bridge-value-3, bridge-value-4, bridge-value-5, bridge-value-6, bridge-value-7, lb-graph-node2, bridge-value-9, lb-graph-node0, bridge-alias-value-15, lb-graph-node1, bridge-alias-value-17, lb-graph-arena, lb-graph-value2, lb-graph-ref0, lb-graph-value0, packet, packet-alias};
+  echo: func(value0: packet) -> packet;
+  echo-groups: func(value0: lb-graph-value0) -> lb-graph-value0;
+  first: func(value0: packet) -> bridge-value-7;
+  groups: func(value0: lb-graph-value0) -> bridge-value-7;
+  produce: func(value0: bridge-value-7) -> packet;
+  second: func(value0: packet) -> bridge-value-7;
+}
+
+world recursivecheckedrecords {
+  import native;
+  export api;
+}

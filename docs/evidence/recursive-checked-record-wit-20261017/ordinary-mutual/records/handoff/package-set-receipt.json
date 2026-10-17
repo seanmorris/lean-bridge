@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59281788,
+          "path": "archives/mutualcheckedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "477cf832b6183e205c82d1446ff25d8279a3856b28ebddfca275530425d22d06"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ea4cfc10c9fca80f8c7c0a4bf5bf6e511ae17fd001c03988baeffdd2e01a734c",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7d8a76d097283dbc84b27d0313716586c8af54bcd392000ccd027bb6a558a67e"
+  }
+}

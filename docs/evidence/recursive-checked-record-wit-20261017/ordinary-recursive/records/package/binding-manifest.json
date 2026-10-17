@@ -1,0 +1,401 @@
+{
+  "assurance": [],
+  "assuranceScope": "original-lean-binding-ir",
+  "backend": "ordinary-wit-native-graph-v1",
+  "bindingIrSha256": "794aa8c927201bf1fe202791f41353f6b7cdf5905052465c47736c12e31fde54",
+  "cHost": {
+    "aliases": [
+      {
+        "name": "recursivecheckedrecords_packet_tail_t",
+        "type": "recursivecheckedrecords_graph_2c3080f9e24fa7c11cff_t"
+      },
+      {
+        "name": "recursivecheckedrecords_echo_groups_argument0_t",
+        "type": "recursivecheckedrecords_graph_bf065e9a21862d87767f_t"
+      },
+      {
+        "name": "recursivecheckedrecords_echo_groups_argument0_element_t",
+        "type": "recursivecheckedrecords_graph_2c3080f9e24fa7c11cff_t"
+      },
+      {
+        "name": "recursivecheckedrecords_echo_groups_result_t",
+        "type": "recursivecheckedrecords_graph_bf065e9a21862d87767f_t"
+      },
+      {
+        "name": "recursivecheckedrecords_echo_groups_result_element_t",
+        "type": "recursivecheckedrecords_graph_2c3080f9e24fa7c11cff_t"
+      },
+      {
+        "name": "recursivecheckedrecords_groups_argument0_t",
+        "type": "recursivecheckedrecords_graph_bf065e9a21862d87767f_t"
+      },
+      {
+        "name": "recursivecheckedrecords_groups_argument0_element_t",
+        "type": "recursivecheckedrecords_graph_2c3080f9e24fa7c11cff_t"
+      }
+    ],
+    "header": "recursivecheckedrecords_wasmtime.h"
+  },
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:RecursiveCheckedRecords.echo",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      ],
+      "result": {
+        "type": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        },
+        "witType": "packet"
+      },
+      "witName": "echo"
+    },
+    {
+      "id": "lean:RecursiveCheckedRecords.echoGroups",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "lb-graph-value0"
+        }
+      ],
+      "result": {
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "witType": "lb-graph-value0"
+      },
+      "witName": "echo-groups"
+    },
+    {
+      "id": "lean:RecursiveCheckedRecords.first",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      ],
+      "result": {
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "witType": "bridge-value-7"
+      },
+      "witName": "first"
+    },
+    {
+      "id": "lean:RecursiveCheckedRecords.groups",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "lb-graph-value0"
+        }
+      ],
+      "result": {
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "witType": "bridge-value-7"
+      },
+      "witName": "groups"
+    },
+    {
+      "id": "lean:RecursiveCheckedRecords.produce",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-7"
+        }
+      ],
+      "result": {
+        "type": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        },
+        "witType": "packet"
+      },
+      "witName": "produce"
+    },
+    {
+      "id": "lean:RecursiveCheckedRecords.second",
+      "parameters": [
+        {
+          "name": "arg0",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          },
+          "witType": "packet"
+        }
+      ],
+      "result": {
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "witType": "bridge-value-7"
+      },
+      "witName": "second"
+    }
+  ],
+  "deferred": [
+    "structured-callables",
+    "resource-containing-aggregates"
+  ],
+  "graph": {
+    "arena": "lb-graph-arena",
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+    "limits": {
+      "copyBytes": 16777216,
+      "valueDepth": 128,
+      "valueNodes": 262144
+    },
+    "nodes": [
+      {
+        "cases": [],
+        "element": "apply:c40f11f8b2fcdc2187480b0c928684e594cd9973c1a133f10af3e637bde39eef",
+        "fields": [],
+        "id": "apply:5acd88ffdea0d41efe461b0fa58f6c4aa3a4f90e81b0b042530d32e68f648fef",
+        "kind": "array",
+        "referenceType": "lb-graph-ref0",
+        "rowType": "lb-graph-node0",
+        "tableField": "nodes0",
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "valueType": "lb-graph-value0"
+      },
+      {
+        "cases": [],
+        "element": null,
+        "fields": [
+          {
+            "name": "value",
+            "type": "{\n  \"id\": \"lean:RecursiveCheckedRecords.Packet\",\n  \"kind\": \"named\"\n}\n",
+            "witName": "value"
+          }
+        ],
+        "id": "apply:c40f11f8b2fcdc2187480b0c928684e594cd9973c1a133f10af3e637bde39eef",
+        "kind": "option",
+        "referenceType": "lb-graph-ref1",
+        "rowType": "lb-graph-node1",
+        "tableField": "nodes1",
+        "type": {
+          "arguments": [
+            {
+              "id": "lean:RecursiveCheckedRecords.PacketAlias",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "valueType": null
+      },
+      {
+        "cases": [],
+        "element": null,
+        "fields": [
+          {
+            "name": "value",
+            "type": "{\n  \"kind\": \"primitive\",\n  \"name\": \"nat\"\n}\n",
+            "witName": "value"
+          },
+          {
+            "name": "digit",
+            "type": "{\n  \"kind\": \"primitive\",\n  \"name\": \"nat\"\n}\n",
+            "witName": "digit"
+          },
+          {
+            "name": "tail",
+            "type": "apply:c40f11f8b2fcdc2187480b0c928684e594cd9973c1a133f10af3e637bde39eef",
+            "witName": "tail"
+          }
+        ],
+        "id": "{\n  \"id\": \"lean:RecursiveCheckedRecords.Packet\",\n  \"kind\": \"named\"\n}\n",
+        "kind": "record",
+        "referenceType": "lb-graph-ref2",
+        "rowType": "lb-graph-node2",
+        "tableField": "nodes2",
+        "type": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        },
+        "valueType": "lb-graph-value2"
+      },
+      {
+        "cases": [],
+        "element": null,
+        "fields": [],
+        "id": "{\n  \"kind\": \"primitive\",\n  \"name\": \"nat\"\n}\n",
+        "kind": "primitive",
+        "referenceType": "bridge-value-7",
+        "rowType": "bridge-value-7",
+        "tableField": null,
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "valueType": "bridge-value-7"
+      }
+    ],
+    "refinementDiagnostics": true,
+    "representation": "typed-node-tables-v1",
+    "schemaVersion": 1,
+    "types": [
+      {
+        "cases": [],
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "value"
+            },
+            "mutability": "immutable",
+            "name": "value",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "digit"
+            },
+            "mutability": "immutable",
+            "name": "digit",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "tail"
+            },
+            "mutability": "immutable",
+            "name": "tail",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:RecursiveCheckedRecords.Packet",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:RecursiveCheckedRecords.Packet",
+        "kind": "record",
+        "name": "Packet",
+        "target": null,
+        "witName": "packet"
+      },
+      {
+        "cases": [],
+        "fields": [],
+        "id": "lean:RecursiveCheckedRecords.PacketAlias",
+        "kind": "alias",
+        "name": "PacketAlias",
+        "target": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        },
+        "witName": "packet-alias"
+      }
+    ],
+    "wireBindingIrSha256": "03b57a5afe45510e22f72da909329eb5c5d9fe852f6058d48760fa2a5be6069d",
+    "wordBits": 64
+  },
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:recursivecheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:recursivecheckedrecords/native@1.0.0",
+    "package": "lean-bridge:recursivecheckedrecords@1.0.0",
+    "world": "recursivecheckedrecords"
+  }
+}

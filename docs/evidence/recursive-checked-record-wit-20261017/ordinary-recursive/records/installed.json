@@ -1,0 +1,37 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "5328688ca8ccc94f27f75d52f8e397c6f731cddad4ab0da7e75a7e3ccc4a559b",
+    "executable": {
+      "bytes": 35544,
+      "sha256": "ff96dcf6fd9b5f2fb272b75f05bc425a64e24ef2f331b221457ebc823d53d138"
+    },
+    "packageFileSetSha256": "d3479a9750fd86ca93be48f25c53893b9ac19545fd673ae3b25ea6823c689289",
+    "receiptSha256": "07e900c7e2f509c9d52d8fa146416cca861f2a3926075ea77ce0ae2e193905f5"
+  },
+  "command": "/tmp/lean-bridge-recursive-wit-installed-suRuAJ/consumer/consumer",
+  "counts": {
+    "checks": 1068,
+    "hostRejections": 75,
+    "module": "recursive",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 5,
+    "snapshots": 352
+  },
+  "cwd": "/tmp/lean-bridge-recursive-wit-installed-suRuAJ/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1068,\"hostRejections\":75,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":5,\"snapshots\":352}\n"
+  }
+}

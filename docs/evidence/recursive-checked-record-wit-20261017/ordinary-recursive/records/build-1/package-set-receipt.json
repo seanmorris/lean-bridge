@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59266871,
+          "path": "archives/recursivecheckedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "ebd5c39c92a247823cab37c042fc5f2b7fd9869ca1415e57cabeec23a955aee5"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "recursivecheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "794aa8c927201bf1fe202791f41353f6b7cdf5905052465c47736c12e31fde54",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "acedd9c97c427e901810c4566da4af56f8a7df99b012101fae2e5347e37ca1d5"
+  }
+}

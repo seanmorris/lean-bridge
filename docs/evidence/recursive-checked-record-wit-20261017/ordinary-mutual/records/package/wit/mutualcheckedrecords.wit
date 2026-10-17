@@ -1,0 +1,55 @@
+package lean-bridge:mutualcheckedrecords@1.0.0;
+
+interface native {
+  record lb-graph-ref3 { index: u32 }
+  record lb-graph-ref1 { index: u32 }
+  type bridge-value-3 = list<lb-graph-ref1>;
+  type bridge-value-4 = list<bridge-value-3>;
+  type bridge-value-5 = option<lb-graph-ref3>;
+  type bridge-value-6 = list<bridge-value-5>;
+  record lb-graph-ref4 { index: u32 }
+  type bridge-value-8 = option<lb-graph-ref4>;
+  type bridge-value-9 = list<bridge-value-8>;
+  type bridge-value-10 = list<u32>;
+  record lb-graph-ref2 { index: u32 }
+  record lb-graph-node3 { value: bridge-value-10, mode: bridge-value-10, next: lb-graph-ref2 }
+  type bridge-value-13 = list<lb-graph-node3>;
+  record lb-graph-node4-more-fields { packet: lb-graph-ref3 }
+  variant lb-graph-node4 { stop, more(lb-graph-node4-more-fields) }
+  type bridge-value-15 = list<lb-graph-node4>;
+  type lb-graph-node0 = bridge-value-3;
+  type bridge-alias-value-22 = list<lb-graph-node0>;
+  type lb-graph-node1 = bridge-value-5;
+  type bridge-alias-value-24 = list<lb-graph-node1>;
+  type lb-graph-node2 = bridge-value-8;
+  type bridge-alias-value-26 = list<lb-graph-node2>;
+  record lb-graph-arena { nodes0: bridge-alias-value-22, nodes1: bridge-alias-value-24, nodes2: bridge-alias-value-26, nodes3: bridge-value-13, nodes4: bridge-value-15 }
+  record lb-graph-value3 { root: lb-graph-ref3, nodes: lb-graph-arena }
+  record lb-graph-ref0 { index: u32 }
+  record lb-graph-value0 { root: lb-graph-ref0, nodes: lb-graph-arena }
+  record lb-graph-value4 { root: lb-graph-ref4, nodes: lb-graph-arena }
+  type envelope = lb-graph-value3;
+  type envelope-alias = lb-graph-value3;
+  type step = lb-graph-value4;
+  echo: func(arg0: envelope) -> envelope;
+  echo-groups: func(arg0: lb-graph-value0) -> lb-graph-value0;
+  first: func(arg0: envelope) -> bridge-value-10;
+  groups: func(arg0: lb-graph-value0) -> bridge-value-10;
+  produce: func(arg0: bridge-value-10) -> envelope;
+  second: func(arg0: envelope) -> bridge-value-10;
+}
+
+interface api {
+  use native.{lb-graph-ref3, lb-graph-ref1, bridge-value-3, bridge-value-4, bridge-value-5, bridge-value-6, lb-graph-ref4, bridge-value-8, bridge-value-9, bridge-value-10, lb-graph-ref2, lb-graph-node3, bridge-value-13, lb-graph-node4-more-fields, lb-graph-node4, bridge-value-15, lb-graph-node0, bridge-alias-value-22, lb-graph-node1, bridge-alias-value-24, lb-graph-node2, bridge-alias-value-26, lb-graph-arena, lb-graph-value3, lb-graph-ref0, lb-graph-value0, lb-graph-value4, envelope, envelope-alias, step};
+  echo: func(arg0: envelope) -> envelope;
+  echo-groups: func(arg0: lb-graph-value0) -> lb-graph-value0;
+  first: func(arg0: envelope) -> bridge-value-10;
+  groups: func(arg0: lb-graph-value0) -> bridge-value-10;
+  produce: func(arg0: bridge-value-10) -> envelope;
+  second: func(arg0: envelope) -> bridge-value-10;
+}
+
+world mutualcheckedrecords {
+  import native;
+  export api;
+}
