@@ -11,6 +11,11 @@ import {
 	, inheritedCheckedRecordName
 	, inheritedCheckedRecordReview
 } from "./inherited-checked-record-fixture.mjs";
+import {
+	inheritedCheckedRecordRubyLoadCeilings
+} from "./inherited-checked-record-ruby-resources.mjs";
+
+export { inheritedCheckedRecordRubyLoadCeilings };
 
 export const inheritedCheckedRecordRubyRoutes = Object.freeze([
 	"ordinary", "reviewed"
@@ -21,9 +26,6 @@ export const inheritedCheckedRecordRubyModes = Object.freeze([
 export const inheritedCheckedRecordRubyTarget = Object.freeze({
 	name: inheritedCheckedRecordName, version: "1.0.0"
 });
-export const inheritedCheckedRecordRubyLoadCeilings = Object.freeze([
-	8, 12, 16, 20
-]);
 export const inheritedCheckedRecordRubyCounts = Object.freeze({
 	full: Object.freeze({
 		checks: 7240, rejections: 1288, hostRejections: 7
