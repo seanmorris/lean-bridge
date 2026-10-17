@@ -1,0 +1,1263 @@
+{
+  "bindingIrSha256": "d0c701ec7684c8405b57675f53612017d7cf2633cca08eb3b776704ebda1a659",
+  "browser": {
+    "deployments": [
+      {
+        "files": [
+          {
+            "bytes": 285,
+            "path": "assets/__vite-browser-external-D513FCGW.js",
+            "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+          },
+          {
+            "bytes": 498074,
+            "path": "assets/index-BwT-jb5R.js",
+            "sha256": "266b4c668ef364827a231ef91aaeb2c7e462bc077e7a0a7d1cf2372003973226"
+          },
+          {
+            "bytes": 10881,
+            "path": "assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb"
+          },
+          {
+            "bytes": 3559763,
+            "path": "assets/inheritedcheckedrecords-BOlCJ8zM.js",
+            "sha256": "80a8ca0050174757c88bb915eb07202ff53a2bb0d80001da7b5a06e98bc41655"
+          },
+          {
+            "bytes": 6488025,
+            "path": "assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          },
+          {
+            "bytes": 2199,
+            "path": "assets/preload-helper-CZj_vqJa.js",
+            "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+          },
+          {
+            "bytes": 1180,
+            "path": "assets/rolldown-runtime-BPOCksWG.js",
+            "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+          },
+          {
+            "bytes": 493,
+            "path": "index.html",
+            "sha256": "5f068419854eccc2581c533a89ea1be353e1fd7b30aca4a5e3c8ee88bff11ee9"
+          }
+        ],
+        "modulePaths": [
+          "node_modules/@lean-bridge/runtime/index.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/main.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+          "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+          "node_modules/inheritedcheckedrecords/index.mjs",
+          "node_modules/inheritedcheckedrecords/internal/descriptor.mjs",
+          "node_modules/inheritedcheckedrecords/internal/runtime.mjs",
+          "node_modules/inheritedcheckedrecords/internal/validators.mjs",
+          "node_modules/react-dom/cjs/react-dom-client.production.js",
+          "node_modules/react-dom/cjs/react-dom.production.js",
+          "node_modules/react-dom/client.js",
+          "node_modules/react-dom/index.js",
+          "node_modules/react/cjs/react.production.js",
+          "node_modules/react/index.js",
+          "node_modules/scheduler/cjs/scheduler.production.js",
+          "node_modules/scheduler/index.js"
+        ],
+        "sha256": "2f7f1cae4e9f9c0dbb14f2613c0b2faeb62ae549efea1cc476f7b8f05799b867",
+        "variant": "production",
+        "viteVersion": "8.2.1"
+      },
+      {
+        "files": [
+          {
+            "bytes": 285,
+            "path": "assets/__vite-browser-external-D513FCGW.js",
+            "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+          },
+          {
+            "bytes": 885724,
+            "path": "assets/index-C7xEMPqd.js",
+            "sha256": "a2386a9c3f8ba4b2326d3b2aade3d643f6aa7b4838b618e93e82f6460ba036c5"
+          },
+          {
+            "bytes": 10881,
+            "path": "assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb"
+          },
+          {
+            "bytes": 3559763,
+            "path": "assets/inheritedcheckedrecords-BOlCJ8zM.js",
+            "sha256": "80a8ca0050174757c88bb915eb07202ff53a2bb0d80001da7b5a06e98bc41655"
+          },
+          {
+            "bytes": 6488025,
+            "path": "assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          },
+          {
+            "bytes": 2199,
+            "path": "assets/preload-helper-CZj_vqJa.js",
+            "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+          },
+          {
+            "bytes": 1180,
+            "path": "assets/rolldown-runtime-BPOCksWG.js",
+            "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+          },
+          {
+            "bytes": 493,
+            "path": "index.html",
+            "sha256": "89ab2c04df6fb5c657982ebbc6de49c5003ab4b8ffd03d26585be75f89b7fb9d"
+          }
+        ],
+        "modulePaths": [
+          "node_modules/@lean-bridge/runtime/index.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/main.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+          "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+          "node_modules/inheritedcheckedrecords/index.mjs",
+          "node_modules/inheritedcheckedrecords/internal/descriptor.mjs",
+          "node_modules/inheritedcheckedrecords/internal/runtime.mjs",
+          "node_modules/inheritedcheckedrecords/internal/validators.mjs",
+          "node_modules/react-dom/cjs/react-dom-client.development.js",
+          "node_modules/react-dom/cjs/react-dom.development.js",
+          "node_modules/react-dom/client.js",
+          "node_modules/react-dom/index.js",
+          "node_modules/react/cjs/react.development.js",
+          "node_modules/react/index.js",
+          "node_modules/scheduler/cjs/scheduler.development.js",
+          "node_modules/scheduler/index.js"
+        ],
+        "sha256": "4241da6d4d83452d19ff02dd433799f791ee1498472ea5860c97f72ef88f538c",
+        "variant": "strict",
+        "viteVersion": "8.2.1"
+      }
+    ],
+    "executions": [
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "chromium",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 2,
+          "commits": 3,
+          "effects": 3,
+          "ignored": 0
+        },
+        "observation": {
+          "hostVersion": "151.0.7922.34",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "chromium",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 5,
+          "commits": 3,
+          "effects": 6,
+          "ignored": 3
+        },
+        "observation": {
+          "hostVersion": "151.0.7922.34",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "strict"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "firefox",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 2,
+          "commits": 3,
+          "effects": 3,
+          "ignored": 0
+        },
+        "observation": {
+          "hostVersion": "153.0",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "firefox",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 5,
+          "commits": 3,
+          "effects": 6,
+          "ignored": 3
+        },
+        "observation": {
+          "hostVersion": "153.0",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "strict"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "webkit",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 2,
+          "commits": 3,
+          "effects": 3,
+          "ignored": 0
+        },
+        "observation": {
+          "hostVersion": "26.5",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 10881,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/inheritedcheckedrecords-95491bb762dabafa.so-CwcmlRLC.wasm",
+            "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb",
+            "status": 200
+          }
+        ],
+        "engine": "webkit",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "cleanups": 5,
+          "commits": 3,
+          "effects": 6,
+          "ignored": 3
+        },
+        "observation": {
+          "hostVersion": "26.5",
+          "module": "inheritedcheckedrecords",
+          "profile": "browser-react",
+          "realm": "window",
+          "results": {
+            "calls": 518,
+            "checks": 1042,
+            "module": "inheritedcheckedrecords",
+            "recoveries": 0,
+            "rejections": 0,
+            "resultOnly": true,
+            "rounds": 256,
+            "route": "reviewed-result-only",
+            "snapshots": 518
+          },
+          "schemaVersion": 1
+        },
+        "pendingUnmount": true,
+        "variant": "strict"
+      }
+    ],
+    "externalNetworkBlocked": true,
+    "framework": [
+      {
+        "archive": "framework/react-19.2.8.tgz",
+        "name": "react",
+        "sha256": "98194e5c2f9003355b8d0f8fbff5ab90970aeaa2fffc98ebeadcfba4ca201a73",
+        "version": "19.2.8"
+      },
+      {
+        "archive": "framework/react-dom-19.2.8.tgz",
+        "name": "react-dom",
+        "sha256": "9ed0cce3ae338576db9a90ad85eb24e5b40f6079589b10b9fce9dbaed53104c4",
+        "version": "19.2.8"
+      },
+      {
+        "archive": "framework/scheduler-0.27.0.tgz",
+        "name": "scheduler",
+        "sha256": "eee584b9bad43f93d70f3e02dd4e564237ad08230b00e4539e1833fc7f6ab0c9",
+        "version": "0.27.0"
+      }
+    ],
+    "installedAssets": [
+      {
+        "bytes": 10881,
+        "path": "node_modules/inheritedcheckedrecords/internal/wasm/inheritedcheckedrecords-95491bb762dabafa.so.wasm",
+        "sha256": "ce47756f536681f8ba248d6f695695b366ae32b89287a0f7f27c8028d7008fbb"
+      },
+      {
+        "bytes": 6488025,
+        "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+      }
+    ],
+    "installedSourcesRemoved": true,
+    "requestedEngines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ]
+  },
+  "compilerFreePath": true,
+  "consumerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "corpusSha256": "7ee7119df916f4cc02b8a12f250d3897a970300cd05ba327512a24a31d27cf1f",
+  "inputs": {
+    "check.mjs": {
+      "bytes": 8036,
+      "sha256": "7ee7119df916f4cc02b8a12f250d3897a970300cd05ba327512a24a31d27cf1f"
+    },
+    "index.html": {
+      "bytes": 259,
+      "sha256": "f1924291e843aff6f831a527b53a8f67aa1ac07624ee0e645736e79fe99eaa1d"
+    },
+    "javascript.mjs": {
+      "bytes": 1243,
+      "sha256": "25270e52940474ab172121d8e6353cf015fa905f56ec275f820dff052cf81500"
+    },
+    "package-lock.json": {
+      "bytes": 2480,
+      "sha256": "acb09202142d05f79c55e560a1c1a0ad30a653003be66fd742f30156cfc3bf7d"
+    },
+    "package.json": {
+      "bytes": 457,
+      "sha256": "60e11b0352e8e31ab0b6f468fc63d47464ad904f68c7d12ddc593fe87188203d"
+    },
+    "package.mjs": {
+      "bytes": 122,
+      "sha256": "e9397965ab7c14b93415111d2bae300f248ba6ca50a4b278e1bbbfd9e308e397"
+    },
+    "react.mjs": {
+      "bytes": 1468,
+      "sha256": "8596690c5bdb64912efc10d7abce14f6083b7e6d855297596c3834ddd44a3b48"
+    },
+    "request.json": {
+      "bytes": 129,
+      "sha256": "e450dfd7d62c48a6b4fee75ed73fe0873333fb12fa2e05daee63d5252d04b0ac"
+    }
+  },
+  "observation": {
+    "hostVersion": "151.0.7922.34",
+    "module": "inheritedcheckedrecords",
+    "profile": "browser-react",
+    "realm": "window",
+    "results": {
+      "calls": 518,
+      "checks": 1042,
+      "module": "inheritedcheckedrecords",
+      "recoveries": 0,
+      "rejections": 0,
+      "resultOnly": true,
+      "rounds": 256,
+      "route": "reviewed-result-only",
+      "snapshots": 518
+    },
+    "schemaVersion": 1
+  },
+  "observations": [
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "strict"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "strict"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "strict"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "strict"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "strict"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "strict"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "strict"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "strict"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "strict"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "strict"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "strict"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-1",
+      "variant": "strict"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "remount-2",
+      "variant": "strict"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "strict"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "inheritedcheckedrecords",
+        "profile": "browser-react",
+        "realm": "window",
+        "results": {
+          "calls": 518,
+          "checks": 1042,
+          "module": "inheritedcheckedrecords",
+          "recoveries": 0,
+          "rejections": 0,
+          "resultOnly": true,
+          "rounds": 256,
+          "route": "reviewed-result-only",
+          "snapshots": 518
+        },
+        "schemaVersion": 1
+      },
+      "phase": "pending-unmount",
+      "variant": "strict"
+    }
+  ],
+  "offlineInstall": true,
+  "packageSourceSha256": "e9397965ab7c14b93415111d2bae300f248ba6ca50a4b278e1bbbfd9e308e397",
+  "producerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "profile": "browser-react",
+  "receiptSha256": "9a6a9d08155afd9567a811752606ebda29553e3546a43f188d0bcaca9482b0c8",
+  "route": "reviewed-result-only",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

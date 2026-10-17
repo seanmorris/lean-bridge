@@ -1,0 +1,35 @@
+{
+  "browserExecutions": 12,
+  "browserVersions": {
+    "chromium": "151.0.7922.34",
+    "firefox": "153.0",
+    "webkit": "26.5"
+  },
+  "calls": 518,
+  "checks": 1042,
+  "consumerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "controls": {
+    "browser": 165,
+    "npmAdapter": 4,
+    "npmReport": 10,
+    "record": 170
+  },
+  "engines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "lifecycleObservations": 51,
+  "mode": "result-only",
+  "producerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "profiles": [
+    "browser-javascript",
+    "browser-react",
+    "browser-worker"
+  ],
+  "recoveries": 0,
+  "rejections": 0,
+  "rounds": 256,
+  "route": "reviewed-result-only",
+  "snapshots": 518
+}

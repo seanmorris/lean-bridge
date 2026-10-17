@@ -1,0 +1,36 @@
+{
+  "accepted": {
+    "artifacts": {
+      "@lean-bridge/runtime": {
+        "bytes": 1638787,
+        "integrity": "sha512-ovxYWjjmwCgGobM2UWJSmjMMEoiBF5reXnusvDwWfRIg4dL89oFHG3eOOnaWZv1RcLxYGL69cEei9RYT9ZfkRg==",
+        "sha256": "51e1711da30c1b86f12e846122bd7eb60d349d1834dac3e3a435e0ed1f2759af"
+      },
+      "inheritedcheckedrecords": {
+        "bytes": 13366,
+        "integrity": "sha512-c43pKgtIAPKCFCn3e8zS+s/7pOZ6sA2Q3H+8ied61d013P5UYbL50UgN5u2SFnKMW6Xai0MkmyIqNR7AcZeInw==",
+        "sha256": "8a05a340e687d1ac4e2f368280508770dd7dd810fa7619a4224200b0da45ad6a"
+      }
+    },
+    "calls": 518,
+    "checks": 1042,
+    "executions": 2,
+    "mode": "result-only",
+    "producerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "route": "ordinary-result-only",
+    "runtime": {
+      "arch": "x64",
+      "node": "v22.23.3",
+      "platform": "linux"
+    },
+    "snapshots": 518
+  },
+  "adapterControls": 4,
+  "checkerCommit": "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33",
+  "recordControls": 64,
+  "reportControls": 10,
+  "schemaVersion": 1
+}

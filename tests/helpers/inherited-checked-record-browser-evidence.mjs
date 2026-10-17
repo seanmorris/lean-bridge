@@ -26,7 +26,8 @@ import {
 
 export { inheritedCheckedRecordBrowserEvidence } from "./inherited-checked-record-browser-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordBrowserEvidenceSha256 = null;
+export const inheritedCheckedRecordBrowserEvidenceSha256
+	= "e407d8a426f8102084cbd40145922cc3508d73e896cae60917886aad26cfb248";
 
 const cellFiles = [
 	"browser.tap", "controls.tap", "npm.tap", "runtime-after.json"

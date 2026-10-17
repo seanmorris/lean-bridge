@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "inheritedcheckedrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for inheritedcheckedrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.cffa0bcea968576e44e98c991892c22996aef14ae45ba7d21489b93df8cd6bd6"
+  },
+  "leanBridge": {
+    "component": "inheritedcheckedrecords@1.0.0",
+    "componentBundleSha256": "6827496c773f77d262909f849f1a4f021137fba47a90c9af16cbdeee3ccbdd1b",
+    "componentIdentitySha256": "9e4fde5b88060981416b622e2cb05ad7e07764a8ebe7dc1969b5205cf6fb6ce2",
+    "bindingIrSha256": "00c89fd429ee5484eed64fb0bdcae3a44bda860d704e48e45f04fe7b0ba0f80f",
+    "sharedRuntime": true
+  }
+}

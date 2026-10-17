@@ -1,0 +1,23 @@
+TAP version 13
+# Subtest: inherited checked-record browser observations close every route and lifecycle
+ok 1 - inherited checked-record browser observations close every route and lifecycle
+  ---
+  duration_ms: 113.559257
+  type: 'test'
+  ...
+# Subtest: retained inherited checked-record npm packages pass source-free browser acceptance
+ok 2 - retained inherited checked-record npm packages pass source-free browser acceptance
+  ---
+  duration_ms: 75243.859348
+  type: 'test'
+  ...
+# reviewed-result-only: retained npm handoff into all browser contexts
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 75653.579842

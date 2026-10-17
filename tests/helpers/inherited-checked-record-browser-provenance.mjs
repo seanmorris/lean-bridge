@@ -11,11 +11,16 @@ import {
 
 export const inheritedCheckedRecordBrowserEvidence
 	= "docs/evidence/inherited-checked-record-browser-20261017";
-export const inheritedCheckedRecordBrowserProducer = null;
-export const inheritedCheckedRecordBrowserNpmChecker = null;
-export const inheritedCheckedRecordBrowserConsumer = null;
-export const inheritedCheckedRecordBrowserChecker = null;
-export const inheritedCheckedRecordBrowserArchiver = null;
+export const inheritedCheckedRecordBrowserProducer
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordBrowserNpmChecker
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordBrowserConsumer
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordBrowserChecker
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
+export const inheritedCheckedRecordBrowserArchiver
+	= "b60f994450a8e45cc6d7023ecdb7cdc9c85bfbb2";
 export const inheritedCheckedRecordBrowserLoadCeiling = 8;
 
 /** Require all five source identities before reading archived evidence. */
