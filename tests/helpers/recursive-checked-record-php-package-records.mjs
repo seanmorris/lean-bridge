@@ -7,7 +7,8 @@ import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { recursiveCheckedRecordPhpGenerator } from "./recursive-checked-record-php-generators.mjs";
 import {
-	assertRecursiveCheckedRecordPhpIdentity
+	assertRecursiveCheckedRecordPhpGraphIdentity
+	, assertRecursiveCheckedRecordPhpIdentity
 	, recursiveCheckedRecordPhpNativeEvidence
 	, recursiveCheckedRecordPhpReceipt
 } from "./recursive-checked-record-php-package.mjs";
@@ -50,7 +51,7 @@ export const checkRecursiveCheckedRecordPhpPackageRecords = async ({ read, json,
 		assert.deepEqual(Buffer.from(bytes.toString("utf8")), bytes);
 	}
 	const prefix = "package/lean-bridge/";
-	assert.equal(model.copiedGraph.callbacks, false);
+	assertRecursiveCheckedRecordPhpGraphIdentity(model);
 	assert.deepEqual(await json(prefix + "component/model.json"), model);
 	assert.deepEqual(await json(prefix + "component/binding-ir.json"), model.bindingIr);
 	const component = await json(prefix + "component/native-component.json");

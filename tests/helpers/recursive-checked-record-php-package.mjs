@@ -16,6 +16,16 @@ export const recursiveCheckedRecordPhpReceipt = "lean-bridge/package-receipt.jso
 const identity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 
 /**
+ * Require the canonical non-callable copied-graph descriptor shape.
+ *
+ * @param model - Reproduced compiler model.
+ */
+export const assertRecursiveCheckedRecordPhpGraphIdentity = model => {
+	assert.ok(model.copiedGraph && typeof model.copiedGraph === "object");
+	assert.equal(model.copiedGraph.callbacks, undefined);
+};
+
+/**
  * Require exact Composer coordinates, source identity and selected platform floor.
  *
  * @param receipt - Original archive-derived package receipt.
@@ -92,7 +102,7 @@ export const inspectRecursiveCheckedRecordPhpPackage = async ({ context, pkg, mo
 	assertRecursiveCheckedRecordPhpIdentity(receipt, pkg, model, floor, fixture);
 	const json = async path => JSON.parse(await readFile(join(root, "lean-bridge", path)));
 	assert.deepEqual(await json("component/model.json"), model);
-	assert.equal(model.copiedGraph.callbacks, false);
+	assertRecursiveCheckedRecordPhpGraphIdentity(model);
 	const component = await json("component/native-component.json"), adapter = await json("native-c-adapter.json"), runtime = await json("runtime.json");
 	const evidence = recursiveCheckedRecordPhpNativeEvidence(receipt, component, adapter, runtime, model.bindingIr);
 	// Every selected export has parameter refinements, so exact diagnostics are mandatory.

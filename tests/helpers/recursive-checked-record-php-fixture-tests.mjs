@@ -24,6 +24,9 @@ import {
 	, recursiveCheckedRecordPhpReview, recursiveCheckedRecordPhpSelection
 } from "./recursive-checked-record-php-fixture.mjs";
 import { assertRecursiveCheckedRecordPhpResources } from "./recursive-checked-record-php-resources.mjs";
+import {
+	assertRecursiveCheckedRecordPhpGraphIdentity
+} from "./recursive-checked-record-php-package.mjs";
 
 export const recursiveCheckedRecordPhpModuleFaults = Object.freeze({
 	recursive: Object.freeze(["second-normalizes-root-only"])
@@ -102,6 +105,15 @@ test("recursive checked-record PHP keeps both author contracts and Composer coor
 		assert.throws(() => parseRecursiveCheckedRecordPhpResult(stdout.replace("{", "{\"extra\":1,"), fixture));
 	}
 	assert.throws(() => recursiveCheckedRecordPhpPackage("unknown"));
+});
+
+test("recursive checked-record PHP requires the canonical non-callable graph shape", () => {
+	assert.doesNotThrow(() => assertRecursiveCheckedRecordPhpGraphIdentity({
+		copiedGraph: { schemaVersion: 1, types: [], exports: [] }
+	}));
+	for(const copiedGraph of [undefined, null, false, { callbacks: false }
+		, { callbacks: true }, { callbacks: [] }])
+		assert.throws(() => assertRecursiveCheckedRecordPhpGraphIdentity({ copiedGraph }));
 });
 
 test("recursive checked-record PHP gates reject disabled selections and unsupported modules", () => {
