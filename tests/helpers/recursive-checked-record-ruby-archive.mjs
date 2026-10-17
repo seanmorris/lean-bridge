@@ -70,9 +70,13 @@ export const checkRecursiveCheckedRecordRubyArchive = ({ archive, artifact, file
 	const checksumBytes = gunzipSync(outer.get("checksums.yaml.gz"), { maxOutputLength: 4096 });
 	// Psych may single-quote a digest that would otherwise read as a YAML number.
 	const lines = checksumBytes.toString("utf8").split("\n");
-	const expected = ["---", ...["SHA256", "SHA512"].flatMap(algorithm => [algorithm + ":"
-		, ...["metadata.gz", "data.tar.gz"].map(name => [name
-			, createHash(algorithm.toLowerCase()).update(outer.get(name)).digest("hex")])]), ""];
+	const digest = (algorithm, name) =>
+		createHash(algorithm.toLowerCase()).update(outer.get(name)).digest("hex");
+	const section = algorithm => [
+		algorithm + ":"
+		, ...["metadata.gz", "data.tar.gz"].map(name => [name, digest(algorithm, name)])
+	];
+	const expected = ["---", ...section("SHA256"), ...section("SHA512"), ""];
 	assert.equal(lines.length, expected.length);
 	for(const [index, line] of lines.entries())
 	{
