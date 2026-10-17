@@ -11,8 +11,6 @@ import { join } from "node:path";
 import { sha256 } from "../src/capsule/node.mjs";
 import { phpWasmDirectPromotionChangedPaths, phpWasmDirectPromotionHistoryPath, reversePhpWasmDirectPromotionUpdate } from "../tests/helpers/php-wasm-direct-fin-promotion-history.mjs";
 
-import { phpWasmDirectPromotionReferences, promotePhpWasmDirectFin } from "../tests/helpers/php-wasm-direct-fin-promotion.mjs";
-
 const predecessorCommit = "4748e2c85700db76be65342b9de153b6f0adb14b";
 const git = args => execFileSync("git", args, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 assert.equal(git(["rev-parse", "HEAD"]).trim(), predecessorCommit, "Direct PHP-Wasm Fin promotion history is draft-only at its exact predecessor; never rewrite a committed ledger");
@@ -25,6 +23,9 @@ const draft = await readFile(phpWasmDirectPromotionHistoryPath, "utf8").then(JSO
 	throw error;
 });
 if(draft) assert.equal(draft.predecessorCommit, predecessorCommit);
+const {
+	phpWasmDirectPromotionReferences, promotePhpWasmDirectFin
+} = await import("../tests/helpers/php-wasm-direct-fin-promotion.mjs");
 const sources = new Map();
 for(const path of phpWasmDirectPromotionChangedPaths.filter(path => path !== inventoryPath))
 	sources.set(path, { previous: sha256(git(["show", `${predecessorCommit}:${path}`]))
