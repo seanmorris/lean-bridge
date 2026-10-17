@@ -36,11 +36,23 @@ export const generateCopiedPerlGraphPackage = (model, receipt) => {
 	const publicModel = compileCopiedPerlGraphPackageModel(ir, moduleName);
 	const generated = generateCopiedPerlGraphXs(ir, moduleName);
 	const abi = nativeGraphCarrierAbi(model);
+	const reviewedParameterNames = item => {
+		if(!model.sourceIdentity?.reviewedBindingIr) return null;
+		const declaration = model.bindingIr.declarations.find(
+			declaration => declaration.id === `lean:${item.name}`
+		);
+		if(!declaration || declaration.parameters.length !== item.parameters.length)
+			throw new TypeError(`Missing reviewed Perl parameter contract for ${item.name}`);
+		return declaration.parameters.map(parameter => parameter.name);
+	};
 	const refinementExports = model.exports.map((item, index) => ({
 		bindingId: item.bindingId
 		, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol
 		, wrapper: `export${index}`, sourceDeclaration: item.name
 		, parameters: item.parameters
+		, ...model.sourceIdentity?.reviewedBindingIr ? {
+			diagnosticParameterNames: reviewedParameterNames(item)
+		} : {}
 		, ...(item.refinements ? { refinements: item.refinements } : {})
 	}));
 	const native = generateNativeCopiedGraphAdapters(ir, abi, {

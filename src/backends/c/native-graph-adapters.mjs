@@ -194,11 +194,18 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 	{
 		const root = roots.get(item.bindingId);
 		if(!root) throw new TypeError("Recursive refinement export lacks a graph root");
+		const diagnosticParameterNames = item.diagnosticParameterNames
+			?? item.refinements.parameters.map((_, index) => `arg${index}`);
+		if(!Array.isArray(diagnosticParameterNames)
+			|| diagnosticParameterNames.length !== item.refinements.parameters.length
+			|| diagnosticParameterNames.some(name => typeof name !== "string" || !name.length))
+			throw new TypeError("Recursive refinement diagnostic parameters must cover the signature");
 		const passes = [];
 		for(const mode of ["fin", "constructor"])
 		{
 			const checked = item.refinements.parameters.map((tree, index) => tree && contains(tree, mode)
-				? { index, name: helper(mode, tree, root.parameters[index], item.symbol, index) } : null).filter(Boolean);
+				? { index, label: diagnosticParameterNames[index]
+					, name: helper(mode, tree, root.parameters[index], item.symbol, index) } : null).filter(Boolean);
 			if(checked.length) passes.push({ mode, checked });
 		}
 		if(passes.length) calls.set(item.bindingId, passes);
@@ -582,8 +589,8 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 		const refinementPasses = diagnostics?.calls.get(root.bindingId) ?? [];
 		const refinementCalls = refinementPasses.flatMap((pass, passIndex) => [
 			passIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`
-			, ...pass.checked.flatMap(({ index, name }, checkIndex) => {
-				const mark = `refinement_mark_${passIndex}_${checkIndex}`, label = `arg${index}`;
+			, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {
+				const mark = `refinement_mark_${passIndex}_${checkIndex}`;
 				return [`  size_t ${mark} = ng_refinement_mark();`
 					, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
 					, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`

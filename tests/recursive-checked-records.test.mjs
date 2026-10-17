@@ -116,6 +116,24 @@ test("recursive checked-record graph diagnostics check fields before every outer
 	assert.match(native.source, /return NG_LIMIT/u);
 });
 
+test("recursive graph diagnostics accept explicit reviewed parameter names", () => {
+	const { ir, abi, exports } = contract();
+	const reviewed = exports.map(item => ({ ...item
+		, diagnosticParameterNames: item.parameters.map((_, index) => `value${index}`) }));
+	const native = generateNativeCopiedGraphAdapters(ir, abi, {
+		wordBits: 32, refinementExports: reviewed
+		, nominalRefinements: nominalRefinementEntries(ir.types)
+	});
+	assert.match(native.source, /ng_refinement_text\("value0"/u);
+	assert.doesNotMatch(native.source, /ng_refinement_text\("arg0"/u);
+	const invalid = structuredClone(reviewed);
+	invalid[0].diagnosticParameterNames = [];
+	assert.throws(() => generateNativeCopiedGraphAdapters(ir, abi, {
+		wordBits: 32, refinementExports: invalid
+		, nominalRefinements: nominalRefinementEntries(ir.types)
+	}), /diagnostic parameters must cover the signature/u);
+});
+
 test("recursive checked-record controls refuse missing definitions, proof drift and repeated backedge choices", () => {
 	const { ir, abi, exports } = contract();
 	const missing = { ...abi, types: abi.types.filter(type => !type.id.endsWith(".Packet")) };
