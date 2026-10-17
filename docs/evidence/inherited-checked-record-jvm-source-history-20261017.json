@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-jvm-source-v1",
+  "predecessorCommit": "a242db6fa8ea22425241191d0ff5ec54964629d8",
+  "draftParentCommit": "1474d502a99ce34080c0a4ce14eff9349c24dc0f",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-jvm.yml",
+      "currentSha256": "e25552c0b200a7e3a59709fae77d55ff89625bfa3c007d6dbd28c8656b723363"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-jvm-ci.mjs",
+      "currentSha256": "99de9d57890fdaef66292cb3bacaac8ac700b0ef0f1f9e8a55b9177a6c587411"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-jvm-ci.sh",
+      "currentSha256": "3374072e0fc1b5a683ca85e4d74c7f5aa34c7271090e52877464acf08aac0f40"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-jvm-source-history.mjs",
+      "currentSha256": "f8c74814f69e1951399a22182e54501ea180d150ef1a6f8ab2b33a0cfed0c872"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/java.java",
+      "currentSha256": "43fcf5b84feea496adfa8606c6f8996c21d5fff7635209edfa26292ccfe58051"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/kotlin.kt",
+      "currentSha256": "f80ff9de38327d5f0f9335e2a72f262d9436f036ff4719b4db07b32e739959c0"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-caller-tests.mjs",
+      "currentSha256": "d13b3beaec4f546bb579d6c1179aceb6a12f36f5ca1e79ff1c128152f65eb253"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-handoff.mjs",
+      "currentSha256": "62579ddb090f3082a32d2ef7cf0cdb2f51bf47855b7b97e2d50e18d6d3cf35aa"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-report.mjs",
+      "currentSha256": "ede3c8c297bb94f60c8a94b42e8091706d614000d58ba28288839807e0338508"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-workflow-tests.mjs",
+      "currentSha256": "ab7f8bf9ed22d2e592c93320d6e279b796e3dcbd2624946ca237cfeb24e9a731"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-ci-workflow.mjs",
+      "currentSha256": "cb8c470018d3700e35e0d0c0616ccd2600d6f1e0893506062e65479e61ece6c9"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-consumer-records.mjs",
+      "currentSha256": "699637cd3b853a82a2179d17f158643a8cac93ba2d8da9b5b44ff417c7e8ef2f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-controls.mjs",
+      "currentSha256": "5437ea048d893628ae0df24da205f9e90d5987e72498fa7c35106b7661e9d6b1"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-fixture-tests.mjs",
+      "currentSha256": "7d7e7c16380d7515a34da9cd94e2492d29e6f4e66c6b9bb912f7afa013ce053e"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-fixture.mjs",
+      "currentSha256": "59ea18b71a2ad46876bd3ec193a1ec06926ac9760cb97a1dd0b510e639089802"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-generators.mjs",
+      "currentSha256": "483972acd957b0a8c0c67039d7b44aeeda9092a4d402c3c05e8c717148856789"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-installed-tests.mjs",
+      "currentSha256": "ea4bdfebfdefe6573b49348d260ca574d89bb7e61dad1a73b3c684048111daab"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-model-records.mjs",
+      "currentSha256": "2b9c50d8df686c40be5ae8dd8dbbf2c5247c8fb7a6882608b9fc26624e5ee22b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-package-records.mjs",
+      "currentSha256": "488598ccea27944b97bdcdfef34459ee956dd07b0b183b8c566f2b39a6767311"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-package.mjs",
+      "currentSha256": "9832f59be76d275282ad9e89cb9c0f779a8d1273d3cdba72b0d42829a886ae80"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-probe.mjs",
+      "currentSha256": "bc8d42ca32f5c96b3347c788e8f05075d89f7ff05f5d899f32a3f59e7565f536"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-report.mjs",
+      "currentSha256": "70056308831e88e3ef89b0bb26713fceb32fde24ad0bcc73642f2696b78b04a4"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-jvm-source-history.mjs",
+      "currentSha256": "21d1b7174aec93d8154cf268ff4e430872de8eb3d8fe34730b79ec4a16fd8c6e"
+    },
+    {
+      "path": "tests/inherited-checked-record-jvm-source-history.test.mjs",
+      "currentSha256": "b996e9ddcd19ef38307e8b1176a5349e0d652793254af9de4e1cbba314af4eab"
+    },
+    {
+      "path": "tests/inherited-checked-record-jvm.test.mjs",
+      "currentSha256": "93a0768afb0ba215fe851577b0f8b8aaae08f34e0beebf1ae6e9b0175ec55a57"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+      "currentSha256": "fa00a0ae64b55cb40105b75263c5b79a2f3aa5e678de062306138c07efa78819",
+      "edits": [
+        {
+          "start": 10850,
+          "previous": "",
+          "current": "\t\t, \"dotnet-span-name-contract\"\n\t\t, \"inherited-checked-record-jvm\"\n\t\t, \"inherited-checked-record-jvm-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7206af14bcc83449b5692f3d945b6b4a1c7fb4d27f94995e9b6a4f62876351cb",
+      "currentSha256": "17a10292bd7d61726183a73fdc2b7f81904835f0e1c03cbf25106ac451bbda87",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordJvmSource, inheritedCheckedRecordJvmChangedPaths } from \"./inherited-checked-record-jvm-source-history.mjs\";\n"
+        },
+        {
+          "start": 72970,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordJvmSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82305,
+          "previous": "\t...inheritedCheckedRecordDotnetChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordJvmChangedPaths\n\t, ...inheritedCheckedRecordDotnetChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

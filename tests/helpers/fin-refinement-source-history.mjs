@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeInheritedCheckedRecordJvmSource, inheritedCheckedRecordJvmChangedPaths } from "./inherited-checked-record-jvm-source-history.mjs";
 import { beforeInheritedCheckedRecordDotnetSource, inheritedCheckedRecordDotnetChangedPaths } from "./inherited-checked-record-dotnet-source-history.mjs";
 import { beforeCheckedRecordAliasAdmissionSource, checkedRecordAliasAdmissionChangedPaths } from "./checked-record-alias-admission-source-history.mjs";
 import { beforeInheritedCheckedRecordTestRegistrationSource, inheritedCheckedRecordTestRegistrationChangedPaths } from "./inherited-checked-record-test-registration-history.mjs";
@@ -932,6 +933,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeInheritedCheckedRecordJvmSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordDotnetSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordAliasAdmissionSource(path, source, expected);
@@ -1104,7 +1107,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedCheckedRecordDotnetChangedPaths
+	...inheritedCheckedRecordJvmChangedPaths
+	, ...inheritedCheckedRecordDotnetChangedPaths
 	, ...checkedRecordAliasAdmissionChangedPaths
 	, ...inheritedCheckedRecordTestRegistrationChangedPaths
 	, ...inheritedCheckedRecordFoundationChangedPaths
