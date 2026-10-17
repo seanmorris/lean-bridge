@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-dotnet-source-v1",
+  "predecessorCommit": "f77cde2fc62475208ee8987e319c74c6ad1b2252",
+  "draftParentCommit": "9c90a8f59824c6f117bc84a33d8f3fc82446a3e1",
+  "pathsSha256": "f4027688a4b2e13797c200540d2b6a7840ef88975dafafcd7334a0f1e8335ce9",
+  "pinCount": 116,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+      "currentSha256": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+      "count": 94
+    },
+    {
+      "path": "src/backends/dotnet/copied-conversions.mjs",
+      "previousSha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+      "currentSha256": "c4f9976033c28c671473ee5941b2320f390c52f0cfda7d45896bb5514fc6efc4",
+      "count": 10
+    },
+    {
+      "path": "src/backends/dotnet/copied-model.mjs",
+      "previousSha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+      "currentSha256": "5b35d4b8dadaceaa68030d2e2e15164f5bca3ea5b99fdadf1ecef7ae9e034064",
+      "count": 12
+    }
+  ],
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-dotnet.yml",
+      "currentSha256": "cd1d0d28e38b593d85ff347a61f744626bdb32b8b6a5a6dca39a4b1b6543de8e"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-dotnet-ci.mjs",
+      "currentSha256": "7bbdf28461d32d3e6e7e4613f94cac48ca4472f883236df668115de4437425dc"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-dotnet-ci.sh",
+      "currentSha256": "30dd7dc21673689af90855c33647ed08d6238d6f6d9226b7c5d920818a251bc0"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-dotnet-source-history.mjs",
+      "currentSha256": "559cbfe2bef034c977aba6c620ee4964c5a9dc325479736d345d3be491214064"
+    },
+    {
+      "path": "tests/dotnet-span-name-contract.test.mjs",
+      "currentSha256": "7358fd1a8b05629091168378d78652f85808eebb7ff7269a1fed4229268b7af8"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/dotnet.cs",
+      "currentSha256": "0d5154135c55e8a14abacd8eaeb48b4190bf59de594d665d71e53a9ac279710b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-handoff.mjs",
+      "currentSha256": "dab467bca05bebed511e298da3af75b9dbe3a623dbeb24354c000baa2a683c4f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-policy-tests.mjs",
+      "currentSha256": "9d3d0ab16109e0017e032fcc7fb6a9b869be2280640a2d84d5dedd7e945b9fce"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-report.mjs",
+      "currentSha256": "81296d33d90e3a9d23f29fdded4ae1b36d57861ce5911138577abb8c7e967ba6"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-shell-tests.mjs",
+      "currentSha256": "ae6568d646cb01392129ec3bbd8c56d4b09c218f80d4fc582582ddfe9b7f3bda"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-tools.mjs",
+      "currentSha256": "a12d8bfc1ec80832813ecb8b0b434f953d94bdf020ab657af16aad814a4d32f6"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-workflow-tests.mjs",
+      "currentSha256": "f8ad7718e3437e77507177cb61586b0fb3993984045e75565ad775ab1f89ccd2"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-ci-workflow.mjs",
+      "currentSha256": "b60bcc78290ffb0066e766d198727e8f876d3ea3812e1bb4c0955086210e657b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-controls.mjs",
+      "currentSha256": "9389a3f8d99d4d2a0a372a28248d73d4659a749bc064a5232069ef97de1fda66"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-environment-records.mjs",
+      "currentSha256": "a1ef64186a6b818a4e20689278db0396cf24fb1ca44c80736748abb26b7afab9"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-fixture-tests.mjs",
+      "currentSha256": "26fa094386c71b0a4ca9633a71a785041998dd5c115759a45f19104616491ac4"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-fixture.mjs",
+      "currentSha256": "791e4ce1002e43e6680802165e1e11681763b8a02a44fa2c738ccfb0d2e97220"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-generators.mjs",
+      "currentSha256": "df5194161f124623ac83a41ccab72d9c5c0c51533a8b1ae88af57fd2a2a3aa19"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-installed-tests.mjs",
+      "currentSha256": "0fa9416d82ff3bd3c11127e52718b62db377ccb04791adb77054d0b1a6fd579a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-model-records.mjs",
+      "currentSha256": "39be2518744ec4559138411a68742e65cf32dc5d308b96b1cd3225f1a6401497"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-package-records.mjs",
+      "currentSha256": "82d688d56ddd2356c538e390014627ebc7f749e34d038cc3a9f2b431f763740e"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-package-tests.mjs",
+      "currentSha256": "0835f89c5c89bf6305e91bc9994babf7d945a1fb9d09048f4acef8532a954bf3"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-package.mjs",
+      "currentSha256": "3e8f462f65f044dd574013ccabe7dbfebe59994c98de710abe345900deb6ff90"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-probe-records.mjs",
+      "currentSha256": "fb5f92660ea1f1879d400a02b0cbef19fb63b28d3dd44f0b533d0cb51511b516"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-probe-tests.mjs",
+      "currentSha256": "ea474661321ed9ec83703cb767edf45095017d1f8b80c676ef0f20507078ddf5"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-probe.mjs",
+      "currentSha256": "0122d86aa1ef1eb6a04ab601a7da3783fa25de2cbf0fdbdc6924a5c377d646aa"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-report.mjs",
+      "currentSha256": "2afb3ac90118bc8ff8e19143635ba1d147ae7b6f41d7750ad7e4758dc9f25a4a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-restore-records.mjs",
+      "currentSha256": "32dfc5d8d4f38624913dc10f67eb6e8af277270e5765d8090d74e401c1dfea1e"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-runtime-records.mjs",
+      "currentSha256": "ea6fe250557769fb390f7b74b8c6308688728a62e1ac1ff9c274df73bff7a72a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-dotnet-source-history.mjs",
+      "currentSha256": "9010124a085c3d383e0f4416785fc3c70264b23a941cda2118c86f5e232ff7b8"
+    },
+    {
+      "path": "tests/inherited-checked-record-dotnet-source-history.test.mjs",
+      "currentSha256": "4f377b839be3be06898a72c626e4e00ab991ead2f196bdafd3051f1f50477c78"
+    },
+    {
+      "path": "tests/inherited-checked-record-dotnet.test.mjs",
+      "currentSha256": "fc78a84bcbefae2ae008f29604da6e0502366a004a121c57aa9ef49bb89deb3a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7b305c1c985b489f274e5c716faaca0022d1adb0da7cf7557f047445be9632e8",
+      "currentSha256": "02a33fc91f547d1c46b54ce2f77ad6fdf47a86a3abc31deae07c61940aafb6af",
+      "replacements": [
+        {
+          "previous": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+          "current": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+          "count": 94
+        },
+        {
+          "previous": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+          "current": "c4f9976033c28c671473ee5941b2320f390c52f0cfda7d45896bb5514fc6efc4",
+          "count": 10
+        },
+        {
+          "previous": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+          "current": "5b35d4b8dadaceaa68030d2e2e15164f5bca3ea5b99fdadf1ecef7ae9e034064",
+          "count": 12
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+      "currentSha256": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+      "edits": [
+        {
+          "start": 10759,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-dotnet\"\n\t\t, \"inherited-checked-record-dotnet-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/dotnet/copied-conversions.mjs",
+      "previousSha256": "c61e403a86d9dfbd76f6e28a96eb3006c5ea360192e92928b7d05d26ae3b5e77",
+      "currentSha256": "c4f9976033c28c671473ee5941b2320f390c52f0cfda7d45896bb5514fc6efc4",
+      "edits": [
+        {
+          "start": 7654,
+          "previous": "        Utf8.GetBytes(value, new Span<byte>((void*)data, length));\n",
+          "current": "        Utf8.GetBytes(value, new global::System.Span<byte>((void*)data, length));\n"
+        },
+        {
+          "start": 8025,
+          "previous": "        value.AsSpan().CopyTo(new Span<byte>((void*)data, value.Length));\n",
+          "current": "        value.AsSpan().CopyTo(new global::System.Span<byte>((void*)data, value.Length));\n"
+        },
+        {
+          "start": 8690,
+          "previous": "        if (limbs != 0 && !magnitude.TryWriteBytes(new Span<byte>((void*)data, checked(limbs * 4)), out _, isUnsigned: true, isBigEndian: false)) throw new InvalidOperationException(\"Integer conversion failed\");\n",
+          "current": "        if (limbs != 0 && !magnitude.TryWriteBytes(new global::System.Span<byte>((void*)data, checked(limbs * 4)), out _, isUnsigned: true, isBigEndian: false)) throw new InvalidOperationException(\"Integer conversion failed\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/dotnet/copied-model.mjs",
+      "previousSha256": "ae2c93521614952d4c96748e8d5bdabb803f1a4663299cf3542ddd0add073d4b",
+      "currentSha256": "5b35d4b8dadaceaa68030d2e2e15164f5bca3ea5b99fdadf1ecef7ae9e034064",
+      "edits": [
+        {
+          "start": 677,
+          "previous": "const runtimeNames = new Set((\"Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding Span ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison\").split(\" \"));\n",
+          "current": "const runtimeNames = new Set((\"Scope Native Runtime NativeError ArgumentException ArgumentNullException ArgumentOutOfRangeException InvalidOperationException OutOfMemoryException PlatformNotSupportedException DllNotFoundException IDisposable StructLayout LayoutKind DllImport CallingConvention UTF8Encoding ReadOnlySpan IntPtr NativeMemory NativeLibrary RuntimeInformation Architecture OperatingSystem BitConverter AppDomain Tuple File Path Convert StringComparison\").split(\" \"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "24fe1e558fd8b68f42e4f2950c9e9fbe5516b677e04a6c2f22f705734ac66186",
+      "currentSha256": "7206af14bcc83449b5692f3d945b6b4a1c7fb4d27f94995e9b6a4f62876351cb",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordDotnetSource, inheritedCheckedRecordDotnetChangedPaths } from \"./inherited-checked-record-dotnet-source-history.mjs\";\n"
+        },
+        {
+          "start": 72824,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordDotnetSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82038,
+          "previous": "\t...checkedRecordAliasAdmissionChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordDotnetChangedPaths\n\t, ...checkedRecordAliasAdmissionChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

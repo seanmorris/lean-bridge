@@ -288,6 +288,7 @@ const profileManifest = Object.freeze({
 		, "inherited-checked-record-browser"
 		, "inherited-checked-record-browser-controls"
 		, "inherited-checked-record-dotnet"
+		, "inherited-checked-record-dotnet-source-history"
 		, "inherited-checked-record-native"
 		, "inherited-checked-record-npm-source"
 		, "inherited-checked-record-test-registration-history"
