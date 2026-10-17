@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-graph-v1",
+  "target": "ruby",
+  "component": "recursivecheckedrecords@1.0.0",
+  "bindingIrSha256": "f3abf5f18f0bd784e54e1e89f10d1ad87e751e6e4a3d5e8c1f8396fdc17b9ce5",
+  "namespace": "LeanBridge::Recursivecheckedrecords",
+  "files": [
+    "lib/lean_bridge/recursivecheckedrecords.rb",
+    "lib/lean_bridge/recursivecheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/recursivecheckedrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/recursivecheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "exports": [
+    "LeanBridgeError",
+    "UNIT",
+    "Some",
+    "Packet",
+    "echo",
+    "echo_groups",
+    "first",
+    "groups",
+    "produce",
+    "second"
+  ],
+  "aliases": [
+    {
+      "id": "lean:RecursiveCheckedRecords.PacketAlias",
+      "name": "PacketAlias",
+      "target": {
+        "id": "lean:RecursiveCheckedRecords.Packet",
+        "kind": "named"
+      },
+      "contractType": "Packet",
+      "rubyType": "LeanBridge::Recursivecheckedrecords::Packet"
+    }
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94"
+  },
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "recursive-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive Ruby packages support finite copied values; callables, resources and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is MRI Ruby 3.3 on Linux x86-64 with 1:1 threads."
+    }
+  ]
+}

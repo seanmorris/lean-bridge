@@ -1,0 +1,32 @@
+{
+  "args": [
+    "consumer.rb",
+    "recursive"
+  ],
+  "closure": {
+    "environmentSha256": "82d97944742f8446954f185c16a3c843b894b266263b9d5a3408ef98b837ba44",
+    "gemspecSha256": "e06a94837d6c6329a04bb9aeea98af607ebe87e9843cf77339185040c8b80525",
+    "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+    "packageFileSetSha256": "17b28d17f229b459339ee62a8a85ba04bf810ead34a15e8b84952ce1c675f2ba",
+    "receiptSha256": "c3a56e821c78d600090e71d420a24c74aac3a42bee9cd0ab98dc9601e12ead33"
+  },
+  "command": "/app/.toolchains/ruby33/bin/ruby",
+  "counts": {
+    "checks": 1083,
+    "hostRejections": 78,
+    "module": "recursive",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 8,
+    "snapshots": 495
+  },
+  "cwd": "/tmp/lean-bridge-recursive-checked-record-ruby-CdYvGt/consumer-relocated",
+  "gems": "/tmp/lean-bridge-recursive-checked-record-ruby-CdYvGt/consumer-relocated/gems",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1083,\"hostRejections\":78,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":8,\"snapshots\":495}\n"
+  }
+}

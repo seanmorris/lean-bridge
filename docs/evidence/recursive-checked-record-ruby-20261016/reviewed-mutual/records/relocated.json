@@ -1,0 +1,32 @@
+{
+  "args": [
+    "consumer.rb",
+    "mutual"
+  ],
+  "closure": {
+    "environmentSha256": "ce39e5f0df04dfa82e521cfa917853a8ff1c6684e666f32d6448d9c9fef16297",
+    "gemspecSha256": "023eb2a3fb651964f6f6071e9b929ccbe2a3659af155eff6d7265940c3376294",
+    "interpreterSha256": "28eea9e1f4c7eef2f6812b0535409dce29f71ca86bbbddeccb6df6d3279bf6bb",
+    "packageFileSetSha256": "c12d1c58838bd76a140634846edaad0ff37972f3b12b22602d9ffe9ede89ef79",
+    "receiptSha256": "1c53850ebf773259c940233a780636db0876ba11517e98769b6d50bb946ed047"
+  },
+  "command": "/app/.toolchains/ruby33/bin/ruby",
+  "counts": {
+    "checks": 1100,
+    "hostRejections": 80,
+    "module": "mutual",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 11,
+    "snapshots": 501
+  },
+  "cwd": "/tmp/lean-bridge-recursive-checked-record-ruby-etiajE/consumer-relocated",
+  "gems": "/tmp/lean-bridge-recursive-checked-record-ruby-etiajE/consumer-relocated/gems",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1100,\"hostRejections\":80,\"module\":\"mutual\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":11,\"snapshots\":501}\n"
+  }
+}

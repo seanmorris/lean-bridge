@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: installed recursive checked-record Ruby packages reproduce and relocate ordinary recursive
+ok 1 - installed recursive checked-record Ruby packages reproduce and relocate ordinary recursive
+  ---
+  duration_ms: 142966.511032
+  type: 'test'
+  ...
+# ordinary recursive author 0: reproducible Ruby gem
+# ordinary recursive author 1: reproducible Ruby gem
+# Subtest: installed recursive checked-record Ruby packages reproduce and relocate ordinary mutual
+ok 2 - installed recursive checked-record Ruby packages reproduce and relocate ordinary mutual
+  ---
+  duration_ms: 160282.513839
+  type: 'test'
+  ...
+# ordinary mutual author 0: reproducible Ruby gem
+# ordinary mutual author 1: reproducible Ruby gem
+# Waiting for host load below 8 before the next recursive Ruby phase: 8.27
+# Subtest: installed recursive checked-record Ruby packages reproduce and relocate reviewed recursive
+ok 3 - installed recursive checked-record Ruby packages reproduce and relocate reviewed recursive
+  ---
+  duration_ms: 150425.870158
+  type: 'test'
+  ...
+# reviewed recursive author 0: reproducible Ruby gem
+# reviewed recursive author 1: reproducible Ruby gem
+# Subtest: installed recursive checked-record Ruby packages reproduce and relocate reviewed mutual
+ok 4 - installed recursive checked-record Ruby packages reproduce and relocate reviewed mutual
+  ---
+  duration_ms: 144373.171659
+  type: 'test'
+  ...
+# reviewed mutual author 0: reproducible Ruby gem
+# reviewed mutual author 1: reproducible Ruby gem
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 598503.83999
+exit 0

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50130432,
+          "path": "archives/recursivecheckedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "200add749654152dec3c00b149634995a6e82a4624c964fbbc8f2ed7a9868fa1"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "recursivecheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f3abf5f18f0bd784e54e1e89f10d1ad87e751e6e4a3d5e8c1f8396fdc17b9ce5",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "0744d698499bdf33aeebfea972a34affb2acf7eb67f1373aff31b80edc454aad"
+  }
+}

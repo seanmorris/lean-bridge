@@ -1,0 +1,34 @@
+{
+  "bindingIrSha256": "099564274d3188dcca547b45151b35cd57e4e77e6c2b28319909e47808504b01",
+  "componentReceiptSha256": "4762c928da176d25eb8ae9228a2881cf2d71fc3fc56df2d4ac3b28440ba6fb1b",
+  "copiedGraph": {
+    "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+    "schemaVersion": 1
+  },
+  "files": {
+    "include/detail/recursivecheckedrecords-graph-types.h": {
+      "bytes": 3956,
+      "sha256": "43259a459e122abb99ae6646560f75c74ce8c3fc43f5d42b8ee30329715f9236"
+    },
+    "include/detail/recursivecheckedrecords-graph.h": {
+      "bytes": 1251,
+      "sha256": "c77d8b9bb8501ef638e2ea37f5f5d2f8df07add4650a3d4084923625f6880251"
+    },
+    "lib/librecursivecheckedrecords.so": {
+      "bytes": 41584,
+      "sha256": "154dfb279028ed4f709f01731d73f365efaa0e3e3ccbbf3d1056a313669ffe66"
+    },
+    "src/native.c": {
+      "bytes": 59705,
+      "sha256": "67ba7f70a734c5f9b90962591fdf36e3a43042a4d8a9c463ffa2a2c3c54a7956"
+    },
+    "src/ruby-graph-clear.c": {
+      "bytes": 314,
+      "sha256": "2ddc7554b89693e21aaa27ee644e3e9c73753ef21ef4daa0c4290def2ebf2c36"
+    }
+  },
+  "library": "librecursivecheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+  "schemaVersion": 1
+}

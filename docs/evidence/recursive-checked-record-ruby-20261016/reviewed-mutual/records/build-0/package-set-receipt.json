@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50141696,
+          "path": "archives/mutualcheckedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "7a0fe0ae9fcdd5ce45b6b72efa3b1fe905ce758d1842b09769591e54e7b9f6b4"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "0c324afdce154e7940085f7de10230893497f0950f6c5001bfe383084a9e6b50",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "3a788b3663b3615d07b93e15b2274da5ecaae6523345477ffc44a7bf8313b5f7"
+  }
+}

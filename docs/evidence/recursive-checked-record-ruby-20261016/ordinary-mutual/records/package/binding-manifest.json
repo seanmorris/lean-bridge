@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-graph-v1",
+  "target": "ruby",
+  "component": "mutualcheckedrecords@1.0.0",
+  "bindingIrSha256": "09246178b80480b6118e09bb277289ba3f661132056ffb964d21057f58b943c7",
+  "namespace": "LeanBridge::Mutualcheckedrecords",
+  "files": [
+    "lib/lean_bridge/mutualcheckedrecords.rb",
+    "lib/lean_bridge/mutualcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/mutualcheckedrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/mutualcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "exports": [
+    "LeanBridgeError",
+    "UNIT",
+    "Some",
+    "Envelope",
+    "Step",
+    "Step::Stop",
+    "Step::More",
+    "echo",
+    "echo_groups",
+    "first",
+    "groups",
+    "produce",
+    "second"
+  ],
+  "aliases": [
+    {
+      "id": "lean:MutualCheckedRecords.EnvelopeAlias",
+      "name": "EnvelopeAlias",
+      "target": {
+        "id": "lean:MutualCheckedRecords.Envelope",
+        "kind": "named"
+      },
+      "contractType": "Envelope",
+      "rubyType": "LeanBridge::Mutualcheckedrecords::Envelope"
+    }
+  ],
+  "memberNames": [
+    {
+      "type": "Envelope",
+      "field": "next",
+      "ruby": "next_"
+    }
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2"
+  },
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "recursive-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive Ruby packages support finite copied values; callables, resources and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is MRI Ruby 3.3 on Linux x86-64 with 1:1 threads."
+    }
+  ]
+}
