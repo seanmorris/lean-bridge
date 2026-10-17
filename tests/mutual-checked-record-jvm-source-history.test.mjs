@@ -66,7 +66,12 @@ test("the recursive JVM history reconstructs every exact predecessor source", as
 
 test("the recursive JVM history refreshes only predecessor source pins", async () => {
 	const path = "docs/type-surface.v1.json";
-	const currentText = await readFile(path, "utf8");
+	const currentText = beforeFinRefinementSource(
+		path, await readFile(path, "utf8")
+		, JSON.parse(await readFile(
+			mutualCheckedRecordJvmHistoryPath, "utf8"
+		)).updates.find(item => item.path === path).currentSha256
+	);
 	const current = JSON.parse(currentText);
 	const record = JSON.parse(await readFile(
 		mutualCheckedRecordJvmHistoryPath, "utf8"

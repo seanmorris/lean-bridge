@@ -118,6 +118,7 @@ import { beforeMutualCheckedRecordNpmSource, mutualCheckedRecordNpmChangedPaths 
 import { beforeMutualCheckedRecordNpmArchiveSource, mutualCheckedRecordNpmArchiveChangedPaths } from "./mutual-checked-record-npm-archive-source-history.mjs";
 import { beforeMutualCheckedRecordDotnetSource, mutualCheckedRecordDotnetChangedPaths } from "./mutual-checked-record-dotnet-source-history.mjs";
 import { beforeMutualCheckedRecordJvmSource, mutualCheckedRecordJvmChangedPaths } from "./mutual-checked-record-jvm-source-history.mjs";
+import { beforeRecursiveCheckedRecordPerlDiagnosticSource, recursiveCheckedRecordPerlDiagnosticChangedPaths } from "./recursive-checked-record-perl-diagnostic-source-history.mjs";
 import { beforeNominalPrimitiveSubtypeRustPromotionSource, nominalPrimitiveSubtypeRustPromotionChangedPaths } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import { beforeNestedCheckedRecordSource, nestedCheckedRecordChangedPaths } from "./nested-checked-record-source-history.mjs";
 import { beforeNestedCheckedRecordBrowserPromotionSource, nestedCheckedRecordBrowserPromotionChangedPaths } from "./nested-checked-record-browser-promotion-history.mjs";
@@ -771,6 +772,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeRecursiveCheckedRecordPerlDiagnosticSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeMutualCheckedRecordJvmSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeMutualCheckedRecordDotnetSource(path, source, expected);
@@ -1165,6 +1170,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...mutualCheckedRecordNpmArchiveChangedPaths
 	, ...mutualCheckedRecordDotnetChangedPaths
 	, ...mutualCheckedRecordJvmChangedPaths
+	, ...recursiveCheckedRecordPerlDiagnosticChangedPaths
 ])].sort());
 
 /**
