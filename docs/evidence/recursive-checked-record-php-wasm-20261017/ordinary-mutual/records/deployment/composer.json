@@ -1,0 +1,105 @@
+{
+  "config": {
+    "allow-plugins": false,
+    "platform": {
+      "php": "8.4.1"
+    }
+  },
+  "name": "lean-bridge-corpus/php-wasm-consumer",
+  "repositories": [
+    {
+      "packagist.org": false
+    },
+    {
+      "package": {
+        "autoload": {
+          "psr-4": {
+            "Brick\\Math\\": "src/"
+          }
+        },
+        "autoload-dev": {
+          "psr-4": {
+            "Brick\\Math\\Tests\\": "tests/"
+          }
+        },
+        "description": "Arbitrary-precision arithmetic library",
+        "dist": {
+          "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea",
+          "type": "zip",
+          "url": "file:///home/runner/work/_temp/lean-bridge-recursive-php-wasm-installed-eIXXnz/consumer/project/feed/brick-math-1.0.0.zip"
+        },
+        "keywords": [
+          "Brick",
+          "Math",
+          "Mathematics",
+          "Arbitrary-precision",
+          "Arithmetic",
+          "BigInteger",
+          "BigDecimal",
+          "BigRational",
+          "BigNumber",
+          "Bignum",
+          "Decimal",
+          "Rational",
+          "Integer"
+        ],
+        "license": "MIT",
+        "name": "brick/math",
+        "require": {
+          "php": "^8.2"
+        },
+        "require-dev": {
+          "phpstan/phpstan": "2.2.13",
+          "phpstan/phpstan-phpunit": "2.0.18",
+          "phpunit/phpunit": "^11.5"
+        },
+        "type": "library",
+        "version": "1.0.0"
+      },
+      "type": "package"
+    },
+    {
+      "package": {
+        "autoload": {
+          "files": [
+            "src/Api.php"
+          ]
+        },
+        "description": "Compiled Lean copied API for PHP-Wasm: mutualcheckedrecords",
+        "dist": {
+          "shasum": "26e0cc2755f7638fd521b08c7ed5fe46367ac4e5",
+          "type": "zip",
+          "url": "file:///home/runner/work/_temp/lean-bridge-recursive-php-wasm-installed-eIXXnz/consumer/project/feed/api.zip"
+        },
+        "extra": {
+          "lean-bridge": {
+            "component": {
+              "id": "mutualcheckedrecords@1.0.0",
+              "name": "mutualcheckedrecords",
+              "version": "1.0.0"
+            },
+            "componentIdentity": "21bc3dd1f597204b5de61cb0503e63cf0a5d2926a92b16e53ed4d7ff85e0f7a8",
+            "namespace": "LeanMutualcheckedrecords",
+            "npm": {
+              "name": "lean-bridge-mutualcheckedrecords-wasm",
+              "version": "1.0.0"
+            },
+            "profile": "php-wasm-copied-loading-v1",
+            "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+          }
+        },
+        "name": "lean-bridge-mutualcheckedrecords/wasm",
+        "require": {
+          "brick/math": "1.0.0",
+          "php": ">=8.4 <8.5"
+        },
+        "type": "library",
+        "version": "1.0.0"
+      },
+      "type": "package"
+    }
+  ],
+  "require": {
+    "lean-bridge-mutualcheckedrecords/wasm": "1.0.0"
+  }
+}

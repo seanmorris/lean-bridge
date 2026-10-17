@@ -1,0 +1,39 @@
+{
+  "arrangement": "composer",
+  "loading": "lazy",
+  "mode": "strict",
+  "observation": {
+    "checks": 1114,
+    "hostRejections": 84,
+    "module": "mutual",
+    "php": "8.4.1",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 12,
+    "snapshots": 505,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_mutualcheckedrecords_graph_85146dd2220b6d25.so",
+        "liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

@@ -1,0 +1,39 @@
+{
+  "arrangement": "composer",
+  "loading": "lazy",
+  "mode": "weak",
+  "observation": {
+    "checks": 1097,
+    "hostRejections": 82,
+    "module": "recursive",
+    "php": "8.4.1",
+    "recoveries": 64,
+    "rejections": 144,
+    "rounds": 64,
+    "snapshotControls": 9,
+    "snapshots": 499,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_recursivecheckedrecords_graph_a31f34ad57fa4425.so",
+        "liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

@@ -17,7 +17,8 @@ import {
 
 export { recursiveCheckedRecordPhpWasmEvidence } from "./recursive-checked-record-php-wasm-provenance.mjs";
 /** Pinned to the index the archive script prints; null refuses every check. */
-export const recursiveCheckedRecordPhpWasmEvidenceSha256 = null;
+export const recursiveCheckedRecordPhpWasmEvidenceSha256
+	= "f90022b0ec7d0b5664e9674f627afe6e11c17d56c258e2dc0cc36bdf1e6201ce";
 
 const cellFiles = ["run.tap", "runtime-after.json", "runtime-after.log", "runtime-before.json", "runtime-before.log", "verification.json"];
 const safePath = path => typeof path === "string"

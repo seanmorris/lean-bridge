@@ -1,0 +1,740 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.first",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "first",
+      "overloadKey": "RecursiveCheckedRecords.first",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.first",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "RecursiveCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveCheckedRecords.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "RecursiveCheckedRecords.Packet"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.second",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "second",
+      "overloadKey": "RecursiveCheckedRecords.second",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.second",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "RecursiveCheckedRecords.normalizePacket",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveCheckedRecords.plusTwo",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "RecursiveCheckedRecords.Packet"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.echo",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echo",
+      "overloadKey": "RecursiveCheckedRecords.echo",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:RecursiveCheckedRecords.Packet",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.echo",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "RecursiveCheckedRecords.mkPacket",
+                "fields": [
+                  {
+                    "name": "value",
+                    "refinement": {
+                      "constructor": "RecursiveCheckedRecords.plusOne",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "digit",
+                    "refinement": {
+                      "bound": "3",
+                      "kind": "fin"
+                    }
+                  },
+                  {
+                    "name": "tail",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "RecursiveCheckedRecords.Packet"
+              }
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "tail",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "RecursiveCheckedRecords.Packet"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.groups",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "groups",
+      "overloadKey": "RecursiveCheckedRecords.groups",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.groups",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "RecursiveCheckedRecords.mkPacket",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "RecursiveCheckedRecords.Packet"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.echoGroups",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "echoGroups",
+      "overloadKey": "RecursiveCheckedRecords.echoGroups",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "arguments": [
+                {
+                  "id": "lean:RecursiveCheckedRecords.PacketAlias",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.echoGroups",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "RecursiveCheckedRecords.normalizePacket",
+                        "fields": [
+                          {
+                            "name": "value",
+                            "refinement": {
+                              "constructor": "RecursiveCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          },
+                          {
+                            "name": "tail",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "RecursiveCheckedRecords.Packet"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": null,
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "constructor": null,
+                            "kind": "subtype"
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "refinement": {
+                            "bound": "3",
+                            "kind": "fin"
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    }
+                  ],
+                  "kind": "option"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:RecursiveCheckedRecords.produce",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produce",
+      "overloadKey": "RecursiveCheckedRecords.produce",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:RecursiveCheckedRecords.Packet",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "RecursiveCheckedRecords.produce",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "value",
+                  "refinement": {
+                    "constructor": null,
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "digit",
+                  "refinement": {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                },
+                {
+                  "name": "tail",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "RecursiveCheckedRecords.Packet"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent corpus contract."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "independent-corpus-contract",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "corpusReview",
+      "tool": "Corpus contract review",
+      "toolVersion": "1"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent recursive checked-record contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent recursive checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "value",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent recursive checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "digit",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent recursive checked-record contract."
+          },
+          "mutability": "immutable",
+          "name": "tail",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:RecursiveCheckedRecords.Packet",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:RecursiveCheckedRecords.Packet",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Packet",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "RecursiveCheckedRecords.Packet",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "linked"
+            ]
+          },
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              null,
+              {
+                "bound": "3",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent recursive checked-record contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:RecursiveCheckedRecords.PacketAlias",
+      "kind": "alias",
+      "mutability": "immutable",
+      "name": "PacketAlias",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "RecursiveCheckedRecords.PacketAlias",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "target": {
+        "id": "lean:RecursiveCheckedRecords.Packet",
+        "kind": "named"
+      },
+      "typeParameters": []
+    }
+  ]
+}

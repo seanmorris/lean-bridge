@@ -15,9 +15,10 @@ import {
 export { recursiveCheckedRecordPhpWasmOriginal };
 
 /** Full producer revision; pinned to the commit that ran the four cells. */
-export const recursiveCheckedRecordPhpWasmProducer = null;
+export const recursiveCheckedRecordPhpWasmProducer
+	= "a6d16eadd27aa8d9461a9fe3406e324028ac9beb";
 /** Full checker revision; pinned with the producer. */
-export const recursiveCheckedRecordPhpWasmVerifier = null;
+export const recursiveCheckedRecordPhpWasmVerifier = recursiveCheckedRecordPhpWasmProducer;
 export const recursiveCheckedRecordPhpWasmEvidence
 	= "docs/evidence/recursive-checked-record-php-wasm-20261017";
 export const recursiveCheckedRecordPhpWasmEvidenceLoadCeiling = 8;
