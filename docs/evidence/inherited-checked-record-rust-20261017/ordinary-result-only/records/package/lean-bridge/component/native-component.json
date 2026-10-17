@@ -1,0 +1,80 @@
+{
+  "adaptersSha256": "9f17e5c14a6f493eb4baaf5aeabea6d93f33ec7d664183a09098ebc92d6c5a0e",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "b8508f844b4d3517282a9abb3d9aeb25bc563734696233548db006dd7389ea48",
+  "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "exports": [
+    {
+      "declaration": "InheritedCheckedRecords.produce",
+      "symbol": "lb_75e550af993806c790a65617"
+    },
+    {
+      "declaration": "InheritedCheckedRecords.produceStamped",
+      "symbol": "lb_2df70568191c40dd3c853dbc"
+    }
+  ],
+  "headerSha256": "77799a6022e3323484920fa8801804ab06799aab253ff07b0c0ef2830221673f",
+  "initializer": "initialize_LeanBridgeNative95491bb762dabafa",
+  "library": "libcomponent_95491bb762dabafaf0ed.so",
+  "metadataSha256": "9c78ad229add9c55cd46d4c231b66a55b2157fca4fa29d461c2638990d3ec99a",
+  "modelSha256": "f42f9c80041e53ba58e46484b75a8b24f11d5fe99330bd0570fc047ec3d44484",
+  "nativeLibrary": {
+    "bytes": 36296,
+    "sha256": "e183f646c9ebeddc2ef01799f4e7480c27b6bcba74b7b0b4e61025277eee15cf"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "f44fbc1a90188d4689b15c6c796ca003621a4ea50fc817c9ec23288122d88f00",
+    "exportConfigurationSource": "{\n  \"exports\": [\n    \"InheritedCheckedRecords.produce\",\n    \"InheritedCheckedRecords.produceStamped\"\n  ],\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 141464,
+          "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+          "sha256": "e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48"
+        },
+        "module": "InheritedCheckedRecords",
+        "source": {
+          "bytes": 3011,
+          "path": "InheritedCheckedRecords.lean",
+          "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "exportModules": [
+        "InheritedCheckedRecords"
+      ],
+      "exports": [
+        "InheritedCheckedRecords.produce",
+        "InheritedCheckedRecords.produceStamped"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "b739228870f4e9202176aa343370d45c2ad07d20b273331a2deb7b5bf9a966e4",
+        "modules": [
+          {
+            "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+            "name": "InheritedCheckedRecords",
+            "sourcePath": "InheritedCheckedRecords.lean",
+            "sourceSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "InheritedCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "de37d2225ef7424f3603872d04fee7a992054f58defbd036190714b95bfed41b",
+    "sourceTreeSha256": "e3d02232899b1e0e720a30682dc416a5a94eb626edca551a3707f35be1fbb470"
+  }
+}

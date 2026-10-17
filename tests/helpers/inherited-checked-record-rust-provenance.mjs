@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordRustEvidence
 	= "docs/evidence/inherited-checked-record-rust-20261017";
-export const inheritedCheckedRecordRustProducer = null;
-export const inheritedCheckedRecordRustChecker = null;
-export const inheritedCheckedRecordRustArchiver = null;
+export const inheritedCheckedRecordRustProducer
+	= "d9e8b1198061273eb65b47753f76dec7522aa8bc";
+export const inheritedCheckedRecordRustChecker
+	= "d9e8b1198061273eb65b47753f76dec7522aa8bc";
+export const inheritedCheckedRecordRustArchiver
+	= "a1b07e11c3c05f4efb5d2facf5f0d98efe2baa33";
 export const inheritedCheckedRecordRustEvidenceLoadCeiling = 8;
 export const inheritedCheckedRecordRustEvidenceFloor = "2.38";
 export const inheritedCheckedRecordRustSelections = Object.freeze([

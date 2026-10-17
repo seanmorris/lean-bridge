@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "inherited-vendor"
+[source.inherited-vendor]
+directory = "vendor/dependencies"

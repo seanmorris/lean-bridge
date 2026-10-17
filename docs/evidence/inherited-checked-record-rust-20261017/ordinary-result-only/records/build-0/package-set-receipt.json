@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51341649,
+          "path": "archives/inheritedcheckedrecords-1.0.0.crate",
+          "sha256": "668f05467d61f3d8cfd34dbbf497a5c84cc40565c8fcf78414d84acaec12d11c"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "inheritedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "b8508f844b4d3517282a9abb3d9aeb25bc563734696233548db006dd7389ea48",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e3d02232899b1e0e720a30682dc416a5a94eb626edca551a3707f35be1fbb470"
+  }
+}

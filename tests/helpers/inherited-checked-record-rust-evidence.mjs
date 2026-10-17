@@ -32,7 +32,8 @@ import {
 
 export { inheritedCheckedRecordRustEvidence } from "./inherited-checked-record-rust-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordRustEvidenceSha256 = null;
+export const inheritedCheckedRecordRustEvidenceSha256
+	= "637341e2f937ed721f0ff640655503a6963f93d4210c04ea29f50be75d1eba30";
 
 const controlKeys = [
 	"recordControls", "resourceControls", "environmentControls"

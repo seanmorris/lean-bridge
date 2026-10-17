@@ -1,0 +1,70 @@
+{
+  "bindingIrSha256": "de271bec45ed3730cd606b3e52297a884065159088d30902c1a5baad0621d334",
+  "evidence": {
+    "componentId": "inheritedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "f7b45b80207a5425b61f0e69ceb469de157a182b0434e2e68ee56a445d904224",
+    "libraries": {
+      "libcomponent_95491bb762dabafaf0ed.so": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4",
+      "libinheritedcheckedrecords.so": "ed27e029cdd050b0559759e02c4904f4a3772d880b59c92f2b40066f429c4628",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libinheritedcheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3312,
+      "sha256": "beea3569139d8ce71cd8b25d5f4c5323300a8414ebc2c0144d0e421978bfed07"
+    },
+    "Cargo.toml": {
+      "bytes": 344,
+      "sha256": "40bef50f00d8f535f691045007630437cc4f74ccff9c7c2806f36aae557cce6a"
+    },
+    "README.md": {
+      "bytes": 8039,
+      "sha256": "838021b46f018eec6fda7fa3f063c4bdac68fdb13f10973429b31234f85f828a"
+    },
+    "binding-manifest.json": {
+      "bytes": 1085,
+      "sha256": "3cc8a65ab0b29fe91f7778ad25e7d106ae7804c27630ab9562ee9d17c854028f"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_95491bb762dabafaf0ed.so": {
+      "bytes": 74832,
+      "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+    },
+    "native/linux-x64/libinheritedcheckedrecords.so": {
+      "bytes": 49328,
+      "sha256": "ed27e029cdd050b0559759e02c4904f4a3772d880b59c92f2b40066f429c4628"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/__runtime.rs": {
+      "bytes": 13014,
+      "sha256": "5af797baf61204c87f4f047058022287d8886ba7a0441c7aa39862a1743d3186"
+    },
+    "src/assets.rs": {
+      "bytes": 8109,
+      "sha256": "c1772aef6282df78765e6d71d096e98b220d7e8735dfef5b3ccfda8a213fd6fe"
+    },
+    "src/lib.rs": {
+      "bytes": 4693,
+      "sha256": "6d4bab6abd7be60a4144bda853538a95156f3855cf059040c36a5c6527df6361"
+    }
+  },
+  "name": "inheritedcheckedrecords",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}
