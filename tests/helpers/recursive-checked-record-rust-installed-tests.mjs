@@ -27,6 +27,7 @@ import {
 	, recursiveCheckedRecordRustReview, recursiveCheckedRecordRustSelection
 } from "./recursive-checked-record-rust-fixture.mjs";
 import { installRecursiveCheckedRecordRust } from "./recursive-checked-record-rust-install.mjs";
+import { checkRecursiveCheckedRecordRustReport } from "./recursive-checked-record-rust-report.mjs";
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 
 const { enabled, routes, fixtures, maxLoad } = recursiveCheckedRecordRustSelection(process.env);
@@ -265,5 +266,13 @@ for(const route of routes) for(const fixture of fixtures)
 			}
 			, resourceChecks, loadCeiling: maxLoad
 		}));
+		await checkRecursiveCheckedRecordRustReport(path => readFile(join(output, path)), {
+			route, fixture, producerCommit, floor
+			, runtime: {
+				platform: runtime.platform, arch: runtime.arch
+				, glibc: runtime.glibc.stdout.trim().slice(6)
+			}
+			, toolchain: JSON.parse(await readFile(join(output, "toolchain.json")))
+		});
 		complete = true;
 	});

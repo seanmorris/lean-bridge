@@ -135,10 +135,15 @@ export const installRecursiveCheckedRecordRust = async ({
 	await saveLakeFile(root, ".cargo/config.toml", config);
 	await saveLakeFile(root, "Cargo.toml", manifest);
 	await saveLakeFile(root, "src/main.rs", caller);
+	const args = recursiveCheckedRecordRustCargoArguments(fixture, route);
+	const features = recursiveCheckedRecordRustFeatures(route, fixture);
+	const metadataArguments = [
+		"metadata", "--locked", "--offline", "--format-version", "1"
+		, ...features.length ? ["--features", features.join(",")] : []
+	];
 	await ready();
 	const locked = await runCopied(cargo, ["generate-lockfile", "--offline"], root, compile);
-	const metadataRun = await runCopied(cargo
-		, ["metadata", "--locked", "--offline", "--format-version", "1"], root, compile);
+	const metadataRun = await runCopied(cargo, metadataArguments, root, compile);
 	const metadata = JSON.parse(metadataRun.stdout);
 	const publicPackage = metadata.packages.find(item => item.name === pkg.name);
 	assert.equal(await realpath(publicPackage.manifest_path), join(installed, "Cargo.toml"));
@@ -149,7 +154,6 @@ export const installRecursiveCheckedRecordRust = async ({
 	for(const item of registry)
 		assert.equal(await realpath(item.manifest_path)
 			, join(dependencyRoot, `${item.name}-${item.version}`, "Cargo.toml"));
-	const args = recursiveCheckedRecordRustCargoArguments(fixture, route);
 	await ready();
 	const build = await runCopied(cargo, ["build", ...args, "--bin", "recursive-consumer"]
 		, root, compile);
@@ -172,7 +176,8 @@ export const installRecursiveCheckedRecordRust = async ({
 	]) await saveLakeFile(output, path, source);
 	const executable = `target/${nestedCheckedRecordRustTarget}/debug/recursive-consumer`;
 	const record = {
-		tools, locked, build, linkerControls, dependencyClosure, executable
+		tools, locked, build, arguments: args, metadataArguments
+		, linkerControls, dependencyClosure, executable
 		, executableSha256: sha256(await readFile(join(root, executable)))
 		, crateReceiptSha256: crate.receiptSha256, crateClosure: crate.closure
 		, emptyCargoHome: true, offline: true, linkOnly: true
