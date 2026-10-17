@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-checked-record-perl-package-history-repair-v1",
+  "predecessorCommit": "041c55a074e8357f118b3c260e0e99315b340433",
+  "historicalCommit": "6b5a9a9b96b4e688f15ec7f5629d3ab8213fabf9",
+  "historicalParent": "5af8ea24701671a08d3da001edac34ba9d49385a",
+  "pinCount": 35,
+  "historicalUpdates": [
+    {
+      "path": "src/backends/perl/copied-graph-package.mjs",
+      "previousSha256": "9cc3467d0ce3549b8d8b10c785bdd0b2b43698dacfc94b4333221248c503b852",
+      "currentSha256": "5c613da3c9b22b9ccc1796248ed94cfa0d2c991e95796261544f2374d4d08e00",
+      "edits": [
+        {
+          "start": 225,
+          "previous": "",
+          "current": "import { nominalRefinementEntries } from \"../../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 1780,
+          "previous": "\tconst native = generateNativeCopiedGraphAdapters(ir, nativeGraphCarrierAbi(model), { initializer: receipt.initializer });\n",
+          "current": "\tconst abi = nativeGraphCarrierAbi(model);\n\tconst refinementExports = model.exports.map((item, index) => ({\n\t\tbindingId: item.bindingId\n\t\t, symbol: abi.exports.find(value => value.bindingId === item.bindingId).symbol\n\t\t, wrapper: `export${index}`, sourceDeclaration: item.name\n\t\t, parameters: item.parameters\n\t\t, ...(item.refinements ? { refinements: item.refinements } : {})\n\t}));\n\tconst native = generateNativeCopiedGraphAdapters(ir, abi, {\n\t\tinitializer: receipt.initializer, refinementExports\n\t\t, nominalRefinements: nominalRefinementEntries(ir.types)\n\t});\n"
+        },
+        {
+          "start": 2571,
+          "previous": "",
+          "current": "\tif(Boolean(generated.refinementDiagnostics) !== Boolean(native.refinementDiagnostics))\n\t\tthrow new TypeError(\"Perl and native graph refinement diagnostics differ\");\n"
+        },
+        {
+          "start": 6875,
+          "previous": "",
+          "current": "\t\t\t, ...publicModel.refinementDiagnostics ? {\n\t\t\t\tsupportedFeatures: [\"checked-refinement-diagnostics\"]\n\t\t\t} : {}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/perl/copied-graph-values.mjs",
+      "previousSha256": "01990917bc261d4875f96fad26918563617f0ce3c8e462b8340efbb9f0eef734",
+      "currentSha256": "9e690e9e28018094f3e798eef0449b333a0d750b317b2704b6594086aecef0ca",
+      "edits": [
+        {
+          "start": 2599,
+          "previous": "",
+          "current": "\tconst refinementDiagnostics = ir.declarations.some(declaration =>\n\t\tdeclaration.source?.extensions?.[\"lean-lang.org/refinements\"]\n\t\t\t?.parameters?.some(Boolean));\n"
+        },
+        {
+          "start": 6569,
+          "previous": "\treturn { layout, types, functions, aliases, source, moduleName };\n",
+          "current": "\treturn { layout, types, functions, aliases, source, moduleName\n\t\t, refinementDiagnostics };\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/perl/copied-graph-xs.mjs",
+      "previousSha256": "a493440cd6a34d11860ab8c98e06abd8715866e4e2077b2fc3bf1472a84a8610",
+      "currentSha256": "15212a9e3fb7a4d68bf18232bb5380bf7de5dc6bc662a470dcd9d6831b898a54",
+      "edits": [
+        {
+          "start": 1190,
+          "previous": "",
+          "current": "${model.refinementDiagnostics ? `  if (status == 1) {\n    const char *specific = ${model.layout.prefix}_graph_error();\n    if (specific) croak(\"%s\\\\n\", specific);\n  }\n` : \"\"}\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a0c147e070db85cf3f98f0ab3f387517d2f90688e742e67833743ef68d63df72",
+      "currentSha256": "8f445c19842f9af82440e639d6178a1f9aa0b3f3cd67f0556c8a3b6d05643a88",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f\"\n",
+          "current": "          \"sha256\": \"03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f8f9f2eed7e7862f296be5251224fb8739996f35c127f4157cb3bc498f679e5f",
+      "currentSha256": "14aa2b402ba2bb6643808c00727c2d60b9e291f7d6686bcdabe85f1adb6d2b88",
+      "edits": [
+        {
+          "start": 13494,
+          "previous": "",
+          "current": "import { beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource, recursiveCheckedRecordPerlPackageHistoricalPaths, recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths } from \"./recursive-checked-record-perl-package-history-repair.mjs\";\n"
+        },
+        {
+          "start": 65325,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84162,
+          "previous": "",
+          "current": "\t, ...recursiveCheckedRecordPerlPackageHistoricalPaths\n\t, ...recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/recursive-checked-record-perl-diagnostic-source-history.mjs",
+      "previousSha256": "88d77581f72b43499d821000179836c9e632c7b89d754b99ed182929ddff868d",
+      "currentSha256": "bfaf6ed4fd36c10dcb4f40fe340c9769874c42dc0b1d57bb3e1bcc1c9fdb659a",
+      "edits": [
+        {
+          "start": 394,
+          "previous": "\tbeforeMutualCheckedRecordJvmPins, beforeMutualCheckedRecordJvmSource\n",
+          "current": "\tbeforeMutualCheckedRecordJvmPins\n"
+        },
+        {
+          "start": 485,
+          "previous": "",
+          "current": "import {\n\tbeforeRecursiveCheckedRecordPerlPackageHistoricalSource\n} from \"./recursive-checked-record-perl-package-history-repair.mjs\";\n"
+        },
+        {
+          "start": 4163,
+          "previous": "\t\treturn beforeMutualCheckedRecordJvmSource(path, source, expected);\n",
+          "current": "\t\treturn beforeRecursiveCheckedRecordPerlPackageHistoricalSource(\n\t\t\tpath, source, expected\n\t\t);\n"
+        },
+        {
+          "start": 4527,
+          "previous": "\treturn beforeMutualCheckedRecordJvmSource(path, source, expected);\n",
+          "current": "\treturn beforeRecursiveCheckedRecordPerlPackageHistoricalSource(\n\t\tpath, source, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "bc55912051401947e66421cf5b3a499093405491617dd990067273fde914a96f",
+      "currentSha256": "03acd03b816245d9dbbdea99bd489fcb7b0bd311d79880cdd6f502e8d491146e",
+      "edits": [
+        {
+          "start": 7989,
+          "previous": "",
+          "current": "import { withoutRecursiveCheckedRecordPerlPackageHistoryRepair } from \"./helpers/recursive-checked-record-perl-package-history-repair.mjs\";\n"
+        },
+        {
+          "start": 10376,
+          "previous": "\tlet current = withoutRustGraphDiagnostic(\n",
+          "current": "\tlet current = withoutRecursiveCheckedRecordPerlPackageHistoryRepair(\n"
+        },
+        {
+          "start": 10483,
+          "previous": "",
+          "current": "\t);\n\tcurrent = withoutRustGraphDiagnostic(\n\t\tfile, current\n"
+        }
+      ]
+    }
+  ]
+}

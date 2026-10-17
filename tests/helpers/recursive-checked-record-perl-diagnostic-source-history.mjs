@@ -10,8 +10,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
-	beforeMutualCheckedRecordJvmPins, beforeMutualCheckedRecordJvmSource
+	beforeMutualCheckedRecordJvmPins
 } from "./mutual-checked-record-jvm-source-history.mjs";
+import {
+	beforeRecursiveCheckedRecordPerlPackageHistoricalSource
+} from "./recursive-checked-record-perl-package-history-repair.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 export const recursiveCheckedRecordPerlDiagnosticHistoryPath
@@ -105,7 +108,9 @@ export const beforeRecursiveCheckedRecordPerlDiagnosticSource = (
 ) => {
 	if(typeof source !== "string"
 		|| !recursiveCheckedRecordPerlDiagnosticChangedPaths.includes(path))
-		return beforeMutualCheckedRecordJvmSource(path, source, expected);
+		return beforeRecursiveCheckedRecordPerlPackageHistoricalSource(
+			path, source, expected
+		);
 	let digest = sha256(source);
 	if(digest === expected) return source;
 	const previous = withoutRecursiveCheckedRecordPerlDiagnostic(path, source);
@@ -115,7 +120,9 @@ export const beforeRecursiveCheckedRecordPerlDiagnosticSource = (
 		digest = sha256(source);
 		if(digest === expected) return source;
 	}
-	return beforeMutualCheckedRecordJvmSource(path, source, expected);
+	return beforeRecursiveCheckedRecordPerlPackageHistoricalSource(
+		path, source, expected
+	);
 };
 
 /**

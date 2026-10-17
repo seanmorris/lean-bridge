@@ -73,6 +73,7 @@ import { withoutMutualCheckedRecordNpmArchive } from "./helpers/mutual-checked-r
 import { withoutMutualCheckedRecordDotnet } from "./helpers/mutual-checked-record-dotnet-source-history.mjs";
 import { withoutMutualCheckedRecordJvm } from "./helpers/mutual-checked-record-jvm-source-history.mjs";
 import { withoutRecursiveCheckedRecordPerlDiagnostic } from "./helpers/recursive-checked-record-perl-diagnostic-source-history.mjs";
+import { withoutRecursiveCheckedRecordPerlPackageHistoryRepair } from "./helpers/recursive-checked-record-perl-package-history-repair.mjs";
 import { withoutPythonGraphDiagnostic } from "./helpers/python-graph-diagnostic-source-history.mjs";
 import { withoutRubyGraphDiagnostic } from "./helpers/ruby-graph-diagnostic-source-history.mjs";
 import { withoutRubyGraphKeywordField } from "./helpers/ruby-graph-keyword-field-source-history.mjs";
@@ -119,8 +120,11 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutRustGraphDiagnostic(
+	let current = withoutRecursiveCheckedRecordPerlPackageHistoryRepair(
 		file, await readFile(file, "utf8")
+	);
+	current = withoutRustGraphDiagnostic(
+		file, current
 	);
 	current = withoutRubyMemberEscape(file, current);
 	current = withoutRubyGraphKeywordField(file, current);

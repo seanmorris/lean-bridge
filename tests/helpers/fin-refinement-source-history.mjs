@@ -119,6 +119,7 @@ import { beforeMutualCheckedRecordNpmArchiveSource, mutualCheckedRecordNpmArchiv
 import { beforeMutualCheckedRecordDotnetSource, mutualCheckedRecordDotnetChangedPaths } from "./mutual-checked-record-dotnet-source-history.mjs";
 import { beforeMutualCheckedRecordJvmSource, mutualCheckedRecordJvmChangedPaths } from "./mutual-checked-record-jvm-source-history.mjs";
 import { beforeRecursiveCheckedRecordPerlDiagnosticSource, recursiveCheckedRecordPerlDiagnosticChangedPaths } from "./recursive-checked-record-perl-diagnostic-source-history.mjs";
+import { beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource, recursiveCheckedRecordPerlPackageHistoricalPaths, recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths } from "./recursive-checked-record-perl-package-history-repair.mjs";
 import { beforePythonGraphDiagnosticSource, pythonGraphDiagnosticChangedPaths } from "./python-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphDiagnosticSource, rubyGraphDiagnosticChangedPaths } from "./ruby-graph-diagnostic-source-history.mjs";
 import { beforeRubyGraphKeywordFieldSource, rubyGraphKeywordFieldChangedPaths } from "./ruby-graph-keyword-field-source-history.mjs";
@@ -777,6 +778,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeRecursiveCheckedRecordPerlPackageHistoryRepairSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeRustGraphDiagnosticSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeRubyMemberEscapeSource(path, source, expected);
@@ -1186,6 +1191,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...mutualCheckedRecordDotnetChangedPaths
 	, ...mutualCheckedRecordJvmChangedPaths
 	, ...recursiveCheckedRecordPerlDiagnosticChangedPaths
+	, ...recursiveCheckedRecordPerlPackageHistoricalPaths
+	, ...recursiveCheckedRecordPerlPackageHistoryRepairChangedPaths
 	, ...pythonGraphDiagnosticChangedPaths
 	, ...rubyGraphDiagnosticChangedPaths
 	, ...rubyGraphKeywordFieldChangedPaths
