@@ -11,9 +11,9 @@ import { sha256 } from "./source-history-digest.mjs";
 export const inheritedCheckedRecordRubyHistoryPath
 	= "docs/evidence/inherited-checked-record-ruby-source-history-20261017.json";
 export const inheritedCheckedRecordRubyPredecessor
-	= "78ecf12b8266c1b591a76deeff1aac7540e5bdfd";
+	= "5f010df32254c872be9f1cf4a74afb9b409a2070";
 export const inheritedCheckedRecordRubyDraftParent
-	= "651f5cbaccf7342f19bad7c9c85dfe66739cb3fa";
+	= "3f7f275e55d9c84e707e1d1e1553fdd40d2e0e59";
 export const inheritedCheckedRecordRubyChangedPaths = Object.freeze([
 	"src/adoption/test-profiles.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"
