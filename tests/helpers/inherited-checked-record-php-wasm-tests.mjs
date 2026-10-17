@@ -339,13 +339,33 @@ test("inherited PHP-Wasm escapes the echo keyword like graph packages and keeps 
 	const caller = await readFile("tests/fixtures/inherited-checked-record-consumers/php-native.php", "utf8");
 	assert.equal(caller.split("($name === 'echo' ? 'echo_' : $name)").length, 2);
 	// Only keywords are escaped; other reserved or colliding names still fail closed.
-	const rename = name => {
+	const renamed = (pairs, types = []) => {
 		const ir = structuredClone(inheritedCheckedRecordPhpWasmReview("full"));
-		const item = ir.declarations.find(value => value.id.endsWith(".first"));
-		item.id = item.id.replace(/first$/u, name); item.name = name; return ir;
+		for(const [from, to] of pairs)
+		{
+			const item = ir.declarations.find(value => value.id.endsWith(`.${from}`));
+			item.id = item.id.replace(new RegExp(`${from}$`, "u"), to); item.name = to;
+		}
+		for(const [from, to] of types)
+		{
+			const item = ir.types.find(value => value.kind === "record" && value.name.endsWith(from));
+			item.name = item.name.replace(new RegExp(`${from}$`, "u"), to);
+		}
+		return ir;
 	};
 	for(const name of ["internal", "bigint"])
-		assert.throws(() => compileCopiedPhpModel(rename(name), options), new RegExp(`PHP function name is reserved or duplicated: ${name}$`, "u"), name);
-	assert.throws(() => compileCopiedPhpModel(rename("echo_"), options), /collides/u);
-	assert.deepEqual(compileCopiedPhpModel(rename("print"), options).surface.functions.map(fn => fn.publicName).slice(0, 1), ["print_"]);
+		assert.throws(() => compileCopiedPhpModel(renamed([["first", name]]), options)
+			, new RegExp(`PHP function name is reserved or duplicated: ${name}$`, "u"), name);
+	// An escaped name never shares a symbol with another export or class, in either order.
+	// The C surface already reserves every name_ form; the PHP check stays as a second guard.
+	for(const [label, pairs, types] of [
+		["echo then echo_", [["first", "echo_"]]]
+		, ["Echo then echo_", [["first", "Echo"], ["normalized", "echo_"]]]
+		, ["echo_ then Echo", [["first", "echo_"], ["normalized", "Echo"]]]
+		, ["case-folded ECHO", [["first", "ECHO"]]]
+		, ["class echo_", [], [["Span", "echo_"]]]
+	]) assert.throws(() => compileCopiedPhpModel(renamed(pairs, types), options)
+		, /collides|reserved or duplicated/u, label);
+	assert.deepEqual(compileCopiedPhpModel(renamed([["first", "print"]]), options)
+		.surface.functions.map(fn => [fn.field, fn.publicName]).slice(0, 1), [["print", "print_"]]);
 });
