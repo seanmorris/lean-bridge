@@ -99,7 +99,13 @@ echo 'Exact integers';`);
 });
 
 test("ordinary PHP admission rejects reserved names and noncanonical coordinates", () => {
-	for(const name of ["match", "Echo", "dispatch"])
+	// Keyword function names gain one trailing underscore; other reserved names are refused at their source.
+	for(const [name, escaped] of [["match", "match_"], ["Echo", "echo_"]])
+	{
+		const ir = synthetic(); ir.declarations[0].name = name;
+		assert.deepEqual(compileCopiedPhpModel(ir).surface.functions.map(fn => fn.publicName), [escaped]);
+	}
+	for(const name of ["dispatch", "internal"])
 	{
 		const ir = synthetic(); ir.declarations[0].name = name;
 		assert.throws(() => compileCopiedPhpModel(ir), error => error.code === "unsupported-php-signature" && error.details.source.path === "Sample.lean");

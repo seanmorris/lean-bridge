@@ -20,7 +20,8 @@ import { phpWasmFinReadme } from "../src/release/php-wasm-copied-package.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { finRecordCompilerInput, finRecordNat, finRecordSignatures } from "./helpers/fin-record-model.mjs";
 import { finProductCompilerInput, finProductSignatures } from "./helpers/fin-product-model.mjs";
-import { generateCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
+import { generateCopiedPhpPackage, renderCopiedPhpPackage } from "../src/backends/php/copied-values.mjs";
+import { generateCopiedPhpZendAdapter } from "../src/backends/php/copied-zend.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import "./helpers/php-wasm-fin-source-history-tests.mjs";
 import "./helpers/php-wasm-fin-evidence-tests.mjs";
@@ -68,6 +69,7 @@ test("plain copied PHP-Wasm models carry the native Fin trees and the same Lean 
 
 test("every PHP Fin fixture's export names generate native PHP and PHP-Wasm packages before any long run", async () => {
 	// FinProducts once exported never, a PHP keyword; both PHP targets refused it only after a full Lean build.
+	// Keywords are now escaped, and the check below proves never becomes never_ before any long run.
 	const fixtures = [["products", phpWasmFinFixtures.products, finProductSignatures, finProductCompilerInput]
 		, ["records", phpWasmFinFixtures.records, finRecordSignatures, finRecordCompilerInput]];
 	for(const [label, fixture, signatures, compilerInput] of fixtures)
@@ -79,12 +81,29 @@ test("every PHP Fin fixture's export names generate native PHP and PHP-Wasm pack
 		generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr);
 		compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 	}
-	// The same input under a reserved name is refused by both targets, so the check above can fail.
-	const reserved = { ...finProductSignatures, never: finProductSignatures.absentOnly };
-	delete reserved.absentOnly;
-	const input = finProductCompilerInput(reserved);
-	assert.throws(() => generateCopiedPhpPackage(createNativeModel(input, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: never/u);
-	assert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(input).bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true }), /PHP function name is reserved or duplicated: never/u);
+	// The keyword never now gains one trailing underscore in both targets, as class names and graph functions do.
+	const renamed = name => {
+		const signatures = { ...finProductSignatures, [name]: finProductSignatures.absentOnly };
+		delete signatures.absentOnly;
+		return finProductCompilerInput(signatures);
+	};
+	const options = { integerBits: 32, structuredCallables: true, lists: true, variants: true };
+	const keyword = renamed("never"), nativeIr = createNativeModel(keyword, { refinements: true }).bindingIr, wasmIr = createPhpWasmCopiedModel(keyword).bindingIr;
+	const native = generateCopiedPhpPackage(nativeIr), wasm = compileCopiedPhpModel(wasmIr, options), wasmFiles = renderCopiedPhpPackage(wasm);
+	const declaration = wasmIr.declarations.find(item => item.name === "never").id, symbol = `${wasm.namespace}\\never_`;
+	for(const files of [native, wasmFiles])
+	{
+		assert.match(files["src/Api.php"], /function never_\(/u); assert.doesNotMatch(files["src/Api.php"], /function never\(/u);
+		const exports = JSON.parse(files["binding-manifest.json"]).exports;
+		assert.ok(exports.includes(symbol)); assert.ok(!exports.includes(`${wasm.namespace}\\never`));
+	}
+	assert.deepEqual(wasm.surface.functions.filter(fn => fn.field === "never").map(fn => fn.publicName), ["never_"]);
+	const zend = JSON.parse(generateCopiedPhpZendAdapter(wasmIr, { integerBits: 32 })["copied-zend-manifest.json"]);
+	assert.deepEqual(zend.exports.filter(item => item.declaration === declaration).map(item => item.function), [symbol]);
+	// A reserved name that is not a keyword is still refused by both targets, so the check above can fail.
+	const reserved = renamed("internal");
+	assert.throws(() => generateCopiedPhpPackage(createNativeModel(reserved, { refinements: true }).bindingIr), /PHP function name is reserved or duplicated: internal/u);
+	assert.throws(() => compileCopiedPhpModel(createPhpWasmCopiedModel(reserved).bindingIr, options), /PHP function name is reserved or duplicated: internal/u);
 });
 
 test("the PHP-Wasm side module compares caller limbs with each bound before the only conversion into Lean", () => {
