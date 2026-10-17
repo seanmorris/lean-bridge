@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-ruby-source-v1",
+  "predecessorCommit": "78ecf12b8266c1b591a76deeff1aac7540e5bdfd",
+  "draftParentCommit": "651f5cbaccf7342f19bad7c9c85dfe66739cb3fa",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-ruby.yml",
+      "currentSha256": "85b0dbb9ce302a7c5c04909f7fcd07c482e9cf7058dc9cdd90c388407139258f"
+    },
+    {
+      "path": "scripts/archive-inherited-checked-record-ruby-evidence.mjs",
+      "currentSha256": "fdb13190d256795be8eb2f397ed439491f3c664813b36734812c7f241896946c"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-ruby-ci.mjs",
+      "currentSha256": "a42b5b760388104512260048aacd2b0425ac5ea3c93149ce46770f0925a34b09"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-ruby-ci.sh",
+      "currentSha256": "d67c63362747d9d680c2920a2308be8fb823a36b1d954b3c3782c7c967980ebe"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-ruby-source-history.mjs",
+      "currentSha256": "6fa299b921e1c59a33aadad9f519a26e509c7c564734bd8384cd441e07247c31"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/ruby.rb",
+      "currentSha256": "e13f0adc42cc4534243d35f4134d9ea60aa941b1531804dc8cd1c74c3c567b3c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-archive.mjs",
+      "currentSha256": "1898092e3450fb2b79814b29a0f5950464cbb9ee4886624efd5cf11dc1c5bd87"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-ci-policy-tests.mjs",
+      "currentSha256": "79c06604cc4c3542622ed6e09a4e6acbda93f0e354eda0f70712c13d4fbce63b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-ci-report.mjs",
+      "currentSha256": "a8b1c41518e9aa2ec970b8a3f2d9f0fa3f73bedd6fa37644a920fb1c9d416b78"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-ci-shell-tests.mjs",
+      "currentSha256": "1c65e2bd9170bb53febb7a9489e94081b8aaff20f01550877d1f0922a5a50abc"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-ci-workflow-tests.mjs",
+      "currentSha256": "6b0eacf4b218375218d9621e73c90c56205b8c32d76e07673fb391e6f1f39ab0"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-ci-workflow.mjs",
+      "currentSha256": "a429b2370d0d4627cc22d6fadf4e5a6c29b61debe070be4b7cfeb5fc6fea9914"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-controls-tests.mjs",
+      "currentSha256": "eb3c240eb1233fe23bf1f7302f782e4954b01dd752c601cf22e85c93280f4114"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-controls.mjs",
+      "currentSha256": "7bff1ab1d57e4220d3b9838b22331ece70268e8ca8c830a771ba8b57a5c266c9"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-environment-records.mjs",
+      "currentSha256": "f6161198461590150eea9a9319d7472e244c48191a621ee32088f874d671facc"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-evidence-sources.mjs",
+      "currentSha256": "b874b16ea8a1b008d1e211a6e525f835654c0e8660645f14e1318462ed69ee28"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-evidence-tests.mjs",
+      "currentSha256": "ed24a40edcb97b00e084378ef5a158fce8c6150d55e677fb06d9c276a2cc3ab8"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-evidence.mjs",
+      "currentSha256": "90a914261e15ddb2b6531bf064b1acc4be1dc88d39462a11a03bd0659de8b90c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-fixture-tests.mjs",
+      "currentSha256": "6001319cee7719e89ff06f3267c9247ee58b8c12245f293de391286b06332260"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-fixture.mjs",
+      "currentSha256": "95be7bd8285e013037dbeba48305d3f6ef5408d6447a5deaac86439be3037042"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-installed-tests.mjs",
+      "currentSha256": "749c32df95b16ce38c634004c5fed2b682603ad1cade80986b64c079fcd184c6"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-model-records.mjs",
+      "currentSha256": "1548c49213a0e6545bd9fef566030eaae70f793d7d447b3ab203c3c4c7f9e821"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-model.rb",
+      "currentSha256": "094febf4147bdde6c237937efc14e6fca78b1badabe3dbb60558fec56f7b873e"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-package-records.mjs",
+      "currentSha256": "ebc988fd4d181b4cfed322da0910f9b07914b3a38fce4b851e15b8be7c5d953d"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-package.mjs",
+      "currentSha256": "830256052cc5e29ee7805bdc3ca3a9b95cd1ff18a0e54f905bd02496a19d72ac"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-provenance.mjs",
+      "currentSha256": "1db7ec154e327bd5322c508c643a4dd197c594088a6b5ab765c2615b1acf3cd5"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-report.mjs",
+      "currentSha256": "409cdca95269e390b42d37287d7cd0ba5d9465ad866ee5d59c0459189e48c475"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-resources.mjs",
+      "currentSha256": "8bdb5c27dd8ac9ca3fe1ca34995126cfb47b2573684f7f86d55c939e598671a4"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-source-history.mjs",
+      "currentSha256": "e27998cc3b1df4c55ebc2c50060955c94efd86eceef7215158dfb6e00cb9513d"
+    },
+    {
+      "path": "tests/inherited-checked-record-ruby-evidence.test.mjs",
+      "currentSha256": "c2a80fc8eb464e255bc718752f00ada7c9797541ba5e1a90261a3af4258fbcc8"
+    },
+    {
+      "path": "tests/inherited-checked-record-ruby-source-history.test.mjs",
+      "currentSha256": "283a258852f084e8764e8fc3aa0a8f5e5844350555fc74c8d4dcf5e0a9423a5f"
+    },
+    {
+      "path": "tests/inherited-checked-record-ruby.test.mjs",
+      "currentSha256": "0d1922e00c97878e2ad3b49657acd462ab3a936d94415f2f90b95a1a768591f3"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "3c0350486dd34d03a50dd602b18377602a76a85e7b10335f76e4c65862e8f98d",
+      "currentSha256": "7c3ac3bce27462d77ddfee6d4cb2215c321c9f982fd773bff88ea77964fced3a",
+      "edits": [
+        {
+          "start": 11276,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-ruby\"\n\t\t, \"inherited-checked-record-ruby-evidence\"\n\t\t, \"inherited-checked-record-ruby-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c720c091fe29e51322b28d328fd9c3fdab92752005313c9ef8bf4161ee07f58a",
+      "currentSha256": "5d7f8e1caa90f558acf2fa6d27ae843c0545c75b2985ab0a75858422b5d9bd99",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordRubySource, inheritedCheckedRecordRubyChangedPaths } from \"./inherited-checked-record-ruby-source-history.mjs\";\n"
+        },
+        {
+          "start": 73655,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordRubySource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 83519,
+          "previous": "\t...inheritedCheckedRecordDotnetArtifactRetentionChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordRubyChangedPaths\n\t, ...inheritedCheckedRecordDotnetArtifactRetentionChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
