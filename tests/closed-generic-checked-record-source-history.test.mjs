@@ -9,7 +9,6 @@ import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
-import { beforeCiContractRepairSource } from "./helpers/ci-contract-repair-source-history.mjs";
 import {
 	beforeClosedGenericCheckedRecordSource
 	, closedGenericCheckedRecordChangedPaths
@@ -36,7 +35,7 @@ test("closed generic checked-record correction has an exact reversible source tr
 		, [...closedGenericCheckedRecordChangedPaths].sort());
 	for(const update of record.updates)
 	{
-		const current = beforeCiContractRepairSource(
+		const current = beforeFinRefinementSource(
 			update.path, await readFile(update.path, "utf8"), update.currentSha256
 		);
 		const repositoryPrevious = git([

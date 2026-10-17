@@ -16,7 +16,6 @@ import {
 	, ciContractRepairPredecessor
 	, reverseCiContractRepairUpdate
 } from "./helpers/ci-contract-repair-source-history.mjs";
-import { beforeClosedGenericCheckedRecordSource } from "./helpers/closed-generic-checked-record-source-history.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
 import {
@@ -41,11 +40,9 @@ test("checked-record test backlog is closed by one authenticated registration", 
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const source = beforeCiContractRepairSource(
+		const current = beforeFinRefinementSource(
 			update.path, await readFile(update.path, "utf8")
-		);
-		const current = beforeClosedGenericCheckedRecordSource(
-			update.path, source, update.currentSha256
+			, update.currentSha256
 		);
 		const previous = original(update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -120,7 +117,10 @@ test("contract repair authenticates every changed source and refreshed pin", asy
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8")
+			, update.currentSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCiContractRepairUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
