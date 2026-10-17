@@ -77,7 +77,9 @@ export const checkRecursiveCheckedRecordPythonEvidence = async (reader = readFil
 	for(const run of index.runs)
 	{
 		const options = {
-			route: run.route, fixture: run.fixture, producerCommit: recursiveCheckedRecordPythonProducer
+			route: run.route
+			, fixture: run.fixture
+			, producerCommit: recursiveCheckedRecordPythonProducer
 			, runtime: recursiveCheckedRecordPythonRuntime, floor: "2.36"
 		};
 		const records = path => read(`${run.label}/records/${path}`);
@@ -92,9 +94,15 @@ export const checkRecursiveCheckedRecordPythonEvidence = async (reader = readFil
 		assert.deepEqual(recorded, run.controls);
 		if(controls === "full") for(const key of Object.keys(recorded)) assert.equal(result[key], recorded[key], key);
 		selections.push({ ...run.controls, route: run.route, fixture: run.fixture
-			, counts: result.counts, executions: result.executions, records: result.records });
+			, counts: result.counts
+			, executions: result.executions
+			, records: result.records });
 	}
-	return { producerCommit: index.producerCommit, checkerCommit: index.checkerCommit
-		, installedProfiles: ["python"], supportPromoted: false, hostedAcceptance: false
+	return {
+		producerCommit: index.producerCommit
+		, checkerCommit: index.checkerCommit
+		, installedProfiles: ["python"]
+		, supportPromoted: false
+		, hostedAcceptance: false
 		, controls, selections };
 };

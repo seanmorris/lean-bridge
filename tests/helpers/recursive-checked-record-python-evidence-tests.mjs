@@ -40,14 +40,13 @@ test("recursive checked-record Python evidence authenticates four wheel selectio
 
 test("recursive checked-record Python evidence rejects a changed record or source", async () => {
 	for(const target of ["ordinary-mutual/records/report.json", "producer/run.tap"
-		, "sources/producer/tests/fixtures/recursive-checked-record-consumers/python.py"])
-	{
+		, "sources/producer/tests/fixtures/recursive-checked-record-consumers/python.py"]) {
 		await assert.rejects(checkRecursiveCheckedRecordPythonEvidence(async path => {
 			const bytes = await readFile(path);
 			return path === `${recursiveCheckedRecordPythonEvidence}/${target}`
 				? Buffer.concat([bytes, Buffer.from("changed")]) : bytes;
 		}), undefined, target);
-	}
+		}
 });
 
 test("recursive checked-record Python evidence admits only frozen control scopes", async () => {
