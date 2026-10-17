@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-test-registration-source-v1",
+  "predecessorCommit": "97ac329b3f5627db2c8676bb5a02d506fb57e515",
+  "pinCount": 94,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1c389a2de54dbf092080184a11383000611648ba5a84d465873dedc176cbfe04",
+      "currentSha256": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+      "count": 94
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4557dc76956a58bb8683b06b9f43fbd203481003c98051d9205387dc12de139c",
+      "currentSha256": "d673fb7a94d2e01b1b0a1b6311a1fdee90fa1ac6decbcb708a7e3b98bc486c07",
+      "replacements": [
+        {
+          "previous": "1c389a2de54dbf092080184a11383000611648ba5a84d465873dedc176cbfe04",
+          "current": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "1c389a2de54dbf092080184a11383000611648ba5a84d465873dedc176cbfe04",
+      "currentSha256": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+      "edits": [
+        {
+          "start": 10672,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-browser\"\n\t\t, \"inherited-checked-record-browser-controls\"\n\t\t, \"inherited-checked-record-native\"\n\t\t, \"inherited-checked-record-npm-source\"\n\t\t, \"inherited-checked-record-test-registration-history\"\n\t\t, \"inherited-checked-records\"\n"
+        }
+      ],
+      "addedTests": [
+        "inherited-checked-record-browser",
+        "inherited-checked-record-browser-controls",
+        "inherited-checked-record-native",
+        "inherited-checked-record-npm-source",
+        "inherited-checked-record-test-registration-history",
+        "inherited-checked-records"
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "05e335c6a6cdabf48124a2d94241c42b65c219a555ac21a18e97dbbb15c8cb82",
+      "currentSha256": "b2f1d5fcf3243bdfcebc4068769f4b0a1d0ebbe6d8943e605147110999662407",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordTestRegistrationSource, inheritedCheckedRecordTestRegistrationChangedPaths } from \"./inherited-checked-record-test-registration-history.mjs\";\n"
+        },
+        {
+          "start": 72517,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordTestRegistrationSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 81484,
+          "previous": "\t...inheritedCheckedRecordFoundationChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordTestRegistrationChangedPaths\n\t, ...inheritedCheckedRecordFoundationChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
