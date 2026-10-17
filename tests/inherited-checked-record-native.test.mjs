@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/inherited-checked-record-native-archive-tests.mjs";
 import "./helpers/inherited-checked-record-native-ci-policy-tests.mjs";
 import "./helpers/inherited-checked-record-native-ci-shell-tests.mjs";
 import "./helpers/inherited-checked-record-native-ci-workflow-tests.mjs";
