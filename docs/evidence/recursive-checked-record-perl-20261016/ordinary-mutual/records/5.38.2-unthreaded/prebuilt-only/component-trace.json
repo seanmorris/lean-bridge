@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/MutualCheckedRecords.pm",
+      "sha256": "6c32169e124899a8c5a9fb3a7baa3b03c30236077dca4c987eabc785ab0e8076"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so",
+      "sha256": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc"
+    },
+    {
+      "origin": "prebuilt-xs",
+      "path": "auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so",
+      "sha256": "de4a8b7ae910e8ccbe551759970bf79a520667a9c1143904ac4766b77cc2e5c4"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "prebuilt-xs",
+  "runtimeIdentity": "12ae9a901392dc563536477c96fa46c1f72387387097b7c4d3e2c22d01815302",
+  "schemaVersion": 1
+}

@@ -77,6 +77,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Nested checked records in WIT/WASI, 16 October 2026](nested-checked-record-wit-20261016/index.json)
 - [Nested checked records in PHP-Wasm, 16 October 2026](nested-checked-record-php-wasm-20261016/index.json)
 - [Nested checked records in Rust, 16 October 2026](nested-checked-record-rust-20261016/index.json)
+- [Recursive checked records in Perl, 16 October 2026](recursive-checked-record-perl-20261016.md)
 
 ## Performance
 

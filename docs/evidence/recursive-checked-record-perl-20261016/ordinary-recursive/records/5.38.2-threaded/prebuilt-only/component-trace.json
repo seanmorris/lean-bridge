@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/RecursiveCheckedRecords.pm",
+      "sha256": "e6765b3fd6e66ff51bf2608e82a66ef9bf484978849962dda080b5f7c44f5b78"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so",
+      "sha256": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575"
+    },
+    {
+      "origin": "prebuilt-xs",
+      "path": "auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so",
+      "sha256": "e101cfd33a94ed8a127d330dc838093be056c3b28582295b449c7a72179edb7e"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "prebuilt-xs",
+  "runtimeIdentity": "12ae9a901392dc563536477c96fa46c1f72387387097b7c4d3e2c22d01815302",
+  "schemaVersion": 1
+}

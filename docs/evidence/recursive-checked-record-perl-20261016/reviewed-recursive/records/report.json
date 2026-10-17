@@ -1,0 +1,1048 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/LeanBridge-RecursiveCheckedRecords-1.000.tar.gz": "f7d85e7fec830bb6cbe120a05e2da7717469d6eb2e99db4be218a8241c6bbceb",
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+      },
+      "bindingIrSha256": "70a0993e9303558249cf2378e20c55a16684d54d04c52e79a1cb0ccb9d55484f",
+      "modelSha256": "9454ca846e061d3577dc040d71159be51636fc06122f6ff24fc01047b43eaf65",
+      "receiptSha256": "a4e52f378fef7aca82bdaa8613872d5256f864ddda778c500ad66704cc25c12e"
+    },
+    {
+      "archives": {
+        "archives/LeanBridge-RecursiveCheckedRecords-1.000.tar.gz": "f7d85e7fec830bb6cbe120a05e2da7717469d6eb2e99db4be218a8241c6bbceb",
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+      },
+      "bindingIrSha256": "70a0993e9303558249cf2378e20c55a16684d54d04c52e79a1cb0ccb9d55484f",
+      "modelSha256": "9454ca846e061d3577dc040d71159be51636fc06122f6ff24fc01047b43eaf65",
+      "receiptSha256": "a4e52f378fef7aca82bdaa8613872d5256f864ddda778c500ad66704cc25c12e"
+    }
+  ],
+  "configurations": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "expectedBindingIrSha256": "d571d47b44f475b93f5e0ec1f8de7c9af319976d4624847df4e0913a458906a3",
+  "fixture": "recursive",
+  "glibcMinimumVersion": "2.36",
+  "independentBuilds": 2,
+  "installModes": [
+    "prebuilt-only",
+    "build-xs"
+  ],
+  "interpreters": [
+    {
+      "configuration": "5.36.3-threaded",
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.36.3-unthreaded",
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.38.2-threaded",
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      }
+    },
+    {
+      "configuration": "5.38.2-unthreaded",
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      }
+    }
+  ],
+  "loadCeiling": 20,
+  "producerCommit": "c8ac44f43022c7fd49d4bb98a17cf4ae43371909",
+  "reports": [
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "534464e86523c9b3b5d3d195f3b8a7b6117f5ac969093a5686ca0f4751073a46",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "2fe9b40d2e8994bf06dbb0baa2aff3e3fbbf9753691c61bbb410e10d13b81a36",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "e89394796986033b45de40baafaa4ab625b1385212708ce75f202c620e03c8a1"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "c15118d9d78abd99906c740da1c0d28b0ec0d856243c0aa7dd0b406ea2ea0c7b",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215",
+          "role": "runtime",
+          "traceSha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "a18530e5bb7f54b1eaa9703c715d54ea64edbcf522d3d11207af93b9833cd105",
+          "role": "component",
+          "traceSha256": "8a7856e623051661a2c11bf57ec37f085a3abf830d7a289cd89671b4025a3c0d"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "269d44f2916c5e0bf092983b3727fd2a4560c0f8a9cfe07722d1d5786f5bab30",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "91c64a86f29bdd8db5bc0b09694c426df5553fc44ff5e9dc34882e3058796523",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0d1e42bcd01c13cedab916a3f21d033f3065d35f5ddc35df2184f9a4827239f0"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "24fd26939c2b30655f78a5f269eed7e4192ecc1bbde7a85a61484b4aaaad2784",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d",
+          "role": "runtime",
+          "traceSha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "63c446f21b9cba62401b0d6e5659980107ac2da452e5c4434411aeeddbaba7a0",
+          "role": "component",
+          "traceSha256": "37884646cd0794d1ca0c123c9e1214806a4f1a8130a253ec55e53ffd9cf5d81d"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "f443e3325a59d2ac3ea2e655ea82a7e563e5d199f855891a07629a0d00e17f94",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "5bc11cb54a78bb05f9b12d8ba3ae10d620e966a018df6435e7b07d8fdcc89613",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d496854a04fd0695daf626f9c9e01ec112293d6d779b81d20a8d147f36d2d800"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "dd39df7b7cb822e1ba7730d35b96a724ce0fd7c5daa12d3e3b0be3e5652a2d40",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290",
+          "role": "runtime",
+          "traceSha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "5f6ac87e7a53465c384c4f8513c94d497c5c2c52f4a8d8e4ee74273f91b734c9",
+          "role": "component",
+          "traceSha256": "7f066866c66b1efc9276d27b7612d7b38ad888c70edaed9877a48d6a91a187bb"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "c5fead8770fa363bd8abfc326986e5e8988cf010325f728ec99cc1936399b1f6",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "21ceee73d0269a3166bebac754bdfcc5eb47ebb1d2855f80cadf43e5c6d368a9",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "a04e3a5a47e87cfed39816c51e7c9397b84af4e5ff290780a69b85666d9b9e19"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "dd15b3ca6a0b8e3ee81f3184f967aea8703182d31ce7f1abf438132a7f7778f5",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535",
+          "role": "runtime",
+          "traceSha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "2c7490b4d5da094c1a170f29706f3bb50a391b7d8e52317a43f7291e8ccaa6ea",
+          "role": "component",
+          "traceSha256": "830b278ea9b24317af937988890e4094819d8873340e03acfadce3f67a6804ed"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "4d28c11df60cab7be28a839e09f2b982b28d6571d19550bb3a42cc5b88ad59ca",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "0e44013666c382dace40ceeb0d1ce7c5ddd0d8a9dfbac0782d1958468399332d",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "b68f620806f19e69dc5c00f90cdba3b577f29821f04f10a9b039f82ea0f653b3"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "a1d91cf8c9009ca31eb248045cefc68cfd41d4c7b2eef039e163a981c1d754e3",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1",
+          "role": "runtime",
+          "traceSha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "3d840dc3b71f37f6652697d24b830c7957963a66008fc46724d4f8ec9bfddfbd",
+          "role": "component",
+          "traceSha256": "0dd3fec929972859719370e2e6c6a5ac2e8ff1cfdea524a7dc9827ddcf95c204"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "46b0eae25457f1febec311081584074abada18dbd47f1420a66d0d069f3c7d17",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "ff721c2cdc17cb5d13bb73a8693109659c96f8146542021e4050913b99369b72",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "6c4f99ff4ce38611a1da8b32ace8b96f831178cc82c40bf4e912c9e2bc69bcf1"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "7aaa4a516e366d5bb19a1ce1a789cd53ed680968f43629ccc3b6f5c10ddade67",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036",
+          "role": "runtime",
+          "traceSha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "5808a96c8e7a32ffab278ab72474818123ae32ea9cc7ca3d58d8ad0132379d21",
+          "role": "component",
+          "traceSha256": "c1923cb0ae61286cf70fab7d465097cdbb2c184141ce9ff14e04f4377979e4ef"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "9c950877bebc3fed283ea80408ad5b7e5faec0cf68535c23181298562ce275f9",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "fd36204d0db28660fe34e0620ab27780604c02991c3fc219a4ef60590381a97a",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d448cae174d263cea0e7dcee51722caf7ed136115ce79beb36814c28b2a74d31"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "e2f25fdf2e9958598268e48426799bc952e050718caf58634e496b8ed9fd3c58",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052",
+          "role": "runtime",
+          "traceSha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "28cec4ee77a6e26679f239c9c2a2232eb2fcd0cb077fd58000bcb448f2ba4c15",
+          "role": "component",
+          "traceSha256": "8c96c46f8d902d1a769347856b57ac2394a329df289b6ebd1152df6d7820abd9"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "recursive",
+        "reviewed"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 527,
+        "checks": 1709,
+        "hostRejections": 79,
+        "recoveries": 95,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 8,
+        "snapshots": 496
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "value0.tail?.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "value0[1]?.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "value0[0]?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "echo-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "value0[0]?.digit is not below its Fin 3 bound\n",
+        "group-record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "group-subtype": "value0[1]?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "huge-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "late-fin": "value0.tail?.digit is not below its Fin 3 bound\n",
+        "late-record": "value0.tail? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "value0.digit is not below its Fin 3 bound\n",
+        "outer-record": "value0 was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "outer-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "value0[1]? was rejected by RecursiveCheckedRecords.mkPacket\n",
+        "round late subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "value0.tail?.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "second-subtype": "value0.value was rejected by RecursiveCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::RecursiveCheckedRecords::Packet with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "recursive",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "5b5c27a32feb2abca69ac39b88c4ecf2ff255147630271d583df3c157bb44c99",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/RecursiveCheckedRecords/native/libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/RecursiveCheckedRecords/RecursiveCheckedRecords.so": "31cc28ae4fe4f0db4874a6786fd873f73e83a3c70c8fd8608dfe1c48a575788b",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "b1752c17535d8f4beac8610d2d56accbf37b16d6a94869e752b661da897dbbee"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "60900b7062545b82ef055e953886623c0aa621205028a70508b0ab45cde2da31",
+      "route": "reviewed",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e",
+          "role": "runtime",
+          "traceSha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+        },
+        {
+          "manifestSha256": "8dd3fd5424cffdab1cbe309d0ca798f0cee812ae911acab8708469d50bd5f5c8",
+          "receiptSha256": "21fb4e16358569b474b69f1ac578bbcfe1530da59b554b3aa527f0695c2b618e",
+          "role": "component",
+          "traceSha256": "518495b43bbef8217c3abef3a7691e4c8117ecac1e74762cd2697b6d3d98945d"
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 9701691392,
+          "freeBytes": 6324166656,
+          "load": 6.54
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9693589504,
+          "freeBytes": 6324113408,
+          "load": 6.54
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10124840960,
+          "freeBytes": 6304096256,
+          "load": 6.58
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10753904640,
+          "freeBytes": 6251147264,
+          "load": 6.64
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10831093760,
+          "freeBytes": 6250672128,
+          "load": 6.02
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10666209280,
+          "freeBytes": 6248816640,
+          "load": 6.01
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10771439616,
+          "freeBytes": 6247337984,
+          "load": 6.02
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10745991168,
+          "freeBytes": 6246731776,
+          "load": 6.11
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10808655872,
+          "freeBytes": 6246252544,
+          "load": 5.74
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10518761472,
+          "freeBytes": 6245224448,
+          "load": 5.45
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10689208320,
+          "freeBytes": 6243332096,
+          "load": 6.2
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

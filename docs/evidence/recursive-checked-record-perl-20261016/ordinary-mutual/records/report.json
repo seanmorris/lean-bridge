@@ -1,0 +1,1064 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/LeanBridge-MutualCheckedRecords-1.000.tar.gz": "39d70b37f69e1c48b66295f0f4a80b37c1fd2ec361a574c2ce5098a07d605f1d",
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+      },
+      "bindingIrSha256": "21a2abbcc84237f17b60237baef9bd07d6d4837de314ee494c21d3b5ca8591fe",
+      "modelSha256": "2b14a4049b8e49f14037ed0f25032ed7e82a998960998a40e9026e07b6235100",
+      "receiptSha256": "4fa965bdc4771e70a0f4b7077ff9c63c7c5a3b029003929d3f0d3233eee40ca3"
+    },
+    {
+      "archives": {
+        "archives/LeanBridge-MutualCheckedRecords-1.000.tar.gz": "39d70b37f69e1c48b66295f0f4a80b37c1fd2ec361a574c2ce5098a07d605f1d",
+        "archives/LeanBridge-Runtime-0.0020592716822581412637753637152461205682916576183240901183894178635322362377514011.tar.gz": "3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76"
+      },
+      "bindingIrSha256": "21a2abbcc84237f17b60237baef9bd07d6d4837de314ee494c21d3b5ca8591fe",
+      "modelSha256": "2b14a4049b8e49f14037ed0f25032ed7e82a998960998a40e9026e07b6235100",
+      "receiptSha256": "4fa965bdc4771e70a0f4b7077ff9c63c7c5a3b029003929d3f0d3233eee40ca3"
+    }
+  ],
+  "configurations": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "expectedBindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "fixture": "mutual",
+  "glibcMinimumVersion": "2.36",
+  "independentBuilds": 2,
+  "installModes": [
+    "prebuilt-only",
+    "build-xs"
+  ],
+  "interpreters": [
+    {
+      "configuration": "5.36.3-threaded",
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.36.3-unthreaded",
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      }
+    },
+    {
+      "configuration": "5.38.2-threaded",
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      }
+    },
+    {
+      "configuration": "5.38.2-unthreaded",
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      }
+    }
+  ],
+  "loadCeiling": 20,
+  "producerCommit": "c8ac44f43022c7fd49d4bb98a17cf4ae43371909",
+  "reports": [
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "53a8274e936b9e14298da2c871f471b35898b7ea16640fa94904f692769a9014",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "6eefad872784147f09d39cd71c521b8a0b90ea4600258a60cc559f4bb1ceef38",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "e89394796986033b45de40baafaa4ab625b1385212708ce75f202c620e03c8a1"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "3a793c1e080774d6fccaa7ff60630ee400eaeec7fef13c0002e1cc7dd9869165",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "440854dc97f5d57bad62ce364d6acd2321fc7406ee85b39a6e86b70d36598215",
+          "role": "runtime",
+          "traceSha256": "5647a8df3ccc1498a20bc91981fb55be0c995f0ed135f7a47b148effda1fdb81"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "67b09f5ae120236e5fd0a8844321f15343b1b9e27cfd52278c2fb655391b70e1",
+          "role": "component",
+          "traceSha256": "24cdbf1fb838a03d3e9e6682bf7760d7c2723f484bc2f38aa355daa32bce3ca8"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "c42996ff51604c680e750f3f445765436a04292575f8b15095930af02faba4c8",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.36.3"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "1ae0f7a902b05d80804d069976d6a3442776cf3031bbcc48f2e51b1ad436ed3c",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "adf2caf93dcce26a0d34395408e4d62831a7c08b9797d0793471f7fba3db9b36",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "0d1e42bcd01c13cedab916a3f21d033f3065d35f5ddc35df2184f9a4827239f0"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "4556777efcb3e4704dd12b60fadc7baac11a45ad0ad97a02987ddc13cac17f98",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "14c87872f1c272b8467aa1139da92a522e8634126115a646ecb22be667e5eb7d",
+          "role": "runtime",
+          "traceSha256": "8d03e05dd5a2d2a7c6bbe45fd5069793b05429b749d1f3a489dccc90c28b4f61"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "7631cc71e5d3ec0d48a18229741468899f3847241f032ac31e87d0a028e37944",
+          "role": "component",
+          "traceSha256": "3fcc7739814c360796324355861d6a9de8654d4d4221b49bba401923e82c91fd"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "c1ba64c85c50dab972970089a27909b9dfe7d745ab9c99150f192bdf3b51cc68",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "5998d8069e4ac1102c709658942288c75b8ae42bc94b63c8ff7e474e68469331",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d496854a04fd0695daf626f9c9e01ec112293d6d779b81d20a8d147f36d2d800"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "4d1da65901e111dbada0f69f83af8c6eda4e0030a7135db0e5794c55d7682cc6",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "c2b6ed629e3dd78670e00e8b13ac332eae1a407e705efc81d20af453933dc290",
+          "role": "runtime",
+          "traceSha256": "02ba5dde209d924cf6b637ff1b92475b8867fe43a139f82ce489793cea46aa12"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "9ba1a513f53f7a9d0286495d6a209484ce07c48eaa5a78d72bc38d1cb4a69e5b",
+          "role": "component",
+          "traceSha256": "af168915e65c0ad68fa3f74f0ba37f6a9a59a37361cb50f68176c9359b84c44d"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.36.3-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "5526d24ded88c1c02c6166a45fe34b064c2f9f6d3e3cfae82525049572d77a3d",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.36.3"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "38a8e35960bc782e45b0fb3dab93d5025384a98eb6d100aa8a0845254047c290",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "42ff9e450a1574f2329346ea3a054aad2c8890ee9c25ada6449c7268fe7d58bb",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "a04e3a5a47e87cfed39816c51e7c9397b84af4e5ff290780a69b85666d9b9e19"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "feaeaef810cf37d1b4078bd47215563db13433f3ea597e0d11c9665c7bbac82e",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "ee31f04bc47713ee1e7af7eec4c79757f5da95358146b058fa875ab63bf3d535",
+          "role": "runtime",
+          "traceSha256": "06a13638c2adf6f6864e131f79eedbcb7a305e7305427648b75470c2a28b83b3"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "020e3440145ac4c06e0eb3ea08810284bbbc1710c3ff1af3efc024eed8fbb7ba",
+          "role": "component",
+          "traceSha256": "61beb5960881fd1fd3283465e38f49b84023089dc49d323e8e5da6792e1c0169"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "d82478283e227b09e45a2c1f616d3a0a4a822a0c747d7da49eb75fcd9668676d",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "a91b03a5b516c0419800e5e05f653602dee9a13235f3d8194f59f6b6654d3a77",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "b68f620806f19e69dc5c00f90cdba3b577f29821f04f10a9b039f82ea0f653b3"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "d4a1e9b2558ee7bc0d65e664489b00aa35e707cd7b0f44b2b3fa2ce15ee2be4f",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "7197ee40f85be2d67ffe57d0830384efc5328bde74215519560a1df57073b5d1",
+          "role": "runtime",
+          "traceSha256": "a8eaa2f967092669e2d42cae391fb335e3e355de8a4c2219e7eb13d36ebe0c02"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "01db6904d30284c5e09fdbef790ba2e1934434cf0c2c7d7faf13062a42cbcaf1",
+          "role": "component",
+          "traceSha256": "c8f30edc30959d2b3d01f697afa835f6f6424751dc83995eb4b11a135aa35687"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-threaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "03f8e3368d9f5ee75c77b2c139a99b09a2326967e448639c1584f5fc725e04fc",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux-thread-multi",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": "define",
+        "usemultiplicity": "define",
+        "version": "5.38.2"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "e07de15a91428640a72365105769ca3f85013414bf37eab6c23eaf1eeee20fa9",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux-thread-multi/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux-thread-multi/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux-thread-multi/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "34862fedfffaa32ad1bd4a1434e95d24b5f0c888f785f509223c28b5d2d21528",
+        "x86_64-linux-thread-multi/auto/LeanBridge/Runtime/Runtime.so": "6c4f99ff4ce38611a1da8b32ace8b96f831178cc82c40bf4e912c9e2bc69bcf1"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "c57efcda44d55387c2d6a7847fcfbf8c067b4634b72444f7208635692c294e55",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "b701e19412fedf35103f2c37d0aa5f45426d6dcd1db25d44ae2cc6b536577036",
+          "role": "runtime",
+          "traceSha256": "a8714ab500eaa1503c6d8e87c7bbea02b6a2c9d0eb313444f5e076aae3afa563"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "befb00232425dbc0ef8e3c220e83f02915df7c4be4408d5b13b8d6c99c1d3c73",
+          "role": "component",
+          "traceSha256": "9e5c2753f6c8e1ab9bb30a4082de132582f1ca07bd7cc7b62a0e8b702fe3af5c"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installMode": "prebuilt-only",
+      "installationCCompilerAvailable": false,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "071b1e4a69e43ebda21000dffa2e07d0aea60179061b3bd4dbbce91a56389995",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "de4a8b7ae910e8ccbe551759970bf79a520667a9c1143904ac4766b77cc2e5c4",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "d448cae174d263cea0e7dcee51722caf7ed136115ce79beb36814c28b2a74d31"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "28cfa4c052be9812287b407317f682e85c967c881d6130178a3709bc23a60af2",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "debea81d3582997b2ae4c08d48d6d63947ea28e2e5e472f5123bacbd48ea0052",
+          "role": "runtime",
+          "traceSha256": "4370b545a49462b73e77622e32819e0afe43a088034fc146d2c3509e535fbdd6"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "60214094e1d92fe3b14885dc0657bc129da99ccccaa8387f985d7183c1241de4",
+          "role": "component",
+          "traceSha256": "40652ecc77992cfa1d379e3fc0e65a057a14dd5bb4bfaa14650e65f5f1388013"
+        }
+      ]
+    },
+    {
+      "arguments": [
+        "consumer.pl",
+        "mutual",
+        "ordinary"
+      ],
+      "callerInputsUnchanged": true,
+      "compilerFreeExecution": true,
+      "compilerFreeReplay": true,
+      "configuration": "5.38.2-unthreaded",
+      "consumerSha256": "58d29b594fcdb2269e32a490bf74a85eea2e640257096a046d3af30381374e6b",
+      "counts": {
+        "calls": 535,
+        "checks": 1734,
+        "hostRejections": 81,
+        "recoveries": 97,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 11,
+        "snapshots": 502
+      },
+      "executableSha256": "4379d8d286f8795c9033af2d66d333571fe234d45889cd6778a57aec9344130c",
+      "extractedDistributionsRemoved": true,
+      "failures": {
+        "absent-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "bare-child": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-record-as-option": "Expected undef or Some at consumer.pl line 105.\n",
+        "bare-step": "Expected undef or Some at consumer.pl line 105.\n",
+        "cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "deep-subtype": "arg0.next?.more.packet.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "depth": "Perl copied graph depth or node limit exceeded at consumer.pl line 105.\n",
+        "echo-group-late-subtype": "arg0[1]?.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-group-subtype": "arg0[0]?.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "echo-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "group-fin": "arg0[0]?.mode is not below its Fin 3 bound\n",
+        "group-record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "group-subtype": "arg0[1]?.value was rejected by MutualCheckedRecords.plusOne\n",
+        "huge-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "late-fin": "arg0.next?.more.packet.mode is not below its Fin 3 bound\n",
+        "late-record": "arg0.next?.more.packet was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "missing-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "negative-bound": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-nat": "Nat cannot be negative at consumer.pl line 105.\n",
+        "negative-value": "Nat cannot be negative at consumer.pl line 105.\n",
+        "option-as-record": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n",
+        "outer-fin": "arg0.mode is not below its Fin 3 bound\n",
+        "outer-record": "arg0 was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "outer-subtype": "arg0.value was rejected by MutualCheckedRecords.plusOne\n",
+        "proof-field": "Perl graph fields do not match the generated schema at consumer.pl line 105.\n",
+        "record-as-array": "Expected a plain untied array reference at consumer.pl line 105.\n",
+        "record-as-step": "Expected an exact generated variant constructor at consumer.pl line 105.\n",
+        "round cycle": "Cyclic Perl copied value at consumer.pl line 105.\n",
+        "round group record": "arg0[1]? was rejected by MutualCheckedRecords.mkEnvelope\n",
+        "round late subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusOne\n",
+        "scalar-nat": "Expected Math::BigInt at consumer.pl line 105.\n",
+        "second-late-subtype": "arg0.next?.more.packet.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "second-subtype": "arg0.value was rejected by MutualCheckedRecords.plusTwo\n",
+        "wrong-record-class": "Expected exact LeanBridge::MutualCheckedRecords::Envelope with a plain untied hash at consumer.pl line 105.\n"
+      },
+      "fixture": "mutual",
+      "identity": {
+        "archname": "x86_64-linux",
+        "ivsize": "8",
+        "ptrsize": "8",
+        "useithreads": null,
+        "usemultiplicity": null,
+        "version": "5.38.2"
+      },
+      "installMode": "build-xs",
+      "installationCCompilerAvailable": true,
+      "installedBytesUnchanged": true,
+      "installedFilesSha256": "7f27621d49062bf264520f16fb180fc63654312ee6f24b1e0b4a4737621f7a30",
+      "leanCompilerUnavailable": true,
+      "nativeLibraries": {
+        "x86_64-linux/LeanBridge/MutualCheckedRecords/native/libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+        "x86_64-linux/LeanBridge/Runtime/native/liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+        "x86_64-linux/LeanBridge/Runtime/native/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+        "x86_64-linux/auto/LeanBridge/MutualCheckedRecords/MutualCheckedRecords.so": "eac0bd7a1d382b2191690d17cf293c008192b1674382e6df6051ed291bef4c70",
+        "x86_64-linux/auto/LeanBridge/Runtime/Runtime.so": "b1752c17535d8f4beac8610d2d56accbf37b16d6a94869e752b661da897dbbee"
+      },
+      "nativePayloadUnchanged": true,
+      "offlineInstall": true,
+      "proofFieldsAbsent": true,
+      "relocatedApiPath": true,
+      "relocatedInstallation": true,
+      "repeatedRuns": 2,
+      "resultSha256": "abae64f517980fad2abae0271cd3c7e0f7569d4b00cfe9e19aef94d2e739d421",
+      "route": "ordinary",
+      "sourceUnchangedAfterReplay": true,
+      "traces": [
+        {
+          "manifestSha256": "6d7237eb129fa0beecab736f6cbda6ba0bfcfc9c0317d58f9b47ae31d3d28124",
+          "receiptSha256": "76c71076342101b1b5f3982e28a24b2ad0808f7a26ccd5df86890f068f50ec9e",
+          "role": "runtime",
+          "traceSha256": "805293363e0456cca364e6530a60b6fe9946b2a68d485ccf03fd5c1a9346b206"
+        },
+        {
+          "manifestSha256": "cdb3b3fdf8f63a18767c4488b732218e25507a03f5b95179b36e40589f8ee29c",
+          "receiptSha256": "a474831acba75164389aa1f1938e5ef0f667526b1519a1e30a9683594d06ebea",
+          "role": "component",
+          "traceSha256": "8c7c0bca4367c4d778d7aa571ae6de73ad539a7588ffab8830fb439cd466c204"
+        }
+      ]
+    }
+  ],
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 12037783552,
+          "freeBytes": 6414503936,
+          "load": 5.95
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 12022816768,
+          "freeBytes": 6414409728,
+          "load": 5.95
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11227246592,
+          "freeBytes": 6358097920,
+          "load": 5.92
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10995474432,
+          "freeBytes": 6324604928,
+          "load": 6.17
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11223408640,
+          "freeBytes": 6323871744,
+          "load": 5.99
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11000221696,
+          "freeBytes": 6322163712,
+          "load": 7.12
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9862664192,
+          "freeBytes": 6302916608,
+          "load": 7.96
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10347409408,
+          "freeBytes": 6320721920,
+          "load": 7.36
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9906024448,
+          "freeBytes": 6283345920,
+          "load": 8.11
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10003693568,
+          "freeBytes": 6280540160,
+          "load": 7.65
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 9975545856,
+          "freeBytes": 6275588096,
+          "load": 6.46
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

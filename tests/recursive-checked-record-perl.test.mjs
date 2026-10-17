@@ -17,6 +17,7 @@ import {
 	, recursiveCheckedRecordPerlPackage, recursiveCheckedRecordPerlReview
 	, recursiveCheckedRecordPerlRoutes
 } from "./helpers/recursive-checked-record-perl-fixture.mjs";
+import "./helpers/recursive-checked-record-perl-evidence-tests.mjs";
 import "./helpers/recursive-checked-record-perl-installed-tests.mjs";
 
 const receipt = component => ({
