@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "mutualcheckedrecords@1.0.0",
+    "name": "mutualcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51389731,
+          "path": "archives/mutualcheckedrecords-1.0.0.crate",
+          "sha256": "6138bc5c727f291c2d6e31499dfb15e47c11d44c1a9a534224854914fe5d4a11"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "526ba7d289f155fe6267decf4dd1cc297207f8d0589e4202775bae4fcbf9a0fc",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "80d2494117cd4dae1c2a2a8cf608640dbdc6acb90b6ff540325ed054b6050ad9"
+  }
+}

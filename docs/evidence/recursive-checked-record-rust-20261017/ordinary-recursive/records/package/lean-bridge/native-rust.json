@@ -1,0 +1,74 @@
+{
+  "bindingIrSha256": "4bd5e82b95f4d381a43890bf5a7819d2c47740d39a544e6f5fa900699013532c",
+  "evidence": {
+    "componentId": "recursivecheckedrecords@1.0.0",
+    "componentReceiptSha256": "fb5f0fb316a33b781aa0b0046725d79306f8bcfc9ccdfa5687eacbd45eb59b49",
+    "copiedGraph": {
+      "layoutSha256": "b564479bbec603724b6ab1629e1962aac552aa5775c5a65fdf7a1e063b7c5c94",
+      "schemaVersion": 1
+    },
+    "libraries": {
+      "libcomponent_a1d30b9a0f384ed52541.so": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "librecursivecheckedrecords.so": "f40a13990c3da41f7963e04a7b229f763eab944b2d917e59ea141e2c7ce1d3d0"
+    },
+    "library": "librecursivecheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3312,
+      "sha256": "eba3a45b1f63442a26479e21fc0a0b4af2f55317bdbbc1c65edd79e6b0282827"
+    },
+    "Cargo.toml": {
+      "bytes": 347,
+      "sha256": "86fededd4d5c05e8b443e055d732e6a4c3e55e8d93a79b9805ee402aa3ed9b32"
+    },
+    "README.md": {
+      "bytes": 2424,
+      "sha256": "31cf2fbbd438e86f30aa9ac716ebe5561d86323955274d0e6b12b896f15199a7"
+    },
+    "binding-manifest.json": {
+      "bytes": 1144,
+      "sha256": "77d4abb27324dd60f9cab80ccecb7868eb6200803ad1a1b3424e5232a8ff8fbb"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_a1d30b9a0f384ed52541.so": {
+      "bytes": 109496,
+      "sha256": "39fd2e912a23a62a9f98962f9c1735759fbd095b12d4b5bcfd2d79e00f23f575"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/librecursivecheckedrecords.so": {
+      "bytes": 41472,
+      "sha256": "f40a13990c3da41f7963e04a7b229f763eab944b2d917e59ea141e2c7ce1d3d0"
+    },
+    "src/__runtime.rs": {
+      "bytes": 26848,
+      "sha256": "e4ae739f492855c161efdf6e330b3f3e2f5a96e4f433cf2685746744850babfe"
+    },
+    "src/assets.rs": {
+      "bytes": 8109,
+      "sha256": "ca9e7486ffbcb4cbe37232a7f83e6b37f00a9d283d2ac65b91706d7cdc2c5b8f"
+    },
+    "src/lib.rs": {
+      "bytes": 2304,
+      "sha256": "a2e6db0b0fcd0a2458bdaa40e512ea3f2820432569e086ed7441689e58f27ac9"
+    }
+  },
+  "name": "recursivecheckedrecords",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

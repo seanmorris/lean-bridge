@@ -1,0 +1,74 @@
+{
+  "bindingIrSha256": "526ba7d289f155fe6267decf4dd1cc297207f8d0589e4202775bae4fcbf9a0fc",
+  "evidence": {
+    "componentId": "mutualcheckedrecords@1.0.0",
+    "componentReceiptSha256": "ff13caf26f9e7653b032afb130c5639d14421dbe1341347e0c3d4df260bced2a",
+    "copiedGraph": {
+      "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2",
+      "schemaVersion": 1
+    },
+    "libraries": {
+      "libcomponent_4ca822048b1456593639.so": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc",
+      "liblean_bridge_native.so": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libmutualcheckedrecords.so": "4c627dbbb57e9b78355774bcc2505f33695d5b3629ee9b51245f3a00adb1aee4"
+    },
+    "library": "libmutualcheckedrecords.so",
+    "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3309,
+      "sha256": "5fcc11fa2c94462abe9cd288263f7e3c4cc73b42ee096b8499b7ad13871d24de"
+    },
+    "Cargo.toml": {
+      "bytes": 344,
+      "sha256": "1e4b988374357ed74b437f2217cdfd708c0bce6fbd81fc7b606d67101c5ea82f"
+    },
+    "README.md": {
+      "bytes": 2403,
+      "sha256": "7cf8b84a2637bc33551a2690f1b10479a0efcaa4920f263097e22e56d15b81c4"
+    },
+    "binding-manifest.json": {
+      "bytes": 1157,
+      "sha256": "62e28df9d03bbd6aa4566d68c1bbec538f47cf8d3eeb9e92a5aeabf4ee290b24"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_4ca822048b1456593639.so": {
+      "bytes": 125368,
+      "sha256": "8b733eede557351ca292348ef05bcba637e1d0c13b884891a247c04892f366dc"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21464,
+      "sha256": "25bb83c98a7f86c15c8f5a5181457943beae8e9052ce059cf11df47060cdb5f7"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "native/linux-x64/libmutualcheckedrecords.so": {
+      "bytes": 46512,
+      "sha256": "4c627dbbb57e9b78355774bcc2505f33695d5b3629ee9b51245f3a00adb1aee4"
+    },
+    "src/__runtime.rs": {
+      "bytes": 31255,
+      "sha256": "21761131a170f01876e6f2f0bfe0df52e999f2ff879e5181bdb56d03f3f45e02"
+    },
+    "src/assets.rs": {
+      "bytes": 8103,
+      "sha256": "3f13e3c4c8f9caeeb8f8a19b14b4538deebf133bca90c643864e4617f930ab4b"
+    },
+    "src/lib.rs": {
+      "bytes": 2440,
+      "sha256": "42954892dfe0bd3f3e689c1464f50710f8de30ae430cba8f770e844b4037901e"
+    }
+  },
+  "name": "mutualcheckedrecords",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

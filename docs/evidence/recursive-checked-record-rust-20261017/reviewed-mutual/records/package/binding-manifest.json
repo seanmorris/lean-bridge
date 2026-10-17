@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/rust-copied-graph",
+    "version": 1
+  },
+  "component": "mutualcheckedrecords@1.0.0",
+  "bindingIrSha256": "9229b3efdbe8d76ef848fc99e437e45aab0fbbbb02bef0569eac03b55769955d",
+  "publicModule": "src/lib.rs",
+  "internalModule": "src/__runtime.rs",
+  "exports": [
+    "Error",
+    "BigInt",
+    "BigUint",
+    "Envelope",
+    "EnvelopeAlias",
+    "Step",
+    "echo",
+    "echo_groups",
+    "first",
+    "groups",
+    "produce",
+    "second"
+  ],
+  "files": [
+    "src/lib.rs",
+    "src/__runtime.rs",
+    "src/assets.rs",
+    "Cargo.toml",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "copiedGraph": {
+    "schemaVersion": 1,
+    "layoutSha256": "d1e59688830ad32403bddb9f4ef537b219d81c50a52e0f06ab850a26e0c67ca2"
+  },
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Recursive Cargo packages support finite copied values; callables, resources and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The native profile requires Rust 1.90+ on Linux x86-64 with glibc."
+    }
+  ]
+}

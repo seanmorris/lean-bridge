@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "recursivecheckedrecords@1.0.0",
+    "name": "recursivecheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51385296,
+          "path": "archives/recursivecheckedrecords-1.0.0.crate",
+          "sha256": "7595459a951d0ed8e3399518b8aa128c5ec6254b0e56c0f7c8631ebb7200a9ac"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "recursivecheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "8abe105ab676592436ae1821f2d06ca093e2fb0963f12da4e009b5c686e1c768",
+      "id": "native-library-v1",
+      "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7bce8747cec51e489cc492bbe2955f80fad32b1876c4d2a19efa00b8295074b6"
+  }
+}

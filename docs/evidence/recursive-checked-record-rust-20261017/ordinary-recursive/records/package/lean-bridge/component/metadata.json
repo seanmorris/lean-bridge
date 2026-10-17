@@ -1,0 +1,1796 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.Groups",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 43,
+            "endLine": 32,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 32
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.PacketAlias",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 28,
+            "endLine": 31,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 31
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A positive word represented by its natural-number payload. ",
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.Positive",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 47,
+            "endLine": 4,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 3
+          },
+          "theoremReferences": [
+            "RecursiveCheckedRecords.Packet.mk.inj",
+            "RecursiveCheckedRecords.Packet.mk.injEq",
+            "RecursiveCheckedRecords.Packet.mk.sizeOf_spec",
+            "RecursiveCheckedRecords.positive.eq_1"
+          ],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.echo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "RecursiveCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "RecursiveCheckedRecords.mkPacket",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "RecursiveCheckedRecords.Packet.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "RecursiveCheckedRecords.Packet.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "RecursiveCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "projection": "RecursiveCheckedRecords.Packet.digit",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "projection": "RecursiveCheckedRecords.Packet.tail",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "RecursiveCheckedRecords.Packet",
+                              "name": "RecursiveCheckedRecords.Packet"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "RecursiveCheckedRecords.Packet",
+                "name": "RecursiveCheckedRecords.Packet"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "RecursiveCheckedRecords.Packet.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "RecursiveCheckedRecords.Packet.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "RecursiveCheckedRecords.Packet.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "tail",
+                      "projection": "RecursiveCheckedRecords.Packet.tail",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveCheckedRecords.Packet",
+                          "name": "RecursiveCheckedRecords.Packet"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "RecursiveCheckedRecords.Packet",
+                  "name": "RecursiveCheckedRecords.Packet"
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "RecursiveCheckedRecords.Packet",
+          "selected": true,
+          "source": {
+            "endColumn": 55,
+            "endLine": 36,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 36
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Packet → RecursiveCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.echoGroups",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "RecursiveCheckedRecords.Groups"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "values",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveCheckedRecords.PacketAlias",
+                          "name": "RecursiveCheckedRecords.PacketAlias"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "RecursiveCheckedRecords.normalizePacket",
+                          "kind": "checked-record"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "RecursiveCheckedRecords.Packet.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "RecursiveCheckedRecords.Packet.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "RecursiveCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "projection": "RecursiveCheckedRecords.Packet.digit",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "projection": "RecursiveCheckedRecords.Packet.tail",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "RecursiveCheckedRecords.Packet",
+                              "name": "RecursiveCheckedRecords.Packet"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "RecursiveCheckedRecords.PacketAlias",
+                      "name": "RecursiveCheckedRecords.PacketAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "RecursiveCheckedRecords.Packet",
+                        "name": "RecursiveCheckedRecords.Packet"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "element": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "element": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "reference",
+                    "lean": "RecursiveCheckedRecords.PacketAlias",
+                    "name": "RecursiveCheckedRecords.PacketAlias"
+                  },
+                  "kind": "option"
+                },
+                "kind": "array"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "RecursiveCheckedRecords.Packet.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "RecursiveCheckedRecords.Packet.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "RecursiveCheckedRecords.Packet.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "tail",
+                      "projection": "RecursiveCheckedRecords.Packet.tail",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveCheckedRecords.Packet",
+                          "name": "RecursiveCheckedRecords.Packet"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "RecursiveCheckedRecords.Packet",
+                  "name": "RecursiveCheckedRecords.Packet"
+                },
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "alias",
+                  "lean": "RecursiveCheckedRecords.PacketAlias",
+                  "name": "RecursiveCheckedRecords.PacketAlias",
+                  "target": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "reference",
+                    "lean": "RecursiveCheckedRecords.Packet",
+                    "name": "RecursiveCheckedRecords.Packet"
+                  }
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "RecursiveCheckedRecords.Groups",
+          "selected": true,
+          "source": {
+            "endColumn": 63,
+            "endLine": 38,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 38
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Groups → RecursiveCheckedRecords.Groups",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.first",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "RecursiveCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "RecursiveCheckedRecords.mkPacket",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "RecursiveCheckedRecords.Packet.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "RecursiveCheckedRecords.Packet.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "RecursiveCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "projection": "RecursiveCheckedRecords.Packet.digit",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "projection": "RecursiveCheckedRecords.Packet.tail",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "RecursiveCheckedRecords.Packet",
+                              "name": "RecursiveCheckedRecords.Packet"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 63,
+            "endLine": 34,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 34
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.groups",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "values",
+              "typeExpression": "RecursiveCheckedRecords.Groups"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "values",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "element": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveCheckedRecords.PacketAlias",
+                          "name": "RecursiveCheckedRecords.PacketAlias"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": "RecursiveCheckedRecords.mkPacket",
+                          "kind": "checked-record"
+                        }
+                      },
+                      "kind": "option"
+                    },
+                    "kind": "array"
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "RecursiveCheckedRecords.Packet.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "RecursiveCheckedRecords.Packet.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "RecursiveCheckedRecords.plusOne",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "projection": "RecursiveCheckedRecords.Packet.digit",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "projection": "RecursiveCheckedRecords.Packet.tail",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "RecursiveCheckedRecords.Packet",
+                              "name": "RecursiveCheckedRecords.Packet"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    },
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "alias",
+                      "lean": "RecursiveCheckedRecords.PacketAlias",
+                      "name": "RecursiveCheckedRecords.PacketAlias",
+                      "target": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": true,
+                          "unbox": "lean_unbox"
+                        },
+                        "kind": "reference",
+                        "lean": "RecursiveCheckedRecords.Packet",
+                        "name": "RecursiveCheckedRecords.Packet"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 61,
+            "endLine": 37,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 37
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Groups → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Preserve a packet when its current payload satisfies the outer relation. ",
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.mkPacket",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "RecursiveCheckedRecords.Positive"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "digit",
+              "typeExpression": "Fin 3"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "tail",
+              "typeExpression": "Option.{0} RecursiveCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} RecursiveCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 84,
+            "endLine": 23,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 21
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Positive →\n  Fin 3 → Option.{0} RecursiveCheckedRecords.Packet → Option.{0} RecursiveCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Normalize the current value while preserving the already checked tail. ",
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.normalizePacket",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "RecursiveCheckedRecords.Positive"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "digit",
+              "typeExpression": "Fin 3"
+            },
+            {
+              "binderInfo": "explicit",
+              "name": "tail",
+              "typeExpression": "Option.{0} RecursiveCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "expression": "Subtype refinements require a configured checked constructor: Subtype fun value => instLTNat.lt 0 value",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} RecursiveCheckedRecords.Packet",
+          "selected": false,
+          "source": {
+            "endColumn": 55,
+            "endLine": 29,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 25
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Positive →\n  Fin 3 → Option.{0} RecursiveCheckedRecords.Packet → Option.{0} RecursiveCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Check and normalize a word by adding one. ",
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.plusOne",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} RecursiveCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 72,
+            "endLine": 8,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 6
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} RecursiveCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A distinct per-site word constructor. ",
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.plusTwo",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "base": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                },
+                "kind": "refinement",
+                "predicate": {
+                  "constructor": null,
+                  "kind": "subtype"
+                }
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} RecursiveCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 57,
+            "endLine": 12,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 10
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} RecursiveCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.positive",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "base": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "primitive",
+                "lean": "Nat",
+                "name": "nat"
+              },
+              "kind": "refinement",
+              "predicate": {
+                "constructor": null,
+                "kind": "subtype"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "RecursiveCheckedRecords.Positive",
+          "selected": false,
+          "source": {
+            "endColumn": 37,
+            "endLine": 41,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 40
+          },
+          "theoremReferences": [
+            "RecursiveCheckedRecords.positive.eq_1"
+          ],
+          "typeExpression": "Nat → RecursiveCheckedRecords.Positive",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.produce",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "kind": "graph",
+              "root": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": true,
+                  "unbox": "lean_unbox"
+                },
+                "kind": "reference",
+                "lean": "RecursiveCheckedRecords.Packet",
+                "name": "RecursiveCheckedRecords.Packet"
+              },
+              "types": [
+                {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "RecursiveCheckedRecords.Packet.mk",
+                  "erased": [
+                    "linked"
+                  ],
+                  "fields": [
+                    {
+                      "name": "value",
+                      "projection": "RecursiveCheckedRecords.Packet.value",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "constructor": null,
+                          "kind": "subtype"
+                        }
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "projection": "RecursiveCheckedRecords.Packet.digit",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "base": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        "kind": "refinement",
+                        "predicate": {
+                          "bound": "3",
+                          "kind": "fin"
+                        }
+                      }
+                    },
+                    {
+                      "name": "tail",
+                      "projection": "RecursiveCheckedRecords.Packet.tail",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "element": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "reference",
+                          "lean": "RecursiveCheckedRecords.Packet",
+                          "name": "RecursiveCheckedRecords.Packet"
+                        },
+                        "kind": "option"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "lean": "RecursiveCheckedRecords.Packet",
+                  "name": "RecursiveCheckedRecords.Packet"
+                }
+              ]
+            },
+            "status": "supported"
+          },
+          "resultExpression": "RecursiveCheckedRecords.Packet",
+          "selected": true,
+          "source": {
+            "endColumn": 23,
+            "endLine": 46,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → RecursiveCheckedRecords.Packet",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "RecursiveCheckedRecords.second",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "RecursiveCheckedRecords.Packet"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "graph",
+                  "root": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "base": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "reference",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    },
+                    "kind": "refinement",
+                    "predicate": {
+                      "constructor": "RecursiveCheckedRecords.normalizePacket",
+                      "kind": "checked-record"
+                    }
+                  },
+                  "types": [
+                    {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "constructor": "RecursiveCheckedRecords.Packet.mk",
+                      "erased": [
+                        "linked"
+                      ],
+                      "fields": [
+                        {
+                          "name": "value",
+                          "projection": "RecursiveCheckedRecords.Packet.value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "RecursiveCheckedRecords.plusTwo",
+                              "kind": "subtype"
+                            }
+                          }
+                        },
+                        {
+                          "name": "digit",
+                          "projection": "RecursiveCheckedRecords.Packet.digit",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "primitive",
+                              "lean": "Nat",
+                              "name": "nat"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "bound": "3",
+                              "kind": "fin"
+                            }
+                          }
+                        },
+                        {
+                          "name": "tail",
+                          "projection": "RecursiveCheckedRecords.Packet.tail",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "element": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": true,
+                                "unbox": "lean_unbox"
+                              },
+                              "kind": "reference",
+                              "lean": "RecursiveCheckedRecords.Packet",
+                              "name": "RecursiveCheckedRecords.Packet"
+                            },
+                            "kind": "option"
+                          }
+                        }
+                      ],
+                      "kind": "record",
+                      "lean": "RecursiveCheckedRecords.Packet",
+                      "name": "RecursiveCheckedRecords.Packet"
+                    }
+                  ]
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 64,
+            "endLine": 35,
+            "path": "RecursiveCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "theoremReferences": [],
+          "typeExpression": "RecursiveCheckedRecords.Packet → Nat",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "6e649dcb38ba50390cd999c7ba8b9e3f663a7f1783d041c4020b5302061cb0b1",
+      "name": "RecursiveCheckedRecords",
+      "sourcePath": "RecursiveCheckedRecords.lean",
+      "sourceSha256": "6c905b0b62022ccb111c4f2d26b294b4f5d09e9977811045a083bf9742a04089"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "93d213a8ab3c4535482b327f3a22076b2e64d1c8e0b5de03fbedca9a29026d53",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}

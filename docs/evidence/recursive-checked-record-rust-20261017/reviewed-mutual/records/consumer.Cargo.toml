@@ -1,0 +1,12 @@
+[package]
+name = "recursive-consumer"
+version = "0.0.0"
+edition = "2021"
+[features]
+mutual = []
+reviewed = []
+[dependencies]
+checkedrecords = { package = "mutualcheckedrecords", path = "vendor/mutualcheckedrecords-1.0.0" }
+[profile.dev]
+debug = 0
+incremental = false

@@ -1,0 +1,54 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"contracts\": {\n    \"MutualCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.echoGroups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"MutualCheckedRecords.normalizeEnvelope\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"MutualCheckedRecords.plusTwo\"\n                        }\n                      },\n                      {\n                        \"name\": \"mode\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"next\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"MutualCheckedRecords.Envelope\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.groups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"MutualCheckedRecords.mkEnvelope\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"MutualCheckedRecords.plusOne\"\n                        }\n                      },\n                      {\n                        \"name\": \"mode\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"next\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"MutualCheckedRecords.Envelope\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"MutualCheckedRecords.second\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"MutualCheckedRecords.normalizeEnvelope\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"MutualCheckedRecords.plusTwo\"\n                }\n              },\n              {\n                \"name\": \"mode\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"next\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"MutualCheckedRecords.Envelope\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"MutualCheckedRecords.first\",\n    \"MutualCheckedRecords.second\",\n    \"MutualCheckedRecords.echo\",\n    \"MutualCheckedRecords.groups\",\n    \"MutualCheckedRecords.echoGroups\",\n    \"MutualCheckedRecords.produce\"\n  ],\n  \"modules\": [\n    \"MutualCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"mutualcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "mutualcheckedrecords",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 91,
+            "path": "lakefile.toml",
+            "sha256": "8e99c408800978898b6433678d1f059b1ddd549178ea60dedb4f542db67295d9"
+          },
+          {
+            "bytes": 5407,
+            "path": "lean-bridge.exports.json",
+            "sha256": "daef7cc804223ece4b97e6bce00363982a6829a02e84c36e8639cd253bf59a84"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 2197,
+            "path": "MutualCheckedRecords.lean",
+            "sha256": "1bf6a7aa60b9115672ecf901e85af5054c3a159f7d68ab80daec35eea29116ec"
+          },
+          {
+            "bytes": 66,
+            "path": "package.json",
+            "sha256": "f6948edd990aab1328f7d1d5a4d4f8fd64e8b82398d9ad697620b58e77f15e55"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "80d2494117cd4dae1c2a2a8cf608640dbdc6acb90b6ff540325ed054b6050ad9"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}

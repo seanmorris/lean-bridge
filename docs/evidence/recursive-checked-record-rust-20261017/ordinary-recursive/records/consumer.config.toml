@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "recursive-vendor"
+[source.recursive-vendor]
+directory = "vendor/dependencies"

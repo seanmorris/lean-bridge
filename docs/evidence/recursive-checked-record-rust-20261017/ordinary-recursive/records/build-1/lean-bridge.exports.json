@@ -1,0 +1,207 @@
+{
+  "contracts": {
+    "RecursiveCheckedRecords.echo": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "RecursiveCheckedRecords.mkPacket",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.plusOne"
+                }
+              },
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "tail",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "RecursiveCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "RecursiveCheckedRecords.echoGroups": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "RecursiveCheckedRecords.normalizePacket",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "RecursiveCheckedRecords.plusTwo"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "RecursiveCheckedRecords.Packet"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "RecursiveCheckedRecords.first": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "RecursiveCheckedRecords.mkPacket",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.plusOne"
+                }
+              },
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "tail",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "RecursiveCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "RecursiveCheckedRecords.groups": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "constructor": "RecursiveCheckedRecords.mkPacket",
+                    "fields": [
+                      {
+                        "name": "value",
+                        "refinement": {
+                          "constructor": "RecursiveCheckedRecords.plusOne"
+                        }
+                      },
+                      {
+                        "name": "digit",
+                        "refinement": null
+                      },
+                      {
+                        "name": "tail",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "RecursiveCheckedRecords.Packet"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "kind": "array"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "RecursiveCheckedRecords.second": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "RecursiveCheckedRecords.normalizePacket",
+            "fields": [
+              {
+                "name": "value",
+                "refinement": {
+                  "constructor": "RecursiveCheckedRecords.plusTwo"
+                }
+              },
+              {
+                "name": "digit",
+                "refinement": null
+              },
+              {
+                "name": "tail",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "RecursiveCheckedRecords.Packet"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "RecursiveCheckedRecords.first",
+    "RecursiveCheckedRecords.second",
+    "RecursiveCheckedRecords.echo",
+    "RecursiveCheckedRecords.groups",
+    "RecursiveCheckedRecords.echoGroups",
+    "RecursiveCheckedRecords.produce"
+  ],
+  "modules": [
+    "RecursiveCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cargo": {
+      "name": "recursivecheckedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

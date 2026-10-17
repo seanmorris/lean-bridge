@@ -1,0 +1,623 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/recursivecheckedrecords-1.0.0.crate": "3e6ce7c26ec0bd636a4afbefa207e2fd9e0a7f0dcc3cdde1efda320a990d017a"
+      },
+      "bindingIrSha256": "4bd5e82b95f4d381a43890bf5a7819d2c47740d39a544e6f5fa900699013532c",
+      "modelSha256": "e50dae9cc7953994877122df76618099a6dfae4d9d24a325b9ec0f135775e870",
+      "receiptSha256": "23e8692a3b7af69ab732618ef7d6295380b713f4d71017231f7f7b4083696309"
+    },
+    {
+      "archives": {
+        "archives/recursivecheckedrecords-1.0.0.crate": "3e6ce7c26ec0bd636a4afbefa207e2fd9e0a7f0dcc3cdde1efda320a990d017a"
+      },
+      "bindingIrSha256": "4bd5e82b95f4d381a43890bf5a7819d2c47740d39a544e6f5fa900699013532c",
+      "modelSha256": "e50dae9cc7953994877122df76618099a6dfae4d9d24a325b9ec0f135775e870",
+      "receiptSha256": "23e8692a3b7af69ab732618ef7d6295380b713f4d71017231f7f7b4083696309"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.36",
+  "dependencies": {
+    "archive": "rust-dependencies.tar.gz",
+    "lockSha256": "eba3a45b1f63442a26479e21fc0a0b4af2f55317bdbbc1c65edd79e6b0282827",
+    "packages": [
+      {
+        "checksum": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+        "directory": "autocfg-1.5.1",
+        "files": 22,
+        "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+      },
+      {
+        "checksum": "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71",
+        "directory": "block-buffer-0.10.4",
+        "files": 10,
+        "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+      },
+      {
+        "checksum": "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801",
+        "directory": "cfg-if-1.0.4",
+        "files": 13,
+        "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+      },
+      {
+        "checksum": "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280",
+        "directory": "cpufeatures-0.2.17",
+        "files": 16,
+        "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+      },
+      {
+        "checksum": "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a",
+        "directory": "crypto-common-0.1.7",
+        "files": 9,
+        "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+      },
+      {
+        "checksum": "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292",
+        "directory": "digest-0.10.7",
+        "files": 21,
+        "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+      },
+      {
+        "checksum": "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a",
+        "directory": "generic-array-0.14.7",
+        "files": 16,
+        "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+      },
+      {
+        "checksum": "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2",
+        "directory": "libc-0.2.189",
+        "files": 403,
+        "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+      },
+      {
+        "checksum": "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9",
+        "directory": "num-bigint-0.4.6",
+        "files": 50,
+        "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+      },
+      {
+        "checksum": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+        "directory": "num-integer-0.1.47",
+        "files": 16,
+        "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+      },
+      {
+        "checksum": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+        "directory": "num-traits-0.2.19",
+        "files": 28,
+        "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+      },
+      {
+        "checksum": "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283",
+        "directory": "sha2-0.10.9",
+        "files": 31,
+        "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+      },
+      {
+        "checksum": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+        "directory": "typenum-1.20.1",
+        "files": 24,
+        "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+      },
+      {
+        "checksum": "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a",
+        "directory": "version_check-0.9.5",
+        "files": 12,
+        "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+      }
+    ],
+    "sha256": "48229987e373402555e4398ebc03073472b74d3f74e13f97c928af53e59be8dd"
+  },
+  "dispatch": {
+    "observed": false,
+    "reason": "No Rust constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "d571d47b44f475b93f5e0ec1f8de7c9af319976d4624847df4e0913a458906a3",
+  "fixture": "recursive",
+  "independentBuilds": 2,
+  "installation": {
+    "arguments": [
+      "--locked",
+      "--offline",
+      "--target",
+      "x86_64-unknown-linux-gnu"
+    ],
+    "build": {
+      "code": 0,
+      "stderr": "   Compiling version_check v0.9.5\n   Compiling generic-array v0.14.7\n   Compiling typenum v1.20.1\n   Compiling autocfg v1.5.1\n   Compiling num-traits v0.2.19\n   Compiling block-buffer v0.10.4\n   Compiling crypto-common v0.1.7\n   Compiling digest v0.10.7\n   Compiling num-integer v0.1.47\n   Compiling cfg-if v1.0.4\n   Compiling cpufeatures v0.2.17\n   Compiling sha2 v0.10.9\n   Compiling num-bigint v0.4.6\n   Compiling recursivecheckedrecords v1.0.0 (/tmp/lean-bridge-recursive-checked-record-rust-s4nhHW/consumer/vendor/recursivecheckedrecords-1.0.0)\n   Compiling recursive-consumer v0.0.0 (/tmp/lean-bridge-recursive-checked-record-rust-s4nhHW/consumer)\n    Finished `dev` profile [unoptimized] target(s) in 4.77s\n",
+      "stdout": ""
+    },
+    "crateClosure": {
+      "packageFileSetSha256": "6675a6807fb64c4e6a21cefec5999416b440b7a266a4928e5576e17c13483ad9",
+      "receiptSha256": "75f0c4005b73de73a7fa8ca5932cce32cbd768f109d0733465710d72ad87de2e"
+    },
+    "crateReceiptSha256": "75f0c4005b73de73a7fa8ca5932cce32cbd768f109d0733465710d72ad87de2e",
+    "dependencyClosure": [
+      {
+        "directory": "autocfg-1.5.1",
+        "fileSetSha256": "8211a52a9529b093f9f14ae54a8f607f0f48f74116af2bf702b33f5c42c32b65",
+        "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+      },
+      {
+        "directory": "block-buffer-0.10.4",
+        "fileSetSha256": "87e694b7846b263f9131e9445a6a25cf1861573f1ff9aa017d93dbfbc235dc74",
+        "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+      },
+      {
+        "directory": "cfg-if-1.0.4",
+        "fileSetSha256": "0c5b61d2846d1e9f1ea1614f77d1734e28b40086a951d726cce2245dfaa380a3",
+        "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+      },
+      {
+        "directory": "cpufeatures-0.2.17",
+        "fileSetSha256": "608d94a6c41973f141543fce96d01974c0de8852e4a1387f1e1d516086747170",
+        "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+      },
+      {
+        "directory": "crypto-common-0.1.7",
+        "fileSetSha256": "93027057d9fc47a30e6c4bb5a024b7964f36f488aff5602d94cee0b9418a71bd",
+        "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+      },
+      {
+        "directory": "digest-0.10.7",
+        "fileSetSha256": "a784535bf974a589982b407973c7edf6aa785f594a658a544f4c9faf67112a6f",
+        "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+      },
+      {
+        "directory": "generic-array-0.14.7",
+        "fileSetSha256": "359a2c430e135c6ff20aea6e716ac723ae3b82b149bb0dc8db2ea995615b728d",
+        "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+      },
+      {
+        "directory": "libc-0.2.189",
+        "fileSetSha256": "1718ea5bdf35bfcc485a6a978620d6fa936b2a5759b9227adbb4063f39b1966c",
+        "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+      },
+      {
+        "directory": "num-bigint-0.4.6",
+        "fileSetSha256": "09f7081aa8fbf585005fda83dfa51e8889509afd9cded9dba009940dbcb3f312",
+        "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+      },
+      {
+        "directory": "num-integer-0.1.47",
+        "fileSetSha256": "af994e3a37294b85884c1f00144d758e24255cab94867c079d3058151574539b",
+        "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+      },
+      {
+        "directory": "num-traits-0.2.19",
+        "fileSetSha256": "29e0285ec82042d584399847b47966812f5e26489fd187dd6abd33e8ece9fe5f",
+        "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+      },
+      {
+        "directory": "sha2-0.10.9",
+        "fileSetSha256": "e2ea06eeb360b45ff2854714bd36bf5a9f54fe7f20327dbc29d2ffe2593123ad",
+        "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+      },
+      {
+        "directory": "typenum-1.20.1",
+        "fileSetSha256": "7bf883bf2f4127bae1b3e5d1f8137a3a37a97451985ce3b1a1a5b8544c4172ab",
+        "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+      },
+      {
+        "directory": "version_check-0.9.5",
+        "fileSetSha256": "71ccdc5898c6b07ecae442101029d98fe3734039bc7ef153e2e35a938d0ac867",
+        "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+      }
+    ],
+    "emptyCargoHome": true,
+    "executable": "target/x86_64-unknown-linux-gnu/debug/recursive-consumer",
+    "executableSha256": "36b05b9e08c65eee83847dfb24133a82c9758ad58b71b54a7455d042f6ac4ce4",
+    "linkOnly": true,
+    "linkerControls": [
+      "-c",
+      "-S",
+      "-E",
+      "-xc",
+      "-fsyntax-only",
+      "test.c",
+      "test.C",
+      "test.cc",
+      "test.cpp",
+      "test.cxx",
+      "test.s",
+      "test.S",
+      "@args"
+    ],
+    "locked": {
+      "code": 0,
+      "stderr": "     Locking 15 packages to latest compatible versions\n",
+      "stdout": ""
+    },
+    "metadataArguments": [
+      "metadata",
+      "--locked",
+      "--offline",
+      "--format-version",
+      "1"
+    ],
+    "offline": true,
+    "tools": {
+      "cargo": {
+        "bytes": 41437528,
+        "command": "/app/.toolchains/rust-1.90.0/bin/cargo",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "cargo 1.90.0 (840b83a10 2025-07-30)\n"
+        },
+        "sha256": "51de284e8bb0d03dcee595a0fb1cb3a952fe9e7e4b953a8b1467b7f71725b561"
+      },
+      "rustc": {
+        "bytes": 656496,
+        "command": "/app/.toolchains/rust-1.90.0/bin/rustc",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "rustc 1.90.0 (1159e78c4 2025-09-14)\n"
+        },
+        "sha256": "e6abf55ab1859e7c990be77fd593f51661ea99fb2fde626ae9f4108aaa34e7fa"
+      }
+    }
+  },
+  "loadCeiling": 8,
+  "observations": [
+    {
+      "closure": {
+        "crate": {
+          "packageFileSetSha256": "6675a6807fb64c4e6a21cefec5999416b440b7a266a4928e5576e17c13483ad9",
+          "receiptSha256": "75f0c4005b73de73a7fa8ca5932cce32cbd768f109d0733465710d72ad87de2e"
+        },
+        "dependencies": [
+          {
+            "directory": "autocfg-1.5.1",
+            "fileSetSha256": "8211a52a9529b093f9f14ae54a8f607f0f48f74116af2bf702b33f5c42c32b65",
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "directory": "block-buffer-0.10.4",
+            "fileSetSha256": "87e694b7846b263f9131e9445a6a25cf1861573f1ff9aa017d93dbfbc235dc74",
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "directory": "cfg-if-1.0.4",
+            "fileSetSha256": "0c5b61d2846d1e9f1ea1614f77d1734e28b40086a951d726cce2245dfaa380a3",
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "directory": "cpufeatures-0.2.17",
+            "fileSetSha256": "608d94a6c41973f141543fce96d01974c0de8852e4a1387f1e1d516086747170",
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "directory": "crypto-common-0.1.7",
+            "fileSetSha256": "93027057d9fc47a30e6c4bb5a024b7964f36f488aff5602d94cee0b9418a71bd",
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "directory": "digest-0.10.7",
+            "fileSetSha256": "a784535bf974a589982b407973c7edf6aa785f594a658a544f4c9faf67112a6f",
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "directory": "generic-array-0.14.7",
+            "fileSetSha256": "359a2c430e135c6ff20aea6e716ac723ae3b82b149bb0dc8db2ea995615b728d",
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "directory": "libc-0.2.189",
+            "fileSetSha256": "1718ea5bdf35bfcc485a6a978620d6fa936b2a5759b9227adbb4063f39b1966c",
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "directory": "num-bigint-0.4.6",
+            "fileSetSha256": "09f7081aa8fbf585005fda83dfa51e8889509afd9cded9dba009940dbcb3f312",
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "directory": "num-integer-0.1.47",
+            "fileSetSha256": "af994e3a37294b85884c1f00144d758e24255cab94867c079d3058151574539b",
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "directory": "num-traits-0.2.19",
+            "fileSetSha256": "29e0285ec82042d584399847b47966812f5e26489fd187dd6abd33e8ece9fe5f",
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "directory": "sha2-0.10.9",
+            "fileSetSha256": "e2ea06eeb360b45ff2854714bd36bf5a9f54fe7f20327dbc29d2ffe2593123ad",
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "directory": "typenum-1.20.1",
+            "fileSetSha256": "7bf883bf2f4127bae1b3e5d1f8137a3a37a97451985ce3b1a1a5b8544c4172ab",
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "directory": "version_check-0.9.5",
+            "fileSetSha256": "71ccdc5898c6b07ecae442101029d98fe3734039bc7ef153e2e35a938d0ac867",
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ]
+      },
+      "counts": {
+        "checks": 908,
+        "limitRejections": 1,
+        "module": "recursive",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 5,
+        "snapshots": 417
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-rust-s4nhHW/consumer",
+      "normalExitCleanup": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":908,\"limitRejections\":1,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":5,\"snapshots\":417}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "crate": {
+          "packageFileSetSha256": "6675a6807fb64c4e6a21cefec5999416b440b7a266a4928e5576e17c13483ad9",
+          "receiptSha256": "75f0c4005b73de73a7fa8ca5932cce32cbd768f109d0733465710d72ad87de2e"
+        },
+        "dependencies": [
+          {
+            "directory": "autocfg-1.5.1",
+            "fileSetSha256": "8211a52a9529b093f9f14ae54a8f607f0f48f74116af2bf702b33f5c42c32b65",
+            "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+          },
+          {
+            "directory": "block-buffer-0.10.4",
+            "fileSetSha256": "87e694b7846b263f9131e9445a6a25cf1861573f1ff9aa017d93dbfbc235dc74",
+            "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+          },
+          {
+            "directory": "cfg-if-1.0.4",
+            "fileSetSha256": "0c5b61d2846d1e9f1ea1614f77d1734e28b40086a951d726cce2245dfaa380a3",
+            "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+          },
+          {
+            "directory": "cpufeatures-0.2.17",
+            "fileSetSha256": "608d94a6c41973f141543fce96d01974c0de8852e4a1387f1e1d516086747170",
+            "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+          },
+          {
+            "directory": "crypto-common-0.1.7",
+            "fileSetSha256": "93027057d9fc47a30e6c4bb5a024b7964f36f488aff5602d94cee0b9418a71bd",
+            "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+          },
+          {
+            "directory": "digest-0.10.7",
+            "fileSetSha256": "a784535bf974a589982b407973c7edf6aa785f594a658a544f4c9faf67112a6f",
+            "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+          },
+          {
+            "directory": "generic-array-0.14.7",
+            "fileSetSha256": "359a2c430e135c6ff20aea6e716ac723ae3b82b149bb0dc8db2ea995615b728d",
+            "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+          },
+          {
+            "directory": "libc-0.2.189",
+            "fileSetSha256": "1718ea5bdf35bfcc485a6a978620d6fa936b2a5759b9227adbb4063f39b1966c",
+            "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+          },
+          {
+            "directory": "num-bigint-0.4.6",
+            "fileSetSha256": "09f7081aa8fbf585005fda83dfa51e8889509afd9cded9dba009940dbcb3f312",
+            "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+          },
+          {
+            "directory": "num-integer-0.1.47",
+            "fileSetSha256": "af994e3a37294b85884c1f00144d758e24255cab94867c079d3058151574539b",
+            "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+          },
+          {
+            "directory": "num-traits-0.2.19",
+            "fileSetSha256": "29e0285ec82042d584399847b47966812f5e26489fd187dd6abd33e8ece9fe5f",
+            "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+          },
+          {
+            "directory": "sha2-0.10.9",
+            "fileSetSha256": "e2ea06eeb360b45ff2854714bd36bf5a9f54fe7f20327dbc29d2ffe2593123ad",
+            "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+          },
+          {
+            "directory": "typenum-1.20.1",
+            "fileSetSha256": "7bf883bf2f4127bae1b3e5d1f8137a3a37a97451985ce3b1a1a5b8544c4172ab",
+            "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+          },
+          {
+            "directory": "version_check-0.9.5",
+            "fileSetSha256": "71ccdc5898c6b07ecae442101029d98fe3734039bc7ef153e2e35a938d0ac867",
+            "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+          }
+        ]
+      },
+      "counts": {
+        "checks": 908,
+        "limitRejections": 1,
+        "module": "recursive",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 5,
+        "snapshots": 417
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-rust-s4nhHW/consumer-relocated",
+      "normalExitCleanup": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":908,\"limitRejections\":1,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":5,\"snapshots\":417}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "counts": {
+        "checks": 908,
+        "limitRejections": 1,
+        "module": "recursive",
+        "recoveries": 64,
+        "rejections": 144,
+        "rounds": 64,
+        "snapshotControls": 5,
+        "snapshots": 417
+      },
+      "cwd": "/tmp/lean-bridge-recursive-checked-record-rust-s4nhHW/source-free",
+      "normalExitCleanup": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":908,\"limitRejections\":1,\"module\":\"recursive\",\"recoveries\":64,\"rejections\":144,\"rounds\":64,\"snapshotControls\":5,\"snapshots\":417}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "1f3664ccd4b9d102ab0222061853ac90c72e0985",
+  "receipt": {
+    "component": {
+      "id": "recursivecheckedrecords@1.0.0",
+      "name": "recursivecheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51382284,
+            "path": "archives/recursivecheckedrecords-1.0.0.crate",
+            "sha256": "3e6ce7c26ec0bd636a4afbefa207e2fd9e0a7f0dcc3cdde1efda320a990d017a"
+          }
+        ],
+        "ecosystem": "cargo",
+        "name": "recursivecheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf",
+        "target": "cargo",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "4bd5e82b95f4d381a43890bf5a7819d2c47740d39a544e6f5fa900699013532c",
+        "id": "native-library-v1",
+        "runtimeIdentity": "137cb2975ffded21021afe95f6e4cd7d33d6c5d9e605a9e0f28fd950136decdf"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "db37841c796b10fa4c948bb924088d45bb43887d0756d54d4cd9f8346b251474"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 11844034560,
+          "freeBytes": 5278527488,
+          "load": 3.69
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 11844034560,
+          "freeBytes": 5278470144,
+          "load": 3.69
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 12326207488,
+          "freeBytes": 4646510592,
+          "load": 4.09
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 12314021888,
+          "freeBytes": 5172154368,
+          "load": 3.92
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 12211351552,
+          "freeBytes": 5171564544,
+          "load": 4.23
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10340016128,
+          "freeBytes": 4660072448,
+          "load": 3.81
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 10685829120,
+          "freeBytes": 4659974144,
+          "load": 3.74
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 12049625088,
+          "freeBytes": 5010968576,
+          "load": 3.7
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.36\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeExecutable": true,
+  "sourceRemovedBeforeInstallation": true
+}

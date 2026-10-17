@@ -1,0 +1,54 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"contracts\": {\n    \"RecursiveCheckedRecords.echo\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.echoGroups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"RecursiveCheckedRecords.normalizePacket\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"RecursiveCheckedRecords.plusTwo\"\n                        }\n                      },\n                      {\n                        \"name\": \"digit\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"tail\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"RecursiveCheckedRecords.Packet\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.first\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.groups\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"arguments\": [\n              {\n                \"arguments\": [\n                  {\n                    \"constructor\": \"RecursiveCheckedRecords.mkPacket\",\n                    \"fields\": [\n                      {\n                        \"name\": \"value\",\n                        \"refinement\": {\n                          \"constructor\": \"RecursiveCheckedRecords.plusOne\"\n                        }\n                      },\n                      {\n                        \"name\": \"digit\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"tail\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"RecursiveCheckedRecords.Packet\"\n                  }\n                ],\n                \"kind\": \"option\"\n              }\n            ],\n            \"kind\": \"array\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"RecursiveCheckedRecords.second\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"RecursiveCheckedRecords.normalizePacket\",\n            \"fields\": [\n              {\n                \"name\": \"value\",\n                \"refinement\": {\n                  \"constructor\": \"RecursiveCheckedRecords.plusTwo\"\n                }\n              },\n              {\n                \"name\": \"digit\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"tail\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"RecursiveCheckedRecords.Packet\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"RecursiveCheckedRecords.first\",\n    \"RecursiveCheckedRecords.second\",\n    \"RecursiveCheckedRecords.echo\",\n    \"RecursiveCheckedRecords.groups\",\n    \"RecursiveCheckedRecords.echoGroups\",\n    \"RecursiveCheckedRecords.produce\"\n  ],\n  \"modules\": [\n    \"RecursiveCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"recursivecheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "recursivecheckedrecords",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 97,
+            "path": "lakefile.toml",
+            "sha256": "83b9a56e0430f12a17d936a07ce8d108de00873d2ac126a7faaba41a02295d29"
+          },
+          {
+            "bytes": 5476,
+            "path": "lean-bridge.exports.json",
+            "sha256": "472a490e92c018130a06000e760a9a3aefb8f6c0165c3818d4cd6817f4745350"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 69,
+            "path": "package.json",
+            "sha256": "f84a9f3ca26558cdb99fd81620179ee9a6329c4a7751320a2c5f9874dcd74c50"
+          },
+          {
+            "bytes": 1953,
+            "path": "RecursiveCheckedRecords.lean",
+            "sha256": "6c905b0b62022ccb111c4f2d26b294b4f5d09e9977811045a083bf9742a04089"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "db37841c796b10fa4c948bb924088d45bb43887d0756d54d4cd9f8346b251474"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}

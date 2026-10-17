@@ -1,0 +1,12 @@
+[package]
+name = "mutualcheckedrecords"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.90"
+description = "Compiled Lean API with owned recursive Rust values"
+readme = "README.md"
+include = ["src/**", "native/**", "lean-bridge/**", "README.md", "Cargo.lock", "binding-manifest.json"]
+
+[dependencies]
+num-bigint = "=0.4.6"
+sha2 = "=0.10.9"

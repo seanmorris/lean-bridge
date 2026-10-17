@@ -1,0 +1,5 @@
+#!/bin/sh
+for arg do
+  case "$arg" in -c|-S|-E|-x*|-fsyntax-only|*.c|*.C|*.cc|*.cpp|*.cxx|*.s|*.S|@*) exit 65;; esac
+done
+exec /usr/bin/cc "$@"
