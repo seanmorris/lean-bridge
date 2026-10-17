@@ -1,0 +1,4 @@
+# Preserve byte-authenticated package outputs without normalizing producer whitespace.
+*/records/package/share/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof
+*/records/package/share/lean-bridge/licenses/Wasmtime-LICENSE whitespace=-blank-at-eof
+*/records/package/src/*_wasmtime.c whitespace=-blank-at-eof
