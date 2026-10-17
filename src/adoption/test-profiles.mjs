@@ -328,6 +328,7 @@ const profileManifest = Object.freeze({
 		, "recursive-checked-record-wit-ci"
 		, "recursive-checked-record-wit"
 		, "recursive-checked-records"
+		, "recursive-component-regression-repair-source-history"
 		, "recursive-subtype-php-wasm"
 		, "recursive-wit-test-registration-history"
 		, "ruby-graph-refinement-diagnostics"

@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	beforeNestedCheckedRecordSource,
 	nestedCheckedRecordChangedPaths,
@@ -30,7 +31,8 @@ test("nested checked-record history reconstructs every predecessor source", asyn
 		, nestedCheckedRecordChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = sourceAtHistoryMilestone(
+			nestedCheckedRecordHistoryPath, update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${nestedCheckedRecordPredecessor}:${update.path}`

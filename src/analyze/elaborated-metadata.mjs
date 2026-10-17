@@ -263,7 +263,7 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind === "record")
 					{
 						closed(type, ["kind", "name", "fields", ...["provenance", "erased"].filter(key => Object.hasOwn(type, key))]);
-						if(Object.hasOwn(type, "erased") && !checkedRecord
+						if(Object.hasOwn(type, "erased") && !checkedRecord && !produced
 							&& type.fields.some(field => containsKind(field?.type, ["refinement"], references)))
 							fail("Unsupported nested refinement position");
 						// Erased proof fields are named once and never cross. Inputs need the enclosing

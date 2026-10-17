@@ -209,10 +209,8 @@ test("component nominal metadata preserves per-use Subtypes and constructor-free
 
 test("component nominal Subtypes do not discard generic or erased-proof restrictions", () => {
 	const leaf = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
-	for(const extension of [
-		{ provenance: { structure: "Sample.Generic", arguments: [{ kind: "primitive", name: "nat" }] } }
-		, { erased: ["proof"] }
-	]) for(const result of [false, true])
+	const extension = { provenance: { structure: "Sample.Generic", arguments: [{ kind: "primitive", name: "nat" }] } };
+	for(const result of [false, true])
 	{
 		const { request, report } = sample(), projection = report.modules[0].declarations[0].projection;
 		const type = { kind: "record", name: "Sample.Record", fields: [{ name: "value", type: structuredClone(leaf) }], ...extension };
@@ -220,6 +218,37 @@ test("component nominal Subtypes do not discard generic or erased-proof restrict
 { type.fields[0].type.predicate.constructor = null; projection.result = type; }
 		else projection.parameters[0].type = type;
 		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);
+	}
+});
+
+test("Lean-produced checked records retain refined fields without weakening input constructors", () => {
+	const record = constructor => ({
+		kind: "record"
+		, name: "Sample.Packet"
+		, fields: [
+			{ name: "bounded", type: { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound: "5" } } }
+			, { name: "payload", type: { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor } } }
+		]
+		, erased: ["proof"]
+	});
+	{
+		const { request, report } = sample();
+		report.modules[0].declarations[0].projection.result = record(null);
+		assert.equal(validateElaboratedMetadata(report, request), true);
+	}
+	{
+		const { request, report } = sample();
+		report.modules[0].declarations[0].projection.parameters[0].type = record("Sample.checked");
+		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);
+	}
+	{
+		const { request, report } = sample();
+		report.modules[0].declarations[0].projection.parameters[0].type = {
+			kind: "refinement"
+			, base: record("Sample.checked")
+			, predicate: { kind: "checked-record", constructor: "Sample.mkPacket" }
+		};
+		assert.equal(validateElaboratedMetadata(report, request), true);
 	}
 });
 

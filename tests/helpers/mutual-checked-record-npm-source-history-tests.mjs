@@ -35,7 +35,9 @@ test("mutual checked-record npm history reconstructs every predecessor source", 
 		, mutualCheckedRecordNpmAddedPaths);
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256);
+		const current = execFileSync("git", ["show"
+			, `${mutualCheckedRecordNpmDraftParent}:${addition.path}`]);
+		assert.equal(sha256(current), addition.currentSha256);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${mutualCheckedRecordNpmPredecessor}:${addition.path}`]).status, 0);
 	}

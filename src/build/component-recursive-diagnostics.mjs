@@ -51,8 +51,6 @@ export const componentRecursiveDiagnostics = ({
 	if(!exports.length) return null;
 	const normalized = componentRefinementMirrors(
 		abi, exports, leanType, nominalRefinements);
-	if(!normalized.sites.some(item => item.refinements.parameters.some(Boolean)))
-		return null;
 	const definitions = new Map(abi.types.map(type => [type.id, type]));
 	const cycles = normalized.cycles, validators = new Set(), bounds = new Map();
 	const helpers = new Map();
@@ -61,7 +59,7 @@ export const componentRecursiveDiagnostics = ({
 		if(!tree) return false;
 		if(tree.kind === "fin") return mode === "fin";
 		if(tree.kind === "subtype") return mode === "constructor";
-		if(tree.kind === "checked-record") return mode === "constructor"
+		if(tree.kind === "checked-record") return mode === "checked-record" || mode === "constructor"
 			|| (tree.arguments ?? []).some(child => contains(child, mode, active));
 		if(tree.kind === "recursive")
 		{
@@ -75,6 +73,8 @@ export const componentRecursiveDiagnostics = ({
 			? tree.cases.flatMap(branch => branch.arguments) : tree.arguments ?? [];
 		return children.some(child => contains(child, mode, nested));
 	};
+	if(!normalized.sites.some(item => item.refinements.parameters
+		.some(tree => contains(tree, "checked-record")))) return null;
 	const appendText = (value, indent = "  ") =>
 		`${indent}if (!crd_text(${JSON.stringify(value)}, sizeof(${JSON.stringify(value)}) - 1)) return 5;`;
 	const reject = value => {
@@ -244,7 +244,7 @@ export const componentRecursiveDiagnostics = ({
 				const parameter = item.parameters[index]?.name;
 				const parameterName = typeof parameter === "string" && parameter.length
 					? parameter : `arg${index}`;
-				return tree && contains(tree, mode) ? {
+				return tree && contains(tree, "checked-record") && contains(tree, mode) ? {
 					index
 					, root: `${item.bindingId.slice(item.bindingId.lastIndexOf(".") + 1)}.${parameterName}`
 					, name: helper(mode, tree, signature.parameters[index], item.symbol, index)

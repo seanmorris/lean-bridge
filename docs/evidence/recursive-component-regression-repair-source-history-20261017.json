@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-component-regression-repair-source-v1",
+  "predecessorCommit": "ad894681d7d131474dc8092f0dd9095c178df6ef",
+  "pathsSha256": "854fd4e43c4a862c77ac33d711e6f256d93f9b10d687653f3bec5f343dd7dd31",
+  "pinCount": 146,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+      "currentSha256": "2a8b4e3728418a6345c4d20a7f8652e95fa2a56076c5e293642e60ad85971cc0",
+      "count": 94
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "2b6a3ffde3a14e98acb0582f396ba68065e54f5e0cadad7812f39651ec2ff2d7",
+      "currentSha256": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+      "count": 48
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "f117435b30520a358625d6a0d17b873d5f6c8b5e22fd917891db4e3635b6d414",
+      "currentSha256": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+      "count": 4
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-recursive-component-regression-repair-history.mjs",
+      "currentSha256": "b0e4c9eb478b88ac614138d4b35b0178434fde40e2a73ac00abf8ce4e0a9fb8f"
+    },
+    {
+      "path": "tests/helpers/recursive-component-regression-repair-source-history.mjs",
+      "currentSha256": "4b2f48333e6ef03bb34f4e95e43bbb2aa2085e5dad0e2d88247d255339b71d90"
+    },
+    {
+      "path": "tests/recursive-component-regression-repair-source-history.test.mjs",
+      "currentSha256": "ce20a57177aa5ac7929ba9e5f600ba687d3b0338c373a6e2dcec72a68909d7a4"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "42fe4d87f41bdb8f6007f7fee2b17fda1fda397271fe14abe43d49aedc3e9624",
+      "currentSha256": "314ff9f3cbb3f2b37a34e9ef43b91a9397285cdc2a40c1d94642889772bcba38",
+      "replacements": [
+        {
+          "previous": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+          "current": "2a8b4e3728418a6345c4d20a7f8652e95fa2a56076c5e293642e60ad85971cc0",
+          "count": 94
+        },
+        {
+          "previous": "2b6a3ffde3a14e98acb0582f396ba68065e54f5e0cadad7812f39651ec2ff2d7",
+          "current": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+          "count": 48
+        },
+        {
+          "previous": "f117435b30520a358625d6a0d17b873d5f6c8b5e22fd917891db4e3635b6d414",
+          "current": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+      "currentSha256": "2a8b4e3728418a6345c4d20a7f8652e95fa2a56076c5e293642e60ad85971cc0",
+      "edits": [
+        {
+          "start": 12362,
+          "previous": "",
+          "current": "\t\t, \"recursive-component-regression-repair-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "2b6a3ffde3a14e98acb0582f396ba68065e54f5e0cadad7812f39651ec2ff2d7",
+      "currentSha256": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+      "edits": [
+        {
+          "start": 16543,
+          "previous": "\t\t\t\t\t\tif(Object.hasOwn(type, \"erased\") && !checkedRecord\n",
+          "current": "\t\t\t\t\t\tif(Object.hasOwn(type, \"erased\") && !checkedRecord && !produced\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-recursive-diagnostics.mjs",
+      "previousSha256": "d7159c7643fab1c591695cdadbda31b3636dee3edbfda2b7a250805f924e9ad3",
+      "currentSha256": "6ff6d8c94178dbf0eb86a5b173e46071227a575c10c4b1cb47108818407fd37e",
+      "edits": [
+        {
+          "start": 2284,
+          "previous": "\tif(!normalized.sites.some(item => item.refinements.parameters.some(Boolean)))\n\t\treturn null;\n",
+          "current": ""
+        },
+        {
+          "start": 2669,
+          "previous": "\t\tif(tree.kind === \"checked-record\") return mode === \"constructor\"\n",
+          "current": "\t\tif(tree.kind === \"checked-record\") return mode === \"checked-record\" || mode === \"constructor\"\n"
+        },
+        {
+          "start": 3383,
+          "previous": "",
+          "current": "\tif(!normalized.sites.some(item => item.refinements.parameters\n\t\t.some(tree => contains(tree, \"checked-record\")))) return null;\n"
+        },
+        {
+          "start": 11093,
+          "previous": "\t\t\t\treturn tree && contains(tree, mode) ? {\n",
+          "current": "\t\t\t\treturn tree && contains(tree, \"checked-record\") && contains(tree, mode) ? {\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "f117435b30520a358625d6a0d17b873d5f6c8b5e22fd917891db4e3635b6d414",
+      "currentSha256": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+      "edits": [
+        {
+          "start": 13589,
+          "previous": "\tfor(const extension of [\n\t\t{ provenance: { structure: \"Sample.Generic\", arguments: [{ kind: \"primitive\", name: \"nat\" }] } }\n\t\t, { erased: [\"proof\"] }\n\t]) for(const result of [false, true])\n",
+          "current": "\tconst extension = { provenance: { structure: \"Sample.Generic\", arguments: [{ kind: \"primitive\", name: \"nat\" }] } };\n\tfor(const result of [false, true])\n"
+        },
+        {
+          "start": 14223,
+          "previous": "",
+          "current": "\t}\n});\n\ntest(\"Lean-produced checked records retain refined fields without weakening input constructors\", () => {\n\tconst record = constructor => ({\n\t\tkind: \"record\"\n\t\t, name: \"Sample.Packet\"\n\t\t, fields: [\n\t\t\t{ name: \"bounded\", type: { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"fin\", bound: \"5\" } } }\n\t\t\t, { name: \"payload\", type: { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"subtype\", constructor } } }\n\t\t]\n\t\t, erased: [\"proof\"]\n\t});\n\t{\n\t\tconst { request, report } = sample();\n\t\treport.modules[0].declarations[0].projection.result = record(null);\n\t\tassert.equal(validateElaboratedMetadata(report, request), true);\n\t}\n\t{\n\t\tconst { request, report } = sample();\n\t\treport.modules[0].declarations[0].projection.parameters[0].type = record(\"Sample.checked\");\n\t\tassert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);\n\t}\n\t{\n\t\tconst { request, report } = sample();\n\t\treport.modules[0].declarations[0].projection.parameters[0].type = {\n\t\t\tkind: \"refinement\"\n\t\t\t, base: record(\"Sample.checked\")\n\t\t\t, predicate: { kind: \"checked-record\", constructor: \"Sample.mkPacket\" }\n\t\t};\n\t\tassert.equal(validateElaboratedMetadata(report, request), true);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "072f4e4eab375bba75a0b2f80bc033ac7438faf5bc4ced1591f238aca567159a",
+      "currentSha256": "bfa71aa79e120d6508f484956701f844b8666881048d54a5f2175afb9b0ffe0a",
+      "edits": [
+        {
+          "start": 10095,
+          "previous": "",
+          "current": "\tassert.doesNotMatch(c, /CRD_MESSAGE_LIMIT/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "009d95beb7c09f4a9de1531ab0ed11516dd231274fddf28e6f7365c2f0790927",
+      "currentSha256": "8691fc8d50a2e773a93ccd6fdc348411dc1c6a872ce8faf48cb26a2a0396f0f5",
+      "edits": [
+        {
+          "start": 297,
+          "previous": "",
+          "current": "import { beforeRecursiveComponentRegressionRepairSource, recursiveComponentRegressionRepairChangedPaths } from \"./recursive-component-regression-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 66325,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveComponentRegressionRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 72905,
+          "previous": "\t...recursiveWitTestRegistrationChangedPaths\n",
+          "current": "\t...recursiveComponentRegressionRepairChangedPaths\n\t, ...recursiveWitTestRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-npm-source-history-tests.mjs",
+      "previousSha256": "af852194dda2e15eb1174aefe6ca54564b418371bcaeeffa6b8236b8ef588c94",
+      "currentSha256": "2b1feeeab6f515254cb90919ca2e3c29a761753a7f08950e7633e6c918b80b84",
+      "edits": [
+        {
+          "start": 1651,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256);\n",
+          "current": "\t\tconst current = execFileSync(\"git\", [\"show\"\n\t\t\t, `${mutualCheckedRecordNpmDraftParent}:${addition.path}`]);\n\t\tassert.equal(sha256(current), addition.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-source-history-tests.mjs",
+      "previousSha256": "fdcb4470e6b9ee42c86e4d652a79b6e6bf4f54beb360faaf14cbaa6464a42b46",
+      "currentSha256": "645dade597acd92ef328e1d8adac36869dbd649753eb73f89fb50bff25e775ee",
+      "edits": [
+        {
+          "start": 499,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1406,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordHistoryPath, update.path);\n"
+        }
+      ]
+    }
+  ]
+}

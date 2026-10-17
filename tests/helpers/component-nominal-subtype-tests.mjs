@@ -163,6 +163,7 @@ test("public nominal frames preflight all Fin leaves before any constructor or s
 	const item = generated.plan.exports.find(item => item.sourceDeclaration.endsWith(".combine"));
 	const c = generateComponentRecursiveAdapters(generated.plan.privateAbi, generated.plan);
 	const body = c.slice(c.indexOf(`LEAN_EXPORT uint32_t ${item.symbol}(`));
+	assert.doesNotMatch(c, /CRD_MESSAGE_LIMIT/u);
 	const positions = ["_fin_guard_0(a0)", "_fin_guard_1(a1)", "_refinement_0(a0)", "_refinement_1(a1)", "_lean(a0, a1)"]
 		.map(suffix => body.indexOf(item.symbol + suffix));
 	assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])));
