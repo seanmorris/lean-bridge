@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { checkRecursiveCheckedRecordRustControls } from "./recursive-checked-record-rust-controls.mjs";
 import {
@@ -45,6 +46,15 @@ const model = fixture => {
 test("recursive Rust corruption controls expose one full verifier path", () => {
 	assert.equal(typeof checkRecursiveCheckedRecordRustControls, "function");
 	assert.equal(typeof checkRecursiveCheckedRecordRustPackageControls, "function");
+});
+
+test("installed recursive Rust acceptance cannot bypass the corruption controls", async () => {
+	const source = await readFile(
+		"tests/helpers/recursive-checked-record-rust-installed-tests.mjs", "utf8");
+	assert.equal(source.split("checkRecursiveCheckedRecordRustControls").length, 3);
+	assert.match(source, /import \{\n\tcheckRecursiveCheckedRecordRustControls\n\} from "\.\/recursive-checked-record-rust-controls\.mjs";/u);
+	assert.match(source, /await checkRecursiveCheckedRecordRustControls\(path => readFile\(join\(output, path\)\), \{/u);
+	assert.doesNotMatch(source, /checkRecursiveCheckedRecordRustReport/u);
 });
 
 test("recursive Rust model controls mutate both graph families without vacuous passes", () => {
