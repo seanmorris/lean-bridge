@@ -137,7 +137,7 @@ test("recursive PHP-Wasm transport and deployment refuse feature-off drift, subs
 			, ["api", new Map(recursiveCheckedRecordPhpWasmPublicSources.map(path => [path, Buffer.from(on[path])]))]
 		]);
 		const component = { zendSha256: sha256(on["graph-zend-manifest.json"]) };
-		const transport = (value, packaged = members()) => checkRecursiveCheckedRecordPhpWasmTransport({ generator: generateCopiedPhpGraphZendAdapter, fixture, component: value, members: packaged });
+		const transport = (value, packaged = members()) => checkRecursiveCheckedRecordPhpWasmTransport({ generator: generateCopiedPhpGraphZendAdapter, ir, component: value, members: packaged });
 		transport(component);
 		assert.throws(() => transport({ zendSha256: sha256(generateCopiedPhpGraphZendAdapter(ir)["graph-zend-manifest.json"]) }), /must read exact refinement diagnostics/u);
 		assert.throws(() => transport({ zendSha256: "0".repeat(64) }));

@@ -177,7 +177,7 @@ export const checkRecursiveCheckedRecordPhpWasmReport = async (read, { route, fi
 	const { generateCopiedPhpGraphZendAdapter, bundledBrickMath } = await recursiveCheckedRecordPhpWasmGenerators(producerCommit);
 	const embedded = `node_modules/${settings.npm.name}/php/`;
 	for(const [path, content] of Object.entries(bundledBrickMath())) assert.deepEqual(deployment[embedded + path], identity(content));
-	checkRecursiveCheckedRecordPhpWasmTransport({ generator: generateCopiedPhpGraphZendAdapter, fixture, component, members: unpacked });
+	checkRecursiveCheckedRecordPhpWasmTransport({ generator: generateCopiedPhpGraphZendAdapter, ir: model.bindingIr, component, members: unpacked });
 	checkRecursiveCheckedRecordPhpWasmDeployment({ deployment, members: unpacked, settings });
 	checkRecursiveCheckedRecordPhpWasmExecutions(evidence, fixture); assert.deepEqual(report.observation, recursiveCheckedRecordPhpWasmExpected(fixture));
 	for(const [index, execution] of evidence.executions.entries())

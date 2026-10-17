@@ -6,7 +6,6 @@
 import assert from "node:assert/strict";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { checkRecursiveCheckedRecordPhpWasmReport } from "./recursive-checked-record-php-wasm-report.mjs";
-import { recursiveCheckedRecordPhpWasmReview } from "./recursive-checked-record-php-wasm-fixture.mjs";
 import { recursiveCheckedRecordPhpWasmGenerators } from "./recursive-checked-record-php-wasm-sources.mjs";
 
 /**
@@ -96,9 +95,10 @@ export const checkRecursiveCheckedRecordPhpWasmControls = async (originals, opti
 			const bytes = Buffer.from("leaked\n"); report.phpWasm.deployment["lean-bridge.exports.json"] = { bytes: bytes.length, sha256: sha256(bytes) };
 		}]
 	]) await refuse((_records, report) => mutate(report), label);
-	// Feature-off drift: a component compiled without diagnostics names the default Zend manifest.
+	// Feature-off drift: the build's own IR compiled without diagnostics names the default Zend manifest.
 	const { generateCopiedPhpGraphZendAdapter } = await recursiveCheckedRecordPhpWasmGenerators(options.producerCommit);
-	const featureOff = sha256(generateCopiedPhpGraphZendAdapter(recursiveCheckedRecordPhpWasmReview(options.fixture))["graph-zend-manifest.json"]);
+	const builtIr = JSON.parse(originals.get("build-0/model.json")).bindingIr;
+	const featureOff = sha256(generateCopiedPhpGraphZendAdapter(builtIr)["graph-zend-manifest.json"]);
 	await refuse((_records, report) => { report.phpWasm.component.zendSha256 = featureOff; }, "feature-off transport");
 	for(const index of [0, 1]) for(const [label, mutate] of [
 		["32-bit model", model => { model.pointerBits = 64; }]

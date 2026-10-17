@@ -12,7 +12,7 @@ import {
 	adaptRecursiveCheckedRecordPhpWasm, recursiveCheckedRecordPhpWasmCaller
 	, recursiveCheckedRecordPhpWasmCallerBlob, recursiveCheckedRecordPhpWasmFixtures
 	, recursiveCheckedRecordPhpWasmLoadCeilings, recursiveCheckedRecordPhpWasmRequest
-	, recursiveCheckedRecordPhpWasmReview, recursiveCheckedRecordPhpWasmRoutes
+	, recursiveCheckedRecordPhpWasmRoutes
 } from "./recursive-checked-record-php-wasm-fixture.mjs";
 
 const exact = (object, keys) => assert.deepEqual(Object.keys(object).sort(), [...keys].sort());
@@ -136,15 +136,18 @@ export const checkRecursiveCheckedRecordPhpWasmConsumers = async ({ text, eviden
 /**
  * Require the diagnostic-on transport and the exact public PHP sources. The compiled extension
  * is bound through its Zend manifest digest; the feature-off manifest must not match.
+ * The transport is regenerated from the build's own binding IR, which the caller has already
+ * authenticated against its digest and the reviewed contract: the ordinary route keeps the
+ * elaborator's documentation and producer records, so the review IR alone cannot reproduce it.
  *
  * @param options - Frozen generator output and shipped package members.
  * @param options.generator - Frozen generateCopiedPhpGraphZendAdapter.
- * @param options.fixture - Recursive or mutual module.
+ * @param options.ir - Authenticated binding IR of build-0.
  * @param options.component - Original php-wasm-component.json.
  * @param options.members - Map of package role to member map (path to bytes).
  */
-export const checkRecursiveCheckedRecordPhpWasmTransport = ({ generator, fixture, component, members }) => {
-	const ir = recursiveCheckedRecordPhpWasmReview(fixture);
+export const checkRecursiveCheckedRecordPhpWasmTransport = ({ generator, ir, component, members }) => {
+	assert.equal(typeof ir, "object"); assert.ok(ir !== null);
 	const on = generator(ir, { refinementDiagnostics: true }), off = generator(ir);
 	const manifest = "graph-zend-manifest.json";
 	assert.equal(component.zendSha256, sha256(on[manifest]), "The compiled Zend extension must read exact refinement diagnostics");
