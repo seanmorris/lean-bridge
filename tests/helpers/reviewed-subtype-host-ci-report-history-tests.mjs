@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedSubtypeHostCiSource } from "./reviewed-subtype-host-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeHostCiReportSource, reviewedSubtypeHostCiReportChangedPaths, reviewedSubtypeHostCiReportHistoryPath, reviewedSubtypeHostCiReportPredecessor, reverseReviewedSubtypeHostCiReportUpdate } from "./reviewed-subtype-host-ci-report-history.mjs";
 
 test("reviewed native CI report history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("reviewed native CI report history authenticates exact transitions and refu
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeHostCiReportChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypeHostCiSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypeHostCiReportHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypeHostCiReportUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeHostCiReportSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +46,7 @@ test("reviewed native CI report history authenticates exact transitions and refu
 
 test("reviewed native CI report gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeHostCiReportHistoryPath));
-	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypeHostCiSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(reviewedSubtypeHostCiReportHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeHostCiReportSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

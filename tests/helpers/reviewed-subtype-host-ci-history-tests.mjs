@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeMavenPrerequisiteSource } from "./maven-prerequisite-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeHostCiSource, reviewedSubtypeHostCiChangedPaths, reviewedSubtypeHostCiHistoryPath, reviewedSubtypeHostCiPredecessor, reverseReviewedSubtypeHostCiUpdate } from "./reviewed-subtype-host-ci-history.mjs";
 
 test("reviewed native CI workflow history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("reviewed native CI workflow history authenticates exact transitions and re
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeHostCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeMavenPrerequisiteSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypeHostCiHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypeHostCiUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeHostCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +46,7 @@ test("reviewed native CI workflow history authenticates exact transitions and re
 
 test("reviewed native CI workflow gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeHostCiHistoryPath));
-	const path = "docs/type-surface.v1.json", source = beforeMavenPrerequisiteSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(reviewedSubtypeHostCiHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeHostCiSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

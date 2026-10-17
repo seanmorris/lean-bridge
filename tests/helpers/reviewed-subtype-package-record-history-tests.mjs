@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedSubtypePackageCiSource } from "./reviewed-subtype-package-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypePackageRecordSource, reviewedSubtypePackageRecordChangedPaths, reviewedSubtypePackageRecordHistoryPath, reviewedSubtypePackageRecordPredecessor, reverseReviewedSubtypePackageRecordUpdate } from "./reviewed-subtype-package-record-history.mjs";
 
 test("Reviewed package record retention history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Reviewed package record retention history authenticates exact transitions 
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypePackageRecordChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypePackageCiSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypePackageRecordHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypePackageRecordUpdate(current, update);
 		assert.equal(beforeReviewedSubtypePackageRecordSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +46,7 @@ test("Reviewed package record retention history authenticates exact transitions 
 
 test("Reviewed package record retention gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypePackageRecordHistoryPath));
-	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypePackageCiSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(reviewedSubtypePackageRecordHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypePackageRecordSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

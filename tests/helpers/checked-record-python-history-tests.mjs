@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordRubyJvmArchiveSource } from "./checked-record-ruby-jvm-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordPythonArchiveSource, checkedRecordPythonArchiveChangedPaths, checkedRecordPythonArchiveHistoryPath, checkedRecordPythonArchivePredecessor, reverseCheckedRecordPythonArchiveUpdate } from "./checked-record-python-history.mjs";
 
 test("Checked-record Python archive history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Checked-record Python archive history authenticates exact transitions and 
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPythonArchiveChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeCheckedRecordRubyJvmArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordPythonArchiveHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordPythonArchiveUpdate(current, update);
 		assert.equal(beforeCheckedRecordPythonArchiveSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Checked-record Python archive history authenticates exact transitions and 
 test("Checked-record Python archive changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordPythonArchiveHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCheckedRecordRubyJvmArchiveSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(checkedRecordPythonArchiveHistoryPath, path);
 	const restored = beforeCheckedRecordPythonArchiveSource(path, source);
 	assert.equal(sha256(restored), "3feaa9617b0eff79e6289da8563b7be9d40fb12361326f3b47a45875bbb8f0bc");
 	const current = JSON.parse(source), previous = JSON.parse(restored);

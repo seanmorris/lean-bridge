@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordPythonArchiveSource } from "./checked-record-python-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordNativeInstalledSource, checkedRecordNativeInstalledChangedPaths, checkedRecordNativeInstalledHistoryPath, checkedRecordNativeInstalledPredecessor, reverseCheckedRecordNativeInstalledUpdate } from "./checked-record-native-installed-history.mjs";
 
 test("Checked-record native installed harness history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Checked-record native installed harness history authenticates exact transi
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordNativeInstalledChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeCheckedRecordPythonArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordNativeInstalledHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordNativeInstalledUpdate(current, update);
 		assert.equal(beforeCheckedRecordNativeInstalledSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Checked-record native installed harness history authenticates exact transi
 test("Checked-record native installed harness gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordNativeInstalledHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCheckedRecordPythonArchiveSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(checkedRecordNativeInstalledHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeCheckedRecordNativeInstalledSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

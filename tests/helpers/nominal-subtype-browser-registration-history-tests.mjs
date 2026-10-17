@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeBrowserRegistrationSource, nominalSubtypeBrowserRegistrationChangedPaths, nominalSubtypeBrowserRegistrationHistoryPath, nominalSubtypeBrowserRegistrationPredecessor, reverseNominalSubtypeBrowserRegistrationUpdate } from "./nominal-subtype-browser-registration-history.mjs";
 
 test("nominal browser harness registration authenticates exact changes without adding support claims", async () => {
@@ -21,8 +22,8 @@ test("nominal browser harness registration authenticates exact changes without a
 	const original = path => execFileSync("git", ["show", `${nominalSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeBrowserRegistrationHistoryPath, update.path
 		);
 		const previous = reverseNominalSubtypeBrowserRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));

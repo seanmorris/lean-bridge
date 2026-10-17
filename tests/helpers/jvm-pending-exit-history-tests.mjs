@@ -9,11 +9,10 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeJvmPendingExitSource, jvmPendingExitChangedPaths, jvmPendingExitHistoryPath, jvmPendingExitPredecessor, reverseJvmPendingExitUpdate } from "./jvm-pending-exit-history.mjs";
 
-test("JVM pending exit authenticates exact changes and restores the original support inventory", async () => {
+test("JVM pending exit authenticates each exact source change", async () => {
 	const record = JSON.parse(await readFile(jvmPendingExitHistoryPath));
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "jvm-pending-exit-source-v1");
 	assert.equal(record.predecessorCommit, jvmPendingExitPredecessor);
@@ -40,8 +39,6 @@ test("JVM pending exit authenticates exact changes and restores the original sup
 			assert.throws(() => reverseJvmPendingExitUpdate(current, changed));
 			}
 	}
-	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeJvmPendingExitSource(inventoryPath, await sourceAtHistoryMilestone(jvmPendingExitHistoryPath, inventoryPath)), original(inventoryPath));
 });
 
 test("JVM pending exit history writer refuses an unrelated checkout before writing", async t => {

@@ -10,7 +10,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmFailureDiagnosticsSource } from "./php-wasm-failure-diagnostics-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypeDotnetCiSource, nominalSubtypeDotnetCiChangedPaths, nominalSubtypeDotnetCiHistoryPath, nominalSubtypeDotnetCiPredecessor, reverseNominalSubtypeDotnetCiUpdate } from "./nominal-subtype-dotnet-ci-history.mjs";
 
 test("nominal C# CI preserves exact original sources and support claims", async () => {
@@ -24,8 +25,8 @@ test("nominal C# CI preserves exact original sources and support claims", async 
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeNominalSubtypeDotnetCiSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypeDotnetCiHistoryPath, update.path
 		);
 		const previous = reverseNominalSubtypeDotnetCiUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -50,11 +51,13 @@ test("nominal C# CI preserves exact original sources and support claims", async 
 		}
 	}
 	const path = "docs/type-surface.v1.json";
-	const inventory = JSON.parse(original(path));
-	assert.equal(beforeNominalSubtypeDotnetCiSource(path, await readFile(path, "utf8")), original(path));
+	const source = original(path), currentSource = await readFile(path, "utf8");
+	const inventory = JSON.parse(source);
+	assert.equal(beforeFinRefinementSource(
+		path, currentSource, sha256(source)
+	), source);
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
-	const current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, "utf8")));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{
@@ -62,6 +65,10 @@ test("nominal C# CI preserves exact original sources and support claims", async 
 		if(update && file.sha256 === update.previousSha256)
 		{ file.sha256 = update.currentSha256; pins++; }
 	}
+	const expectedSource = JSON.stringify(expected, null, 2) + "\n";
+	const current = JSON.parse(beforeFinRefinementSource(
+		path, currentSource, sha256(expectedSource)
+	));
 	assert.ok(pins > 0); assert.deepEqual(current, expected);
 });
 

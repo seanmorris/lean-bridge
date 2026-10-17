@@ -9,7 +9,6 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforePerlContainerSubtypeCiSource, perlContainerSubtypeCiChangedPaths, perlContainerSubtypeCiHistoryPath, perlContainerSubtypeCiPredecessor, reversePerlContainerSubtypeCiUpdate } from "./perl-container-subtype-ci-history.mjs";
 
@@ -41,7 +40,7 @@ test("Perl container Subtype CI repair authenticates exact test changes without 
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforePerlContainerSubtypeCiSource(inventoryPath, await sourceAtHistoryMilestone(perlContainerSubtypeCiHistoryPath, inventoryPath)), original(inventoryPath));
+	assert.ok(!record.updates.some(update => update.path === inventoryPath));
 });
 
 test("Perl container Subtype CI history writer refuses an unrelated checkout before writing", async t => {

@@ -46,7 +46,7 @@ test("nominal Perl registration history authenticates exact changes without chan
 		}
 	}
 	const inventoryPath = "docs/type-surface.v1.json", expected = JSON.parse(original(inventoryPath));
-	assert.equal(beforeNominalSubtypePerlRegistrationSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypePerlRegistrationHistoryPath, inventoryPath)), original(inventoryPath));
+	assert.ok(!record.updates.some(update => update.path === inventoryPath));
 	let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

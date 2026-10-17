@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinAliasClosureSource } from "./fin-alias-closure-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinNominalRefusalSource, finNominalRefusalChangedPaths, finNominalRefusalHistoryPath, finNominalRefusalPredecessor, reverseFinNominalRefusalUpdate } from "./fin-nominal-refusal-history.mjs";
 
 test("Fin nominal refusal integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +22,10 @@ test("Fin nominal refusal integration authenticates every transition and refuses
 	assert.deepEqual(history.updates.map(update => update.path), finNominalRefusalChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinAliasClosureSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinNominalRefusalUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finNominalRefusalHistoryPath, update.path
+		);
+		const previous = reverseFinNominalRefusalUpdate(current, update);
 		assert.equal(beforeFinNominalRefusalSource(update.path, current), previous);
 		assert.equal(beforeFinNominalRefusalSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinNominalRefusalSource(update.path, previous), previous);
@@ -72,7 +75,7 @@ test("Fin nominal refusal integration history writer refuses an unrelated HEAD b
 });
 
 test("Fin nominal refusal integration changes current source pins only and adds no installed support claims", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeFinAliasClosureSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(finNominalRefusalHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinNominalRefusalSource(path, source));
 	const expected = structuredClone(previous), history = JSON.parse(await readFile(finNominalRefusalHistoryPath, "utf8"));
 	let refreshed = 0;

@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedSubtypeBrowserPromotionSource } from "./reviewed-subtype-browser-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeBrowserCiSource, reviewedSubtypeBrowserCiChangedPaths, reviewedSubtypeBrowserCiHistoryPath, reviewedSubtypeBrowserCiPredecessor, reverseReviewedSubtypeBrowserCiUpdate } from "./reviewed-subtype-browser-ci-history.mjs";
 
 test("Reviewed browser CI history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Reviewed browser CI history authenticates exact transitions and refuses un
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeBrowserCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypeBrowserPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypeBrowserCiHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypeBrowserCiUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeBrowserCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Reviewed browser CI history authenticates exact transitions and refuses un
 test("Reviewed browser CI gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeBrowserCiHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeReviewedSubtypeBrowserPromotionSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(reviewedSubtypeBrowserCiHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeBrowserCiSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

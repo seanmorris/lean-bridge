@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalSubtypePhpCiSource, nominalSubtypePhpCiChangedPaths, nominalSubtypePhpCiHistoryPath, nominalSubtypePhpCiPredecessor, reverseNominalSubtypePhpCiUpdate } from "./nominal-subtype-php-ci-history.mjs";
 
 test("nominal native PHP CI preserves exact historical producers and every support observation", async () => {
@@ -21,8 +22,8 @@ test("nominal native PHP CI preserves exact historical producers and every suppo
 	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalSubtypePhpCiHistoryPath, update.path
 		);
 		const previous = reverseNominalSubtypePhpCiUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -46,8 +47,9 @@ test("nominal native PHP CI preserves exact historical producers and every suppo
 	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
 	assert.equal(beforeFinRefinementSource(path, await readFile(path, "utf8"), sha256(original(path))), original(path));
 	assert.equal(inventory.evidence.length, 504); assert.equal(inventory.observations.length, 587);
-	const checkpoint = record.updates.find(update => update.path === path).currentSha256;
-	const current = JSON.parse(beforeNominalSubtypePhpCiSource(path, await readFile(path, "utf8"), checkpoint));
+	const current = JSON.parse(await sourceAtHistoryMilestone(
+		nominalSubtypePhpCiHistoryPath, path
+	));
 	let pins = 0;
 	for(const entry of current.evidence) for(const file of entry.files)
 	{

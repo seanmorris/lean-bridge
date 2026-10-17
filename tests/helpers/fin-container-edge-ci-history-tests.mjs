@@ -12,7 +12,7 @@ import test from "node:test";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinForeignSource } from "./fin-container-foreign-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinEdgeCiSource, finEdgeCiChangedPaths, finEdgeCiHistoryPath, finEdgeCiPredecessor, reverseFinEdgeCiUpdate } from "./fin-container-edge-ci-history.mjs";
 
 test("container edge CI authenticates every transition and refuses unrecorded edits", async () => {
@@ -23,7 +23,10 @@ test("container edge CI authenticates every transition and refuses unrecorded ed
 	assert.deepEqual(history.updates.map(update => update.path), finEdgeCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinForeignSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinEdgeCiUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finEdgeCiHistoryPath, update.path
+		);
+		const previous = reverseFinEdgeCiUpdate(current, update);
 		assert.equal(beforeFinEdgeCiSource(update.path, current), previous);
 		assert.equal(beforeFinEdgeCiSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinEdgeCiSource(update.path, previous), previous);
@@ -48,7 +51,7 @@ test("container edge CI authenticates every transition and refuses unrecorded ed
 
 test("container edge CI refreshes exact source pins without changing support claims or old ledgers", async () => {
 	const history = JSON.parse(await readFile(finEdgeCiHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", source = beforeFinForeignSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(finEdgeCiHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinEdgeCiSource(path, source));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

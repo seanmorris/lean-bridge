@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordPerlPromotionSource } from "./checked-record-perl-promotion-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordPerlCiSource, checkedRecordPerlCiChangedPaths, checkedRecordPerlCiHistoryPath, checkedRecordPerlCiPredecessor, reverseCheckedRecordPerlCiUpdate } from "./checked-record-perl-ci-history.mjs";
 
 test("Perl installed CI history restores exact workflow predecessors and rejects unrecorded edits", async () => {
@@ -21,7 +21,9 @@ test("Perl installed CI history restores exact workflow predecessors and rejects
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordPerlCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeCheckedRecordPerlPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordPerlCiHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordPerlCiUpdate(current, update);
 		assert.equal(beforeCheckedRecordPerlCiSource(update.path, current), previous);
 		assert.equal(beforeCheckedRecordPerlCiSource(update.path, current, update.currentSha256), current);
@@ -47,7 +49,7 @@ test("Perl installed CI history restores exact workflow predecessors and rejects
 
 test("Perl installed CI refreshes only workflow pins and preserves every support claim", async () => {
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCheckedRecordPerlPromotionSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(checkedRecordPerlCiHistoryPath, path);
 	const previous = beforeCheckedRecordPerlCiSource(path, source);
 	assert.equal(sha256(previous), "272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811");
 	const inventory = JSON.parse(source), expected = JSON.parse(previous);

@@ -10,6 +10,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforePhpWasmFailureDiagnosticsSource, phpWasmFailureDiagnosticsChangedPaths, phpWasmFailureDiagnosticsHistoryPath, phpWasmFailureDiagnosticsPredecessor, reversePhpWasmFailureDiagnosticsUpdate } from "./php-wasm-failure-diagnostics-history.mjs";
 
 test("PHP-Wasm failure diagnostics preserves exact original sources and support claims", async () => {
@@ -23,8 +25,8 @@ test("PHP-Wasm failure diagnostics preserves exact original sources and support 
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforePhpWasmFailureDiagnosticsSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			phpWasmFailureDiagnosticsHistoryPath, update.path
 		);
 		const previous = reversePhpWasmFailureDiagnosticsUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -49,13 +51,16 @@ test("PHP-Wasm failure diagnostics preserves exact original sources and support 
 		}
 	}
 	const path = "docs/type-surface.v1.json";
-	const inventory = JSON.parse(original(path));
-	assert.equal(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, "utf8")), original(path));
+	const source = original(path), currentSource = await readFile(path, "utf8");
+	const inventory = JSON.parse(source);
+	assert.equal(beforeFinRefinementSource(
+		path, currentSource, sha256(source)
+	), source);
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
 	const checkpoint = record.updates.find(update => update.path === path);
-	const current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(
-		path, await readFile(path, "utf8"), checkpoint.currentSha256
+	const current = JSON.parse(beforeFinRefinementSource(
+		path, currentSource, checkpoint.currentSha256
 	));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -11,7 +11,7 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordPerlSource } from "./checked-record-perl-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeRefinementCoreCiSource, refinementCoreCiChangedPaths, refinementCoreCiHistoryPath, refinementCoreCiPredecessor, reverseRefinementCoreCiUpdate } from "./refinement-core-ci-history.mjs";
 
 test("Refinement Core CI repairs history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Refinement Core CI repairs history authenticates exact transitions and ref
 	assert.deepEqual(history.updates.map(update => update.path), refinementCoreCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeCheckedRecordPerlSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			refinementCoreCiHistoryPath, update.path
+		);
 		const previous = reverseRefinementCoreCiUpdate(current, update);
 		assert.equal(beforeRefinementCoreCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Refinement Core CI repairs history authenticates exact transitions and ref
 test("Refinement Core CI repairs changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(refinementCoreCiHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCheckedRecordPerlSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(refinementCoreCiHistoryPath, path);
 	const restored = beforeRefinementCoreCiSource(path, source);
 	assert.equal(sha256(restored), "986d6c39e6cf292c706b106f721748651e5f59f00d08f42ca05f4fed917a7756");
 	const current = JSON.parse(source), previous = JSON.parse(restored);

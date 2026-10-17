@@ -12,7 +12,7 @@ import test from "node:test";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinRecordOmissionSource } from "./fin-record-review-omission-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinForeignSource, finForeignChangedPaths, finForeignHistoryPath, finForeignPredecessor, reverseFinForeignUpdate } from "./fin-container-foreign-history.mjs";
 
 test("foreign-carrier integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -23,7 +23,10 @@ test("foreign-carrier integration authenticates every transition and refuses unr
 	assert.deepEqual(history.updates.map(update => update.path), finForeignChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinRecordOmissionSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinForeignUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finForeignHistoryPath, update.path
+		);
+		const previous = reverseFinForeignUpdate(current, update);
 		assert.equal(beforeFinForeignSource(update.path, current), previous);
 		assert.equal(beforeFinForeignSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinForeignSource(update.path, previous), previous);
@@ -48,7 +51,7 @@ test("foreign-carrier integration authenticates every transition and refuses unr
 
 test("foreign-carrier integration refreshes exact source pins without changing support claims or old ledgers", async () => {
 	const history = JSON.parse(await readFile(finForeignHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", source = beforeFinRecordOmissionSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(finForeignHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinForeignSource(path, source));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

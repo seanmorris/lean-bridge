@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeRefinementFollowupSource } from "./refinement-followup-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedPerlDiagnosticSource, reviewedPerlDiagnosticChangedPaths, reviewedPerlDiagnosticHistoryPath, reviewedPerlDiagnosticPredecessor, reverseReviewedPerlDiagnosticUpdate } from "./reviewed-perl-diagnostic-history.mjs";
 
 test("reviewed Perl diagnostic history authenticates exact transitions and preserves requested epochs", async () => {
@@ -22,7 +22,10 @@ test("reviewed Perl diagnostic history authenticates exact transitions and prese
 	assert.deepEqual(history.updates.map(update => update.path), reviewedPerlDiagnosticChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeRefinementFollowupSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedPerlDiagnosticUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			reviewedPerlDiagnosticHistoryPath, update.path
+		);
+		const previous = reverseReviewedPerlDiagnosticUpdate(current, update);
 		assert.equal(beforeReviewedPerlDiagnosticSource(update.path, current), previous);
 		assert.equal(beforeReviewedPerlDiagnosticSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -47,7 +50,10 @@ test("reviewed Perl diagnostic history authenticates exact transitions and prese
 
 test("reviewed Perl diagnostics preserve every support claim and authenticate all current source pins", async () => {
 	const history = JSON.parse(await readFile(reviewedPerlDiagnosticHistoryPath));
-	const path = "docs/type-surface.v1.json", latest = await readFile(path, "utf8"), text = beforeRefinementFollowupSource(path, latest);
+	const path = "docs/type-surface.v1.json", latest = await readFile(path, "utf8");
+	const text = await sourceAtHistoryMilestone(
+		reviewedPerlDiagnosticHistoryPath, path
+	);
 	const current = JSON.parse(text), previous = JSON.parse(beforeReviewedPerlDiagnosticSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

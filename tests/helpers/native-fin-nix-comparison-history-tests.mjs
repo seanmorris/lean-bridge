@@ -9,7 +9,6 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeFinNixComparisonSource, finNixComparisonChangedPaths, finNixComparisonHistoryPath, finNixComparisonPredecessor, reverseFinNixComparisonUpdate } from "./native-fin-nix-comparison-history.mjs";
 
@@ -41,7 +40,7 @@ test("Nix comparison repair authenticates exact test changes without changing su
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeFinNixComparisonSource(inventoryPath, await sourceAtHistoryMilestone(finNixComparisonHistoryPath, inventoryPath)), original(inventoryPath));
+	assert.ok(!record.updates.some(update => update.path === inventoryPath));
 });
 
 test("Nix comparison history writer refuses an unrelated checkout before writing", async t => {

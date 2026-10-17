@@ -42,7 +42,10 @@ test("late checked-record test registrations have one exact reversible lineage",
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8")
+			, update.currentSha256
+		);
 		const previous = original(update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(previous), update.previousSha256, update.path);
@@ -90,7 +93,12 @@ test("late test registration refreshes only matching current-source pins", async
 	const pin = record.pinUpdates[0];
 	assert.equal(pin.path, "src/adoption/test-profiles.mjs");
 	assert.equal(pin.count, record.pinCount);
-	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const inventoryUpdate = record.updates.find(
+		update => update.path === "docs/type-surface.v1.json");
+	const inventory = JSON.parse(beforeFinRefinementSource(
+		inventoryUpdate.path, await readFile(inventoryUpdate.path, "utf8")
+		, inventoryUpdate.currentSha256
+	));
 	const files = inventory.evidence.flatMap(entry => entry.files)
 		.filter(file => file.path === pin.path);
 	assert.equal(files.filter(file => file.sha256 === pin.currentSha256).length

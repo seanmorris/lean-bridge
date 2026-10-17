@@ -1,0 +1,1263 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-wit-test-registration-source-v1",
+  "predecessorCommit": "35f930b30c7c0e1c9ac458cab5ec9743b66bd5ef",
+  "pinCount": 94,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+      "currentSha256": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+      "count": 94
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c74d504efd63875b8277c238ec42b2f88191356038c1d4911a1f0ce95862f879",
+      "currentSha256": "42fe4d87f41bdb8f6007f7fee2b17fda1fda397271fe14abe43d49aedc3e9624",
+      "replacements": [
+        {
+          "previous": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+          "current": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "bd0ef47241f05c08c74a74d191b1dabf8b6149b030b2e6d2ed8e2dc2daf5be25",
+      "currentSha256": "f664527c986da252d33ca48a17c43f6a4ed466df511814667712cce9d66030f4",
+      "edits": [
+        {
+          "start": 12257,
+          "previous": "",
+          "current": "\t\t, \"recursive-checked-record-wit-ci\"\n\t\t, \"recursive-checked-record-wit\"\n"
+        },
+        {
+          "start": 12395,
+          "previous": "",
+          "current": "\t\t, \"recursive-wit-test-registration-history\"\n"
+        }
+      ],
+      "addedTests": [
+        "recursive-checked-record-wit-ci",
+        "recursive-checked-record-wit",
+        "recursive-wit-test-registration-history"
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "010b0edda2537b54eeedfda4adf16bb268cd70fb4b0fe3751c643b0d6a80d307",
+      "currentSha256": "009d95beb7c09f4a9de1531ab0ed11516dd231274fddf28e6f7365c2f0790927",
+      "edits": [
+        {
+          "start": 297,
+          "previous": "",
+          "current": "import { beforeRecursiveWitTestRegistrationSource, recursiveWitTestRegistrationChangedPaths } from \"./recursive-wit-test-registration-history.mjs\";\n"
+        },
+        {
+          "start": 66152,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveWitTestRegistrationSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 72602,
+          "previous": "\t...lateCheckedRecordTestRegistrationChangedPaths\n",
+          "current": "\t...recursiveWitTestRegistrationChangedPaths\n\t, ...lateCheckedRecordTestRegistrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-refinement-mirror-history.mjs",
+      "previousSha256": "113fc09555523da8085d18fd4b618a4ff031af883da41835638ff212f675612d",
+      "currentSha256": "bf10587daaaf9ba41374d35002a53e69ef2c88ff322de50c1edf6809227ba0d9",
+      "edits": [
+        {
+          "start": 264,
+          "previous": "",
+          "current": "import { beforeRecursiveWitTestRegistrationSource } from \"./recursive-wit-test-registration-history.mjs\";\nimport { beforeLateCheckedRecordTestRegistrationSource } from \"./late-checked-record-test-registration-history.mjs\";\nimport { beforeTestProfileBacklogRepairSource } from \"./test-profile-backlog-repair-history.mjs\";\n"
+        },
+        {
+          "start": 2788,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveWitTestRegistrationSource(path, source, expected);\n\tif(typeof source === \"string\" && sha256(source) === expected) return source;\n\tsource = beforeLateCheckedRecordTestRegistrationSource(path, source, expected);\n\tif(typeof source === \"string\" && sha256(source) === expected) return source;\n\tsource = beforeTestProfileBacklogRepairSource(path, source, expected);\n\tif(typeof source === \"string\" && sha256(source) === expected) return source;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-callback-archive-source-history-tests.mjs",
+      "previousSha256": "ee86d81303fdee2ffd351aea9c177a35389e59077a3bfb51f020900e185599a6",
+      "currentSha256": "bb5468e14bc10867b72bfbe35563122cc2ed5b907696ca9872585fddf8bcc366",
+      "edits": [
+        {
+          "start": 273,
+          "previous": "import { beforeSubtypeFixtureLinkSource } from \"./subtype-fixture-link-source-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 964,
+          "previous": "\t\tconst source = beforeSubtypeFixtureLinkSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-archive-history-tests.mjs",
+      "previousSha256": "dc2d50938fa75deecb354680526ba550f2a8e6fcfa7ec3f216aa3d9d2a898fed",
+      "currentSha256": "db8174faca7b0bbb9c7d6eb2b676707f90bb6f87966ac768c69a203b3a5dee03",
+      "edits": [
+        {
+          "start": 375,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2688,
+          "previous": "\tassert.equal(beforeCheckedRecordBrowserArchiveSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordBrowserArchiveHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-browser-ci-history-tests.mjs",
+      "previousSha256": "2fc7ce0cc921e83a90d8593ec0d472805a35c34f44ccd664a37b087bd65f069a",
+      "currentSha256": "bc441c855a5e616dd9ce6b564373c03cae85501c2fab11c11217f52b2922ddd4",
+      "edits": [
+        {
+          "start": 369,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2592,
+          "previous": "\tassert.equal(beforeCheckedRecordBrowserCiSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordBrowserCiHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-php-wasm-archive-history-tests.mjs",
+      "previousSha256": "d83ba216b5d89c64fde1f19246b0cd5c76db786e6854ed6a86edf5d8483a0b22",
+      "currentSha256": "97b4dbbf20d32f1c1993869c6f42554ca630db80ac02ca1471618338f440e1cf",
+      "edits": [
+        {
+          "start": 376,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2692,
+          "previous": "\tassert.equal(beforeCheckedRecordPhpWasmArchiveSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordPhpWasmArchiveHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-php-wasm-ci-history-tests.mjs",
+      "previousSha256": "3d6820dc7c668736eba7cdadaab38a568ba27b3fa74aac1a9f019d12bd8e5595",
+      "currentSha256": "f0543f424e7df5275462f8b6ff1266e827dc3b2160704ac8fc26b83edd075d2e",
+      "edits": [
+        {
+          "start": 371,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2597,
+          "previous": "\tassert.equal(beforeCheckedRecordPhpWasmCiSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordPhpWasmCiHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-php-wasm-history-tests.mjs",
+      "previousSha256": "777e7417b591cb0efdfa6e4cab8bfb1e12ccd20164761ba1b2875f576fcae1fb",
+      "currentSha256": "ecc97bd803bb21ab5bc7bd8fe2f3745578461292f65bc49b194da2ba4fe2d7b3",
+      "edits": [
+        {
+          "start": 379,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2577,
+          "previous": "\tassert.equal(beforeCheckedRecordPhpWasmSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordPhpWasmHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-container-entry-exit-history-tests.mjs",
+      "previousSha256": "7d8bb656de02390106ddd4dae8c7c8e06622ddef01248a39561e19b9b487cfaa",
+      "currentSha256": "ed775d7c933b516b2451f113c5f9317d120ea3ac166763773ec952df24d8e9c2",
+      "edits": [
+        {
+          "start": 536,
+          "previous": "",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1571,
+          "previous": "\t\tconst current = beforeJvmContainerEntryExitSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tjvmContainerEntryExitHistoryPath, update.path\n"
+        },
+        {
+          "start": 2804,
+          "previous": "\tconst inventory = JSON.parse(original(path));\n\tassert.equal(beforeJvmContainerEntryExitSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst source = original(path), currentSource = await readFile(path, \"utf8\");\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(source)\n\t), source);\n"
+        },
+        {
+          "start": 3111,
+          "previous": "\tconst current = JSON.parse(beforeJvmContainerEntryExitSource(path, await readFile(path, \"utf8\")));\n",
+          "current": "\tconst current = JSON.parse(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(source)\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-nix-comparison-history-tests.mjs",
+      "previousSha256": "dbf780ce2fe0db59e67f6aeba921b6552bdfb6a621dc0d9ee6c6ffb22b7b1577",
+      "currentSha256": "0acea79cee3a19a4dc33328fd68a8f6d6c26971bc19757a8a29b8617835373ad",
+      "edits": [
+        {
+          "start": 383,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2505,
+          "previous": "\tassert.equal(beforeFinNixComparisonSource(inventoryPath, await sourceAtHistoryMilestone(finNixComparisonHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-python-registration-history-tests.mjs",
+      "previousSha256": "0b03bc89df6bc593d745af04a00946f106602df68550a76e152c9cf50448ae3b",
+      "currentSha256": "37f1c69d80e81fc57be049279f6f2936c032fd51ca77916424db16b8d987ff99",
+      "edits": [
+        {
+          "start": 476,
+          "previous": "import { beforeNominalPrimitiveSubtypePythonPromotionSource } from \"./nominal-primitive-subtype-python-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1739,
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypePythonRegistrationHistoryPath, update.path\n"
+        },
+        {
+          "start": 3055,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalPrimitiveSubtypePythonPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-history-tests.mjs",
+      "previousSha256": "4ac6955557914e92fbb62ab15752a7741594ee636feeed89a62871a7b9a57376",
+      "currentSha256": "935e157a80c415ad4077171c9932f9a0a7b193f8006db2eb0dda7db7861d70b6",
+      "edits": [
+        {
+          "start": 457,
+          "previous": "import { beforePhpWasmFailureDiagnosticsSource } from \"./php-wasm-failure-diagnostics-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1480,
+          "previous": "\t\tconst current = beforeNominalSubtypeDotnetCiSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeDotnetCiHistoryPath, update.path\n"
+        },
+        {
+          "start": 2720,
+          "previous": "\tconst inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypeDotnetCiSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst source = original(path), currentSource = await readFile(path, \"utf8\");\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(source)\n\t), source);\n"
+        },
+        {
+          "start": 3027,
+          "previous": "\tconst current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, \"utf8\")));\n",
+          "current": ""
+        },
+        {
+          "start": 3338,
+          "previous": "",
+          "current": "\tconst expectedSource = JSON.stringify(expected, null, 2) + \"\\n\";\n\tconst current = JSON.parse(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(expectedSource)\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-perl-registration-history-tests.mjs",
+      "previousSha256": "08bfbda8366539946b18c87781e87975cb8f1a1c04f3ac904b50571803ada3d9",
+      "currentSha256": "0b6d24a07049642cb0e18e23a22324e5a7cbbd8394cd0f1d1374ba084771e9b9",
+      "edits": [
+        {
+          "start": 3024,
+          "previous": "\tassert.equal(beforeNominalSubtypePerlRegistrationSource(inventoryPath, await sourceAtHistoryMilestone(nominalSubtypePerlRegistrationHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-archive-history-tests.mjs",
+      "previousSha256": "6fb2fdbc5ed21c52660a40ed52c8a543f3d4fe740f41e18129aaf7cd013e8a39",
+      "currentSha256": "756398881851be5c9c428dd49a2d605ec44209fd5a186cfc3b740acb92cf2693",
+      "edits": [
+        {
+          "start": 456,
+          "previous": "import { beforeNominalSubtypePythonPromotionSource } from \"./nominal-subtype-python-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2709,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypePythonPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-registration-history-tests.mjs",
+      "previousSha256": "8182e68375b6b549bed951bb450fa6c0cc853c8bcfaa6ba0e3271a675788c16c",
+      "currentSha256": "c62654b599c3844ea88ae2ca9e2a7d6bc5a8251e04e20abdb65234c855a2fe20",
+      "edits": [
+        {
+          "start": 461,
+          "previous": "import { beforeNominalSubtypePythonPromotionSource } from \"./nominal-subtype-python-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2801,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypePythonPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-ruby-archive-history-tests.mjs",
+      "previousSha256": "a25036e826bee28a3f09475306159747e9d86e4dd65d5e90467028477d8685fa",
+      "currentSha256": "244fdb49339926cf2dc26551cbe9eedc1bebeb823849397a376a295c8d9a6663",
+      "edits": [
+        {
+          "start": 454,
+          "previous": "import { beforeNominalSubtypeRubyPromotionSource } from \"./nominal-subtype-ruby-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2673,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypeRubyPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-ruby-registration-history-tests.mjs",
+      "previousSha256": "3aed3d12e39b508335c02adf46766f7c2bc09af0517cad00ab5706d1911583db",
+      "currentSha256": "10da1c7988b337ccf3b51e525ee457ed5369a367c5d565a61a16c27a8088b6d1",
+      "edits": [
+        {
+          "start": 459,
+          "previous": "import { beforeNominalSubtypeRubyPromotionSource } from \"./nominal-subtype-ruby-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2763,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypeRubyPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-archive-history-tests.mjs",
+      "previousSha256": "cd88ed645ee3b119442ffd31f632c4697f1d128e175d6a58d0fd24ff580dbf0e",
+      "currentSha256": "86c0d26723098ba8e2c9cc306298dac4be87c6d958f3648e5968fd524627a82a",
+      "edits": [
+        {
+          "start": 454,
+          "previous": "import { beforeNominalSubtypeRustPromotionSource } from \"./nominal-subtype-rust-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2668,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypeRustPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-registration-history-tests.mjs",
+      "previousSha256": "2b0996862c004cc8d75dccd8c9fdaadd9ab2dbd11da8b8b8b2275488b308cde2",
+      "currentSha256": "1f0f274b353bdd0dcdc72bf545946a7d01096788a23f914bd3ffa2a24f42e10c",
+      "edits": [
+        {
+          "start": 459,
+          "previous": "import { beforeNominalSubtypeRustPromotionSource } from \"./nominal-subtype-rust-promotion-history.mjs\";\n",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\n"
+        },
+        {
+          "start": 2763,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", inventory = JSON.parse(original(path));\n\tassert.equal(beforeNominalSubtypeRustPromotionSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = original(path);\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), sha256(source)\n\t), source);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/perl-container-subtype-ci-history-tests.mjs",
+      "previousSha256": "f9b7c763d505828ceb9c386b50b416fff0221d3e2c4bea12ea19f4a72b542c3a",
+      "currentSha256": "fb39b41e0df59e5da9ef480ace0234b4d28280a5288c181ffeed65753ccf7f17",
+      "edits": [
+        {
+          "start": 389,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 2612,
+          "previous": "\tassert.equal(beforePerlContainerSubtypeCiSource(inventoryPath, await sourceAtHistoryMilestone(perlContainerSubtypeCiHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": "\tassert.ok(!record.updates.some(update => update.path === inventoryPath));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-wasm-failure-diagnostics-history-tests.mjs",
+      "previousSha256": "8088a30a918dd4339b81fbcdbbecf1e802fca9b942fe53bc5b4d06ba2c39ba0d",
+      "currentSha256": "7bfaee76b804143389ab5cfbf2193d4eec54046c2613771dce0c1f82bd682d38",
+      "edits": [
+        {
+          "start": 472,
+          "previous": "",
+          "current": "import { sha256 } from \"./source-history-digest.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1543,
+          "previous": "\t\tconst current = beforePhpWasmFailureDiagnosticsSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tphpWasmFailureDiagnosticsHistoryPath, update.path\n"
+        },
+        {
+          "start": 2804,
+          "previous": "\tconst inventory = JSON.parse(original(path));\n\tassert.equal(beforePhpWasmFailureDiagnosticsSource(path, await readFile(path, \"utf8\")), original(path));\n",
+          "current": "\tconst source = original(path), currentSource = await readFile(path, \"utf8\");\n\tconst inventory = JSON.parse(source);\n\tassert.equal(beforeFinRefinementSource(\n\t\tpath, currentSource, sha256(source)\n\t), source);\n"
+        },
+        {
+          "start": 3184,
+          "previous": "\tconst current = JSON.parse(beforePhpWasmFailureDiagnosticsSource(\n\t\tpath, await readFile(path, \"utf8\"), checkpoint.currentSha256\n",
+          "current": "\tconst current = JSON.parse(beforeFinRefinementSource(\n\t\tpath, currentSource, checkpoint.currentSha256\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-host-ci-history-tests.mjs",
+      "previousSha256": "34f69504da2f944f65931eafed2ab58a14753e028e0cb8a7099fb1f7169478e6",
+      "currentSha256": "879b4a1f057f5e05a0baf0499bbb0b3c5e26695bd63d87783db16be954f69aa2",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "import { beforeRefinementCoreCiSource } from \"./refinement-core-ci-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1327,
+          "previous": "\t\tconst current = beforeRefinementCoreCiSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordHostCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2707,
+          "previous": "\tconst source = beforeRefinementCoreCiSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordHostCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-host-history-tests.mjs",
+      "previousSha256": "469324edd49c0e587108fdc6343178ae6674687b6eac6d5c3a498f7c698cee28",
+      "currentSha256": "133063812f005d3f11dde365b23f1c8c21263de17fa9ad10af4fc1ad890c50e2",
+      "edits": [
+        {
+          "start": 519,
+          "previous": "import { beforeCheckedRecordNativeInstalledSource } from \"./checked-record-native-installed-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1373,
+          "previous": "\t\tconst current = beforeCheckedRecordNativeInstalledSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordNativeHostHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2793,
+          "previous": "\tconst source = beforeCheckedRecordNativeInstalledSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordNativeHostHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-native-installed-history-tests.mjs",
+      "previousSha256": "b416db705856f3030fb0856ddc25174ace6a56fa4cba25660945d80827065267",
+      "currentSha256": "43017ad8f0cce6da3aaac945ce88146978fe62543b7c58351879ad954d919080",
+      "edits": [
+        {
+          "start": 522,
+          "previous": "import { beforeCheckedRecordPythonArchiveSource } from \"./checked-record-python-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1429,
+          "previous": "\t\tconst current = beforeCheckedRecordPythonArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordNativeInstalledHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2887,
+          "previous": "\tconst source = beforeCheckedRecordPythonArchiveSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordNativeInstalledHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-ci-history-tests.mjs",
+      "previousSha256": "6c3126c74053f656a760d160a35843035570821e60e7c653d4a39aecf80d758f",
+      "currentSha256": "e4c9be551286ec70ea79335f2978eb1aeb1dcc1ffb01ed88979567c307e41b44",
+      "edits": [
+        {
+          "start": 513,
+          "previous": "import { beforeCheckedRecordPerlPromotionSource } from \"./checked-record-perl-promotion-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1315,
+          "previous": "\t\tconst current = beforeCheckedRecordPerlPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordPerlCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2759,
+          "previous": "\tconst source = beforeCheckedRecordPerlPromotionSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordPerlCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-history-tests.mjs",
+      "previousSha256": "ecd4b87e002353109fcb18b266b4de254792ec167fb815aa8bc710aa566adc85",
+      "currentSha256": "4cf2cc406fa56814e770239717dda8cea4ac3f3f0b2d0a887cf7148d01b4ae4e",
+      "edits": [
+        {
+          "start": 517,
+          "previous": "import { beforeCheckedRecordPerlInstalledSource } from \"./checked-record-perl-installed-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1299,
+          "previous": "\t\tconst current = beforeCheckedRecordPerlInstalledSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordPerlHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2658,
+          "previous": "\tconst source = beforeCheckedRecordPerlInstalledSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordPerlHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-installed-history-tests.mjs",
+      "previousSha256": "2af4ddf1e7793c5bdd01d8201c8a0dc6ff337a93eefa012d7cb7a53d146e667d",
+      "currentSha256": "4d149d93bef0bf92a2e2d0b3622dd8559c10bcd05e8412c536154c106daa3799",
+      "edits": [
+        {
+          "start": 528,
+          "previous": "import { beforeCheckedRecordPerlCiSource } from \"./checked-record-perl-ci-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1413,
+          "previous": "\t\tconst current = beforeCheckedRecordPerlCiSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordPerlInstalledHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2846,
+          "previous": "\tconst source = beforeCheckedRecordPerlCiSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\")\n\t\t, \"272c84a3d4fb5db30f96c3d120eb11bedea9c8392ad0cc5b7e1f220cf0919811\"\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-python-history-tests.mjs",
+      "previousSha256": "85363b21157163d32d9df2bf65ed8a72095f23bdad2a9baf297d40e379fd1aef",
+      "currentSha256": "dd4de5039cf263f19912bb05d2b38f4ae676f2c73c7f4d1f4b5019ab5b488221",
+      "edits": [
+        {
+          "start": 512,
+          "previous": "import { beforeCheckedRecordRubyJvmArchiveSource } from \"./checked-record-ruby-jvm-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1373,
+          "previous": "\t\tconst current = beforeCheckedRecordRubyJvmArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordPythonArchiveHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2798,
+          "previous": "\tconst source = beforeCheckedRecordRubyJvmArchiveSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordPythonArchiveHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-remaining-hosts-history-tests.mjs",
+      "previousSha256": "cad815d8637ee53f6742a6cf891b254724222f458212a79c99d1473fea53c263",
+      "currentSha256": "b608ce81231b3a59832d1c7dc1552818ea05c69a40fe9a4deb1b8948b4137201",
+      "edits": [
+        {
+          "start": 528,
+          "previous": "import { beforeCheckedRecordNativePromotionSource } from \"./checked-record-native-promotion-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1487,
+          "previous": "\t\tconst current = beforeCheckedRecordNativePromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordRemainingHostsArchiveHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2984,
+          "previous": "\tconst source = beforeCheckedRecordNativePromotionSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordRemainingHostsArchiveHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-ruby-jvm-history-tests.mjs",
+      "previousSha256": "0bf250413a1edcfc293ba735febc8652985213e83e1908f3892ac785fa26eba7",
+      "currentSha256": "cdd7e269219d335b2635b460192486265ef63a3b25617d2a4f84d69051253deb",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { beforeCheckedRecordRemainingHostsArchiveSource } from \"./checked-record-remaining-hosts-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1389,
+          "previous": "\t\tconst current = beforeCheckedRecordRemainingHostsArchiveSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcheckedRecordRubyJvmArchiveHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2823,
+          "previous": "\tconst source = beforeCheckedRecordRemainingHostsArchiveSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(checkedRecordRubyJvmArchiveHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/core-quality-budget-history-tests.mjs",
+      "previousSha256": "976fb1ae1ac7ddabeb0894be753f6a5ddd73654315b1957e8440f0b536f87b8e",
+      "currentSha256": "79a49d022a12b2c0fbb65301bb9a483345f72c4cf3c6e58e56786e790e8726f0",
+      "edits": [
+        {
+          "start": 1715,
+          "previous": "\t\tconst current = beforeCoreQualityBudgetSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, \"utf8\"))), update.currentSha256);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tcoreQualityBudgetHistoryPath, update.path\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-alias-closure-history-tests.mjs",
+      "previousSha256": "d00b5d23e13ad34421b3ed942eff7919f5bf16908a4d366b8e928a4f1fa71deb",
+      "currentSha256": "847ba80c6f55c4bbb2417500e21583b07f8816d1f3f0e5d020087086d9237c28",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { beforePhpWasmDirectFinSource } from \"./php-wasm-fin-direct-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1281,
+          "previous": "\t\tconst current = beforePhpWasmDirectFinSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinAliasClosureUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinAliasClosureHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinAliasClosureUpdate(current, update);\n"
+        },
+        {
+          "start": 5426,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforePhpWasmDirectFinSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(finAliasClosureHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-edge-ci-history-tests.mjs",
+      "previousSha256": "fd32ada0d41ed8b834cb933a6ca374d4dec2e0d662e2dbe2773d740db586f4f6",
+      "currentSha256": "12504c454968827d448d0ccef7afcec671f7766a4534cb6b51acdf22eeaa0880",
+      "edits": [
+        {
+          "start": 591,
+          "previous": "import { beforeFinForeignSource } from \"./fin-container-foreign-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1306,
+          "previous": "\t\tconst current = beforeFinForeignSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinEdgeCiUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinEdgeCiHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinEdgeCiUpdate(current, update);\n"
+        },
+        {
+          "start": 3010,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinForeignSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(finEdgeCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-container-foreign-history-tests.mjs",
+      "previousSha256": "34e72f12084b0b0c630329e60bd6159247cc5eaf4deb3c06cc6e5f3e3c1d6592",
+      "currentSha256": "9444dab3e43d63bc1fdb25a764216c0788aa6b96b4b7352e9e207dcb79d20929",
+      "edits": [
+        {
+          "start": 591,
+          "previous": "import { beforeFinRecordOmissionSource } from \"./fin-record-review-omission-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1324,
+          "previous": "\t\tconst current = beforeFinRecordOmissionSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinForeignUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinForeignHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinForeignUpdate(current, update);\n"
+        },
+        {
+          "start": 3050,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinRecordOmissionSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(finForeignHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-dotnet-sdk-history-tests.mjs",
+      "previousSha256": "17abcb5f7b95aa867f9f8974afe352dd11d3500aacd67a21186f619afd79d829",
+      "currentSha256": "093521fc142720e4bac860a3e48b6863d8851daf8d128cb63a5d44f576faaacc",
+      "edits": [
+        {
+          "start": 527,
+          "previous": "import { beforeFinJvmDiagnosticsSource } from \"./fin-jvm-diagnostics-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1273,
+          "previous": "\t\tconst current = beforeFinJvmDiagnosticsSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinDotnetSdkUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinDotnetSdkHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinDotnetSdkUpdate(current, update);\n"
+        },
+        {
+          "start": 5472,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = beforeFinJvmDiagnosticsSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = await sourceAtHistoryMilestone(finDotnetSdkHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-jvm-diagnostics-history-tests.mjs",
+      "previousSha256": "d0187ff3c3d7be925b567e720ff60a5a3e4c5358462da57c46a531a92f8bb1fc",
+      "currentSha256": "9f228f96397c09eaa0573fae8b2e480e965d5370093197f6c4a814527fbd39f2",
+      "edits": [
+        {
+          "start": 532,
+          "previous": "import { beforePhpWasmSubtypeEntrySource } from \"./php-wasm-subtype-entry-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1333,
+          "previous": "\t\tconst current = beforePhpWasmSubtypeEntrySource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinJvmDiagnosticsUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinJvmDiagnosticsHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinJvmDiagnosticsUpdate(current, update);\n"
+        },
+        {
+          "start": 5736,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = beforePhpWasmSubtypeEntrySource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = await sourceAtHistoryMilestone(finJvmDiagnosticsHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-nominal-refusal-history-tests.mjs",
+      "previousSha256": "c5496338ee19c884dd0b7e7d184cc56a4e3d19dfff9267fbe27c704e0a2266d5",
+      "currentSha256": "329db133983fa153a8020469eb77bd5af91c18b7a83581ade6d14eb36b12c713",
+      "edits": [
+        {
+          "start": 513,
+          "previous": "import { beforeFinAliasClosureSource } from \"./fin-alias-closure-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1302,
+          "previous": "\t\tconst current = beforeFinAliasClosureSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinNominalRefusalUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinNominalRefusalHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinNominalRefusalUpdate(current, update);\n"
+        },
+        {
+          "start": 5340,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinAliasClosureSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(finNominalRefusalHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-review-omission-history-tests.mjs",
+      "previousSha256": "b8de6f952abed5fdcbbcbc9bdc0084eb859479d5482396cc655d96af61bb40e8",
+      "currentSha256": "d07cda9d64e15d887d2ff8c699bf6dbd555b955b6abd3e99cafa6ef18081af6e",
+      "edits": [
+        {
+          "start": 578,
+          "previous": "import { beforeFinHostedPromotionSource } from \"./fin-native-hosted-promotion-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1372,
+          "previous": "\t\tconst current = beforeFinHostedPromotionSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinRecordOmissionUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinRecordOmissionHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinRecordOmissionUpdate(current, update);\n"
+        },
+        {
+          "start": 3916,
+          "previous": "\t]) assert.equal(sha256(beforeFinHostedPromotionSource(path, await readFile(path, \"utf8\"))), digest, path);\n",
+          "current": "\t]) assert.equal(sha256(beforeFinRefinementSource(\n\t\tpath, await readFile(path, \"utf8\"), digest\n\t)), digest, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-record-zero-ci-history-tests.mjs",
+      "previousSha256": "eef44e65d5e0bd70236b7e29ca7959efa48edcb437d538bb4fb0563c01552e37",
+      "currentSha256": "0d3c2fe6b4e392d9c11d55996dd475f53dbaa4f9e1ad153a496f336516ef54ca",
+      "edits": [
+        {
+          "start": 592,
+          "previous": "import { beforeFinNominalRefusalSource } from \"./fin-nominal-refusal-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1307,
+          "previous": "\t\tconst current = beforeFinNominalRefusalSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinZeroCiUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinZeroCiHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinZeroCiUpdate(current, update);\n"
+        },
+        {
+          "start": 5279,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeFinNominalRefusalSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(finZeroCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/maven-prerequisite-history-tests.mjs",
+      "previousSha256": "dd103a70ab0a8b27340b922c235ea4a79cb6d012f932adfe0d4731f76aff4127",
+      "currentSha256": "44f6f56087e7d1843a06f1eabf3a8b72ee06afd061ab73c0bb3e11f90f7043a0",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "import { beforeReviewedSubtypePackageRecordSource } from \"./reviewed-subtype-package-record-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1288,
+          "previous": "\t\tconst current = beforeReviewedSubtypePackageRecordSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tmavenPrerequisiteHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2605,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypePackageRecordSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(mavenPrerequisiteHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-fin-diagnostic-source-history-tests.mjs",
+      "previousSha256": "4c8e5d8b7c7b2300743fb3bfb73d1137a0aac80eafd76c9d4041b4b004436f3d",
+      "currentSha256": "846ca79dc63b95d6274ae747f32930cb5da8f8e97cd5f93e75bd59e09dcf73f3",
+      "edits": [
+        {
+          "start": 521,
+          "previous": "import { beforeFinNixBoundarySource } from \"./native-fin-nix-boundary-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1284,
+          "previous": "\t\tconst current = beforeFinNixBoundarySource(update.path, await readFile(update.path, \"utf8\")), previous = reverseFinDiagnosticUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tfinDiagnosticHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseFinDiagnosticUpdate(current, update);\n"
+        },
+        {
+          "start": 2729,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = await readFile(path, \"utf8\");\n\tconst current = JSON.parse(beforeFinNixBoundarySource(path, text)), previous = JSON.parse(beforeFinDiagnosticSource(path, text));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst text = await sourceAtHistoryMilestone(finDiagnosticHistoryPath, path);\n\tconst current = JSON.parse(text);\n\tconst previous = JSON.parse(beforeFinDiagnosticSource(path, text));\n"
+        },
+        {
+          "start": 3505,
+          "previous": "\tfor(const entry of JSON.parse(text).evidence) for(const file of entry.files)\n",
+          "current": "\tfor(const entry of current.evidence) for(const file of entry.files)\n"
+        },
+        {
+          "start": 3577,
+          "previous": "\t\tif(!files.has(file.path)) files.set(file.path, sha256(await readFile(file.path)));\n\t\tassert.equal(files.get(file.path), file.sha256, file.path);\n",
+          "current": "\t\tconst key = `${file.path}:${file.sha256}`;\n\t\tif(!files.has(key)) files.set(key, sha256(beforeFinRefinementSource(\n\t\t\tfile.path, await readFile(file.path), file.sha256\n\t\t)));\n\t\tassert.equal(files.get(key), file.sha256, file.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-browser-registration-history-tests.mjs",
+      "previousSha256": "132413188181d2acb3324cf03700aabe447b7e5cd39dde96a9d702e89472787e",
+      "currentSha256": "abc4fb4c30d5720d4bef4272d13f2f282ec8d79acd7337d52d3d2b05d8865fc6",
+      "edits": [
+        {
+          "start": 518,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1631,
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeBrowserRegistrationHistoryPath, update.path\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-ci-history-tests.mjs",
+      "previousSha256": "7fbdfd74c8ea708a803c025604748618b5a1a60b4405749476a424d92c4ad7b4",
+      "currentSha256": "5a422483afd31623314cf71d286fcf10481d8ed18c6c6f5d225eee5ea1bf0e7a",
+      "edits": [
+        {
+          "start": 509,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1455,
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeJvmCiHistoryPath, update.path\n"
+        },
+        {
+          "start": 2919,
+          "previous": "\tconst checkpoint = record.updates.find(update => update.path === path).currentSha256;\n\tconst current = JSON.parse(beforeNominalSubtypeJvmCiSource(path, await readFile(path, \"utf8\"), checkpoint));\n",
+          "current": "\tconst current = JSON.parse(await sourceAtHistoryMilestone(\n\t\tnominalSubtypeJvmCiHistoryPath, path\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-ci-history-tests.mjs",
+      "previousSha256": "104ebd996197bf57d27726ee0351ea74346be0c07c9841ab7e57abc4d3f30059",
+      "currentSha256": "424365c550dee60af6dda92d84d11a2bcd6ab94f799198498365a6da2acb1182",
+      "edits": [
+        {
+          "start": 516,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1469,
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypePhpCiHistoryPath, update.path\n"
+        },
+        {
+          "start": 2933,
+          "previous": "\tconst checkpoint = record.updates.find(update => update.path === path).currentSha256;\n\tconst current = JSON.parse(beforeNominalSubtypePhpCiSource(path, await readFile(path, \"utf8\"), checkpoint));\n",
+          "current": "\tconst current = JSON.parse(await sourceAtHistoryMilestone(\n\t\tnominalSubtypePhpCiHistoryPath, path\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-wit-ci-history-tests.mjs",
+      "previousSha256": "cabb49dc2c29a05fdd514df9a4ecd87b67f0ac43614539cb79fa635d4d67dc3d",
+      "currentSha256": "2d07302f5d4050a7ccb06e04021c22700b3581c18bc0e9c324d4e43a7ee808ed",
+      "edits": [
+        {
+          "start": 509,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1455,
+          "previous": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeWitCiHistoryPath, update.path\n"
+        },
+        {
+          "start": 2919,
+          "previous": "\tconst checkpoint = record.updates.find(update => update.path === path).currentSha256;\n\tconst current = JSON.parse(beforeNominalSubtypeWitCiSource(path, await readFile(path, \"utf8\"), checkpoint));\n",
+          "current": "\tconst current = JSON.parse(await sourceAtHistoryMilestone(\n\t\tnominalSubtypeWitCiHistoryPath, path\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-core-ci-history-tests.mjs",
+      "previousSha256": "2f208c46349037411964365d448ce8e90d5359cd591e29bdd9e40751c8825dda",
+      "currentSha256": "8195655f9f98e2d1953be75aae303c7bd5406fac820e2daf048b0ed0fed2b908",
+      "edits": [
+        {
+          "start": 536,
+          "previous": "import { beforeCheckedRecordPerlSource } from \"./checked-record-perl-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1308,
+          "previous": "\t\tconst current = beforeCheckedRecordPerlSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\trefinementCoreCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2660,
+          "previous": "\tconst source = beforeCheckedRecordPerlSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(refinementCoreCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/refinement-followup-history-tests.mjs",
+      "previousSha256": "6927da275b0b93b55f48bd92e26bfe938ebba773e63b5c2cfdc5831a4ec5366e",
+      "currentSha256": "274eeb108a5f1abd367a98e946cf95b58c55976da944da3d7ad412d0c98534d7",
+      "edits": [
+        {
+          "start": 515,
+          "previous": "import { beforeFinHistoryBufferRepairSource } from \"./fin-history-buffer-repair.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1304,
+          "previous": "\t\tconst current = beforeFinHistoryBufferRepairSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseRefinementFollowupUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\trefinementFollowupHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseRefinementFollowupUpdate(current, update);\n"
+        },
+        {
+          "start": 2858,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = beforeFinHistoryBufferRepairSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = await sourceAtHistoryMilestone(refinementFollowupHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-perl-diagnostic-history-tests.mjs",
+      "previousSha256": "4bc80e8b5a6c1a0d5432558e8b74f04aa0e3fab6436bc073561a7d84741ff86d",
+      "currentSha256": "10bb8d811a9e50f8df3a4305dc389224c99ddb8091ceb543ff22e73527af56f0",
+      "edits": [
+        {
+          "start": 519,
+          "previous": "import { beforeRefinementFollowupSource } from \"./refinement-followup-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1354,
+          "previous": "\t\tconst current = beforeRefinementFollowupSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseReviewedPerlDiagnosticUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedPerlDiagnosticHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseReviewedPerlDiagnosticUpdate(current, update);\n"
+        },
+        {
+          "start": 2948,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", latest = await readFile(path, \"utf8\"), text = beforeRefinementFollowupSource(path, latest);\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", latest = await readFile(path, \"utf8\");\n\tconst text = await sourceAtHistoryMilestone(\n\t\treviewedPerlDiagnosticHistoryPath, path\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-ci-history-tests.mjs",
+      "previousSha256": "7039349d08df40005aaef29506555af7d324982b5069fdd0b0058d41c35f12e1",
+      "currentSha256": "40e2c898212c79aa437e5afa0c15454fae6ec34e40fae59a404f32ebb3f1d1cc",
+      "edits": [
+        {
+          "start": 502,
+          "previous": "import { beforeReviewedSubtypeBrowserPromotionSource } from \"./reviewed-subtype-browser-promotion-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1349,
+          "previous": "\t\tconst current = beforeReviewedSubtypeBrowserPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeBrowserCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2759,
+          "previous": "\tconst source = beforeReviewedSubtypeBrowserPromotionSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst source = await sourceAtHistoryMilestone(reviewedSubtypeBrowserCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-browser-history-tests.mjs",
+      "previousSha256": "7344c9440972f09423b9c7f957977095921dcea2cca65490fa728e67496bd070",
+      "currentSha256": "40aba9a94ec02b71f89d528bf81fa262f660480bb17e361d118b05f49a2e4800",
+      "edits": [
+        {
+          "start": 499,
+          "previous": "import { beforeReviewedSubtypeBrowserCiSource } from \"./reviewed-subtype-browser-ci-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1321,
+          "previous": "\t\tconst current = beforeReviewedSubtypeBrowserCiSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeBrowserHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2671,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypeBrowserCiSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(reviewedSubtypeBrowserHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-host-ci-history-tests.mjs",
+      "previousSha256": "b98b3134592a547e39cb23f3784337e418643052907830e984861900a942c95e",
+      "currentSha256": "4b1aa05ecf63810900d17d04d87dbb5a76810e961ada2e54c8cd81be46353a7b",
+      "edits": [
+        {
+          "start": 510,
+          "previous": "import { beforeMavenPrerequisiteSource } from \"./maven-prerequisite-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1335,
+          "previous": "\t\tconst current = beforeMavenPrerequisiteSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeHostCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2689,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeMavenPrerequisiteSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(reviewedSubtypeHostCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-host-ci-report-history-tests.mjs",
+      "previousSha256": "c53b8cbb0e63bdb1a5b0b3efcc015b8d709872374584e482b10fbd0b6f3432ce",
+      "currentSha256": "db54fcc5e4f358fa7948affc9539e0f2a055252397c6297172ff633780880c56",
+      "edits": [
+        {
+          "start": 508,
+          "previous": "import { beforeReviewedSubtypeHostCiSource } from \"./reviewed-subtype-host-ci-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1393,
+          "previous": "\t\tconst current = beforeReviewedSubtypeHostCiSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeHostCiReportHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2787,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypeHostCiSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(reviewedSubtypeHostCiReportHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-host-history-tests.mjs",
+      "previousSha256": "02168321ef3b77545bce2f2b9ab489e1d9c670ffe8d9247972c7c2c2123b544e",
+      "currentSha256": "1d54255ee31c3f636ae3e3d6e4d968329e5f48a9418e5799adf05cce93d659b2",
+      "edits": [
+        {
+          "start": 529,
+          "previous": "import { beforeReviewedPerlDiagnosticSource } from \"./reviewed-perl-diagnostic-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1347,
+          "previous": "\t\tconst current = beforeReviewedPerlDiagnosticSource(update.path, await readFile(update.path, \"utf8\")), previous = reverseReviewedSubtypeHostUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypeHostHistoryPath, update.path\n\t\t);\n\t\tconst previous = reverseReviewedSubtypeHostUpdate(current, update);\n"
+        },
+        {
+          "start": 6328,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = beforeReviewedPerlDiagnosticSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", text = await sourceAtHistoryMilestone(reviewedSubtypeHostHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-package-ci-history-tests.mjs",
+      "previousSha256": "7b815c37161cb70039e7b92d2e23d7a3e0077d9b043c18b3abe219280e30ac71",
+      "currentSha256": "28bb4718cfbf33a4d547c7a2618a01dbd7ea3b7b95d19d8a1d439ddf8c096786",
+      "edits": [
+        {
+          "start": 502,
+          "previous": "import { beforeReviewedSubtypeBrowserSource } from \"./reviewed-subtype-browser-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1349,
+          "previous": "\t\tconst current = beforeReviewedSubtypeBrowserSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypePackageCiHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2716,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypeBrowserSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(reviewedSubtypePackageCiHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/reviewed-subtype-package-record-history-tests.mjs",
+      "previousSha256": "848c09c14aa0ae4e45be1fa97e14597774338c6fc60495102f0728989eecfe83",
+      "currentSha256": "64914615b4608b6c96dac66ce9a4faa58ef9f8e0a546a6554dca7a0078e28c9a",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { beforeReviewedSubtypePackageCiSource } from \"./reviewed-subtype-package-ci-history.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1415,
+          "previous": "\t\tconst current = beforeReviewedSubtypePackageCiSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\treviewedSubtypePackageRecordHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 2824,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = beforeReviewedSubtypePackageCiSource(path, await readFile(path, \"utf8\"));\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtHistoryMilestone(reviewedSubtypePackageRecordHistoryPath, path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-ci-foundation-history-tests.mjs",
+      "previousSha256": "c557db6dfc794a2daf283edc297c62f80e82cab0daf0521fc56f823b96f3e181",
+      "currentSha256": "81d3e520af53fcc440567f291299d0acd49a08f50959543c9b4788dc876c33bf",
+      "edits": [
+        {
+          "start": 520,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1807,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), previous = gitSource(update.path);\n\t\tconst current = beforeStructuralSubtypeCiFoundationSource(update.path, source, update.currentSha256);\n",
+          "current": "\t\tconst previous = gitSource(update.path);\n\t\tconst current = await sourceAtHistoryMilestone(\n\t\t\tstructuralSubtypeCiFoundationHistoryPath, update.path\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/jvm-pending-exit-history-tests.mjs",
+      "previousSha256": "f52994243e4de48cbfa3c3bbf53ffca92142edd9ff74d32da19c4c0357f1a21c",
+      "currentSha256": "65dc8706f04855a57ad88f7c1813d5656610702914d7569322516ff77ecdfd54",
+      "edits": [
+        {
+          "start": 377,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 647,
+          "previous": "test(\"JVM pending exit authenticates exact changes and restores the original support inventory\", async () => {\n",
+          "current": "test(\"JVM pending exit authenticates each exact source change\", async () => {\n"
+        },
+        {
+          "start": 2366,
+          "previous": "\tconst inventoryPath = \"docs/type-surface.v1.json\";\n\tassert.equal(beforeJvmPendingExitSource(inventoryPath, await sourceAtHistoryMilestone(jvmPendingExitHistoryPath, inventoryPath)), original(inventoryPath));\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/subtype-fixture-link-source-history-tests.mjs",
+      "previousSha256": "41eba066c95cf577904d30efdf71991a6eebdb1b31f1d691c39795f9699f3a97",
+      "currentSha256": "c91c59eea1e5c4d1db6c65f754d832dfb69c4b65ebb53b027bdbbbb3382c877e",
+      "edits": [
+        {
+          "start": 276,
+          "previous": "import { beforeInheritedRecordsSource } from \"./inherited-records-source-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 942,
+          "previous": "\t\tconst source = beforeInheritedRecordsSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst source = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/late-checked-record-test-registration-history.test.mjs",
+      "previousSha256": "3ca81a81b559833036f36701589a37528c3ee28300dca73a72528403a5bb7332",
+      "currentSha256": "8600e69e631254676de6a4cb64b99f2b05f9799f776baf592e54d2b78f2e5b17",
+      "edits": [
+        {
+          "start": 1825,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n"
+        },
+        {
+          "start": 3957,
+          "previous": "\tconst inventory = JSON.parse(await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "current": "\tconst inventoryUpdate = record.updates.find(\n\t\tupdate => update.path === \"docs/type-surface.v1.json\");\n\tconst inventory = JSON.parse(beforeFinRefinementSource(\n\t\tinventoryUpdate.path, await readFile(inventoryUpdate.path, \"utf8\")\n\t\t, inventoryUpdate.currentSha256\n\t));\n"
+        }
+      ]
+    }
+  ]
+}

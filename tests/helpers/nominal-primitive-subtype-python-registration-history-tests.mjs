@@ -10,7 +10,8 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeNominalPrimitiveSubtypePythonPromotionSource } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeNominalPrimitiveSubtypePythonRegistrationSource, nominalPrimitiveSubtypePythonRegistrationChangedPaths, nominalPrimitiveSubtypePythonRegistrationHistoryPath, nominalPrimitiveSubtypePythonRegistrationPredecessor, reverseNominalPrimitiveSubtypePythonRegistrationUpdate } from "./nominal-primitive-subtype-python-registration-history.mjs";
 
 test("primitive-base Python harness registration authenticates exact changes without adding support claims", async () => {
@@ -21,8 +22,8 @@ test("primitive-base Python harness registration authenticates exact changes wit
 	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypePythonRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypePythonRegistrationHistoryPath, update.path
 		);
 		const previous = reverseNominalPrimitiveSubtypePythonRegistrationUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -42,8 +43,11 @@ test("primitive-base Python harness registration authenticates exact changes wit
 			assert.throws(() => reverseNominalPrimitiveSubtypePythonRegistrationUpdate(current, changed));
 		}
 	}
-	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(beforeNominalPrimitiveSubtypePythonPromotionSource(path, await readFile(path, "utf8")), original(path));
+	const path = "docs/type-surface.v1.json", source = original(path);
+	const inventory = JSON.parse(source);
+	assert.equal(beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), sha256(source)
+	), source);
 	assert.equal(inventory.evidence.length, 524); assert.equal(inventory.observations.length, 595);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalPrimitiveSubtypePythonRegistrationChangedPaths.includes(file.path));

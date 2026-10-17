@@ -26,7 +26,9 @@ test("Core quality budget history authenticates the exact bounded workflow trans
 		, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeCoreQualityBudgetSource(update.path, beforeNominalPrimitiveSubtypeRubyPromotionSource(update.path, beforeNominalPrimitiveSubtypeRustPromotionSource(update.path, await readFile(update.path, "utf8"))), update.currentSha256);
+		const current = await sourceAtHistoryMilestone(
+			coreQualityBudgetHistoryPath, update.path
+		);
 		const previous = reverseCoreQualityBudgetUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCoreQualityBudgetSource(update.path, current), previous);

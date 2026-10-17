@@ -6,6 +6,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeRecursiveWitTestRegistrationSource } from "./recursive-wit-test-registration-history.mjs";
+import { beforeLateCheckedRecordTestRegistrationSource } from "./late-checked-record-test-registration-history.mjs";
+import { beforeTestProfileBacklogRepairSource } from "./test-profile-backlog-repair-history.mjs";
 import { beforeJvmPendingExitSource } from "./jvm-pending-exit-history.mjs";
 
 export const componentRefinementMirrorHistoryPath = "docs/evidence/component-refinement-mirror-source-history-20261011.json";
@@ -58,6 +61,12 @@ export const reverseComponentRefinementMirrorUpdate = (source, update) => {
  * @param expected - Optional stopping digest.
  */
 export const beforeComponentRefinementMirrorSource = (path, source, expected) => {
+	source = beforeRecursiveWitTestRegistrationSource(path, source, expected);
+	if(typeof source === "string" && sha256(source) === expected) return source;
+	source = beforeLateCheckedRecordTestRegistrationSource(path, source, expected);
+	if(typeof source === "string" && sha256(source) === expected) return source;
+	source = beforeTestProfileBacklogRepairSource(path, source, expected);
+	if(typeof source === "string" && sha256(source) === expected) return source;
 	source = beforeJvmPendingExitSource(path, source, expected);
 	if(typeof source !== "string" || !componentRefinementMirrorChangedPaths.includes(path)) return source;
 	const digest = sha256(source);

@@ -11,6 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeStructuralSubtypeCiFoundationSource, structuralSubtypeCiFoundationChangedPaths, structuralSubtypeCiFoundationHistoryPath, structuralSubtypeCiFoundationPredecessor, reverseStructuralSubtypeCiFoundationUpdate } from "./structural-subtype-ci-foundation-history.mjs";
 
 test("structural CI foundation history authenticates every source transition and preserves the inventory", async () => {
@@ -23,8 +24,10 @@ test("structural CI foundation history authenticates every source transition and
 	assert.equal(beforeFinRefinementSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), sha256(inventory)), inventory);
 	for(const update of record.updates)
 	{
-		const source = await readFile(update.path, "utf8"), previous = gitSource(update.path);
-		const current = beforeStructuralSubtypeCiFoundationSource(update.path, source, update.currentSha256);
+		const previous = gitSource(update.path);
+		const current = await sourceAtHistoryMilestone(
+			structuralSubtypeCiFoundationHistoryPath, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256); assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(reverseStructuralSubtypeCiFoundationUpdate(current, update), previous);
 		assert.equal(beforeStructuralSubtypeCiFoundationSource(update.path, current), previous);

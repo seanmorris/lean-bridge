@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinHistoryBufferRepairSource } from "./fin-history-buffer-repair.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeRefinementFollowupSource, refinementFollowupChangedPaths, refinementFollowupHistoryPath, refinementFollowupPredecessor, reverseRefinementFollowupUpdate } from "./refinement-followup-history.mjs";
 
 test("refinement follow-up history authenticates exact transitions and preserves requested epochs", async () => {
@@ -22,7 +22,10 @@ test("refinement follow-up history authenticates exact transitions and preserves
 	assert.deepEqual(history.updates.map(update => update.path), refinementFollowupChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinHistoryBufferRepairSource(update.path, await readFile(update.path, "utf8")), previous = reverseRefinementFollowupUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			refinementFollowupHistoryPath, update.path
+		);
+		const previous = reverseRefinementFollowupUpdate(current, update);
 		assert.equal(beforeRefinementFollowupSource(update.path, current), previous);
 		assert.equal(beforeRefinementFollowupSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -47,7 +50,7 @@ test("refinement follow-up history authenticates exact transitions and preserves
 
 test("refinement follow-ups preserve every support claim and authenticate all current source pins", async () => {
 	const history = JSON.parse(await readFile(refinementFollowupHistoryPath));
-	const path = "docs/type-surface.v1.json", text = beforeFinHistoryBufferRepairSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await sourceAtHistoryMilestone(refinementFollowupHistoryPath, path);
 	const current = JSON.parse(text), previous = JSON.parse(beforeRefinementFollowupSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

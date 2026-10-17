@@ -12,7 +12,7 @@ import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinNominalRefusalSource } from "./fin-nominal-refusal-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinZeroCiSource, finZeroCiChangedPaths, finZeroCiHistoryPath, finZeroCiPredecessor, reverseFinZeroCiUpdate } from "./fin-record-zero-ci-history.mjs";
 
 test("Fin zero CI integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -23,7 +23,10 @@ test("Fin zero CI integration authenticates every transition and refuses unrecor
 	assert.deepEqual(history.updates.map(update => update.path), finZeroCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinNominalRefusalSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinZeroCiUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finZeroCiHistoryPath, update.path
+		);
+		const previous = reverseFinZeroCiUpdate(current, update);
 		assert.equal(beforeFinZeroCiSource(update.path, current), previous);
 		assert.equal(beforeFinZeroCiSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinZeroCiSource(update.path, previous), previous);
@@ -76,7 +79,7 @@ test("Fin zero installed root has an explicit component test profile", () => {
 });
 
 test("Fin zero integration changes current source pins only and adds no installed support claims", async () => {
-	const path = "docs/type-surface.v1.json", source = beforeFinNominalRefusalSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(finZeroCiHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeFinZeroCiSource(path, source));
 	const expected = structuredClone(previous), history = JSON.parse(await readFile(finZeroCiHistoryPath, "utf8"));
 	let refreshed = 0;

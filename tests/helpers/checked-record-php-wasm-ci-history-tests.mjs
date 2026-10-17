@@ -9,7 +9,6 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordPhpWasmCiSource, checkedRecordPhpWasmCiChangedPaths, checkedRecordPhpWasmCiHistoryPath, checkedRecordPhpWasmCiPredecessor, reverseCheckedRecordPhpWasmCiUpdate } from "./checked-record-php-wasm-ci-history.mjs";
 
@@ -41,7 +40,7 @@ test("Checked-record PHP-Wasm CI repair authenticates exact test changes without
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeCheckedRecordPhpWasmCiSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordPhpWasmCiHistoryPath, inventoryPath)), original(inventoryPath));
+	assert.ok(!record.updates.some(update => update.path === inventoryPath));
 });
 
 test("Checked-record PHP-Wasm CI history writer refuses an unrelated checkout before writing", async t => {

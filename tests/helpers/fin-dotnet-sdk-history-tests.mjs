@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeFinJvmDiagnosticsSource } from "./fin-jvm-diagnostics-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinDotnetSdkSource, finDotnetSdkChangedPaths, finDotnetSdkHistoryPath, finDotnetSdkPredecessor, reverseFinDotnetSdkUpdate } from "./fin-dotnet-sdk-history.mjs";
 
 test("Native Fin .NET SDK repair integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +22,10 @@ test("Native Fin .NET SDK repair integration authenticates every transition and 
 	assert.deepEqual(history.updates.map(update => update.path), finDotnetSdkChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeFinJvmDiagnosticsSource(update.path, await readFile(update.path, "utf8")), previous = reverseFinDotnetSdkUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			finDotnetSdkHistoryPath, update.path
+		);
+		const previous = reverseFinDotnetSdkUpdate(current, update);
 		assert.equal(beforeFinDotnetSdkSource(update.path, current), previous);
 		assert.equal(beforeFinDotnetSdkSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeFinDotnetSdkSource(update.path, previous), previous);
@@ -68,7 +71,7 @@ test("Native Fin .NET SDK repair integration preserves the earlier source ledger
 
 test("Native Fin .NET SDK repair changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(finDotnetSdkHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforeFinJvmDiagnosticsSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await sourceAtHistoryMilestone(finDotnetSdkHistoryPath, path);
 	const current = JSON.parse(text), previous = JSON.parse(beforeFinDotnetSdkSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

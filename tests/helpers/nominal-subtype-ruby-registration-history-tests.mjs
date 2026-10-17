@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeNominalSubtypeRubyPromotionSource } from "./nominal-subtype-ruby-promotion-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalSubtypeRubyRegistrationSource, nominalSubtypeRubyRegistrationChangedPaths, nominalSubtypeRubyRegistrationHistoryPath, nominalSubtypeRubyRegistrationPredecessor, reverseNominalSubtypeRubyRegistrationUpdate } from "./nominal-subtype-ruby-registration-history.mjs";
 
 test("nominal Ruby harness registration authenticates exact changes without adding support claims", async () => {
@@ -42,8 +42,11 @@ test("nominal Ruby harness registration authenticates exact changes without addi
 			assert.throws(() => reverseNominalSubtypeRubyRegistrationUpdate(current, changed));
 		}
 	}
-	const path = "docs/type-surface.v1.json", inventory = JSON.parse(original(path));
-	assert.equal(beforeNominalSubtypeRubyPromotionSource(path, await readFile(path, "utf8")), original(path));
+	const path = "docs/type-surface.v1.json", source = original(path);
+	const inventory = JSON.parse(source);
+	assert.equal(beforeFinRefinementSource(
+		path, await readFile(path, "utf8"), sha256(source)
+	), source);
 	assert.equal(inventory.evidence.length, 488); assert.equal(inventory.observations.length, 579);
 	for(const entry of inventory.evidence) for(const file of entry.files)
 		assert.ok(!nominalSubtypeRubyRegistrationChangedPaths.includes(file.path));

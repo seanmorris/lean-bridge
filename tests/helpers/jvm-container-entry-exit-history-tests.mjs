@@ -11,6 +11,8 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import "./jvm-container-entry-exit-evidence-tests.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeJvmContainerEntryExitSource, jvmContainerEntryExitChangedPaths, jvmContainerEntryExitHistoryPath, jvmContainerEntryExitPredecessor, reverseJvmContainerEntryExitUpdate } from "./jvm-container-entry-exit-history.mjs";
 
 test("JVM container-entry exit observation preserves exact original sources and support claims", async () => {
@@ -24,8 +26,8 @@ test("JVM container-entry exit observation preserves exact original sources and 
 	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
-		const current = beforeJvmContainerEntryExitSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtHistoryMilestone(
+			jvmContainerEntryExitHistoryPath, update.path
 		);
 		const previous = reverseJvmContainerEntryExitUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -50,11 +52,16 @@ test("JVM container-entry exit observation preserves exact original sources and 
 		}
 	}
 	const path = "docs/type-surface.v1.json";
-	const inventory = JSON.parse(original(path));
-	assert.equal(beforeJvmContainerEntryExitSource(path, await readFile(path, "utf8")), original(path));
+	const source = original(path), currentSource = await readFile(path, "utf8");
+	const inventory = JSON.parse(source);
+	assert.equal(beforeFinRefinementSource(
+		path, currentSource, sha256(source)
+	), source);
 	assert.equal(inventory.evidence.length, 496);
 	assert.equal(inventory.observations.length, 583);
-	const current = JSON.parse(beforeJvmContainerEntryExitSource(path, await readFile(path, "utf8")));
+	const current = JSON.parse(beforeFinRefinementSource(
+		path, currentSource, sha256(source)
+	));
 	const expected = structuredClone(inventory); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)
 	{

@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedSubtypeBrowserSource } from "./reviewed-subtype-browser-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypePackageCiSource, reviewedSubtypePackageCiChangedPaths, reviewedSubtypePackageCiHistoryPath, reviewedSubtypePackageCiPredecessor, reverseReviewedSubtypePackageCiUpdate } from "./reviewed-subtype-package-ci-history.mjs";
 
 test("Reviewed package CI history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Reviewed package CI history authenticates exact transitions and refuses un
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypePackageCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypeBrowserSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypePackageCiHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypePackageCiUpdate(current, update);
 		assert.equal(beforeReviewedSubtypePackageCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +46,7 @@ test("Reviewed package CI history authenticates exact transitions and refuses un
 
 test("Reviewed package CI gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypePackageCiHistoryPath));
-	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypeBrowserSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(reviewedSubtypePackageCiHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypePackageCiSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

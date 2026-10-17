@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedSubtypeBrowserCiSource } from "./reviewed-subtype-browser-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeBrowserSource, reviewedSubtypeBrowserChangedPaths, reviewedSubtypeBrowserHistoryPath, reviewedSubtypeBrowserPredecessor, reverseReviewedSubtypeBrowserUpdate } from "./reviewed-subtype-browser-history.mjs";
 
 test("Reviewed browser history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Reviewed browser history authenticates exact transitions and refuses unkno
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeBrowserChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedSubtypeBrowserCiSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypeBrowserHistoryPath, update.path
+		);
 		const previous = reverseReviewedSubtypeBrowserUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeBrowserSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -44,7 +46,7 @@ test("Reviewed browser history authenticates exact transitions and refuses unkno
 
 test("Reviewed browser gate changes source pins without adding or changing installed observations", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeBrowserHistoryPath));
-	const path = "docs/type-surface.v1.json", source = beforeReviewedSubtypeBrowserCiSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", source = await sourceAtHistoryMilestone(reviewedSubtypeBrowserHistoryPath, path);
 	const current = JSON.parse(source), previous = JSON.parse(beforeReviewedSubtypeBrowserSource(path, source));
 	const expected = structuredClone(previous); let pins = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

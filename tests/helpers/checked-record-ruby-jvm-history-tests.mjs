@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeCheckedRecordRemainingHostsArchiveSource } from "./checked-record-remaining-hosts-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordRubyJvmArchiveSource, checkedRecordRubyJvmArchiveChangedPaths, checkedRecordRubyJvmArchiveHistoryPath, checkedRecordRubyJvmArchivePredecessor, reverseCheckedRecordRubyJvmArchiveUpdate } from "./checked-record-ruby-jvm-history.mjs";
 
 test("Checked-record Ruby/JVM archive history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Checked-record Ruby/JVM archive history authenticates exact transitions an
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordRubyJvmArchiveChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeCheckedRecordRemainingHostsArchiveSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordRubyJvmArchiveHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordRubyJvmArchiveUpdate(current, update);
 		assert.equal(beforeCheckedRecordRubyJvmArchiveSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Checked-record Ruby/JVM archive history authenticates exact transitions an
 test("Checked-record Ruby/JVM archive changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordRubyJvmArchiveHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeCheckedRecordRemainingHostsArchiveSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(checkedRecordRubyJvmArchiveHistoryPath, path);
 	const restored = beforeCheckedRecordRubyJvmArchiveSource(path, source);
 	assert.equal(sha256(restored), "82d1a1dc6cf3dca0a0fb7e730fbcc6b843f516d99bdc6b97d923b5e951d2b081");
 	const current = JSON.parse(source), previous = JSON.parse(restored);

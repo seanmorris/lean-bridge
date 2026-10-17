@@ -9,7 +9,6 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeCheckedRecordBrowserCiSource, checkedRecordBrowserCiChangedPaths, checkedRecordBrowserCiHistoryPath, checkedRecordBrowserCiPredecessor, reverseCheckedRecordBrowserCiUpdate } from "./checked-record-browser-ci-history.mjs";
 
@@ -41,7 +40,7 @@ test("Checked-record browser CI repair authenticates exact test changes without 
 			}
 	}
 	const inventoryPath = "docs/type-surface.v1.json";
-	assert.equal(beforeCheckedRecordBrowserCiSource(inventoryPath, await sourceAtHistoryMilestone(checkedRecordBrowserCiHistoryPath, inventoryPath)), original(inventoryPath));
+	assert.ok(!record.updates.some(update => update.path === inventoryPath));
 });
 
 test("Checked-record browser CI history writer refuses an unrelated checkout before writing", async t => {

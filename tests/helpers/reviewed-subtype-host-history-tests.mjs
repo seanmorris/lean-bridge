@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeReviewedPerlDiagnosticSource } from "./reviewed-perl-diagnostic-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeReviewedSubtypeHostSource, reviewedSubtypeHostChangedPaths, reviewedSubtypeHostHistoryPath, reviewedSubtypeHostPredecessor, reverseReviewedSubtypeHostUpdate } from "./reviewed-subtype-host-history.mjs";
 
 test("Reviewed Subtype native host integration authenticates every transition and refuses unrecorded edits", async () => {
@@ -22,7 +22,10 @@ test("Reviewed Subtype native host integration authenticates every transition an
 	assert.deepEqual(history.updates.map(update => update.path), reviewedSubtypeHostChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeReviewedPerlDiagnosticSource(update.path, await readFile(update.path, "utf8")), previous = reverseReviewedSubtypeHostUpdate(current, update);
+		const current = await sourceAtHistoryMilestone(
+			reviewedSubtypeHostHistoryPath, update.path
+		);
+		const previous = reverseReviewedSubtypeHostUpdate(current, update);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, current), previous);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, current, update.currentSha256), current);
 		assert.equal(beforeReviewedSubtypeHostSource(update.path, previous), previous);
@@ -73,7 +76,7 @@ test("Reviewed Subtype native host integration preserves the earlier source ledg
 
 test("Reviewed Subtype native host changes source pins without changing any support claim", async () => {
 	const history = JSON.parse(await readFile(reviewedSubtypeHostHistoryPath, "utf8"));
-	const path = "docs/type-surface.v1.json", text = beforeReviewedPerlDiagnosticSource(path, await readFile(path, "utf8"));
+	const path = "docs/type-surface.v1.json", text = await sourceAtHistoryMilestone(reviewedSubtypeHostHistoryPath, path);
 	const current = JSON.parse(text), previous = JSON.parse(beforeReviewedSubtypeHostSource(path, text));
 	const expected = structuredClone(previous); let refreshed = 0;
 	for(const entry of expected.evidence) for(const file of entry.files)

@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforeRefinementCoreCiSource } from "./refinement-core-ci-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { beforeCheckedRecordHostCiSource, checkedRecordHostCiChangedPaths, checkedRecordHostCiHistoryPath, checkedRecordHostCiPredecessor, reverseCheckedRecordHostCiUpdate } from "./checked-record-host-ci-history.mjs";
 
 test("Checked-record native CI workflow history authenticates exact transitions and refuses unknown edits", async () => {
@@ -22,7 +22,9 @@ test("Checked-record native CI workflow history authenticates exact transitions 
 	assert.deepEqual(history.updates.map(update => update.path), checkedRecordHostCiChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeRefinementCoreCiSource(update.path, await readFile(update.path, "utf8"));
+		const current = await sourceAtHistoryMilestone(
+			checkedRecordHostCiHistoryPath, update.path
+		);
 		const previous = reverseCheckedRecordHostCiUpdate(current, update);
 		assert.equal(beforeCheckedRecordHostCiSource(update.path, current), previous);
 		const bytes = Buffer.from(current);
@@ -45,7 +47,7 @@ test("Checked-record native CI workflow history authenticates exact transitions 
 test("Checked-record native CI workflow changes only source pins and preserves all installed observations", async () => {
 	const history = JSON.parse(await readFile(checkedRecordHostCiHistoryPath));
 	const path = "docs/type-surface.v1.json";
-	const source = beforeRefinementCoreCiSource(path, await readFile(path, "utf8"));
+	const source = await sourceAtHistoryMilestone(checkedRecordHostCiHistoryPath, path);
 	const restored = beforeCheckedRecordHostCiSource(path, source);
 	assert.equal(sha256(restored), "0d3fc42e3dfe1fe694939770d6c70fcfda61b2eef65c76f91987560a75095972");
 	const current = JSON.parse(source), previous = JSON.parse(restored);

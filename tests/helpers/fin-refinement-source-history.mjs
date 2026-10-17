@@ -6,6 +6,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { beforeRecursiveWitTestRegistrationSource, recursiveWitTestRegistrationChangedPaths } from "./recursive-wit-test-registration-history.mjs";
 import { beforeLateCheckedRecordTestRegistrationSource, lateCheckedRecordTestRegistrationChangedPaths } from "./late-checked-record-test-registration-history.mjs";
 import { beforeCiContractRepairSource, ciContractRepairChangedPaths } from "./ci-contract-repair-source-history.mjs";
 import { beforeClosedGenericCheckedRecordSource, closedGenericCheckedRecordChangedPaths } from "./closed-generic-checked-record-source-history.mjs";
@@ -783,6 +784,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeRecursiveWitTestRegistrationSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeLateCheckedRecordTestRegistrationSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeWitGraphDiagnosticSource(path, source, expected);
@@ -895,7 +898,8 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 });
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...lateCheckedRecordTestRegistrationChangedPaths
+	...recursiveWitTestRegistrationChangedPaths
+	, ...lateCheckedRecordTestRegistrationChangedPaths
 	, ...ciContractRepairChangedPaths
 	, ...closedGenericCheckedRecordChangedPaths
 	, extractorPath, typeSurfacePath, ...Object.keys(transitions)
