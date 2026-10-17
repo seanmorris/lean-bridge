@@ -11,6 +11,7 @@ import { generateCopiedRustGraphPackage } from "../backends/rust/copied-graph-pa
 import { generateCallableRustGraphPackage } from "../backends/rust/callable-graph-package.mjs";
 import { auditRustPackage } from "../backends/rust/package-audit.mjs";
 import { nativeArtifactPaths } from "./native-artifacts.mjs";
+import { nativeGraphRefinementDiagnostics } from "./native-graph-sources.mjs";
 import { ordinaryRustEvidence } from "./native-rust-artifacts.mjs";
 import { processBuildRunner } from "./process-runner.mjs";
 import { packageOrdinaryCargo } from "../release/native-cargo.mjs";
@@ -37,7 +38,11 @@ export const projectOrdinaryRust = async ({ working, nativeRoot, runtimeRoot, ad
 	const generate = model.copiedGraph
 		? model.copiedGraph.callbacks ? generateCallableRustGraphPackage : generateCopiedRustGraphPackage
 		: generateCopiedRustPackage;
-	const files = generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) });
+	const options = generate === generateCopiedRustGraphPackage
+		? [{ refinementDiagnostics: nativeGraphRefinementDiagnostics(model) }] : [];
+	const files = generate(model.bindingIr, evidence
+		, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }
+		, ...options);
 	auditRustPackage(model.bindingIr, files);
 	const save = async (path, bytes) => { await mkdir(dirname(join(root, path)), { recursive: true }); await writeFile(join(root, path), bytes, { flag: "wx" }); };
 	for(const [path, contents] of Object.entries(files)) await save(path, contents);

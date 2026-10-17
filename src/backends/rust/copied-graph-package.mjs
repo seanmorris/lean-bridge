@@ -70,11 +70,11 @@ const functions = (model, generated) => {
 	});
 };
 
-const nativeSource = (model, generated, exports) => `${generated.source}
+const nativeSource = (model, generated, exports, refinementDiagnostics) => `${generated.source}
 #[path = "assets.rs"] mod assets;
 unsafe extern "C" { #[link_name = "dlsym"] fn graph_symbol(library: *mut std::ffi::c_void, name: *const std::ffi::c_char) -> *mut std::ffi::c_void; }
 struct GraphNative {
-    lifecycle: GraphLifecycle,
+    lifecycle: GraphLifecycle,${refinementDiagnostics ? "\n    diagnostic: unsafe extern \"C\" fn() -> *const std::ffi::c_char," : ""}
 ${exports.map(fn => `    call${fn.index}: ${fn.signature},`).join("\n")}
 }
 static GRAPH_NATIVE: std::sync::OnceLock<Result<GraphNative, Error>> = std::sync::OnceLock::new();
@@ -96,7 +96,8 @@ fn graph_runtime() -> Result<&'static GraphNative, Error> {
                 initialize: symbol!("${model.prefix}_graph_initialize", unsafe extern "C" fn() -> u32),
                 ready: symbol!("${model.prefix}_graph_ready", unsafe extern "C" fn() -> i32),
                 retire: symbol!("${model.prefix}_graph_retire", unsafe extern "C" fn()),
-            },
+            },${refinementDiagnostics ? `
+            diagnostic: symbol!("${model.prefix}_graph_error", unsafe extern "C" fn() -> *const std::ffi::c_char),` : ""}
 ${exports.map(fn => `            call${fn.index}: symbol!("${fn.name}_graph", ${fn.signature}),`).join("\n")}
         })
     }).as_ref().map_err(Clone::clone)
@@ -109,7 +110,17 @@ fn graph_error(error: GraphError) -> Error {
         GraphError::InvalidInput => Error::Native { code: 1, message: "Invalid copied value".into() },
         GraphError::Unavailable => Error::Native { code: 5, message: "Lean runtime initialization failed or runtime retired".into() },
     }
+}${refinementDiagnostics ? `
+fn graph_checked_error(error: GraphError, diagnostic: unsafe extern "C" fn() -> *const std::ffi::c_char) -> Error {
+    if !matches!(error, GraphError::InvalidInput) { return graph_error(error); }
+    let pointer = unsafe { diagnostic() };
+    if pointer.is_null() { return graph_error(error); }
+    match unsafe { std::ffi::CStr::from_ptr(pointer) }.to_str() {
+        Ok(message) => Error::Native { code: 1, message: message.into() },
+        Err(_) => Error::InvalidNative,
+    }
 }
+` : ""}
 ${exports.map(fn => `pub(super) fn call${fn.index}(${fn.parameters.map((param, i) => `arg${i}: ${param.type}`).join(", ")}) -> Result<${fn.output}, Error> {
     // Validate before loading assets. The guarded call also checks its inputs
     // and shares one conversion budget between arguments and the result.
@@ -117,7 +128,7 @@ ${exports.map(fn => `pub(super) fn call${fn.index}(${fn.parameters.map((param, i
 ${fn.parameters.map(param => `    graph_check${param.raw.index}(${param.argument}, 0, true, &mut budget).map_err(graph_error)?;`).join("\n")}
     let _ = budget;
     let runtime = graph_runtime()?;
-    unsafe { graph_call_${fn.field}_guarded(Some(&runtime.lifecycle), runtime.call${fn.index}${fn.parameters.map(param => `, ${param.argument}`).join("")}) }.map_err(graph_error)
+    unsafe { graph_call_${fn.field}_guarded(Some(&runtime.lifecycle), runtime.call${fn.index}${fn.parameters.map(param => `, ${param.argument}`).join("")}) }.map_err(${refinementDiagnostics ? `|error| graph_checked_error(error, runtime.diagnostic)` : "graph_error"})
 }
 `).join("\n")}`;
 
@@ -127,8 +138,11 @@ ${fn.parameters.map(param => `    graph_check${param.raw.index}(${param.argument
  * @param ir - Compiler-checked finite copied graph Binding IR.
  * @param evidence - Authenticated native library identities, or null for inspection.
  * @param settings - Cargo coordinates and package metadata.
+ * @param options - Generated call features.
+ * @param options.refinementDiagnostics - Read exact checked-refinement failures from the adapter.
  */
-export const generateCopiedRustGraphPackage = (ir, evidence = null, settings = {}) => {
+export const generateCopiedRustGraphPackage = (ir, evidence = null, settings = {}, { refinementDiagnostics = false } = {}) => {
+	if(typeof refinementDiagnostics !== "boolean") throw new TypeError("Rust graph refinement diagnostics must be explicit");
 	const model = compileCopiedRustGraphPackageModel(ir), generated = generateCopiedRustGraphConversions(ir);
 	const exports = functions(model, generated);
 	const name = settings.name ?? `lean_bridge_${model.prefix}`, version = settings.version ?? ir.component.version;
@@ -145,7 +159,7 @@ pub fn ${fn.field}(${fn.parameters.map((param, i) => `arg${i}: ${param.type}`).j
     __runtime::call${fn.index}(${fn.parameters.map((_, i) => `arg${i}`).join(", ")})
 }
 `).join("\n")}`
-		, "src/__runtime.rs": nativeSource(model, generated, exports)
+		, "src/__runtime.rs": nativeSource(model, generated, exports, refinementDiagnostics)
 		, "src/assets.rs": copiedRustAssets(evidence)
 		, "Cargo.toml": `[package]\nname = "${name}"\nversion = "${version}"\nedition = "2021"\nrust-version = "1.90"\n${cargoPackageMetadata({ description: "Compiled Lean API with owned recursive Rust values", ...validatePackageMetadata(settings.metadata ?? {}) })}\nreadme = "README.md"\ninclude = ["src/**", "native/**", "lean-bridge/**", "README.md", "Cargo.lock", "binding-manifest.json"]\n\n[dependencies]\nnum-bigint = "=0.4.6"\nsha2 = "=0.10.9"\n`
 		, "README.md": `# ${name}

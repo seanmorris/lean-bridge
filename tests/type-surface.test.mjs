@@ -77,6 +77,7 @@ import { withoutPythonGraphDiagnostic } from "./helpers/python-graph-diagnostic-
 import { withoutRubyGraphDiagnostic } from "./helpers/ruby-graph-diagnostic-source-history.mjs";
 import { withoutRubyGraphKeywordField } from "./helpers/ruby-graph-keyword-field-source-history.mjs";
 import { withoutRubyMemberEscape } from "./helpers/ruby-member-escape-source-history.mjs";
+import { withoutRustGraphDiagnostic } from "./helpers/rust-graph-diagnostic-source-history.mjs";
 
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "..");
@@ -118,9 +119,10 @@ const observationFixture = () => {
 
 test("historical shape comparisons preserve old cells without weakening the live classifier", async () => {
 	const file = "docs/type-surface.v1.json";
-	let current = withoutRubyMemberEscape(
+	let current = withoutRustGraphDiagnostic(
 		file, await readFile(file, "utf8")
 	);
+	current = withoutRubyMemberEscape(file, current);
 	current = withoutRubyGraphKeywordField(file, current);
 	current = withoutRubyGraphDiagnostic(file, current);
 	current = withoutPythonGraphDiagnostic(file, current);

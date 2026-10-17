@@ -15,6 +15,7 @@ import { validateOrdinaryCargoSettings } from "../backends/rust/copied-model.mjs
 import { createDeterministicTarGz } from "./deterministic-archive.mjs";
 import { readVerifiedSourceNotices } from "./source-notices.mjs";
 import { compiledPackageMetadata } from "../analyze/package-metadata.mjs";
+import { nativeGraphRefinementDiagnostics } from "../build/native-graph-sources.mjs";
 
 /**
  * Archive checked Rust sources, compiled libraries and their provenance.
@@ -43,7 +44,11 @@ export const packageOrdinaryCargo = async ({ working, rustRoot, nativeRoot, runt
 	const generate = model.copiedGraph
 		? model.copiedGraph.callbacks ? generateCallableRustGraphPackage : generateCopiedRustGraphPackage
 		: generateCopiedRustPackage;
-	for(const [path, contents] of Object.entries(generate(model.bindingIr, evidence, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) })))
+	const options = generate === generateCopiedRustGraphPackage
+		? [{ refinementDiagnostics: nativeGraphRefinementDiagnostics(model) }] : [];
+	for(const [path, contents] of Object.entries(generate(model.bindingIr, evidence
+		, { name, version, metadata: compiledPackageMetadata(model.sourceIdentity) }
+		, ...options)))
 		if(await readFile(join(rustRoot, path), "utf8") !== contents) throw new Error("Generated Rust source differs from compiled package model");
 	if(await readFile(join(rustRoot, "Cargo.lock"), "utf8") !== await copiedRustLock(name, version)) throw new Error("Cargo dependency lock differs from checked projection");
 	for(const [file, hash] of Object.entries(evidence.libraries))
