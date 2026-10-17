@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-alias-admission-source-v1",
+  "predecessorCommit": "2d68d17d7c5e9ff2d87d972d7a16d4e4d9f413cc",
+  "repairCommit": "a1b4f5c2246313cbe2905d3bc9c381b4f6af984f",
+  "pathsSha256": "2ba00fd723f9087472ac9e84f42b98a45afce820458b5d27268a6dade996fae6",
+  "pinCount": 146,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+      "currentSha256": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+      "count": 94
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+      "currentSha256": "7cca2ddb97485960fa4c0509a5d1f8dfe978c187b8d11e05f5baad2780ebea62",
+      "count": 48
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+      "currentSha256": "a52be48b74ed1563442cecc61c5e0e5feb8a19407e67a34ed84afb0ece27585f",
+      "count": 4
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-alias-admission-history.mjs",
+      "currentSha256": "f1236b3c611cd29e5ad24a99aa7ebde5136c5f64692dcd6efe6d4716112de386"
+    },
+    {
+      "path": "tests/checked-record-alias-admission-source-history.test.mjs",
+      "currentSha256": "eca7ec8004d83d7dd191370c2f82a5a502e2b0bc4593bebe4a624056039972d1"
+    },
+    {
+      "path": "tests/helpers/checked-record-alias-admission-source-history.mjs",
+      "currentSha256": "48e52aff1b3c5f9cdfb9326164cf25aeceec2721d4cfc21456ed6ad2913d761d"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d673fb7a94d2e01b1b0a1b6311a1fdee90fa1ac6decbcb708a7e3b98bc486c07",
+      "currentSha256": "7b305c1c985b489f274e5c716faaca0022d1adb0da7cf7557f047445be9632e8",
+      "replacements": [
+        {
+          "previous": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+          "current": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+          "count": 94
+        },
+        {
+          "previous": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+          "current": "7cca2ddb97485960fa4c0509a5d1f8dfe978c187b8d11e05f5baad2780ebea62",
+          "count": 48
+        },
+        {
+          "previous": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+          "current": "a52be48b74ed1563442cecc61c5e0e5feb8a19407e67a34ed84afb0ece27585f",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "aa3524a090c12665de6686e0a862be4ca71382576f34ec2c844f82587e70d574",
+      "currentSha256": "9773428c9feb7361aeeac782ded004508698b16bbe6c326e07549f52c737cdc6",
+      "edits": [
+        {
+          "start": 11282,
+          "previous": "",
+          "current": "\t\t, \"checked-record-alias-admission-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "1d639194a88979a0cdf540479b5ea537dc10ac2b5374460b69014f33cdeadf05",
+      "currentSha256": "7cca2ddb97485960fa4c0509a5d1f8dfe978c187b8d11e05f5baad2780ebea62",
+      "edits": [
+        {
+          "start": 13141,
+          "previous": "\t\t\t\t\t\trecurse(type.target); return;\n",
+          "current": "\t\t\t\t\t\tcopied(type.target, depth + 1, references, refinements\n\t\t\t\t\t\t\t, subtypeStructural, produced, checkedRecord); return;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "6bdc283cda643fc880c35334fe44beb52902860173f16cb8545ada765c96b5f7",
+      "currentSha256": "a52be48b74ed1563442cecc61c5e0e5feb8a19407e67a34ed84afb0ece27585f",
+      "edits": [
+        {
+          "start": 15282,
+          "previous": "",
+          "current": "\t\t\tkind: \"alias\", name: \"Sample.PacketAlias\"\n\t\t\t, target: record(\"Sample.checked\")\n\t\t};\n\t\tassert.throws(() => validateElaboratedMetadata(report, request)\n\t\t\t, /Unsupported nested refinement position/u);\n\t}\n\t{\n\t\tconst { request, report } = sample();\n\t\treport.modules[0].declarations[0].projection.parameters[0].type = {\n"
+        },
+        {
+          "start": 15659,
+          "previous": "",
+          "current": "\t\t\t, predicate: { kind: \"checked-record\", constructor: \"Sample.mkPacket\" }\n\t\t};\n\t\tassert.equal(validateElaboratedMetadata(report, request), true);\n\t}\n\t{\n\t\tconst { request, report } = sample();\n\t\treport.modules[0].declarations[0].projection.parameters[0].type = {\n\t\t\tkind: \"refinement\"\n\t\t\t, base: {\n\t\t\t\tkind: \"alias\", name: \"Sample.PacketAlias\"\n\t\t\t\t, target: record(\"Sample.checked\")\n\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b2f1d5fcf3243bdfcebc4068769f4b0a1d0ebbe6d8943e605147110999662407",
+      "currentSha256": "24fe1e558fd8b68f42e4f2950c9e9fbe5516b677e04a6c2f22f705734ac66186",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordAliasAdmissionSource, checkedRecordAliasAdmissionChangedPaths } from \"./checked-record-alias-admission-source-history.mjs\";\n"
+        },
+        {
+          "start": 72669,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordAliasAdmissionSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 81759,
+          "previous": "\t...inheritedCheckedRecordTestRegistrationChangedPaths\n",
+          "current": "\t...checkedRecordAliasAdmissionChangedPaths\n\t, ...inheritedCheckedRecordTestRegistrationChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

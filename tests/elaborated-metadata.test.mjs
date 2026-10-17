@@ -244,6 +244,15 @@ test("Lean-produced checked records retain refined fields without weakening inpu
 	{
 		const { request, report } = sample();
 		report.modules[0].declarations[0].projection.parameters[0].type = {
+			kind: "alias", name: "Sample.PacketAlias"
+			, target: record("Sample.checked")
+		};
+		assert.throws(() => validateElaboratedMetadata(report, request)
+			, /Unsupported nested refinement position/u);
+	}
+	{
+		const { request, report } = sample();
+		report.modules[0].declarations[0].projection.parameters[0].type = {
 			kind: "refinement"
 			, base: record("Sample.checked")
 			, predicate: { kind: "checked-record", constructor: "Sample.mkPacket" }
