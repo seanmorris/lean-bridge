@@ -69,6 +69,7 @@ jobs:
           path: |
             build/inherited-checked-record-dotnet-ci/
             build/inherited-checked-record-dotnet-toolchain.log
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed inherited checked-record .NET acceptance
