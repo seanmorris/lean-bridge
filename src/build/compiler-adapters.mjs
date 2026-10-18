@@ -18,7 +18,7 @@ import { componentRecordLeanSource } from "./component-record-adapters.mjs";
 import { assertComponentRecursiveAbi, componentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { assertComponentStructuredCallableAbi, componentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
-import { componentStructuredCallableLeanSource, componentStructuredLeanType } from "./component-structured-callable-lean.mjs";
+import { componentStructuredCallableLeanSource, componentStructuredLeanType, componentStructuredRuntimeRefinements } from "./component-structured-callable-lean.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentRefinementConversion } from "./component-refinements.mjs";
 import { componentRefinementDefinitions, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 
@@ -252,6 +252,8 @@ export const validateCompilerAdapterPlan = plan => {
 		fail("invalid-compiler-adapter-plan", "Callable nominal refinements must match their private descriptor");
 	if(!Array.isArray(plan.privateAbi.exports) || plan.privateAbi.exports.length !== plan.exports.length) fail("invalid-compiler-adapter-plan", "private ABI must cover every generated export");
 	const types = componentRefinementDefinitions(plan.privateAbi.types ?? plan.privateAbi.records ?? []);
+	const structuredRefinements = plan.privateAbi.version === componentStructuredCallableAbi
+		? componentStructuredRuntimeRefinements(plan.privateAbi) : null;
 	for(const [index, item] of plan.privateAbi.exports.entries())
 	{
 		exactKeys(item, ["bindingId", "symbol", "parameters", "result", "resultMode"], `private ABI export ${index}`);
@@ -263,7 +265,9 @@ export const validateCompilerAdapterPlan = plan => {
 		const refinements = plan.exports[index].refinements;
 		if(refinements)
 		{
-			if([...refinements.parameters, refinements.result].some(tree => hasComponentNominalRefinements(tree)) && plan.privateAbi.version !== componentRecursiveAbi)
+			const runtime = structuredRefinements ? structuredRefinements(item, refinements) : refinements;
+			if(runtime && [...runtime.parameters, runtime.result].some(tree => hasComponentNominalRefinements(tree))
+				&& plan.privateAbi.version !== componentRecursiveAbi)
 				fail("invalid-compiler-adapter-plan", "Per-use nominal refinements require copied graph carriers");
 			try
 			{

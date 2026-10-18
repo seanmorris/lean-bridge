@@ -566,7 +566,7 @@ const emitDeclarations = (ir, typeMap) => {
 		const operation = declaration.resultMode === "iterator" ? "iterate" : declaration.resultMode === "async-iterator" ? "iterateAsync" : "call";
 		const callbackWrapper = (type, value, path) => {
 			const definition = typeMap.get(type.id);
-			return definition?.kind === "callback" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition))
+			return definition?.kind === "callback" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition, ir.types))
 				? `validate.wrap${definition.name}(${value}, ${quote(path)})` : value;
 		};
 		const awaitPrefix = declaration.resultMode === "promise" ? "await " : "";
@@ -624,6 +624,9 @@ const emitValidators = (ir, typeMap) => {
 	const nominalSites = ir.declarations.some(item => {
 		const value = declarationRefinements(item, ir.types);
 		return [...value.parameters, value.result].some(nominal);
+	}) || ir.types.some(type => {
+		const value = type.kind === "callback" ? callbackDefinitionRefinement(type, ir.types) : null;
+		return value && [...value.parameters, value.result].some(nominal);
 	});
 	const structuralSubtype = ir.declarations.some(item => {
 		const value = declarationRefinements(item, ir.types);
@@ -648,7 +651,7 @@ const emitValidators = (ir, typeMap) => {
 		, "export const assertInt = assertBigInt;"
 		, "export const assertNat = (value, path) => { assertBigInt(value, path); if (value < 0n) invalid(path, \"non-negative bigint\"); return value; };"
 		, "export const assertFin = (value, bound, path) => { assertNat(value, path); if (value >= BigInt(bound)) invalid(path, `bigint below ${bound}`); return value; };"
-		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {
+		, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === "callback" && callbackDefinitionRefinement(type, ir.types)) || ir.declarations.some(item => {
 			const value = declarationRefinements(item, ir.types);
 			return [...value.parameters, value.result].some(refinement => refinement && !["fin", "subtype", "checked-record"].includes(refinement.kind));
 		})) ? [

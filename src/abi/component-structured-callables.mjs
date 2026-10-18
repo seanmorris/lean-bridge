@@ -55,7 +55,7 @@ export const componentStructuredCallableSignatureText = (signature, types, nomin
 	dense(parameters, 16);
 	if(!parameters.length) fail("callback arity must be 1 through 16");
 	const checked = graph(result, types);
-	const refinements = callbackRefinement(signature, signature.refinements);
+	const refinements = callbackRefinement(signature, signature.refinements, types);
 	return JSON.stringify(["copied-callable-v1"
 		, parameters.map(root => graph(root, checked.types).root)
 		, checked.root
@@ -166,7 +166,7 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 		const expected = callbacks.get(type.id), call = type.callable;
 		if(!expected || type.representation !== "identity" || type.mutability !== "immutable" || type.typeParameters.length
 			|| type.fields.length || type.cases.length || type.target !== null || type.resource !== null || type.host !== null) fail("unsupported callable type");
-		if(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type)))) fail("callback refinement mismatch");
+		if(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type, ir.types)))) fail("callback refinement mismatch");
 		if(call.resultMode !== "value" || call.invocation !== "many" || call.reentry !== "same-agent" || call.selfDisposal !== "defer"
 			|| !same(call.effects.toSorted(), ["fails", "host-call"])) fail("unsupported callable semantics");
 		parameters(call.parameters, expected.parameters); site(call.result, expected.result, true); failure(call.failure, true);

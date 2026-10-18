@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDownstreamFinCiRepairHistoricalSource, beforeDownstreamFinCiRepairSource, downstreamFinCiRepairChangedPaths, downstreamFinCiRepairHistoricalPaths } from "./downstream-fin-ci-repair-source-history.mjs";
 import { beforeHistoryHubReachabilityRepairSource, historyHubReachabilityRepairChangedPaths } from "./history-hub-reachability-repair-source-history.mjs";
 import { beforeInheritedCheckedRecordFoundationVerifierSource, inheritedCheckedRecordFoundationVerifierChangedPaths, inheritedCheckedRecordFoundationVerifierHistoricalPaths } from "./inherited-checked-record-foundation-verifier-source-history.mjs";
 import { beforePerlRecursiveConversionOutputSource, perlRecursiveConversionOutputChangedPaths } from "./perl-recursive-conversion-output-source-history.mjs";
@@ -960,6 +961,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeDownstreamFinCiRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeHistoryHubReachabilityRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordFoundationVerifierSource(
@@ -991,6 +994,10 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	);
 	if(sha256(source) === expected) return source;
 	source = beforePrimitiveAuditCoreRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	source = beforeDownstreamFinCiRepairHistoricalSource(
+		path, source, expected
+	);
 	if(sha256(source) === expected) return source;
 	source = beforePrimitiveAuditIntegrationSource(path, source, expected);
 	if(sha256(source) === expected) return source;
@@ -1141,18 +1148,18 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypePhpPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
-	// These native PHP registrations predate the native PHP promotion ledger.
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	// These native PHP registrations predate the native PHP promotion ledger.
 	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("php", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeDotnetPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
-	// These .NET registrations predate the .NET promotion ledger.
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	// These .NET registrations predate the .NET promotion ledger.
 	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("dotnet", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
@@ -1223,7 +1230,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...historyHubReachabilityRepairChangedPaths
+	...downstreamFinCiRepairChangedPaths
+	, ...downstreamFinCiRepairHistoricalPaths
+	, ...historyHubReachabilityRepairChangedPaths
 	, ...inheritedCheckedRecordFoundationVerifierChangedPaths
 	, ...inheritedCheckedRecordFoundationVerifierHistoricalPaths
 	, ...perlRecursiveConversionOutputChangedPaths

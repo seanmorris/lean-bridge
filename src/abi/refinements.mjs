@@ -174,19 +174,27 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 /**
- * Validate Fin-only callback constraints against an erased callable signature.
+ * Validate callback constraints against an erased callable signature. Copied
+ * nominal Fin trees require the enclosing document's type definitions.
  *
  * @param signature - Erased parameter and result type references.
  * @param value - Optional compiler-owned parameter/result refinement trees.
+ * @param types - Definitions used to authenticate copied nominal Fin trees.
  */
-export const callbackRefinement = (signature, value) => {
+export const callbackRefinement = (signature, value, types = []) => {
 	if(value === undefined) return null;
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 		|| !Array.isArray(value.parameters) || value.parameters.length !== signature.parameters.length)
 		throw new TypeError("Invalid callback refinement metadata");
-	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1);
-	assertRefinement(value.result, signature.result, 1);
+	const structural = types.length > 0;
+	const definitions = types.map(definition => definition.source ? definition : {
+		...definition
+		, representation: "copied"
+		, source: { declaration: definition.id?.startsWith("lean:") ? definition.id.slice(5) : null, extensions: {} }
+	});
+	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1, structural, definitions);
+	assertRefinement(value.result, signature.result, 1, structural, definitions);
 	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
 	return value;
 };
@@ -195,8 +203,9 @@ export const callbackRefinement = (signature, value) => {
  * Read optional constraints from a public callback definition.
  *
  * @param definition - Public Binding IR callback definition.
+ * @param types - Definitions used to authenticate copied nominal Fin trees.
  */
-export const callbackDefinitionRefinement = definition => callbackRefinement({
+export const callbackDefinitionRefinement = (definition, types = []) => callbackRefinement({
 	parameters: definition.callable.parameters.map(parameter => parameter.type)
 	, result: definition.callable.result.type
-}, definition.source?.extensions?.["lean-lang.org/refinements"]);
+}, definition.source?.extensions?.["lean-lang.org/refinements"], types);

@@ -8,8 +8,8 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { beforePhpWasmFinPromotionSource } from "./php-wasm-fin-promotion-source-history.mjs";
 import { beforeNativeConsumerCiRepairSource, nativeConsumerCiRepairChangedPaths, nativeConsumerCiRepairHistoryPath, reverseNativeConsumerCiRepairUpdate } from "./native-consumer-ci-repair-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 test("Native consumer CI repair integration authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(nativeConsumerCiRepairHistoryPath, "utf8"));
@@ -17,7 +17,9 @@ test("Native consumer CI repair integration authenticates each exact source pred
 	assert.deepEqual(record.updates.map(update => update.path), nativeConsumerCiRepairChangedPaths);
 	for(const update of record.updates)
 	{
-		const source = beforePhpWasmFinPromotionSource(update.path, await readFile(update.path, "utf8"));
+		const source = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeNativeConsumerCiRepairSource
+		);
 		assert.equal(sha256(reverseNativeConsumerCiRepairUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforeNativeConsumerCiRepairSource(update.path, source)), update.previousSha256);
 		assert.equal(beforeNativeConsumerCiRepairSource(update.path, source, update.currentSha256), source);
@@ -30,17 +32,20 @@ test("Native consumer CI repair integration authenticates each exact source pred
 });
 
 test("Native consumer CI repair source pins do not change observations or other inventory claims", async () => {
-	const path = "docs/type-surface.v1.json", text = beforePhpWasmFinPromotionSource(path, await readFile(path, "utf8"));
-	const document = JSON.parse(text), previous = JSON.parse(beforeNativeConsumerCiRepairSource(path, text));
 	const record = JSON.parse(await readFile(nativeConsumerCiRepairHistoryPath, "utf8"));
 	const byPath = new Map(record.updates.map(update => [update.path, update]));
+	const path = "docs/type-surface.v1.json", inventory = byPath.get(path);
+	const text = await sourceAtFinHistoryMilestone(path, inventory.currentSha256, beforeNativeConsumerCiRepairSource);
+	const document = JSON.parse(text), previous = JSON.parse(beforeNativeConsumerCiRepairSource(path, text));
 	let refreshed = 0;
 	for(const evidence of previous.evidence) for(const file of evidence.files)
 	{
 		const update = byPath.get(file.path);
 		if(update && update.previousSha256 === file.sha256)
 		{
-			assert.equal(sha256(beforePhpWasmFinPromotionSource(file.path, await readFile(file.path, "utf8"))), update.currentSha256);
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				file.path, update.currentSha256, beforeNativeConsumerCiRepairSource
+			)), update.currentSha256);
 			file.sha256 = update.currentSha256; refreshed++;
 		}
 	}

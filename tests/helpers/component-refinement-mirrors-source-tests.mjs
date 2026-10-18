@@ -13,6 +13,7 @@ import { promisify } from "node:util";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
 import { componentRecursiveLeanSource } from "../../src/build/component-recursive-lean.mjs";
+import { componentNominalFinGuards } from "../../src/build/component-fin-guards.mjs";
 import {
 	componentRefinementMirrorsFixture
 	, mutualCheckedComponentRefinementMirrorsFixture
@@ -54,6 +55,77 @@ test("fresh Lean checks nominal component carriers, per-use normalization and re
 		if(reports) await cp(file, join(reports, name));
 	}
 	const observations = [];
+	const cycle = "guard-tree-cycle", recursiveGuard = { kind: "recursive", definition: "GuardTree", cycle };
+	const guardTree = { kind: "variant", definition: "GuardTree", cycle
+	, cases: [
+		{ name: "leaf", arguments: [{ kind: "fin", bound: "5" }] }
+		, { name: "array", arguments: [{ kind: "array", arguments: [recursiveGuard] }] }
+		, { name: "list", arguments: [{ kind: "list", arguments: [recursiveGuard] }] }
+		, { name: "nested", arguments: [{ kind: "array", arguments: [{ kind: "list", arguments: [recursiveGuard] }] }] }
+		, { name: "arrayOption", arguments: [{ kind: "array", arguments: [{ kind: "option", arguments: [recursiveGuard] }] }] }
+		, { name: "paired", arguments: [{ kind: "tuple", arguments: [null, recursiveGuard] }] }
+		, { name: "result", arguments: [{ kind: "result", arguments: [recursiveGuard, recursiveGuard] }] }
+	] };
+	const guardType = { kind: "variant"
+		, lean: "GuardTree"
+		, cases: guardTree.cases.map(branch => ({ name: branch.name
+			, fields: branch.arguments.map((_, index) => ({ name: `value${index}` })) })) };
+	const rightTree = { kind: "variant", definition: "GuardRight"
+	, cases: [
+		{ name: "stop", arguments: [{ kind: "fin", bound: "3" }] }
+		, { name: "more", arguments: [{ kind: "recursive", definition: "GuardLeft", cycle: "guard-mutual-cycle" }] }
+	] };
+	const leftTree = { kind: "record"
+		, definition: "GuardLeft"
+		, cycle: "guard-mutual-cycle"
+		, arguments: [{ kind: "array", arguments: [rightTree] }] };
+	const guardLines = componentNominalFinGuards([guardType], new Map([["lean:GuardTree", guardTree]])
+		, new Map([[cycle, guardTree]]));
+	const mutualGuardLines = componentNominalFinGuards([
+		{ kind: "record", lean: "GuardLeft", fields: [{ name: "next" }] }
+		, { kind: "variant", lean: "GuardRight"
+		, cases: [
+			{ name: "stop", fields: [{ name: "digit" }] }
+			, { name: "more", fields: [{ name: "left" }] }
+		] }
+	], new Map([["lean:GuardLeft", leftTree], ["lean:GuardRight", rightTree]])
+	, new Map([["guard-mutual-cycle", leftTree]]), [["GuardLeft", "GuardRight"]]);
+	const guardSource = ["import ComponentMirrors"
+		, "namespace Carriers"
+		, "namespace LbErased"
+		, "inductive GuardTree where"
+		, "  | leaf (value : Nat)"
+		, "  | array (value : Array GuardTree)"
+		, "  | list (value : List GuardTree)"
+		, "  | nested (value : Array (List GuardTree))"
+		, "  | arrayOption (value : Array (Option GuardTree))"
+		, "  | paired (value : Nat × GuardTree)"
+		, "  | result (value : Except GuardTree GuardTree)"
+		, "mutual"
+		, "structure GuardLeft where"
+		, "  next : Array GuardRight"
+		, "inductive GuardRight where"
+		, "  | stop (digit : Nat)"
+		, "  | more (left : GuardLeft)"
+		, "end"
+		, "end LbErased"
+		, ""
+		, ...guardLines, ...mutualGuardLines
+		, "example : LbErased.GuardTree.validFin (.array #[.leaf 4]) = true := by native_decide"
+		, "example : LbErased.GuardTree.validFin (.nested #[[.leaf 5]]) = false := by native_decide"
+		, "example : LbErased.GuardLeft.validFin ⟨#[.stop 2]⟩ = true := by native_decide"
+		, "example : LbErased.GuardLeft.validFin ⟨#[.more ⟨#[.stop 3]⟩]⟩ = false := by native_decide"
+		, "end Carriers", ""].join("\n");
+	assert.match(guardSource, /\.attach\.all \(fun ⟨_bridgeFinValue0, _bridgeFinMember0⟩/u);
+	assert.match(guardSource, /termination_by sizeOf value[\s\S]*Array\.sizeOf_lt_of_mem _bridgeFinMember0[\s\S]*try omega/u);
+	assert.doesNotMatch(guardSource, /\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\b/u);
+	await writeFile(join(directory, "GeneratedFinGuard.lean"), guardSource);
+	const guardResult = await run(["-c", "GeneratedFinGuard.c", "GeneratedFinGuard.lean"]);
+	observations.push({ route: "recursive-fin-guards"
+		, checks: 4
+		, sourceSha256: sha256(guardSource)
+		, cSha256: sha256(await readFile(join(directory, "GeneratedFinGuard.c")))
+		, stdout: guardResult.stdout, stderr: guardResult.stderr });
 	for(const route of ["forward", "reverse", "result-only"])
 	{
 		const fixture = componentRefinementMirrorsFixture();

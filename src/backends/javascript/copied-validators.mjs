@@ -61,8 +61,8 @@ export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 		reference(declaration.result.type);
 	}
 	const scalars = componentScalarTypes.map(name => validatorName({ kind: "primitive", name }, typeMap));
-	const wrappers = ir.types.filter(type => type.kind === "callback" && (constraints.size || callbackDefinitionRefinement(type))).map(type => {
-		const refinement = callbackDefinitionRefinement(type), call = type.callable;
+	const wrappers = ir.types.filter(type => type.kind === "callback" && (constraints.size || callbackDefinitionRefinement(type, ir.types))).map(type => {
+		const refinement = callbackDefinitionRefinement(type, ir.types), call = type.callable;
 		const checks = call.parameters.flatMap((parameter, index) => [
 			`    ${reference(parameter.type)}(args[${index}], path + ".arg${index}");`
 			, ...refinement?.parameters[index] ? [`    assertNestedFin(args[${index}], ${JSON.stringify(refinement.parameters[index])}, path + ".arg${index}");`] : []

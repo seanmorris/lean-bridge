@@ -8,7 +8,7 @@
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { componentRecursiveWalker, generateComponentRecursiveAdapters } from "./component-recursive-adapters.mjs";
-import { componentStructuredCallablePrefix, componentStructuredCopiedView } from "./component-structured-callable-lean.mjs";
+import { componentStructuredCallablePrefix, componentStructuredCopiedView, componentStructuredRuntimeRefinements } from "./component-structured-callable-lean.mjs";
 
 const budget = `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .owner = NULL, .path = {0} };`;
 const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join(", ");
@@ -24,7 +24,9 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	assertComponentStructuredCallableAbi(abi);
 	const copied = componentStructuredCopiedView(abi);
 	const nominalRefinements = abi.nominalRefinements ?? [];
-	const constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);
+	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
+	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
+	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	const walker = type => componentRecursiveWalker(copied, type, nominalRefinements);
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 	const identity = type => type.kind === "named" && callbacks.has(type.id);
@@ -36,7 +38,8 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 			, `static uint32_t ${prefix(signature)}_frame(lean_object *, bridge_scalar_frame *);`);
 	const frame = (signature, name, target, closure = false) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
-		const refinements = closure ? signature.refinements?.parameters ?? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];
+		const refinements = closure ? callbackRefinements.get(signature.id)?.parameters ?? []
+			: runtimeRefinements(signature, exports.find(value => value.bindingId === signature.bindingId)?.refinements)?.parameters ?? [];
 		const cleanup = [...(closure ? ["lean_dec(closure);"] : []), ...names.map(name => `lean_dec(${name});`)].join(" ");
 		for(const [index, refinement] of refinements.entries()) if(refinement && (constrained || refinement.kind !== "fin"))
 			lines.push(`extern uint8_t ${name}_refinement_${index}(lean_object *);`);
@@ -78,9 +81,9 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	};
 	for(const signature of abi.callbacks)
 	{
-		const symbol = prefix(signature);
+		const symbol = prefix(signature), refinements = callbackRefinements.get(signature.id);
 		frame(signature, `${symbol}_frame`, `${symbol}_apply`, true);
-		if(signature.refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);
+		if(refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);
 		lines.push(`lean_object *${symbol}_invoke(size_t token, ${signature.parameters.map((_, index) => `lean_object *a${index}`).join(", ")}) {`
 			, `  struct { uint32_t version, bytes, status, argc; bridge_scalar_slot result, args[${signature.parameters.length}]; } storage = {0};`
 			, "  bridge_scalar_frame *frame = (bridge_scalar_frame *)&storage;"
@@ -103,7 +106,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 		if(constrained)
 		{
 			lines.push("  if (!status && (!lean_is_array(result) || lean_array_size(result) != 1)) status = 5;");
-			if(signature.refinements?.result) lines.push("  if (!status) {", "    lean_inc(result);"
+			if(refinements?.result) lines.push("  if (!status) {", "    lean_inc(result);"
 				, `    if (!${symbol}_result_refinement_0(result)) status = 5;`, "  }");
 			lines.push("  if (status == 5) {", "    lean_dec(result); result = lean_alloc_array(0, 0);"
 				, "    frame->status = 5;"

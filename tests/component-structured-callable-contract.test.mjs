@@ -103,6 +103,50 @@ test("nominal Fin callback metadata binds field constraints and rejects missing 
 	assert.throws(() => plan(finCallback("0")), /no finite recovery value/);
 });
 
+test("source-level nominal Fin trees share the structured callback ABI", () => {
+	const ir = structuredCallableReviewedIr({ recursive: true });
+	const declaration = ir.declarations.find(item => item.name === "callRecord");
+	const payload = ir.types.find(type => type.id === "lean:Structured.Payload");
+	const callback = ir.types.find(type => type.kind === "callback" && type.callable.parameters.length === 1
+		&& type.callable.parameters[0].type.id === payload.id);
+	payload.source.extensions["lean-lang.org/nominal-refinements"] = { kind: "record"
+		, fields: payload.fields.map(field => field.name === "count" ? { kind: "fin", bound: "3" } : null) };
+	const selected = () => ({ kind: "record", name: "Structured.Payload"
+		, fields: payload.fields.map(field => ({ name: field.name
+			, refinement: field.name === "count"
+				? { kind: "fin", bound: "3" } : null })) });
+	callback.source.extensions["lean-lang.org/refinements"] = { parameters: [selected()], result: selected() };
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [selected(), null], result: selected()
+	};
+	const generated = plan(ir), abi = generated.plan.privateAbi;
+	assert.equal(abi.version, 9);
+	assert.equal(abi.dispatch, "copied-callable-frame-v1");
+	assert.ok(abi.callbacks.length > 0);
+	assert.deepEqual(abi.callbacks.find(type => type.id === callback.id).refinements
+		, callback.source.extensions["lean-lang.org/refinements"]);
+	assert.equal(abi.nominalRefinements.length, 1);
+	assertComponentStructuredCallableBindings(abi, ir);
+	assert.doesNotMatch(generated.files["LeanBridgeGenerated.lean"], /LbErased\.undefined/u);
+	assert.match(generateJavaScriptPackage(ir)["internal/validators.mjs"], /refinement\.kind === 'record'/u);
+	const c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);
+	const symbol = abi.exports.find(item => item.bindingId === declaration.id).symbol;
+	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_0`, "u"));
+});
+
+test("structured callbacks still reject constructor-selected nominal trees", () => {
+	const ir = structuredCallableReviewedIr({ recursive: true });
+	const payload = ir.types.find(type => type.id === "lean:Structured.Payload");
+	const callback = ir.types.find(type => type.kind === "callback" && type.callable.parameters.length === 1
+		&& type.callable.parameters[0].type.id === payload.id);
+	const selected = () => ({ kind: "record", name: "Structured.Payload"
+		, fields: payload.fields.map(field => ({ name: field.name
+			, refinement: field.name === "count"
+				? { kind: "subtype", constructor: "Structured.checkedCount" } : null })) });
+	callback.source.extensions["lean-lang.org/refinements"] = { parameters: [selected()], result: selected() };
+	assert.throws(() => plan(ir), /Nominal Subtype selections cannot share a component with callbacks yet/u);
+});
+
 test("structured compiler admission matches independent acyclic, recursive and mixed primitive contracts", async () => {
 	for(const ir of [structuredCallableReviewedIr(), structuredCallableReviewedIr({ recursive: true }), npmStructuredCallableReviewedIr()])
 	{

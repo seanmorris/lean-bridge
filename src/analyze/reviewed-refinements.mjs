@@ -10,6 +10,8 @@ const finOnly = refinement => {
 	if(refinement === null || refinement.kind === "fin") return;
 	if(refinement.kind === "subtype") throw new TypeError("Reviewed Subtype decisions require a checked constructor selection");
 	if(refinement.kind === "checked-record") throw new TypeError("Reviewed checked records cross only at top-level sites");
+	if(refinement.kind === "record") return refinement.fields.forEach(field => finOnly(field.refinement));
+	if(refinement.kind === "variant") return refinement.cases.forEach(branch => branch.fields.forEach(field => finOnly(field.refinement)));
 	refinement.arguments.forEach(finOnly);
 };
 
@@ -18,10 +20,11 @@ const finOnly = refinement => {
  * Checked constructors are not available inside a callback contract.
  *
  * @param definition - Reviewed callback with an authored refinement extension.
+ * @param types - Reviewed definitions for copied nominal Fin trees.
  */
-export const assertReviewedFinCallback = definition => {
+export const assertReviewedFinCallback = (definition, types = []) => {
 	if(definition.kind !== "callback") throw new TypeError("Expected a reviewed callback");
-	const refinement = callbackDefinitionRefinement(definition);
+	const refinement = callbackDefinitionRefinement(definition, types);
 	if(refinement === null) throw new TypeError("Expected a reviewed callback refinement");
 	refinement.parameters.forEach(finOnly);
 	finOnly(refinement.result);

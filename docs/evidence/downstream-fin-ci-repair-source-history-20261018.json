@@ -1,0 +1,1339 @@
+{
+  "schemaVersion": 1,
+  "milestone": "downstream-fin-ci-repair-source-v1",
+  "predecessorCommit": "0003ef0eb244df62ebcbec6f464f468af54db654",
+  "draftParentCommit": "0003ef0eb244df62ebcbec6f464f468af54db654",
+  "pathsSha256": "5b6a7b182c8de4283f91a8ec8613dc6574713a3c4f6901f3aae3b193ef89f72a",
+  "pinCount": 141,
+  "pinUpdates": [
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "previousSha256": "e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd",
+      "currentSha256": "72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88",
+      "count": 31
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384",
+      "currentSha256": "6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e",
+      "count": 32
+    },
+    {
+      "path": "tests/perl-copied-graph-conversions.test.mjs",
+      "previousSha256": "4864ffb7cfef8ee0d9b048f91bfaecc62b5c99105050362f40f51af4706de397",
+      "currentSha256": "9f013a12ec3c380175b7ba751dac5206a73633633fd163265ae6de68a4c3926f",
+      "count": 2
+    },
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "previousSha256": "19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781",
+      "currentSha256": "8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e",
+      "count": 10
+    },
+    {
+      "path": "src/backends/javascript/copied-validators.mjs",
+      "previousSha256": "1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e",
+      "currentSha256": "5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64",
+      "count": 4
+    },
+    {
+      "path": "src/backends/javascript/generate.mjs",
+      "previousSha256": "f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0",
+      "currentSha256": "99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb",
+      "count": 16
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "previousSha256": "a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d",
+      "currentSha256": "5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160",
+      "count": 20
+    },
+    {
+      "path": "src/build/component-callable-adapters.mjs",
+      "previousSha256": "9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc",
+      "currentSha256": "335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d",
+      "count": 12
+    },
+    {
+      "path": "src/abi/component-structured-callables.mjs",
+      "previousSha256": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "currentSha256": "99d9a29d48cceb14c9744d68595bedb4f46e47918ea2ef5241a5c394c7797c32",
+      "count": 2
+    },
+    {
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "previousSha256": "37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c",
+      "currentSha256": "d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a",
+      "count": 4
+    },
+    {
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d",
+      "currentSha256": "20cb15f53d7bca6e54d86c0dfb8c1ef3956bd1bb0e8c1478a7f6a3261dfff5c0",
+      "count": 3
+    },
+    {
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "previousSha256": "dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245",
+      "currentSha256": "6957eb0d57636069d8978497f0603727af13f9c7f5fb511b7c084849c363ab6d",
+      "count": 3
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser.mjs",
+      "previousSha256": "ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932",
+      "currentSha256": "14774583599bf910269dcc804681b2486ee9d3537339c9887ca0539c18386506",
+      "count": 2
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "commit": "3546146128dd507f65b058504a25a7031f2a490a",
+      "predecessorCommit": "fd805a15dd1dfcfd5c589234683f528fbdd3518b",
+      "updates": [
+        {
+          "path": ".gitattributes",
+          "previousSha256": "665b28fb2dcbd6d1c09b4007fb1c05b1f9061a909aa0755ddbab4d2be258441b",
+          "currentSha256": "0ad91f816d57937606f1491e57d6ae15cfef30c875305cbd687e676f1fa2fbef",
+          "edits": [
+            {
+              "start": 2179,
+              "previous": "",
+              "current": "# Preserve the exact supplemental primitive-base GitHub job log.\ndocs/evidence/nominal-primitive-subtype-supplement-20261018/api/job.log whitespace=-blank-at-eol\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "41f04691eafefa2b4794a43ca89d20d03173e7fa",
+      "predecessorCommit": "8e43e3210de3053867485f71929d0fe610f74966",
+      "updates": [
+        {
+          "path": ".gitattributes",
+          "previousSha256": "bc7f83c3c940635f624ada398ba6b396157a1575ab3d0401f18674090b5786fe",
+          "currentSha256": "665b28fb2dcbd6d1c09b4007fb1c05b1f9061a909aa0755ddbab4d2be258441b",
+          "edits": [
+            {
+              "start": 2179,
+              "previous": "# Preserve the byte-authenticated recursive WIT package outputs without normalizing producer whitespace.\ndocs/evidence/recursive-checked-record-wit-20261017/*-mutual/records/package/share/lean-bridge/component/generated.lean whitespace=-blank-at-eol\ndocs/evidence/recursive-checked-record-wit-20261017/*/records/package/share/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof\ndocs/evidence/recursive-checked-record-wit-20261017/*/records/package/share/lean-bridge/licenses/Wasmtime-LICENSE whitespace=-blank-at-eof\ndocs/evidence/recursive-checked-record-wit-20261017/*/records/package/src/*_wasmtime.c whitespace=-blank-at-eof\n# Preserve the byte-authenticated recursive Rust package outputs without normalizing producer whitespace.\ndocs/evidence/recursive-checked-record-rust-20261017/*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol\ndocs/evidence/recursive-checked-record-rust-20261017/*/records/package/lean-bridge/licenses/Lean-LICENSE whitespace=-blank-at-eof\n# Preserve the byte-authenticated hosted recursive PHP package and installation outputs.\ndocs/evidence/recursive-checked-record-php-20261017/*/records/installation/vendor/composer/autoload_static.php whitespace=-blank-at-eol\ndocs/evidence/recursive-checked-record-php-20261017/*-mutual/records/package/lean-bridge/component/generated.lean whitespace=-blank-at-eol\ndocs/evidence/recursive-checked-record-php-20261017/*/records/package/licenses/Lean-LICENSE whitespace=-blank-at-eof\ndocs/evidence/recursive-checked-record-php-20261017/*/records/package/src/Internal/GraphNative.php whitespace=-blank-at-eof\n",
+              "current": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-downstream-fin-ci-repair-history.mjs",
+      "currentSha256": "124d0ddb7de8624413f089959dc7140f929414498b21057efa506153dc62f14b"
+    },
+    {
+      "path": "tests/helpers/downstream-fin-ci-repair-source-history.mjs",
+      "currentSha256": "d7f3b75115c6c9030d990044bfc8d7a46642c4bc80d12204b394e9807415610f"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c1762fc6f263101fc11714cc8c798eb8c2ca3e05a268f38ba08a939079b5080c",
+      "currentSha256": "249b8364668873dcd880ba0a8196c86198ca8ef1882a13a5f42ccfb42c6c9780",
+      "edits": [
+        {
+          "start": 24651,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 24965,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 28022,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 28336,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 74542,
+          "previous": "          \"sha256\": \"4864ffb7cfef8ee0d9b048f91bfaecc62b5c99105050362f40f51af4706de397\"\n",
+          "current": "          \"sha256\": \"9f013a12ec3c380175b7ba751dac5206a73633633fd163265ae6de68a4c3926f\"\n"
+        },
+        {
+          "start": 137112,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 137940,
+          "previous": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n",
+          "current": "          \"sha256\": \"5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64\"\n"
+        },
+        {
+          "start": 138106,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 138267,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 138438,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 466132,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 467258,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 467419,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 467590,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 578206,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 578524,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 665529,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 667321,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 667482,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 667653,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 674744,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 675889,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 676050,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 676221,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 682268,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 683574,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 683735,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 683906,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 690697,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 690858,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 692850,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 827789,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 830772,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 857067,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 857565,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 990153,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1001205,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1024177,
+          "previous": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n",
+          "current": "          \"sha256\": \"5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64\"\n"
+        },
+        {
+          "start": 1024509,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1043733,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1043904,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1139489,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 1139996,
+          "previous": "          \"sha256\": \"ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2\"\n",
+          "current": "          \"sha256\": \"99d9a29d48cceb14c9744d68595bedb4f46e47918ea2ef5241a5c394c7797c32\"\n"
+        },
+        {
+          "start": 1140642,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1140813,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1141167,
+          "previous": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n",
+          "current": "          \"sha256\": \"d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a\"\n"
+        },
+        {
+          "start": 1141527,
+          "previous": "          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n",
+          "current": "          \"sha256\": \"20cb15f53d7bca6e54d86c0dfb8c1ef3956bd1bb0e8c1478a7f6a3261dfff5c0\"\n"
+        },
+        {
+          "start": 1143423,
+          "previous": "          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n",
+          "current": "          \"sha256\": \"6957eb0d57636069d8978497f0603727af13f9c7f5fb511b7c084849c363ab6d\"\n"
+        },
+        {
+          "start": 1319632,
+          "previous": "          \"sha256\": \"4864ffb7cfef8ee0d9b048f91bfaecc62b5c99105050362f40f51af4706de397\"\n",
+          "current": "          \"sha256\": \"9f013a12ec3c380175b7ba751dac5206a73633633fd163265ae6de68a4c3926f\"\n"
+        },
+        {
+          "start": 1433587,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 1433740,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1434733,
+          "previous": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n",
+          "current": "          \"sha256\": \"5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64\"\n"
+        },
+        {
+          "start": 1434899,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1435060,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1435231,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1438638,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1438799,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1439614,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1440472,
+          "previous": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n",
+          "current": "          \"sha256\": \"d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a\"\n"
+        },
+        {
+          "start": 1443633,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 1444465,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1444626,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1446137,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1446828,
+          "previous": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n",
+          "current": "          \"sha256\": \"d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a\"\n"
+        },
+        {
+          "start": 1447006,
+          "previous": "          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n",
+          "current": "          \"sha256\": \"20cb15f53d7bca6e54d86c0dfb8c1ef3956bd1bb0e8c1478a7f6a3261dfff5c0\"\n"
+        },
+        {
+          "start": 1447867,
+          "previous": "          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n",
+          "current": "          \"sha256\": \"6957eb0d57636069d8978497f0603727af13f9c7f5fb511b7c084849c363ab6d\"\n"
+        },
+        {
+          "start": 1451839,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1452000,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1452506,
+          "previous": "          \"sha256\": \"ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932\"\n",
+          "current": "          \"sha256\": \"14774583599bf910269dcc804681b2486ee9d3537339c9887ca0539c18386506\"\n"
+        },
+        {
+          "start": 1456354,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1457032,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1467557,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1489406,
+          "previous": "          \"sha256\": \"19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781\"\n",
+          "current": "          \"sha256\": \"8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e\"\n"
+        },
+        {
+          "start": 1489578,
+          "previous": "          \"sha256\": \"ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2\"\n",
+          "current": "          \"sha256\": \"99d9a29d48cceb14c9744d68595bedb4f46e47918ea2ef5241a5c394c7797c32\"\n"
+        },
+        {
+          "start": 1489731,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1490557,
+          "previous": "          \"sha256\": \"1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e\"\n",
+          "current": "          \"sha256\": \"5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64\"\n"
+        },
+        {
+          "start": 1490723,
+          "previous": "          \"sha256\": \"f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0\"\n",
+          "current": "          \"sha256\": \"99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb\"\n"
+        },
+        {
+          "start": 1490884,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1491055,
+          "previous": "          \"sha256\": \"9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc\"\n",
+          "current": "          \"sha256\": \"335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d\"\n"
+        },
+        {
+          "start": 1491409,
+          "previous": "          \"sha256\": \"37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c\"\n",
+          "current": "          \"sha256\": \"d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a\"\n"
+        },
+        {
+          "start": 1491769,
+          "previous": "          \"sha256\": \"c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d\"\n",
+          "current": "          \"sha256\": \"20cb15f53d7bca6e54d86c0dfb8c1ef3956bd1bb0e8c1478a7f6a3261dfff5c0\"\n"
+        },
+        {
+          "start": 1492282,
+          "previous": "          \"sha256\": \"dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245\"\n",
+          "current": "          \"sha256\": \"6957eb0d57636069d8978497f0603727af13f9c7f5fb511b7c084849c363ab6d\"\n"
+        },
+        {
+          "start": 1610326,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1610640,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1613857,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1614171,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1617648,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1617962,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1621368,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1621682,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1624754,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1625068,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1628608,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1628922,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1632482,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1632796,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1636540,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1636854,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1640430,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1640744,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1644305,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1644619,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1647949,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1648263,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1651690,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1652004,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1655510,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1655824,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1659330,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1659644,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1663150,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1663464,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1666897,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1667211,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1671242,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1671556,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1675599,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1675913,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1679964,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1680278,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1684514,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1684828,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1688268,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1688582,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1691941,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1692255,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1695455,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1695769,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1699131,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1699445,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1702862,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1703176,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1706488,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1706802,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1710040,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1710354,
+          "previous": "          \"sha256\": \"625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384\"\n",
+          "current": "          \"sha256\": \"6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e\"\n"
+        },
+        {
+          "start": 1713713,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1714364,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1719492,
+          "previous": "          \"sha256\": \"e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd\"\n",
+          "current": "          \"sha256\": \"72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88\"\n"
+        },
+        {
+          "start": 1720143,
+          "previous": "          \"sha256\": \"a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d\"\n",
+          "current": "          \"sha256\": \"5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160\"\n"
+        },
+        {
+          "start": 1909799,
+          "previous": "          \"sha256\": \"ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932\"\n",
+          "current": "          \"sha256\": \"14774583599bf910269dcc804681b2486ee9d3537339c9887ca0539c18386506\"\n"
+        }
+      ]
+    },
+    {
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "previousSha256": "19d637f6ad1031d8ca0ddb596a7fbb9d63c9e917932a672f884e4681dde63781",
+      "currentSha256": "8dddc9a483ada7f50b905e6c31eebe3957a0b07cce361c8de46e93c4f716041e",
+      "edits": [
+        {
+          "start": 9882,
+          "previous": "      \"properties\": { \"parameters\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/$defs/finRefinement\" } }, \"result\": { \"$ref\": \"#/$defs/finRefinement\" } }\n",
+          "current": "      \"properties\": { \"parameters\": { \"type\": \"array\", \"items\": { \"$ref\": \"#/$defs/refinement\" } }, \"result\": { \"$ref\": \"#/$defs/refinement\" } }\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/component-structured-callables.mjs",
+      "previousSha256": "ca1ba92c7d00f168d26b007b21c4add381b760f76685b0a55dfffca2d40b97e2",
+      "currentSha256": "99d9a29d48cceb14c9744d68595bedb4f46e47918ea2ef5241a5c394c7797c32",
+      "edits": [
+        {
+          "start": 3116,
+          "previous": "\tconst refinements = callbackRefinement(signature, signature.refinements);\n",
+          "current": "\tconst refinements = callbackRefinement(signature, signature.refinements, types);\n"
+        },
+        {
+          "start": 9192,
+          "previous": "\t\tif(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type)))) fail(\"callback refinement mismatch\");\n",
+          "current": "\t\tif(!same(ordered(expected.refinements ?? null), ordered(callbackDefinitionRefinement(type, ir.types)))) fail(\"callback refinement mismatch\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "625a02a7720c564d9832aa88a5fa4c2f8309db47a02512ba4096217b301df384",
+      "currentSha256": "6bb450a18f8f112f51a2a6e701e8033be66015ac2941e476c00c4c965540941e",
+      "edits": [
+        {
+          "start": 8548,
+          "previous": " * Validate Fin-only callback constraints against an erased callable signature.\n",
+          "current": " * Validate callback constraints against an erased callable signature. Copied\n * nominal Fin trees require the enclosing document's type definitions.\n"
+        },
+        {
+          "start": 8845,
+          "previous": "",
+          "current": " * @param types - Definitions used to authenticate copied nominal Fin trees.\n"
+        },
+        {
+          "start": 8926,
+          "previous": "export const callbackRefinement = (signature, value) => {\n",
+          "current": "export const callbackRefinement = (signature, value, types = []) => {\n"
+        },
+        {
+          "start": 9370,
+          "previous": "\tfor(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1);\n\tassertRefinement(value.result, signature.result, 1);\n",
+          "current": "\tconst structural = types.length > 0;\n\tconst definitions = types.map(definition => definition.source ? definition : {\n\t\t...definition\n\t\t, representation: \"copied\"\n\t\t, source: { declaration: definition.id?.startsWith(\"lean:\") ? definition.id.slice(5) : null, extensions: {} }\n\t});\n\tfor(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1, structural, definitions);\n\tassertRefinement(value.result, signature.result, 1, structural, definitions);\n"
+        },
+        {
+          "start": 10171,
+          "previous": "",
+          "current": " * @param types - Definitions used to authenticate copied nominal Fin trees.\n"
+        },
+        {
+          "start": 10252,
+          "previous": "export const callbackDefinitionRefinement = definition => callbackRefinement({\n",
+          "current": "export const callbackDefinitionRefinement = (definition, types = []) => callbackRefinement({\n"
+        },
+        {
+          "start": 10465,
+          "previous": "}, definition.source?.extensions?.[\"lean-lang.org/refinements\"]);\n",
+          "current": "}, definition.source?.extensions?.[\"lean-lang.org/refinements\"], types);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "previousSha256": "e030d459592eb3ec467a4b55d1a9bbae1fc9d354eed96cd63c8d8b02866fe7fd",
+      "currentSha256": "72e229b4a1bcf39b4840c5bcd8344a7d6df583873d2ebd94c4a4657e3d170e88",
+      "edits": [
+        {
+          "start": 628,
+          "previous": "",
+          "current": "\tif(refinement.kind === \"record\") return refinement.fields.forEach(field => finOnly(field.refinement));\n\tif(refinement.kind === \"variant\") return refinement.cases.forEach(branch => branch.fields.forEach(field => finOnly(field.refinement)));\n"
+        },
+        {
+          "start": 1144,
+          "previous": "",
+          "current": " * @param types - Reviewed definitions for copied nominal Fin trees.\n"
+        },
+        {
+          "start": 1217,
+          "previous": "export const assertReviewedFinCallback = definition => {\n",
+          "current": "export const assertReviewedFinCallback = (definition, types = []) => {\n"
+        },
+        {
+          "start": 1377,
+          "previous": "\tconst refinement = callbackDefinitionRefinement(definition);\n",
+          "current": "\tconst refinement = callbackDefinitionRefinement(definition, types);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/copied-validators.mjs",
+      "previousSha256": "1044c7d768d34a6f98b474983c94e4528572c2837824374ed03383081e77843e",
+      "currentSha256": "5e4e89255afaf89a1e580a0e5b84f90d4e38cdd23fa221135340c4759b984f64",
+      "edits": [
+        {
+          "start": 2714,
+          "previous": "\tconst wrappers = ir.types.filter(type => type.kind === \"callback\" && (constraints.size || callbackDefinitionRefinement(type))).map(type => {\n\t\tconst refinement = callbackDefinitionRefinement(type), call = type.callable;\n",
+          "current": "\tconst wrappers = ir.types.filter(type => type.kind === \"callback\" && (constraints.size || callbackDefinitionRefinement(type, ir.types))).map(type => {\n\t\tconst refinement = callbackDefinitionRefinement(type, ir.types), call = type.callable;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/javascript/generate.mjs",
+      "previousSha256": "f057d161f40d20e2afaca794fdcb485d507b819f3210b00484835d65dc675bb0",
+      "currentSha256": "99fa62c3bde6884feffee5da621e5fc119c77a6116962cb1b585cf142147f8bb",
+      "edits": [
+        {
+          "start": 21861,
+          "previous": "\t\t\treturn definition?.kind === \"callback\" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition))\n",
+          "current": "\t\t\treturn definition?.kind === \"callback\" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition, ir.types))\n"
+        },
+        {
+          "start": 24655,
+          "previous": "",
+          "current": "\t}) || ir.types.some(type => {\n\t\tconst value = type.kind === \"callback\" ? callbackDefinitionRefinement(type, ir.types) : null;\n\t\treturn value && [...value.parameters, value.result].some(nominal);\n"
+        },
+        {
+          "start": 27426,
+          "previous": "\t\t, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === \"callback\" && callbackDefinitionRefinement(type)) || ir.declarations.some(item => {\n",
+          "current": "\t\t, ...(nominalRefinementEntries(ir.types).length || ir.types.some(type => type.kind === \"callback\" && callbackDefinitionRefinement(type, ir.types)) || ir.declarations.some(item => {\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/compiler-adapters.mjs",
+      "previousSha256": "a7a6a1dbb6b207dcf03b29cc74ef47d4acf19b0d1db4d42f85131ff707fe652d",
+      "currentSha256": "5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160",
+      "edits": [
+        {
+          "start": 1274,
+          "previous": "import { componentStructuredCallableLeanSource, componentStructuredLeanType } from \"./component-structured-callable-lean.mjs\";\n",
+          "current": "import { componentStructuredCallableLeanSource, componentStructuredLeanType, componentStructuredRuntimeRefinements } from \"./component-structured-callable-lean.mjs\";\n"
+        },
+        {
+          "start": 16038,
+          "previous": "",
+          "current": "\tconst structuredRefinements = plan.privateAbi.version === componentStructuredCallableAbi\n\t\t? componentStructuredRuntimeRefinements(plan.privateAbi) : null;\n"
+        },
+        {
+          "start": 16906,
+          "previous": "\t\t\tif([...refinements.parameters, refinements.result].some(tree => hasComponentNominalRefinements(tree)) && plan.privateAbi.version !== componentRecursiveAbi)\n",
+          "current": "\t\t\tconst runtime = structuredRefinements ? structuredRefinements(item, refinements) : refinements;\n\t\t\tif(runtime && [...runtime.parameters, runtime.result].some(tree => hasComponentNominalRefinements(tree))\n\t\t\t\t&& plan.privateAbi.version !== componentRecursiveAbi)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-callable-adapters.mjs",
+      "previousSha256": "9069b7342c53a943cdb9e85f3a79943a6298772fb8699c0f5f85f9580ced6cbc",
+      "currentSha256": "335f28390fbdcabbaf4aa60cfa8732960d7bd2adb0e1062d7b3baab96b9fca4d",
+      "edits": [
+        {
+          "start": 3399,
+          "previous": "\tif(selectedNominal || document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, \"lean-lang.org/erased-proofs\")))\n",
+          "current": "\tif(document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, \"lean-lang.org/erased-proofs\")))\n"
+        },
+        {
+          "start": 3512,
+          "previous": "\t\tif(callbackTypes.length) throw new TypeError(selectedNominal\n\t\t\t? \"Nominal Subtype selections cannot share a component with callbacks yet\"\n\t\t\t: \"Checked records cannot share a component with callbacks yet\");\n",
+          "current": "\t\tif(callbackTypes.length) throw new TypeError(\"Checked records cannot share a component with callbacks yet\");\n"
+        },
+        {
+          "start": 4300,
+          "previous": "\tconst structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(callbackDefinitionRefinement)\n",
+          "current": "\tconst structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(type => callbackDefinitionRefinement(type, document.types))\n"
+        },
+        {
+          "start": 4805,
+          "previous": "\t\tconst refinements = callbackDefinitionRefinement(type);\n",
+          "current": "\t\tconst refinements = callbackDefinitionRefinement(type, document.types);\n"
+        },
+        {
+          "start": 6495,
+          "previous": "\tif(constrained && !callbacks.length)\n",
+          "current": "\tif((constrained || selectedNominal) && !callbacks.length)\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-fin-guards.mjs",
+      "previousSha256": "69a1bf34a928021cfa575673f78e01e0d53c08c25593dc897f9d831dd3cc9825",
+      "currentSha256": "97b018a35c4b069395f94741e280ba7418345ce55848a31509684ba5ab6d9089",
+      "edits": [
+        {
+          "start": 1401,
+          "previous": "",
+          "current": " * @param members - Collection membership binders needed by recursive termination proofs.\n"
+        },
+        {
+          "start": 1495,
+          "previous": "export const componentFinGuard = (tree, value, depth = 0, cycles = new Map()) => {\n",
+          "current": "export const componentFinGuard = (tree, value, depth = 0, cycles = new Map(), members = null) => {\n"
+        },
+        {
+          "start": 1982,
+          "previous": "\tconst child = (index, expression) => componentFinGuard(tree.arguments[index], expression, depth + 1, cycles);\n\tif([\"array\", \"list\"].includes(tree.kind)) return `(${input}.all (fun ${name} => ${child(0, name)}))`;\n",
+          "current": "\tconst child = (index, expression) => componentFinGuard(tree.arguments[index], expression, depth + 1, cycles, members);\n\tif([\"array\", \"list\"].includes(tree.kind))\n\t{\n\t\tmembers?.add(`${tree.kind}:${depth}`);\n\t\treturn `(${input}.attach.all (fun ⟨${name}, _bridgeFinMember${depth}⟩ => ${child(0, name)}))`;\n\t}\n"
+        },
+        {
+          "start": 2428,
+          "previous": "\tif(tree.kind === \"tuple\") return `(${conjunction([child(0, `${input}.fst`), child(1, `${input}.snd`)])})`;\n",
+          "current": "\tif(tree.kind === \"tuple\")\n\t{\n\t\tconst first = `_bridgeFinFirst${depth}`, second = `_bridgeFinSecond${depth}`;\n\t\treturn `(match ${input} with | (${first}, ${second}) => ${conjunction([child(0, first), child(1, second)])})`;\n\t}\n"
+        },
+        {
+          "start": 2790,
+          "previous": "",
+          "current": "const termination = members => [\"termination_by sizeOf value\"\n\t, \"decreasing_by\"\n\t, \"  all_goals\"\n\t, \"    try simp_all\"\n\t, ...[...members].sort((left, right) => {\n\t\tconst [leftKind, leftDepth] = left.split(\":\"), [rightKind, rightDepth] = right.split(\":\");\n\t\treturn Number(leftDepth) - Number(rightDepth) || leftKind.localeCompare(rightKind);\n\t}).map(item => {\n\t\tconst [kind, depth] = item.split(\":\");\n\t\tconst type = kind === \"array\" ? \"Array\" : \"List\";\n\t\treturn `    try have _bridgeFin${type}${depth} := _root_.${type}.sizeOf_lt_of_mem _bridgeFinMember${depth}`;\n\t})\n\t, \"    try simp_all\", \"    try omega\"];\n\n"
+        },
+        {
+          "start": 4278,
+          "previous": "\t\tif(!hasFin(tree, cycles)) return [];\n",
+          "current": "\t\tif(!hasFin(tree, cycles)) return null;\n\t\tconst members = new Set();\n"
+        },
+        {
+          "start": 4489,
+          "previous": "\t\t\tif(!recursiveRecord) return [header\n\t\t\t\t, `  ${conjunction(type.fields.map((field, index) => componentFinGuard(tree.arguments[index], `value.«${field.name}»`, 0, cycles)))}`\n\t\t\t\t, \"\"];\n",
+          "current": "\t\t\tif(!recursiveRecord) return { members\n\t\t\t\t, lines: [header\n\t\t\t\t\t, `  ${conjunction(type.fields.map((field, index) => componentFinGuard(tree.arguments[index], `value.«${field.name}»`, 0, cycles, members)))}`] };\n"
+        },
+        {
+          "start": 4784,
+          "previous": "\t\t\tconst checks = tree.arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles));\n\t\t\treturn [header, \"  match value with\", `  | ⟨${names.join(\", \")}⟩ => ${conjunction(checks)}`, \"\"];\n",
+          "current": "\t\t\tconst checks = tree.arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles, members));\n\t\t\treturn { members, lines: [header, \"  match value with\", `  | ⟨${names.join(\", \")}⟩ => ${conjunction(checks)}`] };\n"
+        },
+        {
+          "start": 5027,
+          "previous": "\t\treturn [header, \"  match value with\"\n\t\t\t, ...type.cases.map((branch, index) => {\n\t\t\t\tconst names = branch.fields.map((_, position) => `_bridgeFinField${position}`);\n\t\t\t\tconst checks = tree.cases[index].arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles));\n\t\t\t\treturn `  | .«${branch.name}» ${names.join(\" \")} => ${conjunction(checks)}`;\n\t\t\t})\n\t\t\t, \"\"];\n",
+          "current": "\t\treturn { members\n\t\t\t, lines: [header, \"  match value with\"\n\t\t\t\t, ...type.cases.map((branch, index) => {\n\t\t\t\t\tconst names = branch.fields.map((_, position) => `_bridgeFinField${position}`);\n\t\t\t\t\tconst checks = tree.cases[index].arguments.map((child, position) => componentFinGuard(child, names[position], 0, cycles, members));\n\t\t\t\t\treturn `  | .«${branch.name}» ${names.join(\" \")} => ${conjunction(checks)}`;\n\t\t\t\t})\n\t\t\t]\n\t\t};\n"
+        },
+        {
+          "start": 5458,
+          "previous": "",
+          "current": "\tconst finish = (definition, wellFounded) => [...definition.lines\n\t\t, ...(wellFounded ? termination(definition.members) : []), \"\"];\n"
+        },
+        {
+          "start": 5681,
+          "previous": "\t\t\tlines.push(...render(type, Boolean(trees.get(`lean:${type.lean}`)?.cycle)));\n",
+          "current": "\t\t\tconst recursive = Boolean(trees.get(`lean:${type.lean}`)?.cycle), definition = render(type, recursive);\n\t\t\tif(definition) lines.push(...finish(definition, recursive && definition.members.size > 0));\n"
+        },
+        {
+          "start": 6000,
+          "previous": "\t\tconst definitions = group.map(name => render(typeByName.get(name), true)).filter(body => body.length > 0);\n\t\tif(definitions.length) lines.push(\"mutual\", ...definitions.flat(), \"end\", \"\");\n",
+          "current": "\t\tconst definitions = group.map(name => render(typeByName.get(name), true)).filter(Boolean);\n\t\tconst wellFounded = definitions.some(definition => definition.members.size > 0);\n\t\tif(definitions.length) lines.push(\"mutual\", ...definitions.flatMap(definition => finish(definition, wellFounded)), \"end\", \"\");\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "previousSha256": "37355ed9dc8d8d5aa291fd6bde5d13b1010b77e96a81973152490835e0a5a01c",
+      "currentSha256": "d7f4116cc67b0d07406b84e3cdb20b70522b0a4d3dc846996fe9fce2b4db976a",
+      "edits": [
+        {
+          "start": 542,
+          "previous": "import { componentStructuredCallablePrefix, componentStructuredCopiedView } from \"./component-structured-callable-lean.mjs\";\n",
+          "current": "import { componentStructuredCallablePrefix, componentStructuredCopiedView, componentStructuredRuntimeRefinements } from \"./component-structured-callable-lean.mjs\";\n"
+        },
+        {
+          "start": 1500,
+          "previous": "\tconst constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);\n",
+          "current": "\tconst runtimeRefinements = componentStructuredRuntimeRefinements(abi);\n\tconst callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));\n\tconst constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);\n"
+        },
+        {
+          "start": 2673,
+          "previous": "\t\tconst refinements = closure ? signature.refinements?.parameters ?? [] : exports.find(value => value.bindingId === signature.bindingId)?.refinements?.parameters ?? [];\n",
+          "current": "\t\tconst refinements = closure ? callbackRefinements.get(signature.id)?.parameters ?? []\n\t\t\t: runtimeRefinements(signature, exports.find(value => value.bindingId === signature.bindingId)?.refinements)?.parameters ?? [];\n"
+        },
+        {
+          "start": 6020,
+          "previous": "\t\tconst symbol = prefix(signature);\n",
+          "current": "\t\tconst symbol = prefix(signature), refinements = callbackRefinements.get(signature.id);\n"
+        },
+        {
+          "start": 6173,
+          "previous": "\t\tif(signature.refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);\n",
+          "current": "\t\tif(refinements?.result) lines.push(`extern uint8_t ${symbol}_result_refinement_0(lean_object *);`);\n"
+        },
+        {
+          "start": 7944,
+          "previous": "\t\t\tif(signature.refinements?.result) lines.push(\"  if (!status) {\", \"    lean_inc(result);\"\n",
+          "current": "\t\t\tif(refinements?.result) lines.push(\"  if (!status) {\", \"    lean_inc(result);\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "c9203867763fdb97339cb69b6f38f914d3b9845c031399f16963ee519201287d",
+      "currentSha256": "20cb15f53d7bca6e54d86c0dfb8c1ef3956bd1bb0e8c1478a7f6a3261dfff5c0",
+      "edits": [
+        {
+          "start": 99,
+          "previous": "import { sha256 } from \"../capsule/node.mjs\";\n",
+          "current": "import { canonicalJson, sha256 } from \"../capsule/node.mjs\";\n"
+        },
+        {
+          "start": 705,
+          "previous": "",
+          "current": "import { hasComponentNominalRefinements } from \"./component-refinement-mirrors.mjs\";\n"
+        },
+        {
+          "start": 2438,
+          "previous": "",
+          "current": " * Remove nominal Fin trees already enforced by the copied graph codec. Direct\n * scalar and structural Fin refinements remain adapter checks; constructor-\n * selecting nominal trees remain visible so the unsupported route fails closed.\n *\n * @param abi - Authenticated structured callable descriptor.\n * @returns {(signature: object, value: (object | null | undefined)) => (object | null)} A signature-refinement sanitizer.\n */\nexport const componentStructuredRuntimeRefinements = abi => {\n\tassertComponentStructuredCallableAbi(abi);\n\tconst definitions = new Map(abi.types.map(type => [type.id, type]));\n\tconst constraints = new Map((abi.nominalRefinements ?? []).map(entry => [entry.id, entry.refinement]));\n\tconst combine = (left, right) => {\n\t\tif(left === null || left === undefined) return right ?? null;\n\t\tif(right === null || right === undefined) return left;\n\t\tif(canonicalJson(left) !== canonicalJson(right)) throw new TypeError(\"Conflicting callable nominal Fin refinements\");\n\t\treturn left;\n\t};\n\tconst visit = (tree, type, shared = null, seen = new Set()) => {\n\t\tif(tree === null || tree === undefined) return null;\n\t\tif(type.kind === \"named\")\n\t\t{\n\t\t\tconst definition = definitions.get(type.id);\n\t\t\tif(!definition || seen.has(type.id)) return tree;\n\t\t\tconst declared = constraints.get(type.id);\n\t\t\tconst own = definition.kind === \"alias\" ? declared?.target ?? null : declared ?? null;\n\t\t\tconst expected = combine(shared, own), inner = new Set([...seen, type.id]);\n\t\t\tif(definition.kind === \"alias\") return visit(tree, definition.target, expected, inner);\n\t\t\tif(definition.kind === \"record\" && tree.kind === \"record\")\n\t\t\t{\n\t\t\t\tconst fields = tree.fields.map((field, index) => ({ ...field\n\t\t\t\t\t, refinement: visit(field.refinement, definition.fields[index].type, expected?.kind === \"record\" ? expected.fields[index] : null, inner) }));\n\t\t\t\treturn fields.every(field => field.refinement === null) ? null : { ...tree, fields };\n\t\t\t}\n\t\t\tif(definition.kind === \"variant\" && tree.kind === \"variant\")\n\t\t\t{\n\t\t\t\tconst cases = tree.cases.map((branch, index) => ({ ...branch\n\t\t\t\t\t, fields: branch.fields.map((field, position) => ({ ...field\n\t\t\t\t\t\t, refinement: visit(field.refinement, definition.cases[index].fields[position].type\n\t\t\t\t\t\t\t, expected?.kind === \"variant\" ? expected.cases[index][position] : null, inner) })) }));\n\t\t\t\treturn cases.every(branch => branch.fields.every(field => field.refinement === null)) ? null : { ...tree, cases };\n\t\t\t}\n\t\t\treturn tree;\n\t\t}\n\t\tif(type.kind === \"apply\" && tree.kind === type.constructor)\n\t\t{\n\t\t\tconst expected = shared?.kind === tree.kind ? shared.arguments : [];\n\t\t\tconst arguments_ = tree.arguments.map((child, index) => visit(child, type.arguments[index], expected[index] ?? null, seen));\n\t\t\treturn arguments_.every(child => child === null) ? null : { ...tree, arguments: arguments_ };\n\t\t}\n\t\treturn shared !== null && canonicalJson(tree) === canonicalJson(shared) ? null : tree;\n\t};\n\treturn (signature, value) => {\n\t\tif(value === null || value === undefined) return null;\n\t\tconst parameters = value.parameters.map((tree, index) => visit(tree, signature.parameters[index]));\n\t\tconst result = visit(value.result, signature.result);\n\t\treturn parameters.some(Boolean) || result ? { parameters, result } : null;\n\t};\n};\n\n/**\n"
+        },
+        {
+          "start": 7725,
+          "previous": "\tconst constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);\n",
+          "current": "\tconst runtimeRefinements = componentStructuredRuntimeRefinements(abi);\n\tconst callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));\n\tfor(const value of callbackRefinements.values()) if(value && [...value.parameters, value.result].some(hasComponentNominalRefinements))\n\t\tthrow new TypeError(\"Nominal Subtype selections cannot share a component with callbacks yet\");\n\tconst constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);\n"
+        },
+        {
+          "start": 9026,
+          "previous": "\t\tconst refinements = signature.refinements;\n",
+          "current": "\t\tconst refinements = callbackRefinements.get(signature.id);\n"
+        },
+        {
+          "start": 11902,
+          "previous": "\tfor(const item of sourceExports)\n",
+          "current": "\tfor(const sourceItem of sourceExports)\n"
+        },
+        {
+          "start": 11945,
+          "previous": "",
+          "current": "\t\tconst signature = abi.exports.find(signature => signature.bindingId === sourceItem.bindingId);\n\t\tif(!signature || seen.has(sourceItem.bindingId) || sourceItem.symbol !== signature.symbol) throw new TypeError(\"Structured source export identity mismatch\");\n\t\tconst refinements = runtimeRefinements(signature, sourceItem.refinements);\n\t\tif(refinements && [...refinements.parameters, refinements.result].some(hasComponentNominalRefinements))\n\t\t\tthrow new TypeError(\"Nominal Subtype selections cannot share a component with callbacks yet\");\n\t\tconst base = { ...sourceItem };\n\t\tdelete base.refinements;\n\t\tconst item = refinements ? { ...base, refinements } : base;\n"
+        },
+        {
+          "start": 12680,
+          "previous": "\t\tconst signature = abi.exports.find(signature => signature.bindingId === item.bindingId);\n\t\tif(!signature || seen.has(item.bindingId) || item.symbol !== signature.symbol) throw new TypeError(\"Structured source export identity mismatch\");\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/component-structured-callable-contract.test.mjs",
+      "previousSha256": "dd6380bdf90b187233d0cf480ca6244f32575e7f85051e4bc8c7e44f2c97b245",
+      "currentSha256": "6957eb0d57636069d8978497f0603727af13f9c7f5fb511b7c084849c363ab6d",
+      "edits": [
+        {
+          "start": 6805,
+          "previous": "",
+          "current": "test(\"source-level nominal Fin trees share the structured callback ABI\", () => {\n\tconst ir = structuredCallableReviewedIr({ recursive: true });\n\tconst declaration = ir.declarations.find(item => item.name === \"callRecord\");\n\tconst payload = ir.types.find(type => type.id === \"lean:Structured.Payload\");\n\tconst callback = ir.types.find(type => type.kind === \"callback\" && type.callable.parameters.length === 1\n\t\t&& type.callable.parameters[0].type.id === payload.id);\n\tpayload.source.extensions[\"lean-lang.org/nominal-refinements\"] = { kind: \"record\"\n\t\t, fields: payload.fields.map(field => field.name === \"count\" ? { kind: \"fin\", bound: \"3\" } : null) };\n\tconst selected = () => ({ kind: \"record\", name: \"Structured.Payload\"\n\t\t, fields: payload.fields.map(field => ({ name: field.name\n\t\t\t, refinement: field.name === \"count\"\n\t\t\t\t? { kind: \"fin\", bound: \"3\" } : null })) });\n\tcallback.source.extensions[\"lean-lang.org/refinements\"] = { parameters: [selected()], result: selected() };\n\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [selected(), null], result: selected()\n\t};\n\tconst generated = plan(ir), abi = generated.plan.privateAbi;\n\tassert.equal(abi.version, 9);\n\tassert.equal(abi.dispatch, \"copied-callable-frame-v1\");\n\tassert.ok(abi.callbacks.length > 0);\n\tassert.deepEqual(abi.callbacks.find(type => type.id === callback.id).refinements\n\t\t, callback.source.extensions[\"lean-lang.org/refinements\"]);\n\tassert.equal(abi.nominalRefinements.length, 1);\n\tassertComponentStructuredCallableBindings(abi, ir);\n\tassert.doesNotMatch(generated.files[\"LeanBridgeGenerated.lean\"], /LbErased\\.undefined/u);\n\tassert.match(generateJavaScriptPackage(ir)[\"internal/validators.mjs\"], /refinement\\.kind === 'record'/u);\n\tconst c = generateComponentStructuredCallableAdapters(abi, generated.plan.exports);\n\tconst symbol = abi.exports.find(item => item.bindingId === declaration.id).symbol;\n\tassert.doesNotMatch(c, new RegExp(`${symbol}_refinement_0`, \"u\"));\n});\n\ntest(\"structured callbacks still reject constructor-selected nominal trees\", () => {\n\tconst ir = structuredCallableReviewedIr({ recursive: true });\n\tconst payload = ir.types.find(type => type.id === \"lean:Structured.Payload\");\n\tconst callback = ir.types.find(type => type.kind === \"callback\" && type.callable.parameters.length === 1\n\t\t&& type.callable.parameters[0].type.id === payload.id);\n\tconst selected = () => ({ kind: \"record\", name: \"Structured.Payload\"\n\t\t, fields: payload.fields.map(field => ({ name: field.name\n\t\t\t, refinement: field.name === \"count\"\n\t\t\t\t? { kind: \"subtype\", constructor: \"Structured.checkedCount\" } : null })) });\n\tcallback.source.extensions[\"lean-lang.org/refinements\"] = { parameters: [selected()], result: selected() };\n\tassert.throws(() => plan(ir), /Nominal Subtype selections cannot share a component with callbacks yet/u);\n});\n\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "81af9da3221a35dae6aad5ecf88c4bc2c57a41612a301e1bb63ed0a8a05648e3",
+      "currentSha256": "e9e62b270e14e887e044a351da17fe301abfb67e152634c860093455f0b9661d",
+      "edits": [
+        {
+          "start": 931,
+          "previous": "",
+          "current": "\tbeforeDownstreamFinCiRepairHistoricalSource\n\t, beforeDownstreamFinCiRepairSource\n\t, downstreamFinCiRepairAddedPaths\n\t, downstreamFinCiRepairChangedPaths\n\t, downstreamFinCiRepairHistoricalPaths\n\t, downstreamFinCiRepairHistoryPath\n\t, downstreamFinCiRepairPredecessor\n\t, downstreamFinCiRepairPriorPinRepairs\n\t, downstreamFinCiRepairRerunEvidence\n\t, reverseDownstreamFinCiRepairUpdate\n} from \"./downstream-fin-ci-repair-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 10889,
+          "previous": "",
+          "current": "test(\"downstream Fin CI repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tdownstreamFinCiRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"downstream-fin-ci-repair-source-v1\");\n\tassert.equal(record.predecessorCommit, downstreamFinCiRepairPredecessor);\n\tassert.equal(record.draftParentCommit, downstreamFinCiRepairPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, downstreamFinCiRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, downstreamFinCiRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tdownstreamFinCiRepairChangedPaths)));\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeDownstreamFinCiRepairSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${downstreamFinCiRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseDownstreamFinCiRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeDownstreamFinCiRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeDownstreamFinCiRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeDownstreamFinCiRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update);\n\t\t\tmutate(changed);\n\t\t\tassert.throws(() => reverseDownstreamFinCiRepairUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${downstreamFinCiRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"downstream Fin CI repair restores the two missing attributes transitions\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tdownstreamFinCiRepairHistoryPath, \"utf8\"));\n\tassert.deepEqual(downstreamFinCiRepairHistoricalPaths, [\".gitattributes\"]);\n\tassert.deepEqual(record.historicalTransitions.map(transition =>\n\t\ttransition.commit.slice(0, 7)\n\t), [\"3546146\", \"41f0469\"]);\n\tfor(const transition of record.historicalTransitions)\n\t{\n\t\tassert.equal(git([\"rev-parse\", `${transition.commit}^`]).trim()\n\t\t\t, transition.predecessorCommit);\n\t\tfor(const update of transition.updates)\n\t\t{\n\t\t\tconst current = git([\"show\", `${transition.commit}:${update.path}`]);\n\t\t\tconst previous = git([\"show\"\n\t\t\t\t, `${transition.predecessorCommit}:${update.path}`]);\n\t\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\t\tassert.equal(sha256(beforeDownstreamFinCiRepairHistoricalSource(\n\t\t\t\tupdate.path, current, update.previousSha256\n\t\t\t)), update.previousSha256, update.path);\n\t\t}\n\t}\n\tconst path = \".gitattributes\";\n\tconst live = await readFile(path, \"utf8\");\n\tconst commits = git([\"log\", \"--format=%H\"\n\t\t, downstreamFinCiRepairPredecessor, \"--\", path])\n\t\t.trim().split(\"\\n\").filter(Boolean);\n\tassert.equal(commits.length, 21);\n\tconst excluded = new Set([\"a46d3db\", \"9baf9e6\", \"6de043f\"]);\n\tlet reached = 0;\n\tfor(const commit of commits)\n\t{\n\t\tconst expected = sha256(git([\"show\", `${commit}:${path}`]));\n\t\tconst actual = sha256(beforeFinRefinementSource(path, live, expected));\n\t\tif(excluded.has(commit.slice(0, 7))) assert.notEqual(actual, expected);\n\t\telse\n\t\t{\n\t\t\tassert.equal(actual, expected, commit);\n\t\t\treached++;\n\t\t}\n\t}\n\tassert.equal(reached, 18);\n});\n\ntest(\"downstream Fin CI repair refreshes exact pins and names the two locally rerun observations\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tdownstreamFinCiRepairHistoryPath, \"utf8\"));\n\tassert.deepEqual(downstreamFinCiRepairRerunEvidence\n\t\t, [\"npm-callback-fin-installed\", \"npm-nominal-fin-installed\"]);\n\tassert.equal(record.pinCount, 141);\n\tassert.equal(record.pinCount, record.pinUpdates.reduce(\n\t\t(total, item) => total + item.count, 0));\n\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tconst source = await sourceAtFinHistoryMilestone(\n\t\tinventoryUpdate.path, inventoryUpdate.currentSha256\n\t\t, beforeDownstreamFinCiRepairSource);\n\tconst current = JSON.parse(source);\n\tconst previous = JSON.parse(beforeDownstreamFinCiRepairSource(\n\t\tinventoryUpdate.path, source));\n\tconst pins = new Map(record.pinUpdates.map(item => [item.path, item]));\n\tconst observed = new Map();\n\tlet changed = 0;\n\tfor(const [index, before] of previous.evidence.entries())\n\t{\n\t\tconst after = current.evidence[index];\n\t\tassert.equal(after.id, before.id);\n\t\tassert.deepEqual({ ...after, files: undefined }\n\t\t\t, { ...before, files: undefined }, after.id);\n\t\tfor(const [position, previousFile] of before.files.entries())\n\t\t{\n\t\t\tconst currentFile = after.files[position];\n\t\t\tassert.equal(currentFile.path, previousFile.path, after.id);\n\t\t\tif(currentFile.sha256 === previousFile.sha256) continue;\n\t\t\tconst pin = pins.get(currentFile.path);\n\t\t\tassert.equal(previousFile.sha256, pin.previousSha256);\n\t\t\tassert.equal(currentFile.sha256, pin.currentSha256);\n\t\t\tobserved.set(currentFile.path\n\t\t\t\t, (observed.get(currentFile.path) ?? 0) + 1);\n\t\t\tchanged++;\n\t\t}\n\t}\n\tassert.equal(changed, record.pinCount);\n\tfor(const pin of record.pinUpdates)\n\t\tassert.equal(observed.get(pin.path), pin.count, pin.path);\n\tconst priorPaths = new Set(downstreamFinCiRepairPriorPinRepairs.map(\n\t\trepair => repair.path\n\t));\n\tconst repairedPins = record.pinUpdates.filter(pin =>\n\t\tpriorPaths.has(pin.path));\n\tconst expectedRepairs = downstreamFinCiRepairPriorPinRepairs.map(\n\t\trepair => ({ ...repair, count: 2 })\n\t);\n\tassert.deepEqual(repairedPins, expectedRepairs);\n\tfor(const repair of downstreamFinCiRepairPriorPinRepairs)\n\t{\n\t\tconst live = await readFile(repair.path, \"utf8\");\n\t\tassert.equal(sha256(live), repair.currentSha256);\n\t\tassert.equal(sha256(beforeFinRefinementSource(\n\t\t\trepair.path, live, repair.previousSha256\n\t\t)), repair.previousSha256);\n\t}\n});\n\ntest(\"reviewed Fin browser readiness has a load-specific sixty-second budget\", async () => {\n\tconst source = await readFile(\"tests/helpers/type-corpus-browser.mjs\", \"utf8\");\n\tassert.match(source, /const browserReadyTimeoutMs = 60_000;/u);\n\tassert.match(source, /\\.waitFor\\(\\{ timeout: browserReadyTimeoutMs \\}\\)/u);\n});\n\n"
+        },
+        {
+          "start": 21144,
+          "previous": "",
+          "current": "\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n});\n\ntest(\"downstream Fin CI repair writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-downstream-fin-ci-repair-guard-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-downstream-fin-ci-repair-history.mjs\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-refinement-mirrors-source-tests.mjs",
+      "previousSha256": "cc1cabd1d617ca8cd08f43dc1f77bd4da10f7e07b16b7c7a70bac93d80c7c60b",
+      "currentSha256": "4c9e2792fb718e3b2863a74679143807387feca18378fc055a42248b685d6e92",
+      "edits": [
+        {
+          "start": 675,
+          "previous": "",
+          "current": "import { componentNominalFinGuards } from \"../../src/build/component-fin-guards.mjs\";\n"
+        },
+        {
+          "start": 2704,
+          "previous": "",
+          "current": "\tconst cycle = \"guard-tree-cycle\", recursiveGuard = { kind: \"recursive\", definition: \"GuardTree\", cycle };\n\tconst guardTree = { kind: \"variant\", definition: \"GuardTree\", cycle\n\t, cases: [\n\t\t{ name: \"leaf\", arguments: [{ kind: \"fin\", bound: \"5\" }] }\n\t\t, { name: \"array\", arguments: [{ kind: \"array\", arguments: [recursiveGuard] }] }\n\t\t, { name: \"list\", arguments: [{ kind: \"list\", arguments: [recursiveGuard] }] }\n\t\t, { name: \"nested\", arguments: [{ kind: \"array\", arguments: [{ kind: \"list\", arguments: [recursiveGuard] }] }] }\n\t\t, { name: \"arrayOption\", arguments: [{ kind: \"array\", arguments: [{ kind: \"option\", arguments: [recursiveGuard] }] }] }\n\t\t, { name: \"paired\", arguments: [{ kind: \"tuple\", arguments: [null, recursiveGuard] }] }\n\t\t, { name: \"result\", arguments: [{ kind: \"result\", arguments: [recursiveGuard, recursiveGuard] }] }\n\t] };\n\tconst guardType = { kind: \"variant\"\n\t\t, lean: \"GuardTree\"\n\t\t, cases: guardTree.cases.map(branch => ({ name: branch.name\n\t\t\t, fields: branch.arguments.map((_, index) => ({ name: `value${index}` })) })) };\n\tconst rightTree = { kind: \"variant\", definition: \"GuardRight\"\n\t, cases: [\n\t\t{ name: \"stop\", arguments: [{ kind: \"fin\", bound: \"3\" }] }\n\t\t, { name: \"more\", arguments: [{ kind: \"recursive\", definition: \"GuardLeft\", cycle: \"guard-mutual-cycle\" }] }\n\t] };\n\tconst leftTree = { kind: \"record\"\n\t\t, definition: \"GuardLeft\"\n\t\t, cycle: \"guard-mutual-cycle\"\n\t\t, arguments: [{ kind: \"array\", arguments: [rightTree] }] };\n\tconst guardLines = componentNominalFinGuards([guardType], new Map([[\"lean:GuardTree\", guardTree]])\n\t\t, new Map([[cycle, guardTree]]));\n\tconst mutualGuardLines = componentNominalFinGuards([\n\t\t{ kind: \"record\", lean: \"GuardLeft\", fields: [{ name: \"next\" }] }\n\t\t, { kind: \"variant\", lean: \"GuardRight\"\n\t\t, cases: [\n\t\t\t{ name: \"stop\", fields: [{ name: \"digit\" }] }\n\t\t\t, { name: \"more\", fields: [{ name: \"left\" }] }\n\t\t] }\n\t], new Map([[\"lean:GuardLeft\", leftTree], [\"lean:GuardRight\", rightTree]])\n\t, new Map([[\"guard-mutual-cycle\", leftTree]]), [[\"GuardLeft\", \"GuardRight\"]]);\n\tconst guardSource = [\"import ComponentMirrors\"\n\t\t, \"namespace Carriers\"\n\t\t, \"namespace LbErased\"\n\t\t, \"inductive GuardTree where\"\n\t\t, \"  | leaf (value : Nat)\"\n\t\t, \"  | array (value : Array GuardTree)\"\n\t\t, \"  | list (value : List GuardTree)\"\n\t\t, \"  | nested (value : Array (List GuardTree))\"\n\t\t, \"  | arrayOption (value : Array (Option GuardTree))\"\n\t\t, \"  | paired (value : Nat × GuardTree)\"\n\t\t, \"  | result (value : Except GuardTree GuardTree)\"\n\t\t, \"mutual\"\n\t\t, \"structure GuardLeft where\"\n\t\t, \"  next : Array GuardRight\"\n\t\t, \"inductive GuardRight where\"\n\t\t, \"  | stop (digit : Nat)\"\n\t\t, \"  | more (left : GuardLeft)\"\n\t\t, \"end\"\n\t\t, \"end LbErased\"\n\t\t, \"\"\n\t\t, ...guardLines, ...mutualGuardLines\n\t\t, \"example : LbErased.GuardTree.validFin (.array #[.leaf 4]) = true := by native_decide\"\n\t\t, \"example : LbErased.GuardTree.validFin (.nested #[[.leaf 5]]) = false := by native_decide\"\n\t\t, \"example : LbErased.GuardLeft.validFin ⟨#[.stop 2]⟩ = true := by native_decide\"\n\t\t, \"example : LbErased.GuardLeft.validFin ⟨#[.more ⟨#[.stop 3]⟩]⟩ = false := by native_decide\"\n\t\t, \"end Carriers\", \"\"].join(\"\\n\");\n\tassert.match(guardSource, /\\.attach\\.all \\(fun ⟨_bridgeFinValue0, _bridgeFinMember0⟩/u);\n\tassert.match(guardSource, /termination_by sizeOf value[\\s\\S]*Array\\.sizeOf_lt_of_mem _bridgeFinMember0[\\s\\S]*try omega/u);\n\tassert.doesNotMatch(guardSource, /\\b(?:sorry|axiom|unsafe|partial|unsafeCast|defaultValue)\\b/u);\n\tawait writeFile(join(directory, \"GeneratedFinGuard.lean\"), guardSource);\n\tconst guardResult = await run([\"-c\", \"GeneratedFinGuard.c\", \"GeneratedFinGuard.lean\"]);\n\tobservations.push({ route: \"recursive-fin-guards\"\n\t\t, checks: 4\n\t\t, sourceSha256: sha256(guardSource)\n\t\t, cSha256: sha256(await readFile(join(directory, \"GeneratedFinGuard.c\")))\n\t\t, stdout: guardResult.stdout, stderr: guardResult.stderr });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cdf3e5805cb624631edcf4b156b1ab943ae153a8c9157ad727003b7540e6a7fd",
+      "currentSha256": "89a4b77df7cc7509f1185c090b350d7f433439a1e572cb74207decd2be080122",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeDownstreamFinCiRepairHistoricalSource, beforeDownstreamFinCiRepairSource, downstreamFinCiRepairChangedPaths, downstreamFinCiRepairHistoricalPaths } from \"./downstream-fin-ci-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 77857,
+          "previous": "",
+          "current": "\tsource = beforeDownstreamFinCiRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 79411,
+          "previous": "",
+          "current": "\tsource = beforeDownstreamFinCiRepairHistoricalSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 87829,
+          "previous": "\t// These native PHP registrations predate the native PHP promotion ledger.\n",
+          "current": ""
+        },
+        {
+          "start": 87953,
+          "previous": "",
+          "current": "\t// These native PHP registrations predate the native PHP promotion ledger.\n"
+        },
+        {
+          "start": 88428,
+          "previous": "\t// These .NET registrations predate the .NET promotion ledger.\n",
+          "current": ""
+        },
+        {
+          "start": 88552,
+          "previous": "",
+          "current": "\t// These .NET registrations predate the .NET promotion ledger.\n"
+        },
+        {
+          "start": 91819,
+          "previous": "\t...historyHubReachabilityRepairChangedPaths\n",
+          "current": "\t...downstreamFinCiRepairChangedPaths\n\t, ...downstreamFinCiRepairHistoricalPaths\n\t, ...historyHubReachabilityRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-consumer-ci-repair-source-history-tests.mjs",
+      "previousSha256": "a022188db149c679ec20350ad14ebb8725d6c6fdeddd43f6d5671ef0fe17f544",
+      "currentSha256": "e6a800ebb245a83f523a0431277fdd388718538daf4dba65496eb57a872c7f6b",
+      "edits": [
+        {
+          "start": 367,
+          "previous": "import { beforePhpWasmFinPromotionSource } from \"./php-wasm-fin-promotion-source-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 576,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1076,
+          "previous": "\t\tconst source = beforePhpWasmFinPromotionSource(update.path, await readFile(update.path, \"utf8\"));\n",
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeNativeConsumerCiRepairSource\n\t\t);\n"
+        },
+        {
+          "start": 2086,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", text = beforePhpWasmFinPromotionSource(path, await readFile(path, \"utf8\"));\n\tconst document = JSON.parse(text), previous = JSON.parse(beforeNativeConsumerCiRepairSource(path, text));\n",
+          "current": ""
+        },
+        {
+          "start": 2251,
+          "previous": "",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", inventory = byPath.get(path);\n\tconst text = await sourceAtFinHistoryMilestone(path, inventory.currentSha256, beforeNativeConsumerCiRepairSource);\n\tconst document = JSON.parse(text), previous = JSON.parse(beforeNativeConsumerCiRepairSource(path, text));\n"
+        },
+        {
+          "start": 2744,
+          "previous": "\t\t\tassert.equal(sha256(beforePhpWasmFinPromotionSource(file.path, await readFile(file.path, \"utf8\"))), update.currentSha256);\n",
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\tfile.path, update.currentSha256, beforeNativeConsumerCiRepairSource\n\t\t\t)), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/type-corpus-browser.mjs",
+      "previousSha256": "ca503281cfeed8d7968cc866fdb5ee8b0728a6efbc5f79acef4fcf992bf6f932",
+      "currentSha256": "14774583599bf910269dcc804681b2486ee9d3537339c9887ca0539c18386506",
+      "edits": [
+        {
+          "start": 891,
+          "previous": "",
+          "current": "const browserReadyTimeoutMs = 60_000;\n"
+        },
+        {
+          "start": 1818,
+          "previous": "\tawait page.locator('#result[data-status=\"ready\"], #result[data-status=\"error\"]').waitFor();\n",
+          "current": "\tawait page.locator('#result[data-status=\"ready\"], #result[data-status=\"error\"]').waitFor({ timeout: browserReadyTimeoutMs });\n"
+        }
+      ]
+    }
+  ]
+}

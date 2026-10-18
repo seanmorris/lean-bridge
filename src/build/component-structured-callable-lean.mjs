@@ -3,12 +3,13 @@
  *
  * @file
  */
-import { sha256 } from "../capsule/node.mjs";
+import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
+import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -39,6 +40,66 @@ export const componentStructuredLeanType = (type, callbacks = new Map(), refinem
 	if(type.constructor === "tuple") return `(${children.join(" × ")})`;
 	if(type.constructor === "result") return `(_root_.Except ${children[1]} ${children[0]})`;
 	return `(_root_.${{ array: "Array", list: "List", option: "Option" }[type.constructor]} ${children[0]})`;
+};
+
+/**
+ * Remove nominal Fin trees already enforced by the copied graph codec. Direct
+ * scalar and structural Fin refinements remain adapter checks; constructor-
+ * selecting nominal trees remain visible so the unsupported route fails closed.
+ *
+ * @param abi - Authenticated structured callable descriptor.
+ * @returns {(signature: object, value: (object | null | undefined)) => (object | null)} A signature-refinement sanitizer.
+ */
+export const componentStructuredRuntimeRefinements = abi => {
+	assertComponentStructuredCallableAbi(abi);
+	const definitions = new Map(abi.types.map(type => [type.id, type]));
+	const constraints = new Map((abi.nominalRefinements ?? []).map(entry => [entry.id, entry.refinement]));
+	const combine = (left, right) => {
+		if(left === null || left === undefined) return right ?? null;
+		if(right === null || right === undefined) return left;
+		if(canonicalJson(left) !== canonicalJson(right)) throw new TypeError("Conflicting callable nominal Fin refinements");
+		return left;
+	};
+	const visit = (tree, type, shared = null, seen = new Set()) => {
+		if(tree === null || tree === undefined) return null;
+		if(type.kind === "named")
+		{
+			const definition = definitions.get(type.id);
+			if(!definition || seen.has(type.id)) return tree;
+			const declared = constraints.get(type.id);
+			const own = definition.kind === "alias" ? declared?.target ?? null : declared ?? null;
+			const expected = combine(shared, own), inner = new Set([...seen, type.id]);
+			if(definition.kind === "alias") return visit(tree, definition.target, expected, inner);
+			if(definition.kind === "record" && tree.kind === "record")
+			{
+				const fields = tree.fields.map((field, index) => ({ ...field
+					, refinement: visit(field.refinement, definition.fields[index].type, expected?.kind === "record" ? expected.fields[index] : null, inner) }));
+				return fields.every(field => field.refinement === null) ? null : { ...tree, fields };
+			}
+			if(definition.kind === "variant" && tree.kind === "variant")
+			{
+				const cases = tree.cases.map((branch, index) => ({ ...branch
+					, fields: branch.fields.map((field, position) => ({ ...field
+						, refinement: visit(field.refinement, definition.cases[index].fields[position].type
+							, expected?.kind === "variant" ? expected.cases[index][position] : null, inner) })) }));
+				return cases.every(branch => branch.fields.every(field => field.refinement === null)) ? null : { ...tree, cases };
+			}
+			return tree;
+		}
+		if(type.kind === "apply" && tree.kind === type.constructor)
+		{
+			const expected = shared?.kind === tree.kind ? shared.arguments : [];
+			const arguments_ = tree.arguments.map((child, index) => visit(child, type.arguments[index], expected[index] ?? null, seen));
+			return arguments_.every(child => child === null) ? null : { ...tree, arguments: arguments_ };
+		}
+		return shared !== null && canonicalJson(tree) === canonicalJson(shared) ? null : tree;
+	};
+	return (signature, value) => {
+		if(value === null || value === undefined) return null;
+		const parameters = value.parameters.map((tree, index) => visit(tree, signature.parameters[index]));
+		const result = visit(value.result, signature.result);
+		return parameters.some(Boolean) || result ? { parameters, result } : null;
+	};
 };
 
 /**
@@ -81,7 +142,11 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const carrier = type => `(_root_.Array ${componentStructuredLeanType(type, callbacks)})`;
 	const nominalRefinements = abi.nominalRefinements ?? [];
-	const constrained = nominalRefinements.length > 0 || abi.callbacks.some(type => type.refinements);
+	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
+	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
+	for(const value of callbackRefinements.values()) if(value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
+		throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
+	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
 	const lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType, nominalRefinements), ...defaults.declarations];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), `  pure (${body})`, ")"];
@@ -91,7 +156,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const closure = carrier({ kind: "named", id: signature.id });
-		const refinements = signature.refinements;
+		const refinements = callbackRefinements.get(signature.id);
 		const fallback = defaults.expression(signature.result, refinements?.result);
 		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
 			symbol
@@ -130,11 +195,17 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	}
 	if(sourceExports.length !== abi.exports.length) throw new TypeError("Structured source export count mismatch");
 	const seen = new Set();
-	for(const item of sourceExports)
+	for(const sourceItem of sourceExports)
 	{
+		const signature = abi.exports.find(signature => signature.bindingId === sourceItem.bindingId);
+		if(!signature || seen.has(sourceItem.bindingId) || sourceItem.symbol !== signature.symbol) throw new TypeError("Structured source export identity mismatch");
+		const refinements = runtimeRefinements(signature, sourceItem.refinements);
+		if(refinements && [...refinements.parameters, refinements.result].some(hasComponentNominalRefinements))
+			throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
+		const base = { ...sourceItem };
+		delete base.refinements;
+		const item = refinements ? { ...base, refinements } : base;
 		lines.push(...componentCarrierRefinementValidators(item, constrained));
-		const signature = abi.exports.find(signature => signature.bindingId === item.bindingId);
-		if(!signature || seen.has(item.bindingId) || item.symbol !== signature.symbol) throw new TypeError("Structured source export identity mismatch");
 		seen.add(item.bindingId);
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");

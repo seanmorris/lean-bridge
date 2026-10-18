@@ -139,7 +139,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": ["parameters", "result"],
-      "properties": { "parameters": { "type": "array", "items": { "$ref": "#/$defs/finRefinement" } }, "result": { "$ref": "#/$defs/finRefinement" } }
+      "properties": { "parameters": { "type": "array", "items": { "$ref": "#/$defs/refinement" } }, "result": { "$ref": "#/$defs/refinement" } }
     },
     "refinements": {
       "type": "object",

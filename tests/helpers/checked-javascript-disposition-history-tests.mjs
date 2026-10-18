@@ -22,6 +22,18 @@ import {
 } from "./checked-javascript-disposition-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import {
+	beforeDownstreamFinCiRepairHistoricalSource
+	, beforeDownstreamFinCiRepairSource
+	, downstreamFinCiRepairAddedPaths
+	, downstreamFinCiRepairChangedPaths
+	, downstreamFinCiRepairHistoricalPaths
+	, downstreamFinCiRepairHistoryPath
+	, downstreamFinCiRepairPredecessor
+	, downstreamFinCiRepairPriorPinRepairs
+	, downstreamFinCiRepairRerunEvidence
+	, reverseDownstreamFinCiRepairUpdate
+} from "./downstream-fin-ci-repair-source-history.mjs";
+import {
 	beforeHistoryHubReachabilityRepairSource
 	, historyHubReachabilityRepairAddedPaths
 	, historyHubReachabilityRepairChangedPaths
@@ -240,6 +252,173 @@ test("history-hub reachability repair has one exact reversible lineage", async (
 	}
 });
 
+test("downstream Fin CI repair has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		downstreamFinCiRepairHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "downstream-fin-ci-repair-source-v1");
+	assert.equal(record.predecessorCommit, downstreamFinCiRepairPredecessor);
+	assert.equal(record.draftParentCommit, downstreamFinCiRepairPredecessor);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, downstreamFinCiRepairChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, downstreamFinCiRepairAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		downstreamFinCiRepairChangedPaths)));
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeDownstreamFinCiRepairSource);
+		const previous = git(["show"
+			, `${downstreamFinCiRepairPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseDownstreamFinCiRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeDownstreamFinCiRepairSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeDownstreamFinCiRepairSource(
+			update.path, current, update.currentSha256), current, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeDownstreamFinCiRepairSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits = []; }
+			, item => { item.edits[0].start = -1; }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update);
+			mutate(changed);
+			assert.throws(() => reverseDownstreamFinCiRepairUpdate(
+				current, changed));
+		}
+	}
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${downstreamFinCiRepairPredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("downstream Fin CI repair restores the two missing attributes transitions", async () => {
+	const record = JSON.parse(await readFile(
+		downstreamFinCiRepairHistoryPath, "utf8"));
+	assert.deepEqual(downstreamFinCiRepairHistoricalPaths, [".gitattributes"]);
+	assert.deepEqual(record.historicalTransitions.map(transition =>
+		transition.commit.slice(0, 7)
+	), ["3546146", "41f0469"]);
+	for(const transition of record.historicalTransitions)
+	{
+		assert.equal(git(["rev-parse", `${transition.commit}^`]).trim()
+			, transition.predecessorCommit);
+		for(const update of transition.updates)
+		{
+			const current = git(["show", `${transition.commit}:${update.path}`]);
+			const previous = git(["show"
+				, `${transition.predecessorCommit}:${update.path}`]);
+			assert.equal(sha256(current), update.currentSha256, update.path);
+			assert.equal(sha256(previous), update.previousSha256, update.path);
+			assert.equal(sha256(beforeDownstreamFinCiRepairHistoricalSource(
+				update.path, current, update.previousSha256
+			)), update.previousSha256, update.path);
+		}
+	}
+	const path = ".gitattributes";
+	const live = await readFile(path, "utf8");
+	const commits = git(["log", "--format=%H"
+		, downstreamFinCiRepairPredecessor, "--", path])
+		.trim().split("\n").filter(Boolean);
+	assert.equal(commits.length, 21);
+	const excluded = new Set(["a46d3db", "9baf9e6", "6de043f"]);
+	let reached = 0;
+	for(const commit of commits)
+	{
+		const expected = sha256(git(["show", `${commit}:${path}`]));
+		const actual = sha256(beforeFinRefinementSource(path, live, expected));
+		if(excluded.has(commit.slice(0, 7))) assert.notEqual(actual, expected);
+		else
+		{
+			assert.equal(actual, expected, commit);
+			reached++;
+		}
+	}
+	assert.equal(reached, 18);
+});
+
+test("downstream Fin CI repair refreshes exact pins and names the two locally rerun observations", async () => {
+	const record = JSON.parse(await readFile(
+		downstreamFinCiRepairHistoryPath, "utf8"));
+	assert.deepEqual(downstreamFinCiRepairRerunEvidence
+		, ["npm-callback-fin-installed", "npm-nominal-fin-installed"]);
+	assert.equal(record.pinCount, 141);
+	assert.equal(record.pinCount, record.pinUpdates.reduce(
+		(total, item) => total + item.count, 0));
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	const source = await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
+		, beforeDownstreamFinCiRepairSource);
+	const current = JSON.parse(source);
+	const previous = JSON.parse(beforeDownstreamFinCiRepairSource(
+		inventoryUpdate.path, source));
+	const pins = new Map(record.pinUpdates.map(item => [item.path, item]));
+	const observed = new Map();
+	let changed = 0;
+	for(const [index, before] of previous.evidence.entries())
+	{
+		const after = current.evidence[index];
+		assert.equal(after.id, before.id);
+		assert.deepEqual({ ...after, files: undefined }
+			, { ...before, files: undefined }, after.id);
+		for(const [position, previousFile] of before.files.entries())
+		{
+			const currentFile = after.files[position];
+			assert.equal(currentFile.path, previousFile.path, after.id);
+			if(currentFile.sha256 === previousFile.sha256) continue;
+			const pin = pins.get(currentFile.path);
+			assert.equal(previousFile.sha256, pin.previousSha256);
+			assert.equal(currentFile.sha256, pin.currentSha256);
+			observed.set(currentFile.path
+				, (observed.get(currentFile.path) ?? 0) + 1);
+			changed++;
+		}
+	}
+	assert.equal(changed, record.pinCount);
+	for(const pin of record.pinUpdates)
+		assert.equal(observed.get(pin.path), pin.count, pin.path);
+	const priorPaths = new Set(downstreamFinCiRepairPriorPinRepairs.map(
+		repair => repair.path
+	));
+	const repairedPins = record.pinUpdates.filter(pin =>
+		priorPaths.has(pin.path));
+	const expectedRepairs = downstreamFinCiRepairPriorPinRepairs.map(
+		repair => ({ ...repair, count: 2 })
+	);
+	assert.deepEqual(repairedPins, expectedRepairs);
+	for(const repair of downstreamFinCiRepairPriorPinRepairs)
+	{
+		const live = await readFile(repair.path, "utf8");
+		assert.equal(sha256(live), repair.currentSha256);
+		assert.equal(sha256(beforeFinRefinementSource(
+			repair.path, live, repair.previousSha256
+		)), repair.previousSha256);
+	}
+});
+
+test("reviewed Fin browser readiness has a load-specific sixty-second budget", async () => {
+	const source = await readFile("tests/helpers/type-corpus-browser.mjs", "utf8");
+	assert.match(source, /const browserReadyTimeoutMs = 60_000;/u);
+	assert.match(source, /\.waitFor\(\{ timeout: browserReadyTimeoutMs \}\)/u);
+});
+
 test("checked-JavaScript disposition additions are immutable", async () => {
 	const record = JSON.parse(await readFile(
 		checkedJavaScriptDispositionHistoryPath, "utf8"));
@@ -314,6 +493,27 @@ test("history-hub reachability writer refuses another checkout", async t => {
 		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
 	const result = spawnSync(process.execPath, [resolve(
 		"scripts/update-history-hub-reachability-repair-history.mjs"
+	)], { cwd: root, env: environment, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /exact draft parent/u);
+	assert.deepEqual(await readdir(root), [".git"]);
+});
+
+test("downstream Fin CI repair writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-downstream-fin-ci-repair-guard-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const environment = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const localGit = args => execFileSync("git", args, {
+		cwd: root, env: environment, stdio: "pipe"
+	});
+	localGit(["init", "--quiet"]);
+	localGit(["-c", "user.name=Test", "-c"
+		, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-downstream-fin-ci-repair-history.mjs"
 	)], { cwd: root, env: environment, encoding: "utf8" });
 	assert.equal(result.status, 1);
 	assert.match(result.stderr, /exact draft parent/u);

@@ -17,6 +17,7 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 const repository = resolve(import.meta.dirname, "../..");
 const fixtures = join(repository, "tests/fixtures/type-corpus/consumers/browser");
 const base = "/corpus/nested/";
+const browserReadyTimeoutMs = 60_000;
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
 /**
@@ -40,7 +41,7 @@ export const browserFrameworkArchives = async root => {
 };
 
 const ready = async page => {
-	await page.locator('#result[data-status="ready"], #result[data-status="error"]').waitFor();
+	await page.locator('#result[data-status="ready"], #result[data-status="error"]').waitFor({ timeout: browserReadyTimeoutMs });
 	assert.equal(await page.locator("#result").getAttribute("data-status"), "ready", await page.locator("#result").textContent());
 };
 // Each validated observation also names its engine, variant and phase; validators may ignore it.

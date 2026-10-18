@@ -42,11 +42,9 @@ export const createComponentPrivateAbi = document => {
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
 	// Checked records cross only as payload mirrors, which the recursive graph carriers generate.
-	if(selectedNominal || document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
+	if(document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
 	{
-		if(callbackTypes.length) throw new TypeError(selectedNominal
-			? "Nominal Subtype selections cannot share a component with callbacks yet"
-			: "Checked records cannot share a component with callbacks yet");
+		if(callbackTypes.length) throw new TypeError("Checked records cannot share a component with callbacks yet");
 		const exports = document.declarations.map(declaration => ({ bindingId: declaration.id
 			, symbol: `lean_bridge_${sha256(`${document.component.id}\0${declaration.id}`).slice(0, 24)}`
 			, parameters: declaration.parameters.map(parameter => parameter.type)
@@ -57,11 +55,11 @@ export const createComponentPrivateAbi = document => {
 		return graph;
 	}
 	const nominalRefinements = nominalRefinementEntries(document.types), constrained = nominalRefinements.length > 0;
-	const structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(callbackDefinitionRefinement)
+	const structured = callbackTypes.length > 0 && (records || nominal || copied || callbackTypes.some(type => callbackDefinitionRefinement(type, document.types))
 		|| callbackTypes.some(type => [...type.callable.parameters.map(item => item.type), type.callable.result.type].some(type => type.kind !== "primitive")));
 	const definitions = structured ? componentRecordDefinitions({ types: document.types.filter(type => type.kind !== "callback") }, true) : null;
 	const callbacks = callbackTypes.map(type => {
-		const refinements = callbackDefinitionRefinement(type);
+		const refinements = callbackDefinitionRefinement(type, document.types);
 		const signature = { parameters: type.callable.parameters.map(parameter => parameter.type)
 			, result: type.callable.result.type
 			, ...(refinements ? { refinements } : {}) };
@@ -82,7 +80,7 @@ export const createComponentPrivateAbi = document => {
 			, result: declaration.result.type
 			, resultMode: declaration.resultMode }))
 	};
-	if(constrained && !callbacks.length)
+	if((constrained || selectedNominal) && !callbacks.length)
 	{
 		const graph = { version: componentRecursiveAbi
 			, dispatch: componentRecursiveDispatch
