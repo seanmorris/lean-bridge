@@ -1,0 +1,35 @@
+{
+  "bindingIrSha256": "c40aa608dc52201be2770f2cb02e63b03679cc8f4d7be3be8ae79eb474327b4d",
+  "component": "inheritedcheckedrecords@1.0.0",
+  "exports": [
+    "LeanInheritedcheckedrecords\\Bytes",
+    "LeanInheritedcheckedrecords\\LeanBridgeError",
+    "LeanInheritedcheckedrecords\\Span",
+    "LeanInheritedcheckedrecords\\Ticket",
+    "LeanInheritedcheckedrecords\\Stamped",
+    "LeanInheritedcheckedrecords\\produce",
+    "LeanInheritedcheckedrecords\\produce_stamped"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "88bbc18304e8ca2d3f06369421e78f800b3283ec90809c223e6ef4f652bccf28",
+    "src/Api.php": "40d79dc07f590d26ed124429576578b5f9039092648ba5a0de5ec81cfc593baf",
+    "src/Internal/Native.php": "c3504f930ce2d5b353c7b585b5c4bb0c73334586225796fbd86c8aa9a63032e6",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanInheritedcheckedrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

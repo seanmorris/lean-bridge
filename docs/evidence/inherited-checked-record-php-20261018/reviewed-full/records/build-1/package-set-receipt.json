@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51385020,
+          "path": "archives/example-inheritedcheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "a8783a2a68133152900cd20be82e8e11a41045bb38984479d00d11ab4f70d912"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/inheritedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "622aa41e9e85d9fe0ae2e0f0788ae47baf033afe5046b66be3b3206346fd4f90",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "599073e0882c43e2b4b8ac61a3fdd52ecd1b4215284c61cab79671c956de3137"
+  }
+}

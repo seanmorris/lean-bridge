@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordPhpEvidence
 	= "docs/evidence/inherited-checked-record-php-20261018";
-export const inheritedCheckedRecordPhpProducer = null;
-export const inheritedCheckedRecordPhpChecker = null;
-export const inheritedCheckedRecordPhpArchiver = null;
+export const inheritedCheckedRecordPhpProducer
+	= "4e194c3e38dd61608cfe72ba253351b8c7fc8fce";
+export const inheritedCheckedRecordPhpChecker
+	= "4e194c3e38dd61608cfe72ba253351b8c7fc8fce";
+export const inheritedCheckedRecordPhpArchiver
+	= "6ab99139ced26f09758e339b3284c2e31c1ee419";
 export const inheritedCheckedRecordPhpEvidenceLoadCeiling = 8;
 export const inheritedCheckedRecordPhpEvidenceFloor = "2.38";
 export const inheritedCheckedRecordPhpSelections = Object.freeze([

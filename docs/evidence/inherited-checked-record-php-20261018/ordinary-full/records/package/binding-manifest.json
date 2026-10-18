@@ -1,0 +1,52 @@
+{
+  "aliases": [
+    {
+      "id": "lean:InheritedCheckedRecords.TicketAlias",
+      "name": "TicketAlias",
+      "phpType": "Ticket",
+      "target": {
+        "id": "lean:InheritedCheckedRecords.Ticket",
+        "kind": "named"
+      }
+    }
+  ],
+  "bindingIrSha256": "f6c0ef4691465d43a3c07580564c11151a7924d0344d2a698c0145dfaea569f2",
+  "component": "inheritedcheckedrecords@1.0.0",
+  "exports": [
+    "LeanInheritedcheckedrecords\\Bytes",
+    "LeanInheritedcheckedrecords\\LeanBridgeError",
+    "LeanInheritedcheckedrecords\\Span",
+    "LeanInheritedcheckedrecords\\Ticket",
+    "LeanInheritedcheckedrecords\\Stamped",
+    "LeanInheritedcheckedrecords\\aliased",
+    "LeanInheritedcheckedrecords\\echo_",
+    "LeanInheritedcheckedrecords\\first",
+    "LeanInheritedcheckedrecords\\nested",
+    "LeanInheritedcheckedrecords\\normalized",
+    "LeanInheritedcheckedrecords\\pair",
+    "LeanInheritedcheckedrecords\\produce",
+    "LeanInheritedcheckedrecords\\produce_stamped"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "ba5e0e89ac66d9ee11491112b736effaa805656099a586bdfdcc89602cbaeaea",
+    "src/Api.php": "eb0f1458acdecf3c2ad5175174f67eff66e4983626757ed756fcc6b636511d31",
+    "src/Internal/Native.php": "4bd8098f0ea6d6ac5fc35e539f9d130482e808bd78510e054e3943cc86dba7ca",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanInheritedcheckedrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

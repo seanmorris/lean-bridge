@@ -33,7 +33,8 @@ export {
 	inheritedCheckedRecordPhpEvidence
 } from "./inherited-checked-record-php-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordPhpEvidenceSha256 = null;
+export const inheritedCheckedRecordPhpEvidenceSha256
+	= "fab6f47368402da87eac5827124c4a16d66ca261e9d2299f44f463c311890ee1";
 
 const controlKeys = [
 	"recordControls", "resourceControls", "environmentControls"

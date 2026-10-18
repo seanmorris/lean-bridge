@@ -1,0 +1,777 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/example-inheritedcheckedrecords-1.0.0-linux-x86_64.zip": "2945e1fd0fe55eac18acb39b2bfb48f4d294b8119de39041c5213961902caadc"
+      },
+      "bindingIrSha256": "f6c0ef4691465d43a3c07580564c11151a7924d0344d2a698c0145dfaea569f2",
+      "modelSha256": "e638ca7f3a9228bc9b0b9c840f92dc9c5902ac551030619c3bcd766289ec01b7",
+      "receiptSha256": "be04cbffd53b691ae555eb744f9ccbd77231910b2679513a2c578d356efacf7d"
+    },
+    {
+      "archives": {
+        "archives/example-inheritedcheckedrecords-1.0.0-linux-x86_64.zip": "2945e1fd0fe55eac18acb39b2bfb48f4d294b8119de39041c5213961902caadc"
+      },
+      "bindingIrSha256": "f6c0ef4691465d43a3c07580564c11151a7924d0344d2a698c0145dfaea569f2",
+      "modelSha256": "e638ca7f3a9228bc9b0b9c840f92dc9c5902ac551030619c3bcd766289ec01b7",
+      "receiptSha256": "be04cbffd53b691ae555eb744f9ccbd77231910b2679513a2c578d356efacf7d"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "contracts": {
+      "InheritedCheckedRecords.aliased": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.mkTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "InheritedCheckedRecords.echo": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.normalizeTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "InheritedCheckedRecords.first": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.mkTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "InheritedCheckedRecords.nested": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.mkStamped",
+              "fields": [
+                {
+                  "name": "toTicket",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkTicket",
+                    "fields": [
+                      {
+                        "name": "toSpan",
+                        "refinement": {
+                          "constructor": "InheritedCheckedRecords.mkSpan",
+                          "fields": [
+                            {
+                              "name": "lo",
+                              "refinement": null
+                            },
+                            {
+                              "name": "hi",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "checked-record",
+                          "name": "InheritedCheckedRecords.Span"
+                        }
+                      },
+                      {
+                        "name": "word",
+                        "refinement": {
+                          "constructor": "InheritedCheckedRecords.mkWord"
+                        }
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Ticket"
+                  }
+                },
+                {
+                  "name": "mark",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Stamped"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "InheritedCheckedRecords.normalized": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.normalizeTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "InheritedCheckedRecords.pair": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.mkTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.mkWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          },
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "InheritedCheckedRecords.normalizeTicket",
+              "fields": [
+                {
+                  "name": "toSpan",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeSpan",
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "InheritedCheckedRecords.Span"
+                  }
+                },
+                {
+                  "name": "word",
+                  "refinement": {
+                    "constructor": "InheritedCheckedRecords.normalizeWord"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "InheritedCheckedRecords.Ticket"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "InheritedCheckedRecords.first",
+      "InheritedCheckedRecords.normalized",
+      "InheritedCheckedRecords.pair",
+      "InheritedCheckedRecords.aliased",
+      "InheritedCheckedRecords.nested",
+      "InheritedCheckedRecords.echo",
+      "InheritedCheckedRecords.produce",
+      "InheritedCheckedRecords.produceStamped"
+    ],
+    "modules": [
+      "InheritedCheckedRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "php-native": {
+        "name": "example/inheritedcheckedrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSourceRequired": true,
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No PHP constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "409c72bb1e3ace8db466d1275a0be8d3ad98f82f2b59cdcfb40c65447dc919ce",
+  "independentBuilds": 2,
+  "loadCeiling": 8,
+  "mode": "full",
+  "observations": [
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "2e6bdfc681d4dbc44f344318bcf4403225af8c0739a8bedc6e19d85e8fbdc17c",
+        "packageFileSetSha256": "b2176bb6ffdfc9dd38942d0af8149de95a6996ac8b6893c24cf8a6b9dc810e87",
+        "receiptSha256": "c331f0af258788d719b7ae6f21389d78923967e3382599d7b90dd53d1af7b960",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "2d9dee71fa5dbbf42e1e1c43f34233da7c363640b234db7236c3c0236b9882f9"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 2839,
+        "checks": 5680,
+        "recoveries": 256,
+        "rejections": 1291,
+        "rounds": 256,
+        "snapshots": 2839
+      },
+      "cwd": "/tmp/lean-bridge-inherited-php-installed-qfafxc/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":5680,\"rejections\":1291,\"calls\":2839,\"snapshots\":2839,\"recoveries\":256,\"rounds\":256}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "2e6bdfc681d4dbc44f344318bcf4403225af8c0739a8bedc6e19d85e8fbdc17c",
+        "packageFileSetSha256": "b2176bb6ffdfc9dd38942d0af8149de95a6996ac8b6893c24cf8a6b9dc810e87",
+        "receiptSha256": "c331f0af258788d719b7ae6f21389d78923967e3382599d7b90dd53d1af7b960",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "2d9dee71fa5dbbf42e1e1c43f34233da7c363640b234db7236c3c0236b9882f9"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 2839,
+        "checks": 5680,
+        "recoveries": 256,
+        "rejections": 1291,
+        "rounds": 256,
+        "snapshots": 2839
+      },
+      "cwd": "/tmp/lean-bridge-inherited-php-installed-qfafxc/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":5680,\"rejections\":1291,\"calls\":2839,\"snapshots\":2839,\"recoveries\":256,\"rounds\":256}\n"
+      },
+      "strictness": "strict"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "2e6bdfc681d4dbc44f344318bcf4403225af8c0739a8bedc6e19d85e8fbdc17c",
+        "packageFileSetSha256": "b2176bb6ffdfc9dd38942d0af8149de95a6996ac8b6893c24cf8a6b9dc810e87",
+        "receiptSha256": "c331f0af258788d719b7ae6f21389d78923967e3382599d7b90dd53d1af7b960",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "2d9dee71fa5dbbf42e1e1c43f34233da7c363640b234db7236c3c0236b9882f9"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 2839,
+        "checks": 5680,
+        "recoveries": 256,
+        "rejections": 1291,
+        "rounds": 256,
+        "snapshots": 2839
+      },
+      "cwd": "/tmp/lean-bridge-inherited-php-installed-qfafxc/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":5680,\"rejections\":1291,\"calls\":2839,\"snapshots\":2839,\"recoveries\":256,\"rounds\":256}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "2e6bdfc681d4dbc44f344318bcf4403225af8c0739a8bedc6e19d85e8fbdc17c",
+        "packageFileSetSha256": "b2176bb6ffdfc9dd38942d0af8149de95a6996ac8b6893c24cf8a6b9dc810e87",
+        "receiptSha256": "c331f0af258788d719b7ae6f21389d78923967e3382599d7b90dd53d1af7b960",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "2d9dee71fa5dbbf42e1e1c43f34233da7c363640b234db7236c3c0236b9882f9"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 2839,
+        "checks": 5680,
+        "recoveries": 256,
+        "rejections": 1291,
+        "rounds": 256,
+        "snapshots": 2839
+      },
+      "cwd": "/tmp/lean-bridge-inherited-php-installed-qfafxc/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":5680,\"rejections\":1291,\"calls\":2839,\"snapshots\":2839,\"recoveries\":256,\"rounds\":256}\n"
+      },
+      "strictness": "strict"
+    }
+  ],
+  "offlineInstall": true,
+  "packageReceiptSha256": "c331f0af258788d719b7ae6f21389d78923967e3382599d7b90dd53d1af7b960",
+  "producerCommit": "4e194c3e38dd61608cfe72ba253351b8c7fc8fce",
+  "receipt": {
+    "component": {
+      "id": "inheritedcheckedrecords@1.0.0",
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51381496,
+            "path": "archives/example-inheritedcheckedrecords-1.0.0-linux-x86_64.zip",
+            "sha256": "2945e1fd0fe55eac18acb39b2bfb48f4d294b8119de39041c5213961902caadc"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/inheritedcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "php-native",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "f6c0ef4691465d43a3c07580564c11151a7924d0344d2a698c0145dfaea569f2",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "df57dad906b1b3c4b325beffaac3740b0eb0bbefb7576b1c6e6c13cf38bb6baf"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15621054464,
+          "freeBytes": 76651077632,
+          "load": 1.65
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15616888832,
+          "freeBytes": 76651003904,
+          "load": 1.65
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15243145216,
+          "freeBytes": 76599443456,
+          "load": 1.38
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15464747008,
+          "freeBytes": 76547887104,
+          "load": 1.22
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15108251648,
+          "freeBytes": 76284346368,
+          "load": 1.21
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15158513664,
+          "freeBytes": 76284342272,
+          "load": 1.21
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15220781056,
+          "freeBytes": 76284338176,
+          "load": 1.19
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15206580224,
+          "freeBytes": 76284334080,
+          "load": 1.19
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/usr/bin/php8.3",
+    "composer": "/usr/bin/composer",
+    "composerFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ctype.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/iconv.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/mbstring.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/phar.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/tokenizer.so"
+    ],
+    "composerVersion": {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ctype.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/iconv.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/mbstring.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/phar.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/tokenizer.so",
+        "/usr/bin/composer",
+        "--no-plugins",
+        "--no-scripts",
+        "--no-interaction",
+        "--version"
+      ],
+      "command": "/usr/bin/php8.3",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Composer version 2.7.1 2024-02-09 15:26:28\n"
+      }
+    },
+    "interpreter": {
+      "args": [
+        "-n",
+        "-r",
+        "echo json_encode([\"version\"=>PHP_VERSION,\"sapi\"=>PHP_SAPI,\"zts\"=>PHP_ZTS,\"integerBytes\"=>PHP_INT_SIZE,\"os\"=>PHP_OS_FAMILY,\"arch\"=>php_uname(\"m\"),\"directory\"=>ini_get(\"extension_dir\"),\"modules\"=>get_loaded_extensions()], JSON_THROW_ON_ERROR);"
+      ],
+      "command": "/usr/bin/php8.3",
+      "php": {
+        "arch": "x86_64",
+        "directory": "/usr/lib/php/20230831",
+        "integerBytes": 8,
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "zlib",
+          "filter",
+          "hash",
+          "json",
+          "pcntl",
+          "random",
+          "Reflection",
+          "SPL",
+          "session",
+          "standard",
+          "sodium"
+        ],
+        "os": "Linux",
+        "sapi": "cli",
+        "version": "8.3.6",
+        "zts": 0
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"version\":\"8.3.6\",\"sapi\":\"cli\",\"zts\":0,\"integerBytes\":8,\"os\":\"Linux\",\"arch\":\"x86_64\",\"directory\":\"\\/usr\\/lib\\/php\\/20230831\",\"modules\":[\"Core\",\"date\",\"libxml\",\"openssl\",\"pcre\",\"zlib\",\"filter\",\"hash\",\"json\",\"pcntl\",\"random\",\"Reflection\",\"SPL\",\"session\",\"standard\",\"sodium\"]}"
+      }
+    },
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "selected": {
+      "composer": "/usr/bin/composer",
+      "composerVersion": "2.7.1",
+      "php": "/usr/bin/php8.3",
+      "phpVersion": "8.3.6"
+    },
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.3": {
+        "bytes": 5784016,
+        "sha256": "1c564e6bafa56d03359c3774be6f4c77d0edecabd2075e18556940a56747c8d7"
+      },
+      "/usr/lib/php/20230831/ctype.so": {
+        "bytes": 14600,
+        "sha256": "2865fdd0589a6bf2029a1f436a06ac3072cdf50477f8384146181fe56ef5de51"
+      },
+      "/usr/lib/php/20230831/ffi.so": {
+        "bytes": 178440,
+        "sha256": "8202552d21044032e251383c3ffdc64cf2c5db3719a893dee0765d048a537263"
+      },
+      "/usr/lib/php/20230831/iconv.so": {
+        "bytes": 51464,
+        "sha256": "79ba2593b71ee8277b3a8e2a530c542f901129c78016b7a87d39fe4c2a50ea24"
+      },
+      "/usr/lib/php/20230831/mbstring.so": {
+        "bytes": 1209216,
+        "sha256": "a6086c078f33dfe34a25b2f9ceb33bae5e08e0d789f61af88c4298d2dbeb7a63"
+      },
+      "/usr/lib/php/20230831/phar.so": {
+        "bytes": 293128,
+        "sha256": "eec9a6756cfe51253b0aa53c7a2751236db2292c6ea4e7e599f3cbe7e930b3cb"
+      },
+      "/usr/lib/php/20230831/tokenizer.so": {
+        "bytes": 35080,
+        "sha256": "df382431be0c4ceb5cd99df184f40b7522b0718d6f9db1260097dd2c28fb95ee"
+      }
+    }
+  }
+}

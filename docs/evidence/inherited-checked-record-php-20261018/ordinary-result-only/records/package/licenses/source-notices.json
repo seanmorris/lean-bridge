@@ -1,0 +1,54 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"exports\": [\n    \"InheritedCheckedRecords.produce\",\n    \"InheritedCheckedRecords.produceStamped\"\n  ],\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "inheritedcheckedrecords",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 3011,
+            "path": "InheritedCheckedRecords.lean",
+            "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+          },
+          {
+            "bytes": 97,
+            "path": "lakefile.toml",
+            "sha256": "962eab239a85786d222c654c723b8d4b49407f2d5200c5233cdd1f6a535656d9"
+          },
+          {
+            "bytes": 299,
+            "path": "lean-bridge.exports.json",
+            "sha256": "de8a2808fb5c5898614aed09d9f6fc0ff0d67c0848c7df9928708e940ccb7862"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 69,
+            "path": "package.json",
+            "sha256": "8adfe8f7750b3cbf16f84197dcc42b6befcea05a5525ba587c0bf52f8b6f3432"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "a0a1c16d9fb67617f1895eb44cb2f4b873e6535526c1c7c7f3f1bd0d11c0e664"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}

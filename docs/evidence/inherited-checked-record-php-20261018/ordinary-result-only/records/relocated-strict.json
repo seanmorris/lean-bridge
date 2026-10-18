@@ -1,0 +1,35 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "497146c6f612f7134b3c7c550bee0d0e298f535789aebd89104b960979e3018b",
+    "packageFileSetSha256": "b2176bb6ffdfc9dd38942d0af8149de95a6996ac8b6893c24cf8a6b9dc810e87",
+    "receiptSha256": "3e126973ce6012af1007795062c6ed18d323bd2a8b20e2e176a5262f4b90f6bf",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "97b512fded7e909970f2d427b1be04b637f68c0f4d7d3109e59a59ebf987f410"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "calls": 518,
+    "checks": 1042,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshots": 518
+  },
+  "cwd": "/tmp/lean-bridge-inherited-php-installed-ryhlgg/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":1042,\"rejections\":0,\"calls\":518,\"snapshots\":518,\"recoveries\":0,\"rounds\":256}\n"
+  },
+  "strictness": "strict"
+}
