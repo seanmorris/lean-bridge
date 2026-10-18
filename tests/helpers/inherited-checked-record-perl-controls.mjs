@@ -36,6 +36,28 @@ export const inheritedCheckedRecordPerlModelMutations = mode => {
 		, ["changed extractor", model => {
 			model.sourceIdentity.extractorSha256 = "0".repeat(64);
 		}]
+		, ["changed Lean version", model => {
+			model.sourceIdentity.leanVersion = "0.0.0";
+		}]
+		, ["malformed Lean commit", model => {
+			model.sourceIdentity.leanCommit = "unknown";
+		}]
+		, ["malformed Lean compiler", model => {
+			model.sourceIdentity.leanCompilerSha256 = "unknown";
+		}]
+		, ["changed source notices", model => {
+			model.sourceIdentity.sourceNoticesSha256 = "0".repeat(64);
+		}]
+		, ["invented lake dependency", model => {
+			model.sourceIdentity.lakeDependencies = [];
+		}]
+		, ["changed metadata source", model => {
+			model.sourceIdentity.request.metadata.modules[0].sourceSha256
+				= "0".repeat(64);
+		}]
+		, ["changed metadata toolchain", model => {
+			model.sourceIdentity.request.metadata.toolchain = "leanprover/lean4:v0";
+		}]
 		, ["changed Fin bound", model => {
 			assert.ok(replaceLeaf(refined(model), item => item.kind === "fin"
 				, item => { item.bound = "9"; }));

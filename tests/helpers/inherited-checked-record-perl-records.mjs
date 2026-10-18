@@ -10,10 +10,13 @@ import {
 	reviewedContractDifference, reviewedSourceSelection
 } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { assertCheckedRecordPerlIdentity } from "./checked-record-perl-install.mjs";
-import { inheritedCheckedRecordModule } from "./inherited-checked-record-fixture.mjs";
+import {
+	inheritedCheckedRecordFixture, inheritedCheckedRecordModule
+} from "./inherited-checked-record-fixture.mjs";
 import {
 	inheritedCheckedRecordPerlCaller
 	, inheritedCheckedRecordPerlCallerArgs
@@ -30,6 +33,9 @@ import {
 	, inheritedCheckedRecordPerlConfigurations
 	, inheritedCheckedRecordPerlInstallModes
 } from "./inherited-checked-record-perl-install.mjs";
+import {
+	nominalSubtypePerlOriginal
+} from "./nominal-subtype-perl-generators.mjs";
 
 /**
  * Match JSON::PP's canonical, compact line-oriented output. Repository JSON
@@ -46,6 +52,31 @@ const safePath = path => assert.ok(
 	/^(?:[A-Za-z0-9_.:-]+\/)*[A-Za-z0-9_.:-]+$/u.test(path)
 	&& path.split("/").every(part => !["", ".", ".."].includes(part))
 );
+// Translate the reviewed named tree independently of producer lowering.
+const nativeTree = tree => {
+	if(tree === null || ["fin", "subtype"].includes(tree.kind)) return tree;
+	if(tree.kind === "checked-record") return {
+		kind: "checked-record", definition: tree.name
+		, constructor: tree.constructor
+		, fields: tree.fields.map(field => field.name)
+		, arguments: tree.fields.map(field => nativeTree(field.refinement))
+	};
+	if(tree.kind === "record") return {
+		kind: "record", definition: tree.name
+		, fields: tree.fields.map(field => field.name)
+		, arguments: tree.fields.map(field => nativeTree(field.refinement))
+	};
+	if(tree.kind === "variant") return {
+		kind: "variant", definition: tree.name
+		, cases: tree.cases.map(branch => ({
+			name: branch.name
+			, fields: branch.fields.map(field => field.name)
+			, arguments: branch.fields.map(field =>
+				nativeTree(field.refinement))
+		}))
+	};
+	return { kind: tree.kind, arguments: tree.arguments.map(nativeTree) };
+};
 
 /**
  * Require one bounded resource-admission record.
@@ -84,14 +115,47 @@ export const assertInheritedCheckedRecordPerlResources = (
  * @param root0.route - Ordinary source or independent review.
  * @param root0.mode - Full or constructor-free result-only API.
  * @param root0.read - Reader which never follows recorded environment paths.
+ * @param root0.producer - Immutable producer revision.
  */
 export const assertInheritedCheckedRecordPerlRecords = async ({
-	route, mode, read
+	route, mode, read, producer
 }) => {
 	assert.ok(inheritedCheckedRecordPerlRoutes.includes(route));
 	assert.ok(inheritedCheckedRecordPerlModes.includes(mode));
+	assert.match(producer, /^[a-f0-9]{40}$/u);
 	const configuration = inheritedCheckedRecordPerlConfiguration(route, mode);
 	const expected = inheritedCheckedRecordPerlReview(mode);
+	const original = path => nominalSubtypePerlOriginal(producer, path);
+	const inputs = {
+		"lean-bridge.exports.json": Buffer.from(canonicalJson(configuration))
+	};
+	for(const path of [
+		`${inheritedCheckedRecordModule}.lean`, "lakefile.toml"
+		, "lean-toolchain", "LICENSE", "package.json"
+	]) inputs[path] = original(`${inheritedCheckedRecordFixture}/${path}`);
+	if(route === "reviewed")
+		inputs["api.binding-ir.json"] = Buffer.from(canonicalJson(expected));
+	const sourceInputs = Object.entries(inputs)
+		.sort(([left], [right]) => left.localeCompare(right))
+		.map(([path, bytes]) => ({
+			path, bytes: bytes.length, sha256: sha256(bytes)
+		}));
+	const sourceTreeSha256 = sha256(sourceInputs.map(item =>
+		`${item.sha256}  ${item.path}\n`).join(""));
+	const license = sourceInputs.find(item => item.path === "LICENSE");
+	const notices = {
+		schemaVersion: 2, kind: "lean-bridge-source-notices"
+		, packages: [{
+			name: "inheritedcheckedrecords"
+			, source: {
+				kind: "root", sourceTreeSha256, inputs: sourceInputs
+			}
+			, configurationSource: canonicalJson(configuration)
+			, notices: [{
+				...license, payload: `source-notices/${license.sha256}.txt`
+			}]
+		}]
+	};
 	const json = async path => {
 		const bytes = Buffer.from(await read(path)).toString();
 		const value = JSON.parse(bytes);
@@ -155,9 +219,7 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 			&& item.executable.bytes > 0);
 		digest(item.executable.sha256);
 	}
-	const source = Buffer.from(await read(
-		`build-0/${inheritedCheckedRecordModule}.lean`
-	)).toString();
+	const source = inputs[`${inheritedCheckedRecordModule}.lean`].toString();
 	let receipt;
 	for(const attempt of [0, 1])
 	{
@@ -165,24 +227,54 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 		const model = await json(prefix + "model.json");
 		receipt = await json(prefix + "package-set-receipt.json");
 		validatePackageSetReceipt(receipt);
+		validateBindingIr(model.bindingIr);
 		assert.deepEqual(
 			await json(prefix + "lean-bridge.exports.json"), configuration
 		);
-		assert.equal(Buffer.from(await read(
+		assert.deepEqual(Buffer.from(await read(
 			prefix + `${inheritedCheckedRecordModule}.lean`
-		)).toString(), source);
+		)), inputs[`${inheritedCheckedRecordModule}.lean`]);
 		assert.equal(model.moduleName, inheritedCheckedRecordPerlTarget.module);
 		assert.equal(model.profile, "native-library-v1");
 		assert.equal(model.pointerBits, 64);
+		assert.equal(model.schemaVersion, route === "reviewed" ? 3 : 2);
+		assert.equal(model.byteOrder, "little");
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
 		assert.equal(model.bindingIrSha256, hashBindingIr(model.bindingIr));
-		assert.equal(model.exports.length, expected.declarations.length);
-		assert.ok(model.exports.every(item => item.refinements));
+		assert.deepEqual(model.exports.map(item => item.name).sort()
+			, expected.declarations.map(item => item.id.slice(5)).sort());
+		for(const declaration of expected.declarations)
+		{
+			const item = model.exports.find(value =>
+				value.name === declaration.id.slice(5));
+			const tree = declaration.source.extensions[
+				"lean-lang.org/refinements"
+			];
+			assert.ok(item && tree, declaration.id);
+			assert.deepEqual(item.refinements, {
+				parameters: tree.parameters.map(nativeTree)
+				, result: nativeTree(tree.result)
+			});
+			assert.doesNotMatch(JSON.stringify(item.refinements.result)
+				, /InheritedCheckedRecords\.(?:mk|normalize)(?:Span|Word|Ticket|Stamped)"/u);
+		}
 		const identity = model.sourceIdentity;
 		assert.equal(identity.exportConfigurationSource
 			, canonicalJson(configuration));
 		assert.equal(identity.exportConfigurationSha256
 			, sha256(canonicalJson(configuration)));
+		assert.equal(identity.extractorSha256
+			, sha256(original("src/analyze/NativeExports.lean")));
+		const toolchain = inputs["lean-toolchain"].toString().trim();
+		const leanVersion = /^leanprover\/lean4:v(.+)$/u.exec(toolchain)?.[1];
+		assert.ok(leanVersion);
+		assert.equal(identity.leanVersion, leanVersion);
+		assert.match(identity.leanCommit, /^[a-f0-9]{40}$/u);
+		assert.match(identity.leanCompilerSha256, /^[a-f0-9]{64}$/u);
+		assert.equal(identity.sourceTreeSha256, sourceTreeSha256);
+		assert.equal(identity.sourceNoticesSha256
+			, sha256(canonicalJson(notices)));
+		assert.equal(identity.lakeDependencies, undefined);
 		assert.equal(identity.modules.length, 1);
 		assert.equal(identity.modules[0].module, inheritedCheckedRecordModule);
 		assert.deepEqual(identity.modules[0].source, {
@@ -216,8 +308,17 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 			assert.deepEqual(identity.request[key]
 				, [inheritedCheckedRecordModule]);
 		assert.equal(identity.request.profile, "native-library-v1");
+		assert.deepEqual(identity.request.metadata.modules.map(
+			item => item.sourceSha256
+		), [sha256(inputs[`${inheritedCheckedRecordModule}.lean`])]);
+		assert.equal(identity.request.metadata.toolchain
+			, toolchain);
 		assert.equal(receipt.source.treeSha256, identity.sourceTreeSha256);
 		assert.deepEqual(receipt.component, model.component);
+		assert.deepEqual(model.component, {
+			id: "inheritedcheckedrecords@1.0.0"
+			, name: "inheritedcheckedrecords", version: "1.0.0"
+		});
 		assert.equal(receipt.profiles.length, 1);
 		assert.equal(receipt.profiles[0].id, "native-library-v1");
 		assert.equal(receipt.profiles[0].bindingIrSha256
@@ -226,6 +327,8 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 			, ["component", "runtime"]);
 		assert.ok(receipt.packages.every(item =>
 			item.target === "cpan" && item.artifacts.length === 1));
+		assert.ok(receipt.packages.every(item => item.runtimeIdentity
+			=== receipt.profiles[0].runtimeIdentity));
 		assert.deepEqual(report.builds[attempt], {
 			bindingIrSha256: model.bindingIrSha256
 			, modelSha256: sha256(canonicalJson(model))
@@ -234,29 +337,17 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 				pkg.artifacts.map(item => [item.path, item.sha256])))
 		});
 		const author = await json(prefix + "author-inputs.json");
-		const authorPaths = [
-			"LICENSE", `${inheritedCheckedRecordModule}.lean`, "lakefile.toml"
-			, "lean-bridge.exports.json", "lean-toolchain", "package.json"
-			, ...route === "reviewed" ? ["api.binding-ir.json"] : []
-		].sort();
-		assert.deepEqual(author.map(item => item.path).sort(), authorPaths);
+		assert.deepEqual(author.map(item => item.path), Object.keys(inputs).sort());
 		for(const item of author)
 		{
 			assert.deepEqual(Object.keys(item).sort()
 				, ["ctime", "mode", "mtime", "path", "sha256"]);
-			assert.ok(Number.isFinite(item.ctime)
-				&& Number.isFinite(item.mtime));
-			assert.equal(item.mode, 33188); safePath(item.path); digest(item.sha256);
+			assert.ok(Number.isFinite(item.ctime) && item.ctime > 0
+				&& Number.isFinite(item.mtime) && item.mtime > 0);
+			assert.equal(item.mode & 0o170000, 0o100000);
+			safePath(item.path);
+			assert.equal(item.sha256, sha256(inputs[item.path]));
 		}
-		assert.equal(author.find(item => item.path
-			=== `${inheritedCheckedRecordModule}.lean`).sha256, sha256(source));
-		assert.equal(author.find(item => item.path
-			=== "lean-bridge.exports.json").sha256
-		, sha256(canonicalJson(configuration)));
-		if(route === "reviewed")
-			assert.equal(author.find(item => item.path
-				=== "api.binding-ir.json").sha256
-			, sha256(canonicalJson(expected)));
 	}
 	const caller = await inheritedCheckedRecordPerlCaller();
 	assert.equal(Buffer.from(await read("consumer.pl")).toString(), caller);

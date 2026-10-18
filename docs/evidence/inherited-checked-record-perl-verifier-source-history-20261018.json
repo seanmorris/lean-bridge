@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-perl-verifier-source-v1",
+  "predecessorCommit": "e0712bf0aa862fc2c21c65c9dd1de96d3e90bd4f",
+  "draftParentCommit": "e0712bf0aa862fc2c21c65c9dd1de96d3e90bd4f",
+  "pathsSha256": "0c6378c836f3d0d6ef95284ad64a8a6e41a45bd4bd8e27b2fc7f6157481fb51f",
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-perl-verifier-source-history.mjs",
+      "currentSha256": "65432c4df18e6924177c9b1e7141d80036fc4b36136a318d1140c3074bf9c71b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-verifier-source-history.mjs",
+      "currentSha256": "967446b5ca5d98f2a3752dc320729625353436c8106e64d61661dff32e02778a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/archive-inherited-checked-record-perl-evidence.mjs",
+      "previousSha256": "f3577e5fc0380160196934ecfaf18ae258cf30e708512c256d661426bdfcd6e0",
+      "currentSha256": "a12fb0aef6cc0780f0fa47eebc1bb4a67bb982573fc5d83c4e72ddd59cd349bd",
+      "edits": [
+        {
+          "start": 3701,
+          "previous": "\t, modelControls: mode === \"full\" ? 6 : 5\n",
+          "current": "\t, modelControls: mode === \"full\" ? 13 : 12\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "917ddbdb7c0371735edd1a3a52624c23651afaab8d996d1d1431a097ad34075b",
+      "currentSha256": "c6d7ce1efd61cda3314c26af4f1a4fd78c4227d5e0726e64f4d2661790ea50f0",
+      "edits": [
+        {
+          "start": 638,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPerlVerifierSource, inheritedCheckedRecordPerlVerifierChangedPaths } from \"./inherited-checked-record-perl-verifier-source-history.mjs\";\n"
+        },
+        {
+          "start": 76043,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPerlVerifierSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 88326,
+          "previous": "\t...primitiveAuditCoreRepairChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPerlVerifierChangedPaths\n\t, ...primitiveAuditCoreRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-controls.mjs",
+      "previousSha256": "d1e531a706a767031627aaa7975e58aea87ffecf5ecd89aa66b3773dbea90c14",
+      "currentSha256": "4e157d8a2f07ee26baa0c1e38ea4e5e38456ed166994d1a0f894a4864a20e543",
+      "edits": [
+        {
+          "start": 1203,
+          "previous": "",
+          "current": "\t\t, [\"changed Lean version\", model => {\n\t\t\tmodel.sourceIdentity.leanVersion = \"0.0.0\";\n\t\t}]\n\t\t, [\"malformed Lean commit\", model => {\n\t\t\tmodel.sourceIdentity.leanCommit = \"unknown\";\n\t\t}]\n\t\t, [\"malformed Lean compiler\", model => {\n\t\t\tmodel.sourceIdentity.leanCompilerSha256 = \"unknown\";\n\t\t}]\n\t\t, [\"changed source notices\", model => {\n\t\t\tmodel.sourceIdentity.sourceNoticesSha256 = \"0\".repeat(64);\n\t\t}]\n\t\t, [\"invented lake dependency\", model => {\n\t\t\tmodel.sourceIdentity.lakeDependencies = [];\n\t\t}]\n\t\t, [\"changed metadata source\", model => {\n\t\t\tmodel.sourceIdentity.request.metadata.modules[0].sourceSha256\n\t\t\t\t= \"0\".repeat(64);\n\t\t}]\n\t\t, [\"changed metadata toolchain\", model => {\n\t\t\tmodel.sourceIdentity.request.metadata.toolchain = \"leanprover/lean4:v0\";\n\t\t}]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-records.mjs",
+      "previousSha256": "d7331efd2d0f76eed51fab2acbe992fd44f13b9d3c4e2e892616f681206b839f",
+      "currentSha256": "6cec80a7851729c6d27beeeb74db65a28ff28adadbddeb4bcfa9cc88dc653a71",
+      "edits": [
+        {
+          "start": 388,
+          "previous": "",
+          "current": "import { validateBindingIr } from \"../../src/binding-ir/contract.mjs\";\n"
+        },
+        {
+          "start": 699,
+          "previous": "import { inheritedCheckedRecordModule } from \"./inherited-checked-record-fixture.mjs\";\n",
+          "current": "import {\n\tinheritedCheckedRecordFixture, inheritedCheckedRecordModule\n} from \"./inherited-checked-record-fixture.mjs\";\n"
+        },
+        {
+          "start": 1417,
+          "previous": "",
+          "current": "import {\n\tnominalSubtypePerlOriginal\n} from \"./nominal-subtype-perl-generators.mjs\";\n"
+        },
+        {
+          "start": 2113,
+          "previous": "",
+          "current": "// Translate the reviewed named tree independently of producer lowering.\nconst nativeTree = tree => {\n\tif(tree === null || [\"fin\", \"subtype\"].includes(tree.kind)) return tree;\n\tif(tree.kind === \"checked-record\") return {\n\t\tkind: \"checked-record\", definition: tree.name\n\t\t, constructor: tree.constructor\n\t\t, fields: tree.fields.map(field => field.name)\n\t\t, arguments: tree.fields.map(field => nativeTree(field.refinement))\n\t};\n\tif(tree.kind === \"record\") return {\n\t\tkind: \"record\", definition: tree.name\n\t\t, fields: tree.fields.map(field => field.name)\n\t\t, arguments: tree.fields.map(field => nativeTree(field.refinement))\n\t};\n\tif(tree.kind === \"variant\") return {\n\t\tkind: \"variant\", definition: tree.name\n\t\t, cases: tree.cases.map(branch => ({\n\t\t\tname: branch.name\n\t\t\t, fields: branch.fields.map(field => field.name)\n\t\t\t, arguments: branch.fields.map(field =>\n\t\t\t\tnativeTree(field.refinement))\n\t\t}))\n\t};\n\treturn { kind: tree.kind, arguments: tree.arguments.map(nativeTree) };\n};\n"
+        },
+        {
+          "start": 4520,
+          "previous": "",
+          "current": " * @param root0.producer - Immutable producer revision.\n"
+        },
+        {
+          "start": 4644,
+          "previous": "\troute, mode, read\n",
+          "current": "\troute, mode, read, producer\n"
+        },
+        {
+          "start": 4803,
+          "previous": "",
+          "current": "\tassert.match(producer, /^[a-f0-9]{40}$/u);\n"
+        },
+        {
+          "start": 4982,
+          "previous": "",
+          "current": "\tconst original = path => nominalSubtypePerlOriginal(producer, path);\n\tconst inputs = {\n\t\t\"lean-bridge.exports.json\": Buffer.from(canonicalJson(configuration))\n\t};\n\tfor(const path of [\n\t\t`${inheritedCheckedRecordModule}.lean`, \"lakefile.toml\"\n\t\t, \"lean-toolchain\", \"LICENSE\", \"package.json\"\n\t]) inputs[path] = original(`${inheritedCheckedRecordFixture}/${path}`);\n\tif(route === \"reviewed\")\n\t\tinputs[\"api.binding-ir.json\"] = Buffer.from(canonicalJson(expected));\n\tconst sourceInputs = Object.entries(inputs)\n\t\t.sort(([left], [right]) => left.localeCompare(right))\n\t\t.map(([path, bytes]) => ({\n\t\t\tpath, bytes: bytes.length, sha256: sha256(bytes)\n\t\t}));\n\tconst sourceTreeSha256 = sha256(sourceInputs.map(item =>\n\t\t`${item.sha256}  ${item.path}\\n`).join(\"\"));\n\tconst license = sourceInputs.find(item => item.path === \"LICENSE\");\n\tconst notices = {\n\t\tschemaVersion: 2, kind: \"lean-bridge-source-notices\"\n\t\t, packages: [{\n\t\t\tname: \"inheritedcheckedrecords\"\n\t\t\t, source: {\n\t\t\t\tkind: \"root\", sourceTreeSha256, inputs: sourceInputs\n\t\t\t}\n\t\t\t, configurationSource: canonicalJson(configuration)\n\t\t\t, notices: [{\n\t\t\t\t...license, payload: `source-notices/${license.sha256}.txt`\n\t\t\t}]\n\t\t}]\n\t};\n"
+        },
+        {
+          "start": 8951,
+          "previous": "\tconst source = Buffer.from(await read(\n\t\t`build-0/${inheritedCheckedRecordModule}.lean`\n\t)).toString();\n",
+          "current": "\tconst source = inputs[`${inheritedCheckedRecordModule}.lean`].toString();\n"
+        },
+        {
+          "start": 9261,
+          "previous": "",
+          "current": "\t\tvalidateBindingIr(model.bindingIr);\n"
+        },
+        {
+          "start": 9390,
+          "previous": "\t\tassert.equal(Buffer.from(await read(\n",
+          "current": "\t\tassert.deepEqual(Buffer.from(await read(\n"
+        },
+        {
+          "start": 9484,
+          "previous": "\t\t)).toString(), source);\n",
+          "current": "\t\t)), inputs[`${inheritedCheckedRecordModule}.lean`]);\n"
+        },
+        {
+          "start": 9705,
+          "previous": "",
+          "current": "\t\tassert.equal(model.schemaVersion, route === \"reviewed\" ? 3 : 2);\n\t\tassert.equal(model.byteOrder, \"little\");\n"
+        },
+        {
+          "start": 9963,
+          "previous": "\t\tassert.equal(model.exports.length, expected.declarations.length);\n\t\tassert.ok(model.exports.every(item => item.refinements));\n",
+          "current": "\t\tassert.deepEqual(model.exports.map(item => item.name).sort()\n\t\t\t, expected.declarations.map(item => item.id.slice(5)).sort());\n\t\tfor(const declaration of expected.declarations)\n\t\t{\n\t\t\tconst item = model.exports.find(value =>\n\t\t\t\tvalue.name === declaration.id.slice(5));\n\t\t\tconst tree = declaration.source.extensions[\n\t\t\t\t\"lean-lang.org/refinements\"\n\t\t\t];\n\t\t\tassert.ok(item && tree, declaration.id);\n\t\t\tassert.deepEqual(item.refinements, {\n\t\t\t\tparameters: tree.parameters.map(nativeTree)\n\t\t\t\t, result: nativeTree(tree.result)\n\t\t\t});\n\t\t\tassert.doesNotMatch(JSON.stringify(item.refinements.result)\n\t\t\t\t, /InheritedCheckedRecords\\.(?:mk|normalize)(?:Span|Word|Ticket|Stamped)\"/u);\n\t\t}\n"
+        },
+        {
+          "start": 10867,
+          "previous": "",
+          "current": "\t\tassert.equal(identity.extractorSha256\n\t\t\t, sha256(original(\"src/analyze/NativeExports.lean\")));\n\t\tconst toolchain = inputs[\"lean-toolchain\"].toString().trim();\n\t\tconst leanVersion = /^leanprover\\/lean4:v(.+)$/u.exec(toolchain)?.[1];\n\t\tassert.ok(leanVersion);\n\t\tassert.equal(identity.leanVersion, leanVersion);\n\t\tassert.match(identity.leanCommit, /^[a-f0-9]{40}$/u);\n\t\tassert.match(identity.leanCompilerSha256, /^[a-f0-9]{64}$/u);\n\t\tassert.equal(identity.sourceTreeSha256, sourceTreeSha256);\n\t\tassert.equal(identity.sourceNoticesSha256\n\t\t\t, sha256(canonicalJson(notices)));\n\t\tassert.equal(identity.lakeDependencies, undefined);\n"
+        },
+        {
+          "start": 12925,
+          "previous": "",
+          "current": "\t\tassert.deepEqual(identity.request.metadata.modules.map(\n\t\t\titem => item.sourceSha256\n\t\t), [sha256(inputs[`${inheritedCheckedRecordModule}.lean`])]);\n\t\tassert.equal(identity.request.metadata.toolchain\n\t\t\t, toolchain);\n"
+        },
+        {
+          "start": 13270,
+          "previous": "",
+          "current": "\t\tassert.deepEqual(model.component, {\n\t\t\tid: \"inheritedcheckedrecords@1.0.0\"\n\t\t\t, name: \"inheritedcheckedrecords\", version: \"1.0.0\"\n\t\t});\n"
+        },
+        {
+          "start": 13794,
+          "previous": "",
+          "current": "\t\tassert.ok(receipt.packages.every(item => item.runtimeIdentity\n\t\t\t=== receipt.profiles[0].runtimeIdentity));\n"
+        },
+        {
+          "start": 14279,
+          "previous": "\t\tconst authorPaths = [\n\t\t\t\"LICENSE\", `${inheritedCheckedRecordModule}.lean`, \"lakefile.toml\"\n\t\t\t, \"lean-bridge.exports.json\", \"lean-toolchain\", \"package.json\"\n\t\t\t, ...route === \"reviewed\" ? [\"api.binding-ir.json\"] : []\n\t\t].sort();\n\t\tassert.deepEqual(author.map(item => item.path).sort(), authorPaths);\n",
+          "current": "\t\tassert.deepEqual(author.map(item => item.path), Object.keys(inputs).sort());\n"
+        },
+        {
+          "start": 14488,
+          "previous": "\t\t\tassert.ok(Number.isFinite(item.ctime)\n\t\t\t\t&& Number.isFinite(item.mtime));\n\t\t\tassert.equal(item.mode, 33188); safePath(item.path); digest(item.sha256);\n",
+          "current": "\t\t\tassert.ok(Number.isFinite(item.ctime) && item.ctime > 0\n\t\t\t\t&& Number.isFinite(item.mtime) && item.mtime > 0);\n\t\t\tassert.equal(item.mode & 0o170000, 0o100000);\n\t\t\tsafePath(item.path);\n\t\t\tassert.equal(item.sha256, sha256(inputs[item.path]));\n"
+        },
+        {
+          "start": 14736,
+          "previous": "\t\tassert.equal(author.find(item => item.path\n\t\t\t=== `${inheritedCheckedRecordModule}.lean`).sha256, sha256(source));\n\t\tassert.equal(author.find(item => item.path\n\t\t\t=== \"lean-bridge.exports.json\").sha256\n\t\t, sha256(canonicalJson(configuration)));\n\t\tif(route === \"reviewed\")\n\t\t\tassert.equal(author.find(item => item.path\n\t\t\t\t=== \"api.binding-ir.json\").sha256\n\t\t\t, sha256(canonicalJson(expected)));\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "previousSha256": "aa3d385b7a0564cd4b1fb6ba68f7c32bb34e68f0738655b736e00af329b2c49b",
+      "currentSha256": "ca8a1f8b97e751a869b5da2cf4c7a0dc7387183837a467c49be8cb43653fad8f",
+      "edits": [
+        {
+          "start": 2266,
+          "previous": "",
+          "current": "import {\n\tbeforeInheritedCheckedRecordPerlVerifierSource\n\t, inheritedCheckedRecordPerlVerifierAddedPaths\n\t, inheritedCheckedRecordPerlVerifierChangedPaths\n\t, inheritedCheckedRecordPerlVerifierDraftParent\n\t, inheritedCheckedRecordPerlVerifierHistoryPath\n\t, inheritedCheckedRecordPerlVerifierPredecessor\n\t, reverseInheritedCheckedRecordPerlVerifierUpdate\n} from \"./helpers/inherited-checked-record-perl-verifier-source-history.mjs\";\n"
+        },
+        {
+          "start": 2853,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone\n} from \"./helpers/source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 3040,
+          "previous": "",
+          "current": "test(\"inherited Perl verifier hardening has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlVerifierHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-perl-verifier-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordPerlVerifierPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, inheritedCheckedRecordPerlVerifierDraftParent);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordPerlVerifierChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordPerlVerifierAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordPerlVerifierChangedPaths)));\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPerlVerifierSource\n\t\t);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${inheritedCheckedRecordPerlVerifierPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordPerlVerifierUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlVerifierSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlVerifierSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordPerlVerifierSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() =>\n\t\t\t\treverseInheritedCheckedRecordPerlVerifierUpdate(current, changed));\n\t\t}\n\t}\n});\n\ntest(\"inherited Perl verifier hardening closes additions\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlVerifierHistoryPath, \"utf8\"));\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordPerlVerifierPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"inherited Perl verifier writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-inherited-record-perl-verifier-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-perl-verifier-source-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n});\n\n"
+        },
+        {
+          "start": 22170,
+          "previous": "\tconst inventory = JSON.parse(await readFile(\n\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "current": "\tconst inventory = JSON.parse(sourceAtHistoryMilestone(\n\t\tinheritedCheckedRecordPerlPinRepairHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n"
+        }
+      ]
+    }
+  ]
+}
