@@ -67,7 +67,7 @@ try
 catch(error)
 { process.stderr.write(`${error.message}\n`); process.exit(2); }
 
-const evidence = "docs/evidence/inherited-checked-record-php-20261017";
+const evidence = "docs/evidence/inherited-checked-record-php-20261018";
 await assert.rejects(access(evidence), { code: "ENOENT" });
 assert.doesNotThrow(() => execFileSync(
 	"git", ["diff", "--quiet", "HEAD", "--"], { stdio: "ignore" }

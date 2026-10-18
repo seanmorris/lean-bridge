@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeInheritedCheckedRecordPhpSource, inheritedCheckedRecordPhpChangedPaths } from "./inherited-checked-record-php-source-history.mjs";
 import { beforePhpWasmWriterGuardSource, phpWasmWriterGuardChangedPaths } from "./php-wasm-writer-guard-source-history.mjs";
 import { beforePhpCopiedKeywordSource, phpCopiedKeywordChangedPaths } from "./php-copied-keyword-source-history.mjs";
 import { beforeInheritedCheckedRecordRubySource, inheritedCheckedRecordRubyChangedPaths } from "./inherited-checked-record-ruby-source-history.mjs";
@@ -939,6 +940,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeInheritedCheckedRecordPhpSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforePhpWasmWriterGuardSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforePhpCopiedKeywordSource(path, source, expected);
@@ -1129,7 +1132,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmWriterGuardChangedPaths
+	...inheritedCheckedRecordPhpChangedPaths
+	, ...phpWasmWriterGuardChangedPaths
 	, ...phpCopiedKeywordChangedPaths
 	, ...inheritedCheckedRecordRubyChangedPaths
 	, ...inheritedCheckedRecordDotnetArtifactRetentionChangedPaths

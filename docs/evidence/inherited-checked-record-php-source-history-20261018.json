@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-php-source-v1",
+  "predecessorCommit": "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d",
+  "draftParentCommit": "4268943dc4bdd1f7a8dca256075b75c64594f437",
+  "pathsSha256": "8ccf89d7ee5d63a7c017aace752a32b092442ed9e798e4e5bd744bac4c74713e",
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-php.yml",
+      "currentSha256": "3c55d969a83063d1c1604d02601f92a379b781455bd8971fac1fa041f49db981"
+    },
+    {
+      "path": "scripts/archive-inherited-checked-record-php-evidence.mjs",
+      "currentSha256": "152aa58cb872580e67c646370ff4eb98422de527f2742633061eaa81bda4a0e2"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-php-ci.mjs",
+      "currentSha256": "40a1cc0b61611053708cdbf101cdeabd27e42d37c989a33536ebcce3ae54ea4e"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-php-ci.sh",
+      "currentSha256": "e6a010a5cb6f5b1629ecf1d05695601d0a8cd897206927f21ef3ac0aa4c55718"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-php-source-history.mjs",
+      "currentSha256": "c990b3544a0212d281e8e154c06f0c9b4c90562f5c94cc8c4ad7f979919c77bc"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-ci-policy-tests.mjs",
+      "currentSha256": "6fbaf0306956e41383f669e05226c0013a4e27e3c53ead0c61ab53e772e2540b"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-ci-report.mjs",
+      "currentSha256": "62c0534f8316ebb83c3996b4c33d55da23c6cd31a1aff8975f11503499d405ca"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-ci-shell-tests.mjs",
+      "currentSha256": "6b2951819c7b9e501124bdf811dbbbdbde4557894669362b64496b39136f0251"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-ci-workflow-tests.mjs",
+      "currentSha256": "68c5e70ac3930eff776c6ebb31331c86aaef68efd316623eaa332a4ab18281cb"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-ci-workflow.mjs",
+      "currentSha256": "7362322e5d39981d20ed52efb17c46b1035aa009d6a2b9381aac1e3363012469"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-controls.mjs",
+      "currentSha256": "ec0e1fb5ca709867d98113f0282e13c8294176ae763dd5e9b1b78250c3a93039"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-environment-records.mjs",
+      "currentSha256": "0b89d860d6f5a684e9c67fa625dd8f9d42de5cb40cb7774eb7cce135ffcd081f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-evidence-sources.mjs",
+      "currentSha256": "fbcadf492641c119888e86c50f0d8407a3d3e3c48bb8b0dca63924eea8b4e5b6"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-evidence-tests.mjs",
+      "currentSha256": "8d88ce85971f3afe96e01ab5bc0f67061534e0c1a204fa2c744acbb5d85dda51"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-evidence.mjs",
+      "currentSha256": "95c96619924f1657a1c54c4a162fc115baf03f99229ea5de20a5a0085e16e2eb"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-fixture-tests.mjs",
+      "currentSha256": "9bd10eb05ad56a45a59ded559e8b320ee567ac2c9af219608f788804fdab4002"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-generators.mjs",
+      "currentSha256": "f22784fbefa6000e508b6e32b58d0edd52ada81fb903b62bd31d0e57e803f346"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-installed-tests.mjs",
+      "currentSha256": "0e84063017ea48e0e8425aad87468a90513a0f04e3dc9aa0e02f5a67da7d6230"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-model-records.mjs",
+      "currentSha256": "e804c1d1b4c98c6abd91d40bf4174ee37e71b9324905bb7aca1a7d92f5e52753"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-model.php",
+      "currentSha256": "d0c67f261d7239f344d7d1c279222555b940dd61ee6fa9b973e3e3980c510212"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-package-records.mjs",
+      "currentSha256": "c7dfa55a3ce47e4ca3c92663f14c294efb9afd9ee12177987c61b971dbe3d777"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-package.mjs",
+      "currentSha256": "bb177b427ceb2967860b52988a027c5e166e47e2e3083d5029652d8b6bfb5173"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-provenance.mjs",
+      "currentSha256": "a45af0b5d5a18aebe4506ce4aa707def0ff4885f41cf4a8272707142f677b3e2"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-report.mjs",
+      "currentSha256": "c2eb87e059a9bf353c8255db71d851982021227c7b11482f8f9525af195e0a6d"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-resources.mjs",
+      "currentSha256": "2db0f04fce6592422058400135c3361d4cf5b78e55915f5464e77102d932239c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-source-history.mjs",
+      "currentSha256": "6a2a83694b1a9b4cf2a07526c9c01b120d1ba838bbeb0058f3a8750acfbcda6f"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-tests.mjs",
+      "currentSha256": "4804768853633909f254237d5dc567dc62e161f1a8f410a464cf355d10167529"
+    },
+    {
+      "path": "tests/inherited-checked-record-php-evidence.test.mjs",
+      "currentSha256": "68b311a2074dda361328dd3c8ede44ca4d3ad046734ddb6d7a123f61a0922c25"
+    },
+    {
+      "path": "tests/inherited-checked-record-php-source-history.test.mjs",
+      "currentSha256": "c05e95e93a12e9d83b8af4e1962592231f8ec7a3e75efc4fa6fc3f77c49456e6"
+    },
+    {
+      "path": "tests/inherited-checked-record-php.test.mjs",
+      "currentSha256": "b740da6c9fa5b403d4289ca864d551e74e49374ef98b995c84f07742e6e5bd3a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d3de7ee67c3985d064d5360a5d83d4910ceb38e226941df178c00dd175f04632",
+      "currentSha256": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+      "edits": [
+        {
+          "start": 11138,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-php\"\n\t\t, \"inherited-checked-record-php-evidence\"\n\t\t, \"inherited-checked-record-php-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2a60bfa533c935050e2f6983229170c43ebd34797e5621372f5608b6c6fe85d7",
+      "currentSha256": "a95168f839f1e05ec37d299aa1716ff723f38f72b8a3260bb89842a2300f0a35",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPhpSource, inheritedCheckedRecordPhpChangedPaths } from \"./inherited-checked-record-php-source-history.mjs\";\n"
+        },
+        {
+          "start": 74044,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPhpSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84255,
+          "previous": "\t...phpWasmWriterGuardChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPhpChangedPaths\n\t, ...phpWasmWriterGuardChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-fixture.mjs",
+      "previousSha256": "c3dde88ab7fcd789ca2478a38dc15bddeaa8b8b2888870fb024a7a254392c985",
+      "currentSha256": "1bd56a2e2f65c49eeb37355326448f0688bc91e043cfd657c617de15dd79e842",
+      "edits": [
+        {
+          "start": 175,
+          "previous": "",
+          "current": "import {\n\tinheritedCheckedRecordConfiguration\n\t, inheritedCheckedRecordName\n\t, inheritedCheckedRecordReview\n} from \"./inherited-checked-record-fixture.mjs\";\n"
+        },
+        {
+          "start": 507,
+          "previous": "",
+          "current": "export const inheritedCheckedRecordPhpLoadCeilings = Object.freeze([8, 12, 16, 20]);\nexport const inheritedCheckedRecordPhpTarget = Object.freeze({\n\tname: `example/${inheritedCheckedRecordName}`, version: \"1.0.0\"\n});\n"
+        },
+        {
+          "start": 1123,
+          "previous": "",
+          "current": "\n/**\n * Reject disabled explicit selections, spelling errors, and duplicate work.\n *\n * @param environment - Explicit, injectable producer environment.\n */\nexport const inheritedCheckedRecordPhpSelection = environment => {\n\tconst prefix = \"LEAN_BRIDGE_INHERITED_CHECKED_RECORD_PHP_\";\n\tconst flag = environment[prefix + \"TEST\"];\n\tassert.ok(flag === undefined || [\"0\", \"1\"].includes(flag)\n\t\t, \"Invalid inherited checked-record PHP TEST\");\n\tconst select = (name, permitted) => {\n\t\tconst raw = environment[prefix + name];\n\t\tif(raw !== undefined)\n\t\t{\n\t\t\tassert.equal(typeof raw, \"string\"\n\t\t\t\t, `Invalid inherited checked-record PHP ${name}`);\n\t\t\tassert.equal(flag, \"1\"\n\t\t\t\t, `Explicit inherited checked-record PHP ${name} requires TEST=1`);\n\t\t}\n\t\tconst selected = raw === undefined ? permitted : raw.split(\",\");\n\t\tassert.ok(selected.length\n\t\t\t&& selected.every(value => permitted.includes(value))\n\t\t, `Invalid inherited checked-record PHP ${name}`);\n\t\tassert.equal(new Set(selected).size, selected.length\n\t\t\t, `Duplicate inherited checked-record PHP ${name}`);\n\t\treturn selected;\n\t};\n\tfor(const name of [\"OUTPUT\", \"MAX_LOAD\"])\n\t\tif(environment[prefix + name] !== undefined)\n\t\t\tassert.equal(flag, \"1\"\n\t\t\t\t, `Explicit inherited checked-record PHP ${name} requires TEST=1`);\n\tconst rawLoad = environment[prefix + \"MAX_LOAD\"];\n\tif(rawLoad !== undefined)\n\t\tassert.equal(typeof rawLoad, \"string\"\n\t\t\t, \"Invalid inherited checked-record PHP MAX_LOAD\");\n\tconst maxLoad = rawLoad === undefined ? 8 : Number(rawLoad);\n\tassert.ok(inheritedCheckedRecordPhpLoadCeilings.includes(maxLoad)\n\t\t, \"Inherited checked-record PHP max load must be 8, 12, 16, or 20\");\n\treturn {\n\t\tenabled: flag === \"1\"\n\t\t, routes: select(\"ROUTES\", inheritedCheckedRecordPhpRoutes)\n\t\t, modes: select(\"MODES\", inheritedCheckedRecordPhpModes)\n\t\t, maxLoad\n\t};\n};\n\n/**\n * Keep the complete API or only constructor-free result exports.\n *\n * @param mode - Full API or standalone constructor-free results.\n */\nexport const inheritedCheckedRecordPhpReview = mode => {\n\tassert.ok(inheritedCheckedRecordPhpModes.includes(mode));\n\tconst review = inheritedCheckedRecordReview();\n\tif(mode === \"full\") return review;\n\tconst names = new Set([\"produce\", \"produceStamped\"]);\n\treview.declarations = review.declarations.filter(item => names.has(item.name));\n\treview.types = review.types.filter(type => type.name !== \"TicketAlias\");\n\treturn review;\n};\n\n/**\n * Select a reproducible Composer package without changing author authority.\n *\n * @param route - Ordinary source or independently reviewed Binding IR.\n * @param mode - Full API or standalone constructor-free results.\n */\nexport const inheritedCheckedRecordPhpConfiguration = (route, mode) => {\n\tassert.ok(inheritedCheckedRecordPhpRoutes.includes(route));\n\tassert.ok(inheritedCheckedRecordPhpModes.includes(mode));\n\tconst configuration = inheritedCheckedRecordConfiguration(route, [\"c\"]);\n\tif(mode === \"result-only\")\n\t{\n\t\tconst names = new Set([\n\t\t\t\"InheritedCheckedRecords.produce\"\n\t\t\t, \"InheritedCheckedRecords.produceStamped\"\n\t\t]);\n\t\tif(configuration.exports)\n\t\t\tconfiguration.exports = configuration.exports.filter(name => names.has(name));\n\t\tif(configuration.contracts)\n\t\t{\n\t\t\tconfiguration.contracts = Object.fromEntries(\n\t\t\t\tObject.entries(configuration.contracts)\n\t\t\t\t\t.filter(([name]) => names.has(name))\n\t\t\t);\n\t\t\tif(!Object.keys(configuration.contracts).length)\n\t\t\t\tdelete configuration.contracts;\n\t\t}\n\t}\n\treturn {\n\t\t...configuration\n\t\t, targets: { \"php-native\": { ...inheritedCheckedRecordPhpTarget } }\n\t};\n};\n"
+        }
+      ]
+    }
+  ]
+}
