@@ -17,7 +17,7 @@ import { validatePackageSetReceipt } from "../../src/release/package-set-receipt
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { moduleSpecifiers } from "./module-closure.mjs";
 import {
-	nominalPrimitiveSubtypeNativeGenerators as historicalGenerators
+	nominalPrimitiveSubtypeNativeGenerators as historicalAcyclicGenerators
 	, nominalPrimitiveSubtypeNativeOriginal as original
 } from "./nominal-primitive-subtype-native-generators.mjs";
 import {
@@ -55,7 +55,7 @@ const expectedResult = profile => ({
 	, stdout: `mutual-checked-record-ok:${mutualCheckedRecordNativeChecks[profile]}\n`
 });
 const fixturePath = path => `${mutualCheckedRecordFixtureRoot}/${path}`;
-const historicalModules = new Map();
+const historicalModules = new Map(), historicalGeneratorSets = new Map();
 
 const historicalModule = (producerCommit, entry) => {
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
@@ -91,6 +91,40 @@ const historicalModule = (producerCommit, entry) => {
 		{ await rm(directory, { recursive: true }); }
 	})());
 	return historicalModules.get(key);
+};
+
+/**
+ * Load the exact graph generators used by this recursive producer without
+ * changing the legacy acyclic generator path inventory exposed by older
+ * native reports.
+ *
+ * @param producerCommit - Exact producing Git commit.
+ */
+export const mutualCheckedRecordNativeGenerators = producerCommit => {
+	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	if(!historicalGeneratorSets.has(producerCommit))
+		historicalGeneratorSets.set(producerCommit, (async () => {
+			const [acyclic, graph, projection] = await Promise.all([
+				historicalAcyclicGenerators(producerCommit)
+				, historicalModule(producerCommit
+					, "src/backends/c/graph-package.mjs")
+				, historicalModule(producerCommit
+					, "src/build/native-graph-sources.mjs")
+			]);
+			for(const [module, name] of [
+				[graph, "generateCopiedGraphPackage"]
+				, [projection, "nativeGraphProjectionSources"]
+				, [projection, "nativeGraphRefinementDiagnostics"]
+			]) assert.equal(typeof module[name], "function", name);
+			return {
+				...acyclic
+				, generateCopiedGraphPackage: graph.generateCopiedGraphPackage
+				, nativeGraphProjectionSources: projection.nativeGraphProjectionSources
+				, nativeGraphRefinementDiagnostics:
+					projection.nativeGraphRefinementDiagnostics
+			};
+		})());
+	return historicalGeneratorSets.get(producerCommit);
 };
 
 /**
@@ -390,7 +424,8 @@ const checkPackages = async ({ read, model, receipt, floor, producerCommit }) =>
 	assert.equal(receiptBytes.toString(), canonicalJson(receipt));
 	assert.equal((await read("handoff/package-set-receipt.json.sha256")).toString()
 		, `${sha256(receiptBytes)}  package-set-receipt.json\n`);
-	const generators = await historicalGenerators(producerCommit), results = [];
+	const generators = await mutualCheckedRecordNativeGenerators(producerCommit)
+		, results = [];
 	const cGraphTargets = mutualCheckedRecordNativeProfiles.filter(profile =>
 		receipt.packages.some(pkg => pkg.target === profile));
 	assert.deepEqual(cGraphTargets, mutualCheckedRecordNativeProfiles);

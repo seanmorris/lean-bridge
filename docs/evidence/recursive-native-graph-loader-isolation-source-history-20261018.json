@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-native-graph-loader-isolation-source-v1",
+  "predecessorCommit": "ed2ad0d046ad228f069b259a1a9030ffe49fd16e",
+  "draftParentCommit": "ed2ad0d046ad228f069b259a1a9030ffe49fd16e",
+  "pathsSha256": "0d351da86334b51e5dcfa64e13942abecee469013f626712682a0bdfc19388fa",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "scripts/update-recursive-native-graph-loader-isolation-history.mjs",
+      "currentSha256": "f596d0eeb8a5dce620b0d0285f3f202899ae3d0fe3dff61e359f1e23598530d6"
+    },
+    {
+      "path": "tests/helpers/recursive-native-graph-loader-isolation-source-history.mjs",
+      "currentSha256": "3da5f18f558acd54ebf2d435b9433a69fc59a33544e4365db6943281f10b2581"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "f12cfe3afcd4c7b38a73e8add82f6ddd4c3f56a14d19c8df857d732995361141",
+      "currentSha256": "b63e200fd806490e4359a814244da59a82c16b3ceb14e82a5e47c035c336de71",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "\tbeforeRecursiveNativeGraphLoaderIsolationSource\n\t, recursiveNativeGraphLoaderIsolationAddedPaths\n\t, recursiveNativeGraphLoaderIsolationChangedPaths\n\t, recursiveNativeGraphLoaderIsolationHistoryPath\n\t, recursiveNativeGraphLoaderIsolationPredecessor\n\t, reverseRecursiveNativeGraphLoaderIsolationUpdate\n} from \"./recursive-native-graph-loader-isolation-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 12259,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive native graph loader isolation has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\trecursiveNativeGraphLoaderIsolationHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"recursive-native-graph-loader-isolation-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, recursiveNativeGraphLoaderIsolationPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, recursiveNativeGraphLoaderIsolationPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, recursiveNativeGraphLoaderIsolationChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, recursiveNativeGraphLoaderIsolationAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\trecursiveNativeGraphLoaderIsolationChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeRecursiveNativeGraphLoaderIsolationSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${recursiveNativeGraphLoaderIsolationPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseRecursiveNativeGraphLoaderIsolationUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeGraphLoaderIsolationSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeGraphLoaderIsolationSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeRecursiveNativeGraphLoaderIsolationSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseRecursiveNativeGraphLoaderIsolationUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${recursiveNativeGraphLoaderIsolationPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"recursive native graph loader writer refuses another checkout\", async t => {\n\tconst directory = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-recursive-native-graph-loader-writer-\"\n\t));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tassert.equal(spawnSync(\"git\", [\"init\", \"-q\"]\n\t\t, { cwd: directory }).status, 0);\n\tassert.equal(spawnSync(\"git\", [\"-c\", \"user.name=Test\"\n\t\t, \"-c\", \"user.email=test@example.invalid\", \"commit\", \"--allow-empty\"\n\t\t, \"-qm\", \"other\"], { cwd: directory }).status, 0);\n\tconst environment = Object.fromEntries(Object.entries(process.env).filter(\n\t\t([key]) => !key.startsWith(\"GIT_\")\n\t));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-recursive-native-graph-loader-isolation-history.mjs\"\n\t)], { cwd: directory, encoding: \"utf8\", env: environment });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n\tassert.deepEqual((await readdir(directory)).sort(), [\".git\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "91ee34ae01a1689c29061efbb583f28b0d039ed10a0b9375f4e6a3284ca1812a",
+      "currentSha256": "bc17b611a363f7152c9b7b86ff094de8481e68eaad8e270eb5cc386911039d81",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeRecursiveNativeGraphLoaderIsolationSource, recursiveNativeGraphLoaderIsolationChangedPaths } from \"./recursive-native-graph-loader-isolation-source-history.mjs\";\n"
+        },
+        {
+          "start": 78500,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveNativeGraphLoaderIsolationSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 92975,
+          "previous": "\t...recursiveNativeGraphVerifierRepairChangedPaths\n",
+          "current": "\t...recursiveNativeGraphLoaderIsolationChangedPaths\n\t, ...recursiveNativeGraphVerifierRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-ci-tests.mjs",
+      "previousSha256": "a13c9f367145dbd98c3a3a838a3ca6d5807770d6867736e65d81afaa65ea0248",
+      "currentSha256": "387403366892032bb7b60ff1fa852e1de760ca35c1e0390dbc1889a08fad826a",
+      "edits": [
+        {
+          "start": 704,
+          "previous": "",
+          "current": "\t, mutualCheckedRecordNativeGenerators\n"
+        },
+        {
+          "start": 804,
+          "previous": "\tnominalPrimitiveSubtypeNativeGenerators\n} from \"./nominal-primitive-subtype-native-generators.mjs\";\nimport {\n",
+          "current": ""
+        },
+        {
+          "start": 4226,
+          "previous": "\tconst generators = await nominalPrimitiveSubtypeNativeGenerators(\n",
+          "current": "\tconst generators = await mutualCheckedRecordNativeGenerators(\n"
+        },
+        {
+          "start": 4308,
+          "previous": "",
+          "current": "\tassert.equal(generators.paths.includes(\n\t\t\"src/backends/c/graph-package.mjs\"), false);\n\tassert.equal(generators.paths.includes(\n\t\t\"src/build/native-graph-sources.mjs\"), false);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-report.mjs",
+      "previousSha256": "69804f5830942acc9cd02bc4c0f2b4094c13adb82de9efc80731dab93e6246e7",
+      "currentSha256": "d3fb28e8c55fb810cc75742ed4700886ea2ac095993e083923cf30defebb20dc",
+      "edits": [
+        {
+          "start": 800,
+          "previous": "\tnominalPrimitiveSubtypeNativeGenerators as historicalGenerators\n",
+          "current": "\tnominalPrimitiveSubtypeNativeGenerators as historicalAcyclicGenerators\n"
+        },
+        {
+          "start": 2206,
+          "previous": "const historicalModules = new Map();\n",
+          "current": "const historicalModules = new Map(), historicalGeneratorSets = new Map();\n"
+        },
+        {
+          "start": 3600,
+          "previous": "",
+          "current": " * Load the exact graph generators used by this recursive producer without\n * changing the legacy acyclic generator path inventory exposed by older\n * native reports.\n *\n * @param producerCommit - Exact producing Git commit.\n */\nexport const mutualCheckedRecordNativeGenerators = producerCommit => {\n\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\tif(!historicalGeneratorSets.has(producerCommit))\n\t\thistoricalGeneratorSets.set(producerCommit, (async () => {\n\t\t\tconst [acyclic, graph, projection] = await Promise.all([\n\t\t\t\thistoricalAcyclicGenerators(producerCommit)\n\t\t\t\t, historicalModule(producerCommit\n\t\t\t\t\t, \"src/backends/c/graph-package.mjs\")\n\t\t\t\t, historicalModule(producerCommit\n\t\t\t\t\t, \"src/build/native-graph-sources.mjs\")\n\t\t\t]);\n\t\t\tfor(const [module, name] of [\n\t\t\t\t[graph, \"generateCopiedGraphPackage\"]\n\t\t\t\t, [projection, \"nativeGraphProjectionSources\"]\n\t\t\t\t, [projection, \"nativeGraphRefinementDiagnostics\"]\n\t\t\t]) assert.equal(typeof module[name], \"function\", name);\n\t\t\treturn {\n\t\t\t\t...acyclic\n\t\t\t\t, generateCopiedGraphPackage: graph.generateCopiedGraphPackage\n\t\t\t\t, nativeGraphProjectionSources: projection.nativeGraphProjectionSources\n\t\t\t\t, nativeGraphRefinementDiagnostics:\n\t\t\t\t\tprojection.nativeGraphRefinementDiagnostics\n\t\t\t};\n\t\t})());\n\treturn historicalGeneratorSets.get(producerCommit);\n};\n\n/**\n"
+        },
+        {
+          "start": 18441,
+          "previous": "\tconst generators = await historicalGenerators(producerCommit), results = [];\n",
+          "current": "\tconst generators = await mutualCheckedRecordNativeGenerators(producerCommit)\n\t\t, results = [];\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-native-generators.mjs",
+      "previousSha256": "31a6809ca81ad8e90280b98c93cb32638e23a7346b709280cfe14269a6b21098",
+      "currentSha256": "64c24deadd3522f8efdc6bc001c1aee088f436910ee2f791591c632411a6f7fe",
+      "edits": [
+        {
+          "start": 1691,
+          "previous": "\t\t\t, \"src/backends/c/graph-package.mjs\"\n\t\t\t, \"src/build/native-graph-sources.mjs\"\n",
+          "current": ""
+        },
+        {
+          "start": 3152,
+          "previous": "\t\t\t\t, generateCopiedGraphPackage: modules[4].generateCopiedGraphPackage\n\t\t\t\t, nativeGraphProjectionSources: modules[5].nativeGraphProjectionSources\n\t\t\t\t, nativeGraphRefinementDiagnostics: modules[5].nativeGraphRefinementDiagnostics\n",
+          "current": ""
+        }
+      ]
+    }
+  ]
+}

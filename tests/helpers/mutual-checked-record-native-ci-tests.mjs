@@ -19,10 +19,8 @@ import {
 import {
 	mutualCheckedRecordNativeFixture
 	, mutualCheckedRecordNativeGeneratedSources
+	, mutualCheckedRecordNativeGenerators
 } from "./mutual-checked-record-native-report.mjs";
-import {
-	nominalPrimitiveSubtypeNativeGenerators
-} from "./nominal-primitive-subtype-native-generators.mjs";
 import {
 	assertMutualCheckedRecordNativeWorkflow
 } from "./mutual-checked-record-native-ci-workflow.mjs";
@@ -90,8 +88,12 @@ test("recursive checked-record native shell fixes both routes and exact checker"
 test("recursive checked-record native verifier selects graph package sources", async () => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"]
 		, { encoding: "utf8" }).trim();
-	const generators = await nominalPrimitiveSubtypeNativeGenerators(
+	const generators = await mutualCheckedRecordNativeGenerators(
 		producerCommit);
+	assert.equal(generators.paths.includes(
+		"src/backends/c/graph-package.mjs"), false);
+	assert.equal(generators.paths.includes(
+		"src/build/native-graph-sources.mjs"), false);
 	const bindingIr = mutualCheckedRecordReview();
 	assert.throws(() => generators.generateCBindingPackage(bindingIr)
 		, { code: "unsupported-array-element" });

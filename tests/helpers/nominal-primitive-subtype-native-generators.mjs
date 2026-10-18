@@ -40,8 +40,6 @@ export const nominalPrimitiveSubtypeNativeGenerators = revision => {
 		const entries = [
 			"src/backends/c/generate.mjs", "src/backends/c/gmp-projection.mjs"
 			, "src/backends/cpp/generate.mjs", "src/backends/cpp/boost.mjs"
-			, "src/backends/c/graph-package.mjs"
-			, "src/build/native-graph-sources.mjs"
 		], closure = new Map();
 		const visit = path => {
 			assert.ok(path.startsWith("src/") && /\.(?:mjs|json)$/u.test(path) && posix.normalize(path) === path, path);
@@ -66,9 +64,6 @@ export const nominalPrimitiveSubtypeNativeGenerators = revision => {
 				, generateGmpProjection: modules[1].generateGmpProjection
 				, generateCppBindingPackage: modules[2].generateCppBindingPackage
 				, boostSources: modules[3].boostSources
-				, generateCopiedGraphPackage: modules[4].generateCopiedGraphPackage
-				, nativeGraphProjectionSources: modules[5].nativeGraphProjectionSources
-				, nativeGraphRefinementDiagnostics: modules[5].nativeGraphRefinementDiagnostics
 				, paths: Object.freeze([...closure.keys()].sort()) };
 		}
 		finally
