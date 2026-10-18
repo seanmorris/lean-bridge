@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeMutualCheckedRecordNativeHardeningSource, mutualCheckedRecordNativeHardeningChangedPaths } from "./mutual-checked-record-native-hardening-source-history.mjs";
 import { beforeInheritedCheckedRecordDocsClosureSource, inheritedCheckedRecordDocsClosureChangedPaths } from "./inherited-checked-record-docs-closure-source-history.mjs";
 import { beforeInheritedCheckedRecordPromotionSource, inheritedCheckedRecordPromotionChangedPaths } from "./inherited-checked-record-promotion-source-history.mjs";
 import { beforeInheritedCheckedRecordPerlFinalVerifierSource, inheritedCheckedRecordPerlFinalVerifierChangedPaths } from "./inherited-checked-record-perl-final-verifier-source-history.mjs";
@@ -955,6 +956,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeMutualCheckedRecordNativeHardeningSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordDocsClosureSource(
 		path, source, expected
 	);
@@ -1202,7 +1205,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedCheckedRecordDocsClosureChangedPaths
+	...mutualCheckedRecordNativeHardeningChangedPaths
+	, ...inheritedCheckedRecordDocsClosureChangedPaths
 	, ...inheritedCheckedRecordPromotionChangedPaths
 	, ...inheritedCheckedRecordPerlFinalVerifierChangedPaths
 	, ...inheritedCheckedRecordPerlArchiveChangedPaths

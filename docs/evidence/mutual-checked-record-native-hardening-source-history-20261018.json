@@ -1,0 +1,556 @@
+{
+  "schemaVersion": 1,
+  "milestone": "mutual-checked-record-native-hardening-source-v1",
+  "predecessorCommit": "a07cb9086fac597cfe48d53be3ddef3b6cb8c470",
+  "draftParentCommit": "a07cb9086fac597cfe48d53be3ddef3b6cb8c470",
+  "pathsSha256": "77582dd37e9963b1523a29f31fa63325b099cafa5f215e721077e9a0484c82a2",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "scripts/update-mutual-checked-record-native-hardening-source-history.mjs",
+      "currentSha256": "741f1ae0276ca0911f79e6f61bbe7dff2873919fb71e1e5cb2f38fadca344b9f"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-controls.mjs",
+      "currentSha256": "e5df1f9065bb7695f330ff6e341f07369e2491f3083985edad13e898411b343a"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-hardening-source-history.mjs",
+      "currentSha256": "dd1a8349395133d84d1baba8e765dc77961def7bc4b02a3f9e9f9ba001570b4f"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-hardening-source-history-tests.mjs",
+      "currentSha256": "c207221abd5a67ba437a8aa6be7d528965a620a9bf46671b03f9d06c808289d0"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/archive-mutual-checked-record-native.mjs",
+      "previousSha256": "f235e21417595194a95945b605e1e63000d303225738eecb9dc4b8d4b728ab39",
+      "currentSha256": "e57a467ca7a376da914b4980484778059d4a7b7b6245da70e3aa490c2f86a8dc",
+      "edits": [
+        {
+          "start": 303,
+          "previous": "\taccess, constants, copyFile, mkdir, readFile, readdir, stat, writeFile\n",
+          "current": "\taccess, constants, copyFile, mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile\n"
+        },
+        {
+          "start": 415,
+          "previous": "",
+          "current": "import { tmpdir } from \"node:os\";\n"
+        },
+        {
+          "start": 566,
+          "previous": "\tcheckMutualCheckedRecordNativeCiRecords\n",
+          "current": "\tassertMutualCheckedRecordNativeCiTap\n"
+        },
+        {
+          "start": 683,
+          "previous": "\tmutualCheckedRecordNativeArchiveSources\n\t, mutualCheckedRecordNativeEvidence\n\t, mutualCheckedRecordNativeProducerSources\n\t, mutualCheckedRecordNativeRoutes\n",
+          "current": "\tcheckMutualCheckedRecordNativeControls\n} from \"../tests/helpers/mutual-checked-record-native-controls.mjs\";\nimport {\n\tmutualCheckedRecordNativeEvidence, mutualCheckedRecordNativeEvidenceSources\n\t, mutualCheckedRecordNativeOriginal\n"
+        },
+        {
+          "start": 984,
+          "previous": "",
+          "current": "import {\n\tassertMutualCheckedRecordNativeRecordPaths\n\t, mutualCheckedRecordNativeRecords, mutualCheckedRecordNativeRoutes\n} from \"../tests/helpers/mutual-checked-record-native-report.mjs\";\n"
+        },
+        {
+          "start": 2161,
+          "previous": "const artifactRoot = join(hostedRoot, \"artifact\");\nconst recordsRoot = join(artifactRoot, \"mutual-checked-record-native-ci\");\n",
+          "current": ""
+        },
+        {
+          "start": 2501,
+          "previous": "const digestFile = path => new Promise((resolve, reject) => {\n",
+          "current": "assert.match(archiveCommit, /^[a-f0-9]{40}$/u);\n\nconst digestFile = path => new Promise((resolveDigest, reject) => {\n"
+        },
+        {
+          "start": 2765,
+          "previous": "\tstream.on(\"end\", () => resolve(hash.digest(\"hex\")));\n",
+          "current": "\tstream.on(\"end\", () => resolveDigest(hash.digest(\"hex\")));\n"
+        },
+        {
+          "start": 3075,
+          "previous": "const descriptors = new Map();\nconst putBytes = (path, value) => {\n\tassert.ok(!descriptors.has(path), path);\n\tconst bytes = Buffer.from(value);\n\tdescriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes), value: bytes });\n};\nconst putFile = async (path, source) => {\n\tassert.ok(!descriptors.has(path), path);\n\tconst information = await stat(source);\n\tassert.ok(information.isFile(), source);\n\tdescriptors.set(path, {\n\t\tbytes: information.size, sha256: await digestFile(source), source\n\t});\n",
+          "current": "\nconst safeZipPath = path => {\n\tconst value = path.endsWith(\"/\") ? path.slice(0, -1) : path;\n\treturn value.length > 0 && /^[A-Za-z0-9_@.+/-]+$/u.test(value)\n\t\t&& !value.startsWith(\"/\") && value.split(\"/\").every(part =>\n\t\tpart.length > 0 && part !== \".\" && part !== \"..\");\n"
+        },
+        {
+          "start": 3350,
+          "previous": "",
+          "current": "const zipEntries = execFileSync(\"unzip\", [\"-Z1\", artifactZip]\n\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 ** 2 }).split(\"\\n\").filter(Boolean);\nassert.ok(zipEntries.length > 0 && new Set(zipEntries).size === zipEntries.length);\nfor(const path of zipEntries) assert.ok(safeZipPath(path), path);\n"
+        },
+        {
+          "start": 4080,
+          "previous": "let producerCommit;\nconst runs = [];\nfor(const route of mutualCheckedRecordNativeRoutes)\n",
+          "current": "const extracted = await mkdtemp(join(tmpdir(), \"lean-bridge-recursive-native-artifact-\"));\ntry\n"
+        },
+        {
+          "start": 4177,
+          "previous": "\tconst routeRoot = join(recordsRoot, \"records\", route);\n\tconst report = JSON.parse(await readFile(join(routeRoot, \"report.json\")));\n\tproducerCommit ??= report.producerCommit;\n\tassert.equal(report.producerCommit, producerCommit);\n\tassert.equal(producerCommit, archiveCommit\n\t\t, \"Hosted evidence must come from this exact committed revision\");\n\tconst tapPath = join(recordsRoot, route, \"run.tap\");\n\tconst verificationPath = join(recordsRoot, route, \"verification.json\");\n\tconst checked = await checkMutualCheckedRecordNativeCiRecords({\n\t\troute, producer: producerCommit, directory: routeRoot, tap: tapPath\n\t}, {\n\t\ttap: await readFile(tapPath, \"utf8\")\n\t\t, read: path => readFile(join(routeRoot, path))\n\t});\n\tconst recordPaths = await paths(routeRoot);\n\tassert.deepEqual(recordPaths, checked.recordPaths);\n\tfor(const path of recordPaths)\n\t\tawait putFile(`${route}/records/${path}`, join(routeRoot, path));\n\tawait putFile(`${route}/run.tap`, tapPath);\n\tawait putFile(`${route}/verification.json`, verificationPath);\n\truns.push({\n\t\troute, recordCount: recordPaths.length\n\t\t, reportSha256: checked.reportSha256\n\t\t, verificationSha256: await digestFile(verificationPath)\n\t\t, tapSha256: await digestFile(tapPath)\n\t\t, bindingIrSha256: checked.bindingIrSha256\n\t\t, independentBuilds: checked.independentBuilds\n\t\t, profiles: checked.observations.map(item => ({\n\t\t\tprofile: item.profile, checks: item.checks\n\t\t}))\n\t\t, artifacts: checked.receipt.packages.flatMap(pkg => pkg.artifacts)\n\t});\n}\nawait putFile(\"toolchain.log\", join(\n\tartifactRoot, \"mutual-checked-record-native-toolchain.log\"));\nconst sourceSnapshots = [\n\t{ role: \"producer\", commit: producerCommit\n\t\t, paths: mutualCheckedRecordNativeProducerSources() }\n\t, { role: \"archive\", commit: archiveCommit\n\t\t, paths: [...mutualCheckedRecordNativeArchiveSources] }\n];\nfor(const snapshot of sourceSnapshots) for(const path of snapshot.paths)\n\tputBytes(`sources/${snapshot.role}/${path}`\n\t\t, execFileSync(\"git\", [\"show\", `${snapshot.commit}:${path}`]\n\t\t\t, { maxBuffer: 64 * 1024 * 1024 }));\nconst files = [...descriptors].sort(([left], [right]) =>\n\tleft.localeCompare(right)).map(([path, descriptor]) =>\n\t({ path, bytes: descriptor.bytes, sha256: descriptor.sha256 }));\nconst index = {\n\tschemaVersion: 1, kind: \"mutual-checked-record-native-hosted-v1\"\n\t, producerCommit, archiveCommit\n\t, hostedRun: {\n\t\trepository: \"seanmorris/lean-bridge\", runId: Number(selected.run)\n\t\t, jobId: Number(selected.job), artifactId: Number(selected.artifact)\n\t\t, artifactBytes: artifactInformation.size, artifactSha256\n\t\t, apiDigest: selected[\"api-digest\"]\n",
+          "current": "\texecFileSync(\"unzip\", [\"-q\", artifactZip, \"-d\", extracted]);\n\tconst zipFiles = zipEntries.filter(path => !path.endsWith(\"/\")).sort();\n\tfor(const directory of zipEntries.filter(path => path.endsWith(\"/\")))\n\t\tassert.ok(zipFiles.some(path => path.startsWith(directory)), directory);\n\tassert.deepEqual(await paths(extracted), zipFiles\n\t\t, \"Every extracted byte must come from the authenticated ZIP\");\n\tassert.deepEqual((await readdir(extracted)).sort(), [\n\t\t\"mutual-checked-record-native-ci\"\n\t\t, \"mutual-checked-record-native-toolchain.log\"\n\t]);\n\tconst recordsRoot = join(extracted, \"mutual-checked-record-native-ci\");\n\tconst descriptors = new Map();\n\tconst putBytes = (path, value) => {\n\t\tassert.ok(!descriptors.has(path), path);\n\t\tconst bytes = Buffer.from(value);\n\t\tdescriptors.set(path, { bytes: bytes.length, sha256: sha256(bytes), value: bytes });\n\t};\n\tconst putFile = async (path, source) => {\n\t\tassert.ok(!descriptors.has(path), path);\n\t\tconst information = await stat(source);\n\t\tassert.ok(information.isFile(), source);\n\t\tdescriptors.set(path, {\n\t\t\tbytes: information.size, sha256: await digestFile(source), source\n\t\t});\n\t};\n\tlet producerCommit, runtime, floor;\n\tconst runs = [];\n\tfor(const route of mutualCheckedRecordNativeRoutes)\n\t{\n\t\tconst routeRoot = join(recordsRoot, \"records\", route);\n\t\tconst reportBytes = await readFile(join(routeRoot, \"report.json\"));\n\t\tconst report = JSON.parse(reportBytes);\n\t\tassert.equal(reportBytes.toString(), canonicalJson(report));\n\t\tproducerCommit ??= report.producerCommit;\n\t\tassert.equal(report.producerCommit, producerCommit);\n\t\tfloor ??= report.declaredGlibcFloor;\n\t\tassert.equal(report.declaredGlibcFloor, floor);\n\t\tconst observed = {\n\t\t\tplatform: report.runtime.platform, arch: report.runtime.arch\n\t\t\t, glibc: report.runtime.glibc.stdout.trim().split(\" \")[1]\n\t\t};\n\t\truntime ??= observed;\n\t\tassert.deepEqual(observed, runtime);\n\t\tconst tapPath = join(recordsRoot, route, \"run.tap\");\n\t\tconst verificationPath = join(recordsRoot, route, \"verification.json\");\n\t\tconst tap = await readFile(tapPath, \"utf8\");\n\t\tassertMutualCheckedRecordNativeCiTap(tap, route);\n\t\tconst read = path => readFile(join(routeRoot, path));\n\t\tconst checked = await checkMutualCheckedRecordNativeControls(read, {\n\t\t\troute, producerCommit, runtime, floor\n\t\t});\n\t\tconst receipt = JSON.parse(await read(\"build-0/package-set-receipt.json\"));\n\t\tconst records = [...mutualCheckedRecordNativeRecords(route, receipt)\n\t\t\t, \"controls.json\"].sort();\n\t\tassertMutualCheckedRecordNativeRecordPaths(\n\t\t\tawait paths(routeRoot), route, receipt);\n\t\tconst verification = await readFile(verificationPath);\n\t\tassert.equal(verification.toString(), canonicalJson(checked));\n\t\tassert.equal((await read(\"controls.json\")).toString(), canonicalJson(checked));\n\t\tfor(const path of records)\n\t\t\tawait putFile(`${route}/records/${path}`, join(routeRoot, path));\n\t\tawait putFile(`${route}/run.tap`, tapPath);\n\t\tawait putFile(`${route}/verification.json`, verificationPath);\n\t\truns.push({\n\t\t\troute, recordCount: records.length\n\t\t\t, reportSha256: checked.reportSha256\n\t\t\t, verificationSha256: sha256(verification), tapSha256: sha256(tap)\n\t\t\t, bindingIrSha256: checked.bindingIrSha256\n\t\t\t, independentBuilds: checked.independentBuilds\n\t\t\t, profiles: checked.profiles, controls: checked.controls\n\t\t\t, artifacts: checked.artifacts\n\t\t});\n"
+        },
+        {
+          "start": 7498,
+          "previous": "\t, runtime: { platform: \"linux\", arch: \"x64\", runner: \"ubuntu-24.04\" }\n\t, floor: \"2.38\", runs, sourceSnapshots\n\t, limitations: [\n\t\t\"Hosted Ubuntu 24.04 Linux x64 acceptance with a glibc 2.38 package floor; other operating systems and architectures remain separate requirements.\"\n\t\t, \"Ordinary source and independently reviewed Binding IR routes reproduce complete C and C++ packages from two isolated author roots, remove author sources, install offline, relocate and replay without consumer sources or compilers.\"\n\t\t, \"The immutable C and C++ callers cover mutual records and variants, aliases, arrays and options, active branches, exact Fin and Subtype diagnostics, malformed values, cycles, depth limits, preserved rejected inputs and recovery.\"\n\t\t, \"Proof fields are erased, recursive nominal identities stay distinct, and results contain no runtime proof constructors.\"\n\t\t, \"Callbacks, owned values, asynchronous calls, retained identity, dependent index kinds, open dependent records and zero-payload records remain separate requirements.\"\n\t\t, \"Original package archives, receipts, models, source inputs, caller sources, reports, TAP, checker output, toolchain log and exact producer/archive source closures are retained; external compiler and operating-system distributions remain trusted.\"\n\t]\n\t, files\n};\nawait mkdir(mutualCheckedRecordNativeEvidence);\nfor(const [path, descriptor] of descriptors)\n",
+          "current": "\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\tassert.deepEqual(Object.keys(runtime).sort(), [\"arch\", \"glibc\", \"platform\"]);\n\tassert.equal(floor, \"2.38\");\n\tawait putFile(\"toolchain.log\", join(extracted\n\t\t, \"mutual-checked-record-native-toolchain.log\"));\n\tconst revisions = {\n\t\tproducer: producerCommit, checker: producerCommit, archiver: archiveCommit\n\t};\n\tconst selectedSources = mutualCheckedRecordNativeEvidenceSources(revisions);\n\tfor(const { role, revision, path } of selectedSources)\n\t\tputBytes(`sources/${role}/${path}`\n\t\t\t, mutualCheckedRecordNativeOriginal(revision, path));\n\tconst files = [...descriptors].sort(([left], [right]) =>\n\t\tleft.localeCompare(right)).map(([path, descriptor]) => ({\n\t\tpath, bytes: descriptor.bytes, sha256: descriptor.sha256\n\t\t}));\n\tconst index = {\n\t\tschemaVersion: 1, kind: \"mutual-checked-record-native-hosted-v1\"\n\t\t, producerCommit, checkerCommit: producerCommit, archiveCommit\n\t\t, hostedRun: {\n\t\t\trepository: \"seanmorris/lean-bridge\", runId: Number(selected.run)\n\t\t\t, jobId: Number(selected.job), artifactId: Number(selected.artifact)\n\t\t\t, artifactBytes: artifactInformation.size, artifactSha256\n\t\t\t, apiDigest: selected[\"api-digest\"]\n\t\t}\n\t\t, runtime, floor, runs, selectedSources, files\n\t\t, limitations: [\n\t\t\t\"Hosted Ubuntu 24.04 Linux x64 acceptance records the observed glibc runtime and enforces a glibc 2.38 package floor; other operating systems and architectures remain separate requirements.\"\n\t\t\t, \"Ordinary source and independently reviewed Binding IR routes reproduce complete C and C++ packages from two isolated author roots, remove author sources, install offline, relocate and replay without consumer sources or compilers.\"\n\t\t\t, \"The immutable C and C++ callers cover mutual records and variants, aliases, arrays and options, active branches, exact Fin and Subtype diagnostics, malformed values, cycles, depth limits, preserved rejected inputs and recovery.\"\n\t\t\t, \"Proof fields are erased, recursive nominal identities stay distinct, and results contain no runtime proof constructors.\"\n\t\t\t, \"Callbacks, owned values, asynchronous calls, retained identity, dependent index kinds, open dependent records and zero-payload records remain separate requirements.\"\n\t\t\t, \"Original package archives, receipts, models, source inputs, caller sources, reports, controls, TAP, checker output, toolchain log and exact producer, checker and archiver source closures are retained; external compiler and operating-system distributions remain trusted.\"\n\t\t]\n\t};\n\n\tawait mkdir(mutualCheckedRecordNativeEvidence);\n\tfor(const [path, descriptor] of descriptors)\n\t{\n\t\tconst target = join(mutualCheckedRecordNativeEvidence, path);\n\t\tawait mkdir(dirname(target), { recursive: true });\n\t\tif(descriptor.source) await copyFile(\n\t\t\tdescriptor.source, target, constants.COPYFILE_FICLONE);\n\t\telse await writeFile(target, descriptor.value, { flag: \"wx\" });\n\t\tassert.equal((await stat(target)).size, descriptor.bytes, path);\n\t\tassert.equal(await digestFile(target), descriptor.sha256, path);\n\t}\n\tconst indexBytes = Buffer.from(canonicalJson(index));\n\tawait writeFile(join(mutualCheckedRecordNativeEvidence, \"index.json\")\n\t\t, indexBytes, { flag: \"wx\" });\n\tprocess.stdout.write(canonicalJson({\n\t\tdestination: mutualCheckedRecordNativeEvidence, producerCommit\n\t\t, checkerCommit: producerCommit, archiveCommit, files: files.length + 1\n\t\t, bytes: files.reduce((sum, file) => sum + file.bytes, indexBytes.length)\n\t\t, indexSha256: sha256(indexBytes), hostedRun: index.hostedRun\n\t}));\n}\nfinally\n"
+        },
+        {
+          "start": 11011,
+          "previous": "\tconst target = join(mutualCheckedRecordNativeEvidence, path);\n\tawait mkdir(dirname(target), { recursive: true });\n\tif(descriptor.source) await copyFile(\n\t\tdescriptor.source, target, constants.COPYFILE_FICLONE);\n\telse await writeFile(target, descriptor.value, { flag: \"wx\" });\n\tassert.equal((await stat(target)).size, descriptor.bytes, path);\n\tassert.equal(await digestFile(target), descriptor.sha256, path);\n",
+          "current": "\tawait rm(extracted, { recursive: true });\n"
+        },
+        {
+          "start": 11056,
+          "previous": "const indexBytes = Buffer.from(canonicalJson(index));\nawait writeFile(join(mutualCheckedRecordNativeEvidence, \"index.json\")\n\t, indexBytes, { flag: \"wx\" });\nprocess.stdout.write(canonicalJson({\n\tdestination: mutualCheckedRecordNativeEvidence, producerCommit, archiveCommit\n\t, files: files.length + 1\n\t, bytes: files.reduce((sum, file) => sum + file.bytes, indexBytes.length)\n\t, indexSha256: sha256(indexBytes), hostedRun: index.hostedRun\n}));\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "scripts/check-mutual-checked-record-native-ci.mjs",
+      "previousSha256": "7824d0692d0949fc669d8f3115560a20e4768ec0004065a8f87ab55208bc35ee",
+      "currentSha256": "05bec534f3e113be8c1ddc7af9f7f671ceabb3a7dbceddc078e862f99ede8f4b",
+      "edits": [
+        {
+          "start": 142,
+          "previous": "",
+          "current": "import { execFileSync } from \"node:child_process\";\n"
+        },
+        {
+          "start": 498,
+          "previous": "",
+          "current": "import {\n\tassertMutualCheckedRecordNativeRecordPaths\n} from \"../tests/helpers/mutual-checked-record-native-report.mjs\";\n"
+        },
+        {
+          "start": 697,
+          "previous": "",
+          "current": "assert.equal(process.platform, \"linux\");\nassert.equal(process.arch, \"x64\");\nconst observed = execFileSync(\"/usr/bin/getconf\", [\"GNU_LIBC_VERSION\"]\n\t, { encoding: \"utf8\" });\nassert.match(observed, /^glibc 2\\.[0-9]+\\n$/u);\nconst runtime = {\n\tplatform: process.platform, arch: process.arch\n\t, glibc: observed.trim().split(\" \")[1]\n};\n"
+        },
+        {
+          "start": 1638,
+          "previous": "",
+          "current": "\t, runtime\n"
+        },
+        {
+          "start": 1653,
+          "previous": "assert.deepEqual(await paths(selected.directory), checked.recordPaths);\nprocess.stdout.write(canonicalJson({\n\tschemaVersion: 1, route: checked.route\n\t, producerCommit: checked.producerCommit\n\t, reportSha256: checked.reportSha256\n\t, bindingIrSha256: checked.bindingIrSha256\n\t, records: checked.recordPaths.length\n\t, independentBuilds: checked.independentBuilds\n\t, profiles: checked.observations.map(item => ({\n\t\tprofile: item.profile, checks: item.checks\n\t}) )\n}));\n",
+          "current": "assertMutualCheckedRecordNativeRecordPaths(\n\tawait paths(selected.directory), checked.route\n\t, JSON.parse(await readFile(join(selected.directory\n\t\t, \"build-0/package-set-receipt.json\"))));\nassert.equal((await readFile(join(selected.directory, \"controls.json\"))).toString()\n\t, canonicalJson(checked));\nprocess.stdout.write(canonicalJson(checked));\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/run-mutual-checked-record-native-ci.sh",
+      "previousSha256": "6b32d95ef249d193cf79fd78936dcbfa7daeb800af517e10f352c2096ce089d5",
+      "currentSha256": "749cc0cc6d17df0b403ee8079d1a295540e75692de267426dcc1b7a104608eb8",
+      "edits": [
+        {
+          "start": 1527,
+          "previous": "    --tap \"$output/run.tap\" | tee \"$output/verification.json\"\n",
+          "current": "    --tap \"$output/run.tap\" --floor \"$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR\" \\\n    | tee \"$output/verification.json\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "07d1d36f8a87a2a44b978649c0206e39308da7426fc634a9ede18c2c3f07e781",
+      "currentSha256": "a32574b7b413679a4b4ebba74c78afdb7a10c6154e00a40e381191b41dd1ce57",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeMutualCheckedRecordNativeHardeningSource, mutualCheckedRecordNativeHardeningChangedPaths } from \"./mutual-checked-record-native-hardening-source-history.mjs\";\n"
+        },
+        {
+          "start": 76913,
+          "previous": "",
+          "current": "\tsource = beforeMutualCheckedRecordNativeHardeningSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 89861,
+          "previous": "\t...inheritedCheckedRecordDocsClosureChangedPaths\n",
+          "current": "\t...mutualCheckedRecordNativeHardeningChangedPaths\n\t, ...inheritedCheckedRecordDocsClosureChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-ci-report.mjs",
+      "previousSha256": "c539ac0006c19838b130428b2f0836089580e0f7509a55cb68df631fd3823cb3",
+      "currentSha256": "c855768737fecf78f812ac3439cd04b761bce0480f7613ce70c83cb5f8b42fa3",
+      "edits": [
+        {
+          "start": 150,
+          "previous": "\tcheckMutualCheckedRecordNativeReport, mutualCheckedRecordNativeRoutes\n} from \"./mutual-checked-record-native-report.mjs\";\n",
+          "current": "\tcheckMutualCheckedRecordNativeControls\n} from \"./mutual-checked-record-native-controls.mjs\";\nimport { mutualCheckedRecordNativeRoutes } from \"./mutual-checked-record-native-report.mjs\";\n"
+        },
+        {
+          "start": 842,
+          "previous": "\tconst usage = \"Usage: check-mutual-checked-record-native-ci.mjs --route ordinary|reviewed --producer <commit> --directory <records> --tap <original-tap>\";\n\tconst allowed = [\"route\", \"producer\", \"directory\", \"tap\"], selected = {};\n",
+          "current": "\tconst usage = \"Usage: check-mutual-checked-record-native-ci.mjs --route ordinary|reviewed --producer <commit> --directory <records> --tap <original-tap> --floor 2.38\";\n\tconst allowed = [\"route\", \"producer\", \"directory\", \"tap\", \"floor\"];\n\tconst selected = {};\n"
+        },
+        {
+          "start": 1797,
+          "previous": "",
+          "current": "\tassert.equal(selected.floor, \"2.38\", usage);\n"
+        },
+        {
+          "start": 3068,
+          "previous": " * @param original - Original TAP and record reader.\n",
+          "current": " * @param original - Original TAP, record reader and observed checker runtime.\n"
+        },
+        {
+          "start": 3271,
+          "previous": "",
+          "current": " * @param original.runtime - Actual host platform, architecture and glibc.\n"
+        },
+        {
+          "start": 3439,
+          "previous": "\tconst { tap, read } = original;\n",
+          "current": "\tconst { tap, read, runtime } = original;\n"
+        },
+        {
+          "start": 3672,
+          "previous": "\treturn checkMutualCheckedRecordNativeReport(read, {\n\t\troute: selected.route, producerCommit: selected.producer\n",
+          "current": "\treturn checkMutualCheckedRecordNativeControls(read, {\n\t\troute: selected.route, producerCommit: selected.producer, runtime\n\t\t, floor: selected.floor\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-ci-tests.mjs",
+      "previousSha256": "c8273a20c4a62217867aae2fbcd72b19a3629589d44e4ac755fa847769917c81",
+      "currentSha256": "8ac42bf7071c2fb89aa1f5b448d73b64711bed2b2738d6f0e442d17e88f52e3f",
+      "edits": [
+        {
+          "start": 137,
+          "previous": "",
+          "current": "import { execFileSync } from \"node:child_process\";\n"
+        },
+        {
+          "start": 414,
+          "previous": "",
+          "current": "\tmutualCheckedRecordConfiguration, mutualCheckedRecordFixtureRoot\n\t, mutualCheckedRecordModule, mutualCheckedRecordRefinements\n\t, mutualCheckedRecordReview\n} from \"./mutual-checked-record-fixture.mjs\";\nimport {\n\tmutualCheckedRecordNativeFixture\n} from \"./mutual-checked-record-native-report.mjs\";\nimport {\n"
+        },
+        {
+          "start": 3275,
+          "previous": "",
+          "current": "\tassert.match(source, /--floor \"\\$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR\"/u);\n"
+        },
+        {
+          "start": 3489,
+          "previous": "",
+          "current": "test(\"recursive checked-record native verifier loads the producer fixture closure\", async () => {\n\tconst producerCommit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"]\n\t\t, { encoding: \"utf8\" }).trim();\n\tconst fixture = await mutualCheckedRecordNativeFixture(producerCommit);\n\tassert.equal(fixture.mutualCheckedRecordFixtureRoot\n\t\t, mutualCheckedRecordFixtureRoot);\n\tassert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\tassert.deepEqual(fixture.mutualCheckedRecordConfiguration(route)\n\t\t\t, mutualCheckedRecordConfiguration(route));\n\tassert.deepEqual(fixture.mutualCheckedRecordReview()\n\t\t, mutualCheckedRecordReview());\n\tassert.deepEqual(fixture.mutualCheckedRecordRefinements\n\t\t, mutualCheckedRecordRefinements);\n});\n\n"
+        },
+        {
+          "start": 4457,
+          "previous": "\t\t, \"--directory\", \"records\", \"--tap\", \"run.tap\"\n",
+          "current": "\t\t, \"--directory\", \"records\", \"--tap\", \"run.tap\", \"--floor\", \"2.38\"\n"
+        },
+        {
+          "start": 4669,
+          "previous": "",
+          "current": "\t\t, floor: \"2.38\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-evidence.mjs",
+      "previousSha256": "81d7a810efe83f352bffa2fb485c9ecc6c9b52e4cad8d0012685104ca5a28ec6",
+      "currentSha256": "0adc3d17f8ad88e26a839034de86c3538e45410d9f15baa87c751da99f40d57b",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import { extname, posix } from \"node:path\";\n"
+        },
+        {
+          "start": 346,
+          "previous": "",
+          "current": "import { moduleSpecifiers } from \"./module-closure.mjs\";\n"
+        },
+        {
+          "start": 412,
+          "previous": "\tcheckMutualCheckedRecordNativeCiRecords\n} from \"./mutual-checked-record-native-ci-report.mjs\";\n",
+          "current": "\tcheckMutualCheckedRecordNativeControls\n} from \"./mutual-checked-record-native-controls.mjs\";\n"
+        },
+        {
+          "start": 515,
+          "previous": "\tmutualCheckedRecordChangedPaths\n} from \"./mutual-checked-record-source-history.mjs\";\n",
+          "current": "\tassertMutualCheckedRecordNativeRecordPaths\n\t, mutualCheckedRecordNativeRecords, mutualCheckedRecordNativeRoutes\n} from \"./mutual-checked-record-native-report.mjs\";\n"
+        },
+        {
+          "start": 905,
+          "previous": "export const mutualCheckedRecordNativeRoutes = Object.freeze([\n\t\"ordinary\", \"reviewed\"\n]);\n\n/** Exact source closure that produced the hosted package bytes. */\nexport const mutualCheckedRecordNativeProducerSources = () => [...new Set([\n\t\"package.json\", \"package-lock.json\", \"lean-toolchain\"\n\t, ...mutualCheckedRecordChangedPaths.filter(path =>\n\t\tpath !== \"docs/type-surface.v1.json\")\n\t, \"src/abi/component-recursive-abi.mjs\"\n\t, \"src/abi/component-recursive.mjs\"\n\t, \"src/analyze/reviewed-source.mjs\"\n\t, \"src/backends/c/graph-package.mjs\"\n\t, \"src/backends/c/native-graph-adapters.mjs\"\n\t, \"src/backends/cpp/copied-graph-conversions.mjs\"\n\t, \"src/binding-ir/canonical.mjs\", \"src/binding-ir/contract.mjs\"\n\t, \"src/build/canonical-build.mjs\", \"src/build/native-artifacts.mjs\"\n\t, \"src/build/native-c-projection.mjs\"\n\t, \"src/build/native-graph-sources.mjs\"\n\t, \"src/build/refinement-mirrors.mjs\"\n\t, \"src/capsule/node.mjs\", \"src/release/package-set-receipt.mjs\"\n\t, \"scripts/check-mutual-checked-record-native-ci.mjs\"\n\t, \"scripts/run-mutual-checked-record-native-ci.sh\"\n\t, \"tests/helpers/copied-fixture-install.mjs\"\n\t, \"tests/helpers/fin-container-edge-closure.mjs\"\n\t, \"tests/helpers/lake-workspace.mjs\"\n\t, \"tests/helpers/mutual-checked-record-fixture.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-ci-report.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-installed-tests.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-report.mjs\"\n\t, \"tests/helpers/package-set.mjs\"\n\t, \"tests/fixtures/mutual-checked-record-consumers/c.c\"\n\t, \"tests/fixtures/mutual-checked-record-consumers/cpp.cpp\"\n\t, ...[\"LICENSE\", \"MutualCheckedRecords.lean\", \"lakefile.toml\"\n\t\t, \"lean-toolchain\", \"package.json\"].map(path =>\n\t\t`tests/fixtures/onboarding/mutual-checked-records/${path}`)\n])].sort();\n\nexport const mutualCheckedRecordNativeArchiveSources = Object.freeze([\n\t\"scripts/archive-mutual-checked-record-native.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-evidence.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-report.mjs\"\n]);\n",
+          "current": ""
+        },
+        {
+          "start": 1355,
+          "previous": "const original = (commit, path) => execFileSync(\n\t\"git\", [\"show\", `${commit}:${path}`], { maxBuffer: 64 * 1024 * 1024 }\n);\n",
+          "current": "const originals = new Map();\nconst allowedRoots = [\".github/\", \"config/\", \"poc/\", \"scripts/\", \"site/\", \"src/\", \"tests/\"];\nconst allowedFiles = new Set([\"LICENSE\", \"lean-toolchain\", \"package-lock.json\", \"package.json\"]);\n\n/**\n * Read one exact repository blob from a frozen revision.\n *\n * @param revision - Full immutable Git revision.\n * @param path - Normalized repository-relative source path.\n */\nexport const mutualCheckedRecordNativeOriginal = (revision, path) => {\n\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\tassert.equal(posix.normalize(path), path);\n\tassert.ok(!path.startsWith(\"/\") && !path.split(\"/\").includes(\"..\"));\n\tassert.ok(allowedFiles.has(path) || allowedRoots.some(root => path.startsWith(root)), path);\n\tconst key = `${revision}:${path}`;\n\tif(!originals.has(key)) originals.set(key, execFileSync(\n\t\t\"git\", [\"cat-file\", \"blob\", key], { maxBuffer: 64 * 1024 ** 2 }));\n\treturn Buffer.from(originals.get(key));\n};\n\nconst closure = (revision, entries) => {\n\tconst paths = new Set();\n\tconst visit = path => {\n\t\tif(paths.has(path)) return;\n\t\tconst bytes = mutualCheckedRecordNativeOriginal(revision, path);\n\t\tpaths.add(path);\n\t\tif(!/\\.[cm]?js$/u.test(path)) return;\n\t\tfor(const specifier of moduleSpecifiers(bytes.toString(), path))\n\t\t{\n\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\tvisit(extname(joined) === \"\" ? `${joined}.mjs` : joined);\n\t\t}\n\t};\n\tfor(const entry of entries) visit(entry);\n\treturn [...paths];\n};\n\nconst producerData = Object.freeze([\n\t\"LICENSE\", \"lean-toolchain\", \"package-lock.json\", \"package.json\"\n\t, \".github/workflows/recursive-checked-record-native.yml\"\n\t, \".github/actions/bounded-apt/action.yml\"\n\t, \".github/actions/bounded-apt/apt-network.conf\"\n\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t, \"scripts/run-mutual-checked-record-native-ci.sh\"\n\t, \"src/analyze/NativeExports.lean\"\n\t, \"src/backends/c/gmp.source.tar.xz\"\n\t, \"src/backends/cpp/boost.source.json\"\n\t, \"tests/helpers/mutual-checked-record-native-ci-workflow.mjs\"\n\t, ...[\"LICENSE\", \"MutualCheckedRecords.lean\", \"lakefile.toml\"\n\t\t, \"lean-toolchain\", \"package.json\"].map(path =>\n\t\t`tests/fixtures/onboarding/mutual-checked-records/${path}`)\n\t, ...[\"c.c\", \"cpp.cpp\"].map(path =>\n\t\t`tests/fixtures/mutual-checked-record-consumers/${path}`)\n]);\n\n/**\n * Select every source byte that produced, checked and archived the hosted records.\n *\n * @param revisions - Independent producer, checker and archiver revisions.\n */\nexport const mutualCheckedRecordNativeEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\"archiver\", \"checker\", \"producer\"]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\tconst roles = [\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer\n\t\t\t\t\t, [\"tests/helpers/mutual-checked-record-native-installed-tests.mjs\"])\n\t\t\t\t, ...producerData\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: closure(revisions.checker\n\t\t\t\t, [\"scripts/check-mutual-checked-record-native-ci.mjs\"])\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-mutual-checked-record-native.mjs\"\n\t\t\t\t, \"tests/helpers/mutual-checked-record-native-evidence.mjs\"\n\t\t\t])\n\t\t}\n\t];\n\treturn Object.freeze(roles.flatMap(({ role, revision, paths }) =>\n\t\t[...new Set(paths)].sort().map(path => Object.freeze({ role, revision, path }))));\n};\n"
+        },
+        {
+          "start": 4967,
+          "previous": "export const checkMutualCheckedRecordNativeEvidence = async (\n\tread = readFile\n) => {\n\tassert.match(mutualCheckedRecordNativeEvidenceSha256, /^[a-f0-9]{64}$/u);\n",
+          "current": "export const checkMutualCheckedRecordNativeEvidence = async (read = readFile) => {\n\tassert.match(mutualCheckedRecordNativeEvidenceSha256 ?? \"\", /^[a-f0-9]{64}$/u\n\t\t, \"Pin the recursive native archive index first\");\n"
+        },
+        {
+          "start": 5467,
+          "previous": "\t\t\"schemaVersion\", \"kind\", \"producerCommit\", \"archiveCommit\"\n\t\t, \"hostedRun\", \"runtime\", \"floor\", \"runs\", \"sourceSnapshots\"\n",
+          "current": "\t\t\"schemaVersion\", \"kind\", \"producerCommit\", \"checkerCommit\", \"archiveCommit\"\n\t\t, \"hostedRun\", \"runtime\", \"floor\", \"runs\", \"selectedSources\"\n"
+        },
+        {
+          "start": 5762,
+          "previous": "\tassert.match(index.producerCommit, /^[a-f0-9]{40}$/u);\n\tassert.match(index.archiveCommit, /^[a-f0-9]{40}$/u);\n",
+          "current": "\tfor(const key of [\"producerCommit\", \"checkerCommit\", \"archiveCommit\"])\n\t\tassert.match(index[key], /^[a-f0-9]{40}$/u, key);\n\tassert.equal(index.checkerCommit, index.producerCommit\n\t\t, \"The hosted checker must be the exact producer revision\");\n"
+        },
+        {
+          "start": 6278,
+          "previous": "\t\tassert.ok(Number.isSafeInteger(index.hostedRun[key])\n\t\t\t&& index.hostedRun[key] > 0, key);\n",
+          "current": "\t\tassert.ok(Number.isSafeInteger(index.hostedRun[key]) && index.hostedRun[key] > 0);\n"
+        },
+        {
+          "start": 6533,
+          "previous": "\tassert.equal(index.hostedRun.apiDigest\n\t\t, `sha256:${index.hostedRun.artifactSha256}`);\n\tassert.deepEqual(index.runtime, {\n\t\tplatform: \"linux\", arch: \"x64\", runner: \"ubuntu-24.04\"\n\t});\n",
+          "current": "\tassert.equal(index.hostedRun.apiDigest, `sha256:${index.hostedRun.artifactSha256}`);\n\texactKeys(index.runtime, [\"platform\", \"arch\", \"glibc\"], \"runtime\");\n\tassert.equal(index.runtime.platform, \"linux\");\n\tassert.equal(index.runtime.arch, \"x64\");\n\tassert.match(index.runtime.glibc, /^2\\.[0-9]+$/u);\n"
+        },
+        {
+          "start": 6866,
+          "previous": "",
+          "current": "\tassert.ok(Number(index.runtime.glibc.split(\".\")[1])\n\t\t>= Number(index.floor.split(\".\")[1]));\n"
+        },
+        {
+          "start": 7004,
+          "previous": "\tassert.ok(index.limitations.every(item =>\n\t\ttypeof item === \"string\" && item.length > 0));\n",
+          "current": "\tassert.ok(index.limitations.every(item => typeof item === \"string\" && item.length > 0));\n"
+        },
+        {
+          "start": 7504,
+          "previous": "\t\tconst bytes = Buffer.from(await read(\n\t\t\t`${mutualCheckedRecordNativeEvidence}/${entry.path}`));\n",
+          "current": "\t\tconst bytes = Buffer.from(await read(`${mutualCheckedRecordNativeEvidence}/${entry.path}`));\n"
+        },
+        {
+          "start": 7746,
+          "previous": "\tconst snapshots = [\n\t\t{ role: \"producer\", commit: index.producerCommit\n\t\t\t, paths: mutualCheckedRecordNativeProducerSources() }\n\t\t, { role: \"archive\", commit: index.archiveCommit\n\t\t\t, paths: [...mutualCheckedRecordNativeArchiveSources] }\n\t];\n\tassert.deepEqual(index.sourceSnapshots, snapshots);\n",
+          "current": "\tconst revisions = {\n\t\tproducer: index.producerCommit, checker: index.checkerCommit\n\t\t, archiver: index.archiveCommit\n\t};\n\tconst selectedSources = mutualCheckedRecordNativeEvidenceSources(revisions);\n\tassert.deepEqual(index.selectedSources, selectedSources);\n"
+        },
+        {
+          "start": 8032,
+          "previous": "\tfor(const snapshot of snapshots) for(const path of snapshot.paths)\n",
+          "current": "\tfor(const { role, revision, path } of selectedSources)\n"
+        },
+        {
+          "start": 8091,
+          "previous": "\t\tconst retained = `sources/${snapshot.role}/${path}`;\n",
+          "current": "\t\tconst retained = `sources/${role}/${path}`;\n"
+        },
+        {
+          "start": 8176,
+          "previous": "\t\t\t, original(snapshot.commit, path), retained);\n",
+          "current": "\t\t\t, mutualCheckedRecordNativeOriginal(revision, path), retained);\n"
+        },
+        {
+          "start": 8572,
+          "previous": "\t\t\t, \"profiles\", \"artifacts\"\n",
+          "current": "\t\t\t, \"profiles\", \"controls\", \"artifacts\"\n"
+        },
+        {
+          "start": 8686,
+          "previous": "\t\tconst routeFiles = [...files.keys()].filter(path => path.startsWith(prefix))\n\t\t\t.map(path => path.slice(prefix.length)).sort();\n",
+          "current": "\t\tconst archivedRead = path => {\n\t\t\tconst value = files.get(prefix + path);\n\t\t\tassert.ok(value, path);\n\t\t\treturn value;\n\t\t};\n"
+        },
+        {
+          "start": 8914,
+          "previous": "\t\tconst checked = await checkMutualCheckedRecordNativeCiRecords({\n\t\t\troute: run.route, producer: index.producerCommit\n\t\t\t, directory: \"records\", tap: \"run.tap\"\n\t\t}, {\n\t\t\ttap: files.get(tapPath).toString()\n\t\t\t, read: path => {\n\t\t\t\tconst value = files.get(prefix + path);\n\t\t\t\tassert.ok(value, path); return value;\n\t\t\t}\n",
+          "current": "\t\tconst receipt = json(archivedRead(\"build-0/package-set-receipt.json\")\n\t\t\t, `${run.route} receipt`);\n\t\tconst records = [...mutualCheckedRecordNativeRecords(run.route, receipt)\n\t\t\t, \"controls.json\"].sort();\n\t\tconst routeFiles = [...files.keys()].filter(path => path.startsWith(prefix))\n\t\t\t.map(path => path.slice(prefix.length)).sort();\n\t\tassertMutualCheckedRecordNativeRecordPaths(routeFiles, run.route, receipt);\n\t\tassert.equal(run.recordCount, records.length);\n\t\tconst checked = await checkMutualCheckedRecordNativeControls(archivedRead, {\n\t\t\troute: run.route, producerCommit: index.producerCommit\n\t\t\t, runtime: index.runtime, floor: index.floor\n"
+        },
+        {
+          "start": 9569,
+          "previous": "\t\tassert.deepEqual(routeFiles, checked.recordPaths);\n\t\tassert.equal(run.recordCount, checked.recordPaths.length);\n",
+          "current": ""
+        },
+        {
+          "start": 9684,
+          "previous": "\t\tassert.equal(run.verificationSha256\n\t\t\t, sha256(files.get(verificationPath)));\n",
+          "current": "\t\tassert.equal(run.verificationSha256, sha256(files.get(verificationPath)));\n"
+        },
+        {
+          "start": 9889,
+          "previous": "\t\tassert.deepEqual(run.profiles, checked.observations.map(item => ({\n\t\t\tprofile: item.profile, checks: item.checks\n\t\t})));\n\t\tconst verification = json(files.get(verificationPath), verificationPath);\n\t\tassert.deepEqual(verification, {\n\t\t\tschemaVersion: 1, route: checked.route\n\t\t\t, producerCommit: checked.producerCommit\n\t\t\t, reportSha256: checked.reportSha256\n\t\t\t, bindingIrSha256: checked.bindingIrSha256\n\t\t\t, records: checked.recordPaths.length\n\t\t\t, independentBuilds: checked.independentBuilds\n\t\t\t, profiles: checked.observations.map(item => ({\n\t\t\t\tprofile: item.profile, checks: item.checks\n\t\t\t}))\n\t\t});\n\t\tassert.deepEqual(run.artifacts\n\t\t\t, checked.receipt.packages.flatMap(pkg => pkg.artifacts));\n\t\texpectedPaths.push(...routeFiles.map(path => prefix + path)\n\t\t\t, tapPath, verificationPath);\n",
+          "current": "\t\tassert.deepEqual(run.profiles, checked.profiles);\n\t\tassert.deepEqual(run.controls, checked.controls);\n\t\tassert.deepEqual(run.artifacts, checked.artifacts);\n\t\tassert.equal(files.get(verificationPath).toString(), canonicalJson(checked));\n\t\tassert.equal(archivedRead(\"controls.json\").toString(), canonicalJson(checked));\n\t\texpectedPaths.push(tapPath, verificationPath\n\t\t\t, ...records.map(path => prefix + path));\n"
+        },
+        {
+          "start": 10499,
+          "previous": "\t\tproducerCommit: index.producerCommit, archiveCommit: index.archiveCommit\n\t\t, hostedRun: index.hostedRun, runtime: index.runtime, floor: index.floor\n\t\t, runs: checkedRuns, files: index.files\n\t\t, sourceSnapshots: index.sourceSnapshots, limitations: index.limitations\n\t\t, installedProfiles: [\"c\", \"cpp\"], hostedAcceptance: true\n\t\t, supportPromoted: false\n",
+          "current": "\t\tproducerCommit: index.producerCommit, checkerCommit: index.checkerCommit\n\t\t, archiveCommit: index.archiveCommit, hostedRun: index.hostedRun\n\t\t, runtime: index.runtime, floor: index.floor, runs: checkedRuns\n\t\t, files: index.files, selectedSources: index.selectedSources\n\t\t, limitations: index.limitations, installedProfiles: [\"c\", \"cpp\"]\n\t\t, hostedAcceptance: true, supportPromoted: false\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-installed-tests.mjs",
+      "previousSha256": "fb0cd46fafb4d133db8d22e7b5b2e426e9151289a1c9d082e6d4e5604f339efc",
+      "currentSha256": "39a7fb76cdd2b2f7ee7fbd6793637a03589f7931f301d89451c38feb8adad127",
+      "edits": [
+        {
+          "start": 1240,
+          "previous": "",
+          "current": "import {\n\tcheckMutualCheckedRecordNativeControls\n} from \"./mutual-checked-record-native-controls.mjs\";\n"
+        },
+        {
+          "start": 2849,
+          "previous": "",
+          "current": "\t\tconst producerCommit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"]\n\t\t\t, { encoding: \"utf8\" }).trim();\n\t\tfor(const path of [\n\t\t\t\"tests/helpers/mutual-checked-record-native-installed-tests.mjs\"\n\t\t\t, \"tests/helpers/mutual-checked-record-native-report.mjs\"\n\t\t\t, \"tests/helpers/mutual-checked-record-native-controls.mjs\"\n\t\t\t, ...profiles.map(profile =>\n\t\t\t\t`tests/fixtures/mutual-checked-record-consumers/${profile}.${profile}`)\n\t\t]) execFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", path]);\n\t\texecFileSync(\"git\", [\"diff\", \"--quiet\", \"HEAD\", \"--\", \"src\", \"tests\", \"scripts\"]);\n"
+        },
+        {
+          "start": 3987,
+          "previous": "",
+          "current": "\t\tconst floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;\n\t\tassert.match(floor, /^2\\.[0-9]+$/u);\n\t\tassert.equal(process.platform, \"linux\");\n\t\tassert.equal(process.arch, \"x64\");\n\t\tconst runtime = {\n\t\t\tplatform: process.platform, arch: process.arch\n\t\t\t, glibc: await runCopied(\"/usr/bin/getconf\", [\"GNU_LIBC_VERSION\"], root)\n\t\t};\n\t\tassert.deepEqual(runtime.glibc, {\n\t\t\tcode: 0, stdout: runtime.glibc.stdout, stderr: \"\"\n\t\t});\n\t\tassert.match(runtime.glibc.stdout, /^glibc 2\\.[0-9]+\\n$/u);\n\t\tconst glibc = runtime.glibc.stdout.trim().split(\" \")[1];\n\t\tassert.ok(Number(glibc.split(\".\")[1]) >= Number(floor.split(\".\")[1]));\n\t\tawait saveLakeFile(output, \"runtime.json\", canonicalJson(runtime));\n\t\tawait saveLakeFile(output, \"configuration.json\", canonicalJson(configuration));\n\t\tawait saveLakeFile(output, \"expected.binding-ir.json\", canonicalJson(expected));\n"
+        },
+        {
+          "start": 10084,
+          "previous": "\t\t\t, producerCommit: execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { encoding: \"utf8\" }).trim()\n",
+          "current": "\t\t\t, producerCommit\n"
+        },
+        {
+          "start": 10158,
+          "previous": "",
+          "current": "\t\t\t, runtime, declaredGlibcFloor: floor, authorInputsUnchanged: true\n"
+        },
+        {
+          "start": 10319,
+          "previous": "",
+          "current": "\t\tconst read = path => readFile(join(output, path));\n\t\tconst controls = await checkMutualCheckedRecordNativeControls(read, {\n\t\t\troute, producerCommit\n\t\t\t, runtime: { platform: process.platform, arch: process.arch, glibc }\n\t\t\t, floor\n\t\t});\n\t\tawait saveLakeFile(output, \"controls.json\", canonicalJson(controls));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-report.mjs",
+      "previousSha256": "459e0f1989e0b4d7e408e58ee5b12d6a19c11aba4a1515f5ef3a089480ee715c",
+      "currentSha256": "03f7aa50c3f0e4c1ecc7b9b8246b3ea656f29484e61e01babbedec9a62b866d7",
+      "edits": [
+        {
+          "start": 130,
+          "previous": "import { readFile } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { reviewedContractDifference } from \"../../src/analyze/reviewed-source.mjs\";\n",
+          "current": "import { mkdtemp, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, posix } from \"node:path\";\nimport { pathToFileURL } from \"node:url\";\nimport {\n\treviewedContractDifference, reviewedSourceSelection\n} from \"../../src/analyze/reviewed-source.mjs\";\n"
+        },
+        {
+          "start": 473,
+          "previous": "",
+          "current": "import { validateBindingIr } from \"../../src/binding-ir/contract.mjs\";\n"
+        },
+        {
+          "start": 699,
+          "previous": "",
+          "current": "import { saveLakeFile } from \"./lake-workspace.mjs\";\nimport { moduleSpecifiers } from \"./module-closure.mjs\";\nimport {\n\tnominalPrimitiveSubtypeNativeGenerators as historicalGenerators\n\t, nominalPrimitiveSubtypeNativeOriginal as original\n} from \"./nominal-primitive-subtype-native-generators.mjs\";\n"
+        },
+        {
+          "start": 1005,
+          "previous": "\tmutualCheckedRecordConfiguration, mutualCheckedRecordFixtureRoot\n\t, mutualCheckedRecordModule, mutualCheckedRecordReview\n} from \"./mutual-checked-record-fixture.mjs\";\n",
+          "current": "\treadOwnedPerlCallbackVariantTar as readRepositoryTar\n} from \"./owned-perl-callback-result-variant-archives.mjs\";\n"
+        },
+        {
+          "start": 1372,
+          "previous": "",
+          "current": "const mutualCheckedRecordFixtureRoot\n\t= \"tests/fixtures/onboarding/mutual-checked-records\";\nconst mutualCheckedRecordModule = \"MutualCheckedRecords\";\n\nconst component = Object.freeze({\n\tid: \"mutualcheckedrecords@1.0.0\"\n\t, name: \"mutualcheckedrecords\"\n\t, version: \"1.0.0\"\n});\n"
+        },
+        {
+          "start": 2144,
+          "previous": "",
+          "current": "const fixturePath = path => `${mutualCheckedRecordFixtureRoot}/${path}`;\nconst historicalFixtures = new Map();\n\n/**\n * Load the exact fixture specification and its relative module closure from the\n * producer revision. The verifier must not reinterpret old output through a\n * newer checkout's configuration, reviewed IR or refinements.\n *\n * @param producerCommit - Exact producing Git commit.\n */\nexport const mutualCheckedRecordNativeFixture = producerCommit => {\n\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\tif(!historicalFixtures.has(producerCommit)) historicalFixtures.set(\n\t\tproducerCommit, (async () => {\n\t\t\tconst entry = \"tests/helpers/mutual-checked-record-fixture.mjs\";\n\t\t\tconst closure = new Map();\n\t\t\tconst visit = path => {\n\t\t\t\tassert.ok(/^(?:src|tests)\\//u.test(path)\n\t\t\t\t\t&& posix.normalize(path) === path, path);\n\t\t\t\tif(closure.has(path)) return;\n\t\t\t\tconst bytes = original(producerCommit, path), source = bytes.toString();\n\t\t\t\tclosure.set(path, bytes);\n\t\t\t\tfor(const specifier of moduleSpecifiers(source, path))\n\t\t\t\t{\n\t\t\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\t\t\tvisit(posix.extname(joined) === \"\" ? `${joined}.mjs` : joined);\n\t\t\t\t}\n\t\t\t};\n\t\t\tvisit(entry);\n\t\t\tconst directory = await mkdtemp(join(\n\t\t\t\ttmpdir(), \"lean-bridge-mutual-checked-record-fixture-\"));\n\t\t\ttry\n\t\t\t{\n\t\t\t\tfor(const [path, bytes] of closure)\n\t\t\t\t\tawait saveLakeFile(directory, path, bytes);\n\t\t\t\tconst fixture = await import(pathToFileURL(join(directory, entry)).href);\n\t\t\t\tassert.equal(fixture.mutualCheckedRecordFixtureRoot\n\t\t\t\t\t, mutualCheckedRecordFixtureRoot);\n\t\t\t\tassert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);\n\t\t\t\tfor(const name of [\n\t\t\t\t\t\"mutualCheckedRecordConfiguration\", \"mutualCheckedRecordReview\"\n\t\t\t\t]) assert.equal(typeof fixture[name], \"function\", name);\n\t\t\t\tassert.ok(fixture.mutualCheckedRecordRefinements\n\t\t\t\t\t&& typeof fixture.mutualCheckedRecordRefinements === \"object\");\n\t\t\t\treturn fixture;\n\t\t\t}\n\t\t\tfinally\n\t\t\t{ await rm(directory, { recursive: true }); }\n\t\t})());\n\treturn historicalFixtures.get(producerCommit);\n};\n"
+        },
+        {
+          "start": 4364,
+          "previous": "",
+          "current": " * @param producerCommit - Exact producing Git commit.\n"
+        },
+        {
+          "start": 4423,
+          "previous": "export const mutualCheckedRecordNativeConsumer = async profile => {\n",
+          "current": "export const mutualCheckedRecordNativeConsumer = (profile, producerCommit) => {\n"
+        },
+        {
+          "start": 4568,
+          "previous": "\tconst source = await readFile(\n\t\t`tests/fixtures/mutual-checked-record-consumers/${profile}.${profile}`\n\t\t, \"utf8\");\n\treturn `#define MUTUAL_CHECKED_PARAMETER \"arg0\"\\n${source}`;\n",
+          "current": "\tconst source = original(producerCommit\n\t\t, `tests/fixtures/mutual-checked-record-consumers/${profile}.${profile}`);\n\treturn Buffer.concat([\n\t\tBuffer.from('#define MUTUAL_CHECKED_PARAMETER \"arg0\"\\n'), source\n\t]);\n};\n\n/**\n * Name the complete original record set for one route.\n *\n * @param route - Ordinary source or reviewed Binding IR.\n * @param receipt - Independently authenticated package-set receipt.\n */\nexport const mutualCheckedRecordNativeRecords = (route, receipt) => {\n\tassert.ok(mutualCheckedRecordNativeRoutes.includes(route));\n\tvalidatePackageSetReceipt(receipt);\n\tconst build = [\n\t\t`${mutualCheckedRecordModule}.lean`, \"author-inputs.json\"\n\t\t, \"lean-bridge.exports.json\", \"model.json\", \"package-set-receipt.json\"\n\t\t, ...route === \"reviewed\" ? [\"api.binding-ir.json\"] : []\n\t];\n\treturn [\n\t\t\"report.json\"\n\t\t, \"runtime.json\"\n\t\t, \"configuration.json\"\n\t\t, \"expected.binding-ir.json\"\n\t\t, ...[0, 1].flatMap(attempt => build.map(path => `build-${attempt}/${path}`))\n\t\t, ...mutualCheckedRecordNativeProfiles.flatMap(profile => [\n\t\t\t`consumers/${profile}.${profile}`, `${profile}/report.json`\n\t\t])\n\t\t, ...[\n\t\t\t\"package-set-receipt.json\", \"package-set-receipt.json.sha256\"\n\t\t\t, ...receipt.packages.flatMap(pkg => pkg.artifacts.map(item => item.path))\n\t\t].map(path => `handoff/${path}`)\n\t];\n};\n\n/**\n * Refuse missing, duplicate and additional retained records before reconciliation.\n *\n * @param actual - Relative file inventory observed by the caller.\n * @param route - Ordinary source or reviewed Binding IR.\n * @param receipt - Independently authenticated package-set receipt.\n */\nexport const assertMutualCheckedRecordNativeRecordPaths = (\n\tactual, route, receipt\n) => assert.deepEqual([...actual].sort()\n\t, [...mutualCheckedRecordNativeRecords(route, receipt), \"controls.json\"].sort());\n\nconst expectedInputs = (route, producerCommit, fixture) => {\n\tconst configuration = fixture.mutualCheckedRecordConfiguration(route);\n\tconst values = {\n\t\t\"lean-bridge.exports.json\": Buffer.from(canonicalJson(configuration))\n\t};\n\tfor(const path of [\n\t\t`${mutualCheckedRecordModule}.lean`, \"lakefile.toml\", \"lean-toolchain\"\n\t\t, \"LICENSE\", \"package.json\"\n\t]) values[path] = original(producerCommit, fixturePath(path));\n\tif(route === \"reviewed\")\n\t\tvalues[\"api.binding-ir.json\"] = Buffer.from(canonicalJson(\n\t\t\tfixture.mutualCheckedRecordReview()));\n\treturn values;\n};\n\nconst checkModels = async ({ read, json, report, route, producerCommit }) => {\n\tconst fixture = await mutualCheckedRecordNativeFixture(producerCommit);\n\tconst expected = fixture.mutualCheckedRecordReview();\n\tconst configuration = fixture.mutualCheckedRecordConfiguration(route);\n\tassert.deepEqual(await json(\"configuration.json\"), configuration);\n\tassert.deepEqual(await json(\"expected.binding-ir.json\"), expected);\n\tassert.equal(report.expectedBindingIrSha256, hashBindingIr(expected));\n\tconst inputs = expectedInputs(route, producerCommit, fixture);\n\tconst sourceInputs = Object.entries(inputs).sort(([left], [right]) =>\n\t\tleft.localeCompare(right)).map(([path, bytes]) => ({\n\t\tpath, bytes: bytes.length, sha256: sha256(bytes)\n\t\t}));\n\tconst treeSha256 = sha256(sourceInputs.map(item =>\n\t\t`${item.sha256}  ${item.path}\\n`).join(\"\"));\n\tconst license = sourceInputs.find(item => item.path === \"LICENSE\");\n\tconst notices = {\n\t\tschemaVersion: 2, kind: \"lean-bridge-source-notices\"\n\t\t, packages: [{\n\t\t\tname: component.name\n\t\t\t, source: {\n\t\t\t\tkind: \"root\", sourceTreeSha256: treeSha256, inputs: sourceInputs\n\t\t\t}\n\t\t\t, configurationSource: canonicalJson(configuration)\n\t\t\t, notices: [{\n\t\t\t\t...license, payload: `source-notices/${license.sha256}.txt`\n\t\t\t}]\n\t\t}]\n\t};\n\tassert.equal(report.builds.length, 2);\n\tassert.deepEqual(report.builds[1], report.builds[0]\n\t\t, \"Independent author roots must reproduce exact identities\");\n\tlet model, receipt;\n\tfor(const attempt of [0, 1])\n\t{\n\t\tconst prefix = `build-${attempt}/`, build = report.builds[attempt];\n\t\tconst modelBytes = await read(prefix + \"model.json\");\n\t\tconst receiptBytes = await read(prefix + \"package-set-receipt.json\");\n\t\tmodel = await json(prefix + \"model.json\");\n\t\treceipt = await json(prefix + \"package-set-receipt.json\");\n\t\tvalidateBindingIr(model.bindingIr);\n\t\tvalidatePackageSetReceipt(receipt);\n\t\tassert.equal(reviewedContractDifference(expected, model.bindingIr), null);\n\t\tassert.equal(model.bindingIrSha256, hashBindingIr(model.bindingIr));\n\t\tassert.equal(model.profile, \"native-library-v1\");\n\t\tassert.equal(model.pointerBits, 64);\n\t\tassert.equal(model.byteOrder, \"little\");\n\t\tassert.equal(model.schemaVersion, route === \"reviewed\" ? 5 : 4);\n\t\tassert.deepEqual(model.component, component);\n\t\tassert.deepEqual(model.exports.map(item => item.name).sort()\n\t\t\t, expected.declarations.map(item => item.id.slice(5)).sort());\n\t\tfor(const item of model.exports)\n\t\t{\n\t\t\tassert.deepEqual(item.refinements\n\t\t\t\t, fixture.mutualCheckedRecordRefinements[item.name], item.name);\n\t\t\tassert.doesNotMatch(JSON.stringify(item.refinements.result)\n\t\t\t\t, /\"constructor\":\"[A-Za-z]+CheckedRecords\\./u\n\t\t\t\t, `${item.name} result selects no constructor`);\n\t\t}\n\t\tconst source = inputs[`${mutualCheckedRecordModule}.lean`];\n\t\tconst identity = model.sourceIdentity;\n\t\tassert.deepEqual(await read(prefix + `${mutualCheckedRecordModule}.lean`), source);\n\t\tassert.deepEqual(await json(prefix + \"lean-bridge.exports.json\"), configuration);\n\t\tassert.equal(identity.modules.length, 1);\n\t\tassert.deepEqual(identity.modules[0].source, {\n\t\t\tpath: `${mutualCheckedRecordModule}.lean`, bytes: source.length\n\t\t\t, sha256: sha256(source)\n\t\t});\n\t\tassert.equal(identity.exportConfigurationSource, canonicalJson(configuration));\n\t\tassert.equal(identity.exportConfigurationSha256, sha256(canonicalJson(configuration)));\n\t\tassert.equal(identity.extractorSha256\n\t\t\t, sha256(original(producerCommit, \"src/analyze/NativeExports.lean\")));\n\t\tdigest(identity.leanCompilerSha256);\n\t\tassert.match(identity.leanCommit, /^[a-f0-9]{40}$/u);\n\t\tconst toolchain = inputs[\"lean-toolchain\"].toString().trim();\n\t\tassert.equal(identity.leanVersion, toolchain.split(\":v\").at(-1));\n\t\tassert.equal(identity.sourceTreeSha256, treeSha256);\n\t\tassert.equal(identity.sourceNoticesSha256, sha256(canonicalJson(notices)));\n\t\tassert.equal(identity.lakeDependencies, undefined);\n\t\tassert.deepEqual(identity.request.metadata.modules.map(item => item.sourceSha256)\n\t\t\t, [sha256(source)]);\n\t\tassert.equal(identity.request.metadata.toolchain, toolchain);\n\t\tlet selection = configuration;\n\t\tif(route === \"reviewed\")\n\t\t{\n\t\t\tassert.deepEqual(await json(prefix + \"api.binding-ir.json\"), expected);\n\t\t\tassert.equal(identity.reviewedBindingIr.path, \"api.binding-ir.json\");\n\t\t\tassert.equal(identity.reviewedBindingIr.source, canonicalJson(expected));\n\t\t\tassert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(expected)));\n\t\t\tassert.equal(identity.reviewedBindingIr.semanticSha256, hashBindingIr(expected));\n\t\t\tselection = reviewedSourceSelection(identity.reviewedBindingIr);\n\t\t}\n\t\telse assert.equal(identity.reviewedBindingIr, undefined);\n\t\tfor(const key of [\"contracts\", \"exports\", \"specializations\"])\n\t\t\tassert.deepEqual(identity.request[key], selection[key]);\n\t\tfor(const key of [\"arities\", \"resources\"])\n\t\t\tassert.deepEqual(identity.request[key], []);\n\t\tfor(const key of [\"modules\", \"exportModules\"])\n\t\t\tassert.deepEqual(identity.request[key], [mutualCheckedRecordModule]);\n\t\tassert.equal(identity.request.profile, \"native-library-v1\");\n\t\tconst snapshot = await json(prefix + \"author-inputs.json\");\n\t\tassert.deepEqual(snapshot.map(item => item.path), Object.keys(inputs).sort());\n\t\tfor(const item of snapshot)\n\t\t{\n\t\t\texactKeys(item, [\"path\", \"sha256\", \"mode\", \"mtime\", \"ctime\"], item.path);\n\t\t\tassert.equal(item.sha256, sha256(inputs[item.path]));\n\t\t\tassert.equal(item.mode & 0o170000, 0o100000);\n\t\t\tassert.ok(Number.isFinite(item.mtime) && item.mtime > 0);\n\t\t\tassert.ok(Number.isFinite(item.ctime) && item.ctime > 0);\n\t\t}\n\t\tassert.equal(receipt.source.treeSha256, identity.sourceTreeSha256);\n\t\tassert.deepEqual(receipt.component, component);\n\t\tassert.equal(receipt.profiles.length, 1);\n\t\tassert.equal(receipt.profiles[0].id, \"native-library-v1\");\n\t\tassert.equal(receipt.profiles[0].bindingIrSha256, model.bindingIrSha256);\n\t\tassert.deepEqual(receipt.packages.map(pkg => pkg.target).sort()\n\t\t\t, [...mutualCheckedRecordNativeProfiles]);\n\t\tfor(const pkg of receipt.packages)\n\t\t\tassert.equal(pkg.runtimeIdentity, receipt.profiles[0].runtimeIdentity);\n\t\tassert.deepEqual(build, {\n\t\t\tbindingIrSha256: model.bindingIrSha256, modelSha256: sha256(modelBytes)\n\t\t\t, receiptSha256: sha256(receiptBytes)\n\t\t\t, archives: Object.fromEntries(receipt.packages.flatMap(pkg =>\n\t\t\t\tpkg.artifacts.map(artifact => [artifact.path, artifact.sha256])))\n\t\t});\n\t}\n\tfor(const path of [\n\t\t\"model.json\", \"package-set-receipt.json\"\n\t\t, `${mutualCheckedRecordModule}.lean`, \"lean-bridge.exports.json\"\n\t\t, ...route === \"reviewed\" ? [\"api.binding-ir.json\"] : []\n\t]) assert.deepEqual(await read(`build-0/${path}`), await read(`build-1/${path}`), path);\n\treturn { model, receipt };\n};\n\nconst checkPackages = async ({ read, model, receipt, floor, producerCommit }) => {\n\tconst receiptBytes = await read(\"handoff/package-set-receipt.json\");\n\tassert.equal(receiptBytes.toString(), canonicalJson(receipt));\n\tassert.equal((await read(\"handoff/package-set-receipt.json.sha256\")).toString()\n\t\t, `${sha256(receiptBytes)}  package-set-receipt.json\\n`);\n\tconst generators = await historicalGenerators(producerCommit), results = [];\n\tfor(const pkg of receipt.packages)\n\t{\n\t\tconst profile = pkg.target, name = component.name;\n\t\tassert.ok(mutualCheckedRecordNativeProfiles.includes(profile));\n\t\tassert.equal(pkg.ecosystem, profile);\n\t\tassert.equal(pkg.role, \"component\");\n\t\tassert.equal(pkg.profile, \"native-library-v1\");\n\t\tassert.equal(pkg.runtimeDelivery, \"embedded\");\n\t\tassert.deepEqual(pkg.requires, []);\n\t\tassert.equal(pkg.name, name);\n\t\tassert.equal(pkg.version, component.version);\n\t\tassert.equal(pkg.artifacts.length, 1);\n\t\tassert.equal(pkg.runtimeIdentity, receipt.profiles[0].runtimeIdentity);\n\t\tconst artifact = pkg.artifacts[0], root = `${name}-1.0.0-${profile}`;\n\t\tassert.equal(artifact.path, `archives/${root}.tar.gz`);\n\t\tconst archive = await read(`handoff/${artifact.path}`);\n\t\tassert.equal(archive.length, artifact.bytes);\n\t\tassert.equal(sha256(archive), artifact.sha256);\n\t\tconst files = readRepositoryTar(archive, root);\n\t\tconst packageBytes = files.get(\"lean-bridge-package.json\");\n\t\tconst packaged = JSON.parse(packageBytes);\n\t\tassert.equal(packageBytes.toString(), canonicalJson(packaged));\n\t\tassert.equal(packaged.schemaVersion, 1);\n\t\tassert.equal(packaged.kind, \"lean-bridge-native-c-package\");\n\t\tassert.equal(packaged.ecosystem, profile);\n\t\tassert.equal(packaged.name, name);\n\t\tassert.equal(packaged.version, component.version);\n\t\tassert.equal(packaged.profile, \"native-library-v1\");\n\t\tassert.equal(packaged.runtimeIdentity, pkg.runtimeIdentity);\n\t\tassert.equal(packaged.bindingIrSha256, model.bindingIrSha256);\n\t\tassert.deepEqual(packaged.component, component);\n\t\tassert.equal(packaged.glibcMinimumVersion, floor);\n\t\tassert.equal(packaged.pkgConfig, name);\n\t\tassert.equal(packaged.cmakePackage, \"LeanBridgeMutualcheckedrecords\");\n\t\tassert.equal(packaged.cmakeTarget, \"LeanBridge::mutualcheckedrecords\");\n\t\tassert.equal(packaged.exactIntegers, profile === \"c\" ? \"gmp-6.3.0\" : undefined);\n\t\tassert.deepEqual([...files.keys()].sort()\n\t\t\t, [...Object.keys(packaged.files), \"lean-bridge-package.json\"].sort());\n\t\tfor(const [path, record] of Object.entries(packaged.files))\n\t\t{\n\t\t\tconst bytes = files.get(path);\n\t\t\tassert.deepEqual(record, { bytes: bytes.length, sha256: sha256(bytes) }, path);\n\t\t}\n\t\tconst json = path => {\n\t\t\tconst bytes = files.get(`share/lean-bridge/${path}`), value = JSON.parse(bytes);\n\t\t\tassert.equal(bytes.toString(), canonicalJson(value), path);\n\t\t\treturn value;\n\t\t};\n\t\tassert.deepEqual(json(\"component/model.json\"), model);\n\t\tassert.deepEqual(json(\"component/binding-ir.json\"), model.bindingIr);\n\t\tconst nativeComponent = json(\"component/native-component.json\");\n\t\tconst adapter = json(\"native-c-adapter.json\"), runtime = json(\"runtime.json\");\n\t\tassert.equal(sha256(canonicalJson(runtime)), packaged.runtimeIdentity);\n\t\tassert.equal(nativeComponent.runtimeIdentity, packaged.runtimeIdentity);\n\t\tassert.equal(adapter.runtimeIdentity, packaged.runtimeIdentity);\n\t\tassert.equal(nativeComponent.bindingIrSha256, model.bindingIrSha256);\n\t\tassert.equal(adapter.bindingIrSha256, model.bindingIrSha256);\n\t\tassert.deepEqual(nativeComponent.sourceIdentity, model.sourceIdentity);\n\t\tassert.equal(packaged.componentReceiptSha256\n\t\t\t, sha256(canonicalJson(nativeComponent)));\n\t\tassert.equal(packaged.adapterReceiptSha256, sha256(canonicalJson(adapter)));\n\t\tconst libraries = {\n\t\t\t[`lib/${adapter.library}`]: adapter.files[`lib/${adapter.library}`]\n\t\t\t, [`lib/${nativeComponent.library}`]: nativeComponent.nativeLibrary\n\t\t\t, ...Object.fromEntries(Object.entries(runtime.files)\n\t\t\t\t.filter(([path]) => path.startsWith(\"lib/\")))\n\t\t\t, ...profile === \"c\" ? Object.fromEntries(Object.entries(adapter.files)\n\t\t\t\t.filter(([path]) => path.startsWith(\"gmp/lib/\"))\n\t\t\t\t.map(([path, file]) => [path.slice(4), file])) : {}\n\t\t};\n\t\tassert.deepEqual(Object.keys(packaged.files).filter(path =>\n\t\t\tpath.startsWith(\"lib/\") && !path.startsWith(\"lib/pkgconfig/\")\n\t\t\t&& !path.startsWith(\"lib/cmake/\")).sort(), Object.keys(libraries).sort());\n\t\tfor(const [path, record] of Object.entries(libraries))\n\t\t\tassert.deepEqual(packaged.files[path]\n\t\t\t\t, { bytes: record.bytes, sha256: record.sha256 }, path);\n\t\tconst raw = generators.generateCBindingPackage(model.bindingIr);\n\t\tconst generated = profile === \"c\"\n\t\t\t? generators.generateGmpProjection(model.bindingIr).files\n\t\t\t: {\n\t\t\t\t...raw, ...generators.generateCppBindingPackage(model.bindingIr)\n\t\t\t\t, ...generators.boostSources()\n\t\t\t};\n\t\tfor(const [path, source] of Object.entries(generated).filter(([path]) =>\n\t\t\tpath.startsWith(\"include/\") || path === \"share/lean-bridge/boost.json\"\n\t\t\t|| path.endsWith(\"Boost-LICENSE\")))\n\t\t\tassert.equal(files.get(path)?.toString(), source, path);\n\t\tconst headers = Object.keys(generated).filter(path => path.startsWith(\"include/\"));\n\t\tif(profile === \"c\")\n\t\t{\n\t\t\theaders.push(\"include/gmp.h\");\n\t\t\tconst gmp = json(\"gmp.json\");\n\t\t\tconst source = files.get(\"share/lean-bridge/sources/gmp-6.3.0.tar.xz\");\n\t\t\tassert.deepEqual(source, original(producerCommit, \"src/backends/c/gmp.source.tar.xz\"));\n\t\t\tassert.equal(gmp.version, \"6.3.0\");\n\t\t\tassert.equal(gmp.checked, true);\n\t\t\tassert.equal(gmp.sha256, sha256(source));\n\t\t}\n\t\tassert.deepEqual([...files.keys()].filter(path => path.startsWith(\"include/\")).sort()\n\t\t\t, headers.sort());\n\t\tconst sourceLicense = original(producerCommit, fixturePath(\"LICENSE\"));\n\t\tconst noticePath = \"share/lean-bridge/licenses/source-notices.json\";\n\t\tassert.equal(sha256(files.get(noticePath)), model.sourceIdentity.sourceNoticesSha256);\n\t\tconst payloadPath = \"share/lean-bridge/licenses/source-notices/\"\n\t\t\t+ sha256(sourceLicense) + \".txt\";\n\t\tassert.deepEqual(files.get(payloadPath), sourceLicense);\n\t\tconst expectedPaths = [\n\t\t\t\"README.md\", \"package-metadata.json\", ...headers, ...Object.keys(libraries)\n\t\t\t, `lib/pkgconfig/${name}.pc`\n\t\t\t, ...[\"Config\", \"ConfigVersion\"].map(suffix =>\n\t\t\t\t`lib/cmake/${packaged.cmakePackage}/${packaged.cmakePackage}${suffix}.cmake`)\n\t\t\t, ...[\"native-component.json\", \"model.json\", \"metadata.json\"\n\t\t\t\t, \"binding-ir.json\", \"generated.lean\", \"component.h\"\n\t\t\t\t, \"allocation-guard.h\", \"artifacts.json\"]\n\t\t\t\t.map(path => `share/lean-bridge/component/${path}`)\n\t\t\t, \"share/lean-bridge/runtime.json\", \"share/lean-bridge/native-c-adapter.json\"\n\t\t\t, ...[\"Lean-LICENSE\", \"Lean-LICENSES\", \"LeanBridge-LICENSE\"]\n\t\t\t\t.map(path => `share/lean-bridge/licenses/${path}`)\n\t\t\t, noticePath, payloadPath\n\t\t\t, ...profile === \"c\" ? [\n\t\t\t\t\"share/lean-bridge/gmp.json\"\n\t\t\t\t, \"share/lean-bridge/sources/gmp-6.3.0.tar.xz\"\n\t\t\t\t, ...[\"COPYING\", \"COPYING.LESSERv3\", \"COPYINGv2\", \"COPYINGv3\"]\n\t\t\t\t\t.map(path => `share/lean-bridge/licenses/GMP-${path}`)\n\t\t\t] : [\n\t\t\t\t\"share/lean-bridge/boost.json\"\n\t\t\t\t, \"share/lean-bridge/licenses/Boost-LICENSE\"\n\t\t\t]\n\t\t];\n\t\tassert.equal(new Set(expectedPaths).size, expectedPaths.length);\n\t\tassert.deepEqual(Object.keys(packaged.files).sort(), expectedPaths.sort());\n\t\tresults.push({\n\t\t\tprofile, artifact, receiptSha256: sha256(packageBytes)\n\t\t\t, packageFileSetSha256: sha256(canonicalJson([...files.keys()].sort()))\n\t\t\t, files: files.size\n\t\t});\n\t}\n\treturn results;\n"
+        },
+        {
+          "start": 21144,
+          "previous": " * @param options - Exact route and producer revision.\n * @param options.route - Ordinary source or reviewed Binding IR.\n * @param options.producerCommit - Exact producing Git commit.\n",
+          "current": " * @param options - Exact route, producer revision and observed host contract.\n"
+        },
+        {
+          "start": 21227,
+          "previous": "export const checkMutualCheckedRecordNativeReport = async (\n\tread, { route, producerCommit }\n) => {\n",
+          "current": "export const checkMutualCheckedRecordNativeReport = async (read, options) => {\n\tconst { route, producerCommit, runtime, floor } = options;\n"
+        },
+        {
+          "start": 21477,
+          "previous": "",
+          "current": "\tassert.match(floor, /^2\\.[0-9]+$/u);\n\texactKeys(runtime, [\"platform\", \"arch\", \"glibc\"], \"runtime option\");\n\tassert.equal(runtime.platform, \"linux\");\n\tassert.equal(runtime.arch, \"x64\");\n\tassert.match(runtime.glibc, /^2\\.[0-9]+$/u);\n\tassert.ok(Number(runtime.glibc.split(\".\")[1]) >= Number(floor.split(\".\")[1]));\n"
+        },
+        {
+          "start": 22098,
+          "previous": "\t\t, \"producerCommit\", \"expectedBindingIrSha256\", \"reproducible\"\n",
+          "current": "\t\t, \"producerCommit\", \"expectedBindingIrSha256\", \"runtime\"\n\t\t, \"declaredGlibcFloor\", \"authorInputsUnchanged\", \"reproducible\"\n"
+        },
+        {
+          "start": 22500,
+          "previous": "\tassert.equal(report.expectedBindingIrSha256\n\t\t, hashBindingIr(mutualCheckedRecordReview()));\n",
+          "current": ""
+        },
+        {
+          "start": 22586,
+          "previous": "",
+          "current": "\tassert.equal(report.authorInputsUnchanged, true);\n"
+        },
+        {
+          "start": 22716,
+          "previous": "\tassert.equal(report.builds.length, 2);\n\tassert.deepEqual(report.builds[1], report.builds[0]\n\t\t, \"Independent author roots must reproduce exact identities\");\n\n\tconst expectedInputs = [\n\t\t\"LICENSE\", `${mutualCheckedRecordModule}.lean`, \"lakefile.toml\"\n\t\t, \"lean-bridge.exports.json\", \"lean-toolchain\", \"package.json\"\n\t\t, ...route === \"reviewed\" ? [\"api.binding-ir.json\"] : []\n\t].sort();\n\tconst recordPaths = [\"report.json\"];\n\tlet receipt;\n\tfor(const attempt of [0, 1])\n\t{\n\t\tconst prefix = `build-${attempt}/`;\n\t\tconst names = [\n\t\t\t`${mutualCheckedRecordModule}.lean`, \"author-inputs.json\"\n\t\t\t, \"lean-bridge.exports.json\", \"model.json\"\n\t\t\t, \"package-set-receipt.json\"\n\t\t\t, ...route === \"reviewed\" ? [\"api.binding-ir.json\"] : []\n\t\t];\n\t\trecordPaths.push(...names.map(name => prefix + name));\n\t\tconst modelBytes = await bytes(prefix + \"model.json\");\n\t\tconst model = canonical(modelBytes, prefix + \"model.json\");\n\t\tassert.equal(reviewedContractDifference(\n\t\t\tmutualCheckedRecordReview(), model.bindingIr), null);\n\t\tassert.equal(model.bindingIrSha256, report.builds[attempt].bindingIrSha256);\n\t\tassert.equal(sha256(modelBytes), report.builds[attempt].modelSha256);\n\t\tconst receiptBytes = await bytes(prefix + \"package-set-receipt.json\");\n\t\tconst currentReceipt = canonical(receiptBytes\n\t\t\t, prefix + \"package-set-receipt.json\");\n\t\tassert.equal(validatePackageSetReceipt(currentReceipt), true);\n\t\tassert.equal(sha256(receiptBytes), report.builds[attempt].receiptSha256);\n\t\tassert.deepEqual(currentReceipt.packages.map(item => item.target).sort()\n\t\t\t, [...mutualCheckedRecordNativeProfiles]);\n\t\tassert.deepEqual(\n\t\t\tObject.fromEntries(currentReceipt.packages.flatMap(pkg =>\n\t\t\t\tpkg.artifacts.map(artifact => [artifact.path, artifact.sha256])))\n\t\t\t, report.builds[attempt].archives\n\t\t);\n\t\treceipt ??= currentReceipt;\n\t\tassert.deepEqual(currentReceipt, receipt);\n\t\tconst configuration = canonical(\n\t\t\tawait bytes(prefix + \"lean-bridge.exports.json\")\n\t\t\t, prefix + \"lean-bridge.exports.json\");\n\t\tassert.deepEqual(configuration, mutualCheckedRecordConfiguration(route));\n\t\tassert.deepEqual(await bytes(prefix + `${mutualCheckedRecordModule}.lean`)\n\t\t\t, await readFile(join(mutualCheckedRecordFixtureRoot\n\t\t\t\t, `${mutualCheckedRecordModule}.lean`)));\n\t\tif(route === \"reviewed\") assert.deepEqual(\n\t\t\tcanonical(await bytes(prefix + \"api.binding-ir.json\")\n\t\t\t\t, prefix + \"api.binding-ir.json\")\n\t\t\t, mutualCheckedRecordReview());\n\t\tconst inputs = await json(prefix + \"author-inputs.json\");\n\t\tassert.deepEqual(inputs.map(item => item.path), expectedInputs);\n\t\tfor(const item of inputs)\n\t\t{\n\t\t\texactKeys(item, [\"path\", \"sha256\", \"mode\", \"mtime\", \"ctime\"]\n\t\t\t\t, `${prefix}${item.path}`);\n\t\t\tassert.equal(item.mode, 0o100644);\n\t\t\tdigest(item.sha256);\n\t\t\tassert.ok(Number.isFinite(item.mtime) && Number.isFinite(item.ctime));\n\t\t}\n\t}\n\n\tconst handoffReceiptBytes = await bytes(\"handoff/package-set-receipt.json\");\n\tassert.deepEqual(handoffReceiptBytes\n\t\t, await bytes(\"build-0/package-set-receipt.json\"));\n\tassert.deepEqual(await bytes(\"handoff/package-set-receipt.json.sha256\")\n\t\t, Buffer.from(`${sha256(handoffReceiptBytes)}  package-set-receipt.json\\n`));\n\trecordPaths.push(\"handoff/package-set-receipt.json\"\n\t\t, \"handoff/package-set-receipt.json.sha256\");\n\tfor(const pkg of receipt.packages) for(const artifact of pkg.artifacts)\n\t{\n\t\tconst path = `handoff/${artifact.path}`, archive = await bytes(path);\n\t\tassert.equal(archive.length, artifact.bytes, path);\n\t\tassert.equal(sha256(archive), artifact.sha256, path);\n\t\trecordPaths.push(path);\n\t}\n\n",
+          "current": "\tassert.equal(report.declaredGlibcFloor, floor);\n\tconst observedRuntime = {\n\t\tplatform: runtime.platform, arch: runtime.arch\n\t\t, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\\n`, stderr: \"\" }\n\t};\n\tassert.deepEqual(report.runtime, observedRuntime);\n\tassert.deepEqual(await json(\"runtime.json\"), observedRuntime);\n\tconst { model, receipt } = await checkModels({\n\t\tread: bytes, json, report, route, producerCommit\n\t});\n"
+        },
+        {
+          "start": 23406,
+          "previous": "\t\tassert.equal(consumer.toString(), await mutualCheckedRecordNativeConsumer(profile));\n",
+          "current": "\t\tassert.deepEqual(consumer\n\t\t\t, mutualCheckedRecordNativeConsumer(profile, producerCommit));\n"
+        },
+        {
+          "start": 24762,
+          "previous": "\t\trecordPaths.push(consumerPath, `${profile}/report.json`);\n",
+          "current": ""
+        },
+        {
+          "start": 24801,
+          "previous": "",
+          "current": "\tconst packages = await checkPackages({\n\t\tread: bytes, model, receipt, floor, producerCommit\n\t});\n\tfor(const profileReport of observations)\n\t{\n\t\tconst packageResult = packages.find(item => item.profile === profileReport.profile);\n\t\tassert.deepEqual(profileReport.closure, {\n\t\t\tpackageFileSetSha256: packageResult.packageFileSetSha256\n\t\t\t, receiptSha256: packageResult.receiptSha256\n\t\t});\n\t}\n\tconst recordPaths = mutualCheckedRecordNativeRecords(route, receipt).sort();\n"
+        },
+        {
+          "start": 25280,
+          "previous": "\t\troute, producerCommit, reportSha256: sha256(reportBytes)\n\t\t, bindingIrSha256: report.expectedBindingIrSha256\n\t\t, recordPaths: recordPaths.sort(), receipt, observations\n\t\t, independentBuilds: report.independentBuilds\n",
+          "current": "\t\troute, producerCommit, runtime, floor, reportSha256: sha256(reportBytes)\n\t\t, bindingIrSha256: report.expectedBindingIrSha256, recordPaths, receipt\n\t\t, observations, packages, independentBuilds: report.independentBuilds\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-record-native-ci.test.mjs",
+      "previousSha256": "9843cb8bcd82227df2d62a7500435011188592f4a38dab82c9053b97b4d12149",
+      "currentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/**\n * Registered hosted C/C++ recursive checked-record contracts.\n *\n * @file\n */\nimport \"./helpers/mutual-checked-record-native-ci-tests.mjs\";\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-records.test.mjs",
+      "previousSha256": "0d121e434e5e345e983754dc4141fed783166ab0a6aeaa017a197e220848f7c7",
+      "currentSha256": "0764aa685788850aed84766bf8ebc4378b1998225c054d3cc6860b98069bb6bd",
+      "edits": [
+        {
+          "start": 1699,
+          "previous": "",
+          "current": "import \"./helpers/mutual-checked-record-native-ci-tests.mjs\";\nimport \"./helpers/mutual-checked-record-native-hardening-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

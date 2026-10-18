@@ -33,5 +33,6 @@ for route in ordinary reviewed; do
     tests/helpers/mutual-checked-record-native-installed-tests.mjs 2>&1 | tee "$output/run.tap"
   node scripts/check-mutual-checked-record-native-ci.mjs --route "$route" \
     --producer "$revision" --directory "$output_root/records/$route" \
-    --tap "$output/run.tap" | tee "$output/verification.json"
+    --tap "$output/run.tap" --floor "$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR" \
+    | tee "$output/verification.json"
 done

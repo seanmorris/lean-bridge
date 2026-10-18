@@ -4,12 +4,21 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
 	assertMutualCheckedRecordNativeCiTap
 	, parseMutualCheckedRecordNativeCiArgs
 } from "./mutual-checked-record-native-ci-report.mjs";
+import {
+	mutualCheckedRecordConfiguration, mutualCheckedRecordFixtureRoot
+	, mutualCheckedRecordModule, mutualCheckedRecordRefinements
+	, mutualCheckedRecordReview
+} from "./mutual-checked-record-fixture.mjs";
+import {
+	mutualCheckedRecordNativeFixture
+} from "./mutual-checked-record-native-report.mjs";
 import {
 	assertMutualCheckedRecordNativeWorkflow
 } from "./mutual-checked-record-native-ci-workflow.mjs";
@@ -61,18 +70,36 @@ test("recursive checked-record native shell fixes both routes and exact checker"
 	assert.match(source, /--test-concurrency=1/u);
 	assert.match(source, /check-mutual-checked-record-native-ci\.mjs/u);
 	assert.match(source, /--producer "\$revision"/u);
+	assert.match(source, /--floor "\$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"/u);
 	assert.match(source, /2>&1 \| tee "\$output\/run\.tap"/u);
 	assert.doesNotMatch(source, /\|\| true|continue-on-error|--test-only/u);
+});
+
+test("recursive checked-record native verifier loads the producer fixture closure", async () => {
+	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"]
+		, { encoding: "utf8" }).trim();
+	const fixture = await mutualCheckedRecordNativeFixture(producerCommit);
+	assert.equal(fixture.mutualCheckedRecordFixtureRoot
+		, mutualCheckedRecordFixtureRoot);
+	assert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);
+	for(const route of ["ordinary", "reviewed"])
+		assert.deepEqual(fixture.mutualCheckedRecordConfiguration(route)
+			, mutualCheckedRecordConfiguration(route));
+	assert.deepEqual(fixture.mutualCheckedRecordReview()
+		, mutualCheckedRecordReview());
+	assert.deepEqual(fixture.mutualCheckedRecordRefinements
+		, mutualCheckedRecordRefinements);
 });
 
 test("recursive checked-record native CLI rejects incomplete arguments and TAP", () => {
 	const commit = "a".repeat(40);
 	const args = [
 		"--route", "ordinary", "--producer", commit
-		, "--directory", "records", "--tap", "run.tap"
+		, "--directory", "records", "--tap", "run.tap", "--floor", "2.38"
 	];
 	assert.deepEqual(parseMutualCheckedRecordNativeCiArgs(args), {
 		route: "ordinary", producer: commit, directory: "records", tap: "run.tap"
+		, floor: "2.38"
 	});
 	for(const changed of [args.slice(2), [...args, "--route", "reviewed"]
 		, args.with(1, "other"), args.with(3, "HEAD")])

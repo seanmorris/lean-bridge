@@ -23,6 +23,9 @@ import {
 	mutualCheckedRecordConfiguration, mutualCheckedRecordFixtureRoot
 	, mutualCheckedRecordModule, mutualCheckedRecordReview
 } from "./mutual-checked-record-fixture.mjs";
+import {
+	checkMutualCheckedRecordNativeControls
+} from "./mutual-checked-record-native-controls.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 
 const flag = "LEAN_BRIDGE_MUTUAL_CHECKED_RECORD_NATIVE_TEST";
@@ -53,6 +56,16 @@ for(const route of routes) test(
 			?? "build/mutual-checked-record-native", route);
 		await assert.rejects(access(output), { code: "ENOENT" });
 		await mkdir(output, { recursive: true });
+		const producerCommit = execFileSync("git", ["rev-parse", "HEAD"]
+			, { encoding: "utf8" }).trim();
+		for(const path of [
+			"tests/helpers/mutual-checked-record-native-installed-tests.mjs"
+			, "tests/helpers/mutual-checked-record-native-report.mjs"
+			, "tests/helpers/mutual-checked-record-native-controls.mjs"
+			, ...profiles.map(profile =>
+				`tests/fixtures/mutual-checked-record-consumers/${profile}.${profile}`)
+		]) execFileSync("git", ["ls-files", "--error-unmatch", path]);
+		execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
 		const root = await mkdtemp(join(tmpdir(), "lean-bridge-mutual-checked-record-native-"));
 		let complete = false;
 		t.after(async () => {
@@ -66,6 +79,23 @@ for(const route of routes) test(
 			, LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:
 				process.env.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38"
 		};
+		const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
+		assert.match(floor, /^2\.[0-9]+$/u);
+		assert.equal(process.platform, "linux");
+		assert.equal(process.arch, "x64");
+		const runtime = {
+			platform: process.platform, arch: process.arch
+			, glibc: await runCopied("/usr/bin/getconf", ["GNU_LIBC_VERSION"], root)
+		};
+		assert.deepEqual(runtime.glibc, {
+			code: 0, stdout: runtime.glibc.stdout, stderr: ""
+		});
+		assert.match(runtime.glibc.stdout, /^glibc 2\.[0-9]+\n$/u);
+		const glibc = runtime.glibc.stdout.trim().split(" ")[1];
+		assert.ok(Number(glibc.split(".")[1]) >= Number(floor.split(".")[1]));
+		await saveLakeFile(output, "runtime.json", canonicalJson(runtime));
+		await saveLakeFile(output, "configuration.json", canonicalJson(configuration));
+		await saveLakeFile(output, "expected.binding-ir.json", canonicalJson(expected));
 		const consumer = join(root, "consumer"), handoff = join(consumer, "handoff");
 		const builds = [];
 		for(const attempt of [0, 1])
@@ -163,11 +193,19 @@ for(const route of routes) test(
 		await copyPackageSetHandoff(handoff, join(output, "handoff"));
 		await saveLakeFile(output, "report.json", canonicalJson({
 			schemaVersion: 1, route, profiles, builds, reports
-			, producerCommit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+			, producerCommit
 			, expectedBindingIrSha256: hashBindingIr(expected)
+			, runtime, declaredGlibcFloor: floor, authorInputsUnchanged: true
 			, reproducible: true, independentBuilds: 2
 			, relocated: true, sourceFree: true
 		}));
+		const read = path => readFile(join(output, path));
+		const controls = await checkMutualCheckedRecordNativeControls(read, {
+			route, producerCommit
+			, runtime: { platform: process.platform, arch: process.arch, glibc }
+			, floor
+		});
+		await saveLakeFile(output, "controls.json", canonicalJson(controls));
 		complete = true;
 	}
 );

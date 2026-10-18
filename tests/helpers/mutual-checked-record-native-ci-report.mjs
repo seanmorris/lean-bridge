@@ -5,8 +5,9 @@
  */
 import assert from "node:assert/strict";
 import {
-	checkMutualCheckedRecordNativeReport, mutualCheckedRecordNativeRoutes
-} from "./mutual-checked-record-native-report.mjs";
+	checkMutualCheckedRecordNativeControls
+} from "./mutual-checked-record-native-controls.mjs";
+import { mutualCheckedRecordNativeRoutes } from "./mutual-checked-record-native-report.mjs";
 
 /**
  * Name the only permitted hosted test for one source route.
@@ -24,8 +25,9 @@ export const mutualCheckedRecordNativeCiTestName = route => {
  * @param args - Checker CLI arguments.
  */
 export const parseMutualCheckedRecordNativeCiArgs = args => {
-	const usage = "Usage: check-mutual-checked-record-native-ci.mjs --route ordinary|reviewed --producer <commit> --directory <records> --tap <original-tap>";
-	const allowed = ["route", "producer", "directory", "tap"], selected = {};
+	const usage = "Usage: check-mutual-checked-record-native-ci.mjs --route ordinary|reviewed --producer <commit> --directory <records> --tap <original-tap> --floor 2.38";
+	const allowed = ["route", "producer", "directory", "tap", "floor"];
+	const selected = {};
 	assert.ok(Array.isArray(args) && args.length === allowed.length * 2, usage);
 	for(let index = 0; index < args.length; index += 2)
 	{
@@ -41,6 +43,7 @@ export const parseMutualCheckedRecordNativeCiArgs = args => {
 	assert.deepEqual(Object.keys(selected).sort(), [...allowed].sort(), usage);
 	mutualCheckedRecordNativeCiTestName(selected.route);
 	assert.match(selected.producer, /^[a-f0-9]{40}$/u);
+	assert.equal(selected.floor, "2.38", usage);
 	return selected;
 };
 
@@ -76,18 +79,20 @@ export const assertMutualCheckedRecordNativeCiTap = (source, route) => {
  * Recheck original TAP and every retained route record.
  *
  * @param options - Closed checker CLI values.
- * @param original - Original TAP and record reader.
+ * @param original - Original TAP, record reader and observed checker runtime.
  * @param original.tap - Original Node TAP output.
  * @param original.read - Reader relative to the route record directory.
+ * @param original.runtime - Actual host platform, architecture and glibc.
  */
 export const checkMutualCheckedRecordNativeCiRecords = async (
 	options, original
 ) => {
-	const { tap, read } = original;
+	const { tap, read, runtime } = original;
 	const selected = parseMutualCheckedRecordNativeCiArgs(
 		Object.entries(options).flatMap(([key, value]) => ["--" + key, value]));
 	assertMutualCheckedRecordNativeCiTap(tap, selected.route);
-	return checkMutualCheckedRecordNativeReport(read, {
-		route: selected.route, producerCommit: selected.producer
+	return checkMutualCheckedRecordNativeControls(read, {
+		route: selected.route, producerCommit: selected.producer, runtime
+		, floor: selected.floor
 	});
 };
