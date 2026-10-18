@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-jvm-source-v1",
+  "predecessorCommit": "59d50c538589be9f2fd2460a7e4a1d383130ff00",
+  "draftParentCommit": "f31d4b6b21b62cb494c648e1f0574942261b2d2d",
+  "pathsSha256": "05f5a50d9038a3b02ebb1b483f7eb5d628b55e8c144605b5d089155025c06eae",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50",
+      "currentSha256": "54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "tests/checked-record-value-index-jvm.test.mjs",
+      "currentSha256": "9f29064d1c2efa3a24722e18fe43bdf5e23ce2d66c1351703f9b18f36c0ee459"
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-jvm/java.java",
+      "currentSha256": "87f1a76482ddded80ebaa977df2a7bd304703989e225602ed3bed398d761f6f9"
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-jvm/kotlin.kt",
+      "currentSha256": "2c36e6032bd0ee2d4cac4d6a5f14953715b9b1d4c5c2bed6451aa648ad083f5f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-caller-tests.mjs",
+      "currentSha256": "026bfda2bca71823759a1b50282464fc6ca74a436a6377e6c2e74087cd3eb364"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-fixture-tests.mjs",
+      "currentSha256": "a2186dd20dcd4f2600d431802f01710265443f3c59dee81bff7ff916223b62d3"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-fixture.mjs",
+      "currentSha256": "c8edaaba38815b31e658d136492dd14109fab9d79f06af2006c11e3c65307055"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-jvm-source-history.mjs",
+      "currentSha256": "d266c79ac658fcf8eeb13ac6370c99dfe1bd6f1502d4dbc269eea9dd356cdffe"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-source-history.mjs",
+      "currentSha256": "e88aa32002af697ba734e3cef37beda26bfe6d4567f5615aab40df19d4bc695f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-source-history-tests.mjs",
+      "currentSha256": "6d70838e0bb0d5461c16fde1b32a30239de31a0fb813f01ff1376a58bd895fdf"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "f42c723c846252b438a0cd2787abf3aa44859e7a508a967c1aa7b0e297299a75",
+      "currentSha256": "65f76da282ff917810205f05994bf4f8b4e9f857ac8aa658c90ef5266ff30bd8",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n",
+          "current": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n",
+          "current": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n",
+          "current": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "4bc54c9f3d045b802f5b219f2c3371df2107e47c0c461da751e8e46aa18acd1e",
+      "currentSha256": "e579bac05a6eefd514b8375bcc7efb29c67ea93abcebf5216c06b167fcd40d8e",
+      "edits": [
+        {
+          "start": 12420,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-jvm\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50",
+      "currentSha256": "54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb",
+      "edits": [
+        {
+          "start": 5241,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-jvm-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "792b163c2994cefde08e69e742989c7100bb100f7c31c504963511af26e5b151",
+      "currentSha256": "1d2f98f00bf625eb616d469dab096f33dade88f10bbb1605338158466a2ba047",
+      "edits": [
+        {
+          "start": 573,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexJvmSource, checkedRecordValueIndexJvmChangedPaths } from \"./checked-record-value-index-jvm-source-history.mjs\";\n"
+        },
+        {
+          "start": 80933,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexJvmSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 97260,
+          "previous": "\t...checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexJvmChangedPaths\n\t, ...checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
