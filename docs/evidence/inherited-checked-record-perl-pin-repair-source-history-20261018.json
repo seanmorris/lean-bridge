@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-perl-pin-repair-source-v1",
+  "predecessorCommit": "61d7f67ff206dd92542b063063bed52f48c6912d",
+  "draftParentCommit": "61d7f67ff206dd92542b063063bed52f48c6912d",
+  "pathsSha256": "bc4a64799052809812715a6efcd9560d06ae74275015d3b03a29d73657919f45",
+  "pinCount": 94,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+      "currentSha256": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+      "count": 94
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-perl-pin-repair-source-history.mjs",
+      "currentSha256": "7aa058936ad27ae74ff1439ba540b59aef03d3fd0b1e1aae30d8f795cc74ad4e"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-pin-repair-source-history.mjs",
+      "currentSha256": "30578c64f7e3a0903ceb7a4abbc5c164e0a0d155fef87ed09ccea24464d4137d"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "dfeb9e60830cd43315f0177b395e8a995b8d718da7057a34dc392b9ea79857e5",
+      "currentSha256": "d85d67f4cd8b3702daf848f2827392e9801149790db15c0edf55211b6b2454f3",
+      "replacements": [
+        {
+          "previous": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+          "current": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "33a6014ab48d4e8afc2b4cd5ed12dff4f584fe1c8ec4173cedf195037845d563",
+      "currentSha256": "025e223f07785b33f1ca8576c6e502f6e9706399acb0ea64babeafe83338f02a",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPerlPinRepairSource, inheritedCheckedRecordPerlPinRepairChangedPaths } from \"./inherited-checked-record-perl-pin-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 74546,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPerlPinRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 85150,
+          "previous": "\t...inheritedCheckedRecordPerlChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPerlPinRepairChangedPaths\n\t, ...inheritedCheckedRecordPerlChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "previousSha256": "6018d4d53a034bba7170b3121745bb6c69b55ec1ad3ea21f5cd354834062d0b8",
+      "currentSha256": "fb241b127257a028c4efc0525b868e826679231e1675ef0d40512965e048354d",
+      "edits": [
+        {
+          "start": 929,
+          "previous": "",
+          "current": "import {\n\tbeforeInheritedCheckedRecordPerlPinRepairSource\n\t, inheritedCheckedRecordPerlPinRepairAddedPaths\n\t, inheritedCheckedRecordPerlPinRepairChangedPaths\n\t, inheritedCheckedRecordPerlPinRepairDraftParent\n\t, inheritedCheckedRecordPerlPinRepairHistoryPath\n\t, inheritedCheckedRecordPerlPinRepairPins\n\t, inheritedCheckedRecordPerlPinRepairPredecessor\n\t, reverseInheritedCheckedRecordPerlPinRepairUpdate\n} from \"./helpers/inherited-checked-record-perl-pin-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5176,
+          "previous": "",
+          "current": "});\n\ntest(\"inherited Perl pin repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlPinRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-perl-pin-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordPerlPinRepairPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, inheritedCheckedRecordPerlPinRepairDraftParent);\n\tassert.equal(inheritedCheckedRecordPerlPinRepairPredecessor\n\t\t, inheritedCheckedRecordPerlPinRepairDraftParent);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordPerlPinRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordPerlPinRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordPerlPinRepairChangedPaths)));\n\tconst pinCount = inheritedCheckedRecordPerlPinRepairPins.reduce(\n\t\t(total, pin) => total + pin.count, 0\n\t);\n\tassert.equal(record.pinCount, pinCount);\n\tassert.deepEqual(record.pinUpdates\n\t\t, inheritedCheckedRecordPerlPinRepairPins);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPerlPinRepairSource\n\t\t);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${inheritedCheckedRecordPerlPinRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordPerlPinRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlPinRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlPinRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordPerlPinRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tconst mutations = [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t];\n\t\tif(update.replacements)\n\t\t\tmutations.push(\n\t\t\t\titem => { item.replacements = []; }\n\t\t\t\t, item => { item.replacements[0].count = 0; }\n\t\t\t\t, item => { item.replacements[0].current += \"unknown\"; }\n\t\t\t);\n\t\telse mutations.push(\n\t\t\titem => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t);\n\t\tfor(const mutate of mutations)\n\t\t{\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseInheritedCheckedRecordPerlPinRepairUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n});\n\ntest(\"inherited Perl pin repair closes additions and repaired pins\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlPinRepairHistoryPath, \"utf8\"));\n\tfor(const addition of record.additions)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPerlPinRepairSource\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordPerlPinRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n\tconst inventory = JSON.parse(await readFile(\n\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst paths = new Set(inheritedCheckedRecordPerlPinRepairPins.map(\n\t\tpin => pin.path\n\t));\n\tconst pins = inventory.evidence.flatMap(evidence => evidence.files)\n\t\t.filter(file => paths.has(file.path));\n\tassert.equal(pins.length, record.pinCount);\n\tfor(const expected of inheritedCheckedRecordPerlPinRepairPins)\n\t{\n\t\tconst matches = pins.filter(file => file.path === expected.path);\n\t\tassert.equal(matches.length, expected.count, expected.path);\n\t\tassert.ok(matches.every(file => file.sha256\n\t\t\t=== expected.currentSha256), expected.path);\n\t}\n\tassert.equal(classifyRepositoryTest(\n\t\t\"tests/inherited-checked-record-perl-source-history.test.mjs\"\n\t), \"contract\");\n});\n\ntest(\"inherited Perl pin-repair writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-inherited-record-perl-pin-repair-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-perl-pin-repair-source-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n"
+        }
+      ]
+    }
+  ]
+}
