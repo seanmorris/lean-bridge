@@ -1,0 +1,40 @@
+{
+  "checks": 23,
+  "closure": {
+    "packageFileSetSha256": "83fca7b4eb200b88966d34a51aff76343d7440008ee49fbfdc1d00749e093825",
+    "receiptSha256": "6572237f6334cbfa5a55b8e55fd17230d66004290ca01423cd791d3c399b60cf"
+  },
+  "compilerFreeReplay": true,
+  "consumerSha256": "c8642ff58c35c54f2248523a31c69d51026c81411b09e8df7fdd98437e64bf9e",
+  "immutableCallerAssertions": true,
+  "malformedDepthCycleRecovery": true,
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51812483,
+          "path": "archives/mutualcheckedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "e5b1c6096e1cac3e50acef5bfd9aff4ca548ab46c91dfe4cb462ac25dd3cda61"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "relocatedReplay": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "mutual-checked-record-ok:23\n"
+  },
+  "route": "reviewed",
+  "sourceRemovedBeforeInstallation": true
+}

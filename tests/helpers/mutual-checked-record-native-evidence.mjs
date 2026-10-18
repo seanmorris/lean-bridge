@@ -24,8 +24,8 @@ import {
 
 export const mutualCheckedRecordNativeEvidence
 	= "docs/evidence/mutual-checked-record-native-20261018";
-// Filled after the one-shot hosted archive is committed.
-export const mutualCheckedRecordNativeEvidenceSha256 = null;
+export const mutualCheckedRecordNativeEvidenceSha256
+	= "ec43a05020fd29501dc5f93efbae50ff23c8ab29910569635d399426a8c5bc02";
 
 const exactKeys = (value, keys, label) => assert.deepEqual(
 	Object.keys(value).sort(), [...keys].sort(), label);

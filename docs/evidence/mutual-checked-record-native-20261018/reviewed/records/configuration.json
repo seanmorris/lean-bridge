@@ -1,0 +1,30 @@
+{
+  "modules": [
+    "MutualCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "npm": {
+      "name": "mutualcheckedrecords",
+      "version": "1.0.0"
+    },
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-mutual-checked-records/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-mutual-checked-records-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "artifacts": [
+    {
+      "bytes": 53884343,
+      "path": "archives/mutualcheckedrecords-1.0.0-c.tar.gz",
+      "profile": "c",
+      "sha256": "6a16b6106b9db6d86711a7be21cc4d2b4adca517e55c0d8cb84357f77c10c7a0"
+    },
+    {
+      "bytes": 51809717,
+      "path": "archives/mutualcheckedrecords-1.0.0-cpp.tar.gz",
+      "profile": "cpp",
+      "sha256": "5b3f1466bbb0700904702c86a9457e2d42f54c8e700e09f3a959766f2b226fd6"
+    }
+  ],
+  "bindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "controls": {
+    "execution": 8,
+    "model": 6,
+    "package": 1,
+    "record": 26,
+    "report": 10,
+    "sourceTree": 1
+  },
+  "floor": "2.38",
+  "independentBuilds": 2,
+  "producerCommit": "9d95e09a9bf04b187a7de086deb7a44e4b3193c6",
+  "profiles": [
+    {
+      "checks": 71,
+      "profile": "c"
+    },
+    {
+      "checks": 23,
+      "profile": "cpp"
+    }
+  ],
+  "recordPaths": [
+    "build-0/MutualCheckedRecords.lean",
+    "build-0/author-inputs-after.json",
+    "build-0/author-inputs.json",
+    "build-0/lean-bridge.exports.json",
+    "build-0/model.json",
+    "build-0/package-set-receipt.json",
+    "build-1/MutualCheckedRecords.lean",
+    "build-1/author-inputs-after.json",
+    "build-1/author-inputs.json",
+    "build-1/lean-bridge.exports.json",
+    "build-1/model.json",
+    "build-1/package-set-receipt.json",
+    "c/report.json",
+    "configuration.json",
+    "consumers/c.c",
+    "consumers/cpp.cpp",
+    "cpp/report.json",
+    "expected.binding-ir.json",
+    "handoff/archives/mutualcheckedrecords-1.0.0-c.tar.gz",
+    "handoff/archives/mutualcheckedrecords-1.0.0-cpp.tar.gz",
+    "handoff/package-set-receipt.json",
+    "handoff/package-set-receipt.json.sha256",
+    "report.json",
+    "runtime.json"
+  ],
+  "reportSha256": "5380f6fd501361894abcb2bac6c3ef6624680284ae6937c11b89e595b3dfdc28",
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  }
+}

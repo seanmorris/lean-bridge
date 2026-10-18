@@ -12,6 +12,14 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	beforeMutualCheckedRecordNativeArchiveSource
+	, mutualCheckedRecordNativeArchiveAddedPaths
+	, mutualCheckedRecordNativeArchiveChangedPaths
+	, mutualCheckedRecordNativeArchiveHistoryPath
+	, mutualCheckedRecordNativeArchivePredecessor
+	, reverseMutualCheckedRecordNativeArchiveUpdate
+} from "./mutual-checked-record-native-archive-source-history.mjs";
+import {
 	beforeRecursiveNativeGraphLoaderIsolationSource
 	, recursiveNativeGraphLoaderIsolationAddedPaths
 	, recursiveNativeGraphLoaderIsolationChangedPaths
@@ -282,6 +290,90 @@ test("history-hub reachability repair has one exact reversible lineage", async (
 			, `${historyHubReachabilityRepairPredecessor}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
 	}
+});
+
+test("recursive native archive has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		mutualCheckedRecordNativeArchiveHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "mutual-checked-record-native-archive-source-v1");
+	assert.equal(record.predecessorCommit
+		, mutualCheckedRecordNativeArchivePredecessor);
+	assert.equal(record.draftParentCommit
+		, mutualCheckedRecordNativeArchivePredecessor);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, mutualCheckedRecordNativeArchiveChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, mutualCheckedRecordNativeArchiveAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		mutualCheckedRecordNativeArchiveChangedPaths)));
+	assert.equal(record.pinCount, 1);
+	assert.deepEqual(record.pinUpdates, [{
+		path: "tests/helpers/mutual-checked-record-native-evidence.mjs"
+		, value: "ec43a05020fd29501dc5f93efbae50ff23c8ab29910569635d399426a8c5bc02"
+	}]);
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeMutualCheckedRecordNativeArchiveSource);
+		const previous = git(["show"
+			, `${mutualCheckedRecordNativeArchivePredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseMutualCheckedRecordNativeArchiveUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeMutualCheckedRecordNativeArchiveSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeMutualCheckedRecordNativeArchiveSource(
+			update.path, current, update.currentSha256), current, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeMutualCheckedRecordNativeArchiveSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update); mutate(changed);
+			assert.throws(() => reverseMutualCheckedRecordNativeArchiveUpdate(
+				current, changed));
+		}
+	}
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+			, addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${mutualCheckedRecordNativeArchivePredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("recursive native archive writer refuses another checkout", async t => {
+	const directory = await mkdtemp(join(
+		tmpdir(), "lean-bridge-recursive-native-archive-writer-"
+	));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	assert.equal(spawnSync("git", ["init", "-q"]
+		, { cwd: directory }).status, 0);
+	assert.equal(spawnSync("git", ["-c", "user.name=Test"
+		, "-c", "user.email=test@example.invalid", "commit", "--allow-empty"
+		, "-qm", "other"], { cwd: directory }).status, 0);
+	const environment = Object.fromEntries(Object.entries(process.env).filter(
+		([key]) => !key.startsWith("GIT_")
+	));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-mutual-checked-record-native-archive-history.mjs"
+	)], { cwd: directory, encoding: "utf8", env: environment });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /exact draft parent/u);
+	assert.deepEqual((await readdir(directory)).sort(), [".git"]);
 });
 
 test("recursive native graph loader isolation has one exact reversible lineage", async () => {

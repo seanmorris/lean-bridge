@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "milestone": "mutual-checked-record-native-archive-source-v1",
+  "predecessorCommit": "9d95e09a9bf04b187a7de086deb7a44e4b3193c6",
+  "draftParentCommit": "9d95e09a9bf04b187a7de086deb7a44e4b3193c6",
+  "pathsSha256": "0ca8b3d3ca08ecbeeeb0b7f43b7bab5cf37f21997059b1729639eef200889df8",
+  "pinCount": 1,
+  "pinUpdates": [
+    {
+      "path": "tests/helpers/mutual-checked-record-native-evidence.mjs",
+      "value": "ec43a05020fd29501dc5f93efbae50ff23c8ab29910569635d399426a8c5bc02"
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-mutual-checked-record-native-archive-history.mjs",
+      "currentSha256": "e359eac47e9c6f7aa7838d19ad173e94c5aa723786a617d8629860ef09e6b8f3"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-archive-source-history.mjs",
+      "currentSha256": "2b5253420446ca5e3d0a9c991433c29bad70f5c9f6e25289830ebb76fc943230"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "b63e200fd806490e4359a814244da59a82c16b3ceb14e82a5e47c035c336de71",
+      "currentSha256": "f8f680e4c80db3b2b9c400dec83f922150f9ac76517f563e35148bff398499a6",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "\tbeforeMutualCheckedRecordNativeArchiveSource\n\t, mutualCheckedRecordNativeArchiveAddedPaths\n\t, mutualCheckedRecordNativeArchiveChangedPaths\n\t, mutualCheckedRecordNativeArchiveHistoryPath\n\t, mutualCheckedRecordNativeArchivePredecessor\n\t, reverseMutualCheckedRecordNativeArchiveUpdate\n} from \"./mutual-checked-record-native-archive-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 12619,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive native archive has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tmutualCheckedRecordNativeArchiveHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"mutual-checked-record-native-archive-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, mutualCheckedRecordNativeArchivePredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, mutualCheckedRecordNativeArchivePredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, mutualCheckedRecordNativeArchiveChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, mutualCheckedRecordNativeArchiveAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tmutualCheckedRecordNativeArchiveChangedPaths)));\n\tassert.equal(record.pinCount, 1);\n\tassert.deepEqual(record.pinUpdates, [{\n\t\tpath: \"tests/helpers/mutual-checked-record-native-evidence.mjs\"\n\t\t, value: \"ec43a05020fd29501dc5f93efbae50ff23c8ab29910569635d399426a8c5bc02\"\n\t}]);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeMutualCheckedRecordNativeArchiveSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${mutualCheckedRecordNativeArchivePredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseMutualCheckedRecordNativeArchiveUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeMutualCheckedRecordNativeArchiveSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeMutualCheckedRecordNativeArchiveSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeMutualCheckedRecordNativeArchiveSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseMutualCheckedRecordNativeArchiveUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${mutualCheckedRecordNativeArchivePredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"recursive native archive writer refuses another checkout\", async t => {\n\tconst directory = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-recursive-native-archive-writer-\"\n\t));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tassert.equal(spawnSync(\"git\", [\"init\", \"-q\"]\n\t\t, { cwd: directory }).status, 0);\n\tassert.equal(spawnSync(\"git\", [\"-c\", \"user.name=Test\"\n\t\t, \"-c\", \"user.email=test@example.invalid\", \"commit\", \"--allow-empty\"\n\t\t, \"-qm\", \"other\"], { cwd: directory }).status, 0);\n\tconst environment = Object.fromEntries(Object.entries(process.env).filter(\n\t\t([key]) => !key.startsWith(\"GIT_\")\n\t));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-mutual-checked-record-native-archive-history.mjs\"\n\t)], { cwd: directory, encoding: \"utf8\", env: environment });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n\tassert.deepEqual((await readdir(directory)).sort(), [\".git\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bc17b611a363f7152c9b7b86ff094de8481e68eaad8e270eb5cc386911039d81",
+      "currentSha256": "5c1e8d99237325b23f39088bde548115c59149b8ae3e5012d2fcd03482683b6e",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeMutualCheckedRecordNativeArchiveSource, mutualCheckedRecordNativeArchiveChangedPaths } from \"./mutual-checked-record-native-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 78668,
+          "previous": "",
+          "current": "\tsource = beforeMutualCheckedRecordNativeArchiveSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 93276,
+          "previous": "\t...recursiveNativeGraphLoaderIsolationChangedPaths\n",
+          "current": "\t...mutualCheckedRecordNativeArchiveChangedPaths\n\t, ...recursiveNativeGraphLoaderIsolationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-evidence.mjs",
+      "previousSha256": "0f1ae24e0775bd6bb9df778e99548e9c59e0a48641256ecc77a0f88007178244",
+      "currentSha256": "01808cb34b5ec2c84d50b99ce78fd02e4fce1258b3310ecf9fcecaa659d56178",
+      "edits": [
+        {
+          "start": 988,
+          "previous": "// Filled after the one-shot hosted archive is committed.\nexport const mutualCheckedRecordNativeEvidenceSha256 = null;\n",
+          "current": "export const mutualCheckedRecordNativeEvidenceSha256\n\t= \"ec43a05020fd29501dc5f93efbae50ff23c8ab29910569635d399426a8c5bc02\";\n"
+        }
+      ]
+    }
+  ]
+}

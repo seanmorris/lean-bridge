@@ -1,0 +1,40 @@
+{
+  "checks": 71,
+  "closure": {
+    "packageFileSetSha256": "ababa4b92ad51e131a8a3deb42013a5667199be0e91a30500281888c0214a230",
+    "receiptSha256": "00d692db717e54568c111b942738b78ebcf714e2d6189d2580a8874f11dfd2d7"
+  },
+  "compilerFreeReplay": true,
+  "consumerSha256": "61d5ab98d9033eb252d6f618d0cda5b56e001e54031191f8bbc2fde82712d833",
+  "immutableCallerAssertions": true,
+  "malformedDepthCycleRecovery": true,
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53887126,
+          "path": "archives/mutualcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "8756cc3dd814cfa2f0ef2fa02689f547cfeaabacc9a7fcfc8ff33f4f6a677e01"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "mutualcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "relocatedReplay": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "mutual-checked-record-ok:71\n"
+  },
+  "route": "reviewed",
+  "sourceRemovedBeforeInstallation": true
+}

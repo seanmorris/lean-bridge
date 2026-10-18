@@ -1,0 +1,127 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/mutualcheckedrecords-1.0.0-c.tar.gz": "6a16b6106b9db6d86711a7be21cc4d2b4adca517e55c0d8cb84357f77c10c7a0",
+        "archives/mutualcheckedrecords-1.0.0-cpp.tar.gz": "5b3f1466bbb0700904702c86a9457e2d42f54c8e700e09f3a959766f2b226fd6"
+      },
+      "bindingIrSha256": "959ad1851bd7c98090f80b45938263bc1e7a36515a76946b00ca44985e35ce93",
+      "modelSha256": "ade7566756ca2f13a16db839136ca2c49a4bc9c5bb4c0f7b8313bd1e11ad18ed",
+      "receiptSha256": "9f262449ab3b524e1f5025a5bdc04da4f74f79eab588d1dc471134ed97658c1c"
+    },
+    {
+      "archives": {
+        "archives/mutualcheckedrecords-1.0.0-c.tar.gz": "6a16b6106b9db6d86711a7be21cc4d2b4adca517e55c0d8cb84357f77c10c7a0",
+        "archives/mutualcheckedrecords-1.0.0-cpp.tar.gz": "5b3f1466bbb0700904702c86a9457e2d42f54c8e700e09f3a959766f2b226fd6"
+      },
+      "bindingIrSha256": "959ad1851bd7c98090f80b45938263bc1e7a36515a76946b00ca44985e35ce93",
+      "modelSha256": "ade7566756ca2f13a16db839136ca2c49a4bc9c5bb4c0f7b8313bd1e11ad18ed",
+      "receiptSha256": "9f262449ab3b524e1f5025a5bdc04da4f74f79eab588d1dc471134ed97658c1c"
+    }
+  ],
+  "declaredGlibcFloor": "2.38",
+  "expectedBindingIrSha256": "b33ae74d019038b304c6cf30c977b39f031301d92ac26e088d24cf7f4f60c94a",
+  "independentBuilds": 2,
+  "producerCommit": "9d95e09a9bf04b187a7de086deb7a44e4b3193c6",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "relocated": true,
+  "reports": [
+    {
+      "checks": 71,
+      "closure": {
+        "packageFileSetSha256": "ababa4b92ad51e131a8a3deb42013a5667199be0e91a30500281888c0214a230",
+        "receiptSha256": "2922151f7e1b461a9c0722f47fa2724e15cd66194118e6227260b17e483fdcfa"
+      },
+      "compilerFreeReplay": true,
+      "consumerSha256": "61d5ab98d9033eb252d6f618d0cda5b56e001e54031191f8bbc2fde82712d833",
+      "immutableCallerAssertions": true,
+      "malformedDepthCycleRecovery": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53884343,
+              "path": "archives/mutualcheckedrecords-1.0.0-c.tar.gz",
+              "sha256": "6a16b6106b9db6d86711a7be21cc4d2b4adca517e55c0d8cb84357f77c10c7a0"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "mutualcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "relocatedReplay": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "mutual-checked-record-ok:71\n"
+      },
+      "route": "ordinary",
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "checks": 23,
+      "closure": {
+        "packageFileSetSha256": "83fca7b4eb200b88966d34a51aff76343d7440008ee49fbfdc1d00749e093825",
+        "receiptSha256": "be85d22880238bf44f5f76cfa92e7d94089c1475dc256355a095c355034f628a"
+      },
+      "compilerFreeReplay": true,
+      "consumerSha256": "c8642ff58c35c54f2248523a31c69d51026c81411b09e8df7fdd98437e64bf9e",
+      "immutableCallerAssertions": true,
+      "malformedDepthCycleRecovery": true,
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51809717,
+              "path": "archives/mutualcheckedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "5b3f1466bbb0700904702c86a9457e2d42f54c8e700e09f3a959766f2b226fd6"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "mutualcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "relocatedReplay": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "mutual-checked-record-ok:23\n"
+      },
+      "route": "ordinary",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFree": true
+}

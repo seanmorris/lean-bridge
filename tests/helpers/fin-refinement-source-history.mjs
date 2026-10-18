@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeMutualCheckedRecordNativeArchiveSource, mutualCheckedRecordNativeArchiveChangedPaths } from "./mutual-checked-record-native-archive-source-history.mjs";
 import { beforeRecursiveNativeGraphLoaderIsolationSource, recursiveNativeGraphLoaderIsolationChangedPaths } from "./recursive-native-graph-loader-isolation-source-history.mjs";
 import { beforeRecursiveNativeGraphVerifierRepairSource, recursiveNativeGraphVerifierRepairChangedPaths } from "./recursive-native-graph-verifier-repair-source-history.mjs";
 import { beforeRecursiveNativeSelectorRepairSource, recursiveNativeSelectorRepairChangedPaths } from "./recursive-native-selector-repair-source-history.mjs";
@@ -965,6 +966,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeMutualCheckedRecordNativeArchiveSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeRecursiveNativeGraphLoaderIsolationSource(
 		path, source, expected
 	);
@@ -1246,7 +1251,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...recursiveNativeGraphLoaderIsolationChangedPaths
+	...mutualCheckedRecordNativeArchiveChangedPaths
+	, ...recursiveNativeGraphLoaderIsolationChangedPaths
 	, ...recursiveNativeGraphVerifierRepairChangedPaths
 	, ...recursiveNativeSelectorRepairChangedPaths
 	, ...callbackFinGateRepairChangedPaths
