@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCoreQualityShardingSource, coreQualityShardingChangedPaths } from "./core-quality-sharding-source-history.mjs";
 import { beforeCheckedRecordValueIndexFoundationSource, checkedRecordValueIndexFoundationChangedPaths } from "./checked-record-value-index-foundation-source-history.mjs";
 import { beforeRecursiveCheckedRecordPromotionSource, recursiveCheckedRecordPromotionChangedPaths } from "./recursive-checked-record-promotion-source-history.mjs";
 import { beforeMutualCheckedRecordNativeArchiveSource, mutualCheckedRecordNativeArchiveChangedPaths } from "./mutual-checked-record-native-archive-source-history.mjs";
@@ -968,6 +969,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCoreQualityShardingSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexFoundationSource(
 		path, source, expected
 	);
@@ -1261,7 +1264,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexFoundationChangedPaths
+	...coreQualityShardingChangedPaths
+	, ...checkedRecordValueIndexFoundationChangedPaths
 	, ...recursiveCheckedRecordPromotionChangedPaths
 	, ...mutualCheckedRecordNativeArchiveChangedPaths
 	, ...recursiveNativeGraphLoaderIsolationChangedPaths
