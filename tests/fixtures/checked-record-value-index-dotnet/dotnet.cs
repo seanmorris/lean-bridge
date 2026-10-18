@@ -70,6 +70,19 @@ static class Consumer
     {
         try
         {
+            if (arguments.Length == 1 && arguments[0] == "--runtime")
+            {
+                Console.WriteLine(JsonSerializer.Serialize(new {
+                    version = Environment.Version.ToString(),
+                    description = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription,
+                    directory = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(),
+                    command = Environment.ProcessPath,
+                    architecture = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString(),
+                    os = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
+                    littleEndian = BitConverter.IsLittleEndian
+                }));
+                return 0;
+            }
             if (arguments.Length != 0)
                 throw new InvalidOperationException("Unexpected caller arguments");
             Run();
