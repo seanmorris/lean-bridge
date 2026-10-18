@@ -37,7 +37,11 @@ test("nominal PHP changes only the reserved echo name and preserves both complet
 	const original = await readFile(`${nominalSubtypeFixture}/NominalSubtypes.lean`, "utf8");
 	const source = await nominalSubtypePhpLeanSource();
 	assert.notEqual(source, original); assert.equal(source.replace("def echoEnvelope (", "def echo ("), original);
-	assert.throws(() => generateCopiedPhpPackage(nominalSubtypeInstalledReview()), /reserved or duplicated: echo/u);
+	const unrenamed = generateCopiedPhpPackage(
+		nominalSubtypeInstalledReview()
+	)["src/Api.php"];
+	assert.match(unrenamed, /function echo_\(/u);
+	assert.doesNotMatch(unrenamed, /function echo\(/u);
 	for(const route of nominalSubtypePhpRoutes) for(const mode of nominalSubtypePhpModes)
 	{
 		const expected = nominalSubtypeInstalledConfiguration(route, ["c"], mode === "result-only");

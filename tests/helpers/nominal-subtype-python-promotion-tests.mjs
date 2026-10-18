@@ -7,15 +7,15 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionPins, beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
-import { nominalSubtypeRubyPromotionHistoryPath } from "./nominal-subtype-ruby-promotion-history.mjs";
-import { nominalSubtypeRustPromotionHistoryPath } from "./nominal-subtype-rust-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypePythonPromotionPins, beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from "./nominal-primitive-subtype-python-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalSubtypePythonArchive, nominalSubtypePythonReferences, promoteNominalSubtypePython, nominalSubtypePythonConversion, nominalSubtypePythonLimit } from "./nominal-subtype-python-promotion.mjs";
 import { nominalSubtypePythonPromotionHistoryPath } from "./nominal-subtype-python-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
+	withHistorySourcePins
+} from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad3f7716d997ef8a4331ec8a3f2a6524a2ca3b30:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -89,26 +89,22 @@ test("nominal Python promotion refuses missing originals and substituted scope o
 
 test("nominal Python promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypePythonReferences();
-	const proposed = beforeNominalSubtypeJvmPromotionPins(beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalSubtypePython(original, references))), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalSubtypePythonPromotionHistoryPath
+		, await promoteNominalSubtypePython(original, references)
+	);
+	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypePythonPromotionHistoryPath, "docs/type-surface.v1.json"
 	));
 	assert.ok(current.evidence.length >= document.evidence.length);
-	for(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])
-	{
-		const later = JSON.parse(await readFile(path));
-		for(const entry of proposed.evidence) for(const file of entry.files)
-		{
-			const update = later.updates.find(item => item.path === file.path);
-			if(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;
-		}
-	}
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 484); assert.equal(proposed.evidence.length, 488);
 	assert.equal(original.observations.length, 577); assert.equal(proposed.observations.length, 579);
-	assert.deepEqual(proposed.evidence.slice(0, 484), original.evidence);
-	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(document.evidence.slice(484), proposed.evidence.slice(484));
+	assert.deepEqual(withHistorySourcePins(
+		nominalSubtypePythonPromotionHistoryPath, proposed
+	).evidence.slice(0, 484), original.evidence);
+	assert.deepEqual(document, proposed);
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())

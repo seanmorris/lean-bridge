@@ -10,8 +10,11 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeJvmArchive, nominalSubtypeJvmReferences, promoteNominalSubtypeJvm, nominalSubtypeJvmConversion, nominalSubtypeJvmLimit } from "./nominal-subtype-jvm-promotion.mjs";
 import { nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { beforeNominalSubtypePhpPromotionSource, beforeNominalSubtypePhpPromotionPins, nominalSubtypePhpPromotionHistoryPath } from "./nominal-subtype-php-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { beforeNominalSubtypePhpPromotionSource, nominalSubtypePhpPromotionHistoryPath } from "./nominal-subtype-php-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
+	withHistorySourcePins
+} from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "58777508091f0e6b9b574cbfa2561c2c019b1570:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -103,14 +106,22 @@ test("nominal JVM promotion refuses missing originals, invented claims and misma
 
 test("nominal JVM promotion adds four field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeJvmReferences();
-	const proposed = beforeNominalSubtypePhpPromotionPins(await promoteNominalSubtypeJvm(original, references)), { document: live, ...contracts } = await readTypeSurface();
-	const document = JSON.parse(beforeNominalSubtypePhpPromotionSource("docs/type-surface.v1.json", JSON.stringify(live, null, 2) + "\n"));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalSubtypeJvmPromotionHistoryPath
+		, await promoteNominalSubtypeJvm(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalSubtypeJvmPromotionHistoryPath, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 500); assert.equal(proposed.evidence.length, 504);
 	assert.equal(original.observations.length, 585); assert.equal(proposed.observations.length, 587);
-	assert.deepEqual(proposed.evidence.slice(0, 500), original.evidence);
-	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(document.evidence.slice(500), proposed.evidence.slice(500));
+	assert.deepEqual(withHistorySourcePins(
+		nominalSubtypeJvmPromotionHistoryPath, proposed
+	).evidence.slice(0, 500), original.evidence);
+	assert.deepEqual(document, proposed);
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())

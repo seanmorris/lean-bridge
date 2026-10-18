@@ -7,12 +7,17 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource } from "./nominal-subtype-jvm-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeNativePromotionSource } from "./nominal-primitive-subtype-native-promotion-history.mjs";
+import {
+	beforeNominalSubtypeJvmPromotionSource,
+	nominalSubtypeJvmPromotionHistoryPath
+} from "./nominal-subtype-jvm-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeNativeArchive, nominalSubtypeNativeProfiles, nominalSubtypeNativeReferences, promoteNominalSubtypeNative, nominalSubtypeNativeConversion, nominalSubtypeNativeLimit } from "./nominal-subtype-native-promotion.mjs";
 import { nominalSubtypeNativePromotionHistoryPath } from "./nominal-subtype-native-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
+	withHistorySourcePins
+} from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "4d9424e6c1fa551d0c6802d39ee7c5d469ed8c23:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -76,16 +81,22 @@ test("nominal native promotion refuses missing originals and substituted scope o
 
 test("nominal native promotion adds four C/C++ field cells and supplements eight existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeNativeReferences();
-	const proposed = await promoteNominalSubtypeNative(original, references), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalSubtypeNativePromotionHistoryPath
+		, await promoteNominalSubtypeNative(original, references)
+	);
+	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeNativePromotionHistoryPath, "docs/type-surface.v1.json"
 	));
+	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 476); assert.equal(proposed.evidence.length, 480);
 	assert.equal(original.observations.length, 573); assert.equal(proposed.observations.length, 575);
-	assert.deepEqual(proposed.evidence.slice(0, 476), original.evidence);
-	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(current.evidence.slice(476, 480), proposed.evidence.slice(476));
+	assert.deepEqual(withHistorySourcePins(
+		nominalSubtypeNativePromotionHistoryPath, proposed
+	).evidence.slice(0, 476), original.evidence);
+	assert.deepEqual(document, proposed);
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())
@@ -113,9 +124,11 @@ test("nominal native promotion adds four C/C++ field cells and supplements eight
 
 test("nominal native docs distinguish verified C/C++ from other hosts and callback contexts", async () => {
 	const authorPath = "docs/lean/existing-package.md";
-	const beforePrimitiveNative = (path, source) => beforeNominalPrimitiveSubtypeNativePromotionSource(path, source);
-	const author = beforeNominalSubtypeJvmPromotionSource(authorPath
-		, beforePrimitiveNative(authorPath, await readFile(authorPath, "utf8")));
+	const author = beforeNominalSubtypeJvmPromotionSource(
+		authorPath, await sourceAtHistoryMilestone(
+			nominalSubtypeJvmPromotionHistoryPath, authorPath
+		)
+	);
 	for(const prefix of ["| `Subtype` in acyclic", "| Lean-produced `Subtype` result without"])
 	{
 		const row = author.split("\n").find(line => line.startsWith(prefix));
@@ -130,7 +143,9 @@ test("nominal native docs distinguish verified C/C++ from other hosts and callba
 	for(const name of ["c", "cpp"])
 	{
 		const path = `docs/consume/${name}.md`;
-		const source = beforePrimitiveNative(path, await readFile(path, "utf8"));
+		const source = await sourceAtHistoryMilestone(
+			nominalSubtypeNativePromotionHistoryPath, path
+		);
 		assert.ok(source.includes("### Subtypes in copied records\n"));
 		assert.ok(source.includes("Linux x64/glibc 2.36"));
 		assert.doesNotMatch(source, /Subtype fields in nominal records or variants, refined callback signatures and\nowned Subtypes remain unsupported/u);

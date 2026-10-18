@@ -26,8 +26,23 @@ const previousHistoryMilestone = (historyPath, path) => {
 	const update = record.updates.find(item => item.path === path);
 	assert.ok(update, `${path} is absent from ${historyPath}`);
 	assert.match(record.predecessorCommit, /^[0-9a-f]{40}$/u);
-	source = execFileSync("git", ["show", `${record.predecessorCommit}:${path}`]
+	const primaryPredecessor = update.predecessorCommit
+		?? record.predecessorCommit;
+	assert.match(primaryPredecessor, /^[0-9a-f]{40}$/u);
+	source = execFileSync("git", ["show", `${primaryPredecessor}:${path}`]
 		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	if(sha256(source) !== update.previousSha256)
+	{
+		assert.equal(update.predecessorCommit, undefined
+			, `${historyPath}: explicit predecessor did not match ${path}`);
+		const specializedPredecessor = record.generatorPredecessorCommit;
+		assert.equal(typeof specializedPredecessor, "string"
+			, `${historyPath}: missing specialized predecessor for ${path}`);
+		assert.match(specializedPredecessor, /^[0-9a-f]{40}$/u);
+		source = execFileSync("git", ["show"
+			, `${specializedPredecessor}:${path}`]
+		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	}
 	assert.equal(sha256(source), update.previousSha256, historyPath);
 	previousMilestones.set(key, source);
 	return source;

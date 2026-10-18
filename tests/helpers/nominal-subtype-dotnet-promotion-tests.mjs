@@ -7,11 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
+import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from "./nominal-subtype-jvm-promotion-history.mjs";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { nominalSubtypeDotnetArchive, nominalSubtypeDotnetReferences, promoteNominalSubtypeDotnet, nominalSubtypeDotnetConversion, nominalSubtypeDotnetLimit } from "./nominal-subtype-dotnet-promotion.mjs";
 import { nominalSubtypeDotnetPromotionHistoryPath } from "./nominal-subtype-dotnet-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins,
+	withHistorySourcePins
+} from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "ad838834ca234ac7715462df368c28ca0d1cede1:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -89,7 +92,11 @@ test("nominal C# promotion refuses missing originals and substituted scope or re
 
 test("nominal C# promotion adds two field cells and supplements four existing cells only", async () => {
 	const original = predecessor(), references = await nominalSubtypeDotnetReferences();
-	const proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeDotnet(original, references)), { document: current, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalSubtypeDotnetPromotionHistoryPath
+		, await promoteNominalSubtypeDotnet(original, references)
+	);
+	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalSubtypeDotnetPromotionHistoryPath, "docs/type-surface.v1.json"
 	));
@@ -97,9 +104,10 @@ test("nominal C# promotion adds two field cells and supplements four existing ce
 	validateTypeSurface(proposed, contracts);
 	assert.equal(original.evidence.length, 496); assert.equal(proposed.evidence.length, 500);
 	assert.equal(original.observations.length, 583); assert.equal(proposed.observations.length, 585);
-	assert.deepEqual(proposed.evidence.slice(0, 496), original.evidence);
-	assert.deepEqual(document.observations, proposed.observations);
-	assert.deepEqual(document.evidence.slice(496), proposed.evidence.slice(496));
+	assert.deepEqual(withHistorySourcePins(
+		nominalSubtypeDotnetPromotionHistoryPath, proposed
+	).evidence.slice(0, 496), original.evidence);
+	assert.deepEqual(document, proposed);
 	const before = typeSurfaceCells(original, contracts), after = typeSurfaceCells(proposed, contracts);
 	const changed = [], added = [];
 	for(const [index, cell] of after.entries())

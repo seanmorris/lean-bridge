@@ -28,16 +28,9 @@ import {
 	nestedCheckedRecordBrowserPromotionHistoryPath,
 	nestedCheckedRecordBrowserPromotionPredecessor
 } from "./nested-checked-record-browser-promotion-history.mjs";
-import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
-	beforeNominalPrimitiveSubtypeWitPromotionPins
-} from "./nominal-primitive-subtype-wit-promotion-history.mjs";
-import {
-	beforeNominalPrimitiveSubtypeJvmPromotionPins
-} from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
-import {
-	beforeNestedCheckedRecordNativeCorrectionPins
-} from "./nested-checked-record-native-correction-source-history.mjs";
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 
 const inventory = async () => JSON.parse(execFileSync("git", ["show"
 	, `${nestedCheckedRecordBrowserPromotionPredecessor}:docs/type-surface.v1.json`]
@@ -108,16 +101,14 @@ test("nested checked-record promotion refuses narrowed, forged or repeated evide
 test("nested checked-record promotion changes thirty exact cells and leaves callbacks open", async () => {
 	const original = await inventory(), unchanged = structuredClone(original);
 	const references = await nestedCheckedRecordBrowserReferences();
-	const proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(beforeNominalPrimitiveSubtypeJvmPromotionPins(
-		beforeNestedCheckedRecordNativeCorrectionPins(
-			await promoteNestedCheckedRecordBrowsers(original, references))));
+	const proposed = withHistoryMilestoneSourcePins(
+		nestedCheckedRecordBrowserPromotionHistoryPath
+		, await promoteNestedCheckedRecordBrowsers(original, references)
+	);
 	const contract = await contracts(); validateTypeSurface(proposed, contract);
-	// Newer layers append receipts, supplement cells and refresh pins; read this
-	// layer's exact output through them.
-	const ledger = JSON.parse(await readFile(nestedCheckedRecordBrowserPromotionHistoryPath));
-	const current = async path => beforeFinRefinementSource(path
-		, await readFile(path, "utf8")
-		, ledger.updates.find(update => update.path === path).currentSha256);
+	const current = path => sourceAtHistoryMilestone(
+		nestedCheckedRecordBrowserPromotionHistoryPath, path
+	);
 	assert.deepEqual(proposed, JSON.parse(await current("docs/type-surface.v1.json")));
 	assert.deepEqual(original, unchanged);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);

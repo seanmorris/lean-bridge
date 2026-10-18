@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 1,
+  "milestone": "primitive-audit-core-repair-source-v1",
+  "predecessorCommit": "3546146128dd507f65b058504a25a7031f2a490a",
+  "draftParentCommit": "3546146128dd507f65b058504a25a7031f2a490a",
+  "profilePredecessorCommit": "6321287658f2d06d08638bc3c52713fd3ad8c795",
+  "pathsSha256": "b2885ab9633b6ba2d3abf7145bcae9794f818f481f0e36bde7476ee35e89e374",
+  "pinCount": 118,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previous": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+      "current": "6c5c9687c4246163a14140e200d5d6b056c6493bb3b1a679b584576357f12c08",
+      "count": 94
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+      "previous": "32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9",
+      "current": "8b112ca8b38764303eaf192362586ecefb14a3a865e164c234ece1284ca4b21f",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-dotnet-promotion-tests.mjs",
+      "previous": "9100c33d20a5ac5ee05cca5677e351daf57b49de6a86563f6a09385ac4721e5f",
+      "current": "9c012fa89535b3a84d9e58ad849867509e509ece914822644d1875c9178ead01",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-promotion-tests.mjs",
+      "previous": "bef2164c1760e2adc2d9fc76231fad15787a9c1c51b4636c7de88227817429a5",
+      "current": "680afc9259993fab3b49db95fbd85fa686d7936d1795aaeeaa2e11e3818a8f1b",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-native-promotion-tests.mjs",
+      "previous": "e74c4c676a94f1b8560e35348ac5f7a9972c0a2b53fb2db6360489ed93a25082",
+      "current": "f54afa5909e9d3639dcd6596e272a483ec5332202412d0deaf46f429b9c2a232",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-promotion-tests.mjs",
+      "previous": "023fadaf176057bead3da69a5630b07a376d8699e0cd826d9d3ddb6c2d45fc73",
+      "current": "455020af4f671f652fcf8ad36333dab44f1b3dfafcd449fc61d78b46c4eb96cf",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-promotion-tests.mjs",
+      "previous": "48c84762aaed474dafdd58995b3835aa7f9284f265557d70bb60ae16a41051a1",
+      "current": "e8b43a66fd4165ecf80f9267ca75b99064ac8c00af90a9db63549ded234118b1",
+      "count": 4
+    }
+  ],
+  "additions": [
+    {
+      "path": "docs/evidence/nominal-primitive-subtype-supplement-20261018/.gitattributes",
+      "currentSha256": "c43f59ab1d3030bb221e3fcd4f3751b582f9a09bb7f3d7ee030eb3f53861f36b"
+    },
+    {
+      "path": "scripts/update-primitive-audit-core-repair-source-history.mjs",
+      "currentSha256": "657479f9a24dbc55a524b268ec17da9e32839352397d25e59925db4e8ee7bf76"
+    },
+    {
+      "path": "tests/helpers/primitive-audit-core-repair-source-history.mjs",
+      "currentSha256": "367d358a9d86012e573103c30d202420a59e1a78a1669509f831a1779201bdbc"
+    },
+    {
+      "path": "tests/helpers/primitive-audit-core-repair-source-history-tests.mjs",
+      "currentSha256": "944bffaefd165ae949ba01f5fde61a51132728b1007f2b0d07e5a4a52a19a89d"
+    }
+  ],
+  "updates": [
+    {
+      "path": ".gitattributes",
+      "previousSha256": "0ad91f816d57937606f1491e57d6ae15cfef30c875305cbd687e676f1fa2fbef",
+      "currentSha256": "665b28fb2dcbd6d1c09b4007fb1c05b1f9061a909aa0755ddbab4d2be258441b",
+      "edits": [
+        {
+          "start": 2179,
+          "previous": "# Preserve the exact supplemental primitive-base GitHub job log.\ndocs/evidence/nominal-primitive-subtype-supplement-20261018/api/job.log whitespace=-blank-at-eol\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4a93d1c13aefc151580c64e4338a1e9a54c326d50071a22ebceb61cef25fc32a",
+      "currentSha256": "1f3bd0b23d103c26ca9e147e9c1cbe203e2b7ae50b2ae667dd8dfac85358d33b",
+      "replacements": [
+        {
+          "previous": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+          "current": "6c5c9687c4246163a14140e200d5d6b056c6493bb3b1a679b584576357f12c08",
+          "count": 94
+        },
+        {
+          "previous": "32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9",
+          "current": "8b112ca8b38764303eaf192362586ecefb14a3a865e164c234ece1284ca4b21f",
+          "count": 4
+        },
+        {
+          "previous": "9100c33d20a5ac5ee05cca5677e351daf57b49de6a86563f6a09385ac4721e5f",
+          "current": "9c012fa89535b3a84d9e58ad849867509e509ece914822644d1875c9178ead01",
+          "count": 4
+        },
+        {
+          "previous": "bef2164c1760e2adc2d9fc76231fad15787a9c1c51b4636c7de88227817429a5",
+          "current": "680afc9259993fab3b49db95fbd85fa686d7936d1795aaeeaa2e11e3818a8f1b",
+          "count": 4
+        },
+        {
+          "previous": "e74c4c676a94f1b8560e35348ac5f7a9972c0a2b53fb2db6360489ed93a25082",
+          "current": "f54afa5909e9d3639dcd6596e272a483ec5332202412d0deaf46f429b9c2a232",
+          "count": 4
+        },
+        {
+          "previous": "023fadaf176057bead3da69a5630b07a376d8699e0cd826d9d3ddb6c2d45fc73",
+          "current": "455020af4f671f652fcf8ad36333dab44f1b3dfafcd449fc61d78b46c4eb96cf",
+          "count": 4
+        },
+        {
+          "previous": "48c84762aaed474dafdd58995b3835aa7f9284f265557d70bb60ae16a41051a1",
+          "current": "e8b43a66fd4165ecf80f9267ca75b99064ac8c00af90a9db63549ded234118b1",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+      "currentSha256": "6c5c9687c4246163a14140e200d5d6b056c6493bb3b1a679b584576357f12c08",
+      "predecessorCommit": "6321287658f2d06d08638bc3c52713fd3ad8c795",
+      "edits": [
+        {
+          "start": 243,
+          "previous": "",
+          "current": "\t\t, \"nominal-primitive-subtype-supplement-ci\"\n\t\t, \"nominal-primitive-subtype-supplement-evidence\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f9570367802182ca0e671ac9b02516da62e73fad45f910cacb59ea55ef0ec881",
+      "currentSha256": "917ddbdb7c0371735edd1a3a52624c23651afaab8d996d1d1431a097ad34075b",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePrimitiveAuditCoreRepairSource, primitiveAuditCoreRepairChangedPaths } from \"./primitive-audit-core-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 75869,
+          "previous": "",
+          "current": "\tsource = beforePrimitiveAuditCoreRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 88017,
+          "previous": "\t...primitiveAuditIntegrationChangedPaths\n",
+          "current": "\t...primitiveAuditCoreRepairChangedPaths\n\t, ...primitiveAuditIntegrationChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+      "previousSha256": "32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9",
+      "currentSha256": "8b112ca8b38764303eaf192362586ecefb14a3a865e164c234ece1284ca4b21f",
+      "edits": [
+        {
+          "start": 1101,
+          "previous": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 1110,
+          "previous": "\tbeforeNominalPrimitiveSubtypeWitPromotionPins\n} from \"./nominal-primitive-subtype-wit-promotion-history.mjs\";\nimport {\n\tbeforeNominalPrimitiveSubtypeJvmPromotionPins\n} from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport {\n\tbeforeNestedCheckedRecordNativeCorrectionPins\n} from \"./nested-checked-record-native-correction-source-history.mjs\";\n",
+          "current": "\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 4898,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(beforeNominalPrimitiveSubtypeJvmPromotionPins(\n\t\tbeforeNestedCheckedRecordNativeCorrectionPins(\n\t\t\tawait promoteNestedCheckedRecordBrowsers(original, references))));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordBrowserPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordBrowsers(original, references)\n\t);\n"
+        },
+        {
+          "start": 5146,
+          "previous": "\t// Newer layers append receipts, supplement cells and refresh pins; read this\n\t// layer's exact output through them.\n\tconst ledger = JSON.parse(await readFile(nestedCheckedRecordBrowserPromotionHistoryPath));\n\tconst current = async path => beforeFinRefinementSource(path\n\t\t, await readFile(path, \"utf8\")\n\t\t, ledger.updates.find(update => update.path === path).currentSha256);\n",
+          "current": "\tconst current = path => sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordBrowserPromotionHistoryPath, path\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "previousSha256": "ca011b294fe9a4e35abfea8abbf05d50c41be7210e696a52a62392099271e1e8",
+      "currentSha256": "c14c4dfb596cebee7f09dcd4be57783c3ce6882591527e7e428d47d608b56427",
+      "edits": [
+        {
+          "start": 4321,
+          "previous": "",
+          "current": "import \"./primitive-audit-core-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-dotnet-promotion-tests.mjs",
+      "previousSha256": "9100c33d20a5ac5ee05cca5677e351daf57b49de6a86563f6a09385ac4721e5f",
+      "currentSha256": "9c012fa89535b3a84d9e58ad849867509e509ece914822644d1875c9178ead01",
+      "edits": [
+        {
+          "start": 261,
+          "previous": "import { beforeNominalSubtypeJvmPromotionSource, beforeNominalSubtypeJvmPromotionPins, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 825,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins,\n\twithHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5917,
+          "previous": "\tconst proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeDotnet(original, references)), { document: current, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalSubtypeDotnetPromotionHistoryPath\n\t\t, await promoteNominalSubtypeDotnet(original, references)\n\t);\n\tconst { document: current, ...contracts } = await readTypeSurface();\n"
+        },
+        {
+          "start": 6574,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 496), original.evidence);\n\tassert.deepEqual(document.observations, proposed.observations);\n\tassert.deepEqual(document.evidence.slice(496), proposed.evidence.slice(496));\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalSubtypeDotnetPromotionHistoryPath, proposed\n\t).evidence.slice(0, 496), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-jvm-promotion-tests.mjs",
+      "previousSha256": "bef2164c1760e2adc2d9fc76231fad15787a9c1c51b4636c7de88227817429a5",
+      "currentSha256": "680afc9259993fab3b49db95fbd85fa686d7936d1795aaeeaa2e11e3818a8f1b",
+      "edits": [
+        {
+          "start": 666,
+          "previous": "import { beforeNominalSubtypePhpPromotionSource, beforeNominalSubtypePhpPromotionPins, nominalSubtypePhpPromotionHistoryPath } from \"./nominal-subtype-php-promotion-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { beforeNominalSubtypePhpPromotionSource, nominalSubtypePhpPromotionHistoryPath } from \"./nominal-subtype-php-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins,\n\twithHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6326,
+          "previous": "\tconst proposed = beforeNominalSubtypePhpPromotionPins(await promoteNominalSubtypeJvm(original, references)), { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(beforeNominalSubtypePhpPromotionSource(\"docs/type-surface.v1.json\", JSON.stringify(live, null, 2) + \"\\n\"));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalSubtypeJvmPromotionHistoryPath\n\t\t, await promoteNominalSubtypeJvm(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalSubtypeJvmPromotionHistoryPath, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6968,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 500), original.evidence);\n\tassert.deepEqual(document.observations, proposed.observations);\n\tassert.deepEqual(document.evidence.slice(500), proposed.evidence.slice(500));\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalSubtypeJvmPromotionHistoryPath, proposed\n\t).evidence.slice(0, 500), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-native-promotion-tests.mjs",
+      "previousSha256": "e74c4c676a94f1b8560e35348ac5f7a9972c0a2b53fb2db6360489ed93a25082",
+      "currentSha256": "f54afa5909e9d3639dcd6596e272a483ec5332202412d0deaf46f429b9c2a232",
+      "edits": [
+        {
+          "start": 261,
+          "previous": "import { beforeNominalSubtypeJvmPromotionSource } from \"./nominal-subtype-jvm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeNativePromotionSource } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\n",
+          "current": "import {\n\tbeforeNominalSubtypeJvmPromotionSource,\n\tnominalSubtypeJvmPromotionHistoryPath\n} from \"./nominal-subtype-jvm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 857,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins,\n\twithHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5320,
+          "previous": "\tconst proposed = await promoteNominalSubtypeNative(original, references), { document: current, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalSubtypeNativePromotionHistoryPath\n\t\t, await promoteNominalSubtypeNative(original, references)\n\t);\n\tconst { document: current, ...contracts } = await readTypeSurface();\n"
+        },
+        {
+          "start": 5679,
+          "previous": "",
+          "current": "\tassert.ok(current.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 5977,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 476), original.evidence);\n\tassert.deepEqual(document.observations, proposed.observations);\n\tassert.deepEqual(current.evidence.slice(476, 480), proposed.evidence.slice(476));\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalSubtypeNativePromotionHistoryPath, proposed\n\t).evidence.slice(0, 476), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        },
+        {
+          "start": 7803,
+          "previous": "\tconst beforePrimitiveNative = (path, source) => beforeNominalPrimitiveSubtypeNativePromotionSource(path, source);\n\tconst author = beforeNominalSubtypeJvmPromotionSource(authorPath\n\t\t, beforePrimitiveNative(authorPath, await readFile(authorPath, \"utf8\")));\n",
+          "current": "\tconst author = beforeNominalSubtypeJvmPromotionSource(\n\t\tauthorPath, await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeJvmPromotionHistoryPath, authorPath\n\t\t)\n\t);\n"
+        },
+        {
+          "start": 8871,
+          "previous": "\t\tconst source = beforePrimitiveNative(path, await readFile(path, \"utf8\"));\n",
+          "current": "\t\tconst source = await sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeNativePromotionHistoryPath, path\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-php-tests.mjs",
+      "previousSha256": "62a5f3b4883dd53e40e24008b9187d0286268c7666879a6272397edcd12a7be8",
+      "currentSha256": "a5b3bcff38fde01413cb75394fdf946c4ad6e3a5acec8cbc1d0f106106621853",
+      "edits": [
+        {
+          "start": 2503,
+          "previous": "\tassert.throws(() => generateCopiedPhpPackage(nominalSubtypeInstalledReview()), /reserved or duplicated: echo/u);\n",
+          "current": "\tconst unrenamed = generateCopiedPhpPackage(\n\t\tnominalSubtypeInstalledReview()\n\t)[\"src/Api.php\"];\n\tassert.match(unrenamed, /function echo_\\(/u);\n\tassert.doesNotMatch(unrenamed, /function echo\\(/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-python-promotion-tests.mjs",
+      "previousSha256": "023fadaf176057bead3da69a5630b07a376d8699e0cd826d9d3ddb6c2d45fc73",
+      "currentSha256": "455020af4f671f652fcf8ad36333dab44f1b3dfafcd449fc61d78b46c4eb96cf",
+      "edits": [
+        {
+          "start": 265,
+          "previous": "import { beforeNominalSubtypeJvmPromotionPins, beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\nimport { nominalSubtypeDotnetPromotionHistoryPath } from \"./nominal-subtype-dotnet-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 516,
+          "previous": "import { nominalSubtypeRubyPromotionHistoryPath } from \"./nominal-subtype-ruby-promotion-history.mjs\";\nimport { nominalSubtypeRustPromotionHistoryPath } from \"./nominal-subtype-rust-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypePythonPromotionPins, beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from \"./nominal-primitive-subtype-python-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalPrimitiveSubtypePythonPromotionSource, nominalPrimitiveSubtypePythonPromotionHistoryPath } from \"./nominal-primitive-subtype-python-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 1007,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins,\n\twithHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5771,
+          "previous": "\tconst proposed = beforeNominalSubtypeJvmPromotionPins(beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalSubtypePython(original, references))), { document: current, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalSubtypePythonPromotionHistoryPath\n\t\t, await promoteNominalSubtypePython(original, references)\n\t);\n\tconst { document: current, ...contracts } = await readTypeSurface();\n"
+        },
+        {
+          "start": 6195,
+          "previous": "\tfor(const path of [nominalSubtypeDotnetPromotionHistoryPath, nominalSubtypeRustPromotionHistoryPath, nominalSubtypeRubyPromotionHistoryPath])\n\t{\n\t\tconst later = JSON.parse(await readFile(path));\n\t\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t\t{\n\t\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\t\tif(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;\n\t\t}\n\t}\n",
+          "current": ""
+        },
+        {
+          "start": 6428,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 484), original.evidence);\n\tassert.deepEqual(document.observations, proposed.observations);\n\tassert.deepEqual(document.evidence.slice(484), proposed.evidence.slice(484));\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalSubtypePythonPromotionHistoryPath, proposed\n\t).evidence.slice(0, 484), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-rust-promotion-tests.mjs",
+      "previousSha256": "48c84762aaed474dafdd58995b3835aa7f9284f265557d70bb60ae16a41051a1",
+      "currentSha256": "e8b43a66fd4165ecf80f9267ca75b99064ac8c00af90a9db63549ded234118b1",
+      "edits": [
+        {
+          "start": 263,
+          "previous": "import { beforeNominalSubtypeJvmPromotionPins, beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\nimport { nominalSubtypeDotnetPromotionHistoryPath } from \"./nominal-subtype-dotnet-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalSubtypeJvmPromotionSource, nominalSubtypeJvmPromotionHistoryPath } from \"./nominal-subtype-jvm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 811,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins,\n\twithHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5668,
+          "previous": "\tconst proposed = beforeNominalSubtypeJvmPromotionPins(await promoteNominalSubtypeRust(original, references)), { document: current, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalSubtypeRustPromotionHistoryPath\n\t\t, await promoteNominalSubtypeRust(original, references)\n\t);\n\tconst { document: current, ...contracts } = await readTypeSurface();\n"
+        },
+        {
+          "start": 6086,
+          "previous": "\tconst later = JSON.parse(await readFile(nominalSubtypeDotnetPromotionHistoryPath));\n\tfor(const entry of proposed.evidence) for(const file of entry.files)\n\t{\n\t\tconst update = later.updates.find(item => item.path === file.path);\n\t\tif(update && file.sha256 === update.currentSha256) file.sha256 = update.previousSha256;\n\t}\n",
+          "current": ""
+        },
+        {
+          "start": 6319,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 492), original.evidence);\n\tassert.deepEqual(document.observations, proposed.observations);\n\tassert.deepEqual(document.evidence.slice(492), proposed.evidence.slice(492));\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalSubtypeRustPromotionHistoryPath, proposed\n\t).evidence.slice(0, 492), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/source-history-test-source.mjs",
+      "previousSha256": "42bf45fd4da671c3ea67b854aab582a1bf3d69be36f78e23f512fc42b7cc20aa",
+      "currentSha256": "46c1ebefa7b76167def31e59efe478d5e8ed6807455bbae1bc7f4bd09d308515",
+      "edits": [
+        {
+          "start": 1034,
+          "previous": "\tsource = execFileSync(\"git\", [\"show\", `${record.predecessorCommit}:${path}`]\n",
+          "current": "\tconst primaryPredecessor = update.predecessorCommit\n\t\t?? record.predecessorCommit;\n\tassert.match(primaryPredecessor, /^[0-9a-f]{40}$/u);\n\tsource = execFileSync(\"git\", [\"show\", `${primaryPredecessor}:${path}`]\n"
+        },
+        {
+          "start": 1300,
+          "previous": "",
+          "current": "\tif(sha256(source) !== update.previousSha256)\n\t{\n\t\tassert.equal(update.predecessorCommit, undefined\n\t\t\t, `${historyPath}: explicit predecessor did not match ${path}`);\n\t\tconst specializedPredecessor = record.generatorPredecessorCommit;\n\t\tassert.equal(typeof specializedPredecessor, \"string\"\n\t\t\t, `${historyPath}: missing specialized predecessor for ${path}`);\n\t\tassert.match(specializedPredecessor, /^[0-9a-f]{40}$/u);\n\t\tsource = execFileSync(\"git\", [\"show\"\n\t\t\t, `${specializedPredecessor}:${path}`]\n\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/nested-checked-records.test.mjs",
+      "previousSha256": "29a7b234347e3d2b9ddb78cc3950a98b91cb701bff2fca71756a97a10208bee2",
+      "currentSha256": "c5d70510d83178a76f5700e7a18da54d9dd1b70b2df64f9906bd2af8925e90a0",
+      "edits": [
+        {
+          "start": 1337,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-python-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

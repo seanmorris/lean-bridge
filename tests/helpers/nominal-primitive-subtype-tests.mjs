@@ -69,6 +69,7 @@ import "./nominal-primitive-subtype-supplement-installed-tests.mjs";
 import "./nominal-primitive-subtype-audit-correction-history-tests.mjs";
 import "./nominal-primitive-subtype-registration-gap-history-tests.mjs";
 import "./primitive-audit-integration-source-history-tests.mjs";
+import "./primitive-audit-core-repair-source-history-tests.mjs";
 import "./nominal-primitive-subtype-php-promotion-tests.mjs";
 import "./nominal-primitive-subtype-php-promotion-history-tests.mjs";
 import "./nominal-primitive-subtype-rust-fixture-tests.mjs";
