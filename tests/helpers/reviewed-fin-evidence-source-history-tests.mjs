@@ -11,7 +11,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeHistoryDigestSource } from "./history-digest-source-history.mjs";
 import { beforeReviewedFinEvidenceSource, reviewedFinEvidenceChangedPaths
 	, reviewedFinEvidenceHistoryPath, reverseReviewedFinEvidenceUpdate } from "./reviewed-fin-evidence-source-history.mjs";
-import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("reviewed Fin installed evidence authenticates its complete source predecessors", async () => {
 	const record = JSON.parse(await readFile(reviewedFinEvidenceHistoryPath, "utf8"));
@@ -78,9 +78,14 @@ test("reviewed Fin promotion preserves older receipts and limits acceptance to C
 		assert.equal(entry.kind, "installed");
 		assert.equal(entry.revision, reports[index].revision);
 		assert.equal(entry.command, reports[index].command);
-		for(const file of entry.files) assert.equal(sha256(await sourceAtFinHistoryRecord(
-			reviewedFinEvidenceHistoryPath, file.path, beforeHistoryDigestSource
-		)), file.sha256, file.path);
+		for(const file of entry.files)
+		{
+			const source = reviewedFinEvidenceChangedPaths.includes(file.path)
+				? await sourceAtFinHistoryRecord(
+					reviewedFinEvidenceHistoryPath, file.path, beforeHistoryDigestSource
+				) : await sourceAtFinHistoryMilestone(file.path, file.sha256);
+			assert.equal(sha256(source), file.sha256, file.path);
+		}
 		const report = JSON.parse(await readFile(reports[index].path, "utf8"));
 		assert.deepEqual(entry.artifacts.map(item => item.sha256).sort(), Object.values(report.archives).sort());
 	}

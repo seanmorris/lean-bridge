@@ -15,7 +15,9 @@ export const ciContractRepairPredecessor
 export const ciContractRepairPathSetSha256
 	= "a95c2f83cce0563bc71df0c3bcb6b042536edca9c528f6286f72e7c0dc002fdf";
 
-const history = JSON.parse(readFileSync(ciContractRepairHistoryPath, "utf8"));
+const history = JSON.parse(readFileSync(new URL(
+	`../../${ciContractRepairHistoryPath}`, import.meta.url
+), "utf8"));
 export const ciContractRepairChangedPaths = Object.freeze(
 	history.updates.map(update => update.path)
 );

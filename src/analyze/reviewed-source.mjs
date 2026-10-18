@@ -102,7 +102,16 @@ const checkReview = document => {
 		if(refinementKey !== null && Object.hasOwn(item.source.extensions, refinementKey))
 		{
 			try
-			{ (declaration ? assertReviewedRefinements : item.kind === "callback" ? assertReviewedFinCallback : assertReviewedFinNominal)(item, item.source.extensions[refinementKey], document.types); }
+			{
+				if(declaration) assertReviewedRefinements(
+					item, item.source.extensions[refinementKey], document.types
+				);
+				else if(item.kind === "callback")
+					assertReviewedFinCallback(item, document.types);
+				else assertReviewedFinNominal(
+					item, item.source.extensions[refinementKey]
+				);
+			}
 			catch
 			{ unsupported("Reviewed refinement decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
 		}

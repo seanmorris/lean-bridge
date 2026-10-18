@@ -47,15 +47,23 @@ for(const name of ["Some", "Ok", "Err"]) test(`Ruby compound ${name} cannot coll
 	assert.throws(() => compileCopiedRubyModel(component), /component name collides/);
 });
 
-test("Ruby compounds admit copied callbacks but reject borrowed identity and keyword fields", () => {
+test("Ruby compounds admit copied callbacks, escape keywords and reject borrowed identity", () => {
 	const ir = callableReviewedIr();
 	ir.types[0].callable.result.type = { kind: "apply", constructor: "option", arguments: [{ kind: "primitive", name: "unit" }] };
 	const model = compileCopiedRubyModel(ir);
 	assert.equal(model.surface.copy(ir.types[0].callable.result.type).compound, "option");
 	const borrowed = compoundReviewedIr(); borrowed.declarations[0].parameters[0].ownership = "borrow";
 	assert.throws(() => compileCopiedRubyModel(borrowed), /copy ownership/);
-	const field = compoundReviewedIr(); field.types.find(type => type.kind === "record").fields[0].name = "next";
-	assert.throws(() => compileCopiedRubyModel(field), /record field name collides/);
+	const field = compoundReviewedIr();
+	const fields = field.types.find(type => type.kind === "record").fields;
+	fields[0].name = "next";
+	const packet = compileCopiedRubyModel(field).surface.copies.find(
+		copy => copy.record?.name === "Packet"
+	);
+	assert.equal(packet.fields[0].rubyName, "next_");
+	fields[1].name = "next_";
+	assert.throws(() => compileCopiedRubyModel(field)
+		, /(?:reserved or duplicated|record field name collides)/);
 });
 
 const ruby = process.env.LEAN_BRIDGE_RUBY ?? resolve(".toolchains/ruby33/bin/ruby");

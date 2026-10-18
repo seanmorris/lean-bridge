@@ -10,7 +10,7 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedScalarRolloutSource } from "./reviewed-scalar-rollout-source-history.mjs";
 import { beforeGenericRecordPromotionSource, genericRecordPromotionChangedPaths, genericRecordPromotionHistoryPath, reverseGenericRecordPromotionUpdate } from "./generic-record-promotion-source-history.mjs";
-import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("Generic record promotion authenticates each exact source predecessor", async () => {
 	const record = JSON.parse(await readFile(genericRecordPromotionHistoryPath, "utf8"));
@@ -100,8 +100,13 @@ test("generic promotion cites nine installed bundles without changing unrelated 
 		const hashes = reference.id === "specialized-npm" ? [report.archiveSha256, report.runtimeArchiveSha256] : Object.values(report.archives);
 		assert.deepEqual(evidence.artifacts.map(item => item.sha256).sort(), hashes.sort());
 		for(const file of evidence.files)
-			assert.equal(sha256(await sourceAtFinHistoryRecord(
-			genericRecordPromotionHistoryPath, file.path, beforeReviewedScalarRolloutSource
-			)), file.sha256, file.path);
+		{
+			const source = genericRecordPromotionChangedPaths.includes(file.path)
+				? await sourceAtFinHistoryRecord(
+					genericRecordPromotionHistoryPath, file.path
+					, beforeReviewedScalarRolloutSource
+				) : await sourceAtFinHistoryMilestone(file.path, file.sha256);
+			assert.equal(sha256(source), file.sha256, file.path);
+		}
 	}
 });

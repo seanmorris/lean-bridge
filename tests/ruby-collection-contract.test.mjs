@@ -42,12 +42,22 @@ test("Ruby collections preserve the complete independent copied contract", () =>
 	assert.match(files["README.md"], /field-by-field ==, eql\?, hash and deconstruct_keys/);
 });
 
-test("Ruby record pattern methods cannot overwrite source fields", () => {
-	for(const name of ["deconstruct", "deconstruct_keys", "deconstructKeys"])
-	{
+test("Ruby record pattern methods escape reserved fields and reject post-escape collisions", () => {
+	for(const [name, rubyName] of [
+		["deconstruct", "deconstruct_"]
+		, ["deconstruct_keys", "deconstruct_keys_"]
+		, ["deconstructKeys", "deconstruct_keys_"]
+	]) {
 		const ir = collectionReviewedIr();
-		ir.types.find(type => type.name === "Pair").fields[0].name = name;
-		assert.throws(() => compileCopiedRubyModel(ir), /Ruby record field name collides/);
+		const fields = ir.types.find(type => type.name === "Pair").fields;
+		fields[0].name = name;
+		const pair = compileCopiedRubyModel(ir).surface.copies.find(
+			copy => copy.record?.name === "Pair"
+		);
+		assert.equal(pair.fields[0].rubyName, rubyName);
+		fields[1].name = rubyName;
+		assert.throws(() => compileCopiedRubyModel(ir)
+			, /(?:reserved or duplicated|Ruby record field name collides)/);
 	}
 });
 

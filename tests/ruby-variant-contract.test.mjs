@@ -49,8 +49,15 @@ test("Ruby constructor families reject collisions and preserve trailing undersco
 	}
 	for(const name of ["freeze", "deconstruct_keys", "object_id"])
 	{
-		const ir = contract(); ir.types.find(type => type.name === "Signal").cases[2].fields[0].name = name;
-		assert.throws(() => compileCopiedRubyModel(ir), /(?:collid|reserved)/);
+		const ir = contract();
+		const fields = ir.types.find(type => type.name === "Signal").cases[2].fields;
+		fields[0].name = name;
+		const signal = compileCopiedRubyModel(ir).surface.copies.find(
+			copy => copy.variant?.name === "Signal"
+		);
+		assert.equal(signal.cases[2].fields[0].rubyName, `${name}_`);
+		fields[1].name = `${name}_`;
+		assert.throws(() => compileCopiedRubyModel(ir), /collid/);
 	}
 	const ir = contract(); ir.types.find(type => type.name === "Signal").cases[0].name = "idle_";
 	assert.match(generateCopiedRubyPackage(ir)["lib/lean_bridge/variants.rb"], /class Signal::Idle_ < Signal/);

@@ -13,10 +13,10 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import "./helpers/refinement-core-ci-history-tests.mjs";
-import { beforePerlClosureNativeBudgetSource, perlClosureNativeBudgetHistoryPath } from "./helpers/perl-closure-native-budget-source-history.mjs";
+import { beforePerlClosureNativeBudgetSource } from "./helpers/perl-closure-native-budget-source-history.mjs";
 import { perlRelocatedPromotionIds, perlRelocatedReviewedId, promotePerlRelocatedInventory, promotePerlRelocatedObservations } from "./helpers/perl-relocated-promotion.mjs";
 import { beforePerlRelocatedPromotionSource, perlRelocatedPromotionChangedPaths, perlRelocatedPromotionHistoryPath, perlRelocatedPromotionPredecessor, reversePerlRelocatedPromotionUpdate } from "./helpers/perl-relocated-promotion-source-history.mjs";
-import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 
 test("Perl relocated promotion authenticates all exact predecessors and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
@@ -91,11 +91,8 @@ test("Perl promotion evidence binds four configurations per selection and does n
 	assert.match(evidence.find(item => item.id === "perl-relocated-container-hosted-installed").scope, /does not establish relocated scalar/u);
 	// This promotion predates the independently accepted reviewed Subtype rollout.
 	const path = "docs/consume/perl.md";
-	const closureSource = await sourceAtFinHistoryRecord(
-		perlClosureNativeBudgetHistoryPath, path
-		, beforePerlClosureNativeBudgetSource
-	);
-	const consumer = beforePerlClosureNativeBudgetSource(path, closureSource);
+	const consumer = await sourceAtFinHistoryMilestone(path
+		, "97d6960b6b5c974d5fd0ff73ce27470187a773d5d365070ab9088a74379b0378");
 	assert.ok(consumer.includes("perl-refinements-20261009.md"));
 	const subtypeRow = consumer.split("\n").find(line => line.startsWith("| `Subtype /"));
 	const finRow = consumer.split("\n").find(line => line.startsWith("| `Fin n`"));
