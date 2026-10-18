@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "milestone": "source-history-milestone-assertion-repair-v1",
+  "predecessorCommit": "d020b25aeabdad516b9dd23912a0bd90dc2d20fe",
+  "draftParentCommit": "f8cb2d4e9952a3fe3bc7faeb71a073dc534c1524",
+  "pathsSha256": "b9261e0e69ad6fe0f1a2db2363d65aa0325c8e09ae1187770360b13994a05408",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "757a4cd3deb39eb0b01c20f347e00be6bc7aaa991bbd213f536a71989235d36c",
+      "currentSha256": "2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-source-history-milestone-assertion-repair.mjs",
+      "currentSha256": "2f6b4adcf4a058a42e5aa9abb94f2f6aa54eb9b8b83f1651ab084c7a5bebb767"
+    },
+    {
+      "path": "tests/helpers/source-history-milestone-assertion-repair-tests.mjs",
+      "currentSha256": "373899dbaa472a26780d648494807dd33479f8984329cc5100f88af5bfa20298"
+    },
+    {
+      "path": "tests/helpers/source-history-milestone-assertion-repair.mjs",
+      "currentSha256": "99729daaed769532fc8566263ca45efa271366fc1f1d47fa64f1bccebea22c08"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "5d677b414167e0b0b3741f5b57dee91adaff770419f22fb5623a0b9e99e3cd43",
+      "currentSha256": "501a03cce81f190a9121ad8e03d1bc9ad1e8d5d6eac74431b45d409462930437",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"757a4cd3deb39eb0b01c20f347e00be6bc7aaa991bbd213f536a71989235d36c\"\n",
+          "current": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"757a4cd3deb39eb0b01c20f347e00be6bc7aaa991bbd213f536a71989235d36c\"\n",
+          "current": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"757a4cd3deb39eb0b01c20f347e00be6bc7aaa991bbd213f536a71989235d36c\"\n",
+          "current": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "757a4cd3deb39eb0b01c20f347e00be6bc7aaa991bbd213f536a71989235d36c",
+      "currentSha256": "2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0",
+      "edits": [
+        {
+          "start": 4716,
+          "previous": "",
+          "current": "import \"./helpers/source-history-milestone-assertion-repair-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-foundation-source-history-tests.mjs",
+      "previousSha256": "8a9b36499750a988a53404a3f4c2adf9a254ac7695faa4d06742e56501d07079",
+      "currentSha256": "807d7ef6ed7e5239ab25272f3bb0d9212c7b90b87e9231374304a939380f4f5d",
+      "edits": [
+        {
+          "start": 3887,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t\t, beforeCheckedRecordValueIndexFoundationSource\n\t\t);\n\t\tassert.equal(sha256(current)\n"
+        },
+        {
+          "start": 4300,
+          "previous": "test(\"checked-record value-index admission refreshes exactly its live pins\", async () => {\n",
+          "current": "test(\"checked-record value-index admission refreshes exactly its milestone pins\", async () => {\n"
+        },
+        {
+          "start": 4588,
+          "previous": "",
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === inventoryPath\n\t);\n\tassert.ok(inventoryUpdate);\n"
+        },
+        {
+          "start": 5648,
+          "previous": "\tassert.equal(await readFile(inventoryPath, \"utf8\")\n\t\t, JSON.stringify(expected, null, 2) + \"\\n\");\n",
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tinventoryPath, inventoryUpdate.currentSha256\n\t\t, beforeCheckedRecordValueIndexFoundationSource\n\t);\n\tassert.equal(current, JSON.stringify(expected, null, 2) + \"\\n\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/core-quality-sharding-source-history-tests.mjs",
+      "previousSha256": "fabf15f88595a1bd7f6c0cc06bce21173439a6c49ebdfb28975f95977921eeb4",
+      "currentSha256": "9cc7f20bf7cc3e6c2e03490d3b3737659e0a37535e8e140ef13c7d60f1341b16",
+      "edits": [
+        {
+          "start": 3487,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeCoreQualityShardingSource\n\t\t);\n\t\tassert.equal(sha256(current)\n"
+        },
+        {
+          "start": 3868,
+          "previous": "test(\"Core quality sharding refreshes exactly its live pins\", async () => {\n",
+          "current": "test(\"Core quality sharding refreshes exactly its milestone pins\", async () => {\n"
+        },
+        {
+          "start": 4125,
+          "previous": "",
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === inventoryPath\n\t);\n\tassert.ok(inventoryUpdate);\n"
+        },
+        {
+          "start": 5157,
+          "previous": "\tassert.equal(await readFile(inventoryPath, \"utf8\")\n\t\t, JSON.stringify(expected, null, 2) + \"\\n\");\n",
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tinventoryPath, inventoryUpdate.currentSha256\n\t\t, beforeCoreQualityShardingSource\n\t);\n\tassert.equal(current, JSON.stringify(expected, null, 2) + \"\\n\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7fdd4e7a787d17775d116bd155630d2d6437e46f5fd4e691e92bd1fb8d8094c8",
+      "currentSha256": "ce1e17d28ab896201ffcb5f27193f8bc6c1c9d4ba3a4398765a89b57d320f735",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeSourceHistoryMilestoneAssertionRepairSource, sourceHistoryMilestoneAssertionRepairChangedPaths } from \"./source-history-milestone-assertion-repair.mjs\";\n"
+        },
+        {
+          "start": 79975,
+          "previous": "",
+          "current": "\tsource = beforeSourceHistoryMilestoneAssertionRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 95606,
+          "previous": "\t...checkedRecordValueIndexDotnetInstalledChangedPaths\n",
+          "current": "\t...sourceHistoryMilestoneAssertionRepairChangedPaths\n\t, ...checkedRecordValueIndexDotnetInstalledChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/value-index-browser-lint-source-history-tests.mjs",
+      "previousSha256": "6e9cad194977306de2242f5bac1b5e69690eda54d2b181dbf35eac42675f2c2e",
+      "currentSha256": "7a15f31ba682105d7bcead3bfa066b7cee74d50fd0065a390c31d71270156620",
+      "edits": [
+        {
+          "start": 3663,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeValueIndexBrowserLintSource\n\t\t);\n\t\tassert.equal(sha256(current)\n"
+        },
+        {
+          "start": 4047,
+          "previous": "test(\"value-index browser lint repair refreshes exactly its live pins\"\n",
+          "current": "test(\"value-index browser lint repair refreshes exactly its milestone pins\"\n"
+        },
+        {
+          "start": 4323,
+          "previous": "",
+          "current": "\t\tconst inventoryUpdate = record.updates.find(update =>\n\t\t\tupdate.path === inventoryPath\n\t\t);\n\t\tassert.ok(inventoryUpdate);\n"
+        },
+        {
+          "start": 5397,
+          "previous": "\t\tassert.equal(await readFile(inventoryPath, \"utf8\")\n\t\t\t, JSON.stringify(expected, null, 2) + \"\\n\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tinventoryPath, inventoryUpdate.currentSha256\n\t\t\t, beforeValueIndexBrowserLintSource\n\t\t);\n\t\tassert.equal(current, JSON.stringify(expected, null, 2) + \"\\n\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/value-index-core-lineage-repair-source-history-tests.mjs",
+      "previousSha256": "2964fd4bfaa98527ffc6e1ca767403268ad71d1fdb64444d35d361e4898140de",
+      "currentSha256": "1b3d336a410958579b28098febec5d88e8dfcc161e34ec88dbb7d7bc609c1788",
+      "edits": [
+        {
+          "start": 5979,
+          "previous": "test(\"value-index Core lineage repair closes additions and live pins\", async () => {\n",
+          "current": "test(\"value-index Core lineage repair closes additions and milestone pins\", async () => {\n"
+        },
+        {
+          "start": 6210,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t\t, beforeValueIndexCoreLineageRepairSource\n\t\t);\n\t\tassert.equal(sha256(current)\n"
+        },
+        {
+          "start": 6692,
+          "previous": "",
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === inventoryPath\n\t);\n\tassert.ok(inventoryUpdate);\n"
+        },
+        {
+          "start": 7738,
+          "previous": "\tassert.equal(await readFile(inventoryPath, \"utf8\")\n\t\t, JSON.stringify(expected, null, 2) + \"\\n\");\n",
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tinventoryPath, inventoryUpdate.currentSha256\n\t\t, beforeValueIndexCoreLineageRepairSource\n\t);\n\tassert.equal(current, JSON.stringify(expected, null, 2) + \"\\n\");\n"
+        }
+      ]
+    }
+  ]
+}

@@ -138,7 +138,7 @@ test("value-index test-profile history closes both omitted transitions", async (
 	assert.ok(finRefinementNormalizationPaths.includes(profilePath));
 });
 
-test("value-index Core lineage repair closes additions and live pins", async () => {
+test("value-index Core lineage repair closes additions and milestone pins", async () => {
 	const record = JSON.parse(await readFile(
 		valueIndexCoreLineageRepairHistoryPath, "utf8"
 	));
