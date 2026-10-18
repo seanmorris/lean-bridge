@@ -97,9 +97,10 @@ export const checkCheckedRecordValueIndexDotnetReport = async (read, {
 	const report = await json("report.json");
 	assert.deepEqual(Object.keys(report).sort(), [
 		"apiProbe", "authorInputsUnchanged"
-		, "builds", "compilerFreeReplay", "declaredGlibcFloor", "dispatch"
+		, "builds", "compilerFreeReplay", "consumerCommit"
+		, "declaredGlibcFloor", "dispatch"
 		, "expectedBindingIrSha256", "independentBuilds", "installation"
-		, "consumerCommit", "installerCommandLogs", "mode", "observations"
+		, "installerCommandLogs", "mode", "observations"
 		, "offlineInstall", "producerCommit", "receipt"
 		, "relocatedInstallation", "reproducible"
 		, "resourceChecks", "route", "runtime", "schemaVersion"

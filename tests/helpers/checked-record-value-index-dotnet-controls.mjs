@@ -103,7 +103,8 @@ export const checkCheckedRecordValueIndexDotnetControls = async (
 					.source.extensions["lean-lang.org/instantiation"];
 			}
 		]
-		, ["missing value-index record", /Exact value-index record set/u
+		, ["missing value-index record"
+			, /references unknown type lean:CheckedRecordValueIndices\.Off/u
 			, ir => {
 				ir.types = ir.types.filter(type => type.name !== "Off");
 			}

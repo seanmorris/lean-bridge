@@ -124,7 +124,8 @@ export const checkCheckedRecordValueIndexDotnetEnvironment = async ({ read, json
 		.filter(path => !path.startsWith("runtimes/") && path !== `${checkedRecordValueIndexDotnetAssembly}.dll`))
 		assert.deepEqual(context.outputs[path], identity(await read(`consumer-environment/out/${path}`)));
 	const dependencies = JSON.parse(await read("consumer-environment/out/Consumer.deps.json"));
-	assert.deepEqual(Object.keys(dependencies.libraries).sort(), ["Consumer/1.0.0", coordinate]);
+	assert.deepEqual(Object.keys(dependencies.libraries).sort()
+		, [coordinate, "Consumer/1.0.0"]);
 	assert.equal(dependencies.libraries[coordinate].sha512, "sha512-" + archiveSha512);
 	assert.equal(dependencies.libraries[coordinate].type, "package");
 	const runtime = JSON.parse(await read("consumer-environment/out/Consumer.runtimeconfig.json"));
