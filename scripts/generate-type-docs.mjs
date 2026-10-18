@@ -73,6 +73,8 @@ const nestedCheckedRecordRustPending = "the Rust target still needs separate nes
 const nestedCheckedRecordRust = "[Nested checked-record Rust crates](../evidence/nested-checked-record-rust-20261016/index.json) establish the same copied positions through generated Packet and Holder structs and the Packet case of a Choice enum on both author routes and API modes. Two author roots reproduce complete Cargo crates before author removal, offline installation from an authenticated vendored dependency closure and physical relocation. The unchanged compiled caller runs from the installed tree, after relocation and again with only its executable retained on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36 and a 2.36 package floor. Exact constructor failures preserve caller graphs and later calls recover.";
 const inheritedCheckedRecordMarker = "Generic, recursive and inherited checked records, other indices, open dependent records, callbacks and owned positions remain unverified;";
 const inheritedCheckedRecord = "[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) preserves the tested Span → Ticket → Stamped parent-subobject chain, its Ticket alias, repeated parameters, nested Fin field and proof-free results in installed packages across all seventeen profiles and both author routes. Full and result-only packages are separately retained. Generic or recursive inheritance, other index kinds, open dependent or zero-payload records, callbacks and owned positions remain separate work.";
+const recursiveCheckedRecordMarker = inheritedCheckedRecord;
+const recursiveCheckedRecord = `${inheritedCheckedRecord} [Recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers finite self-recursive Packet and mutually recursive Envelope/Step graphs across all seventeen profiles and both author routes. The retained packages preserve nominal identities and aliases, Array/Option carriers and active branches; validate selected checked fields and Fin bounds; erase proofs; preserve rejected inputs; recover on later valid calls; and return constructor-free copied results. Other recursive graph shapes, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload records, callbacks, owned positions, retained identity and cyclic host-object inputs remain separate work.`;
 
 /**
  * Classify a single cell without borrowing evidence from another stage or position.
@@ -266,6 +268,7 @@ export async function renderTypeDocuments({ root })
 			.replace(nestedCheckedRecordRustPending
 				, "all seventeen profiles have separate installed acceptance for this tested nested copied boundary")
 			.replace(inheritedCheckedRecordMarker, inheritedCheckedRecord)
+			.replace(recursiveCheckedRecordMarker, recursiveCheckedRecord)
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
 	};

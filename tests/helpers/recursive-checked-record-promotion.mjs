@@ -163,6 +163,81 @@ const uniqueFiles = files => {
 	}
 	return result;
 };
+const laneValidators = lane => ({
+	native: [
+		"tests/helpers/mutual-checked-record-native-evidence.mjs"
+		, "tests/helpers/mutual-checked-record-native-controls.mjs"
+		, "scripts/check-mutual-checked-record-native-ci.mjs"
+		, "scripts/run-mutual-checked-record-native-ci.sh"
+		, ".github/workflows/recursive-checked-record-native.yml"
+	]
+	, browser: [
+		"tests/helpers/mutual-checked-record-npm-browser-archive.mjs"
+		, "tests/mutual-checked-record-npm-browser-archive.test.mjs"
+		, "scripts/archive-mutual-checked-record-npm-browser.mjs"
+	]
+	, jvm: [
+		"tests/helpers/mutual-checked-record-jvm-evidence.mjs"
+		, "tests/helpers/mutual-checked-record-jvm-provenance.mjs"
+		, "tests/mutual-checked-record-jvm-evidence.test.mjs"
+		, "scripts/archive-mutual-checked-record-jvm.mjs"
+	]
+	, dotnet: [
+		"tests/helpers/mutual-checked-record-dotnet-evidence.mjs"
+		, "tests/helpers/mutual-checked-record-dotnet-provenance.mjs"
+		, "tests/mutual-checked-record-dotnet-evidence.test.mjs"
+		, "scripts/archive-mutual-checked-record-dotnet.mjs"
+	]
+	, python: [
+		"tests/helpers/recursive-checked-record-python-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-python-provenance.mjs"
+		, "scripts/check-recursive-checked-record-python-ci.mjs"
+		, "scripts/run-recursive-checked-record-python-ci.sh"
+		, ".github/workflows/recursive-checked-record-python.yml"
+	]
+	, ruby: [
+		"tests/helpers/recursive-checked-record-ruby-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-ruby-provenance.mjs"
+		, "scripts/check-recursive-checked-record-ruby-ci.mjs"
+		, "scripts/run-recursive-checked-record-ruby-ci.sh"
+		, ".github/workflows/recursive-checked-record-ruby.yml"
+	]
+	, perl: [
+		"tests/helpers/recursive-checked-record-perl-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-perl-provenance.mjs"
+		, "scripts/check-recursive-checked-record-perl-ci.mjs"
+		, "scripts/run-recursive-checked-record-perl-ci.sh"
+		, ".github/workflows/recursive-checked-record-perl.yml"
+	]
+	, php: [
+		"tests/helpers/recursive-checked-record-php-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-php-provenance.mjs"
+		, "scripts/check-recursive-checked-record-php-ci.mjs"
+		, "scripts/run-recursive-checked-record-php-ci.sh"
+		, ".github/workflows/recursive-checked-record-php.yml"
+	]
+	, "php-wasm": [
+		"tests/helpers/recursive-checked-record-php-wasm-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-php-wasm-provenance.mjs"
+		, "scripts/check-recursive-checked-record-php-wasm-ci.mjs"
+		, "scripts/run-recursive-checked-record-php-wasm-ci.sh"
+		, ".github/workflows/recursive-checked-record-php-wasm.yml"
+	]
+	, rust: [
+		"tests/helpers/recursive-checked-record-rust-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-rust-provenance.mjs"
+		, "scripts/check-recursive-checked-record-rust-ci.mjs"
+		, "scripts/run-recursive-checked-record-rust-ci.sh"
+		, ".github/workflows/recursive-checked-record-rust.yml"
+	]
+	, wit: [
+		"tests/helpers/recursive-checked-record-wit-evidence.mjs"
+		, "tests/helpers/recursive-checked-record-wit-provenance.mjs"
+		, "scripts/check-recursive-checked-record-wit-ci.mjs"
+		, "scripts/run-recursive-checked-record-wit-ci.sh"
+		, ".github/workflows/recursive-checked-record-wit.yml"
+	]
+}[lane.id]);
 const labelForRun = run => run.label ?? run.name ?? run.route;
 const fixtureForRun = run => run.fixture ?? "mutual";
 const selectionKey = run => `${run.route}/${fixtureForRun(run)}`;
@@ -275,4 +350,103 @@ export const assertExactRecursiveCheckedRecordReferences = async references => {
 	for(const [index, reference] of references.entries())
 		assert.equal(referenceDigest(reference), expected[index]
 			, `Recursive promotion reference ${index}`);
+};
+
+const removeUnreviewedRecursive = text => text
+	.replaceAll("Generic and recursive checked records", "Generic checked records")
+	.replaceAll("Generic or recursive checked records", "Generic checked records")
+	.replaceAll("generic and recursive checked records", "generic checked records")
+	.replaceAll("generic or recursive checked records", "generic checked records")
+	.replaceAll("Generic and recursive records", "Generic records")
+	.replaceAll("generic and recursive records", "generic records")
+	.replaceAll("Generic and recursive payload records", "Generic payload records")
+	.replaceAll("generic and recursive payload records", "generic payload records")
+	.replaceAll("recursive checked records, dependent types"
+		, "other recursive checked-record graph shapes, dependent types");
+const supplement = (text, addition) =>
+	`${removeUnreviewedRecursive(text).trimEnd()} ${addition}`;
+const hostSuffix = lane => lane.fixtures.includes("recursive")
+	? "; also carries the tested proof-free recursive Packet and Envelope/Step graphs with nominal identities and active variants preserved"
+	: "; also carries the tested proof-free Envelope/Step mutually recursive graph with nominal identities and active variants preserved";
+
+/**
+ * Add 36 installed references and supplement exactly the 102 copied
+ * checked-record cells already owned by the seventeen consumer profiles.
+ *
+ * @param original - Exact inventory immediately before aggregate promotion.
+ * @param references - Independently authenticated installed references.
+ */
+export const promoteRecursiveCheckedRecords = async (original, references) => {
+	await assertExactRecursiveCheckedRecordReferences(references);
+	const inventory = structuredClone(original);
+	const validatorPaths = [
+		"docs/evidence/recursive-checked-record-promotion-20261018.md"
+		, "scripts/generate-type-docs.mjs"
+		, "scripts/promote-recursive-checked-record-evidence.mjs"
+		, "scripts/update-recursive-checked-record-promotion-source-history.mjs"
+		, "tests/nested-checked-records.test.mjs"
+		, "tests/helpers/recursive-checked-record-promotion.mjs"
+		, "tests/helpers/recursive-checked-record-promotion-tests.mjs"
+		, "tests/helpers/recursive-checked-record-promotion-source-history.mjs"
+		, "tests/helpers/recursive-checked-record-promotion-source-history-tests.mjs"
+		, ...recursiveCheckedRecordPromotionLanes.flatMap(laneValidators)
+	];
+	const validators = await Promise.all([...new Set(validatorPaths)].map(
+		async path => ({ path, sha256: sha256(await readFile(path)) })
+	));
+	for(const reference of references)
+	{
+		assert.ok(!inventory.evidence.some(item => item.id === reference.id)
+			, `Already promoted: ${reference.id}`);
+		inventory.evidence.push({
+			id: reference.id, kind: "installed", revision: reference.revision
+			, command: reference.command, scope: reference.scope
+			, files: uniqueFiles([...validators, ...reference.files])
+			, artifacts: reference.artifacts.map(item => ({
+				...item, path: `${reference.id}/${item.path}`
+			}))
+		});
+	}
+	for(const lane of recursiveCheckedRecordPromotionLanes)
+		for(const profile of lane.profiles)
+			for(const path of ["ordinary-source", "reviewed-ir"])
+			{
+				const matched = references.filter(item => item.lane === lane.id
+					&& item.sourcePath === path);
+				assert.equal(matched.length, lane.fixtures.length);
+				const ids = matched.map(item => item.id);
+				const scope = matched.map(item => item.scope).join(" ");
+				for(const position of ["parameter", "result", "field"])
+				{
+					const cells = inventory.observations.filter(item =>
+						item.profiles.includes(profile) && item.path === path
+						&& item.shapes.includes("checked-record")
+						&& item.positions.includes(position));
+					assert.equal(cells.length, 1
+						, `Missing or overlapping recursive cell: ${profile}/${path}/${position}`);
+					const cell = cells[0];
+					cell.scope = supplement(cell.scope
+						, `Additional recursive ${lane.id} acceptance: ${scope}`);
+					cell.conversionNotes["checked-record"] = supplement(
+						cell.conversionNotes["checked-record"]
+						, recursiveCheckedRecordConversion
+					);
+					cell.hostTypes["checked-record"][position]
+						= removeUnreviewedRecursive(
+							cell.hostTypes["checked-record"][position]
+						).trimEnd() + hostSuffix(lane);
+					const limitations = cell.limitations.map(removeUnreviewedRecursive);
+					assert.ok(!limitations.includes(recursiveCheckedRecordBoundary));
+					cell.limitations = [...limitations, recursiveCheckedRecordBoundary];
+					for(const stage of Object.values(cell.stages))
+					{
+						assert.equal(stage.state, "passed");
+						stage.evidence.push(...ids);
+						assert.equal(new Set(stage.evidence).size, stage.evidence.length);
+						stage.note = supplement(stage.note
+							, `Additional recursive ${lane.id} acceptance: ${scope}`);
+					}
+				}
+			}
+	return inventory;
 };

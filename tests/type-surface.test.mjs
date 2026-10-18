@@ -515,8 +515,19 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					const inherited = modes.map(mode =>
 						`inherited-checked-record-${inheritedLane}-ordinary-${mode}-installed`
 					);
+					const recursiveLane = {
+						dotnet: "dotnet", java: "jvm", kotlin: "jvm"
+						, "php-native": "php", "php-wasm": "php-wasm"
+						, python: "python", ruby: "ruby", rust: "rust"
+						, "wit-wasi": "wit"
+					}[profile];
+					const recursiveFixtures = ["dotnet", "java", "kotlin"]
+						.includes(profile) ? ["mutual"] : ["recursive", "mutual"];
+					const recursiveChecked = recursiveFixtures.map(fixture =>
+						`recursive-checked-record-${recursiveLane}-ordinary-${fixture}-installed`
+					);
 					assert.deepEqual(stage.evidence
-						, [...baseline, ...nested, ...inherited]);
+						, [...baseline, ...nested, ...inherited, ...recursiveChecked]);
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
