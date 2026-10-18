@@ -19,6 +19,9 @@ import {
 	, checkedRecordValueIndexDotnetPredecessor
 	, reverseCheckedRecordValueIndexDotnetUpdate
 } from "./checked-record-value-index-dotnet-source-history.mjs";
+import {
+	beforeCheckedRecordValueIndexDotnetInstalledSource
+} from "./checked-record-value-index-dotnet-installed-source-history.mjs";
 import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
@@ -96,7 +99,11 @@ test("static .NET value-index support closes additions and registration"
 		));
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			const current = await sourceAtFinHistoryMilestone(
+				addition.path, addition.currentSha256
+				, beforeCheckedRecordValueIndexDotnetInstalledSource
+			);
+			assert.equal(sha256(current)
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexDotnetPredecessor}:${addition.path}`]
@@ -115,6 +122,10 @@ test("static .NET value-index support refreshes exactly its live pins"
 		));
 		assert.equal(record.pinCount, 3);
 		const inventoryPath = "docs/type-surface.v1.json";
+		const inventoryUpdate = record.updates.find(update =>
+			update.path === inventoryPath
+		);
+		assert.ok(inventoryUpdate);
 		const previousSource = git(["show"
 			, `${checkedRecordValueIndexDotnetPredecessor}:${inventoryPath}`]);
 		const expected = JSON.parse(previousSource);
@@ -139,8 +150,11 @@ test("static .NET value-index support refreshes exactly its live pins"
 			count += found;
 		}
 		assert.equal(count, record.pinCount);
-		assert.equal(await readFile(inventoryPath, "utf8")
-			, JSON.stringify(expected, null, 2) + "\n");
+		const current = await sourceAtFinHistoryMilestone(
+			inventoryPath, inventoryUpdate.currentSha256
+			, beforeCheckedRecordValueIndexDotnetSource
+		);
+		assert.equal(current, JSON.stringify(expected, null, 2) + "\n");
 	}
 );
 

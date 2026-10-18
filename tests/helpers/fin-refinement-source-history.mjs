@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexDotnetInstalledSource, checkedRecordValueIndexDotnetInstalledChangedPaths } from "./checked-record-value-index-dotnet-installed-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetSource, checkedRecordValueIndexDotnetChangedPaths } from "./checked-record-value-index-dotnet-source-history.mjs";
 import { beforeValueIndexBrowserLintSource, valueIndexBrowserLintChangedPaths } from "./value-index-browser-lint-source-history.mjs";
 import { beforeValueIndexCoreLineageRepairSource, valueIndexCoreLineageRepairChangedPaths, valueIndexCoreLineageRepairHistoricalPaths } from "./value-index-core-lineage-repair-source-history.mjs";
@@ -972,6 +973,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedRecordValueIndexDotnetInstalledSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexDotnetSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeValueIndexBrowserLintSource(path, source, expected);
@@ -1273,7 +1278,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexDotnetChangedPaths
+	...checkedRecordValueIndexDotnetInstalledChangedPaths
+	, ...checkedRecordValueIndexDotnetChangedPaths
 	, ...valueIndexBrowserLintChangedPaths
 	, ...valueIndexCoreLineageRepairChangedPaths
 	, ...valueIndexCoreLineageRepairHistoricalPaths
