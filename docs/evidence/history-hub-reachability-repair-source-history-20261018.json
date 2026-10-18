@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "milestone": "history-hub-reachability-repair-source-v1",
+  "predecessorCommit": "c31ed24c5ca95bc222b9b52e8c4057597e0f5b21",
+  "draftParentCommit": "c31ed24c5ca95bc222b9b52e8c4057597e0f5b21",
+  "pathsSha256": "68c53d496f62e826d7e2ea7e0264b3dd37058334ecd840ea570c50e37305d4aa",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "perlOutputEdit": {
+    "historyPath": "docs/evidence/perl-recursive-conversion-output-source-history-20261018.json",
+    "historySha256": "63675db6ad2620e77f2c8ca47a32e04baa540005bb2d50c5a9b666175d02e9f1",
+    "receiptPath": "docs/evidence/perl-recursive-conversions-20260923.json",
+    "receiptSha256": "e5a990073852c99cc29cf2ec8d58d35844e5a183a01aa9d45a2edb4c9526acc1",
+    "previousSourceSha256": "a3b78bfd4200c9a189b6ab05a01cfee9297a7c1c9e26d6d262d181b979cef1a7",
+    "currentSourceSha256": "a98e5c03f56b94f8c775cca6be782f2b60e861ff2997f26fd5c2e6639cdfb2ad",
+    "edits": [
+      {
+        "start": 119125,
+        "previous": "",
+        "current": "\n"
+      }
+    ]
+  },
+  "additions": [
+    {
+      "path": "scripts/update-history-hub-reachability-repair-history.mjs",
+      "currentSha256": "1f42d082eec56149fbb11a7a1519ff9ed132cbd701fd21da6a7ae2a397feed7a"
+    },
+    {
+      "path": "tests/helpers/history-hub-reachability-repair-source-history.mjs",
+      "currentSha256": "3a29adea938bdcab5e6d59d90620e2b5437bd4a8e1e5271498c3a98fefd83623"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "e37525d6a19ff7f33f2438e3a81ffaae0389a2361211a4571e72aa1d1a6ba844",
+      "currentSha256": "81af9da3221a35dae6aad5ecf88c4bc2c57a41612a301e1bb63ed0a8a05648e3",
+      "edits": [
+        {
+          "start": 922,
+          "previous": "",
+          "current": "import {\n\tbeforeHistoryHubReachabilityRepairSource\n\t, historyHubReachabilityRepairAddedPaths\n\t, historyHubReachabilityRepairChangedPaths\n\t, historyHubReachabilityRepairHistoryPath\n\t, historyHubReachabilityRepairPredecessor\n\t, reverseHistoryHubReachabilityRepairUpdate\n} from \"./history-hub-reachability-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 6488,
+          "previous": "",
+          "current": "\tlet predecessorReachability = 0, transitionReachability = 0;\n"
+        },
+        {
+          "start": 7398,
+          "previous": "\t\t\tfor(const expectedSha256 of [update.currentSha256\n\t\t\t\t, update.previousSha256])\n",
+          "current": "\t\t\tconst expectedDigests = [update.currentSha256, update.previousSha256];\n\t\t\tfor(const expectedSha256 of expectedDigests)\n\t\t\t{\n\t\t\t\tassert.equal(sha256(beforeFinRefinementSource(\n\t\t\t\t\tpath, current, expectedSha256\n\t\t\t\t)), expectedSha256, `${path} ${expectedSha256} predecessor`);\n\t\t\t\tpredecessorReachability++;\n"
+        },
+        {
+          "start": 7799,
+          "previous": "\t\t\t\t)), expectedSha256, `${path} ${expectedSha256}`);\n",
+          "current": "\t\t\t\t)), expectedSha256, `${path} ${expectedSha256} transition`);\n\t\t\t\ttransitionReachability++;\n\t\t\t}\n\t\t}\n\t}\n\tassert.equal(predecessorReachability, 28);\n\tassert.equal(transitionReachability, 28);\n});\n\ntest(\"history-hub reachability repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\thistoryHubReachabilityRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"history-hub-reachability-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, historyHubReachabilityRepairPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, historyHubReachabilityRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, historyHubReachabilityRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\thistoryHubReachabilityRepairChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeHistoryHubReachabilityRepairSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${historyHubReachabilityRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseHistoryHubReachabilityRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeHistoryHubReachabilityRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeHistoryHubReachabilityRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeHistoryHubReachabilityRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update);\n\t\t\tmutate(changed);\n\t\t\tassert.throws(() => {\n\t\t\t\treverseHistoryHubReachabilityRepairUpdate(current, changed);\n\t\t\t});\n"
+        },
+        {
+          "start": 10072,
+          "previous": "",
+          "current": "\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${historyHubReachabilityRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n"
+        },
+        {
+          "start": 12928,
+          "previous": "",
+          "current": "\tassert.deepEqual(await readdir(root), [\".git\"]);\n});\n\ntest(\"history-hub reachability writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-history-hub-reachability-guard-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-history-hub-reachability-repair-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "77e10b6be7ad777e8b8553ea5937fe8a147a037293737704d335b70ef61ed4ef",
+      "currentSha256": "cdf3e5805cb624631edcf4b156b1ab943ae153a8c9157ad727003b7540e6a7fd",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeHistoryHubReachabilityRepairSource, historyHubReachabilityRepairChangedPaths } from \"./history-hub-reachability-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 77640,
+          "previous": "",
+          "current": "\tsource = beforeHistoryHubReachabilityRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 87439,
+          "previous": "",
+          "current": "\tsource = beforeCheckedJavaScriptDispositionSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 88026,
+          "previous": "",
+          "current": "\tsource = beforeCheckedJavaScriptDispositionSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 91353,
+          "previous": "\t...inheritedCheckedRecordFoundationVerifierChangedPaths\n",
+          "current": "\t...historyHubReachabilityRepairChangedPaths\n\t, ...inheritedCheckedRecordFoundationVerifierChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-copied-graph-conversions.test.mjs",
+      "previousSha256": "bf71cc348eb62140a5a53349ff6f9e38d12060397267e81d3ba1a9fdcf38ac47",
+      "currentSha256": "9f013a12ec3c380175b7ba751dac5206a73633633fd163265ae6de68a4c3926f",
+      "edits": [
+        {
+          "start": 1204,
+          "previous": "",
+          "current": "import {\n\tassertHistoryHubPerlOutputEdit\n} from \"./helpers/history-hub-reachability-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 7391,
+          "previous": "",
+          "current": "\tconst historicalSource = assertHistoryHubPerlOutputEdit(compiled.source);\n\tassert.deepEqual([...new Set(receipt.native.observations.map(\n\t\tobservation => observation.sourceSha256))], [sha256(historicalSource)]);\n"
+        }
+      ]
+    }
+  ]
+}

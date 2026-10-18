@@ -23,6 +23,9 @@ import {
 	, reversePerlRecursiveConversionOutputUpdate
 } from "./helpers/perl-recursive-conversion-output-source-history.mjs";
 import { finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
+import {
+	assertHistoryHubPerlOutputEdit
+} from "./helpers/history-hub-reachability-repair-source-history.mjs";
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
 import { perlAliasGraphIr } from "./helpers/perl-graph-values-fixture.mjs";
@@ -136,6 +139,9 @@ test("recorded Perl conversions bind all four ABIs without claiming installed CP
 	const ir = nativeRecursiveReviewedIr(); ir.declarations.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 	const compiled = generateCopiedPerlGraphXs(ir, "LeanBridge::Recursive");
 	assertPerlRecursiveConversionOutputTransition(receiptPath, receipt, compiled);
+	const historicalSource = assertHistoryHubPerlOutputEdit(compiled.source);
+	assert.deepEqual([...new Set(receipt.native.observations.map(
+		observation => observation.sourceSha256))], [sha256(historicalSource)]);
 	for(const observation of receipt.native.observations)
 	{
 		assert.equal(observation.exports, 18);

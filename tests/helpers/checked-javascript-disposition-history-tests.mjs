@@ -21,6 +21,14 @@ import {
 	, reverseCheckedJavaScriptDispositionUpdate
 } from "./checked-javascript-disposition-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import {
+	beforeHistoryHubReachabilityRepairSource
+	, historyHubReachabilityRepairAddedPaths
+	, historyHubReachabilityRepairChangedPaths
+	, historyHubReachabilityRepairHistoryPath
+	, historyHubReachabilityRepairPredecessor
+	, reverseHistoryHubReachabilityRepairUpdate
+} from "./history-hub-reachability-repair-source-history.mjs";
 import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
@@ -136,6 +144,7 @@ test("checked-JavaScript disposition closes prior unrecorded Core transitions", 
 	assert.deepEqual([...new Set(record.historicalTransitions.flatMap(
 		transition => transition.updates.map(update => update.path)
 	))].sort(), checkedJavaScriptDispositionHistoricalPaths);
+	let predecessorReachability = 0, transitionReachability = 0;
 	for(const path of checkedJavaScriptDispositionHistoricalPaths)
 	{
 		const transitions = record.historicalTransitions.filter(transition =>
@@ -156,12 +165,78 @@ test("checked-JavaScript disposition closes prior unrecorded Core transitions", 
 			const update = transition.updates.find(item => item.path === path);
 			const atTransition = git(["show"
 				, `${transition.commit}:${path}`]);
-			for(const expectedSha256 of [update.currentSha256
-				, update.previousSha256])
+			const expectedDigests = [update.currentSha256, update.previousSha256];
+			for(const expectedSha256 of expectedDigests)
+			{
+				assert.equal(sha256(beforeFinRefinementSource(
+					path, current, expectedSha256
+				)), expectedSha256, `${path} ${expectedSha256} predecessor`);
+				predecessorReachability++;
 				assert.equal(sha256(beforeFinRefinementSource(
 					path, atTransition, expectedSha256
-				)), expectedSha256, `${path} ${expectedSha256}`);
+				)), expectedSha256, `${path} ${expectedSha256} transition`);
+				transitionReachability++;
+			}
 		}
+	}
+	assert.equal(predecessorReachability, 28);
+	assert.equal(transitionReachability, 28);
+});
+
+test("history-hub reachability repair has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		historyHubReachabilityRepairHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "history-hub-reachability-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, historyHubReachabilityRepairPredecessor);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, historyHubReachabilityRepairChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, historyHubReachabilityRepairAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		historyHubReachabilityRepairChangedPaths)));
+	assert.equal(record.pinCount, 0);
+	assert.deepEqual(record.pinUpdates, []);
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeHistoryHubReachabilityRepairSource);
+		const previous = git(["show"
+			, `${historyHubReachabilityRepairPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseHistoryHubReachabilityRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeHistoryHubReachabilityRepairSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeHistoryHubReachabilityRepairSource(
+			update.path, current, update.currentSha256), current, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeHistoryHubReachabilityRepairSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update);
+			mutate(changed);
+			assert.throws(() => {
+				reverseHistoryHubReachabilityRepairUpdate(current, changed);
+			});
+		}
+	}
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${historyHubReachabilityRepairPredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
 	}
 });
 
@@ -221,6 +296,27 @@ test("checked-JavaScript disposition writer refuses another checkout", async t =
 	)], { cwd: root, env: environment, encoding: "utf8" });
 	assert.equal(result.status, 1);
 	assert.match(result.stderr, /must stay on its exact predecessor/u);
+	assert.deepEqual(await readdir(root), [".git"]);
+});
+
+test("history-hub reachability writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-history-hub-reachability-guard-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const environment = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const localGit = args => execFileSync("git", args, {
+		cwd: root, env: environment, stdio: "pipe"
+	});
+	localGit(["init", "--quiet"]);
+	localGit(["-c", "user.name=Test", "-c"
+		, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-history-hub-reachability-repair-history.mjs"
+	)], { cwd: root, env: environment, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /exact draft parent/u);
 	assert.deepEqual(await readdir(root), [".git"]);
 });
 
