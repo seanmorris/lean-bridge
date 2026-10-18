@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-native-graph-verifier-repair-source-v1",
+  "predecessorCommit": "0f09e410778a0097bd17129568fe619db9c079ad",
+  "draftParentCommit": "0f09e410778a0097bd17129568fe619db9c079ad",
+  "pathsSha256": "0d351da86334b51e5dcfa64e13942abecee469013f626712682a0bdfc19388fa",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "scripts/update-recursive-native-graph-verifier-repair-history.mjs",
+      "currentSha256": "7ced31e967b9c9457a950fb520f1677c14f359e507d261597d487ccf4bf3dccd"
+    },
+    {
+      "path": "tests/helpers/recursive-native-graph-verifier-repair-source-history.mjs",
+      "currentSha256": "a539cded0a0cfccb95db7ccc3b6caddb85db2c563425094bf1d9283c01c9983a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "efee4e763d404422d5303c8bcf20197f4165c1f60509dad7692bf15913d82831",
+      "currentSha256": "f12cfe3afcd4c7b38a73e8add82f6ddd4c3f56a14d19c8df857d732995361141",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "\tbeforeRecursiveNativeGraphVerifierRepairSource\n\t, recursiveNativeGraphVerifierRepairAddedPaths\n\t, recursiveNativeGraphVerifierRepairChangedPaths\n\t, recursiveNativeGraphVerifierRepairHistoryPath\n\t, recursiveNativeGraphVerifierRepairPredecessor\n\t, reverseRecursiveNativeGraphVerifierRepairUpdate\n} from \"./recursive-native-graph-verifier-repair-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 11878,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive native graph verifier repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\trecursiveNativeGraphVerifierRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"recursive-native-graph-verifier-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, recursiveNativeGraphVerifierRepairPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, recursiveNativeGraphVerifierRepairPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, recursiveNativeGraphVerifierRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, recursiveNativeGraphVerifierRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\trecursiveNativeGraphVerifierRepairChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeRecursiveNativeGraphVerifierRepairSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${recursiveNativeGraphVerifierRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseRecursiveNativeGraphVerifierRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeGraphVerifierRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeGraphVerifierRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeRecursiveNativeGraphVerifierRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseRecursiveNativeGraphVerifierRepairUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${recursiveNativeGraphVerifierRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"recursive native graph verifier writer refuses another checkout\", async t => {\n\tconst directory = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-recursive-native-graph-verifier-writer-\"\n\t));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tassert.equal(spawnSync(\"git\", [\"init\", \"-q\"]\n\t\t, { cwd: directory }).status, 0);\n\tassert.equal(spawnSync(\"git\", [\"-c\", \"user.name=Test\"\n\t\t, \"-c\", \"user.email=test@example.invalid\", \"commit\", \"--allow-empty\"\n\t\t, \"-qm\", \"other\"], { cwd: directory }).status, 0);\n\tconst environment = Object.fromEntries(Object.entries(process.env).filter(\n\t\t([key]) => !key.startsWith(\"GIT_\")\n\t));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-recursive-native-graph-verifier-repair-history.mjs\"\n\t)], { cwd: directory, encoding: \"utf8\", env: environment });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n\tassert.deepEqual((await readdir(directory)).sort(), [\".git\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "783e783b30339646265ed7e95ac1b94bd0622c0c2310dcd021040a11c6f347f0",
+      "currentSha256": "91ee34ae01a1689c29061efbb583f28b0d039ed10a0b9375f4e6a3284ca1812a",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeRecursiveNativeGraphVerifierRepairSource, recursiveNativeGraphVerifierRepairChangedPaths } from \"./recursive-native-graph-verifier-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 78323,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveNativeGraphVerifierRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 92662,
+          "previous": "\t...recursiveNativeSelectorRepairChangedPaths\n",
+          "current": "\t...recursiveNativeGraphVerifierRepairChangedPaths\n\t, ...recursiveNativeSelectorRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-ci-tests.mjs",
+      "previousSha256": "bb47f6b9f71b11399f70c1db8dfac2e0b1b6ed90d413e1b199eb15cb3ef4c80b",
+      "currentSha256": "a13c9f367145dbd98c3a3a838a3ca6d5807770d6867736e65d81afaa65ea0248",
+      "edits": [
+        {
+          "start": 659,
+          "previous": "",
+          "current": "\t, mutualCheckedRecordNativeGeneratedSources\n"
+        },
+        {
+          "start": 765,
+          "previous": "",
+          "current": "\tnominalPrimitiveSubtypeNativeGenerators\n} from \"./nominal-primitive-subtype-native-generators.mjs\";\nimport {\n"
+        },
+        {
+          "start": 3712,
+          "previous": "",
+          "current": "\tconst name = \"installed mutual checked-record C/C++ packages reproduce and relocate ordinary\";\n\tconst pattern = execFileSync(\"bash\", [\"-c\"\n\t\t, 'name=\"$1\"; printf \"%s\" \"^${name//+/\\\\\\\\+}$\"', \"bash\", name]\n\t, { encoding: \"utf8\" });\n\tconst selector = new RegExp(pattern);\n\tassert.equal(selector.test(name), true);\n\tassert.equal(selector.test(name.replace(\"ordinary\", \"reviewed\")), false);\n});\n\ntest(\"recursive checked-record native verifier selects graph package sources\", async () => {\n\tconst producerCommit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"]\n\t\t, { encoding: \"utf8\" }).trim();\n\tconst generators = await nominalPrimitiveSubtypeNativeGenerators(\n\t\tproducerCommit);\n\tconst bindingIr = mutualCheckedRecordReview();\n\tassert.throws(() => generators.generateCBindingPackage(bindingIr)\n\t\t, { code: \"unsupported-array-element\" });\n\tconst graph = generators.generateCopiedGraphPackage(\n\t\tbindingIr, [\"c\", \"cpp\"], { refinementDiagnostics: true });\n\tassert.equal(graph.bigint, true);\n\tfor(const path of [\n\t\t\"gmp/include/mutualcheckedrecords.h\"\n\t\t, \"include/mutualcheckedrecords.hpp\"\n\t]) assert.equal(typeof graph.files[path], \"string\", path);\n\tconst calls = [];\n\tconst sources = profile => mutualCheckedRecordNativeGeneratedSources({\n\t\tgenerators: {\n\t\t\tgenerateCopiedGraphPackage: (actualIr, targets, options) => {\n\t\t\t\tcalls.push([\"graph\", actualIr, targets, options]);\n\t\t\t\treturn {\n\t\t\t\t\ttargets\n\t\t\t\t\t, bigint: true\n\t\t\t\t\t, files: {\n\t\t\t\t\t\t\"gmp/include/c-public.h\": \"c\"\n\t\t\t\t\t\t, \"include/cpp-public.hpp\": \"cpp\"\n\t\t\t\t\t\t, \"src/cpp.cpp\": \"cpp-source\"\n\t\t\t\t\t}\n\t\t\t\t};\n\t\t\t}\n\t\t\t, nativeGraphProjectionSources: (actualModel, receipt) => {\n\t\t\t\tcalls.push([\"projection\", actualModel, receipt]);\n\t\t\t\treturn { \"include/detail/graph.h\": \"graph\", \"src/native.c\": \"native\" };\n\t\t\t}\n\t\t\t, nativeGraphRefinementDiagnostics: actualModel => {\n\t\t\t\tcalls.push([\"diagnostics\", actualModel]); return true;\n\t\t\t}\n\t\t\t, boostSources: () => {\n\t\t\t\tcalls.push([\"boost\"]);\n\t\t\t\treturn { \"include/boost/value.hpp\": \"boost\" };\n\t\t\t}\n\t\t}\n\t\t, model: { bindingIr }, nativeComponent: { initializer: \"initialize\" }\n\t\t, targets: [\"c\", \"cpp\"], profile\n\t});\n\tassert.deepEqual(sources(\"c\").package, { \"include/c-public.h\": \"c\" });\n\tassert.deepEqual(sources(\"cpp\").package, {\n\t\t\"gmp/include/c-public.h\": \"c\"\n\t\t, \"include/cpp-public.hpp\": \"cpp\", \"src/cpp.cpp\": \"cpp-source\"\n\t\t, \"include/detail/graph.h\": \"graph\", \"src/native.c\": \"native\"\n\t\t, \"include/boost/value.hpp\": \"boost\"\n\t});\n\tassert.deepEqual(calls.map(call => call[0]), [\n\t\t\"diagnostics\", \"graph\", \"projection\", \"boost\"\n\t\t, \"diagnostics\", \"graph\", \"projection\", \"boost\"\n\t]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-report.mjs",
+      "previousSha256": "3e59dfffb19ff223d3750b2528d1ec308c829cc8cd04c04da2502eb3e02a7e32",
+      "currentSha256": "69804f5830942acc9cd02bc4c0f2b4094c13adb82de9efc80731dab93e6246e7",
+      "edits": [
+        {
+          "start": 7336,
+          "previous": "",
+          "current": "/**\n * Reconstruct the adapter and package-visible graph sources through the\n * producer's exact graph route. The legacy acyclic C generators reject\n * recursive containers and must never be used to verify these packages.\n *\n * @param options - Frozen generators and authenticated package inputs.\n * @param options.generators - Producer-revision generator closure.\n * @param options.model - Authenticated native component model.\n * @param options.nativeComponent - Authenticated native component receipt.\n * @param options.targets - C-family targets compiled into the shared adapter.\n * @param options.profile - Package whose public source set is requested.\n */\nexport const mutualCheckedRecordNativeGeneratedSources = ({\n\tgenerators, model, nativeComponent, targets, profile\n}) => {\n\tassert.ok(mutualCheckedRecordNativeProfiles.includes(profile));\n\tassert.deepEqual(targets, mutualCheckedRecordNativeProfiles);\n\tfor(const name of [\n\t\t\"generateCopiedGraphPackage\", \"nativeGraphProjectionSources\"\n\t\t, \"nativeGraphRefinementDiagnostics\", \"boostSources\"\n\t]) assert.equal(typeof generators[name], \"function\", name);\n\tconst refinementDiagnostics\n\t\t= generators.nativeGraphRefinementDiagnostics(model);\n\tassert.equal(typeof refinementDiagnostics, \"boolean\");\n\tconst graph = generators.generateCopiedGraphPackage(\n\t\tmodel.bindingIr, targets, { refinementDiagnostics });\n\tassert.deepEqual(graph.targets, targets);\n\tconst adapter = {\n\t\t...graph.files\n\t\t, ...generators.nativeGraphProjectionSources(model, nativeComponent)\n\t\t, ...(graph.bigint ? generators.boostSources() : {})\n\t};\n\tconst package_ = profile === \"c\"\n\t\t? Object.fromEntries(Object.entries(graph.files)\n\t\t\t.filter(([path]) => path.startsWith(\"gmp/include/\"))\n\t\t\t.map(([path, source]) => [path.slice(4), source]))\n\t\t: adapter;\n\treturn { adapter, package: package_ };\n};\n\n"
+        },
+        {
+          "start": 17160,
+          "previous": "",
+          "current": "\tconst cGraphTargets = mutualCheckedRecordNativeProfiles.filter(profile =>\n\t\treceipt.packages.some(pkg => pkg.target === profile));\n\tassert.deepEqual(cGraphTargets, mutualCheckedRecordNativeProfiles);\n\tlet generatedNativeComponent;\n"
+        },
+        {
+          "start": 20645,
+          "previous": "",
+          "current": "\t\tconst generatedSources = mutualCheckedRecordNativeGeneratedSources({\n\t\t\tgenerators, model, nativeComponent, targets: cGraphTargets, profile\n\t\t});\n\t\tif(generatedNativeComponent === undefined)\n\t\t{\n\t\t\tgeneratedNativeComponent = nativeComponent;\n\t\t}\n\t\telse assert.deepEqual(nativeComponent, generatedNativeComponent\n\t\t\t, \"native component receipt across C/C++ packages\");\n\t\tfor(const [path, source] of Object.entries(generatedSources.adapter))\n\t\t\tassert.deepEqual(adapter.files[path], {\n\t\t\t\tbytes: Buffer.byteLength(source), sha256: sha256(source)\n\t\t\t}, `adapter ${path}`);\n\t\tconst externalAdapterPaths = [\n\t\t\t`lib/${adapter.library}`\n\t\t\t, \"gmp/include/gmp.h\", \"gmp/lib/libgmp.so.10\"\n\t\t\t, `gmp/lib/${adapter.gmp.library}`\n\t\t\t, \"gmp/share/lean-bridge/gmp.json\"\n\t\t\t, ...[\n\t\t\t\t\"GMP-COPYING\", \"GMP-COPYING.LESSERv3\"\n\t\t\t\t, \"GMP-COPYINGv2\", \"GMP-COPYINGv3\"\n\t\t\t].map(path => `gmp/share/lean-bridge/licenses/${path}`)\n\t\t\t, \"gmp/share/lean-bridge/sources/gmp-6.3.0.tar.xz\"\n\t\t].sort();\n\t\tassert.deepEqual(Object.keys(adapter.files).filter(path =>\n\t\t\t!Object.hasOwn(generatedSources.adapter, path)).sort()\n\t\t, externalAdapterPaths, \"adapter external file set\");\n"
+        },
+        {
+          "start": 22618,
+          "previous": "\t\tconst raw = generators.generateCBindingPackage(model.bindingIr);\n\t\tconst generated = profile === \"c\"\n\t\t\t? generators.generateGmpProjection(model.bindingIr).files\n\t\t\t: {\n\t\t\t\t...raw, ...generators.generateCppBindingPackage(model.bindingIr)\n\t\t\t\t, ...generators.boostSources()\n\t\t\t};\n",
+          "current": "\t\tconst gmpAdapterFiles = Object.entries(adapter.files).filter(([path]) =>\n\t\t\t/^gmp\\/(?:include|lib|share)\\//u.test(path));\n\t\tif(profile === \"c\") for(const [path, record] of gmpAdapterFiles)\n\t\t{\n\t\t\tconst bytes = files.get(path.slice(4));\n\t\t\tassert.deepEqual(record, {\n\t\t\t\tbytes: bytes.length, sha256: sha256(bytes)\n\t\t\t}, `adapter ${path}`);\n\t\t}\n\t\tconst generated = generatedSources.package;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-native-generators.mjs",
+      "previousSha256": "64c24deadd3522f8efdc6bc001c1aee088f436910ee2f791591c632411a6f7fe",
+      "currentSha256": "31a6809ca81ad8e90280b98c93cb32638e23a7346b709280cfe14269a6b21098",
+      "edits": [
+        {
+          "start": 1691,
+          "previous": "",
+          "current": "\t\t\t, \"src/backends/c/graph-package.mjs\"\n\t\t\t, \"src/build/native-graph-sources.mjs\"\n"
+        },
+        {
+          "start": 3234,
+          "previous": "",
+          "current": "\t\t\t\t, generateCopiedGraphPackage: modules[4].generateCopiedGraphPackage\n\t\t\t\t, nativeGraphProjectionSources: modules[5].nativeGraphProjectionSources\n\t\t\t\t, nativeGraphRefinementDiagnostics: modules[5].nativeGraphRefinementDiagnostics\n"
+        }
+      ]
+    }
+  ]
+}

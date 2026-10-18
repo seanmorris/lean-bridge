@@ -12,6 +12,14 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
+	beforeRecursiveNativeGraphVerifierRepairSource
+	, recursiveNativeGraphVerifierRepairAddedPaths
+	, recursiveNativeGraphVerifierRepairChangedPaths
+	, recursiveNativeGraphVerifierRepairHistoryPath
+	, recursiveNativeGraphVerifierRepairPredecessor
+	, reverseRecursiveNativeGraphVerifierRepairUpdate
+} from "./recursive-native-graph-verifier-repair-source-history.mjs";
+import {
 	beforeRecursiveNativeSelectorRepairSource
 	, recursiveNativeSelectorRepairAddedPaths
 	, recursiveNativeSelectorRepairChangedPaths
@@ -266,6 +274,87 @@ test("history-hub reachability repair has one exact reversible lineage", async (
 			, `${historyHubReachabilityRepairPredecessor}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
 	}
+});
+
+test("recursive native graph verifier repair has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		recursiveNativeGraphVerifierRepairHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "recursive-native-graph-verifier-repair-source-v1");
+	assert.equal(record.predecessorCommit
+		, recursiveNativeGraphVerifierRepairPredecessor);
+	assert.equal(record.draftParentCommit
+		, recursiveNativeGraphVerifierRepairPredecessor);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, recursiveNativeGraphVerifierRepairChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, recursiveNativeGraphVerifierRepairAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		recursiveNativeGraphVerifierRepairChangedPaths)));
+	assert.equal(record.pinCount, 0);
+	assert.deepEqual(record.pinUpdates, []);
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeRecursiveNativeGraphVerifierRepairSource);
+		const previous = git(["show"
+			, `${recursiveNativeGraphVerifierRepairPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseRecursiveNativeGraphVerifierRepairUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeRecursiveNativeGraphVerifierRepairSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeRecursiveNativeGraphVerifierRepairSource(
+			update.path, current, update.currentSha256), current, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeRecursiveNativeGraphVerifierRepairSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update); mutate(changed);
+			assert.throws(() => reverseRecursiveNativeGraphVerifierRepairUpdate(
+				current, changed));
+		}
+	}
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
+			, addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${recursiveNativeGraphVerifierRepairPredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("recursive native graph verifier writer refuses another checkout", async t => {
+	const directory = await mkdtemp(join(
+		tmpdir(), "lean-bridge-recursive-native-graph-verifier-writer-"
+	));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	assert.equal(spawnSync("git", ["init", "-q"]
+		, { cwd: directory }).status, 0);
+	assert.equal(spawnSync("git", ["-c", "user.name=Test"
+		, "-c", "user.email=test@example.invalid", "commit", "--allow-empty"
+		, "-qm", "other"], { cwd: directory }).status, 0);
+	const environment = Object.fromEntries(Object.entries(process.env).filter(
+		([key]) => !key.startsWith("GIT_")
+	));
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-recursive-native-graph-verifier-repair-history.mjs"
+	)], { cwd: directory, encoding: "utf8", env: environment });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /exact draft parent/u);
+	assert.deepEqual((await readdir(directory)).sort(), [".git"]);
 });
 
 test("recursive native selector repair has one exact reversible lineage", async () => {

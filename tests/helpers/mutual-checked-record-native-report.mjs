@@ -190,6 +190,46 @@ export const assertMutualCheckedRecordNativeRecordPaths = (
 ) => assert.deepEqual([...actual].sort()
 	, [...mutualCheckedRecordNativeRecords(route, receipt), "controls.json"].sort());
 
+/**
+ * Reconstruct the adapter and package-visible graph sources through the
+ * producer's exact graph route. The legacy acyclic C generators reject
+ * recursive containers and must never be used to verify these packages.
+ *
+ * @param options - Frozen generators and authenticated package inputs.
+ * @param options.generators - Producer-revision generator closure.
+ * @param options.model - Authenticated native component model.
+ * @param options.nativeComponent - Authenticated native component receipt.
+ * @param options.targets - C-family targets compiled into the shared adapter.
+ * @param options.profile - Package whose public source set is requested.
+ */
+export const mutualCheckedRecordNativeGeneratedSources = ({
+	generators, model, nativeComponent, targets, profile
+}) => {
+	assert.ok(mutualCheckedRecordNativeProfiles.includes(profile));
+	assert.deepEqual(targets, mutualCheckedRecordNativeProfiles);
+	for(const name of [
+		"generateCopiedGraphPackage", "nativeGraphProjectionSources"
+		, "nativeGraphRefinementDiagnostics", "boostSources"
+	]) assert.equal(typeof generators[name], "function", name);
+	const refinementDiagnostics
+		= generators.nativeGraphRefinementDiagnostics(model);
+	assert.equal(typeof refinementDiagnostics, "boolean");
+	const graph = generators.generateCopiedGraphPackage(
+		model.bindingIr, targets, { refinementDiagnostics });
+	assert.deepEqual(graph.targets, targets);
+	const adapter = {
+		...graph.files
+		, ...generators.nativeGraphProjectionSources(model, nativeComponent)
+		, ...(graph.bigint ? generators.boostSources() : {})
+	};
+	const package_ = profile === "c"
+		? Object.fromEntries(Object.entries(graph.files)
+			.filter(([path]) => path.startsWith("gmp/include/"))
+			.map(([path, source]) => [path.slice(4), source]))
+		: adapter;
+	return { adapter, package: package_ };
+};
+
 const expectedInputs = (route, producerCommit, fixture) => {
 	const configuration = fixture.mutualCheckedRecordConfiguration(route);
 	const values = {
@@ -351,6 +391,10 @@ const checkPackages = async ({ read, model, receipt, floor, producerCommit }) =>
 	assert.equal((await read("handoff/package-set-receipt.json.sha256")).toString()
 		, `${sha256(receiptBytes)}  package-set-receipt.json\n`);
 	const generators = await historicalGenerators(producerCommit), results = [];
+	const cGraphTargets = mutualCheckedRecordNativeProfiles.filter(profile =>
+		receipt.packages.some(pkg => pkg.target === profile));
+	assert.deepEqual(cGraphTargets, mutualCheckedRecordNativeProfiles);
+	let generatedNativeComponent;
 	for(const pkg of receipt.packages)
 	{
 		const profile = pkg.target, name = component.name;
@@ -412,6 +456,33 @@ const checkPackages = async ({ read, model, receipt, floor, producerCommit }) =>
 		assert.equal(packaged.componentReceiptSha256
 			, sha256(canonicalJson(nativeComponent)));
 		assert.equal(packaged.adapterReceiptSha256, sha256(canonicalJson(adapter)));
+		const generatedSources = mutualCheckedRecordNativeGeneratedSources({
+			generators, model, nativeComponent, targets: cGraphTargets, profile
+		});
+		if(generatedNativeComponent === undefined)
+		{
+			generatedNativeComponent = nativeComponent;
+		}
+		else assert.deepEqual(nativeComponent, generatedNativeComponent
+			, "native component receipt across C/C++ packages");
+		for(const [path, source] of Object.entries(generatedSources.adapter))
+			assert.deepEqual(adapter.files[path], {
+				bytes: Buffer.byteLength(source), sha256: sha256(source)
+			}, `adapter ${path}`);
+		const externalAdapterPaths = [
+			`lib/${adapter.library}`
+			, "gmp/include/gmp.h", "gmp/lib/libgmp.so.10"
+			, `gmp/lib/${adapter.gmp.library}`
+			, "gmp/share/lean-bridge/gmp.json"
+			, ...[
+				"GMP-COPYING", "GMP-COPYING.LESSERv3"
+				, "GMP-COPYINGv2", "GMP-COPYINGv3"
+			].map(path => `gmp/share/lean-bridge/licenses/${path}`)
+			, "gmp/share/lean-bridge/sources/gmp-6.3.0.tar.xz"
+		].sort();
+		assert.deepEqual(Object.keys(adapter.files).filter(path =>
+			!Object.hasOwn(generatedSources.adapter, path)).sort()
+		, externalAdapterPaths, "adapter external file set");
 		const libraries = {
 			[`lib/${adapter.library}`]: adapter.files[`lib/${adapter.library}`]
 			, [`lib/${nativeComponent.library}`]: nativeComponent.nativeLibrary
@@ -427,13 +498,16 @@ const checkPackages = async ({ read, model, receipt, floor, producerCommit }) =>
 		for(const [path, record] of Object.entries(libraries))
 			assert.deepEqual(packaged.files[path]
 				, { bytes: record.bytes, sha256: record.sha256 }, path);
-		const raw = generators.generateCBindingPackage(model.bindingIr);
-		const generated = profile === "c"
-			? generators.generateGmpProjection(model.bindingIr).files
-			: {
-				...raw, ...generators.generateCppBindingPackage(model.bindingIr)
-				, ...generators.boostSources()
-			};
+		const gmpAdapterFiles = Object.entries(adapter.files).filter(([path]) =>
+			/^gmp\/(?:include|lib|share)\//u.test(path));
+		if(profile === "c") for(const [path, record] of gmpAdapterFiles)
+		{
+			const bytes = files.get(path.slice(4));
+			assert.deepEqual(record, {
+				bytes: bytes.length, sha256: sha256(bytes)
+			}, `adapter ${path}`);
+		}
+		const generated = generatedSources.package;
 		for(const [path, source] of Object.entries(generated).filter(([path]) =>
 			path.startsWith("include/") || path === "share/lean-bridge/boost.json"
 			|| path.endsWith("Boost-LICENSE")))

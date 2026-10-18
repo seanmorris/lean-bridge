@@ -18,7 +18,11 @@ import {
 } from "./mutual-checked-record-fixture.mjs";
 import {
 	mutualCheckedRecordNativeFixture
+	, mutualCheckedRecordNativeGeneratedSources
 } from "./mutual-checked-record-native-report.mjs";
+import {
+	nominalPrimitiveSubtypeNativeGenerators
+} from "./nominal-primitive-subtype-native-generators.mjs";
 import {
 	assertMutualCheckedRecordNativeWorkflow
 } from "./mutual-checked-record-native-ci-workflow.mjs";
@@ -74,6 +78,71 @@ test("recursive checked-record native shell fixes both routes and exact checker"
 	assert.match(source, /--floor "\$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"/u);
 	assert.match(source, /2>&1 \| tee "\$output\/run\.tap"/u);
 	assert.doesNotMatch(source, /\|\| true|continue-on-error|--test-only/u);
+	const name = "installed mutual checked-record C/C++ packages reproduce and relocate ordinary";
+	const pattern = execFileSync("bash", ["-c"
+		, 'name="$1"; printf "%s" "^${name//+/\\\\+}$"', "bash", name]
+	, { encoding: "utf8" });
+	const selector = new RegExp(pattern);
+	assert.equal(selector.test(name), true);
+	assert.equal(selector.test(name.replace("ordinary", "reviewed")), false);
+});
+
+test("recursive checked-record native verifier selects graph package sources", async () => {
+	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"]
+		, { encoding: "utf8" }).trim();
+	const generators = await nominalPrimitiveSubtypeNativeGenerators(
+		producerCommit);
+	const bindingIr = mutualCheckedRecordReview();
+	assert.throws(() => generators.generateCBindingPackage(bindingIr)
+		, { code: "unsupported-array-element" });
+	const graph = generators.generateCopiedGraphPackage(
+		bindingIr, ["c", "cpp"], { refinementDiagnostics: true });
+	assert.equal(graph.bigint, true);
+	for(const path of [
+		"gmp/include/mutualcheckedrecords.h"
+		, "include/mutualcheckedrecords.hpp"
+	]) assert.equal(typeof graph.files[path], "string", path);
+	const calls = [];
+	const sources = profile => mutualCheckedRecordNativeGeneratedSources({
+		generators: {
+			generateCopiedGraphPackage: (actualIr, targets, options) => {
+				calls.push(["graph", actualIr, targets, options]);
+				return {
+					targets
+					, bigint: true
+					, files: {
+						"gmp/include/c-public.h": "c"
+						, "include/cpp-public.hpp": "cpp"
+						, "src/cpp.cpp": "cpp-source"
+					}
+				};
+			}
+			, nativeGraphProjectionSources: (actualModel, receipt) => {
+				calls.push(["projection", actualModel, receipt]);
+				return { "include/detail/graph.h": "graph", "src/native.c": "native" };
+			}
+			, nativeGraphRefinementDiagnostics: actualModel => {
+				calls.push(["diagnostics", actualModel]); return true;
+			}
+			, boostSources: () => {
+				calls.push(["boost"]);
+				return { "include/boost/value.hpp": "boost" };
+			}
+		}
+		, model: { bindingIr }, nativeComponent: { initializer: "initialize" }
+		, targets: ["c", "cpp"], profile
+	});
+	assert.deepEqual(sources("c").package, { "include/c-public.h": "c" });
+	assert.deepEqual(sources("cpp").package, {
+		"gmp/include/c-public.h": "c"
+		, "include/cpp-public.hpp": "cpp", "src/cpp.cpp": "cpp-source"
+		, "include/detail/graph.h": "graph", "src/native.c": "native"
+		, "include/boost/value.hpp": "boost"
+	});
+	assert.deepEqual(calls.map(call => call[0]), [
+		"diagnostics", "graph", "projection", "boost"
+		, "diagnostics", "graph", "projection", "boost"
+	]);
 });
 
 test("recursive checked-record native verifier loads the producer fixture closure", async () => {
