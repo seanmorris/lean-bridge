@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-perl-stdout-source-v1",
+  "predecessorCommit": "b4260c9df3508dbfa49849524d8d351e8ddc8b7b",
+  "draftParentCommit": "6b7ec0fca6e8ec4cd3a0ef97e8d681e883057ea6",
+  "pathsSha256": "98ed4a6765a622a6a7a90a08fd81933c6af296138f9d8c6d759c996af1abadb8",
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-perl-stdout-source-history.mjs",
+      "currentSha256": "8f115763d4f2ff88faa4c0b9594612699c29b042ae060c7caba77cb1c0f1d714"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-stdout-source-history.mjs",
+      "currentSha256": "42d7a6722c29fc3e64226c6c99cc545243e942cc70194da3cd053fd8efa0525b"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "025e223f07785b33f1ca8576c6e502f6e9706399acb0ea64babeafe83338f02a",
+      "currentSha256": "1da91fb31e65af4a265f975470956973b75ae81c9a511217fd2b466a1c482eb5",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPerlStdoutSource, inheritedCheckedRecordPerlStdoutChangedPaths } from \"./inherited-checked-record-perl-stdout-source-history.mjs\";\n"
+        },
+        {
+          "start": 74714,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPerlStdoutSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 85451,
+          "previous": "\t...inheritedCheckedRecordPerlPinRepairChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPerlStdoutChangedPaths\n\t, ...inheritedCheckedRecordPerlPinRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-report-tests.mjs",
+      "previousSha256": "7826b80daaff6ef7110e10933dd68edb6fef7701b10114261d9216f053b1231c",
+      "currentSha256": "fbd58eea7b553bb46a26b88c3fe1bb2f658230dd4201ece4e91f1f5d5cfb66b5",
+      "edits": [
+        {
+          "start": 460,
+          "previous": "",
+          "current": "import {\n\tinheritedCheckedRecordPerlStdout\n} from \"./inherited-checked-record-perl-records.mjs\";\n"
+        },
+        {
+          "start": 1129,
+          "previous": "",
+          "current": "\tassert.equal(inheritedCheckedRecordPerlStdout({\n\t\tz: [2, { z: 1, a: 0 }], a: 1\n\t}), '{\"a\":1,\"z\":[2,{\"a\":0,\"z\":1}]}\\n');\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-records.mjs",
+      "previousSha256": "61014e4ccdb4a10948052ec767c386071e9acd069ef5116e4f040dbc403f8f84",
+      "currentSha256": "d7331efd2d0f76eed51fab2acbe992fd44f13b9d3c4e2e892616f681206b839f",
+      "edits": [
+        {
+          "start": 1315,
+          "previous": "",
+          "current": "/**\n * Match JSON::PP's canonical, compact line-oriented output. Repository JSON\n * records use the pretty canonicalJson encoding, but the independent Perl\n * caller deliberately emits one compact object per invocation.\n *\n * @param value - Parsed caller result.\n */\nexport const inheritedCheckedRecordPerlStdout = value =>\n\tJSON.stringify(JSON.parse(canonicalJson(value))) + \"\\n\";\n\n"
+        },
+        {
+          "start": 13529,
+          "previous": "\t\tassert.equal(installedProcess.stdout, canonicalJson(first));\n\t\tassert.equal(relocatedProcess.stdout, canonicalJson(first));\n",
+          "current": "\t\tassert.equal(installedProcess.stdout\n\t\t\t, inheritedCheckedRecordPerlStdout(first));\n\t\tassert.equal(relocatedProcess.stdout\n\t\t\t, inheritedCheckedRecordPerlStdout(first));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "previousSha256": "fb241b127257a028c4efc0525b868e826679231e1675ef0d40512965e048354d",
+      "currentSha256": "00c334387402ed0f8404d92829ba45cc453704bf47f5cdb4e91f0d96e1f6b6e6",
+      "edits": [
+        {
+          "start": 1412,
+          "previous": "",
+          "current": "import {\n\tbeforeInheritedCheckedRecordPerlStdoutSource\n\t, inheritedCheckedRecordPerlStdoutAddedPaths\n\t, inheritedCheckedRecordPerlStdoutChangedPaths\n\t, inheritedCheckedRecordPerlStdoutDraftParent\n\t, inheritedCheckedRecordPerlStdoutHistoryPath\n\t, inheritedCheckedRecordPerlStdoutPredecessor\n\t, reverseInheritedCheckedRecordPerlStdoutUpdate\n} from \"./helpers/inherited-checked-record-perl-stdout-source-history.mjs\";\n"
+        },
+        {
+          "start": 2079,
+          "previous": "",
+          "current": "});\n\ntest(\"inherited Perl stdout correction has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlStdoutHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-perl-stdout-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordPerlStdoutPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, inheritedCheckedRecordPerlStdoutDraftParent);\n\tassert.equal(spawnSync(\"git\", [\"merge-base\", \"--is-ancestor\"\n\t\t, inheritedCheckedRecordPerlStdoutPredecessor\n\t\t, inheritedCheckedRecordPerlStdoutDraftParent]).status, 0);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordPerlStdoutChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordPerlStdoutAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordPerlStdoutChangedPaths)));\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPerlStdoutSource\n\t\t);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${inheritedCheckedRecordPerlStdoutPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordPerlStdoutUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlStdoutSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlStdoutSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordPerlStdoutSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseInheritedCheckedRecordPerlStdoutUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n});\n\ntest(\"inherited Perl stdout correction closes additions\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlStdoutHistoryPath, \"utf8\"));\n\tfor(const addition of record.additions)\n\t{\n\t\tconst current = await readFile(addition.path);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordPerlStdoutPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"inherited Perl stdout writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-inherited-record-perl-stdout-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-perl-stdout-source-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n"
+        }
+      ]
+    }
+  ]
+}
