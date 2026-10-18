@@ -178,6 +178,46 @@ test("independent inherited checked-record Perl caller covers every closed selec
 		"{}", "unknown"));
 });
 
+test("independent inherited checked-record Perl caller accepts the closed CLI matrix", {
+	skip: !available, timeout: 30_000
+}, async () => {
+	const probe = String.raw`
+my $caller = shift @ARGV;
+do $caller or die($@ || $!);
+my @cases = (
+    [[], [0, 'arg']],
+    [['--result-only'], [1, 'arg']],
+    [['--reviewed'], [0, 'value']],
+    [['--result-only', '--reviewed'], [1, 'value']]
+);
+for my $case (@cases) {
+    my @actual = inherited_checked_record_cli(@{$case->[0]});
+    die "wrong CLI projection\n"
+        unless join("\0", @actual) eq join("\0", @{$case->[1]});
+}
+for my $invalid (
+    ['--reviewed', '--result-only'],
+    ['--result-only', '--result-only'],
+    ['--unknown']
+) {
+    my $accepted = eval { inherited_checked_record_cli(@$invalid); 1 };
+    die "invalid CLI accepted\n" if $accepted;
+    die "wrong CLI diagnostic\n"
+        unless $@ eq "usage: consumer.pl [--result-only] [--reviewed]\n";
+}
+print "ok\n";
+`;
+	for(const configuration of checkedRecordPerlConfigurations)
+	{
+		const run = await runCopied(executables[configuration], [
+			"-e", probe, callerPath
+		], process.cwd());
+		assert.equal(run.code, 0, run.stderr);
+		assert.equal(run.stderr, "");
+		assert.equal(run.stdout, "ok\n");
+	}
+});
+
 test("inherited checked-record Perl caller rejects independent semantic faults", {
 	skip: !available, timeout: 120_000
 }, async t => {

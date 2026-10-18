@@ -287,18 +287,26 @@ sub check_inherited_checked_records {
     return $summary->();
 }
 
-if ($0 eq __FILE__) {
+sub inherited_checked_record_cli {
+    my (@arguments) = @_;
     my %allowed = map { $_ => 1 } ('', '--result-only', '--reviewed',
-        '--result-only\0--reviewed');
-    my $arguments = join("\0", @ARGV);
+        "--result-only\0--reviewed");
+    my $arguments = join("\0", @arguments);
     die "usage: consumer.pl [--result-only] [--reviewed]\n"
         unless $allowed{$arguments};
+    return (
+        scalar(grep { $_ eq '--result-only' } @arguments) ? 1 : 0,
+        scalar(grep { $_ eq '--reviewed' } @arguments) ? 'value' : 'arg'
+    );
+}
+
+if ($0 eq __FILE__) {
+    my ($result_only, $parameter_prefix)
+        = inherited_checked_record_cli(@ARGV);
     require LeanBridge::InheritedCheckedRecords;
     my $result = check_inherited_checked_records(
         'LeanBridge::InheritedCheckedRecords',
-        scalar(grep { $_ eq '--result-only' } @ARGV) ? 1 : 0,
-        256,
-        scalar(grep { $_ eq '--reviewed' } @ARGV) ? 'value' : 'arg'
+        $result_only, 256, $parameter_prefix
     );
     print JSON::PP->new->canonical->encode($result), "\n";
 }
