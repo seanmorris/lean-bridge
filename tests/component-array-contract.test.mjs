@@ -74,6 +74,7 @@ import "./helpers/source-history-milestone-assertion-repair-tests.mjs";
 import "./helpers/checked-record-value-index-dotnet-ci-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-dotnet-evidence-tests.mjs";
 import "./helpers/checked-record-value-index-dotnet-hosted-repair-source-history-tests.mjs";
+import "./helpers/checked-record-value-index-native-dotnet-verifier-repair-source-history-tests.mjs";
 
 test("nested Fin constraints match their full erased shape and emit checked Lean construction", async () => {
 	const ir = corpusReviewedIr({ id: "refinements" }, [{ name: "Refinements.echo", parameters: [{ array: { array: "nat" } }], result: { array: { array: "nat" } } }]);

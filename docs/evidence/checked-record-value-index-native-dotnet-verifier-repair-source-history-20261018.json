@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-native-dotnet-verifier-repair-v1",
+  "predecessorCommit": "029cc8e12af2adaddd9afa35dab09542ac4f431a",
+  "draftParentCommit": "4cc7834c5a7060fbdf9aaaa844850bf14b282ce9",
+  "pathsSha256": "9f918ef7728461fc068d19612a94819d279bd82e5b1cdcf23a22718cb6029af1",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "9cc0051e389b9470d92423b2b15f5d7ef34fbc5245d34522c4689ba94aeed34d",
+      "currentSha256": "1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-native-dotnet-verifier-repair-source-history.mjs",
+      "currentSha256": "dd28087415e4a4f445ecb7cee554aee0667e1e25c98d696df7d340eba3403a0b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-dotnet-verifier-repair-source-history-tests.mjs",
+      "currentSha256": "83e8f38f2189b1cb9c572f1f3488fcb0c388bed397a9ced9a63af17fc4c06feb"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-dotnet-verifier-repair-source-history.mjs",
+      "currentSha256": "57374f46c140764d0795de1db39086d495dca03eff07bc4ef9fc1bef1c9deba7"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e0a509c12d8bf45d564b8c6e5acc3b3858a63ac9a7dbf454bcdc9f42361e7181",
+      "currentSha256": "371e2527946084044e19d1d36553ce697a6b09079a72b5ac92085e0f0013632d",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"9cc0051e389b9470d92423b2b15f5d7ef34fbc5245d34522c4689ba94aeed34d\"\n",
+          "current": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"9cc0051e389b9470d92423b2b15f5d7ef34fbc5245d34522c4689ba94aeed34d\"\n",
+          "current": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"9cc0051e389b9470d92423b2b15f5d7ef34fbc5245d34522c4689ba94aeed34d\"\n",
+          "current": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "9cc0051e389b9470d92423b2b15f5d7ef34fbc5245d34522c4689ba94aeed34d",
+      "currentSha256": "1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7",
+      "edits": [
+        {
+          "start": 5036,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-native-dotnet-verifier-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-controls.mjs",
+      "previousSha256": "ce8a6e490a24f5d2d58919760e78fd3ed7983e331ba0a8e99df100549c3918a8",
+      "currentSha256": "56bdab53a4c96e0bd074c463484387f4e5a05702f6a10bb5d354658f49d4003f",
+      "edits": [
+        {
+          "start": 3847,
+          "previous": "\t\t\t, /references unknown type lean:CheckedRecordValueIndices\\.Off/u\n",
+          "current": "\t\t\t, /Exact value-index record set/u\n"
+        },
+        {
+          "start": 3897,
+          "previous": "\t\t\t\tir.types = ir.types.filter(type => type.name !== \"Off\");\n",
+          "current": "\t\t\t\tconst id = \"lean:CheckedRecordValueIndices.Off\";\n\t\t\t\tir.types = ir.types.filter(type => type.id !== id);\n\t\t\t\tir.declarations = ir.declarations.filter(declaration => ![\n\t\t\t\t\t...declaration.parameters.map(parameter => parameter.type)\n\t\t\t\t\t, declaration.result?.type\n\t\t\t\t].some(type => type?.id === id));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-controls.mjs",
+      "previousSha256": "fe22a31277ac400297c064dd9bc453194e1e87e7f6da34e4df514c058431d4c9",
+      "currentSha256": "267e3c7efbde697587f72abd68feb95f51537da3c19da192a9ab5ee71774a63c",
+      "edits": [
+        {
+          "start": 2060,
+          "previous": "\t\t\tir.types = ir.types.filter(type => type.name !== \"Off\");\n",
+          "current": "\t\t\tconst id = \"lean:CheckedRecordValueIndices.Off\";\n\t\t\tir.types = ir.types.filter(type => type.id !== id);\n\t\t\tir.declarations = ir.declarations.filter(declaration => ![\n\t\t\t\t...declaration.parameters.map(parameter => parameter.type)\n\t\t\t\t, declaration.result?.type\n\t\t\t].some(type => type?.id === id));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-report.mjs",
+      "previousSha256": "ed5e2161b23faa4b0d042f0f7369bd894b5c068e2365ff8b6a78dcb05a69324a",
+      "currentSha256": "567fe5c72280ed99b0c656f8ecfb9ad9f3b3b6a9a31a5e78734d804579303189",
+      "edits": [
+        {
+          "start": 1626,
+          "previous": "",
+          "current": "// Independently enrich reviewed named types with the positional record shape\n// that the native projection must carry. Reviewed constructor selections name\n// only the checked constructor; result records deliberately select none.\nconst recordRefinement = (expected, type, constructor) => {\n\tif(type?.kind !== \"named\") return null;\n\tconst record = expected.types.find(item => item.id === type.id);\n\tassert.ok(record, type.id);\n\tassert.equal(record.kind, \"record\", type.id);\n\treturn {\n\t\tkind: \"checked-record\", definition: record.source.declaration\n\t\t, constructor, fields: record.fields.map(field => field.name)\n\t};\n};\nconst nativeRefinements = (expected, declaration) => {\n\tconst selected = declaration.source.extensions?.[refinementsKey];\n\tconst parameters = declaration.parameters.map((parameter, index) => {\n\t\tconst refinement = selected?.parameters[index];\n\t\tif(refinement === null || refinement === undefined) return null;\n\t\tassert.equal(refinement.kind, \"checked-record\");\n\t\treturn recordRefinement(\n\t\t\texpected, parameter.type, refinement.constructor);\n\t});\n\treturn {\n\t\tparameters\n\t\t, result: recordRefinement(expected, declaration.result?.type, null)\n\t};\n};\n\n"
+        },
+        {
+          "start": 9621,
+          "previous": "\t\t\t\t, declaration.source.extensions?.[refinementsKey], item.name);\n",
+          "current": "\t\t\t\t, nativeRefinements(expected, declaration), item.name);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5a998316b91b42449fcceaf7428238145d498111768e3236138887f6e86b09d8",
+      "currentSha256": "f67022245d2d7ca2bc64c9e7c984a23c3e71c7aef4a6094fd63013a154b2a1f0",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexNativeDotnetVerifierRepairSource, checkedRecordValueIndexNativeDotnetVerifierRepairChangedPaths } from \"./checked-record-value-index-native-dotnet-verifier-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 80560,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexNativeDotnetVerifierRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 96615,
+          "previous": "\t...checkedRecordValueIndexDotnetHostedRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexNativeDotnetVerifierRepairChangedPaths\n\t, ...checkedRecordValueIndexDotnetHostedRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
