@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "milestone": "recursive-native-selector-repair-source-v1",
+  "predecessorCommit": "378095ebf5bb66c944f3785de16c77882cd1fe4f",
+  "draftParentCommit": "378095ebf5bb66c944f3785de16c77882cd1fe4f",
+  "pathsSha256": "0a1844453fd1e9a2c2403d188930eb34aeecbd36d7774692d1a338306f199c4f",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "scripts/update-recursive-native-selector-repair-history.mjs",
+      "currentSha256": "8728d7de056882ceb00e43339a424c38fe26f18d5eadf69bfc50abcd580133fd"
+    },
+    {
+      "path": "tests/helpers/recursive-native-selector-repair-source-history.mjs",
+      "currentSha256": "ab06e03ed07a89e70a4820875bc7fec7f2aa281b6cfac8ec9fdb04ecf53f8e47"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/run-mutual-checked-record-native-ci.sh",
+      "previousSha256": "749cc0cc6d17df0b403ee8079d1a295540e75692de267426dcc1b7a104608eb8",
+      "currentSha256": "d087b2750dd33a1d78fb406b819b84e2ef9d589dd94739533a176f666de4bc99",
+      "edits": [
+        {
+          "start": 1197,
+          "previous": "  node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern=\"^$name$\" \\\n",
+          "current": "  node --test --test-concurrency=1 --test-reporter=tap \\\n    --test-name-pattern=\"^${name//+/\\\\+}$\" \\\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "4f53baf56ea8d1d6a93fc008537d21f3c64bb58d12418731f2f13bc3fdfe3de5",
+      "currentSha256": "efee4e763d404422d5303c8bcf20197f4165c1f60509dad7692bf15913d82831",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "\tbeforeRecursiveNativeSelectorRepairSource\n\t, recursiveNativeSelectorRepairAddedPaths\n\t, recursiveNativeSelectorRepairChangedPaths\n\t, recursiveNativeSelectorRepairHistoryPath\n\t, recursiveNativeSelectorRepairPredecessor\n\t, reverseRecursiveNativeSelectorRepairUpdate\n} from \"./recursive-native-selector-repair-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 11504,
+          "previous": "",
+          "current": "});\n\ntest(\"recursive native selector repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\trecursiveNativeSelectorRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone, \"recursive-native-selector-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, recursiveNativeSelectorRepairPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, recursiveNativeSelectorRepairPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, recursiveNativeSelectorRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, recursiveNativeSelectorRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\trecursiveNativeSelectorRepairChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeRecursiveNativeSelectorRepairSource);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${recursiveNativeSelectorRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseRecursiveNativeSelectorRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeSelectorRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeRecursiveNativeSelectorRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeRecursiveNativeSelectorRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseRecursiveNativeSelectorRepairUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${recursiveNativeSelectorRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"recursive native selector repair writer refuses another checkout\", async t => {\n\tconst directory = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-recursive-native-selector-writer-\"\n\t));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tassert.equal(spawnSync(\"git\", [\"init\", \"-q\"], { cwd: directory }).status, 0);\n\tassert.equal(spawnSync(\"git\", [\"-c\", \"user.name=Test\"\n\t\t, \"-c\", \"user.email=test@example.invalid\", \"commit\", \"--allow-empty\"\n\t\t, \"-qm\", \"other\"], { cwd: directory }).status, 0);\n\tconst environment = Object.fromEntries(Object.entries(process.env).filter(\n\t\t([key]) => !key.startsWith(\"GIT_\")\n\t));\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-recursive-native-selector-repair-history.mjs\"\n\t)], { cwd: directory, encoding: \"utf8\", env: environment });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n\tassert.deepEqual((await readdir(directory)).sort(), [\".git\"]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fadee2c09256197f88d4ab46118424d8790962ba8beee2d35a3375a2779b926f",
+      "currentSha256": "783e783b30339646265ed7e95ac1b94bd0622c0c2310dcd021040a11c6f347f0",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeRecursiveNativeSelectorRepairSource, recursiveNativeSelectorRepairChangedPaths } from \"./recursive-native-selector-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 78149,
+          "previous": "",
+          "current": "\tsource = beforeRecursiveNativeSelectorRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 92353,
+          "previous": "\t...callbackFinGateRepairChangedPaths\n",
+          "current": "\t...recursiveNativeSelectorRepairChangedPaths\n\t, ...callbackFinGateRepairChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-ci-tests.mjs",
+      "previousSha256": "8ac42bf7071c2fb89aa1f5b448d73b64711bed2b2738d6f0e442d17e88f52e3f",
+      "currentSha256": "bb47f6b9f71b11399f70c1db8dfac2e0b1b6ed90d413e1b199eb15cb3ef4c80b",
+      "edits": [
+        {
+          "start": 3154,
+          "previous": "",
+          "current": "\tassert.ok(source.includes('--test-name-pattern=\"^${name//+/\\\\\\\\+}$\"'));\n"
+        }
+      ]
+    }
+  ]
+}

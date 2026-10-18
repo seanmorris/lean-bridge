@@ -68,6 +68,7 @@ test("recursive checked-record native shell fixes both routes and exact checker"
 	assert.match(source, /LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2\.38/u);
 	assert.match(source, /LEAN_BRIDGE_MUTUAL_CHECKED_RECORD_NATIVE_TEST=1/u);
 	assert.match(source, /--test-concurrency=1/u);
+	assert.ok(source.includes('--test-name-pattern="^${name//+/\\\\+}$"'));
 	assert.match(source, /check-mutual-checked-record-native-ci\.mjs/u);
 	assert.match(source, /--producer "\$revision"/u);
 	assert.match(source, /--floor "\$LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR"/u);

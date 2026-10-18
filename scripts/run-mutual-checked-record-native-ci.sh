@@ -29,7 +29,8 @@ for route in ordinary reviewed; do
   mkdir "$output"
   export LEAN_BRIDGE_MUTUAL_CHECKED_RECORD_NATIVE_ROUTES="$route"
   name="installed mutual checked-record C/C++ packages reproduce and relocate $route"
-  node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="^$name$" \
+  node --test --test-concurrency=1 --test-reporter=tap \
+    --test-name-pattern="^${name//+/\\+}$" \
     tests/helpers/mutual-checked-record-native-installed-tests.mjs 2>&1 | tee "$output/run.tap"
   node scripts/check-mutual-checked-record-native-ci.mjs --route "$route" \
     --producer "$revision" --directory "$output_root/records/$route" \
