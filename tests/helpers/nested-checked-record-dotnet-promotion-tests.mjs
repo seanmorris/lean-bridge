@@ -10,7 +10,11 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nestedCheckedRecordDotnetPromotionPredecessor } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { nestedCheckedRecordDotnetPromotionHistoryPath, nestedCheckedRecordDotnetPromotionPredecessor } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nestedCheckedRecordDotnetProducer } from "./nested-checked-record-dotnet-provenance.mjs";
 import {
 	nestedCheckedRecordDotnetConversion
@@ -132,12 +136,23 @@ test("nested checked-record C# promotion rejects narrowed references and overlap
 
 test("nested checked-record C# promotion supplements six cells and preserves all others", async () => {
 	const original = predecessor(), references = await nestedCheckedRecordDotnetReferences();
-	const proposed = await promoteNestedCheckedRecordDotnet(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nestedCheckedRecordDotnetPromotionHistoryPath
+		, await promoteNestedCheckedRecordDotnet(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nestedCheckedRecordDotnetPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 2);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nestedCheckedRecordDotnetPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length),
 		proposed.evidence.slice(original.evidence.length));

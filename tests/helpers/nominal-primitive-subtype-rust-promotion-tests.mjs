@@ -11,7 +11,11 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeRustProducer } from "./nominal-primitive-subtype-rust-provenance.mjs";
-import { nominalPrimitiveSubtypeRustPromotionPredecessor } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import { nominalPrimitiveSubtypeRustPromotionHistoryPath, nominalPrimitiveSubtypeRustPromotionPredecessor } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import {
 	nominalPrimitiveSubtypeRustConversion
 	, nominalPrimitiveSubtypeRustField
@@ -104,11 +108,22 @@ test("primitive-base Rust promotion rejects narrowed references, new hosts and o
 
 test("primitive-base Rust promotion supplements six existing Rust cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeRustReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeRust(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeRustPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeRust(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeRustPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4); assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeRustPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length), proposed.evidence.slice(original.evidence.length));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

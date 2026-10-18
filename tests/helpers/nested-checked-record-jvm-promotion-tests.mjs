@@ -11,7 +11,11 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { checkedRecordNativeConversion, checkedRecordNativeLimit } from "./checked-record-native-promotion.mjs";
-import { nestedCheckedRecordJvmPromotionPredecessor } from "./nested-checked-record-jvm-promotion-history.mjs";
+import { nestedCheckedRecordJvmPromotionHistoryPath, nestedCheckedRecordJvmPromotionPredecessor } from "./nested-checked-record-jvm-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nestedCheckedRecordJvmProducer } from "./nested-checked-record-jvm-provenance.mjs";
 import {
 	nestedCheckedRecordJvmConversion
@@ -122,12 +126,23 @@ test("nested checked-record JVM promotion rejects narrowed references and overla
 
 test("nested checked-record JVM promotion supplements twelve cells only", async () => {
 	const original = predecessor(), references = await nestedCheckedRecordJvmReferences();
-	const proposed = await promoteNestedCheckedRecordJvm(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nestedCheckedRecordJvmPromotionHistoryPath
+		, await promoteNestedCheckedRecordJvm(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nestedCheckedRecordJvmPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 4);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nestedCheckedRecordJvmPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length)
 		, proposed.evidence.slice(original.evidence.length));

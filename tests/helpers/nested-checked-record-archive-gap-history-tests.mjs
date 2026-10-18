@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	beforeNestedCheckedRecordArchiveGapSource
 	, nestedCheckedRecordArchiveGapChangedPaths
@@ -50,7 +51,9 @@ test("nested checked-record archive repair records its own exact source transiti
 	for(const update of record.updates)
 	{
 		// Newer layers may edit the same sources; stop at this repair's recorded output.
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = sourceAtHistoryMilestone(
+			nestedCheckedRecordArchiveGapHistoryPath, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = show(nestedCheckedRecordArchiveGapPredecessor, update.path);
 		assert.equal(reverseNestedCheckedRecordArchiveGapUpdate(current, update), previous);

@@ -10,7 +10,11 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypePhpPromotionPredecessor } from "./nominal-primitive-subtype-php-promotion-history.mjs";
+import { nominalPrimitiveSubtypePhpPromotionHistoryPath, nominalPrimitiveSubtypePhpPromotionPredecessor } from "./nominal-primitive-subtype-php-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypePhpProducer } from "./nominal-primitive-subtype-php-provenance.mjs";
 import {
 	nominalPrimitiveSubtypePhpConversion
@@ -125,12 +129,23 @@ test("primitive-base native PHP promotion rejects narrowed references and overla
 
 test("primitive-base native PHP promotion supplements six cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypePhpReferences();
-	const proposed = await promoteNominalPrimitiveSubtypePhp(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypePhp(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypePhpPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length),
 		proposed.evidence.slice(original.evidence.length));

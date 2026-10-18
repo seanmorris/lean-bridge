@@ -16,8 +16,13 @@ import {
 	checkedRecordNativeConversion, checkedRecordNativeLimit
 } from "./checked-record-native-promotion.mjs";
 import {
-	nestedCheckedRecordWitPromotionPredecessor
+	nestedCheckedRecordWitPromotionHistoryPath
+	, nestedCheckedRecordWitPromotionPredecessor
 } from "./nested-checked-record-wit-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nestedCheckedRecordWitProducer } from "./nested-checked-record-wit-provenance.mjs";
 import {
 	nestedCheckedRecordWitConversion
@@ -124,13 +129,23 @@ test("nested checked-record WIT promotion rejects narrowed references and overla
 test("nested checked-record WIT promotion supplements six cells only", async () => {
 	const original = predecessor();
 	const references = await nestedCheckedRecordWitReferences();
-	const proposed = await promoteNestedCheckedRecordWit(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nestedCheckedRecordWitPromotionHistoryPath
+		, await promoteNestedCheckedRecordWit(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nestedCheckedRecordWitPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 2);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length)
-		, original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nestedCheckedRecordWitPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length)
 		, proposed.evidence.slice(original.evidence.length));

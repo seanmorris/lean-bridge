@@ -10,7 +10,11 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypeJvmPromotionPredecessor } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import { nominalPrimitiveSubtypeJvmPromotionHistoryPath, nominalPrimitiveSubtypeJvmPromotionPredecessor } from "./nominal-primitive-subtype-jvm-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypeJvmProducer } from "./nominal-primitive-subtype-jvm-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeJvmConversion
@@ -107,12 +111,23 @@ test("primitive-base JVM promotion rejects narrowed references and overlaps", as
 
 test("primitive-base JVM promotion supplements twelve cells only", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeJvmReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeJvm(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeJvmPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeJvm(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeJvmPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeJvmPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length), proposed.evidence.slice(original.evidence.length));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

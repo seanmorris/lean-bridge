@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	beforeNominalPrimitiveSubtypeRegistrationGapSource
 	, nominalPrimitiveSubtypeRegistrationGapChangedPaths
@@ -56,7 +57,9 @@ test("primitive-base registration repair records its own exact source transition
 	for(const update of record.updates)
 	{
 		// Newer layers may edit the same sources; stop at this repair's recorded output.
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeRegistrationGapHistoryPath, update.path
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = show(nominalPrimitiveSubtypeRegistrationGapPredecessor, update.path);
 		assert.equal(reverseNominalPrimitiveSubtypeRegistrationGapUpdate(current, update), previous);

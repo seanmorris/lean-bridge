@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePrimitiveAuditIntegrationSource, primitiveAuditIntegrationChangedPaths } from "./primitive-audit-integration-source-history.mjs";
 import { beforeInheritedCheckedRecordPerlArgumentsSource, inheritedCheckedRecordPerlArgumentsChangedPaths } from "./inherited-checked-record-perl-arguments-source-history.mjs";
 import { beforeInheritedCheckedRecordPerlStdoutSource, inheritedCheckedRecordPerlStdoutChangedPaths } from "./inherited-checked-record-perl-stdout-source-history.mjs";
 import { beforeInheritedCheckedRecordPerlPinRepairSource, inheritedCheckedRecordPerlPinRepairChangedPaths } from "./inherited-checked-record-perl-pin-repair-source-history.mjs";
@@ -129,6 +130,9 @@ import { beforeNestedCheckedRecordNativeCorrectionSource, nestedCheckedRecordNat
 import { beforeNestedCheckedRecordNativePromotionSource, nestedCheckedRecordNativePromotionChangedPaths } from "./nested-checked-record-native-promotion-history.mjs";
 import { beforeNestedCheckedRecordQualitySource, nestedCheckedRecordQualityChangedPaths } from "./nested-checked-record-quality-source-history.mjs";
 import { beforeNestedCheckedRecordDotnetPromotionSource, nestedCheckedRecordDotnetPromotionChangedPaths } from "./nested-checked-record-dotnet-promotion-history.mjs";
+import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from "./nominal-primitive-subtype-audit-correction-history.mjs";
+import { beforeNominalPrimitiveSubtypeRegistrationGapSource, beforeNominalPrimitiveSubtypeRegistrationRepairSource, nominalPrimitiveSubtypeRegistrationGapChangedPaths, nominalPrimitiveSubtypeRegistrationGapPath } from "./nominal-primitive-subtype-registration-gap-history.mjs";
+import { beforeNestedCheckedRecordArchiveGapSource, beforeNestedCheckedRecordArchiveRepairSource, nestedCheckedRecordArchiveGapChangedPaths, nestedCheckedRecordArchiveGapPath } from "./nested-checked-record-archive-gap-history.mjs";
 import { beforeNestedCheckedRecordJvmPromotionSource, nestedCheckedRecordJvmPromotionChangedPaths } from "./nested-checked-record-jvm-promotion-history.mjs";
 import { beforeNestedCheckedRecordPerlPromotionSource, nestedCheckedRecordPerlPromotionChangedPaths } from "./nested-checked-record-perl-promotion-history.mjs";
 import { beforeNestedCheckedRecordPhpPromotionSource, nestedCheckedRecordPhpPromotionChangedPaths } from "./nested-checked-record-php-promotion-history.mjs";
@@ -945,6 +949,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforePrimitiveAuditIntegrationSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordPerlArgumentsSource(
 		path, source, expected
 	);
@@ -1055,11 +1061,20 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordJvmPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	source = beforeNestedCheckedRecordArchiveRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	source = beforeNominalPrimitiveSubtypeRegistrationRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	source = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordDotnetPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordQualitySource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordNativePromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	// The nested native archive registration predates the promotion ledger.
+	source = beforeNestedCheckedRecordArchiveGapSource("archive", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNestedCheckedRecordNativeArchiveHistoricalSource(
 		path, source, expected
@@ -1083,9 +1098,15 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypePhpPromotionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
+	// These native PHP registrations predate the native PHP promotion ledger.
+	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("php", path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeNominalPrimitiveSubtypeDotnetPromotionSource(path, source, expected);
+	if(sha256(source) === expected) return source;
+	// These .NET registrations predate the .NET promotion ledger.
+	source = beforeNominalPrimitiveSubtypeRegistrationGapSource("dotnet", path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedJavaScriptDispositionSource(path, source, expected);
 	if(sha256(source) === expected) return source;
@@ -1155,7 +1176,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedCheckedRecordPerlArgumentsChangedPaths
+	...primitiveAuditIntegrationChangedPaths
+	, ...inheritedCheckedRecordPerlArgumentsChangedPaths
 	, ...inheritedCheckedRecordPerlStdoutChangedPaths
 	, ...inheritedCheckedRecordPerlPinRepairChangedPaths
 	, ...inheritedCheckedRecordPerlChangedPaths
@@ -1476,6 +1498,11 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nestedCheckedRecordNativePromotionChangedPaths
 	, ...nestedCheckedRecordQualityChangedPaths
 	, ...nestedCheckedRecordDotnetPromotionChangedPaths
+	, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths
+	, nominalPrimitiveSubtypeRegistrationGapPath
+	, ...nominalPrimitiveSubtypeRegistrationGapChangedPaths
+	, nestedCheckedRecordArchiveGapPath
+	, ...nestedCheckedRecordArchiveGapChangedPaths
 	, ...nestedCheckedRecordJvmPromotionChangedPaths
 	, ...nestedCheckedRecordPerlPromotionChangedPaths
 	, ...nestedCheckedRecordPhpPromotionChangedPaths

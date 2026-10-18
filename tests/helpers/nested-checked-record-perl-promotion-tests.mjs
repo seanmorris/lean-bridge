@@ -16,8 +16,13 @@ import {
 	checkedRecordPerlConversion, checkedRecordPerlLimit
 } from "./checked-record-perl-promotion.mjs";
 import {
-	nestedCheckedRecordPerlPromotionPredecessor
+	nestedCheckedRecordPerlPromotionHistoryPath
+	, nestedCheckedRecordPerlPromotionPredecessor
 } from "./nested-checked-record-perl-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nestedCheckedRecordPerlProducer } from "./nested-checked-record-perl-provenance.mjs";
 import {
 	nestedCheckedRecordPerlConversion
@@ -119,8 +124,16 @@ test("nested checked-record Perl promotion rejects narrowed references and overl
 
 test("nested checked-record Perl promotion supplements six cells only", async () => {
 	const original = predecessor(), references = await nestedCheckedRecordPerlReferences();
-	const proposed = await promoteNestedCheckedRecordPerl(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nestedCheckedRecordPerlPromotionHistoryPath
+		, await promoteNestedCheckedRecordPerl(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nestedCheckedRecordPerlPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length + 2);
@@ -132,11 +145,22 @@ test("nested checked-record Perl promotion supplements six cells only", async ()
 		if(file.path === nestedCheckedRecordPerlGeneratorPath)
 		{
 			assert.equal(file.sha256, nestedCheckedRecordPerlGeneratorAfter);
-			file.sha256 = nestedCheckedRecordPerlGeneratorBefore;
 			generatorPins++;
 		}
 	assert.equal(generatorPins, nestedCheckedRecordPerlGeneratorPins);
-	assert.deepEqual(priorEvidence, original.evidence);
+	const predecessorEvidence = withHistorySourcePins(
+		nestedCheckedRecordPerlPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length);
+	let predecessorGeneratorPins = 0;
+	for(const entry of predecessorEvidence) for(const file of entry.files)
+		if(file.path === nestedCheckedRecordPerlGeneratorPath)
+		{
+			assert.equal(file.sha256, nestedCheckedRecordPerlGeneratorBefore);
+			predecessorGeneratorPins++;
+		}
+	assert.equal(predecessorGeneratorPins, nestedCheckedRecordPerlGeneratorPins);
+	assert.deepEqual(predecessorEvidence, original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length)
 		, proposed.evidence.slice(original.evidence.length));

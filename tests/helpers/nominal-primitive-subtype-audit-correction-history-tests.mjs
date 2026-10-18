@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import {
 	beforeNominalPrimitiveSubtypeAuditCorrectionPins
 	, beforeNominalPrimitiveSubtypeAuditCorrectionSource
@@ -33,7 +34,9 @@ test("primitive-base audit correction history authenticates every source transit
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeAuditCorrectionChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = beforeFinRefinementSource(update.path, await readFile(update.path, "utf8"), update.currentSha256);
+		const current = sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeAuditCorrectionHistoryPath, update.path
+		);
 		const previous = reverseNominalPrimitiveSubtypeAuditCorrectionUpdate(current, update);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeNominalPrimitiveSubtypeAuditCorrectionSource(update.path, current, update.currentSha256), current);
@@ -53,8 +56,9 @@ test("primitive-base audit correction history authenticates every source transit
 		}
 	}
 	// The correction adds no receipts or cells; reversing its pins restores the predecessor inventory.
-	const update = record.updates.find(item => item.path === inventoryPath);
-	const current = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, "utf8"), update.currentSha256));
+	const current = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeAuditCorrectionHistoryPath, inventoryPath
+	));
 	const baseline = JSON.parse(original(inventoryPath));
 	assert.deepEqual(beforeNominalPrimitiveSubtypeAuditCorrectionPins(current), baseline);
 	assert.deepEqual(current.observations, baseline.observations);

@@ -10,7 +10,11 @@ import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
-import { nominalPrimitiveSubtypeDotnetPromotionPredecessor } from "./nominal-primitive-subtype-dotnet-promotion-history.mjs";
+import { nominalPrimitiveSubtypeDotnetPromotionHistoryPath, nominalPrimitiveSubtypeDotnetPromotionPredecessor } from "./nominal-primitive-subtype-dotnet-promotion-history.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+	, withHistorySourcePins
+} from "./source-history-test-source.mjs";
 import { nominalPrimitiveSubtypeDotnetProducer } from "./nominal-primitive-subtype-dotnet-provenance.mjs";
 import {
 	nominalPrimitiveSubtypeDotnetConversion
@@ -127,12 +131,23 @@ test("primitive-base C# promotion rejects narrowed references and overlapping ob
 
 test("primitive-base C# promotion supplements six cells and preserves all others", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeDotnetReferences();
-	const proposed = await promoteNominalPrimitiveSubtypeDotnet(original, references);
-	const { document, ...contracts } = await readTypeSurface();
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeDotnet(original, references)
+	);
+	const { document: live, ...contracts } = await readTypeSurface();
+	const document = JSON.parse(sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath
+		, "docs/type-surface.v1.json"
+	));
+	assert.ok(live.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4);
 	assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeDotnetPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(document, proposed);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length),
 		proposed.evidence.slice(original.evidence.length));

@@ -1,0 +1,716 @@
+{
+  "schemaVersion": 1,
+  "milestone": "primitive-audit-integration-source-v1",
+  "predecessorCommit": "f9ae4e507ca1036d73b4696d6c740dfc54bb5a80",
+  "draftParentCommit": "f9ae4e507ca1036d73b4696d6c740dfc54bb5a80",
+  "pathsSha256": "554f5a474200ab598a5692727d00334404543504353f19e6c07da423e3d16bda",
+  "pinCount": 82,
+  "pinUpdates": [
+    {
+      "path": "docs/php.md",
+      "previousSha256": "5ed27a2997a4f0402b82e5d638355d3416d7918bcd878d77042a53497177b099",
+      "currentSha256": "670217466b4e161d1e33335c395d02c24916595e3517680b634f5dd9ab54beb8",
+      "count": 6
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "d6dbfe5066a341d7a32f66908a87514d7e29fb105a3dca082bb74c102738ae7f",
+      "currentSha256": "d1ce513877e10c140c7df020376835fd453e54808768a5816c826d7a1b349ae3",
+      "count": 24
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+      "previousSha256": "6118d8dd5154fef1e1d26e6ada2fbf141140150c7d84484b2d4d6a6fe7836d70",
+      "currentSha256": "bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+      "previousSha256": "a96207064ec78f603b1a8dbd27131baa4ba0314e3df808e3bbe0699c53289d7b",
+      "currentSha256": "67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "658d81d1d44ce0d2c99ec3af325f943563ca6f8ae36c27488bc743e7ee6a7be9",
+      "currentSha256": "8aa179667f8c66aed190b68d5ca4229398bf1708befe723076894f58c3d12d21",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+      "previousSha256": "4089b051a4c41b60faf9d7c2a593218783463bc5fa8ecf4f13c96cd3e920bd2f",
+      "currentSha256": "d503bbcf78fcf375a358d643d10f6f7eef3677ba138c5fa7d6d361c7fad88cc8",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+      "previousSha256": "49b12c1e36902a870733bf75cf3fa76843f1825dc43cfc4c15a8c432f5f5a0e1",
+      "currentSha256": "58bd97bce8facb09d568c4ce0473ec0752c970af1d8b4b85ed43874c14049000",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+      "previousSha256": "058222fd374b8e238c067284fef1eb24dfde57c9c758088134fb9d5dc477f1fe",
+      "currentSha256": "e85db975c3006c9b5899bf2e5ffbabb27491cfb7c6813d55d5ffe87c9c6d5686",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+      "previousSha256": "2464be63e56cdca917c21668cef35cb78e88ad5b51501b8561a6941c9f541898",
+      "currentSha256": "161b160917538ec852ed5b33be8ee3c8aef4417519c17940b37a5ef2f76af113",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+      "previousSha256": "dc608ba6fca86cfb45c39474e90848f9eb11e1b07e117ba99821035a35dfed07",
+      "currentSha256": "f0578b2b84994a4d1340139e2820bce8c35c3e39ab9e1613b3d7979ca8fb6b06",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+      "previousSha256": "34ff8e1e117610ef0b5edb2c69716e4030de831d6c85818dc72bbe2d09daeabd",
+      "currentSha256": "bf92c19e99dcaa73dbc3dddaeb2d32b24d07df1a1cdfa2ff5f8d86df520af0dc",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-dotnet-promotion-tests.mjs",
+      "previousSha256": "f3215357dca29786cd693cb579686fb249a60e6ce60283f9a386773a31642f14",
+      "currentSha256": "a0dc20c1b2110dd4b5970070c71b43a36e363d6aa0ef04173329d90716d4c3d7",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+      "previousSha256": "10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b",
+      "currentSha256": "ce574888406257225a47c0b7e80d8d7f382ed323fc063df43870069791a6fb90",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-tests.mjs",
+      "previousSha256": "8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f",
+      "currentSha256": "87e65c37af7a8207d2cb7ad7fc93be1f2e28d657789ba7c0ef020c7cf1252fa5",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-rust-promotion-tests.mjs",
+      "previousSha256": "ddad228d708d428a164cb3c9ac8cd4d483e5029e380674da7689148303f7afa3",
+      "currentSha256": "8762f858a5c5722c9ad4dc6686f63f7587d38f2efc3541a46af2c08b1ebcbabb",
+      "count": 4
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-primitive-audit-integration-source-history.mjs",
+      "currentSha256": "078e2b7f85fe1cce03fcd8726b13c5b4ec91d5f4b9046f2e655609b5142f5dca"
+    },
+    {
+      "path": "tests/helpers/primitive-audit-integration-source-history.mjs",
+      "currentSha256": "f5ec0edf97ab97b9271a8be11e0ae28591db586210d0d1e5183966bbd25ea2cb"
+    },
+    {
+      "path": "tests/helpers/primitive-audit-integration-source-history-tests.mjs",
+      "currentSha256": "97dafdeabacd15bb9afc994f3cbaeb55577387702aa9ef649d05b41e898bebf6"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "3f90e811b6ce494f47014f2d20c3210aa67600f481f1b1db208c7b0b164a6bbf",
+      "currentSha256": "43013f4e44c2e10420f6095a88dbdbffef6b3b286e2ee1a50ef59d4a59183e23",
+      "edits": [
+        {
+          "start": 25366,
+          "previous": "Primitive-base nominal acceptance in the remaining hosts is pending. Callback,\nowned, recursive, dependent and broader generic Subtype combinations need\ntheir own checks.\n",
+          "current": "[Java and Kotlin checks](evidence/nominal-primitive-subtype-jvm-20261015/index.json)\ncover the same fields in Maven packages on JDK 22.0.2 and Kotlin 2.2.0 with\n64-bit machine words.\n[Native PHP checks](evidence/nominal-primitive-subtype-php-20261015/index.json)\ncover them in Composer packages on PHP 8.2.33 with 64-bit machine words, and\n[PHP-Wasm checks](evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)\ncover them on wasm32 PHP 8.4.1 with 32-bit machine words.\n[WIT checks](evidence/nominal-primitive-subtype-wit-20261015/index.json) cover\nthem through the Component Model adapter on Wasmtime 42.0.1 with the 64-bit\nnative Lean host. All seventeen consumer profiles now have primitive-base\nnominal acceptance. Callback, owned, recursive, dependent and broader generic\nSubtype combinations need their own checks.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "previousSha256": "5ed27a2997a4f0402b82e5d638355d3416d7918bcd878d77042a53497177b099",
+      "currentSha256": "670217466b4e161d1e33335c395d02c24916595e3517680b634f5dd9ab54beb8",
+      "edits": [
+        {
+          "start": 85729,
+          "previous": "Primitive-base nominal acceptance in the remaining hosts, refined callbacks,\nowned, dependent and broader generic Subtypes remain pending. Recursive\nchecked-record combinations remain separate work. The\n",
+          "current": "Refined callbacks, owned, dependent and broader generic Subtypes remain\npending. Recursive checked-record combinations remain separate work. The\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/reference/types.md",
+      "previousSha256": "dc12483575a0684323ae2ddfc3b754944188655304580c23f10c5be58cae7aba",
+      "currentSha256": "028fceeaa05f9c88ab6a85e256d188f9a41084a2338353accc0e93a019e0e6f4",
+      "edits": [
+        {
+          "start": 2504,
+          "previous": "[Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. [Nominal npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md) add the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md) add those Nat forms on both source routes in Linux x64/glibc 2.36, including standalone result-only packages. [Nominal Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md) add those Nat fields, aliases and constructor-free results on all four pinned ABIs via prebuilt-only and build-xs installation on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers, with reproduced component/runtime archives and missing-asset and lifecycle recovery checks. [Nominal PHP-Wasm checks](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) add both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy loading and weak/strict execution twice after relocation; all three reproduced archives are retained. [Nineteen-base npm checks](../evidence/nominal-primitive-subtype-npm-20261014/index.json) extend Node record and variant fields to every admitted primitive base on both source routes, with per-site normalization, constructor-free results, offline installation and relocated JavaScript/strict-TypeScript replay. Complete component/runtime archives are retained. [Nineteen-base Python checks](../evidence/nominal-primitive-subtype-python-20261014/index.json) extend the same nominal fields and constructor-free results to both author routes on CPython 3.11.16 and 3.12.14. Two author roots reproduce each complete wheel; both interpreter floors install it offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base browser checks](../evidence/nominal-primitive-subtype-browser-20261014/index.json) add all four source/API selections in Chromium, Firefox and WebKit pages, React production/Strict Mode and dedicated workers. Source-free bundles run after offline installation of both reproduced npm archives and removal of installed sources. They check missing-asset recovery, React remounts and pending unmounts, and worker restart/disposal using wasm32 payloads. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json) extend those fields and constructor-free results to both native projections. All four author/API selections reproduce complete packages, install offline after author removal and replay independent C11/GMP and C++20 callers after relocation on Linux x64/glibc 2.36. Both API modes retain native representations and 64-bit machine words. Full APIs check per-site normalization, active branches, caller snapshots, C output preservation and recovery after rejection; standalone result-only packages omit input constructor selections. [Nineteen-base Perl checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json) extend those fields and constructor-free results to all four pinned Perl ABIs through reproduced CPAN component and runtime archives, prebuilt-only and build-xs offline installation after author removal and relocated replay on Linux x64/glibc 2.36 with 64-bit machine words. The four accepted selections ran serially under two frozen revisions with recorded per-run load admission ceilings; four non-accepted launches are preserved and not counted. [Nineteen-base Ruby checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json) extend the same fields and constructor-free results to both author routes on MRI Ruby 3.3.12. Full and result-only APIs reproduce complete gems, install offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json) extend the same fields and constructor-free results to both author routes using exact Rust representations and 64-bit machine words. Full and result-only APIs reproduce complete crates from two author roots, install offline with fourteen authenticated dependencies after author removal, replay after relocation and execute again after deleting all consumer sources on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36. [Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact C# representations and 64-bit machine words. Full and result-only APIs reproduce complete NuGet packages from two author roots, install offline after author removal, replay after relocation and execute again after deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. [Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json) extend the same fields and constructor-free results to both author routes with native PHP representations and 64-bit machine words. Full and result-only APIs reproduce complete Composer ZIPs from two author roots, install offline after author and build removal, and run weak and strict callers before and after relocation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Consumer PHP source remains required at runtime. [Nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact wasm32 PHP representations and 32-bit machine words. Full and standalone result-only APIs reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots, install offline after author and build removal, and run twelve startup/lazy, weak/strict Node and Chromium contexts twice after relocation on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Consumer PHP source remains required at runtime. [Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover. [Nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact WIT wire representations and 64-bit native machine words. Full and standalone result-only APIs reproduce complete WIT archives from two author roots, install offline after author and build removal, and execute one compiled public C caller through Wasmtime 42.0.1 before and after relocation on Linux x64/glibc 2.36. [Nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact JVM representations and 64-bit machine words. Full and standalone result-only APIs reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment on JDK 22.0.2 and Kotlin 2.2.0 with Linux x64/glibc 2.36. Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\n",
+          "current": "[Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. [Nominal npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md) add the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md) add those Nat forms on both source routes in Linux x64/glibc 2.36, including standalone result-only packages. [Nominal Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md) add those Nat fields, aliases and constructor-free results on all four pinned ABIs via prebuilt-only and build-xs installation on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers, with reproduced component/runtime archives and missing-asset and lifecycle recovery checks. [Nominal PHP-Wasm checks](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) add both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy loading and weak/strict execution twice after relocation; all three reproduced archives are retained. [Nineteen-base npm checks](../evidence/nominal-primitive-subtype-npm-20261014/index.json) extend Node record and variant fields to every admitted primitive base on both source routes, with per-site normalization, constructor-free results, offline installation and relocated JavaScript/strict-TypeScript replay. Complete component/runtime archives are retained. [Nineteen-base Python checks](../evidence/nominal-primitive-subtype-python-20261014/index.json) extend the same nominal fields and constructor-free results to both author routes on CPython 3.11.16 and 3.12.14. Two author roots reproduce each complete wheel; both interpreter floors install it offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base browser checks](../evidence/nominal-primitive-subtype-browser-20261014/index.json) add all four source/API selections in Chromium, Firefox and WebKit pages, React production/Strict Mode and dedicated workers. Source-free bundles run after offline installation of both reproduced npm archives and removal of installed sources. They check missing-asset recovery, React remounts and pending unmounts, and worker restart/disposal using wasm32 payloads. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json) extend those fields and constructor-free results to both native projections. All four author/API selections reproduce complete packages, install offline after author removal and replay independent C11/GMP and C++20 callers after relocation on Linux x64/glibc 2.36. Both API modes retain native representations and 64-bit machine words. Full APIs check per-site normalization, active branches, caller snapshots, C output preservation and recovery after rejection; standalone result-only packages omit input constructor selections. [Nineteen-base Perl checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json) extend those fields and constructor-free results to all four pinned Perl ABIs through reproduced CPAN component and runtime archives, prebuilt-only and build-xs offline installation after author removal and relocated replay on Linux x64/glibc 2.36 with 64-bit machine words. The four accepted selections ran serially under two frozen revisions with recorded per-run load admission ceilings; four non-accepted launches are preserved and not counted. [Nineteen-base Ruby checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json) extend the same fields and constructor-free results to both author routes on MRI Ruby 3.3.12. Full and result-only APIs reproduce complete gems, install offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json) extend the same fields and constructor-free results to both author routes using exact Rust representations and 64-bit machine words. Full and result-only APIs reproduce complete crates from two author roots, install offline with fourteen authenticated dependencies after author removal, replay after relocation and execute again after deleting all consumer sources on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36. [Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact C# representations and 64-bit machine words. Full and result-only APIs reproduce complete NuGet packages from two author roots, install offline after author removal, replay after relocation and execute again after deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. [Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json) extend the same fields and constructor-free results to both author routes with native PHP representations and 64-bit machine words. Full and result-only APIs reproduce complete Composer ZIPs from two author roots, install offline after author and build removal, and run weak and strict callers before and after relocation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Consumer PHP source remains required at runtime. [Nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact wasm32 PHP representations and 32-bit machine words. Full and standalone result-only APIs reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots, install offline after author and build removal, and run twelve startup/lazy, weak/strict Node and Chromium contexts twice after relocation on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Consumer PHP source remains required at runtime. [Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover. [Nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact WIT wire representations and 64-bit native machine words. Full and standalone result-only APIs reproduce complete WIT archives from two author roots, install offline after author and build removal, and execute one compiled public C caller through Wasmtime 42.0.1 before and after relocation on Linux x64/glibc 2.36. [Nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact JVM representations and 64-bit machine words. Full and standalone result-only APIs reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment on JDK 22.0.2 and Kotlin 2.2.0 with Linux x64/glibc 2.36. Refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d85d67f4cd8b3702daf848f2827392e9801149790db15c0edf55211b6b2454f3",
+      "currentSha256": "4a93d1c13aefc151580c64e4338a1e9a54c326d50071a22ebceb61cef25fc32a",
+      "replacements": [
+        {
+          "previous": "5ed27a2997a4f0402b82e5d638355d3416d7918bcd878d77042a53497177b099",
+          "current": "670217466b4e161d1e33335c395d02c24916595e3517680b634f5dd9ab54beb8",
+          "count": 6
+        },
+        {
+          "previous": "d6dbfe5066a341d7a32f66908a87514d7e29fb105a3dca082bb74c102738ae7f",
+          "current": "d1ce513877e10c140c7df020376835fd453e54808768a5816c826d7a1b349ae3",
+          "count": 24
+        },
+        {
+          "previous": "6118d8dd5154fef1e1d26e6ada2fbf141140150c7d84484b2d4d6a6fe7836d70",
+          "current": "bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034",
+          "count": 4
+        },
+        {
+          "previous": "a96207064ec78f603b1a8dbd27131baa4ba0314e3df808e3bbe0699c53289d7b",
+          "current": "67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae",
+          "count": 4
+        },
+        {
+          "previous": "658d81d1d44ce0d2c99ec3af325f943563ca6f8ae36c27488bc743e7ee6a7be9",
+          "current": "8aa179667f8c66aed190b68d5ca4229398bf1708befe723076894f58c3d12d21",
+          "count": 4
+        },
+        {
+          "previous": "4089b051a4c41b60faf9d7c2a593218783463bc5fa8ecf4f13c96cd3e920bd2f",
+          "current": "d503bbcf78fcf375a358d643d10f6f7eef3677ba138c5fa7d6d361c7fad88cc8",
+          "count": 4
+        },
+        {
+          "previous": "49b12c1e36902a870733bf75cf3fa76843f1825dc43cfc4c15a8c432f5f5a0e1",
+          "current": "58bd97bce8facb09d568c4ce0473ec0752c970af1d8b4b85ed43874c14049000",
+          "count": 4
+        },
+        {
+          "previous": "058222fd374b8e238c067284fef1eb24dfde57c9c758088134fb9d5dc477f1fe",
+          "current": "e85db975c3006c9b5899bf2e5ffbabb27491cfb7c6813d55d5ffe87c9c6d5686",
+          "count": 4
+        },
+        {
+          "previous": "2464be63e56cdca917c21668cef35cb78e88ad5b51501b8561a6941c9f541898",
+          "current": "161b160917538ec852ed5b33be8ee3c8aef4417519c17940b37a5ef2f76af113",
+          "count": 4
+        },
+        {
+          "previous": "dc608ba6fca86cfb45c39474e90848f9eb11e1b07e117ba99821035a35dfed07",
+          "current": "f0578b2b84994a4d1340139e2820bce8c35c3e39ab9e1613b3d7979ca8fb6b06",
+          "count": 4
+        },
+        {
+          "previous": "34ff8e1e117610ef0b5edb2c69716e4030de831d6c85818dc72bbe2d09daeabd",
+          "current": "bf92c19e99dcaa73dbc3dddaeb2d32b24d07df1a1cdfa2ff5f8d86df520af0dc",
+          "count": 4
+        },
+        {
+          "previous": "f3215357dca29786cd693cb579686fb249a60e6ce60283f9a386773a31642f14",
+          "current": "a0dc20c1b2110dd4b5970070c71b43a36e363d6aa0ef04173329d90716d4c3d7",
+          "count": 4
+        },
+        {
+          "previous": "10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b",
+          "current": "ce574888406257225a47c0b7e80d8d7f382ed323fc063df43870069791a6fb90",
+          "count": 4
+        },
+        {
+          "previous": "8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f",
+          "current": "87e65c37af7a8207d2cb7ad7fc93be1f2e28d657789ba7c0ef020c7cf1252fa5",
+          "count": 4
+        },
+        {
+          "previous": "ddad228d708d428a164cb3c9ac8cd4d483e5029e380674da7689148303f7afa3",
+          "current": "8762f858a5c5722c9ad4dc6686f63f7587d38f2efc3541a46af2c08b1ebcbabb",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "d6dbfe5066a341d7a32f66908a87514d7e29fb105a3dca082bb74c102738ae7f",
+      "currentSha256": "d1ce513877e10c140c7df020376835fd453e54808768a5816c826d7a1b349ae3",
+      "edits": [
+        {
+          "start": 1928,
+          "previous": "const primitiveNominalPending = \"Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\";\n",
+          "current": "const primitiveNominalPending = \"Refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8d981c8ccf089a0ccbe6058cd680a7aef9708dd8043f2f5061cace1933ba141d",
+      "currentSha256": "f9570367802182ca0e671ac9b02516da62e73fad45f910cacb59ea55ef0ec881",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePrimitiveAuditIntegrationSource, primitiveAuditIntegrationChangedPaths } from \"./primitive-audit-integration-source-history.mjs\";\n"
+        },
+        {
+          "start": 15237,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRegistrationGapSource, beforeNominalPrimitiveSubtypeRegistrationRepairSource, nominalPrimitiveSubtypeRegistrationGapChangedPaths, nominalPrimitiveSubtypeRegistrationGapPath } from \"./nominal-primitive-subtype-registration-gap-history.mjs\";\nimport { beforeNestedCheckedRecordArchiveGapSource, beforeNestedCheckedRecordArchiveRepairSource, nestedCheckedRecordArchiveGapChangedPaths, nestedCheckedRecordArchiveGapPath } from \"./nested-checked-record-archive-gap-history.mjs\";\n"
+        },
+        {
+          "start": 75726,
+          "previous": "",
+          "current": "\tsource = beforePrimitiveAuditIntegrationSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 81726,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordArchiveRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n\tsource = beforeNominalPrimitiveSubtypeRegistrationRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n\tsource = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 82507,
+          "previous": "",
+          "current": "\t// The nested native archive registration predates the promotion ledger.\n\tsource = beforeNestedCheckedRecordArchiveGapSource(\"archive\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84012,
+          "previous": "",
+          "current": "\t// These native PHP registrations predate the native PHP promotion ledger.\n\tsource = beforeNominalPrimitiveSubtypeRegistrationGapSource(\"php\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84487,
+          "previous": "",
+          "current": "\t// These .NET registrations predate the .NET promotion ledger.\n\tsource = beforeNominalPrimitiveSubtypeRegistrationGapSource(\"dotnet\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 87754,
+          "previous": "\t...inheritedCheckedRecordPerlArgumentsChangedPaths\n",
+          "current": "\t...primitiveAuditIntegrationChangedPaths\n\t, ...inheritedCheckedRecordPerlArgumentsChangedPaths\n"
+        },
+        {
+          "start": 101388,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths\n\t, nominalPrimitiveSubtypeRegistrationGapPath\n\t, ...nominalPrimitiveSubtypeRegistrationGapChangedPaths\n\t, nestedCheckedRecordArchiveGapPath\n\t, ...nestedCheckedRecordArchiveGapChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/source-history-test-source.mjs",
+      "previousSha256": "eecf06fda1fde1c5ffa680343ffff0aff5a14f8706d3b5f588149531bd106248",
+      "currentSha256": "42bf45fd4da671c3ea67b854aab582a1bf3d69be36f78e23f512fc42b7cc20aa",
+      "edits": [
+        {
+          "start": 2038,
+          "previous": "",
+          "current": "\tif(update.replacements !== undefined)\n\t{\n\t\tassert.ok(Array.isArray(update.replacements)\n\t\t\t&& update.replacements.length > 0);\n\t\tsource = previous;\n\t\tfor(const replacement of update.replacements)\n\t\t{\n\t\t\tassert.equal(typeof replacement.previous, \"string\");\n\t\t\tassert.equal(typeof replacement.current, \"string\");\n\t\t\tassert.notEqual(replacement.previous, replacement.current);\n\t\t\tassert.ok(Number.isSafeInteger(replacement.count)\n\t\t\t\t&& replacement.count > 0);\n\t\t\tassert.equal(source.split(replacement.previous).length - 1\n\t\t\t\t, replacement.count, path);\n\t\t\tsource = source.replaceAll(\n\t\t\t\treplacement.previous, replacement.current\n\t\t\t);\n\t\t}\n\t\tassert.equal(sha256(source), update.currentSha256, historyPath);\n\t\treplayedMilestones.set(key, source);\n\t\treturn source;\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-archive-gap-history-tests.mjs",
+      "previousSha256": "f0ae3e3b4053ecea794123d375225967309681a1112b8db2fb15b54d376053b3",
+      "currentSha256": "50efdfab76ea9f9182ebf55edafb43e4a446c2972172fd82a37052b9eb59db3a",
+      "edits": [
+        {
+          "start": 470,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 3007,
+          "previous": "\t\tconst current = beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "current": "\t\tconst current = sourceAtHistoryMilestone(\n\t\t\tnestedCheckedRecordArchiveGapHistoryPath, update.path\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-dotnet-promotion-tests.mjs",
+      "previousSha256": "6118d8dd5154fef1e1d26e6ada2fbf141140150c7d84484b2d4d6a6fe7836d70",
+      "currentSha256": "bc0820ef0d792db1ee820f6883860d0fed2b393856b6617b72f8866592eeb034",
+      "edits": [
+        {
+          "start": 508,
+          "previous": "import { nestedCheckedRecordDotnetPromotionPredecessor } from \"./nested-checked-record-dotnet-promotion-history.mjs\";\n",
+          "current": "import { nestedCheckedRecordDotnetPromotionHistoryPath, nestedCheckedRecordDotnetPromotionPredecessor } from \"./nested-checked-record-dotnet-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6881,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordDotnet(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordDotnetPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordDotnet(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordDotnetPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7510,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordDotnetPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-jvm-promotion-tests.mjs",
+      "previousSha256": "a96207064ec78f603b1a8dbd27131baa4ba0314e3df808e3bbe0699c53289d7b",
+      "currentSha256": "67576791547b299f1c45138a49c581668e3ca27d2342b0400e3eb8aceeb89dae",
+      "edits": [
+        {
+          "start": 627,
+          "previous": "import { nestedCheckedRecordJvmPromotionPredecessor } from \"./nested-checked-record-jvm-promotion-history.mjs\";\n",
+          "current": "import { nestedCheckedRecordJvmPromotionHistoryPath, nestedCheckedRecordJvmPromotionPredecessor } from \"./nested-checked-record-jvm-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6260,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordJvm(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordJvmPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordJvm(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordJvmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6880,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordJvmPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "658d81d1d44ce0d2c99ec3af325f943563ca6f8ae36c27488bc743e7ee6a7be9",
+      "currentSha256": "8aa179667f8c66aed190b68d5ca4229398bf1708befe723076894f58c3d12d21",
+      "edits": [
+        {
+          "start": 621,
+          "previous": "\tnestedCheckedRecordPerlPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordPerlPromotionHistoryPath\n\t, nestedCheckedRecordPerlPromotionPredecessor\n"
+        },
+        {
+          "start": 774,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5633,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordPerl(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordPerlPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordPerl(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPerlPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6575,
+          "previous": "\t\t\tfile.sha256 = nestedCheckedRecordPerlGeneratorBefore;\n",
+          "current": ""
+        },
+        {
+          "start": 6667,
+          "previous": "\tassert.deepEqual(priorEvidence, original.evidence);\n",
+          "current": "\tconst predecessorEvidence = withHistorySourcePins(\n\t\tnestedCheckedRecordPerlPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length);\n\tlet predecessorGeneratorPins = 0;\n\tfor(const entry of predecessorEvidence) for(const file of entry.files)\n\t\tif(file.path === nestedCheckedRecordPerlGeneratorPath)\n\t\t{\n\t\t\tassert.equal(file.sha256, nestedCheckedRecordPerlGeneratorBefore);\n\t\t\tpredecessorGeneratorPins++;\n\t\t}\n\tassert.equal(predecessorGeneratorPins, nestedCheckedRecordPerlGeneratorPins);\n\tassert.deepEqual(predecessorEvidence, original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-php-promotion-tests.mjs",
+      "previousSha256": "4089b051a4c41b60faf9d7c2a593218783463bc5fa8ecf4f13c96cd3e920bd2f",
+      "currentSha256": "d503bbcf78fcf375a358d643d10f6f7eef3677ba138c5fa7d6d361c7fad88cc8",
+      "edits": [
+        {
+          "start": 633,
+          "previous": "\tnestedCheckedRecordPhpPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordPhpPromotionHistoryPath\n\t, nestedCheckedRecordPhpPromotionPredecessor\n"
+        },
+        {
+          "start": 783,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5521,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordPhp(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordPhpPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordPhp(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPhpPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6141,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordPhpPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-php-wasm-promotion-tests.mjs",
+      "previousSha256": "49b12c1e36902a870733bf75cf3fa76843f1825dc43cfc4c15a8c432f5f5a0e1",
+      "currentSha256": "58bd97bce8facb09d568c4ce0473ec0752c970af1d8b4b85ed43874c14049000",
+      "edits": [
+        {
+          "start": 635,
+          "previous": "\tnestedCheckedRecordPhpWasmPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordPhpWasmPromotionHistoryPath\n\t, nestedCheckedRecordPhpWasmPromotionPredecessor\n"
+        },
+        {
+          "start": 798,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5939,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordPhpWasm(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordPhpWasmPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordPhpWasm(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPhpWasmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6571,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordPhpWasmPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-python-promotion-tests.mjs",
+      "previousSha256": "058222fd374b8e238c067284fef1eb24dfde57c9c758088134fb9d5dc477f1fe",
+      "currentSha256": "e85db975c3006c9b5899bf2e5ffbabb27491cfb7c6813d55d5ffe87c9c6d5686",
+      "edits": [
+        {
+          "start": 635,
+          "previous": "\tnestedCheckedRecordPythonPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordPythonPromotionHistoryPath\n\t, nestedCheckedRecordPythonPromotionPredecessor\n"
+        },
+        {
+          "start": 794,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5887,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordPython(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordPythonPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordPython(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordPythonPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6516,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordPythonPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-ruby-promotion-tests.mjs",
+      "previousSha256": "2464be63e56cdca917c21668cef35cb78e88ad5b51501b8561a6941c9f541898",
+      "currentSha256": "161b160917538ec852ed5b33be8ee3c8aef4417519c17940b37a5ef2f76af113",
+      "edits": [
+        {
+          "start": 631,
+          "previous": "\tnestedCheckedRecordRubyPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordRubyPromotionHistoryPath\n\t, nestedCheckedRecordRubyPromotionPredecessor\n"
+        },
+        {
+          "start": 784,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5828,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordRuby(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordRubyPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordRuby(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordRubyPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6451,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordRubyPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-rust-promotion-tests.mjs",
+      "previousSha256": "dc608ba6fca86cfb45c39474e90848f9eb11e1b07e117ba99821035a35dfed07",
+      "currentSha256": "f0578b2b84994a4d1340139e2820bce8c35c3e39ab9e1613b3d7979ca8fb6b06",
+      "edits": [
+        {
+          "start": 633,
+          "previous": "\tnestedCheckedRecordRustPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordRustPromotionHistoryPath\n\t, nestedCheckedRecordRustPromotionPredecessor\n"
+        },
+        {
+          "start": 786,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6799,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordRust(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordRustPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordRust(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordRustPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7422,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordRustPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-wit-promotion-tests.mjs",
+      "previousSha256": "34ff8e1e117610ef0b5edb2c69716e4030de831d6c85818dc72bbe2d09daeabd",
+      "currentSha256": "bf92c19e99dcaa73dbc3dddaeb2d32b24d07df1a1cdfa2ff5f8d86df520af0dc",
+      "edits": [
+        {
+          "start": 641,
+          "previous": "\tnestedCheckedRecordWitPromotionPredecessor\n",
+          "current": "\tnestedCheckedRecordWitPromotionHistoryPath\n\t, nestedCheckedRecordWitPromotionPredecessor\n"
+        },
+        {
+          "start": 791,
+          "previous": "",
+          "current": "import {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5836,
+          "previous": "\tconst proposed = await promoteNestedCheckedRecordWit(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnestedCheckedRecordWitPromotionHistoryPath\n\t\t, await promoteNestedCheckedRecordWit(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnestedCheckedRecordWitPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 6456,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length)\n\t\t, original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnestedCheckedRecordWitPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-audit-correction-history-tests.mjs",
+      "previousSha256": "a6119e3438a1ec02b4aacef39d5c0973d836115cb9afade58d0c1a09ccc3b2cf",
+      "currentSha256": "fd4ee052925275966552efa264c1d3142f49427eccdee7850836466e6e021800",
+      "edits": [
+        {
+          "start": 454,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 1874,
+          "previous": "\t\tconst current = beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "current": "\t\tconst current = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeAuditCorrectionHistoryPath, update.path\n\t\t);\n"
+        },
+        {
+          "start": 3164,
+          "previous": "\tconst update = record.updates.find(item => item.path === inventoryPath);\n\tconst current = JSON.parse(beforeFinRefinementSource(inventoryPath, await readFile(inventoryPath, \"utf8\"), update.currentSha256));\n",
+          "current": "\tconst current = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeAuditCorrectionHistoryPath, inventoryPath\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-dotnet-promotion-tests.mjs",
+      "previousSha256": "f3215357dca29786cd693cb579686fb249a60e6ce60283f9a386773a31642f14",
+      "currentSha256": "a0dc20c1b2110dd4b5970070c71b43a36e363d6aa0ef04173329d90716d4c3d7",
+      "edits": [
+        {
+          "start": 526,
+          "previous": "import { nominalPrimitiveSubtypeDotnetPromotionPredecessor } from \"./nominal-primitive-subtype-dotnet-promotion-history.mjs\";\n",
+          "current": "import { nominalPrimitiveSubtypeDotnetPromotionHistoryPath, nominalPrimitiveSubtypeDotnetPromotionPredecessor } from \"./nominal-primitive-subtype-dotnet-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6668,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypeDotnet(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeDotnetPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeDotnet(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeDotnetPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7305,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeDotnetPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+      "previousSha256": "10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b",
+      "currentSha256": "ce574888406257225a47c0b7e80d8d7f382ed323fc063df43870069791a6fb90",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { nominalPrimitiveSubtypeJvmPromotionPredecessor } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\n",
+          "current": "import { nominalPrimitiveSubtypeJvmPromotionHistoryPath, nominalPrimitiveSubtypeJvmPromotionPredecessor } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6936,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypeJvm(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeJvmPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeJvm(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeJvmPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7564,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeJvmPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-tests.mjs",
+      "previousSha256": "8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f",
+      "currentSha256": "87e65c37af7a8207d2cb7ad7fc93be1f2e28d657789ba7c0ef020c7cf1252fa5",
+      "edits": [
+        {
+          "start": 509,
+          "previous": "import { nominalPrimitiveSubtypePhpPromotionPredecessor } from \"./nominal-primitive-subtype-php-promotion-history.mjs\";\n",
+          "current": "import { nominalPrimitiveSubtypePhpPromotionHistoryPath, nominalPrimitiveSubtypePhpPromotionPredecessor } from \"./nominal-primitive-subtype-php-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6543,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypePhp(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypePhpPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypePhp(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypePhpPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7171,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypePhpPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-registration-gap-history-tests.mjs",
+      "previousSha256": "11e99b2918b4eaf7ce663f396c87a2e1ac867a9601110bf023280a79279f3e76",
+      "currentSha256": "ff0f0542d5d37e2751be16e42ec3a059c22bf34bf7d099e987ea428f2dcaa47e",
+      "edits": [
+        {
+          "start": 477,
+          "previous": "",
+          "current": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 3423,
+          "previous": "\t\tconst current = beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n",
+          "current": "\t\tconst current = sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeRegistrationGapHistoryPath, update.path\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-rust-promotion-tests.mjs",
+      "previousSha256": "ddad228d708d428a164cb3c9ac8cd4d483e5029e380674da7689148303f7afa3",
+      "currentSha256": "8762f858a5c5722c9ad4dc6686f63f7587d38f2efc3541a46af2c08b1ebcbabb",
+      "edits": [
+        {
+          "start": 634,
+          "previous": "import { nominalPrimitiveSubtypeRustPromotionPredecessor } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\n",
+          "current": "import { nominalPrimitiveSubtypeRustPromotionHistoryPath, nominalPrimitiveSubtypeRustPromotionPredecessor } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\nimport {\n\tsourceAtHistoryMilestone, withHistoryMilestoneSourcePins\n\t, withHistorySourcePins\n} from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6733,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypeRust(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeRustPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeRust(original, references)\n\t);\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\tconst document = JSON.parse(sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeRustPromotionHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        },
+        {
+          "start": 7363,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeRustPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n\tassert.deepEqual(document, proposed);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "previousSha256": "8f0f37898537b0be835df15754dd333bb9c5c4cd6c72face3ed396dcd3e0c74c",
+      "currentSha256": "ca011b294fe9a4e35abfea8abbf05d50c41be7210e696a52a62392099271e1e8",
+      "edits": [
+        {
+          "start": 3975,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-supplement-caller-tests.mjs\";\nimport \"./nominal-primitive-subtype-supplement-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-audit-correction-history-tests.mjs\";\nimport \"./nominal-primitive-subtype-registration-gap-history-tests.mjs\";\nimport \"./primitive-audit-integration-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/nested-checked-records.test.mjs",
+      "previousSha256": "6cff213f116c5fac61940d36c0c5c2686804d4c338280363997018f14cc20e94",
+      "currentSha256": "29a7b234347e3d2b9ddb78cc3950a98b91cb701bff2fca71756a97a10208bee2",
+      "edits": [
+        {
+          "start": 759,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-archive-gap-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

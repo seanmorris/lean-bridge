@@ -49,6 +49,28 @@ const replayHistoryMilestone = (historyPath, path) => {
 	const update = record.updates.find(item => item.path === path);
 	assert.ok(update, `${path} is absent from ${historyPath}`);
 	const previous = previousHistoryMilestone(historyPath, path);
+	if(update.replacements !== undefined)
+	{
+		assert.ok(Array.isArray(update.replacements)
+			&& update.replacements.length > 0);
+		source = previous;
+		for(const replacement of update.replacements)
+		{
+			assert.equal(typeof replacement.previous, "string");
+			assert.equal(typeof replacement.current, "string");
+			assert.notEqual(replacement.previous, replacement.current);
+			assert.ok(Number.isSafeInteger(replacement.count)
+				&& replacement.count > 0);
+			assert.equal(source.split(replacement.previous).length - 1
+				, replacement.count, path);
+			source = source.replaceAll(
+				replacement.previous, replacement.current
+			);
+		}
+		assert.equal(sha256(source), update.currentSha256, historyPath);
+		replayedMilestones.set(key, source);
+		return source;
+	}
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
 	let previousCursor = 0; let currentCursor = 0; const parts = [];
 	for(const edit of update.edits)
