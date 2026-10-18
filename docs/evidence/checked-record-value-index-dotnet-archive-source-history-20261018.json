@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-dotnet-archive-source-v1",
+  "predecessorCommit": "48bf81cd13da3c526d6ad7f37cb968e5a5a4a948",
+  "draftParentCommit": "d86bdb9ff4cb742befce1b19618667f846bab3d6",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-dotnet-20261018",
+    "indexSha256": "56b823c66218e714bf625b9da1760ca4bee04791d0350aa939f51feeb3453dca",
+    "attributesSha256": "9b114a24d4773d5a92b192c92b0256d72c82162ee2e15dd1fa90568d85627024",
+    "indexedFileCount": 1088,
+    "addedFileCount": 1090
+  },
+  "pathsSha256": "7dfcb6108d978f076daffdba50dbe2a582194fcdf483e21f2399ec06b9c346cd",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb",
+      "currentSha256": "ad5e0fc336eb440662307aa76efb253de851bf2a0e5b7929580baf7160b7f637",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-dotnet-archive-source-history.mjs",
+      "currentSha256": "736a9d1b65ca76f69385f13545e4d0483b500555f4977bab204bd3c88f1d6e80"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-archive-source-history-tests.mjs",
+      "currentSha256": "f4c5c4f2dda362bf088478feb3c1d7634f790f0c64499a99d7a32934b78e96d1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-archive-source-history.mjs",
+      "currentSha256": "151fe318e8264d4e56688699c01a1e20f3d39f831521dbcf9797677e319e8136"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "65f76da282ff917810205f05994bf4f8b4e9f857ac8aa658c90ef5266ff30bd8",
+      "currentSha256": "aa53b26f724ecef36fa43fe04a072d7a0b6ec6412379800f252d150c725c317d",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n",
+          "current": "          \"sha256\": \"ad5e0fc336eb440662307aa76efb253de851bf2a0e5b7929580baf7160b7f637\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n",
+          "current": "          \"sha256\": \"ad5e0fc336eb440662307aa76efb253de851bf2a0e5b7929580baf7160b7f637\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb\"\n",
+          "current": "          \"sha256\": \"ad5e0fc336eb440662307aa76efb253de851bf2a0e5b7929580baf7160b7f637\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "54ab8daf1f2dcb66afdb642f734f5e7c95b72cc5ab2a9fc4d4bf8f1d36e796fb",
+      "currentSha256": "ad5e0fc336eb440662307aa76efb253de851bf2a0e5b7929580baf7160b7f637",
+      "edits": [
+        {
+          "start": 5317,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-dotnet-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-evidence.mjs",
+      "previousSha256": "f59e0558f20b4ba2f2c35e7c79761d6563ad59a6e238cd6c0c7bddc24b74bd16",
+      "currentSha256": "46fd87301dc0feb40edbedf6142f75acd9a808d46a6de411544591c6348b5b2f",
+      "edits": [
+        {
+          "start": 1427,
+          "previous": "export const checkedRecordValueIndexDotnetEvidenceSha256 = null;\n",
+          "current": "export const checkedRecordValueIndexDotnetEvidenceSha256\n\t= \"56b823c66218e714bf625b9da1760ca4bee04791d0350aa939f51feeb3453dca\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-provenance.mjs",
+      "previousSha256": "c71963782051cc375d795ee849299fb21d812c4e79e1edb8b7fc1fcafe613898",
+      "currentSha256": "0d29583a5b874fce35ee82b04ce8a98318bcaa3d1f587b7fa927d9092e9b41d2",
+      "edits": [
+        {
+          "start": 446,
+          "previous": "export const checkedRecordValueIndexDotnetProducer = null;\nexport const checkedRecordValueIndexDotnetConsumer = null;\nexport const checkedRecordValueIndexDotnetChecker = null;\nexport const checkedRecordValueIndexDotnetArchiver = null;\n",
+          "current": "export const checkedRecordValueIndexDotnetProducer\n\t= \"59d50c538589be9f2fd2460a7e4a1d383130ff00\";\nexport const checkedRecordValueIndexDotnetConsumer\n\t= \"59d50c538589be9f2fd2460a7e4a1d383130ff00\";\nexport const checkedRecordValueIndexDotnetChecker\n\t= \"59d50c538589be9f2fd2460a7e4a1d383130ff00\";\nexport const checkedRecordValueIndexDotnetArchiver\n\t= \"48bf81cd13da3c526d6ad7f37cb968e5a5a4a948\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1d2f98f00bf625eb616d469dab096f33dade88f10bbb1605338158466a2ba047",
+      "currentSha256": "92a82c1379fdbda62aeb00928b8b5ddc7eebeebbca2c709aec586f7e58aa09db",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexDotnetArchiveSource, checkedRecordValueIndexDotnetArchiveChangedPaths } from \"./checked-record-value-index-dotnet-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 81114,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexDotnetArchiveSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 97578,
+          "previous": "\t...checkedRecordValueIndexJvmChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexDotnetArchiveChangedPaths\n\t, ...checkedRecordValueIndexJvmChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
