@@ -142,6 +142,7 @@ const routeOrder = new Map([
 const archivePattern = /\.(?:a|crate|gem|gz|jar|nupkg|so|tgz|wasm|whl|zip)$/u;
 const exactSelectionKeys = Object.freeze([...routeOrder.keys()]);
 let defaultReferences;
+let defaultReferenceDigests;
 
 const json = (bytes, path) => {
 	const value = JSON.parse(bytes);
@@ -253,6 +254,19 @@ const authenticateInheritedCheckedRecordReferences = async read => {
 };
 const exactInheritedCheckedRecordReferences = () =>
 	defaultReferences ??= authenticateInheritedCheckedRecordReferences(readFile);
+const referenceDigest = reference => sha256(canonicalJson(reference));
+const exactInheritedCheckedRecordReferenceDigests = async () =>
+	defaultReferenceDigests ??= (await exactInheritedCheckedRecordReferences())
+		.map(referenceDigest);
+
+const assertExactInheritedCheckedRecordReferences = async references => {
+	const expected = await exactInheritedCheckedRecordReferenceDigests();
+	assert.equal(references.length, expected.length
+		, "Inherited promotion requires exactly 44 references");
+	for(const [index, reference] of references.entries())
+		assert.equal(referenceDigest(reference), expected[index]
+			, `Inherited promotion reference ${index}`);
+};
 
 /**
  * Authenticate all eleven archives serially and derive exactly 44 references.
@@ -301,12 +315,18 @@ const hostSuffix = "; also carries the tested proof-free inherited Span, Ticket 
  * @param references - Independently authenticated installed references.
  */
 export const promoteInheritedCheckedRecords = async (original, references) => {
-	assert.deepEqual(references
-		, await exactInheritedCheckedRecordReferences());
+	await assertExactInheritedCheckedRecordReferences(references);
 	const inventory = structuredClone(original);
 	const validatorPaths = [
-		"tests/helpers/inherited-checked-record-promotion.mjs"
+		"docs/evidence/inherited-checked-record-promotion-20261018.md"
+		, "scripts/generate-type-docs.mjs"
+		, "scripts/promote-inherited-checked-record-evidence.mjs"
+		, "scripts/update-inherited-checked-record-promotion-source-history.mjs"
+		, "tests/nested-checked-records.test.mjs"
+		, "tests/helpers/inherited-checked-record-promotion.mjs"
 		, "tests/helpers/inherited-checked-record-promotion-tests.mjs"
+		, "tests/helpers/inherited-checked-record-promotion-source-history.mjs"
+		, "tests/helpers/inherited-checked-record-promotion-source-history-tests.mjs"
 		, ...inheritedCheckedRecordPromotionLanes.flatMap(laneValidators)
 	];
 	const validators = await Promise.all([...new Set(validatorPaths)].map(async path => ({

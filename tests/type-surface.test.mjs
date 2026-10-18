@@ -505,8 +505,18 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 									? modes.map(mode => `nested-checked-record-wit-ordinary-${mode}-installed`)
 									: profile === "php-wasm"
 										? modes.map(mode => `nested-checked-record-php-wasm-ordinary-${mode}-installed`)
-										: [];
-				assert.deepEqual(stage.evidence, [...baseline, ...nested]);
+								: [];
+					const inheritedLane = {
+						dotnet: "dotnet", java: "jvm", kotlin: "jvm"
+						, "php-native": "php", "php-wasm": "php-wasm"
+						, python: "python", ruby: "ruby", rust: "rust"
+						, "wit-wasi": "wit"
+					}[profile];
+					const inherited = modes.map(mode =>
+						`inherited-checked-record-${inheritedLane}-ordinary-${mode}-installed`
+					);
+					assert.deepEqual(stage.evidence
+						, [...baseline, ...nested, ...inherited]);
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.

@@ -1,14 +1,13 @@
 /**
  * Aggregate inherited checked-record promotion contract.
  *
- * This helper deliberately remains unregistered until the final Perl archive
- * is pinned. The archive pin turns every skipped aggregate test into a hard
- * 44-reference promotion gate before the public inventory can change.
+ * The final Perl archive pin registers every aggregate test as a hard
+ * 44-reference promotion gate for the public inventory.
  *
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	readTypeSurface, typeSurfaceCells, validateTypeSurface
@@ -17,6 +16,10 @@ import {
 	inheritedCheckedRecordPerlEvidenceSha256
 } from "./inherited-checked-record-perl-evidence.mjs";
 import {
+	inheritedCheckedRecordPromotionHistoryPath
+	, inheritedCheckedRecordPromotionPredecessor
+} from "./inherited-checked-record-promotion-source-history.mjs";
+import {
 	inheritedCheckedRecordBoundary
 	, inheritedCheckedRecordConversion
 	, inheritedCheckedRecordLaneReferences
@@ -24,11 +27,15 @@ import {
 	, inheritedCheckedRecordReferences
 	, promoteInheritedCheckedRecords
 } from "./inherited-checked-record-promotion.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
 
 const complete = inheritedCheckedRecordPerlEvidenceSha256 !== null;
-const inventory = async () => JSON.parse(await readFile(
-	"docs/type-surface.v1.json", "utf8"
-));
+const inventoryPath = "docs/type-surface.v1.json";
+const inventory = () => JSON.parse(execFileSync("git", ["show"
+	, `${inheritedCheckedRecordPromotionPredecessor}:${inventoryPath}`]
+, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 const expectedProfiles = [
 	"browser-javascript", "browser-react", "browser-worker", "c", "cpp"
 	, "dotnet", "java", "kotlin", "node-javascript", "node-typescript"
@@ -96,14 +103,22 @@ test("inherited promotion authenticates exactly four selections per lane", {
 test("inherited promotion changes exactly 102 copied checked-record cells", {
 	skip: !complete
 }, async () => {
-	const original = await inventory();
+	const original = inventory();
 	const references = await inheritedCheckedRecordReferences();
-	const promoted = await promoteInheritedCheckedRecords(original, references);
+	const proposal = await promoteInheritedCheckedRecords(original, references);
+	const promoted = withHistoryMilestoneSourcePins(
+		inheritedCheckedRecordPromotionHistoryPath, proposal
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
+	const milestone = JSON.parse(sourceAtHistoryMilestone(
+		inheritedCheckedRecordPromotionHistoryPath, inventoryPath
+	));
 	validateTypeSurface(promoted, contracts);
+	assert.deepEqual(current, milestone);
+	assert.deepEqual(milestone, promoted);
 	assert.equal(promoted.evidence.length, original.evidence.length + 44);
 	assert.equal(promoted.observations.length, original.observations.length);
-	assert.deepEqual(promoted.evidence.slice(0, original.evidence.length)
+	assert.deepEqual(proposal.evidence.slice(0, original.evidence.length)
 		, original.evidence);
 	const before = typeSurfaceCells(original, contracts);
 	const after = typeSurfaceCells(promoted, contracts), changed = [];
@@ -133,14 +148,13 @@ test("inherited promotion changes exactly 102 copied checked-record cells", {
 	}
 	assert.equal(changed.length, 102);
 	assert.equal(new Set(changed).size, 102);
-	assert.deepEqual(original, await inventory());
-	assert.ok(current.evidence.length <= promoted.evidence.length);
+	assert.deepEqual(original, inventory());
 });
 
 test("inherited promotion refuses missing, reordered, forged and duplicate evidence", {
 	skip: !complete
 }, async () => {
-	const original = await inventory();
+	const original = inventory();
 	const references = await inheritedCheckedRecordReferences();
 	for(const changed of [references.slice(1), references.slice().reverse()
 		, [...references, references[0]]])

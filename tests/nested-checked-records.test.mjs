@@ -23,6 +23,8 @@ import "./helpers/nested-checked-record-native-ci-workflow-tests.mjs";
 import "./helpers/nested-checked-record-native-promotion-tests.mjs";
 import "./helpers/nested-checked-record-native-promotion-history-tests.mjs";
 import "./helpers/nested-checked-record-python-tests.mjs";
+import "./helpers/inherited-checked-record-promotion-tests.mjs";
+import "./helpers/inherited-checked-record-promotion-source-history-tests.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
