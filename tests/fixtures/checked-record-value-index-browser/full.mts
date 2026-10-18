@@ -1,4 +1,8 @@
-/** Strict payload-only types for every admitted closed value-index kind. */
+/**
+ * Strict payload-only types for every admitted closed value-index kind.
+ *
+ * @file
+ */
 import * as api from "checkedrecordvalueindices";
 
 const on: api.On = { count: 0n };

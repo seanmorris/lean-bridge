@@ -1,4 +1,8 @@
-/** Strict result-only package: proof-free records are produced without checked inputs. */
+/**
+ * Strict result-only package: proof-free records are produced without checked inputs.
+ *
+ * @file
+ */
 import * as api from "checkedrecordvalueindices";
 
 const on: api.On = api.produceTrueBool();
