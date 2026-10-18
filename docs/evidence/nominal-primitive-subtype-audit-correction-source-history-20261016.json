@@ -1,0 +1,720 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nominal-primitive-subtype-audit-correction-source-v1",
+  "predecessorCommit": "412013dff975cd04677363eb092d36b2c850b328",
+  "draftParentCommit": "412013dff975cd04677363eb092d36b2c850b328",
+  "updates": [
+    {
+      "path": "docs/javascript-typescript.md",
+      "currentSha256": "d1a3a4b5e6f9ddc8bb724c29b7e958c5d2e50966503d02356e3222a9c0778e81",
+      "previousSha256": "ed7e84aa4960a2809c45feeba29e1daa376498966fb16c19971d36eb9d35bed3",
+      "edits": [
+        {
+          "start": 25366,
+          "previous": "Primitive-base nominal acceptance in the remaining hosts is pending. Callback,\nowned, recursive, dependent and broader generic Subtype combinations need\ntheir own checks.\n",
+          "current": "[Java and Kotlin checks](evidence/nominal-primitive-subtype-jvm-20261015/index.json)\ncover the same fields in Maven packages on JDK 22.0.2 and Kotlin 2.2.0 with\n64-bit machine words.\n[Native PHP checks](evidence/nominal-primitive-subtype-php-20261015/index.json)\ncover them in Composer packages on PHP 8.2.33 with 64-bit machine words, and\n[PHP-Wasm checks](evidence/nominal-primitive-subtype-php-wasm-20261015/index.json)\ncover them on wasm32 PHP 8.4.1 with 32-bit machine words.\n[WIT checks](evidence/nominal-primitive-subtype-wit-20261015/index.json) cover\nthem through the Component Model adapter on Wasmtime 42.0.1 with the 64-bit\nnative Lean host. All seventeen consumer profiles now have primitive-base\nnominal acceptance. Callback, owned, recursive, dependent and broader generic\nSubtype combinations need their own checks.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "currentSha256": "a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60",
+      "previousSha256": "edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362",
+      "edits": [
+        {
+          "start": 83120,
+          "previous": "Primitive-base nominal acceptance in the remaining hosts, refined callbacks,\nowned, dependent and broader generic Subtypes remain pending. Recursive\nchecked-record combinations remain separate work. The\n",
+          "current": "Refined callbacks, owned, dependent and broader generic Subtypes remain\npending. Recursive checked-record combinations remain separate work. The\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/reference/types.md",
+      "currentSha256": "e065e97eab31d315ede689a99235e8afb66a7b3288db6fd658885167013e3057",
+      "previousSha256": "cf2d9653dcde03a5451f3aa8a6adf56628796a657e33b4ee0ebde350161f1920",
+      "edits": [
+        {
+          "start": 2504,
+          "previous": "[Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. [Nominal npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md) add the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md) add those Nat forms on both source routes in Linux x64/glibc 2.36, including standalone result-only packages. [Nominal Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md) add those Nat fields, aliases and constructor-free results on all four pinned ABIs via prebuilt-only and build-xs installation on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers, with reproduced component/runtime archives and missing-asset and lifecycle recovery checks. [Nominal PHP-Wasm checks](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) add both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy loading and weak/strict execution twice after relocation; all three reproduced archives are retained. [Nineteen-base npm checks](../evidence/nominal-primitive-subtype-npm-20261014/index.json) extend Node record and variant fields to every admitted primitive base on both source routes, with per-site normalization, constructor-free results, offline installation and relocated JavaScript/strict-TypeScript replay. Complete component/runtime archives are retained. [Nineteen-base Python checks](../evidence/nominal-primitive-subtype-python-20261014/index.json) extend the same nominal fields and constructor-free results to both author routes on CPython 3.11.16 and 3.12.14. Two author roots reproduce each complete wheel; both interpreter floors install it offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base browser checks](../evidence/nominal-primitive-subtype-browser-20261014/index.json) add all four source/API selections in Chromium, Firefox and WebKit pages, React production/Strict Mode and dedicated workers. Source-free bundles run after offline installation of both reproduced npm archives and removal of installed sources. They check missing-asset recovery, React remounts and pending unmounts, and worker restart/disposal using wasm32 payloads. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json) extend those fields and constructor-free results to both native projections. All four author/API selections reproduce complete packages, install offline after author removal and replay independent C11/GMP and C++20 callers after relocation on Linux x64/glibc 2.36. Both API modes retain native representations and 64-bit machine words. Full APIs check per-site normalization, active branches, caller snapshots, C output preservation and recovery after rejection; standalone result-only packages omit input constructor selections. [Nineteen-base Perl checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json) extend those fields and constructor-free results to all four pinned Perl ABIs through reproduced CPAN component and runtime archives, prebuilt-only and build-xs offline installation after author removal and relocated replay on Linux x64/glibc 2.36 with 64-bit machine words. The four accepted selections ran serially under two frozen revisions with recorded per-run load admission ceilings; four non-accepted launches are preserved and not counted. [Nineteen-base Ruby checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json) extend the same fields and constructor-free results to both author routes on MRI Ruby 3.3.12. Full and result-only APIs reproduce complete gems, install offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json) extend the same fields and constructor-free results to both author routes using exact Rust representations and 64-bit machine words. Full and result-only APIs reproduce complete crates from two author roots, install offline with fourteen authenticated dependencies after author removal, replay after relocation and execute again after deleting all consumer sources on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36. [Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact C# representations and 64-bit machine words. Full and result-only APIs reproduce complete NuGet packages from two author roots, install offline after author removal, replay after relocation and execute again after deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. [Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json) extend the same fields and constructor-free results to both author routes with native PHP representations and 64-bit machine words. Full and result-only APIs reproduce complete Composer ZIPs from two author roots, install offline after author and build removal, and run weak and strict callers before and after relocation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Consumer PHP source remains required at runtime. [Nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact wasm32 PHP representations and 32-bit machine words. Full and standalone result-only APIs reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots, install offline after author and build removal, and run twelve startup/lazy, weak/strict Node and Chromium contexts twice after relocation on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Consumer PHP source remains required at runtime. [Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover. [Nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact WIT wire representations and 64-bit native machine words. Full and standalone result-only APIs reproduce complete WIT archives from two author roots, install offline after author and build removal, and execute one compiled public C caller through Wasmtime 42.0.1 before and after relocation on Linux x64/glibc 2.36. [Nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact JVM representations and 64-bit machine words. Full and standalone result-only APIs reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment on JDK 22.0.2 and Kotlin 2.2.0 with Linux x64/glibc 2.36. Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\n",
+          "current": "[Structural Subtype packages](../evidence/structural-subtype-promotion-20261011.md) have installed checks across all seventeen profiles on both source routes. The fixtures cover primitive leaves inside Array, List, Option, products and Except, mixed Fin, transparent aliases and one closed List specialization. [Nominal npm checks](../evidence/nominal-subtype-npm-acceptance-20261011.md) add the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ checks](../evidence/nominal-subtype-native-acceptance-20261011.md) add those Nat forms on both source routes in Linux x64/glibc 2.36, including standalone result-only packages. [Nominal Perl checks](../evidence/nominal-subtype-perl-acceptance-20261012.md) add those Nat fields, aliases and constructor-free results on all four pinned ABIs via prebuilt-only and build-xs installation on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers, with reproduced component/runtime archives and missing-asset and lifecycle recovery checks. [Nominal PHP-Wasm checks](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) add both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. Embedded, Composer and bundled callers pass startup/lazy loading and weak/strict execution twice after relocation; all three reproduced archives are retained. [Nineteen-base npm checks](../evidence/nominal-primitive-subtype-npm-20261014/index.json) extend Node record and variant fields to every admitted primitive base on both source routes, with per-site normalization, constructor-free results, offline installation and relocated JavaScript/strict-TypeScript replay. Complete component/runtime archives are retained. [Nineteen-base Python checks](../evidence/nominal-primitive-subtype-python-20261014/index.json) extend the same nominal fields and constructor-free results to both author routes on CPython 3.11.16 and 3.12.14. Two author roots reproduce each complete wheel; both interpreter floors install it offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base browser checks](../evidence/nominal-primitive-subtype-browser-20261014/index.json) add all four source/API selections in Chromium, Firefox and WebKit pages, React production/Strict Mode and dedicated workers. Source-free bundles run after offline installation of both reproduced npm archives and removal of installed sources. They check missing-asset recovery, React remounts and pending unmounts, and worker restart/disposal using wasm32 payloads. [Nineteen-base C/C++ checks](../evidence/nominal-primitive-subtype-native-20261014/index.json) extend those fields and constructor-free results to both native projections. All four author/API selections reproduce complete packages, install offline after author removal and replay independent C11/GMP and C++20 callers after relocation on Linux x64/glibc 2.36. Both API modes retain native representations and 64-bit machine words. Full APIs check per-site normalization, active branches, caller snapshots, C output preservation and recovery after rejection; standalone result-only packages omit input constructor selections. [Nineteen-base Perl checks](../evidence/nominal-primitive-subtype-perl-20261015/index.json) extend those fields and constructor-free results to all four pinned Perl ABIs through reproduced CPAN component and runtime archives, prebuilt-only and build-xs offline installation after author removal and relocated replay on Linux x64/glibc 2.36 with 64-bit machine words. The four accepted selections ran serially under two frozen revisions with recorded per-run load admission ceilings; four non-accepted launches are preserved and not counted. [Nineteen-base Ruby checks](../evidence/nominal-primitive-subtype-ruby-20261015/index.json) extend the same fields and constructor-free results to both author routes on MRI Ruby 3.3.12. Full and result-only APIs reproduce complete gems, install offline after author removal and replay after physical relocation on Linux x64/glibc 2.36 with 64-bit machine words. [Nineteen-base Rust checks](../evidence/nominal-primitive-subtype-rust-20261015/index.json) extend the same fields and constructor-free results to both author routes using exact Rust representations and 64-bit machine words. Full and result-only APIs reproduce complete crates from two author roots, install offline with fourteen authenticated dependencies after author removal, replay after relocation and execute again after deleting all consumer sources on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36. [Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact C# representations and 64-bit machine words. Full and result-only APIs reproduce complete NuGet packages from two author roots, install offline after author removal, replay after relocation and execute again after deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36. [Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json) extend the same fields and constructor-free results to both author routes with native PHP representations and 64-bit machine words. Full and result-only APIs reproduce complete Composer ZIPs from two author roots, install offline after author and build removal, and run weak and strict callers before and after relocation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Consumer PHP source remains required at runtime. [Nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact wasm32 PHP representations and 32-bit machine words. Full and standalone result-only APIs reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots, install offline after author and build removal, and run twelve startup/lazy, weak/strict Node and Chromium contexts twice after relocation on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Consumer PHP source remains required at runtime. [Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover. [Nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact WIT wire representations and 64-bit native machine words. Full and standalone result-only APIs reproduce complete WIT archives from two author roots, install offline after author and build removal, and execute one compiled public C caller through Wasmtime 42.0.1 before and after relocation on Linux x64/glibc 2.36. [Nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact JVM representations and 64-bit machine words. Full and standalone result-only APIs reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment on JDK 22.0.2 and Kotlin 2.2.0 with Linux x64/glibc 2.36. Refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "66add3e1b6f9d9f67f1feba16903d813c650b19f7efa9889fedae19e2f9d81aa",
+      "previousSha256": "7cc3eecd1694d7173766b1a090e9e978163fa87df07ebee2debe276b5bc46c89",
+      "edits": [
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 682765,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 825509,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1073101,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1080692,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1087295,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1094402,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1101900,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1108953,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1116554,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1126834,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1139824,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1150254,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1158140,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1168877,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1179137,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1193230,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1225774,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1256056,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1289019,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 1330571,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 1356123,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1378660,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1398352,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1418842,
+          "previous": "          \"sha256\": \"a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8\"\n",
+          "current": "          \"sha256\": \"a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21\"\n",
+          "current": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"edc40cbe5795a9750ed9036e21e6c272f840f9e3c88b95a6fb09504d528c4362\"\n",
+          "current": "          \"sha256\": \"a533c94fc4697d2da8eee4b3b08b50494e60610d1538bc0b14ef7fc34a770d60\"\n"
+        },
+        {
+          "start": 7020366,
+          "previous": "          \"sha256\": \"d10d91c5def594562e28cfbd73a650e68080d3691c59e69d29716a6b37695055\"\n",
+          "current": "          \"sha256\": \"9b14c0626247d22c185f8592a7c26571871149eb6b31e474fdfa1c254b70d158\"\n"
+        },
+        {
+          "start": 7082013,
+          "previous": "          \"sha256\": \"d10d91c5def594562e28cfbd73a650e68080d3691c59e69d29716a6b37695055\"\n",
+          "current": "          \"sha256\": \"9b14c0626247d22c185f8592a7c26571871149eb6b31e474fdfa1c254b70d158\"\n"
+        },
+        {
+          "start": 7144076,
+          "previous": "          \"sha256\": \"d10d91c5def594562e28cfbd73a650e68080d3691c59e69d29716a6b37695055\"\n",
+          "current": "          \"sha256\": \"9b14c0626247d22c185f8592a7c26571871149eb6b31e474fdfa1c254b70d158\"\n"
+        },
+        {
+          "start": 7205723,
+          "previous": "          \"sha256\": \"d10d91c5def594562e28cfbd73a650e68080d3691c59e69d29716a6b37695055\"\n",
+          "current": "          \"sha256\": \"9b14c0626247d22c185f8592a7c26571871149eb6b31e474fdfa1c254b70d158\"\n"
+        },
+        {
+          "start": 9041188,
+          "previous": "          \"sha256\": \"8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f\"\n",
+          "current": "          \"sha256\": \"b5c4133d595ab8ca091db8d8e2512ad474de9e6d1b713745021b569823722b2e\"\n"
+        },
+        {
+          "start": 9041375,
+          "previous": "          \"sha256\": \"0f4026271569678a082fb85cd3194b0d6d44fd3f8b16228a131582fdef882508\"\n",
+          "current": "          \"sha256\": \"1daf81a30cf741dd8fc792d873eff440c8be444b537928154d9930c3de6780f7\"\n"
+        },
+        {
+          "start": 9041744,
+          "previous": "          \"sha256\": \"8b53320ec648ef6c909e2d10c721d197f213eea329da4dd4fb90cb89c709ef2f\"\n",
+          "current": "          \"sha256\": \"e480d8b3b151f8b78a2f98d4002e074626e2a2f27c3de0f50602d7c990f7fa3a\"\n"
+        },
+        {
+          "start": 9184919,
+          "previous": "          \"sha256\": \"8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f\"\n",
+          "current": "          \"sha256\": \"b5c4133d595ab8ca091db8d8e2512ad474de9e6d1b713745021b569823722b2e\"\n"
+        },
+        {
+          "start": 9185106,
+          "previous": "          \"sha256\": \"0f4026271569678a082fb85cd3194b0d6d44fd3f8b16228a131582fdef882508\"\n",
+          "current": "          \"sha256\": \"1daf81a30cf741dd8fc792d873eff440c8be444b537928154d9930c3de6780f7\"\n"
+        },
+        {
+          "start": 9185475,
+          "previous": "          \"sha256\": \"8b53320ec648ef6c909e2d10c721d197f213eea329da4dd4fb90cb89c709ef2f\"\n",
+          "current": "          \"sha256\": \"e480d8b3b151f8b78a2f98d4002e074626e2a2f27c3de0f50602d7c990f7fa3a\"\n"
+        },
+        {
+          "start": 9329144,
+          "previous": "          \"sha256\": \"8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f\"\n",
+          "current": "          \"sha256\": \"b5c4133d595ab8ca091db8d8e2512ad474de9e6d1b713745021b569823722b2e\"\n"
+        },
+        {
+          "start": 9329331,
+          "previous": "          \"sha256\": \"0f4026271569678a082fb85cd3194b0d6d44fd3f8b16228a131582fdef882508\"\n",
+          "current": "          \"sha256\": \"1daf81a30cf741dd8fc792d873eff440c8be444b537928154d9930c3de6780f7\"\n"
+        },
+        {
+          "start": 9329700,
+          "previous": "          \"sha256\": \"8b53320ec648ef6c909e2d10c721d197f213eea329da4dd4fb90cb89c709ef2f\"\n",
+          "current": "          \"sha256\": \"e480d8b3b151f8b78a2f98d4002e074626e2a2f27c3de0f50602d7c990f7fa3a\"\n"
+        },
+        {
+          "start": 9473339,
+          "previous": "          \"sha256\": \"8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f\"\n",
+          "current": "          \"sha256\": \"b5c4133d595ab8ca091db8d8e2512ad474de9e6d1b713745021b569823722b2e\"\n"
+        },
+        {
+          "start": 9473526,
+          "previous": "          \"sha256\": \"0f4026271569678a082fb85cd3194b0d6d44fd3f8b16228a131582fdef882508\"\n",
+          "current": "          \"sha256\": \"1daf81a30cf741dd8fc792d873eff440c8be444b537928154d9930c3de6780f7\"\n"
+        },
+        {
+          "start": 9473895,
+          "previous": "          \"sha256\": \"8b53320ec648ef6c909e2d10c721d197f213eea329da4dd4fb90cb89c709ef2f\"\n",
+          "current": "          \"sha256\": \"e480d8b3b151f8b78a2f98d4002e074626e2a2f27c3de0f50602d7c990f7fa3a\"\n"
+        },
+        {
+          "start": 10216701,
+          "previous": "          \"sha256\": \"32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9\"\n",
+          "current": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n"
+        },
+        {
+          "start": 10257868,
+          "previous": "          \"sha256\": \"32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9\"\n",
+          "current": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n"
+        },
+        {
+          "start": 10299716,
+          "previous": "          \"sha256\": \"32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9\"\n",
+          "current": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n"
+        },
+        {
+          "start": 10340883,
+          "previous": "          \"sha256\": \"32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9\"\n",
+          "current": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/check-nominal-primitive-subtype-php-ci.mjs",
+      "currentSha256": "e480d8b3b151f8b78a2f98d4002e074626e2a2f27c3de0f50602d7c990f7fa3a",
+      "previousSha256": "8b53320ec648ef6c909e2d10c721d197f213eea329da4dd4fb90cb89c709ef2f",
+      "edits": [
+        {
+          "start": 929,
+          "previous": "",
+          "current": "\t, nominalPrimitiveSubtypePhpCiPaths\n"
+        },
+        {
+          "start": 2329,
+          "previous": "assert.deepEqual(await nativeArtifactPaths(directory), [...result.records, original.archivePath].sort());\n",
+          "current": "assert.deepEqual(await nativeArtifactPaths(directory), nominalPrimitiveSubtypePhpCiPaths(result.records, original.archivePath));\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/generate-type-docs.mjs",
+      "currentSha256": "a352cc243421a83e449da1295179a9b31afdfc6bcf8a2d94109d64d405b23ed8",
+      "previousSha256": "a0df07e3d35dda72e50ab552c448c5f9234334c3b9df557a4009af11191f9cb8",
+      "edits": [
+        {
+          "start": 1928,
+          "previous": "const primitiveNominalPending = \"Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\";\n",
+          "current": "const primitiveNominalPending = \"Refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "138765e307113fcad9d46aa9629a1795ba781c1ad46d55c31205dd13144ba018",
+      "previousSha256": "e8adc844cb930a9eaeb633349d9e02569c0f654316b59eed2b8f5e35ed4ed5ef",
+      "edits": [
+        {
+          "start": 11145,
+          "previous": "",
+          "current": "import { beforeNominalPrimitiveSubtypeAuditCorrectionSource, nominalPrimitiveSubtypeAuditCorrectionChangedPaths } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 62269,
+          "previous": "",
+          "current": "\tsource = beforeNominalPrimitiveSubtypeAuditCorrectionSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 77901,
+          "previous": "",
+          "current": "\t, ...nominalPrimitiveSubtypeAuditCorrectionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+      "currentSha256": "4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274",
+      "previousSha256": "32f4d54b7a3fb9816f7865377af84d51814d28263e8c15e507971336220e1ee9",
+      "edits": [
+        {
+          "start": 1182,
+          "previous": "",
+          "current": "import {\n\tbeforeNominalPrimitiveSubtypeAuditCorrectionPins\n} from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 5473,
+          "previous": "\t\tbeforeNestedCheckedRecordNativeCorrectionPins(\n\t\t\tawait promoteNestedCheckedRecordBrowsers(original, references))));\n",
+          "current": "\t\tbeforeNestedCheckedRecordNativeCorrectionPins(beforeNominalPrimitiveSubtypeAuditCorrectionPins(\n\t\t\tawait promoteNestedCheckedRecordBrowsers(original, references)))));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+      "currentSha256": "6110bcd78ed2e32b284ad794e73da77ec3d5abb32d4601cb8cc8cae4e78d6590",
+      "previousSha256": "2feb3c31c649fd88e398f7616c623e840c25160c7f6f96207fe7f7610ba3d8a1",
+      "edits": [
+        {
+          "start": 388,
+          "previous": "",
+          "current": "import { withoutNominalPrimitiveSubtypeAuditCorrection } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 3683,
+          "previous": "\tconst currentText = await readFile(path, \"utf8\");\n",
+          "current": "\t// The newer #1499 audit correction only refreshes pins; read this layer's output through it.\n\tconst currentText = withoutNominalPrimitiveSubtypeAuditCorrection(path, await readFile(path, \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+      "currentSha256": "9b14c0626247d22c185f8592a7c26571871149eb6b31e474fdfa1c254b70d158",
+      "previousSha256": "d10d91c5def594562e28cfbd73a650e68080d3691c59e69d29716a6b37695055",
+      "edits": [
+        {
+          "start": 278,
+          "previous": "",
+          "current": "import { withoutNominalPrimitiveSubtypeAuditCorrection } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 752,
+          "previous": "import { beforeNominalPrimitiveSubtypeNativePromotionPins, beforeNominalPrimitiveSubtypeNativePromotionSource } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { nominalPrimitiveSubtypeBrowserPromotionPredecessor } from \"./nominal-primitive-subtype-browser-promotion-history.mjs\";\n",
+          "current": "import { beforeNominalPrimitiveSubtypeNativePromotionPins } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\nimport { nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor } from \"./nominal-primitive-subtype-browser-promotion-history.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeNestedCheckedRecordBrowserPromotionPins } from \"./nested-checked-record-browser-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeJvmPromotionPins } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport { beforePrimitiveSubtypePhpWasmPromotionPins } from \"./nominal-primitive-subtype-php-wasm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeWitPromotionPins } from \"./nominal-primitive-subtype-wit-promotion-history.mjs\";\nimport { beforeRecursiveSubtypePhpWasmPromotionPins } from \"./recursive-subtype-php-wasm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 2285,
+          "previous": "import { beforeNominalPrimitiveSubtypeRubyPromotionSource } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRustPromotionSource, beforePrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 6816,
+          "previous": "",
+          "current": "// Newer layers, newest first: each restores only its own refreshed source pins.\nconst newerPins = [\n\tbeforeNominalPrimitiveSubtypeAuditCorrectionPins\n\t, beforeNestedCheckedRecordNativeCorrectionPins\n\t, beforeNominalPrimitiveSubtypeJvmPromotionPins\n\t, beforeNominalPrimitiveSubtypeWitPromotionPins\n\t, beforeNestedCheckedRecordBrowserPromotionPins\n\t, beforeRecursiveSubtypePhpWasmPromotionPins\n\t, beforePrimitiveSubtypePhpWasmPromotionPins\n\t, beforeNominalPrimitiveSubtypeNativePromotionPins\n];\nconst withoutNewerPins = inventory => newerPins.reduce((current, before) => before(current), inventory);\n\n"
+        },
+        {
+          "start": 7647,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));\n",
+          "current": "\tconst proposed = withoutNewerPins(await promoteNominalPrimitiveSubtypeBrowser(original, references));\n"
+        },
+        {
+          "start": 7820,
+          "previous": "\tconst document = JSON.parse(beforeNominalPrimitiveSubtypeNativePromotionSource(\"docs/type-surface.v1.json\", beforeNominalPrimitiveSubtypeRubyPromotionSource(\"docs/type-surface.v1.json\", beforeNominalPrimitiveSubtypeRustPromotionSource(\"docs/type-surface.v1.json\", await readFile(\"docs/type-surface.v1.json\", \"utf8\")))));\n",
+          "current": "\t// Read this milestone's exact inventory output through every newer layer.\n\tconst ledger = JSON.parse(await readFile(nominalPrimitiveSubtypeBrowserPromotionHistoryPath, \"utf8\"));\n\tconst document = JSON.parse(beforeFinRefinementSource(\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t\t, ledger.updates.find(item => item.path === \"docs/type-surface.v1.json\").currentSha256));\n"
+        },
+        {
+          "start": 11194,
+          "previous": "\tconst javascript = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n",
+          "current": "\t// The #1499 audit correction later retires the remaining-hosts sentence; read this milestone's guide.\n\tconst javascript = withoutNominalPrimitiveSubtypeAuditCorrection(\"docs/javascript-typescript.md\"\n\t\t, await readFile(\"docs/javascript-typescript.md\", \"utf8\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-ci-policy-tests.mjs",
+      "currentSha256": "135a073d32593ee4a93e5ffc4e8551583fa74cc04962816831d69025fb9755d4",
+      "previousSha256": "2e655e492c1ed64ce6626ab157f526f2783484db1925a78f3033b5e5c4c802a7",
+      "edits": [
+        {
+          "start": 413,
+          "previous": "",
+          "current": "\t, nominalPrimitiveSubtypePhpCiPaths\n"
+        },
+        {
+          "start": 5352,
+          "previous": "",
+          "current": "\ntest(\"primitive-base native PHP CI expects the original ZIP exactly once\", () => {\n\t// Hosted run 38824636357 appended the ZIP to records that already listed it.\n\tconst archive = \"handoff/archives/example-nominalprimitivesubtypes-1.0.0-linux-x86_64.zip\";\n\tconst records = [\"report.json\", archive, \"handoff/package-set-receipt.json\", \"consumer.php\"];\n\tassert.deepEqual(nominalPrimitiveSubtypePhpCiPaths(records, archive), [...records].sort());\n\tassert.equal(nominalPrimitiveSubtypePhpCiPaths(records, archive).filter(path => path === archive).length, 1);\n\tassert.throws(() => nominalPrimitiveSubtypePhpCiPaths(records.filter(path => path !== archive), archive), /omit the original ZIP/u);\n\tassert.throws(() => nominalPrimitiveSubtypePhpCiPaths([...records, archive], archive), /Duplicate retained/u);\n});\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-ci-report.mjs",
+      "currentSha256": "1daf81a30cf741dd8fc792d873eff440c8be444b537928154d9930c3de6780f7",
+      "previousSha256": "0f4026271569678a082fb85cd3194b0d6d44fd3f8b16228a131582fdef882508",
+      "edits": [
+        {
+          "start": 5626,
+          "previous": "",
+          "current": "\n/**\n * Expected retained paths for one checked selection. The report records already list the\n * original handoff ZIP, so the archive path must be present once and is never appended.\n *\n * @param records - Retained record paths returned by the record check.\n * @param archivePath - Authenticated original ZIP path below the record directory.\n */\nexport const nominalPrimitiveSubtypePhpCiPaths = (records, archivePath) => {\n\tassert.equal(new Set(records).size, records.length, \"Duplicate retained PHP record path\");\n\tassert.ok(records.includes(archivePath), \"Retained PHP records omit the original ZIP\");\n\treturn [...records].sort();\n};\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-history-tests.mjs",
+      "currentSha256": "ba1b00a1e51b7fc14f92b59d4baa98f49579ad43f7aafc2392bd0a9563d14bf2",
+      "previousSha256": "1e5435a4de82eac07d76df5b577b9fb1440c6073752d6f692e0d6c994ba4c646",
+      "edits": [
+        {
+          "start": 457,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordBrowserPromotionPins } from \"./nested-checked-record-browser-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeJvmPromotionPins } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypePhpWasmPromotionPins } from \"./nominal-primitive-subtype-php-wasm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeWitPromotionPins } from \"./nominal-primitive-subtype-wit-promotion-history.mjs\";\nimport { beforeRecursiveSubtypePhpWasmPromotionPins } from \"./recursive-subtype-php-wasm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 1772,
+          "previous": "",
+          "current": "// Newer layers, newest first: each restores only its own refreshed source pins.\nconst newerPins = [\n\tbeforeNominalPrimitiveSubtypeAuditCorrectionPins, beforeNestedCheckedRecordNativeCorrectionPins\n\t, beforeNominalPrimitiveSubtypeJvmPromotionPins, beforeNominalPrimitiveSubtypeWitPromotionPins\n\t, beforeNestedCheckedRecordBrowserPromotionPins, beforeRecursiveSubtypePhpWasmPromotionPins\n\t, beforeNominalPrimitiveSubtypePhpWasmPromotionPins\n];\n\n"
+        },
+        {
+          "start": 2942,
+          "previous": "\t\tconst current = beforeNominalPrimitiveSubtypePhpPromotionSource(\n",
+          "current": "\t\tconst current = beforeFinRefinementSource(\n"
+        },
+        {
+          "start": 4302,
+          "previous": "\tconst expected = await promoteNominalPrimitiveSubtypePhp(\n\t\tJSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePhpReferences()\n",
+          "current": "\tconst expected = newerPins.reduce((inventory, before) => before(inventory)\n\t\t, await promoteNominalPrimitiveSubtypePhp(\n\t\t\tJSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypePhpReferences()));\n\tconst update = record.updates.find(item => item.path === inventoryPath);\n\t// Newer layers stop at this layer's output before its own reversal is checked.\n\tconst checkpoint = beforeFinRefinementSource(\n\t\tinventoryPath, await readFile(inventoryPath, \"utf8\"), update.currentSha256\n"
+        },
+        {
+          "start": 4794,
+          "previous": "\tassert.equal(beforeNominalPrimitiveSubtypePhpPromotionSource(\n\t\tinventoryPath, await readFile(inventoryPath, \"utf8\")\n\t), original(inventoryPath));\n",
+          "current": "\tassert.equal(beforeNominalPrimitiveSubtypePhpPromotionSource(inventoryPath, checkpoint)\n\t\t, original(inventoryPath));\n"
+        },
+        {
+          "start": 5184,
+          "previous": "\tconst update = record.updates.find(item => item.path === inventoryPath);\n\tconst checkpoint = beforeNominalPrimitiveSubtypePhpPromotionSource(\n\t\tinventoryPath, await readFile(inventoryPath, \"utf8\"), update.currentSha256\n\t);\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-tests.mjs",
+      "currentSha256": "b5c4133d595ab8ca091db8d8e2512ad474de9e6d1b713745021b569823722b2e",
+      "previousSha256": "8b99205d744ff940b18d31bf8ae149eb7548f522d27ee8cd5eecf9657082370f",
+      "edits": [
+        {
+          "start": 509,
+          "previous": "import { nominalPrimitiveSubtypePhpPromotionPredecessor } from \"./nominal-primitive-subtype-php-promotion-history.mjs\";\n",
+          "current": "import {\n\tnominalPrimitiveSubtypePhpPromotionHistoryPath\n\t, nominalPrimitiveSubtypePhpPromotionPredecessor\n} from \"./nominal-primitive-subtype-php-promotion-history.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeNestedCheckedRecordBrowserPromotionPins } from \"./nested-checked-record-browser-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeJvmPromotionPins } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypePhpWasmPromotionPins } from \"./nominal-primitive-subtype-php-wasm-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeWitPromotionPins } from \"./nominal-primitive-subtype-wit-promotion-history.mjs\";\nimport { beforeRecursiveSubtypePhpWasmPromotionPins } from \"./recursive-subtype-php-wasm-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 7164,
+          "previous": "",
+          "current": "// Newer layers, newest first: each restores only its own refreshed source pins.\nconst newerPins = [\n\tbeforeNominalPrimitiveSubtypeAuditCorrectionPins, beforeNestedCheckedRecordNativeCorrectionPins\n\t, beforeNominalPrimitiveSubtypeJvmPromotionPins, beforeNominalPrimitiveSubtypeWitPromotionPins\n\t, beforeNestedCheckedRecordBrowserPromotionPins, beforeRecursiveSubtypePhpWasmPromotionPins\n\t, beforeNominalPrimitiveSubtypePhpWasmPromotionPins\n];\n\n"
+        },
+        {
+          "start": 7785,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypePhp(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\tconst proposed = newerPins.reduce((inventory, before) => before(inventory)\n\t\t, await promoteNominalPrimitiveSubtypePhp(original, references));\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\t// Newer layers append receipts and supplement cells; compare this layer's exact output.\n\tconst history = JSON.parse(await readFile(nominalPrimitiveSubtypePhpPromotionHistoryPath, \"utf8\"));\n\tconst expected = history.updates.find(item => item.path === \"docs/type-surface.v1.json\").currentSha256;\n\tconst document = JSON.parse(beforeFinRefinementSource(\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"), expected));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-tests.mjs",
+      "currentSha256": "170efb1d30dfa8d7c155001e3e7e638338f57b8a2a48b81d66e8371af369ae9a",
+      "previousSha256": "8f0f37898537b0be835df15754dd333bb9c5c4cd6c72face3ed396dcd3e0c74c",
+      "edits": [
+        {
+          "start": 3975,
+          "previous": "",
+          "current": "import \"./nominal-primitive-subtype-supplement-caller-tests.mjs\";\nimport \"./nominal-primitive-subtype-supplement-installed-tests.mjs\";\nimport \"./nominal-primitive-subtype-audit-correction-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60",
+      "previousSha256": "a28d814ecc27ec555a552460c41faf7b7aefd04c8adb3240972ac41c9c540f21",
+      "edits": [
+        {
+          "start": 6235,
+          "previous": "",
+          "current": "import { withoutNominalPrimitiveSubtypeAuditCorrection } from \"./helpers/nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 8124,
+          "previous": "\tlet current = withoutNestedCheckedRecordDotnetPromotion(file\n\t\t, await readFile(file, \"utf8\"));\n\tcurrent = withoutNestedCheckedRecordQuality(file\n\t\t, current);\n",
+          "current": "\tlet current = withoutNominalPrimitiveSubtypeAuditCorrection(file, await readFile(file, \"utf8\"));\n\tcurrent = withoutNestedCheckedRecordDotnetPromotion(file, current);\n\tcurrent = withoutNestedCheckedRecordQuality(file, current);\n"
+        }
+      ]
+    }
+  ]
+}

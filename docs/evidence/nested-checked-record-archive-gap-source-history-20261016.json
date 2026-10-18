@@ -1,0 +1,387 @@
+{
+  "schemaVersion": 1,
+  "milestone": "nested-checked-record-archive-gap-source-v1",
+  "predecessorCommit": "599d26a53004ef64b7a830e2bed3f25c317c2fe2",
+  "draftParentCommit": "599d26a53004ef64b7a830e2bed3f25c317c2fe2",
+  "gaps": {
+    "archive": {
+      "path": "tests/nested-checked-records.test.mjs",
+      "currentSha256": "c71b896121a1c27e491938213407f9501b0db4e0a4f440bc7712f0de7ab5132f",
+      "previousSha256": "9e366669909565efb36424f7919c5330871ae9c231c582be1bf810d2fe15fdcb",
+      "edits": [
+        {
+          "start": 844,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-native-archive-tests.mjs\";\n"
+        }
+      ],
+      "fromCommit": "1e6f4c5983be741f2065cef7e703fe2ffe76d766",
+      "toCommit": "d6fe6dfffc8f6b94e11a3110f704ea98634a2c0f"
+    }
+  },
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "currentSha256": "adf82863fa6ca644adcc7d8d66da44f89bd5e628ef475376bcf5bca1284e322f",
+      "previousSha256": "66add3e1b6f9d9f67f1feba16903d813c650b19f7efa9889fedae19e2f9d81aa",
+      "edits": [
+        {
+          "start": 50871,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 707695,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 721726,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 733101,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 747321,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 758775,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 770846,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 782134,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 790717,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 797175,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 805561,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 813538,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 836468,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1078061,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1084759,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1091762,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1099268,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1106222,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1113856,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1123094,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1132221,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1147156,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1155203,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1164175,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1173566,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1186589,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1219701,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1249945,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1282881,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1322184,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1348725,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1371105,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1390997,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1412450,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 1425469,
+          "previous": "          \"sha256\": \"f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60\"\n",
+          "current": "          \"sha256\": \"8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82\"\n"
+        },
+        {
+          "start": 10216701,
+          "previous": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n",
+          "current": "          \"sha256\": \"05a2b46c9e994992019d9daeed583f35c07c7e4a4855608c1e1efe003b2df80e\"\n"
+        },
+        {
+          "start": 10257868,
+          "previous": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n",
+          "current": "          \"sha256\": \"05a2b46c9e994992019d9daeed583f35c07c7e4a4855608c1e1efe003b2df80e\"\n"
+        },
+        {
+          "start": 10299716,
+          "previous": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n",
+          "current": "          \"sha256\": \"05a2b46c9e994992019d9daeed583f35c07c7e4a4855608c1e1efe003b2df80e\"\n"
+        },
+        {
+          "start": 10340883,
+          "previous": "          \"sha256\": \"4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274\"\n",
+          "current": "          \"sha256\": \"05a2b46c9e994992019d9daeed583f35c07c7e4a4855608c1e1efe003b2df80e\"\n"
+        },
+        {
+          "start": 10570924,
+          "previous": "          \"sha256\": \"10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b\"\n",
+          "current": "          \"sha256\": \"3154b16fdc6fc0235b3422e443b33b75f4228e94eade433f86b7f0c674d065f5\"\n"
+        },
+        {
+          "start": 10630943,
+          "previous": "          \"sha256\": \"10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b\"\n",
+          "current": "          \"sha256\": \"3154b16fdc6fc0235b3422e443b33b75f4228e94eade433f86b7f0c674d065f5\"\n"
+        },
+        {
+          "start": 10691374,
+          "previous": "          \"sha256\": \"10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b\"\n",
+          "current": "          \"sha256\": \"3154b16fdc6fc0235b3422e443b33b75f4228e94eade433f86b7f0c674d065f5\"\n"
+        },
+        {
+          "start": 10751857,
+          "previous": "          \"sha256\": \"10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b\"\n",
+          "current": "          \"sha256\": \"3154b16fdc6fc0235b3422e443b33b75f4228e94eade433f86b7f0c674d065f5\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "currentSha256": "fe41f443a0f71bb98066dd455f93b3738ab44b631137142e27f4e9cbf4e7e142",
+      "previousSha256": "bf23b7dfc1b7534e8a64ea87ae4050413c3dd430f88e8ace688d8f622d659207",
+      "edits": [
+        {
+          "start": 11602,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordArchiveGapSource, beforeNestedCheckedRecordArchiveRepairSource, nestedCheckedRecordArchiveGapChangedPaths, nestedCheckedRecordArchiveGapPath } from \"./nested-checked-record-archive-gap-history.mjs\";\n"
+        },
+        {
+          "start": 62780,
+          "previous": "",
+          "current": "\tsource = beforeNestedCheckedRecordArchiveRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 63561,
+          "previous": "",
+          "current": "\t// The nested native archive edit predates the nested native promotion ledger.\n\tsource = beforeNestedCheckedRecordArchiveGapSource(\"archive\", path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 79524,
+          "previous": "",
+          "current": "\t, nestedCheckedRecordArchiveGapPath\n\t, ...nestedCheckedRecordArchiveGapChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-browser-promotion-tests.mjs",
+      "currentSha256": "05a2b46c9e994992019d9daeed583f35c07c7e4a4855608c1e1efe003b2df80e",
+      "previousSha256": "4206c6bb8139297a432d923f0f9f6d5264550f06de944413703c4a72898e8274",
+      "edits": [
+        {
+          "start": 1182,
+          "previous": "",
+          "current": "import {\n\tbeforeNestedCheckedRecordArchiveAndRegistrationPins\n} from \"./nested-checked-record-archive-gap-history.mjs\";\nimport {\n\tbeforeNestedCheckedRecordNativePromotionPins\n} from \"./nested-checked-record-native-promotion-history.mjs\";\nimport {\n\tbeforeNestedCheckedRecordQualityPins\n} from \"./nested-checked-record-quality-source-history.mjs\";\nimport {\n\tbeforeNestedCheckedRecordDotnetPromotionPins\n} from \"./nested-checked-record-dotnet-promotion-history.mjs\";\n"
+        },
+        {
+          "start": 5826,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeWitPromotionPins(beforeNominalPrimitiveSubtypeJvmPromotionPins(\n\t\tbeforeNestedCheckedRecordNativeCorrectionPins(beforeNominalPrimitiveSubtypeAuditCorrectionPins(\n\t\t\tawait promoteNestedCheckedRecordBrowsers(original, references)))));\n",
+          "current": "\t// Newer layers, newest first: each restores only its own refreshed source pins.\n\tconst proposed = [\n\t\tbeforeNestedCheckedRecordArchiveAndRegistrationPins\n\t\t, beforeNominalPrimitiveSubtypeAuditCorrectionPins\n\t\t, beforeNestedCheckedRecordDotnetPromotionPins\n\t\t, beforeNestedCheckedRecordQualityPins\n\t\t, beforeNestedCheckedRecordNativePromotionPins\n\t\t, beforeNestedCheckedRecordNativeCorrectionPins\n\t\t, beforeNominalPrimitiveSubtypeJvmPromotionPins\n\t\t, beforeNominalPrimitiveSubtypeWitPromotionPins\n\t].reduce((inventory, before) => before(inventory)\n\t\t, await promoteNestedCheckedRecordBrowsers(original, references));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+      "currentSha256": "6d71ef8dd6edde3e2ae8ad99ad053309c19c60184fd8204513b65f9cca417889",
+      "previousSha256": "6110bcd78ed2e32b284ad794e73da77ec3d5abb32d4601cb8cc8cae4e78d6590",
+      "edits": [
+        {
+          "start": 388,
+          "previous": "import { withoutNominalPrimitiveSubtypeAuditCorrection } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 3561,
+          "previous": "\t// The newer #1499 audit correction only refreshes pins; read this layer's output through it.\n\tconst currentText = withoutNominalPrimitiveSubtypeAuditCorrection(path, await readFile(path, \"utf8\"));\n\tconst current = JSON.parse(currentText);\n",
+          "current": ""
+        },
+        {
+          "start": 3744,
+          "previous": "",
+          "current": "\t// Newer layers add receipts, supplement cells and refresh pins; read this layer's output through them.\n\tconst currentText = beforeFinRefinementSource(path, await readFile(path, \"utf8\"), inventoryUpdate.currentSha256);\n\tconst current = JSON.parse(currentText);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-history-tests.mjs",
+      "currentSha256": "659ad9cca520c68f92aaa8ba0032b9eb8bdf4e3d3eac922b6edd501d56992da2",
+      "previousSha256": "0e3dc70bfccdbd873444e187ec1d2058b0292b8d68ce6d44fd02c34de8be0523",
+      "edits": [
+        {
+          "start": 450,
+          "previous": "",
+          "current": "import { beforeNestedCheckedRecordArchiveAndRegistrationPins } from \"./nested-checked-record-archive-gap-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNestedCheckedRecordNativePromotionPins } from \"./nested-checked-record-native-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordQualityPins } from \"./nested-checked-record-quality-source-history.mjs\";\nimport { beforeNestedCheckedRecordDotnetPromotionPins } from \"./nested-checked-record-dotnet-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 3797,
+          "previous": "\tconst expected = await promoteNominalPrimitiveSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeJvmReferences());\n",
+          "current": "\t// Newer layers, newest first: each restores only its own refreshed source pins.\n\tconst expected = [\n\t\tbeforeNestedCheckedRecordArchiveAndRegistrationPins\n\t\t, beforeNominalPrimitiveSubtypeAuditCorrectionPins\n\t\t, beforeNestedCheckedRecordDotnetPromotionPins\n\t\t, beforeNestedCheckedRecordQualityPins\n\t\t, beforeNestedCheckedRecordNativePromotionPins\n\t\t, beforeNestedCheckedRecordNativeCorrectionPins\n\t].reduce((inventory, before) => before(inventory)\n\t\t, await promoteNominalPrimitiveSubtypeJvm(JSON.parse(original(inventoryPath)), await nominalPrimitiveSubtypeJvmReferences()));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-tests.mjs",
+      "currentSha256": "3154b16fdc6fc0235b3422e443b33b75f4228e94eade433f86b7f0c674d065f5",
+      "previousSha256": "10b2209122b8026b41de52744ea1793b553fbb9cd98242ce271de3da1dbf974b",
+      "edits": [
+        {
+          "start": 514,
+          "previous": "import { nominalPrimitiveSubtypeJvmPromotionPredecessor } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\n",
+          "current": "import { nominalPrimitiveSubtypeJvmPromotionHistoryPath, nominalPrimitiveSubtypeJvmPromotionPredecessor } from \"./nominal-primitive-subtype-jvm-promotion-history.mjs\";\nimport { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\nimport { beforeNestedCheckedRecordArchiveAndRegistrationPins } from \"./nested-checked-record-archive-gap-history.mjs\";\nimport { beforeNestedCheckedRecordNativeCorrectionPins } from \"./nested-checked-record-native-correction-source-history.mjs\";\nimport { beforeNestedCheckedRecordNativePromotionPins } from \"./nested-checked-record-native-promotion-history.mjs\";\nimport { beforeNestedCheckedRecordQualityPins } from \"./nested-checked-record-quality-source-history.mjs\";\nimport { beforeNestedCheckedRecordDotnetPromotionPins } from \"./nested-checked-record-dotnet-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeAuditCorrectionPins } from \"./nominal-primitive-subtype-audit-correction-history.mjs\";\n"
+        },
+        {
+          "start": 7593,
+          "previous": "\tconst proposed = await promoteNominalPrimitiveSubtypeJvm(original, references);\n\tconst { document, ...contracts } = await readTypeSurface();\n",
+          "current": "\t// Newer layers, newest first: each restores only its own refreshed source pins.\n\tconst proposed = [\n\t\tbeforeNestedCheckedRecordArchiveAndRegistrationPins\n\t\t, beforeNominalPrimitiveSubtypeAuditCorrectionPins\n\t\t, beforeNestedCheckedRecordDotnetPromotionPins\n\t\t, beforeNestedCheckedRecordQualityPins\n\t\t, beforeNestedCheckedRecordNativePromotionPins\n\t\t, beforeNestedCheckedRecordNativeCorrectionPins\n\t].reduce((inventory, before) => before(inventory), await promoteNominalPrimitiveSubtypeJvm(original, references));\n\tconst { document: live, ...contracts } = await readTypeSurface();\n\t// Newer layers append receipts and supplement cells; compare this layer's exact output.\n\tconst history = JSON.parse(await readFile(nominalPrimitiveSubtypeJvmPromotionHistoryPath, \"utf8\"));\n\tconst expected = history.updates.find(item => item.path === \"docs/type-surface.v1.json\").currentSha256;\n\tconst document = JSON.parse(beforeFinRefinementSource(\"docs/type-surface.v1.json\"\n\t\t, await readFile(\"docs/type-surface.v1.json\", \"utf8\"), expected));\n\tassert.ok(live.evidence.length >= document.evidence.length);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-registration-gap-history-tests.mjs",
+      "currentSha256": "11e99b2918b4eaf7ce663f396c87a2e1ac867a9601110bf023280a79279f3e76",
+      "previousSha256": "12fe414dd0be99759d29d2bf32ff17e21be0f89fb46fa9cde2a85e35014a5c3b",
+      "edits": [
+        {
+          "start": 3262,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\t// Newer layers may edit the same sources; stop at this repair's recorded output.\n\t\tconst current = beforeFinRefinementSource(update.path, await readFile(update.path, \"utf8\"), update.currentSha256);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/nested-checked-records.test.mjs",
+      "currentSha256": "29a7b234347e3d2b9ddb78cc3950a98b91cb701bff2fca71756a97a10208bee2",
+      "previousSha256": "6cff213f116c5fac61940d36c0c5c2686804d4c338280363997018f14cc20e94",
+      "edits": [
+        {
+          "start": 759,
+          "previous": "",
+          "current": "import \"./helpers/nested-checked-record-archive-gap-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "currentSha256": "8d6e7a92ddb57d73832923fb1fee26381e8dc510ba599386c4dc3271ca8fec82",
+      "previousSha256": "f00b20db4f828b74ba46b06ab6e32f723d568dcb3c70d75191bbd67a6bbede60",
+      "edits": [
+        {
+          "start": 6365,
+          "previous": "",
+          "current": "import { withoutNestedCheckedRecordArchiveRepair } from \"./helpers/nested-checked-record-archive-gap-history.mjs\";\n"
+        },
+        {
+          "start": 8239,
+          "previous": "\tlet current = withoutNominalPrimitiveSubtypeAuditCorrection(file, await readFile(file, \"utf8\"));\n",
+          "current": "\tlet current = withoutNestedCheckedRecordArchiveRepair(file, await readFile(file, \"utf8\"));\n\tcurrent = withoutNominalPrimitiveSubtypeAuditCorrection(file, current);\n"
+        }
+      ]
+    }
+  ]
+}
