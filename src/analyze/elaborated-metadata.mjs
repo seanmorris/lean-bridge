@@ -5,7 +5,7 @@
  */
 import { lstat, readFile, realpath } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { componentScalarTypes, isClosedValueIndex } from "../abi/component-scalars.mjs";
 import { validateNativeType, validateOwnedNativeType } from "./native-types.mjs";
 import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 import { exportContractFor, exportContractProblem, validateExportConfiguration } from "./export-configuration.mjs";
@@ -287,13 +287,13 @@ export const validateElaboratedMetadata = (report, request) => {
 							// identity, a callback or a refinement, so no bound is lowered away with the argument.
 							for(const argument of type.provenance.arguments)
 							{
-								// A value index is provenance only: a closed Nat literal, never a host type.
+								// A value index is closed instantiation provenance, never a host type.
 								if(argument?.kind === "value")
 								{
 									closed(argument, ["kind", "type", "value"]);
 									closed(argument.type, ["kind", "name"]);
-									if(argument.type.kind !== "primitive" || argument.type.name !== "nat" || typeof argument.value !== "string"
-										|| !/^(?:0|[1-9][0-9]*)$/.test(argument.value)) fail("Invalid component record value argument");
+									if(argument.type.kind !== "primitive" || !isClosedValueIndex(argument.type.name, argument.value))
+										fail("Invalid component record value argument");
 									continue;
 								}
 								if(containsKind(argument, ["resource", "callback", "refinement"], references)) fail("Component record provenance arguments cannot carry resource, callback or refinement types");

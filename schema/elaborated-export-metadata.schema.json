@@ -339,7 +339,11 @@
           "type": "object", "additionalProperties": false, "required": ["kind", "base", "predicate"],
           "properties": {
             "kind": { "const": "refinement" },
-            "base": { "allOf": [{ "$ref": "#/$defs/copiedType" }, { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } }] },
+            "base": { "allOf": [
+              { "$ref": "#/$defs/copiedType" },
+              { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } },
+              { "if": { "properties": { "kind": { "const": "record" } } }, "then": { "required": ["erased"] } }
+            ] },
             "predicate": {
               "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],
               "properties": {
@@ -402,9 +406,17 @@
       "properties": {
         "kind": { "const": "value" },
         "type": { "type": "object", "additionalProperties": false, "required": ["kind", "name"],
-          "properties": { "kind": { "const": "primitive" }, "name": { "const": "nat" } } },
-        "value": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
-      }
+          "properties": { "kind": { "const": "primitive" }, "name": { "enum": ["nat", "bool", "string"] } } },
+        "value": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "nat" } } } } },
+          "then": { "properties": { "value": { "pattern": "^(0|[1-9][0-9]*)$" } } } },
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "bool" } } } } },
+          "then": { "properties": { "value": { "enum": ["false", "true"] } } } },
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "string" } } } } },
+          "then": { "properties": { "value": { "pattern": "^(?:[^\\uD800-\\uDFFF]|[\\uD800-\\uDBFF][\\uDC00-\\uDFFF])*$" } } } }
+      ]
     },
     "erasedFields": {
       "type": "array", "minItems": 1, "maxItems": 1024, "uniqueItems": true,

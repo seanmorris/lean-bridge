@@ -70,6 +70,122 @@ export const checkedRecordReview = ({ module = "CheckedRecords", component = "ch
 	return ir;
 };
 
+/** Closed value-index examples admitted as provenance-only generic-record arguments. */
+export const checkedRecordValueIndexSource = `
+structure Flagged (flag : Bool) where
+  count : Nat
+  set : flag = true
+abbrev On := Flagged true
+def mkOn (count : Nat) : Option On := some ⟨count, rfl⟩
+def boolIndex (value : On) : Nat := value.count
+structure Labeled (label : String) where
+  size : Nat
+  named : label.length = size
+abbrev Ab := Labeled "ab"
+def mkAb (size : Nat) : Option Ab := if h : "ab".length = size then some ⟨size, h⟩ else none
+def stringIndex (value : Ab) : Nat := value.size
+structure Token (α : Type) (index : α) where
+  count : Nat
+  fixed : index = index
+abbrev EmptySized := Sized 0
+abbrev ZeroToken := Token Nat 0
+abbrev SumToken := Token Nat (1 + 2)
+abbrev WideToken := Token Nat 340282366920938463463374607431768211457
+abbrev OffToken := Token Bool false
+abbrev DecidedToken := Token Bool (decide (1 < 2))
+abbrev EmptyToken := Token String ""
+abbrev UnicodeToken := Token String "λ🌱"
+def mkZeroToken (count : Nat) : Option ZeroToken := some ⟨count, rfl⟩
+def mkEmptySized (data : Array Nat) : Option EmptySized := if h : data.size = 0 then some ⟨data, h⟩ else none
+def mkSumToken (count : Nat) : Option SumToken := some ⟨count, rfl⟩
+def mkWideToken (count : Nat) : Option WideToken := some ⟨count, rfl⟩
+def mkOffToken (count : Nat) : Option OffToken := some ⟨count, rfl⟩
+def mkDecidedToken (count : Nat) : Option DecidedToken := some ⟨count, rfl⟩
+def mkEmptyToken (count : Nat) : Option EmptyToken := some ⟨count, rfl⟩
+def mkUnicodeToken (count : Nat) : Option UnicodeToken := some ⟨count, rfl⟩
+def zeroIndex (value : ZeroToken) : Nat := value.count
+def emptySizedIndex (value : EmptySized) : Nat := value.data.size
+def sumIndex (value : SumToken) : Nat := value.count
+def wideIndex (value : WideToken) : Nat := value.count
+def falseIndex (value : OffToken) : Nat := value.count
+def decidedIndex (value : DecidedToken) : Nat := value.count
+def emptyStringIndex (value : EmptyToken) : Nat := value.count
+def unicodeStringIndex (value : UnicodeToken) : Nat := value.count
+`;
+
+const valueIndex = (name, contents) => ({ kind: "value", type: { kind: "primitive", name }, value: contents });
+const valueIndexRecords = {
+	On: { fields: { count: "nat" }, erased: ["set"], structure: "Flagged", arguments: [valueIndex("bool", "true")] }
+	, Ab: { fields: { size: "nat" }, erased: ["named"], structure: "Labeled", arguments: [valueIndex("string", "ab")] }
+	, EmptySized: { fields: { data: { array: "nat" } }, erased: ["sized"], structure: "Sized", arguments: [valueIndex("nat", "0")] }
+	, ZeroToken: { fields: { count: "nat" }, erased: ["fixed"], structure: "Token", arguments: [nat, valueIndex("nat", "0")] }
+	, SumToken: { fields: { count: "nat" }, erased: ["fixed"], structure: "Token", arguments: [nat, valueIndex("nat", "3")] }
+	, WideToken: { fields: { count: "nat" }
+		, erased: ["fixed"]
+		, structure: "Token"
+		, arguments: [nat, valueIndex("nat", "340282366920938463463374607431768211457")] }
+	, OffToken: { fields: { count: "nat" }
+		, erased: ["fixed"]
+		, structure: "Token"
+		, arguments: [{ kind: "primitive", name: "bool" }, valueIndex("bool", "false")] }
+	, DecidedToken: { fields: { count: "nat" }
+		, erased: ["fixed"]
+		, structure: "Token"
+		, arguments: [{ kind: "primitive", name: "bool" }, valueIndex("bool", "true")] }
+	, EmptyToken: { fields: { count: "nat" }
+		, erased: ["fixed"]
+		, structure: "Token"
+		, arguments: [{ kind: "primitive", name: "string" }, valueIndex("string", "")] }
+	, UnicodeToken: { fields: { count: "nat" }
+		, erased: ["fixed"]
+		, structure: "Token"
+		, arguments: [{ kind: "primitive", name: "string" }, valueIndex("string", "λ🌱")] } };
+const valueIndexExports = {
+	boolIndex: ["On", "mkOn"]
+	, stringIndex: ["Ab", "mkAb"]
+	, emptySizedIndex: ["EmptySized", "mkEmptySized"]
+	, zeroIndex: ["ZeroToken", "mkZeroToken"]
+	, sumIndex: ["SumToken", "mkSumToken"]
+	, wideIndex: ["WideToken", "mkWideToken"]
+	, falseIndex: ["OffToken", "mkOffToken"]
+	, decidedIndex: ["DecidedToken", "mkDecidedToken"]
+	, emptyStringIndex: ["EmptyToken", "mkEmptyToken"]
+	, unicodeStringIndex: ["UnicodeToken", "mkUnicodeToken"] };
+
+/**
+ * Contracts selecting the exact checked constructor for every admitted value-index example.
+ *
+ * @param module - Lean module and namespace name.
+ */
+export const checkedRecordValueIndexContracts = (module = "CheckedRecords") => Object.fromEntries(Object.entries(valueIndexExports).map(([name, [, constructor]]) => [`${module}.${name}`
+	, { parameters: [site(`${module}.${constructor}`)], result: plain }]));
+
+/**
+ * Independently authored Binding IR for all admitted value-index examples.
+ *
+ * @param root0 - Fixture identity.
+ * @param root0.module - Lean module and namespace name.
+ * @param root0.component - Component name.
+ */
+export const checkedRecordValueIndexReview = ({ module = "CheckedRecords", component = "checkedrecords" } = {}) => {
+	const signatures = Object.entries(valueIndexExports).map(([name, [record]]) => ({ name: `${module}.${name}`
+		, parameters: [{ record: `${module}.${record}`, fields: valueIndexRecords[record].fields }]
+		, result: "nat" }));
+	const ir = corpusReviewedIr({ id: component }, signatures);
+	for(const definition of ir.types)
+	{
+		const record = valueIndexRecords[definition.name];
+		definition.source.extensions[erasedProofsKey] = { fields: [...record.erased] };
+		definition.source.extensions[instantiationKey] = { structure: `${module}.${record.structure}`, arguments: structuredClone(record.arguments) };
+	}
+	for(const declaration of ir.declarations)
+	{
+		const [, constructor] = valueIndexExports[declaration.name];
+		declaration.source.extensions[refinementsKey] = { parameters: [{ kind: "checked-record", constructor: `${module}.${constructor}` }], result: null };
+	}
+	return ir;
+};
+
 /**
  * Source-level refusals, appended inside the fixture namespace. Each export names the contract
  * its site needs and the diagnostic fresh Lean must report for it.
@@ -95,24 +211,55 @@ def bySorry (value : Triple) : Nat := total value
 /-- A checked input without a constructor, and a constructor on a Lean-produced result. -/
 def unconstructed (value : Interval) : Nat := width value
 def constructedResult (value : Nat) : Triple := repeated value
-/-- Index kinds outside this slice. -/
+${checkedRecordValueIndexSource}
+/-- Open or opaque supported indices and unreviewed scalar kinds remain fail-closed. -/
 abbrev SizedN (n : Nat) := Sized n
 def openIndex (value : SizedN 3) : Nat := value.data.size
 opaque hidden : Nat
 abbrev Hidden := Sized hidden
 def hiddenIndex (value : Hidden) : Nat := value.data.size
-structure Flagged (flag : Bool) where
+abbrev FlaggedB (flag : Bool) := Flagged flag
+def openBoolIndex (value : FlaggedB true) : Nat := value.count
+opaque hiddenFlag : Bool
+abbrev HiddenFlag := Flagged hiddenFlag
+def hiddenBoolIndex (value : HiddenFlag) : Nat := value.count
+abbrev LabeledS (label : String) := Labeled label
+def openStringIndex (value : LabeledS "ab") : Nat := value.size
+opaque hiddenLabel : String
+abbrev HiddenLabel := Labeled hiddenLabel
+def hiddenStringIndex (value : HiddenLabel) : Nat := value.size
+abbrev IntToken := Token Int (-1)
+abbrev CharToken := Token Char 'A'
+abbrev UInt8Token := Token UInt8 7
+abbrev USizeToken := Token USize 7
+abbrev ISizeToken := Token ISize 7
+def intIndex (value : IntToken) : Nat := value.count
+def charIndex (value : CharToken) : Nat := value.count
+def uint8Index (value : UInt8Token) : Nat := value.count
+def usizeIndex (value : USizeToken) : Nat := value.count
+def isizeIndex (value : ISizeToken) : Nat := value.count
+structure FinTagged (index : Fin 3) where
   count : Nat
-  set : flag = true
-abbrev On := Flagged true
-def mkOn (count : Nat) : Option On := some ⟨count, rfl⟩
-def boolIndex (value : On) : Nat := value.count
-structure Labeled (label : String) where
-  size : Nat
-  named : label.length = size
-abbrev Ab := Labeled "ab"
-def mkAb (size : Nat) : Option Ab := if h : "ab".length = size then some ⟨size, h⟩ else none
-def stringIndex (value : Ab) : Nat := value.size
+  fixed : index = index
+abbrev FinToken := FinTagged ⟨0, by decide⟩
+def finIndex (value : FinToken) : Nat := value.count
+structure ProofTagged (proof : True) where
+  count : Nat
+  fixed : proof = proof
+abbrev ProofToken := ProofTagged True.intro
+def proofIndex (value : ProofToken) : Nat := value.count
+structure InstanceTagged [inst : Inhabited Nat] where
+  count : Nat
+  fixed : True
+abbrev InstanceToken := InstanceTagged
+def instanceIndex (value : InstanceToken) : Nat := value.count
+structure FunctionTagged (function : Nat → Nat) where
+  count : Nat
+  fixed : function = function
+abbrev FunctionToken := FunctionTagged id
+def functionIndex (value : FunctionToken) : Nat := value.count
+abbrev JoinedToken := Token String ("a" ++ "b")
+def joinedStringIndex (value : JoinedToken) : Nat := value.count
 /-- A payload field that depends on another field stays a dependent type. -/
 structure Dep where
   bound : Nat
@@ -153,9 +300,21 @@ const refusals = {
 	, unconstructed: [[null], /checked records require a configured checked constructor/u]
 	, constructedResult: [[null], /Lean-produced checked records take no constructor/u, "mkTriple"]
 	, openIndex: [[null], /name this instantiation of a generic structure with an abbrev/u]
-	, hiddenIndex: [[null], /generic record value arguments must be closed Nat literals/u]
-	, boolIndex: [["mkOn"], /generic record value arguments must be Nat literals/u]
-	, stringIndex: [["mkAb"], /generic record value arguments must be Nat literals/u]
+	, hiddenIndex: [[null], /generic record Nat value arguments must be closed literals/u]
+	, openBoolIndex: [[null], /name this instantiation of a generic structure with an abbrev/u]
+	, hiddenBoolIndex: [[null], /generic record Bool value arguments must be closed literals/u]
+	, openStringIndex: [[null], /name this instantiation of a generic structure with an abbrev/u]
+	, hiddenStringIndex: [[null], /generic record String value arguments must be closed literals/u]
+	, intIndex: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, charIndex: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, uint8Index: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, usizeIndex: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, isizeIndex: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, finIndex: [[null], /generic record value arguments must have type Nat, Bool or String/u]
+	, proofIndex: [[null], /generic record value arguments cannot be proofs/u]
+	, instanceIndex: [[null], /generic record value arguments cannot be typeclass instances/u]
+	, functionIndex: [[null], /generic record value arguments cannot be functions/u]
+	, joinedStringIndex: [[null], /generic record String value arguments must be closed literals/u]
 	, dependent: [[null], /dependent or unresolved native type/u]
 	, witnessed: [[null], /checked records need at least one payload field/u]
 	, digitOf: [["mkDigit"], /checked record payload fields cannot carry refinements yet/u]

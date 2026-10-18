@@ -592,18 +592,43 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         if induct.numParams != args.size || induct.numIndices != 0 then
           reject e "indexed and partially applied generic records require a reviewed projection"
         if levels.length != induct.levelParams.length then reject e "generic record universe instantiation is incomplete"
+        let (_, parameterBinders, _) ← forallMetaTelescope induct.type
+        unless parameterBinders.size == args.size do
+          reject e "generic record parameter metadata disagrees with its application"
         -- Every type argument is a closed runtime type: a Sort-typed, non-proposition, copied shape.
         let mut arguments := #[]
-        for argument in args do
-          unless (← whnf (← inferType argument)).isSort do
-            -- A value index is recorded only as instantiation provenance. This slice admits a
-            -- closed Nat literal; other index kinds are refused at their source.
-            unless ← isDefEq (← inferType argument) (mkConst ``Nat) do
-              reject e "generic record value arguments must be Nat literals"
-            let .lit (.natVal index) ← whnf argument
-              | reject e "generic record value arguments must be closed Nat literals"
+        for argument in args, position in [0:args.size] do
+          let inferredArgumentType ← inferType argument
+          let argumentType ← whnf inferredArgumentType
+          unless argumentType.isSort do
+            -- A value index is recorded only as instantiation provenance. Canonical strings keep
+            -- arbitrary-size Nat literals exact, distinguish both Bool constructors and preserve
+            -- Unicode String contents without turning any index into a host-visible field.
+            if ← isProp inferredArgumentType then
+              reject argument "generic record value arguments cannot be proofs"
+            if parameterBinders[position]! == .instImplicit || (← isClass? inferredArgumentType).isSome then
+              reject argument "generic record value arguments cannot be typeclass instances"
+            if argumentType.isForall then
+              reject argument "generic record value arguments cannot be functions"
+            let normalized ← whnf argument
+            let (indexType, index) ←
+              if ← isDefEq argumentType (mkConst ``Nat) then
+                let .lit (.natVal value) := normalized
+                  | reject argument "generic record Nat value arguments must be closed literals"
+                pure (mkConst ``Nat, toString value)
+              else if ← isDefEq argumentType (mkConst ``Bool) then
+                match normalized with
+                | .const ``Bool.false [] => pure (mkConst ``Bool, "false")
+                | .const ``Bool.true [] => pure (mkConst ``Bool, "true")
+                | _ => reject argument "generic record Bool value arguments must be closed literals"
+              else if ← isDefEq argumentType (mkConst ``String) then
+                let .lit (.strVal value) := normalized
+                  | reject argument "generic record String value arguments must be closed literals"
+                pure (mkConst ``String, value)
+              else
+                reject argument "generic record value arguments must have type Nat, Bool or String"
             arguments := arguments.push (obj [("kind", str "value"),
-              ("type", ← shapeTree request (mkConst ``Nat)), ("value", str (toString index))])
+              ("type", ← shapeTree request indexType), ("value", str index)])
             continue
           if ← isProp argument then reject e "generic record arguments cannot be propositions"
           let shape ← shapeTree request argument (aliasName :: seen) 0 true none containerFin false

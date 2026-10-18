@@ -315,7 +315,11 @@
       "required": ["kind", "base", "predicate", "abi"],
       "properties": {
         "kind": { "const": "refinement" },
-        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } }] },
+        "base": { "allOf": [
+          { "$ref": "#" },
+          { "properties": { "kind": { "enum": ["record", "alias", "reference"] } } },
+          { "if": { "properties": { "kind": { "const": "record" } } }, "then": { "required": ["erased"] } }
+        ] },
         "predicate": { "$ref": "#/$defs/constructorPredicate", "properties": { "kind": { "const": "checked-record" } } },
         "abi": { "$ref": "#/$defs/abi" }
       }
@@ -333,9 +337,17 @@
       "type": "object", "additionalProperties": false, "required": ["kind", "type", "value"],
       "properties": {
         "kind": { "const": "value" },
-        "type": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" }, "name": { "const": "nat" } } }] },
-        "value": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" }
-      }
+        "type": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" }, "name": { "enum": ["nat", "bool", "string"] } } }] },
+        "value": { "type": "string" }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "nat" } } } } },
+          "then": { "properties": { "value": { "pattern": "^(0|[1-9][0-9]*)$" } } } },
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "bool" } } } } },
+          "then": { "properties": { "value": { "enum": ["false", "true"] } } } },
+        { "if": { "properties": { "type": { "properties": { "name": { "const": "string" } } } } },
+          "then": { "properties": { "value": { "pattern": "^(?:[^\\uD800-\\uDFFF]|[\\uD800-\\uDBFF][\\uDC00-\\uDFFF])*$" } } } }
+      ]
     },
     "abi": {
       "type": "object",

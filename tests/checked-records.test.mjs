@@ -38,7 +38,7 @@ import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { assertCheckedRecordReport, checkCheckedRecordNpmPackages, checkedRecordNativeCaller, checkedRecordNativeReport, checkedRecordNodeConsumer, checkedRecordResultOnlyConsumer, checkedRecordTypescript } from "./helpers/checked-record-packages.mjs";
 import { checkedRecordDispatchColumns, checkedRecordDispatchExpected, checkedRecordDispatchInterposer, checkedRecordDispatchProbe } from "./helpers/checked-record-dispatch.mjs";
-import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
+import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, checkedRecordValueIndexContracts, checkedRecordValueIndexReview, checkedRecordValueIndexSource, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
 const lean = process.env.LEAN_BRIDGE_CHECKED_RECORD_LEAN_TEST === "1";
 const module = "CheckedRecords";
@@ -91,6 +91,36 @@ test("malformed checked-record reviews are refused before Lean runs", () => {
 	assert.throws(() => assertRefinement({ kind: "checked-record", constructor: `${module}.mkTriple`, bound: "3" }, named("Triple")), TypeError);
 });
 
+test("reviewed value-index provenance admits only canonical Nat, Bool and String literals", () => {
+	const exact = checkedRecordValueIndexReview();
+	validateReviewedSource(reviewInput(exact));
+	assert.equal(canonicalJson(reviewedSourceSelection(reviewInput(exact)).contracts), canonicalJson(checkedRecordValueIndexContracts()));
+	const review = (name, value) => {
+		const ir = checkedRecordReview();
+		ir.types.find(item => item.name === "Triple").source.extensions[instantiationKey].arguments
+			= [{ kind: "value", type: { kind: "primitive", name }, value }];
+		return ir;
+	};
+	const valid = [
+		["nat", "0"]
+		, ["nat", "340282366920938463463374607431768211457"]
+		, ["bool", "false"]
+		, ["bool", "true"]
+		, ["string", ""]
+		, ["string", "λ🌱"]];
+	for(const [name, value] of valid)
+		validateReviewedSource(reviewInput(review(name, value)));
+	const invalid = [
+		["nat", "00"]
+		, ["bool", "True"]
+		, ["string", "\ud800"]
+		, ["int", "1"]
+		, ["char", "A"]
+		, ["uint8", "7"]];
+	for(const [name, value] of invalid)
+		assert.throws(() => validateReviewedSource(reviewInput(review(name, value))), Error, `${name} ${JSON.stringify(value)}`);
+});
+
 test("native metadata keeps erased proofs at top-level sites and value indices in provenance", () => {
 	const field = name => ({ name, projection: `${module}.Interval.${name}`, type: nat });
 	const record = { kind: "record"
@@ -105,13 +135,22 @@ test("native metadata keeps erased proofs at top-level sites and value indices i
 	validateNativeType(checked, 0, false, "parameter");
 	validateNativeType(record, 0, false, "result");
 	validateNativeType(indexed({ kind: "value", type: nat, value: "3" }), 0, false, "result");
+	const indices = [["nat", "Nat", "340282366920938463463374607431768211457"]
+		, ["bool", "Bool", "false"]
+		, ["bool", "Bool", "true"]
+		, ["string", "String", ""]
+		, ["string", "String", "λ🌱"]];
+	for(const [name, lean, value] of indices)
+		validateNativeType(indexed({ kind: "value", type: { ...nat, name, lean }, value }), 0, false, "result");
 	const refused = [
 		["a bare checked record at a parameter", () => validateNativeType(record, 0, false, "parameter")]
 		, ["a constructor at a result", () => validateNativeType(checked, 0, false, "result")]
 		, ["a checked record inside an array", () => validateNativeType({ kind: "array", element: record, abi: record.abi })]
 		, ["a constructor over a record without erased proofs", () => validateNativeType({ ...checked, base: { ...record, erased: undefined } }, 0, false, "parameter")]
 		, ["an erased name that is a payload field", () => validateNativeType({ ...record, erased: ["lo"] }, 0, false, "result")]
-		, ["a value index of another type", () => validateNativeType(indexed({ kind: "value", type: { ...nat, name: "int", lean: "Int" }, value: "3" }), 0, false, "result")]];
+		, ["a value index of another type", () => validateNativeType(indexed({ kind: "value", type: { ...nat, name: "int", lean: "Int" }, value: "3" }), 0, false, "result")]
+		, ["a noncanonical Bool index", () => validateNativeType(indexed({ kind: "value", type: { ...nat, name: "bool", lean: "Bool" }, value: "True" }), 0, false, "result")]
+		, ["an invalid Unicode String index", () => validateNativeType(indexed({ kind: "value", type: { ...nat, name: "string", lean: "String" }, value: "\ud800" }), 0, false, "result")]];
 	for(const [label, check] of refused) assert.throws(check, TypeError, label);
 });
 
@@ -135,10 +174,28 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, fields: [{ name: "data", type: { kind: "array", element: nat } }]
 		, erased: ["sized"] };
 	const componentSite = { kind: "refinement", base: component, predicate: { kind: "checked-record", constructor: `${module}.mkTriple` } };
+	const nativeIndex = (name, lean, value) => ({ ...native, provenance: { ...native.provenance
+		, arguments: [{ kind: "value", type: { ...nativeNat, name, lean }, value }] } });
+	const componentIndex = (name, value) => ({ ...component, provenance: { ...component.provenance
+		, arguments: [{ kind: "value", type: { kind: "primitive", name }, value }] } });
 	const copied = "elaborated-export-metadata#/$defs/copiedType";
 	const finSite = { kind: "refinement", base: nativeNat, predicate: { kind: "fin", bound: "10" }, abi };
 	const subtypeSite = { kind: "refinement", base: { ...nativeNat, name: "string", lean: "String" }, predicate: { kind: "subtype", constructor: `${module}.checkedWord` }, abi };
-	const valid = [["native-metadata-type", native], ["native-metadata-type", nativeSite], ["native-metadata-type", finSite], ["native-metadata-type", subtypeSite], [copied, component], [copied, componentSite]];
+	const valid = [
+		["native-metadata-type", native]
+		, ["native-metadata-type", nativeSite]
+		, ["native-metadata-type", finSite]
+		, ["native-metadata-type", subtypeSite]
+		, ["native-metadata-type", nativeIndex("nat", "Nat", "340282366920938463463374607431768211457")]
+		, ["native-metadata-type", nativeIndex("bool", "Bool", "false")]
+		, ["native-metadata-type", nativeIndex("bool", "Bool", "true")]
+		, ["native-metadata-type", nativeIndex("string", "String", "")]
+		, ["native-metadata-type", nativeIndex("string", "String", "λ🌱")]
+		, [copied, component]
+		, [copied, componentSite]
+		, [copied, componentIndex("bool", "false")]
+		, [copied, componentIndex("string", "")]
+		, [copied, componentIndex("string", "λ🌱")]];
 	for(const [reference, value] of valid)
 		assert.equal(await jsonSchemaErrors(reference, value), null, `${reference} ${value.kind}`);
 	const malformed = [
@@ -147,6 +204,8 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, ["native-metadata-type", { ...native, erased: ["1sized"] }, "an erased name that is not an identifier"]
 		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: nativeNat, value: "03" }] } }, "a non-decimal index"]
 		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: { ...nativeNat, name: "int", lean: "Int" }, value: "3" }] } }, "an Int index"]
+		, ["native-metadata-type", nativeIndex("bool", "Bool", "True"), "a noncanonical Bool index"]
+		, ["native-metadata-type", nativeIndex("string", "String", "\ud800"), "an unpaired String surrogate"]
 		, ["native-metadata-type", { ...native, provenance: { ...native.provenance, arguments: [{ kind: "value", type: nativeNat, value: "3", bound: "3" }] } }, "an extra index key"]
 		, ["native-metadata-type", { ...nativeSite, predicate: { ...nativeSite.predicate, bound: "3" } }, "an extra predicate key"]
 		, ["native-metadata-type", { ...nativeSite, predicate: { kind: "checked", constructor: `${module}.mkTriple` } }, "an unknown predicate kind"]
@@ -154,7 +213,9 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, [copied, { ...componentSite, base: { ...component, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
 		, [copied, { ...component, erased: [] }, "no erased names"]
 		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: nat, value: "-3" }] } }, "a negative index"]
-		, [copied, { ...component, provenance: { ...component.provenance, arguments: [{ kind: "value", type: { kind: "primitive", name: "string" }, value: "3" }] } }, "a String index"]
+		, [copied, componentIndex("bool", "TRUE"), "a noncanonical reviewed Bool index"]
+		, [copied, componentIndex("string", "\udfff"), "an invalid reviewed String index"]
+		, [copied, componentIndex("char", "A"), "an unreviewed Char index"]
 		// Each predicate keeps its own base: Fin over Nat, Subtype over a primitive, checked-record over a record with erased proofs.
 		, ["native-metadata-type", { ...nativeSite, base: nativeNat }, "a checked-record predicate over Nat"]
 		, ["native-metadata-type", { ...nativeSite, base: { ...native, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
@@ -420,6 +481,78 @@ test("fresh Lean compiles native C and C++ mirror adapters for checked records",
 	await assert.rejects(compile, error => /conflicting types/u.test(JSON.stringify(error.details)), "an object-returning validator probe must not compile");
 });
 
+test("fresh Lean preserves closed Nat, Bool and String indices as provenance only", { skip: !lean, timeout: 900_000 }, async t => {
+	const contracts = checkedRecordValueIndexContracts();
+	const { model, adapters, metadata } = await nativeModel(t, { extra: checkedRecordValueIndexSource, contracts });
+	await assertJsonSchema("elaborated-export-metadata", metadata);
+	const values = root => {
+		const found = new Set(), seen = new Set();
+		const visit = value => {
+			if(value === null || typeof value !== "object" || seen.has(value)) return;
+			seen.add(value);
+			if(value.kind === "value" && value.type?.kind === "primitive") found.add(`${value.type.name}:${JSON.stringify(value.value)}`);
+			for(const child of Object.values(value)) visit(child);
+		};
+		visit(root);
+		return [...found].sort();
+	};
+	const expected = [
+		"bool:\"false\""
+		, "bool:\"true\""
+		, "nat:\"0\""
+		, "nat:\"3\""
+		, "nat:\"340282366920938463463374607431768211457\""
+		, "string:\"\""
+		, "string:\"ab\""
+		, "string:\"λ🌱\""].sort();
+	assert.deepEqual(values(model.bindingIr), expected);
+	assert.deepEqual(values(metadata), expected);
+	for(const [name, kind, value] of [["SumToken", "nat", "3"], ["DecidedToken", "bool", "true"]])
+	{
+		const extension = model.bindingIr.types.find(item => item.name === name).source.extensions[instantiationKey];
+		assert.deepEqual(extension.arguments.at(-1), { kind: "value", type: { kind: "primitive", name: kind }, value }, name);
+	}
+	for(const [name, contract] of Object.entries(contracts))
+	{
+		const declaration = exportNamed(model, name.split(".").at(-1));
+		assert.equal(declaration.refinements.parameters[0].kind, "checked-record", name);
+		assert.equal(declaration.refinements.parameters[0].constructor, contract.parameters[0].refinement.constructor, name);
+		assert.ok(declaration.refinements.parameters[0].fields.every(field => !["index", "flag", "label", "fixed", "set", "named"].includes(field)), name);
+	}
+	const call = name => `${adapters.module}.f_${exportNamed(model, name).symbol}`;
+	const evaluations = [
+		[`[${call("boolIndex")} ⟨7⟩, ${call("falseIndex")} ⟨8⟩]`, "[some 7, some 8]"]
+		, [`[${call("stringIndex")} ⟨2⟩, ${call("stringIndex")} ⟨1⟩]`, "[some 2, none]"]
+		, [`[${call("emptySizedIndex")} ⟨#[]⟩, ${call("emptySizedIndex")} ⟨#[1]⟩]`, "[some 0, none]"]
+		, [`[${call("zeroIndex")} ⟨9⟩, ${call("sumIndex")} ⟨10⟩, ${call("wideIndex")} ⟨11⟩, ${call("decidedIndex")} ⟨12⟩, ${call("emptyStringIndex")} ⟨13⟩, ${call("unicodeStringIndex")} ⟨14⟩]`, "[some 9, some 10, some 11, some 12, some 13, some 14]"]];
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-checked-record-value-indices-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const fixture = await readFile(join(checkedRecordFixture, "CheckedRecords.lean"), "utf8");
+	const source = fixture.replace("end CheckedRecords", `${checkedRecordValueIndexSource}\nend CheckedRecords`);
+	await writeFile(join(directory, "ValueIndices.lean"), [source, adapters.leanSource.replace(/^import CheckedRecords$/mu, ""), ...evaluations.map(([expression]) => `#eval ${expression}`)].join("\n"));
+	const run = await processBuildRunner.capture({ command: join(leanPrefix, "bin/lean"), args: ["ValueIndices.lean"], cwd: directory, timeoutMs: 600_000 });
+	assert.deepEqual(run.stdout.trim().split("\n"), evaluations.map(([, expectedValue]) => expectedValue));
+});
+
+test("fresh Lean reconciles every reviewed value-index kind and detects omitted or changed constraints", { skip: !lean, timeout: 900_000 }, async t => {
+	const review = checkedRecordValueIndexReview();
+	const { model } = await nativeModel(t, { extra: checkedRecordValueIndexSource, review });
+	assert.equal(reviewedContractDifference(review, model.bindingIr), null);
+	const mutate = edit => {
+		const changed = structuredClone(review);
+		edit(name => changed.types.find(item => item.name === name).source.extensions[instantiationKey]);
+		return changed;
+	};
+	const mismatches = [
+		["Bool value", find => { find("On").arguments[0].value = "false"; }]
+		, ["String value", find => { find("Ab").arguments[0].value = "ba"; }]
+		, ["same spelling with another kind", find => { find("ZeroToken").arguments[1] = { kind: "value", type: { kind: "primitive", name: "string" }, value: "0" }; }]];
+	for(const [label, edit] of mismatches) assert.notEqual(reviewedContractDifference(mutate(edit), model.bindingIr), null, label);
+	const omitted = structuredClone(review);
+	delete omitted.types.find(item => item.name === "WideToken").source.extensions[instantiationKey];
+	assert.notEqual(reviewedContractDifference(omitted, model.bindingIr), null, "the complete provenance extension is required");
+});
+
 test("raw Lean entries refuse invalid payloads and keep normalization inside Lean", { skip: !lean, timeout: 900_000 }, async t => {
 	const { model, adapters } = await nativeModel(t);
 	const call = name => `${adapters.module}.f_${exportNamed(model, name).symbol}`;
@@ -456,6 +589,7 @@ test("reconciliation refuses a dropped erased name, a changed index and a reorde
 	const mismatches = [
 		["a dropped erased name", find => { find("Percent").source.extensions[erasedProofsKey].fields = ["above"]; }]
 		, ["a changed value index", find => { find("Triple").source.extensions[instantiationKey].arguments[0].value = "4"; }]
+		, ["a changed value-index kind", find => { find("Triple").source.extensions[instantiationKey].arguments[0] = { kind: "value", type: { kind: "primitive", name: "bool" }, value: "true" }; }]
 		, ["a reordered payload", find => { find("Interval").fields.reverse(); }]];
 	for(const [label, edit] of mismatches)
 		await assert.rejects(() => nativeModel(t, { review: mutate(edit) }), { code: "reviewed-ir-source-mismatch" }, label);
@@ -476,6 +610,7 @@ test("every refused checked-record site reports its own diagnostic", { skip: !le
 	});
 	const projections = new Map((details?.projections ?? []).map(item => [item.declaration, item.expression]));
 	for(const [name, { pattern }] of Object.entries(refusals)) assert.match(projections.get(name) ?? JSON.stringify(details), pattern, name);
+	assert.match(projections.get(`${module}.instanceIndex`), /: instInhabitedNat$/u, "the source expression identifies the rejected instance");
 });
 
 /**

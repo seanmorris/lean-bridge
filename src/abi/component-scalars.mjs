@@ -10,6 +10,34 @@ export const componentScalarTypes = Object.freeze([
 	, "int8", "int16", "int32", "int64", "nat", "int"
 	, "float32", "float64", "string", "bytes", "char", "usize", "isize"
 ]);
+const canonicalNatIndex = value => /^(?:0|[1-9][0-9]*)$/.test(value);
+const scalarIndexString = value => {
+	for(let index = 0; index < value.length; index++)
+	{
+		const unit = value.charCodeAt(index);
+		if(unit >= 0xd800 && unit <= 0xdbff)
+		{
+			const low = value.charCodeAt(index + 1);
+			if(!(low >= 0xdc00 && low <= 0xdfff)) return false;
+			index++;
+		}
+		else if(unit >= 0xdc00 && unit <= 0xdfff) return false;
+	}
+	return true;
+};
+
+/**
+ * Whether a primitive kind and serialized value form one closed, canonical generic-record index.
+ * The value remains instantiation provenance and never becomes a host field.
+ *
+ * @param name - Binding IR primitive name.
+ * @param value - Serialized value from compiler or reviewed metadata.
+ */
+export const isClosedValueIndex = (name, value) => typeof value === "string" && (
+	(name === "nat" && canonicalNatIndex(value))
+	|| (name === "bool" && (value === "false" || value === "true"))
+	|| (name === "string" && scalarIndexString(value))
+);
 // The scalar-frame component profile compiles Lean for wasm32, even on a 64-bit host.
 export const componentScalarWordBits = 32;
 

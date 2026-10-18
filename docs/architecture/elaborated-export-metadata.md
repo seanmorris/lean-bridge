@@ -21,6 +21,15 @@ container or record still requires an explicit retention or ownership policy.
 The [callable alias regression checks](../evidence/callable-alias-repair-20260921.md)
 cover both compiler profiles and installed Perl specializations.
 
+An alias-named generic record can retain a closed value argument in its
+`provenance.arguments` without exposing that argument as a host field. The
+compiler emits `{kind: "value", type, value}` for canonical `Nat`, `Bool`, and
+`String` indices: unbounded unsigned decimal, `true`/`false`, or exact
+Unicode-scalar text. Reviewed Binding IR must restate both the primitive kind
+and value exactly. Open or opaque values and other index types fail at the Lean
+argument; no adapter infers an index from a host representation. The alias
+continues to supply the public nominal identity and its runtime payload fields.
+
 The extractor also describes concrete user-defined variants.
 Both profiles retain constructor order, names and typed fields; the native
 profile additionally records each qualified constructor and the compiler's C

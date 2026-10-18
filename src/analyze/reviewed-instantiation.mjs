@@ -5,7 +5,7 @@
  *
  * @file
  */
-import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { componentScalarTypes, isClosedValueIndex } from "../abi/component-scalars.mjs";
 
 export const instantiationKey = "lean-lang.org/instantiation";
 const refinementKeys = ["lean-lang.org/nominal-refinements", "lean-lang.org/refinements"];
@@ -61,12 +61,12 @@ export const assertReviewedInstantiation = (definition, value, types) => {
 		return heights.get(target.id);
 	};
 	value.arguments.forEach((argument, index) => {
-		// A value index is provenance only: a closed Nat literal, never a host type.
+		// A value index is closed instantiation provenance, never a host type.
 		if(argument?.kind === "value")
 		{
 			if(!keys(argument, ["kind", "type", "value"]) || !keys(argument.type, ["kind", "name"]) || argument.type.kind !== "primitive"
-				|| argument.type.name !== "nat" || typeof argument.value !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(argument.value))
-				refuse(`${base}.arguments[${index}]`, "a value argument is a closed Nat literal");
+				|| !isClosedValueIndex(argument.type.name, argument.value))
+				refuse(`${base}.arguments[${index}]`, "a value argument is a closed Nat, Bool or String literal");
 			return;
 		}
 		reach(argument, `${base}.arguments[${index}]`, 0, "an instantiation argument cannot reach a Fin bound");

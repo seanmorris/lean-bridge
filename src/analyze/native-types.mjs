@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { componentScalarTypes } from "../abi/component-scalars.mjs";
+import { componentScalarTypes, isClosedValueIndex } from "../abi/component-scalars.mjs";
 import { validateCopiedMetadataGraph } from "./copied-metadata-graph.mjs";
 import { validateOwnedMetadataGraph } from "./owned-metadata-graph.mjs";
 import { validateOwnedAggregatePolicy } from "./owned-aggregate-policy.mjs";
@@ -206,12 +206,12 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			// references in the graph form. Nothing inside an argument is an identity, a callback or a refinement.
 			for(const child of type.provenance.arguments)
 			{
-				// A value index is provenance only: a closed Nat literal, never a host type.
+				// A value index is closed instantiation provenance, never a host type.
 				if(child?.kind === "value")
 				{
 					closed(child, ["kind", "type", "value"], "record value argument");
 					recurse(child.type, true, false, false, false);
-					if(child.type.kind !== "primitive" || child.type.name !== "nat" || typeof child.value !== "string" || !/^(?:0|[1-9][0-9]*)$/.test(child.value)) fail("invalid record value argument");
+					if(child.type.kind !== "primitive" || !isClosedValueIndex(child.type.name, child.value)) fail("invalid record value argument");
 					continue;
 				}
 				recurse(child, true, false, false, false);
