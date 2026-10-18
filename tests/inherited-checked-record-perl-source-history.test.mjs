@@ -31,6 +31,15 @@ import {
 	, reverseInheritedCheckedRecordPerlArchiveUpdate
 } from "./helpers/inherited-checked-record-perl-archive-source-history.mjs";
 import {
+	beforeInheritedCheckedRecordPerlFinalVerifierSource
+	, inheritedCheckedRecordPerlFinalVerifierAddedPaths
+	, inheritedCheckedRecordPerlFinalVerifierChangedPaths
+	, inheritedCheckedRecordPerlFinalVerifierDraftParent
+	, inheritedCheckedRecordPerlFinalVerifierHistoryPath
+	, inheritedCheckedRecordPerlFinalVerifierPredecessor
+	, reverseInheritedCheckedRecordPerlFinalVerifierUpdate
+} from "./helpers/inherited-checked-record-perl-final-verifier-source-history.mjs";
+import {
 	beforeInheritedCheckedRecordPerlSource
 	, inheritedCheckedRecordPerlAddedPaths
 	, inheritedCheckedRecordPerlChangedPaths
@@ -77,6 +86,93 @@ import {
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+});
+
+test("final inherited Perl verifier hardening has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		inheritedCheckedRecordPerlFinalVerifierHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "inherited-checked-record-perl-final-verifier-source-v1");
+	assert.equal(record.predecessorCommit
+		, inheritedCheckedRecordPerlFinalVerifierPredecessor);
+	assert.equal(record.draftParentCommit
+		, inheritedCheckedRecordPerlFinalVerifierDraftParent);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, inheritedCheckedRecordPerlFinalVerifierChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, inheritedCheckedRecordPerlFinalVerifierAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		inheritedCheckedRecordPerlFinalVerifierChangedPaths)));
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeInheritedCheckedRecordPerlFinalVerifierSource
+		);
+		const previous = git(["show"
+			, `${inheritedCheckedRecordPerlFinalVerifierPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseInheritedCheckedRecordPerlFinalVerifierUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(
+			update.path, current, update.currentSha256), current, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits = []; }
+			, item => { item.edits[0].start = -1; }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update); mutate(changed);
+			assert.throws(() =>
+				reverseInheritedCheckedRecordPerlFinalVerifierUpdate(current, changed));
+		}
+	}
+});
+
+test("final inherited Perl verifier history closes additions", async () => {
+	const record = JSON.parse(await readFile(
+		inheritedCheckedRecordPerlFinalVerifierHistoryPath, "utf8"));
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await readFile(addition.path))
+			, addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${inheritedCheckedRecordPerlFinalVerifierPredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("final inherited Perl verifier writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-inherited-record-perl-final-verifier-guard-"
+	));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const environment = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const localGit = args => execFileSync("git", args, {
+		cwd: root, env: environment, stdio: "pipe"
+	});
+	localGit(["init", "--quiet"]);
+	localGit(["-c", "user.name=Test", "-c"
+		, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-inherited-checked-record-perl-final-verifier-source-history.mjs"
+	)], { cwd: root, env: environment, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /must stay on its exact draft parent/u);
+	assert.deepEqual(await readdir(root), [".git"]);
 });
 
 test("inherited Perl archive pins have one exact reversible lineage", async () => {

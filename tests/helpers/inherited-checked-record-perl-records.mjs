@@ -344,7 +344,7 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 				, ["ctime", "mode", "mtime", "path", "sha256"]);
 			assert.ok(Number.isFinite(item.ctime) && item.ctime > 0
 				&& Number.isFinite(item.mtime) && item.mtime > 0);
-			assert.equal(item.mode & 0o170000, 0o100000);
+			assert.equal(item.mode, 0o100644);
 			safePath(item.path);
 			assert.equal(item.sha256, sha256(inputs[item.path]));
 		}

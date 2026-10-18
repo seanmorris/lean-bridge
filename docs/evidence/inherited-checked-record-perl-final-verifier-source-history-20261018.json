@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-perl-final-verifier-source-v1",
+  "predecessorCommit": "57180f8dce69b8be6cd21faeca6a79d2daa14d06",
+  "draftParentCommit": "57180f8dce69b8be6cd21faeca6a79d2daa14d06",
+  "pathsSha256": "f5f16a1a25976fcb52df199d33e4ee81d6788077d60e356fc568494fd2ef9165",
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-perl-final-verifier-source-history.mjs",
+      "currentSha256": "32f2541e735df8fd1914a2fbdef73fca97b7bb330b80978d2d89e8916f320fe6"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-final-verifier-source-history.mjs",
+      "currentSha256": "f02e7f67ba2f2885d750a380ea77610e4da012f3756f506f8652f44a846958d5"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/archive-inherited-checked-record-perl-evidence.mjs",
+      "previousSha256": "a12fb0aef6cc0780f0fa47eebc1bb4a67bb982573fc5d83c4e72ddd59cd349bd",
+      "currentSha256": "6a0048a50d675758178e25f666c93d33d76e7e328e1eea6f77fd851696678e9c",
+      "edits": [
+        {
+          "start": 3701,
+          "previous": "\t, modelControls: mode === \"full\" ? 13 : 12\n",
+          "current": "\t, modelControls: mode === \"full\" ? 14 : 13\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8f3db37d19ef1212012752f5ef1995075352bbb989e08c9fa25030573e7efbd0",
+      "currentSha256": "738b4ed47eb544d1a88e134c7ada9521f99a5de63541869c240bf8980a5dd729",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPerlFinalVerifierSource, inheritedCheckedRecordPerlFinalVerifierChangedPaths } from \"./inherited-checked-record-perl-final-verifier-source-history.mjs\";\n"
+        },
+        {
+          "start": 76404,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPerlFinalVerifierSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 88961,
+          "previous": "\t...inheritedCheckedRecordPerlArchiveChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPerlFinalVerifierChangedPaths\n\t, ...inheritedCheckedRecordPerlArchiveChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-controls.mjs",
+      "previousSha256": "4e157d8a2f07ee26baa0c1e38ea4e5e38456ed166994d1a0f894a4864a20e543",
+      "currentSha256": "ba38d639bcfa161deb32f06d7c8a83f97811a1b6b453fa431ac578b7d9284834",
+      "edits": [
+        {
+          "start": 1602,
+          "previous": "",
+          "current": "\t\t, [\"changed source tree\", model => {\n\t\t\tmodel.sourceIdentity.sourceTreeSha256 = \"0\".repeat(64);\n\t\t}]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-evidence.mjs",
+      "previousSha256": "629080073abf75741ed0f65c46adc14bd49c385aa921806ad12916469f798ba1",
+      "currentSha256": "ec090112c9f67a731e557d1c32229ff9a48177a6c5af2632fe46c95d08f32738",
+      "edits": [
+        {
+          "start": 1507,
+          "previous": "const expectedControls = (records, mode) => ({\n",
+          "current": "/* The immutable archive records the controls replayed by its archiver. */\nconst archivedControls = (records, mode) => ({\n"
+        },
+        {
+          "start": 1796,
+          "previous": "",
+          "current": "/* Current verification adds independent source-tree identity coverage. */\nconst currentControls = (records, mode) => ({\n\t...archivedControls(records, mode)\n\t, modelControls: mode === \"full\" ? 14 : 13\n});\n"
+        },
+        {
+          "start": 8797,
+          "previous": "\t\t\tconst controlCounts = expectedControls(\n",
+          "current": "\t\t\tconst controlCounts = archivedControls(\n"
+        },
+        {
+          "start": 9266,
+          "previous": "\t\t\t\t\t[key, replay[key]])), controlCounts);\n",
+          "current": "\t\t\t\t\t[key, replay[key]]\n\t\t\t\t)), currentControls(\n\t\t\t\t\tchecked.records.length, run.mode\n\t\t\t\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-records.mjs",
+      "previousSha256": "6cec80a7851729c6d27beeeb74db65a28ff28adadbddeb4bcfa9cc88dc653a71",
+      "currentSha256": "de8b909044fc0b90c81ace85ed75e282f2e6f4f96b1743e30a098d2804269ece",
+      "edits": [
+        {
+          "start": 14602,
+          "previous": "\t\t\tassert.equal(item.mode & 0o170000, 0o100000);\n",
+          "current": "\t\t\tassert.equal(item.mode, 0o100644);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "previousSha256": "9f652990756f94b165b1ae98878de0b43d591c43e8dafc6826070a61e3d31e01",
+      "currentSha256": "327c3ff5de56d70fa519fbd8c23be5c381d0c7e9d0c3ebb053095d4471a0e7f3",
+      "edits": [
+        {
+          "start": 1434,
+          "previous": "",
+          "current": "\tbeforeInheritedCheckedRecordPerlFinalVerifierSource\n\t, inheritedCheckedRecordPerlFinalVerifierAddedPaths\n\t, inheritedCheckedRecordPerlFinalVerifierChangedPaths\n\t, inheritedCheckedRecordPerlFinalVerifierDraftParent\n\t, inheritedCheckedRecordPerlFinalVerifierHistoryPath\n\t, inheritedCheckedRecordPerlFinalVerifierPredecessor\n\t, reverseInheritedCheckedRecordPerlFinalVerifierUpdate\n} from \"./helpers/inherited-checked-record-perl-final-verifier-source-history.mjs\";\nimport {\n"
+        },
+        {
+          "start": 3930,
+          "previous": "",
+          "current": "});\n\ntest(\"final inherited Perl verifier hardening has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlFinalVerifierHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-perl-final-verifier-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordPerlFinalVerifierPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, inheritedCheckedRecordPerlFinalVerifierDraftParent);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordPerlFinalVerifierChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordPerlFinalVerifierAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordPerlFinalVerifierChangedPaths)));\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPerlFinalVerifierSource\n\t\t);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${inheritedCheckedRecordPerlFinalVerifierPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordPerlFinalVerifierUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordPerlFinalVerifierSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() =>\n\t\t\t\treverseInheritedCheckedRecordPerlFinalVerifierUpdate(current, changed));\n\t\t}\n\t}\n});\n\ntest(\"final inherited Perl verifier history closes additions\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPerlFinalVerifierHistoryPath, \"utf8\"));\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordPerlFinalVerifierPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"final inherited Perl verifier writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-inherited-record-perl-final-verifier-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-perl-final-verifier-source-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n"
+        }
+      ]
+    }
+  ]
+}

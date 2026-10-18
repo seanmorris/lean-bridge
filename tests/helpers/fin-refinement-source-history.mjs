@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeInheritedCheckedRecordPerlFinalVerifierSource, inheritedCheckedRecordPerlFinalVerifierChangedPaths } from "./inherited-checked-record-perl-final-verifier-source-history.mjs";
 import { beforeInheritedCheckedRecordPerlArchiveSource, inheritedCheckedRecordPerlArchiveChangedPaths } from "./inherited-checked-record-perl-archive-source-history.mjs";
 import { beforePrimitiveAuditCoreRepairSource, primitiveAuditCoreRepairChangedPaths } from "./primitive-audit-core-repair-source-history.mjs";
 import { beforePrimitiveAuditIntegrationSource, primitiveAuditIntegrationChangedPaths } from "./primitive-audit-integration-source-history.mjs";
@@ -952,6 +953,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeInheritedCheckedRecordPerlFinalVerifierSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeInheritedCheckedRecordPerlArchiveSource(
 		path, source, expected
 	);
@@ -1189,7 +1194,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...inheritedCheckedRecordPerlArchiveChangedPaths
+	...inheritedCheckedRecordPerlFinalVerifierChangedPaths
+	, ...inheritedCheckedRecordPerlArchiveChangedPaths
 	, ...inheritedCheckedRecordPerlVerifierChangedPaths
 	, ...primitiveAuditCoreRepairChangedPaths
 	, ...primitiveAuditIntegrationChangedPaths

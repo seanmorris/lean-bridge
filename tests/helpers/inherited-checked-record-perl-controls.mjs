@@ -48,6 +48,9 @@ export const inheritedCheckedRecordPerlModelMutations = mode => {
 		, ["changed source notices", model => {
 			model.sourceIdentity.sourceNoticesSha256 = "0".repeat(64);
 		}]
+		, ["changed source tree", model => {
+			model.sourceIdentity.sourceTreeSha256 = "0".repeat(64);
+		}]
 		, ["invented lake dependency", model => {
 			model.sourceIdentity.lakeDependencies = [];
 		}]

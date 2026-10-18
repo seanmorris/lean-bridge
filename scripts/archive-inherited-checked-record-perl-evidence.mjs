@@ -96,7 +96,7 @@ const controlKeys = [
 ];
 const expectedControls = (records, mode) => ({
 	recordControls: records * 2, resourceControls: 7, interpreterControls: 4
-	, modelControls: mode === "full" ? 13 : 12
+	, modelControls: mode === "full" ? 14 : 13
 	, executionControls: 12, packageControls: 4
 });
 let runtime, interpreters;

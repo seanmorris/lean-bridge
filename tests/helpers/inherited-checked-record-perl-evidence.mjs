@@ -38,10 +38,16 @@ const controlKeys = [
 	"recordControls", "resourceControls", "interpreterControls"
 	, "modelControls", "executionControls", "packageControls"
 ];
-const expectedControls = (records, mode) => ({
+/* The immutable archive records the controls replayed by its archiver. */
+const archivedControls = (records, mode) => ({
 	recordControls: records * 2, resourceControls: 7, interpreterControls: 4
 	, modelControls: mode === "full" ? 13 : 12
 	, executionControls: 12, packageControls: 4
+});
+/* Current verification adds independent source-tree identity coverage. */
+const currentControls = (records, mode) => ({
+	...archivedControls(records, mode)
+	, modelControls: mode === "full" ? 14 : 13
 });
 const safePath = path => typeof path === "string" && path.length > 0
 	&& !path.startsWith("/") && !path.includes("\\")
@@ -207,7 +213,7 @@ export const checkInheritedCheckedRecordPerlEvidence = async (
 			assert.equal(verification.toString(), canonicalJson(checked));
 			assert.equal(run.verificationSha256, sha256(verification));
 			const controlsPath = `${label}/controls.json`;
-			const controlCounts = expectedControls(
+			const controlCounts = archivedControls(
 				checked.records.length, run.mode
 			);
 			assert.deepEqual(run.controls, controlCounts);
@@ -219,7 +225,10 @@ export const checkInheritedCheckedRecordPerlEvidence = async (
 					originalRead, checkerOptions
 				);
 				assert.deepEqual(Object.fromEntries(controlKeys.map(key =>
-					[key, replay[key]])), controlCounts);
+					[key, replay[key]]
+				)), currentControls(
+					checked.records.length, run.mode
+				));
 				}
 			const diskPaths = [...records.keys()].sort();
 			assert.deepEqual(diskPaths, [...checked.records, ...checked.handoff]
