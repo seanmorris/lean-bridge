@@ -5,8 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import { isAbsolute, join } from "node:path";
+import { isAbsolute } from "node:path";
 import {
 	reviewedContractDifference, reviewedSourceSelection
 } from "../../src/analyze/reviewed-source.mjs";
@@ -14,9 +13,7 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { assertCheckedRecordPerlIdentity } from "./checked-record-perl-install.mjs";
-import {
-	inheritedCheckedRecordFixture, inheritedCheckedRecordModule
-} from "./inherited-checked-record-fixture.mjs";
+import { inheritedCheckedRecordModule } from "./inherited-checked-record-fixture.mjs";
 import {
 	inheritedCheckedRecordPerlCaller
 	, inheritedCheckedRecordPerlCallerArgs
@@ -148,9 +145,9 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 			&& item.executable.bytes > 0);
 		digest(item.executable.sha256);
 	}
-	const source = await readFile(join(
-		inheritedCheckedRecordFixture, `${inheritedCheckedRecordModule}.lean`
-	), "utf8");
+	const source = Buffer.from(await read(
+		`build-0/${inheritedCheckedRecordModule}.lean`
+	)).toString();
 	let receipt;
 	for(const attempt of [0, 1])
 	{
