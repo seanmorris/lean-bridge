@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeInheritedCheckedRecordFoundationVerifierSource, inheritedCheckedRecordFoundationVerifierChangedPaths, inheritedCheckedRecordFoundationVerifierHistoricalPaths } from "./inherited-checked-record-foundation-verifier-source-history.mjs";
 import { beforePerlRecursiveConversionOutputSource, perlRecursiveConversionOutputChangedPaths } from "./perl-recursive-conversion-output-source-history.mjs";
 import { beforeMutualCheckedRecordNativeReviewSource, mutualCheckedRecordNativeReviewChangedPaths } from "./mutual-checked-record-native-review-source-history.mjs";
 import { beforeMutualCheckedRecordNativeHardeningSource, mutualCheckedRecordNativeHardeningChangedPaths } from "./mutual-checked-record-native-hardening-source-history.mjs";
@@ -958,6 +959,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeInheritedCheckedRecordFoundationVerifierSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforePerlRecursiveConversionOutputSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeMutualCheckedRecordNativeReviewSource(path, source, expected);
@@ -1211,7 +1216,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlRecursiveConversionOutputChangedPaths
+	...inheritedCheckedRecordFoundationVerifierChangedPaths
+	, ...inheritedCheckedRecordFoundationVerifierHistoricalPaths
+	, ...perlRecursiveConversionOutputChangedPaths
 	, ...mutualCheckedRecordNativeReviewChangedPaths
 	, ...mutualCheckedRecordNativeHardeningChangedPaths
 	, ...inheritedCheckedRecordDocsClosureChangedPaths

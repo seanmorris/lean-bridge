@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-foundation-verifier-source-v1",
+  "predecessorCommit": "0aaee40052296392a4940211243363cdb58fd247",
+  "draftParentCommit": "0aaee40052296392a4940211243363cdb58fd247",
+  "pathsSha256": "2d761415f208c69439201c1eedc94aa2f1d4e04baa83312f4116ddd42da09b5e",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "historicalTransitions": [
+    {
+      "commit": "71de763ae897c4e06d583eeddd649b9d5f791808",
+      "predecessorCommit": "5ee0e447a39da3ebd67a7591912b31b5c9f2b9a1",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "0b19737f8423bf5c5f31e948a0737860664d7de01275c78cfffa49deb383a632",
+          "currentSha256": "ce9e91ba228e0086e51fbf95dc202a7611df9f79d03e780be41d59ae225f58a4",
+          "edits": [
+            {
+              "start": 612,
+              "previous": "import \"./helpers/inherited-checked-record-php-wasm-tests.mjs\";\n",
+              "current": "import \"./helpers/inherited-checked-record-php-wasm-lane-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "5ee0e447a39da3ebd67a7591912b31b5c9f2b9a1",
+      "predecessorCommit": "1c8145c4a9f8295a2fef1f9afb5f8a5b14409b74",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "73618b02213707286d23ef9c2df642f15299d9e03c5eaf994ef9d54d05a0fe51",
+          "currentSha256": "0b19737f8423bf5c5f31e948a0737860664d7de01275c78cfffa49deb383a632",
+          "edits": [
+            {
+              "start": 612,
+              "previous": "",
+              "current": "import \"./helpers/inherited-checked-record-php-wasm-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "2870c7136cb659003d8920701c9e6d8afa48de69",
+      "predecessorCommit": "f974e1d060cd2096ec863414680ca86e1d5d90c1",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "78323276ea3a7e13c6b8b8859ac825e51aa6da6dfef1eb7fe7291bd19f156fe2",
+          "currentSha256": "73618b02213707286d23ef9c2df642f15299d9e03c5eaf994ef9d54d05a0fe51",
+          "edits": [
+            {
+              "start": 612,
+              "previous": "",
+              "current": "import \"./helpers/inherited-checked-record-rust-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "833b9015bc85478eb0ca733b7c560ca14bf21f65",
+      "predecessorCommit": "53f32a2c3b98388cfcd836838c3ed644a412131a",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "92b88f449d6e1ac7e774f817402283f392166162c28227eb9455601920ec058b",
+          "currentSha256": "78323276ea3a7e13c6b8b8859ac825e51aa6da6dfef1eb7fe7291bd19f156fe2",
+          "edits": [
+            {
+              "start": 612,
+              "previous": "",
+              "current": "import \"./helpers/inherited-checked-record-wit-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "531cce06292aa090022d6a186abf30b719074a7c",
+      "predecessorCommit": "d4c8216147f23de24e6129255f5c288b07189253",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "27d146fd9a80712b658924a135b71718def5929ac92accca8ef5228f733a0cf8",
+          "currentSha256": "92b88f449d6e1ac7e774f817402283f392166162c28227eb9455601920ec058b",
+          "edits": [
+            {
+              "start": 392,
+              "previous": "",
+              "current": "import \"./helpers/inherited-checked-record-browser-evidence-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "commit": "725d2e48e71d6d9454b9d257b4204b95bdf1e622",
+      "predecessorCommit": "ed30582187c8984997d1f1f79f6a5255c49bcb35",
+      "updates": [
+        {
+          "path": "tests/inherited-checked-records.test.mjs",
+          "previousSha256": "25227f243644616e92a0a4dea5166841bf1abf7f4a26d0586c4797db1691fd52",
+          "currentSha256": "27d146fd9a80712b658924a135b71718def5929ac92accca8ef5228f733a0cf8",
+          "edits": [
+            {
+              "start": 392,
+              "previous": "",
+              "current": "import \"./helpers/inherited-checked-record-browser-ci-policy-tests.mjs\";\nimport \"./helpers/inherited-checked-record-browser-ci-workflow-tests.mjs\";\n"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-foundation-verifier-history.mjs",
+      "currentSha256": "7bc0e6c8666d876e0babca9c734ca7addb8c9983dd311bc92e9d5b33f4c56c99"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-foundation-verifier-source-history.mjs",
+      "currentSha256": "961cef6695c4de117aa99dc4f137a97dc9bb425abd69265389a2363716eb78c0"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "489f9ecd401f01b3b47699535b767e70e33ed5ba39e4f88e1c0b91af0f6a7053",
+      "currentSha256": "77e10b6be7ad777e8b8553ea5937fe8a147a037293737704d335b70ef61ed4ef",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordFoundationVerifierSource, inheritedCheckedRecordFoundationVerifierChangedPaths, inheritedCheckedRecordFoundationVerifierHistoricalPaths } from \"./inherited-checked-record-foundation-verifier-source-history.mjs\";\n"
+        },
+        {
+          "start": 77485,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordFoundationVerifierSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 90826,
+          "previous": "\t...perlRecursiveConversionOutputChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordFoundationVerifierChangedPaths\n\t, ...inheritedCheckedRecordFoundationVerifierHistoricalPaths\n\t, ...perlRecursiveConversionOutputChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-foundation-history-tests.mjs",
+      "previousSha256": "982d902f6a4bfd63b0525ae8d6c2269e59795bb2834c65071eb8cdca288c3d6d",
+      "currentSha256": "1b809361f0d28a7e51286c79c94aaac8f790004cd4a47b60fa646277830d08bf",
+      "edits": [
+        {
+          "start": 954,
+          "previous": "",
+          "current": "import {\n\tbeforeInheritedCheckedRecordFoundationVerifierSource\n\t, inheritedCheckedRecordFoundationVerifierAddedPaths\n\t, inheritedCheckedRecordFoundationVerifierChangedPaths\n\t, inheritedCheckedRecordFoundationVerifierHistoricalCommits\n\t, inheritedCheckedRecordFoundationVerifierHistoricalPaths\n\t, inheritedCheckedRecordFoundationVerifierHistoryPath\n\t, inheritedCheckedRecordFoundationVerifierPredecessor\n\t, reverseInheritedCheckedRecordFoundationVerifierUpdate\n} from \"./inherited-checked-record-foundation-verifier-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2557,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordFoundationSource\n\t\t);\n"
+        },
+        {
+          "start": 4484,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t))\n"
+        },
+        {
+          "start": 4632,
+          "previous": "\tconst currentInventory = JSON.parse(await readFile(\"docs/type-surface.v1.json\"));\n",
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventoryUpdate);\n\tconst currentInventory = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventoryUpdate.path, inventoryUpdate.currentSha256\n\t\t, beforeInheritedCheckedRecordFoundationSource\n\t));\n"
+        },
+        {
+          "start": 5130,
+          "previous": "",
+          "current": "test(\"foundation verifier repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordFoundationVerifierHistoryPath, \"utf8\"\n\t));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-foundation-verifier-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordFoundationVerifierPredecessor);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordFoundationVerifierChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordFoundationVerifierAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordFoundationVerifierChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tassert.deepEqual(record.historicalTransitions.map(transition =>\n\t\ttransition.commit\n\t), inheritedCheckedRecordFoundationVerifierHistoricalCommits);\n\tassert.deepEqual([...new Set(record.historicalTransitions.flatMap(\n\t\ttransition => transition.updates.map(update => update.path)\n\t))], inheritedCheckedRecordFoundationVerifierHistoricalPaths);\n\tconst original = path => execFileSync(\"git\", [\"show\"\n\t\t, `${inheritedCheckedRecordFoundationVerifierPredecessor}:${path}`]\n\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordFoundationVerifierSource\n\t\t);\n\t\tconst previous = original(update.path);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordFoundationVerifierUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordFoundationVerifierSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordFoundationVerifierSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordFoundationVerifierSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update);\n\t\t\tmutate(changed);\n\t\t\tassert.throws(() => {\n\t\t\t\treverseInheritedCheckedRecordFoundationVerifierUpdate(\n\t\t\t\t\tcurrent, changed\n\t\t\t\t);\n\t\t\t});\n\t\t}\n\t}\n\tfor(const transition of record.historicalTransitions)\n\t{\n\t\tassert.equal(execFileSync(\"git\", [\"rev-parse\"\n\t\t\t, `${transition.commit}^`], { encoding: \"utf8\" }).trim()\n\t\t\t, transition.predecessorCommit);\n\t\tfor(const update of transition.updates)\n\t\t{\n\t\t\tconst current = execFileSync(\"git\", [\"show\"\n\t\t\t\t, `${transition.commit}:${update.path}`], { encoding: \"utf8\" });\n\t\t\tconst previous = execFileSync(\"git\", [\"show\"\n\t\t\t\t, `${transition.predecessorCommit}:${update.path}`]\n\t\t\t, { encoding: \"utf8\" });\n\t\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\t\tassert.equal(reverseInheritedCheckedRecordFoundationVerifierUpdate(\n\t\t\t\tcurrent, update), previous, update.path);\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordFoundationVerifierPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\n"
+        },
+        {
+          "start": 9863,
+          "previous": "",
+          "current": "\tassert.deepEqual(await readdir(root), [\".git\"]);\n});\n\ntest(\"foundation verifier history writer refuses an unrelated checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-foundation-verifier-history-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst env = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst git = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env, stdio: \"pipe\"\n\t});\n\tgit([\"init\", \"--quiet\"]);\n\tgit([\"-c\", \"user.name=Test\", \"-c\", \"user.email=test@example.invalid\"\n\t\t, \"-c\", \"commit.gpgsign=false\", \"commit\", \"--allow-empty\", \"--quiet\"\n\t\t, \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-foundation-verifier-history.mjs\"\n\t)], { cwd: root, env, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /exact draft parent/u);\n"
+        }
+      ]
+    }
+  ]
+}
