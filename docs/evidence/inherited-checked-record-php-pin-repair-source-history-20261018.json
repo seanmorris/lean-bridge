@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-php-pin-repair-source-v1",
+  "predecessorCommit": "de9d1316c340a39de8d608475689526b176d9df5",
+  "draftParentCommit": "de9d1316c340a39de8d608475689526b176d9df5",
+  "pathsSha256": "19c191693a4946b851193210910dc2606b3ed4ff08758dae5ce19310caf9daf8",
+  "pinCount": 152,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+      "currentSha256": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+      "count": 94
+    },
+    {
+      "path": "src/backends/php/copied-model.mjs",
+      "previousSha256": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6",
+      "currentSha256": "eed0dc2bd9d087c487196b32da297ca4e40eb1b9af779800384556272709b7fb",
+      "count": 20
+    },
+    {
+      "path": "src/backends/php/copied-values.mjs",
+      "previousSha256": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d",
+      "currentSha256": "9c2b0120141797def8a295a630de4468f7623c9eae37f4d224dcad7a53d152ce",
+      "count": 19
+    },
+    {
+      "path": "src/backends/php/copied-zend.mjs",
+      "previousSha256": "3a4919ac406a0365868a90f6c44ad16460a79666995e507e76d00d68861d4599",
+      "currentSha256": "1296d8fc02dd00091eaaa2de467fb647b0ec59c8e6614dc3fd1fda089ecfd62e",
+      "count": 16
+    },
+    {
+      "path": "tests/native-php.test.mjs",
+      "previousSha256": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36",
+      "currentSha256": "b8ae940ea7c75b363ed7d35ef4a6f662bb9febadea90f330ea1821c9091102db",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-php-pin-repair-source-history.mjs",
+      "currentSha256": "461c799d1e31a05ec12fdebb9e899468817a6193c74eb372a8ebdab13f9955de"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-pin-repair-source-history.mjs",
+      "currentSha256": "b146115dff81b9fdb04e09ce6b6eec8e1c9b27ef46c9c2529284a7f91f46e006"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "02a33fc91f547d1c46b54ce2f77ad6fdf47a86a3abc31deae07c61940aafb6af",
+      "currentSha256": "dfeb9e60830cd43315f0177b395e8a995b8d718da7057a34dc392b9ea79857e5",
+      "replacements": [
+        {
+          "previous": "0af21710b4dc282aed01dc2bfa78155fd203301e56cc8f26b8435734e7bb2265",
+          "current": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+          "count": 94
+        },
+        {
+          "previous": "92250b77404eb0ae0c620bbc11a5d8ce7cbbf3df313d7fdccad8d93a2edffdf6",
+          "current": "eed0dc2bd9d087c487196b32da297ca4e40eb1b9af779800384556272709b7fb",
+          "count": 20
+        },
+        {
+          "previous": "eb62ac337326372d41b184c1628d3a1bc63d3f968bc429a5e6142d74f1b9bb7d",
+          "current": "9c2b0120141797def8a295a630de4468f7623c9eae37f4d224dcad7a53d152ce",
+          "count": 19
+        },
+        {
+          "previous": "3a4919ac406a0365868a90f6c44ad16460a79666995e507e76d00d68861d4599",
+          "current": "1296d8fc02dd00091eaaa2de467fb647b0ec59c8e6614dc3fd1fda089ecfd62e",
+          "count": 16
+        },
+        {
+          "previous": "bcedaccafb6fd72701933d251a529dcbf96c2b3d67aa1dd1aa20a3ffa92eed36",
+          "current": "b8ae940ea7c75b363ed7d35ef4a6f662bb9febadea90f330ea1821c9091102db",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a95168f839f1e05ec37d299aa1716ff723f38f72b8a3260bb89842a2300f0a35",
+      "currentSha256": "2dc10f8a40bd71ff978b09df6c6a97c918654d13f09437116cd476cf0c95fc0d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPhpPinRepairSource, inheritedCheckedRecordPhpPinRepairChangedPaths } from \"./inherited-checked-record-php-pin-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 74219,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPhpPinRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84565,
+          "previous": "\t...inheritedCheckedRecordPhpChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPhpPinRepairChangedPaths\n\t, ...inheritedCheckedRecordPhpChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-php-source-history.test.mjs",
+      "previousSha256": "c05e95e93a12e9d83b8af4e1962592231f8ec7a3e75efc4fa6fc3f77c49456e6",
+      "currentSha256": "1df484caf3c44a520368313b33137c376b5e6eca033d78cbd674279f4f9f76d1",
+      "edits": [
+        {
+          "start": 920,
+          "previous": "",
+          "current": "import {\n\tbeforeInheritedCheckedRecordPhpPinRepairSource\n\t, inheritedCheckedRecordPhpPinRepairAddedPaths\n\t, inheritedCheckedRecordPhpPinRepairChangedPaths\n\t, inheritedCheckedRecordPhpPinRepairDraftParent\n\t, inheritedCheckedRecordPhpPinRepairHistoryPath\n\t, inheritedCheckedRecordPhpPinRepairPins\n\t, inheritedCheckedRecordPhpPinRepairPredecessor\n\t, reverseInheritedCheckedRecordPhpPinRepairUpdate\n} from \"./helpers/inherited-checked-record-php-pin-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 5136,
+          "previous": "",
+          "current": "});\n\ntest(\"inherited native PHP pin repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPhpPinRepairHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"inherited-checked-record-php-pin-repair-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, inheritedCheckedRecordPhpPinRepairPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, inheritedCheckedRecordPhpPinRepairDraftParent);\n\tassert.equal(inheritedCheckedRecordPhpPinRepairPredecessor\n\t\t, inheritedCheckedRecordPhpPinRepairDraftParent);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, inheritedCheckedRecordPhpPinRepairChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, inheritedCheckedRecordPhpPinRepairAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tinheritedCheckedRecordPhpPinRepairChangedPaths)));\n\tconst pinCount = inheritedCheckedRecordPhpPinRepairPins.reduce(\n\t\t(total, pin) => total + pin.count, 0\n\t);\n\tassert.equal(record.pinCount, pinCount);\n\tassert.deepEqual(record.pinUpdates\n\t\t, inheritedCheckedRecordPhpPinRepairPins);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPhpPinRepairSource\n\t\t);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${inheritedCheckedRecordPhpPinRepairPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reverseInheritedCheckedRecordPhpPinRepairUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPhpPinRepairSource(\n\t\t\tupdate.path, current), previous, update.path);\n\t\tassert.equal(beforeInheritedCheckedRecordPhpPinRepairSource(\n\t\t\tupdate.path, current, update.currentSha256), current, update.path);\n\t\tassert.equal(beforeFinRefinementSource(\n\t\t\tupdate.path, current, update.previousSha256), previous, update.path);\n\t\tconst unknown = current + \"unknown\";\n\t\tassert.equal(beforeInheritedCheckedRecordPhpPinRepairSource(\n\t\t\tupdate.path, unknown), unknown, update.path);\n\t\tconst mutations = [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t];\n\t\tif(update.replacements)\n\t\t\tmutations.push(\n\t\t\t\titem => { item.replacements = []; }\n\t\t\t\t, item => { item.replacements[0].count = 0; }\n\t\t\t\t, item => { item.replacements[0].current += \"unknown\"; }\n\t\t\t);\n\t\telse mutations.push(\n\t\t\titem => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t);\n\t\tfor(const mutate of mutations)\n\t\t{\n\t\t\tconst changed = structuredClone(update); mutate(changed);\n\t\t\tassert.throws(() => reverseInheritedCheckedRecordPhpPinRepairUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n});\n\ntest(\"inherited native PHP pin repair closes additions and all repaired pins\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tinheritedCheckedRecordPhpPinRepairHistoryPath, \"utf8\"));\n\tfor(const addition of record.additions)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t\t, beforeInheritedCheckedRecordPhpPinRepairSource\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${inheritedCheckedRecordPhpPinRepairPredecessor}:${addition.path}`]\n\t\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n\tconst inventory = JSON.parse(await readFile(\n\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n\tconst paths = new Set(inheritedCheckedRecordPhpPinRepairPins.map(\n\t\tpin => pin.path\n\t));\n\tconst pins = inventory.evidence.flatMap(evidence => evidence.files)\n\t\t.filter(file => paths.has(file.path));\n\tassert.equal(pins.length, record.pinCount);\n\tfor(const expected of inheritedCheckedRecordPhpPinRepairPins)\n\t{\n\t\tconst matches = pins.filter(file => file.path === expected.path);\n\t\tassert.equal(matches.length, expected.count, expected.path);\n\t\tassert.ok(matches.every(file => file.sha256\n\t\t\t=== expected.currentSha256), expected.path);\n\t}\n\tassert.equal(classifyRepositoryTest(\n\t\t\"tests/inherited-checked-record-php-source-history.test.mjs\"\n\t), \"contract\");\n});\n\ntest(\"inherited native PHP pin-repair writer refuses another checkout\", async t => {\n\tconst root = await mkdtemp(join(\n\t\ttmpdir(), \"lean-bridge-inherited-record-php-pin-repair-guard-\"\n\t));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\tconst localGit = args => execFileSync(\"git\", args, {\n\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t});\n\tlocalGit([\"init\", \"--quiet\"]);\n\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\"scripts/update-inherited-checked-record-php-pin-repair-source-history.mjs\"\n\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\tassert.equal(result.status, 1);\n\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\tassert.deepEqual(await readdir(root), [\".git\"]);\n"
+        }
+      ]
+    }
+  ]
+}
