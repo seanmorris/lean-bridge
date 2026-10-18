@@ -31,6 +31,16 @@ import {
 	, inheritedCheckedRecordPerlInstallModes
 } from "./inherited-checked-record-perl-install.mjs";
 
+/**
+ * Match JSON::PP's canonical, compact line-oriented output. Repository JSON
+ * records use the pretty canonicalJson encoding, but the independent Perl
+ * caller deliberately emits one compact object per invocation.
+ *
+ * @param value - Parsed caller result.
+ */
+export const inheritedCheckedRecordPerlStdout = value =>
+	JSON.stringify(JSON.parse(canonicalJson(value))) + "\n";
+
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const safePath = path => assert.ok(
 	/^(?:[A-Za-z0-9_.:-]+\/)*[A-Za-z0-9_.:-]+$/u.test(path)
@@ -303,8 +313,10 @@ export const assertInheritedCheckedRecordPerlRecords = async ({
 		const repeated = await json(prefix + "relocated.json");
 		assert.deepEqual(first, inheritedCheckedRecordPerlCounts[mode]);
 		assert.deepEqual(repeated, first);
-		assert.equal(installedProcess.stdout, canonicalJson(first));
-		assert.equal(relocatedProcess.stdout, canonicalJson(first));
+		assert.equal(installedProcess.stdout
+			, inheritedCheckedRecordPerlStdout(first));
+		assert.equal(relocatedProcess.stdout
+			, inheritedCheckedRecordPerlStdout(first));
 		assert.equal(item.resultSha256, sha256(canonicalJson(first)));
 		assert.deepEqual(item.traces.map(trace => trace.role)
 			, ["runtime", "component"]);

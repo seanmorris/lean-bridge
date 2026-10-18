@@ -13,6 +13,9 @@ import {
 	, inheritedCheckedRecordPerlRecordPaths
 	, parseInheritedCheckedRecordPerlCiArgs
 } from "./inherited-checked-record-perl-ci-report.mjs";
+import {
+	inheritedCheckedRecordPerlStdout
+} from "./inherited-checked-record-perl-records.mjs";
 
 const tap = (route, mode) => {
 	const title = inheritedCheckedRecordPerlCiTestName(route, mode);
@@ -26,6 +29,9 @@ const args = (route = "ordinary", mode = "full") => [
 ];
 
 test("inherited checked-record Perl CI closes all four selections and records", () => {
+	assert.equal(inheritedCheckedRecordPerlStdout({
+		z: [2, { z: 1, a: 0 }], a: 1
+	}), '{"a":1,"z":[2,{"a":0,"z":1}]}\n');
 	assert.deepEqual(inheritedCheckedRecordPerlCases, [
 		"ordinary-full", "ordinary-result-only"
 		, "reviewed-full", "reviewed-result-only"
