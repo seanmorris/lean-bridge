@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "milestone": "value-index-browser-lint-source-v1",
+  "predecessorCommit": "ec16ecae358d71f83a66ffd59c570a2264d30202",
+  "draftParentCommit": "518ec61d10d6cac3fa9ecb7a9a7bd9b3c9ac5cc5",
+  "pathsSha256": "0ac366ce60a404046894ce94c9bffd03898239632de176df864d841211f20f23",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64",
+      "currentSha256": "32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-value-index-browser-lint-source-history.mjs",
+      "currentSha256": "d35ab865643ddf33f43c2375bfbdcd1aee5123689332829cc7f3b3419bee9812"
+    },
+    {
+      "path": "tests/helpers/value-index-browser-lint-source-history.mjs",
+      "currentSha256": "8169dbae93e5239c6e8dc2d3d88b9138eb6ba8425315687b88652b1aa35d8d85"
+    },
+    {
+      "path": "tests/helpers/value-index-browser-lint-source-history-tests.mjs",
+      "currentSha256": "6e9cad194977306de2242f5bac1b5e69690eda54d2b181dbf35eac42675f2c2e"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a4a3b47c9bd1680b816cced2c1ad89668c13e828d4990ef6dd5bd962dafa180b",
+      "currentSha256": "c9d205db306ba929ec13c0459a5abe2fe333846d12468d9794981117a40ca4a1",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n",
+          "current": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n",
+          "current": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n",
+          "current": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64",
+      "currentSha256": "32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2",
+      "edits": [
+        {
+          "start": 4478,
+          "previous": "",
+          "current": "import \"./helpers/value-index-browser-lint-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-browser/full.mts",
+      "previousSha256": "4eac77f6e43ec9de32f903de6bded28ee01045f94f52a2bfc81006324462edb5",
+      "currentSha256": "530b2d4c1df652d3e3ce2eb90a1ed5dddaeb6d68f54bd47137c4ceb3a0b8cf1d",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Strict payload-only types for every admitted closed value-index kind. */\n",
+          "current": "/**\n * Strict payload-only types for every admitted closed value-index kind.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-browser/result-only.mts",
+      "previousSha256": "98eef5214dff6ff30ea2466905adad63a255a92975c14faf1e08a97ec94fa257",
+      "currentSha256": "48ea36b9567f2b5fef6fc684c04f0dd747593034d8c21dde173a48c0e30ef72b",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Strict result-only package: proof-free records are produced without checked inputs. */\n",
+          "current": "/**\n * Strict result-only package: proof-free records are produced without checked inputs.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "8165152bd4ef5a8dff28ff3fce1a3a564067907aeaaff3dea34813d2314cea85",
+      "currentSha256": "81f3e0bdbedfda4c181dc9d8a9f1e0ea6e89b33a25e4b960b18f4a0b7579f86c",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeValueIndexBrowserLintSource, valueIndexBrowserLintChangedPaths } from \"./value-index-browser-lint-source-history.mjs\";\n"
+        },
+        {
+          "start": 79461,
+          "previous": "",
+          "current": "\tsource = beforeValueIndexBrowserLintSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 94690,
+          "previous": "\t...valueIndexCoreLineageRepairChangedPaths\n",
+          "current": "\t...valueIndexBrowserLintChangedPaths\n\t, ...valueIndexCoreLineageRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

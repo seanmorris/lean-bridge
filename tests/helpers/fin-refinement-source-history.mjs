@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeValueIndexBrowserLintSource, valueIndexBrowserLintChangedPaths } from "./value-index-browser-lint-source-history.mjs";
 import { beforeValueIndexCoreLineageRepairSource, valueIndexCoreLineageRepairChangedPaths, valueIndexCoreLineageRepairHistoricalPaths } from "./value-index-core-lineage-repair-source-history.mjs";
 import { beforeCoreQualityShardingSource, coreQualityShardingChangedPaths } from "./core-quality-sharding-source-history.mjs";
 import { beforeCheckedRecordValueIndexFoundationSource, checkedRecordValueIndexFoundationChangedPaths } from "./checked-record-value-index-foundation-source-history.mjs";
@@ -970,6 +971,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeValueIndexBrowserLintSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeValueIndexCoreLineageRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCoreQualityShardingSource(path, source, expected);
@@ -1267,7 +1270,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexCoreLineageRepairChangedPaths
+	...valueIndexBrowserLintChangedPaths
+	, ...valueIndexCoreLineageRepairChangedPaths
 	, ...valueIndexCoreLineageRepairHistoricalPaths
 	, ...coreQualityShardingChangedPaths
 	, ...checkedRecordValueIndexFoundationChangedPaths
