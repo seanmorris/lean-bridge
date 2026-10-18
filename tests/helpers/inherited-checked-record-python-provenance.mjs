@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordPythonEvidence
 	= "docs/evidence/inherited-checked-record-python-20261017";
-export const inheritedCheckedRecordPythonProducer = null;
-export const inheritedCheckedRecordPythonChecker = null;
-export const inheritedCheckedRecordPythonArchiver = null;
+export const inheritedCheckedRecordPythonProducer
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordPythonChecker
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordPythonArchiver
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
 export const inheritedCheckedRecordPythonEvidenceLoadCeiling = 6;
 export const inheritedCheckedRecordPythonEvidenceFloor = "2.38";
 export const inheritedCheckedRecordPythonSelections = Object.freeze([

@@ -1,0 +1,509 @@
+{
+  "bindingIrSha256": "28c8b49afbb68f485ac895d36ae218873c93571d5d6e33f23b9839d37ebc74da",
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "ecosystem": "pypi",
+  "files": {
+    "inheritedcheckedrecords-1.0.0.dist-info/METADATA": {
+      "bytes": 9040,
+      "sha256": "f16ad61671fb810f1b97df933c5e752b46eb61fa8343f2fe853d3b5c5afb4975"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "d391ca575dc1597f0e33751f6fe2ac710b8e64f41336cf49410762d2762c5f44"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2121,
+      "sha256": "5b46495d3bd5541d7ed61e53060f7b57e049a66bc620ea53132ff14e692bc409"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/top_level.txt": {
+      "bytes": 29,
+      "sha256": "9aeacb2ec8746e0fd8427a9a757d16c84980bcb90852a8eb883f4a4a9fde532f"
+    },
+    "lean_inheritedcheckedrecords/__init__.py": {
+      "bytes": 3529,
+      "sha256": "726673cc763be2558fdd1e897c6ca1d66eec1ddb105c1ec6b90dc9cee2c4088c"
+    },
+    "lean_inheritedcheckedrecords/__init__.pyi": {
+      "bytes": 3240,
+      "sha256": "10eb4c58e11835fa17617dd86132a9612911e00ac4c4f63032778b8d11da85cf"
+    },
+    "lean_inheritedcheckedrecords/_native.py": {
+      "bytes": 12572,
+      "sha256": "b1d06b52260faf0a0f3de5321f723fd3e2fcb11a006c283932a9202f29910015"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/README.md": {
+      "bytes": 8614,
+      "sha256": "58f42546b7b6dc3f9686a277fb0a6e10ab0f55ae2fc468c9e6e3e729bedcb81f"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/binding-manifest.json": {
+      "bytes": 1285,
+      "sha256": "7e126aac4098b17ca2dc668bcf0bf9f012805fb5e5e29de41fea616f70fda353"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/artifacts.json": {
+      "bytes": 1533,
+      "sha256": "49b0326df08f16bebe35975cde7f2d8b10709f8a81eff65e73f30db49ea6eb7e"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/binding-ir.json": {
+      "bytes": 42655,
+      "sha256": "c6818bc3b10f78321600bc490e682d18e771cd33297e7cbb52cf8d06e78b8ce9"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/component.h": {
+      "bytes": 2990,
+      "sha256": "7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/generated.lean": {
+      "bytes": 15033,
+      "sha256": "1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/metadata.json": {
+      "bytes": 96880,
+      "sha256": "2f94dfedf7510f410c97a8ca1e259d1b0a4c587a4efa90f3fcf11a88aacfecae"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/model.json": {
+      "bytes": 145827,
+      "sha256": "b5d1a5fbfe45174f198f0754bc9ebedb1a94c37d7dc2fb090c0d8a1e3f945fff"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/native-component.json": {
+      "bytes": 47761,
+      "sha256": "d5b7d5a1c11c062c3579082a497be6eccbd23bd28877a3a431ed509bd6e0e60a"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/include/inheritedcheckedrecords.h": {
+      "bytes": 4163,
+      "sha256": "0deed2753b3c4180038932ed2c5f83693ffcce52ca9b7e8cf9e94defc414ee37"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/native-c-adapter.json": {
+      "bytes": 1423,
+      "sha256": "c53355e250672b153444b0d009925ef7e00e03ed7c9df0b878f07a8da1a7786d"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so": {
+      "bytes": 74832,
+      "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libinheritedcheckedrecords.so": {
+      "bytes": 49328,
+      "sha256": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_inheritedcheckedrecords/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-python-package",
+  "moduleName": "lean_inheritedcheckedrecords",
+  "name": "inheritedcheckedrecords",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "5b8663f4131e55a26545772689ebb5f334f03030252509bc04777268859fd409",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"InheritedCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"pypi\": {\n      \"name\": \"inheritedcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "5a7a93b0e4eafa04701b64540a7e7ef5525f8df53c898fa9451d2e52d96ef141",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 141464,
+          "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+          "sha256": "e3595dd580e4677d8cb7804aa2110324346b99a948bb7b451f1a177dbfe51e48"
+        },
+        "module": "InheritedCheckedRecords",
+        "source": {
+          "bytes": 3011,
+          "path": "InheritedCheckedRecords.lean",
+          "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "InheritedCheckedRecords.aliased": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.echo": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.first": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.nested": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkStamped",
+                "fields": [
+                  {
+                    "name": "toTicket",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkTicket",
+                      "fields": [
+                        {
+                          "name": "toSpan",
+                          "refinement": {
+                            "constructor": "InheritedCheckedRecords.mkSpan",
+                            "fields": [
+                              {
+                                "name": "lo",
+                                "refinement": null
+                              },
+                              {
+                                "name": "hi",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "checked-record",
+                            "name": "InheritedCheckedRecords.Span"
+                          }
+                        },
+                        {
+                          "name": "word",
+                          "refinement": {
+                            "constructor": "InheritedCheckedRecords.mkWord"
+                          }
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Ticket"
+                    }
+                  },
+                  {
+                    "name": "mark",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Stamped"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.normalized": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "InheritedCheckedRecords.pair": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.mkTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.mkWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "InheritedCheckedRecords.normalizeTicket",
+                "fields": [
+                  {
+                    "name": "toSpan",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeSpan",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "InheritedCheckedRecords.Span"
+                    }
+                  },
+                  {
+                    "name": "word",
+                    "refinement": {
+                      "constructor": "InheritedCheckedRecords.normalizeWord"
+                    }
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "InheritedCheckedRecords.Ticket"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "InheritedCheckedRecords"
+      ],
+      "exports": [
+        "InheritedCheckedRecords.aliased",
+        "InheritedCheckedRecords.echo",
+        "InheritedCheckedRecords.first",
+        "InheritedCheckedRecords.nested",
+        "InheritedCheckedRecords.normalized",
+        "InheritedCheckedRecords.pair",
+        "InheritedCheckedRecords.produce",
+        "InheritedCheckedRecords.produceStamped"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "0492eaf1d3cf1632987df798dd84210cb96932cd93fb51628989528d03f49604",
+        "modules": [
+          {
+            "interfaceSha256": "5b301a5673a1916e73487d4d42b9343491d07506fa430c1707259bcf78314328",
+            "name": "InheritedCheckedRecords",
+            "sourcePath": "InheritedCheckedRecords.lean",
+            "sourceSha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "InheritedCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "409c72bb1e3ace8db466d1275a0be8d3ad98f82f2b59cdcfb40c65447dc919ce",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"inheritedcheckedrecords@1.0.0\",\n    \"name\": \"inheritedcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.first\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"first\",\n      \"overloadKey\": \"InheritedCheckedRecords.first\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.first\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.normalized\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"normalized\",\n      \"overloadKey\": \"InheritedCheckedRecords.normalized\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.normalized\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.pair\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"pair\",\n      \"overloadKey\": \"InheritedCheckedRecords.pair\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value1\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.pair\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              },\n              {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.aliased\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"aliased\",\n      \"overloadKey\": \"InheritedCheckedRecords.aliased\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.TicketAlias\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.aliased\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.nested\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"nested\",\n      \"overloadKey\": \"InheritedCheckedRecords.nested\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Stamped\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.nested\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.mkStamped\",\n                \"fields\": [\n                  {\n                    \"name\": \"toTicket\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkTicket\",\n                      \"fields\": [\n                        {\n                          \"name\": \"toSpan\",\n                          \"refinement\": {\n                            \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                            \"fields\": [\n                              {\n                                \"name\": \"lo\",\n                                \"refinement\": null\n                              },\n                              {\n                                \"name\": \"hi\",\n                                \"refinement\": null\n                              }\n                            ],\n                            \"kind\": \"checked-record\",\n                            \"name\": \"InheritedCheckedRecords.Span\"\n                          }\n                        },\n                        {\n                          \"name\": \"word\",\n                          \"refinement\": {\n                            \"constructor\": \"InheritedCheckedRecords.mkWord\",\n                            \"kind\": \"subtype\"\n                          }\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Ticket\"\n                    }\n                  },\n                  {\n                    \"name\": \"mark\",\n                    \"refinement\": {\n                      \"bound\": \"8\",\n                      \"kind\": \"fin\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Stamped\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.echo\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"echo\",\n      \"overloadKey\": \"InheritedCheckedRecords.echo\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.echo\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"InheritedCheckedRecords.normalizeTicket\",\n                \"fields\": [\n                  {\n                    \"name\": \"toSpan\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.mkSpan\",\n                      \"fields\": [\n                        {\n                          \"name\": \"lo\",\n                          \"refinement\": null\n                        },\n                        {\n                          \"name\": \"hi\",\n                          \"refinement\": null\n                        }\n                      ],\n                      \"kind\": \"checked-record\",\n                      \"name\": \"InheritedCheckedRecords.Span\"\n                    }\n                  },\n                  {\n                    \"name\": \"word\",\n                    \"refinement\": {\n                      \"constructor\": \"InheritedCheckedRecords.normalizeWord\",\n                      \"kind\": \"subtype\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"InheritedCheckedRecords.Ticket\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"toSpan\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"lo\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"hi\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"InheritedCheckedRecords.Span\"\n                  }\n                },\n                {\n                  \"name\": \"word\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"kind\": \"subtype\"\n                  }\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"InheritedCheckedRecords.Ticket\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.produce\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produce\",\n      \"overloadKey\": \"InheritedCheckedRecords.produce\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.produce\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"toSpan\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"lo\",\n                        \"refinement\": null\n                      },\n                      {\n                        \"name\": \"hi\",\n                        \"refinement\": null\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"InheritedCheckedRecords.Span\"\n                  }\n                },\n                {\n                  \"name\": \"word\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"kind\": \"subtype\"\n                  }\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"InheritedCheckedRecords.Ticket\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:InheritedCheckedRecords.produceStamped\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceStamped\",\n      \"overloadKey\": \"InheritedCheckedRecords.produceStamped\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:InheritedCheckedRecords.Stamped\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.produceStamped\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"toTicket\",\n                  \"refinement\": {\n                    \"constructor\": null,\n                    \"fields\": [\n                      {\n                        \"name\": \"toSpan\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"fields\": [\n                            {\n                              \"name\": \"lo\",\n                              \"refinement\": null\n                            },\n                            {\n                              \"name\": \"hi\",\n                              \"refinement\": null\n                            }\n                          ],\n                          \"kind\": \"checked-record\",\n                          \"name\": \"InheritedCheckedRecords.Span\"\n                        }\n                      },\n                      {\n                        \"name\": \"word\",\n                        \"refinement\": {\n                          \"constructor\": null,\n                          \"kind\": \"subtype\"\n                        }\n                      }\n                    ],\n                    \"kind\": \"checked-record\",\n                    \"name\": \"InheritedCheckedRecords.Ticket\"\n                  }\n                },\n                {\n                  \"name\": \"mark\",\n                  \"refinement\": {\n                    \"bound\": \"8\",\n                    \"kind\": \"fin\"\n                  }\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"InheritedCheckedRecords.Stamped\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"lo\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"hi\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:InheritedCheckedRecords.Span\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Span\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.Span\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"ordered\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"toTicket\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"mark\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:InheritedCheckedRecords.Stamped\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Stamped\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.Stamped\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"stamped\"\n            ]\n          },\n          \"lean-lang.org/nominal-refinements\": {\n            \"fields\": [\n              null,\n              {\n                \"bound\": \"8\",\n                \"kind\": \"fin\"\n              }\n            ],\n            \"kind\": \"record\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"toSpan\",\n          \"type\": {\n            \"id\": \"lean:InheritedCheckedRecords.Span\",\n            \"kind\": \"named\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"word\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Ticket\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.Ticket\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"linked\"\n            ]\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent inherited checked-record contract.\"\n      },\n      \"fields\": [],\n      \"host\": null,\n      \"id\": \"lean:InheritedCheckedRecords.TicketAlias\",\n      \"kind\": \"alias\",\n      \"mutability\": \"immutable\",\n      \"name\": \"TicketAlias\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"InheritedCheckedRecords.TicketAlias\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": {\n        \"id\": \"lean:InheritedCheckedRecords.Ticket\",\n        \"kind\": \"named\"\n      },\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "7da488580c64083ef877277ccf8158062fd778e81078d2c42624e331daadbff5"
+    },
+    "sourceNoticesSha256": "5b46495d3bd5541d7ed61e53060f7b57e049a66bc620ea53132ff14e692bc409",
+    "sourceTreeSha256": "014379f298361407b139111f711b116770157f88aa74c2e6639a027e33c59c60"
+  },
+  "tag": "py3-none-manylinux_2_38_x86_64",
+  "version": "1.0.0"
+}

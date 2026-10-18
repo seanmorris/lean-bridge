@@ -1,0 +1,146 @@
+{
+  "archiveSha256": "22e5e7609366f8c38b94cdf20bdb264c5dd4c67138c970750710e6059664661e",
+  "counts": {
+    "calls": 3355,
+    "checks": 7240,
+    "hostRejections": 7,
+    "recoveries": 256,
+    "rejections": 1288,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3355
+  },
+  "dispatchObserved": false,
+  "executions": 4,
+  "floor": "2.38",
+  "generatorModules": 19,
+  "handoff": {
+    "archivePath": "handoff/archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+    "archiveSha256": "22e5e7609366f8c38b94cdf20bdb264c5dd4c67138c970750710e6059664661e",
+    "members": 31
+  },
+  "interpreters": [
+    {
+      "binary": "/opt/hostedtoolcache/Python/3.11.17/x64/bin/python3.11",
+      "identity": {
+        "implementation": "cpython",
+        "pointerBits": 64,
+        "python": "3.11.17"
+      },
+      "interpreter": {
+        "bytes": 17744,
+        "kind": "file",
+        "sha256": "d601e62487858384d3000725c3b2e16e86ff11a6ad0b0810b76281e45426ea62"
+      },
+      "minor": "3.11",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.11.17\"}\n"
+      }
+    },
+    {
+      "binary": "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3.12",
+      "identity": {
+        "implementation": "cpython",
+        "pointerBits": 64,
+        "python": "3.12.15"
+      },
+      "interpreter": {
+        "bytes": 17752,
+        "kind": "file",
+        "sha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e"
+      },
+      "minor": "3.12",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.12.15\"}\n"
+      }
+    }
+  ],
+  "loadCeiling": 6,
+  "minors": [
+    "3.11",
+    "3.12"
+  ],
+  "mode": "full",
+  "producerCommit": "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d",
+  "recordPaths": [
+    "3.11/baseline.json",
+    "3.11/environment.json",
+    "3.11/installed-process.json",
+    "3.11/installed.json",
+    "3.11/pip-metadata.json",
+    "3.11/pip.json",
+    "3.11/relocated-process.json",
+    "3.11/relocated.json",
+    "3.11/report.json",
+    "3.12/baseline.json",
+    "3.12/environment.json",
+    "3.12/installed-process.json",
+    "3.12/installed.json",
+    "3.12/pip-metadata.json",
+    "3.12/pip.json",
+    "3.12/relocated-process.json",
+    "3.12/relocated.json",
+    "3.12/report.json",
+    "build-0/InheritedCheckedRecords.lean",
+    "build-0/api.binding-ir.json",
+    "build-0/author-inputs.json",
+    "build-0/lean-bridge.exports.json",
+    "build-0/model.json",
+    "build-0/package-set-receipt.json",
+    "build-1/InheritedCheckedRecords.lean",
+    "build-1/api.binding-ir.json",
+    "build-1/author-inputs.json",
+    "build-1/lean-bridge.exports.json",
+    "build-1/model.json",
+    "build-1/package-set-receipt.json",
+    "configuration.json",
+    "consumer.py",
+    "expected.binding-ir.json",
+    "handoff/archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+    "handoff/package-set-receipt.json",
+    "handoff/package-set-receipt.json.sha256",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/METADATA",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/RECORD",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/WHEEL",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "package/inheritedcheckedrecords-1.0.0.dist-info/top_level.txt",
+    "package/lean_inheritedcheckedrecords/__init__.py",
+    "package/lean_inheritedcheckedrecords/__init__.pyi",
+    "package/lean_inheritedcheckedrecords/_native.py",
+    "package/lean_inheritedcheckedrecords/lean_bridge/README.md",
+    "package/lean_inheritedcheckedrecords/lean_bridge/binding-manifest.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/allocation-guard.h",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/artifacts.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/binding-ir.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/component.h",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/generated.lean",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/metadata.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/model.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/component/native-component.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/include/inheritedcheckedrecords.h",
+    "package/lean_inheritedcheckedrecords/lean_bridge/native-c-adapter.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/package-receipt.json",
+    "package/lean_inheritedcheckedrecords/lean_bridge/runtime.json",
+    "package/lean_inheritedcheckedrecords/py.typed",
+    "report.json",
+    "resources.json",
+    "runtime.json",
+    "wheel.json"
+  ],
+  "records": 67,
+  "reportSha256": "dc23b3d28905bb46615bd83bc5a0b4f20ff6ec0b33ce4332095ce51aa4655c95",
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  }
+}

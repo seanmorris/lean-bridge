@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51388766,
+    "path": "archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+    "sha256": "22e5e7609366f8c38b94cdf20bdb264c5dd4c67138c970750710e6059664661e"
+  },
+  "evidence": {
+    "componentId": "inheritedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "d5b7d5a1c11c062c3579082a497be6eccbd23bd28877a3a431ed509bd6e0e60a",
+    "libraries": {
+      "libcomponent_95491bb762dabafaf0ed.so": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4",
+      "libinheritedcheckedrecords.so": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libinheritedcheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "inheritedcheckedrecords-1.0.0.dist-info/METADATA": {
+      "bytes": 9040,
+      "sha256": "f16ad61671fb810f1b97df933c5e752b46eb61fa8343f2fe853d3b5c5afb4975"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/RECORD": {
+      "bytes": 3638,
+      "sha256": "ba99b62b0e6c621f1d7453a0d11096bff39b9f19b36c35816eba153d368e395d"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "d391ca575dc1597f0e33751f6fe2ac710b8e64f41336cf49410762d2762c5f44"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2121,
+      "sha256": "5b46495d3bd5541d7ed61e53060f7b57e049a66bc620ea53132ff14e692bc409"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "inheritedcheckedrecords-1.0.0.dist-info/top_level.txt": {
+      "bytes": 29,
+      "sha256": "9aeacb2ec8746e0fd8427a9a757d16c84980bcb90852a8eb883f4a4a9fde532f"
+    },
+    "lean_inheritedcheckedrecords/__init__.py": {
+      "bytes": 3529,
+      "sha256": "726673cc763be2558fdd1e897c6ca1d66eec1ddb105c1ec6b90dc9cee2c4088c"
+    },
+    "lean_inheritedcheckedrecords/__init__.pyi": {
+      "bytes": 3240,
+      "sha256": "10eb4c58e11835fa17617dd86132a9612911e00ac4c4f63032778b8d11da85cf"
+    },
+    "lean_inheritedcheckedrecords/_native.py": {
+      "bytes": 12572,
+      "sha256": "b1d06b52260faf0a0f3de5321f723fd3e2fcb11a006c283932a9202f29910015"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/README.md": {
+      "bytes": 8614,
+      "sha256": "58f42546b7b6dc3f9686a277fb0a6e10ab0f55ae2fc468c9e6e3e729bedcb81f"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/binding-manifest.json": {
+      "bytes": 1285,
+      "sha256": "7e126aac4098b17ca2dc668bcf0bf9f012805fb5e5e29de41fea616f70fda353"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/artifacts.json": {
+      "bytes": 1533,
+      "sha256": "49b0326df08f16bebe35975cde7f2d8b10709f8a81eff65e73f30db49ea6eb7e"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/binding-ir.json": {
+      "bytes": 42655,
+      "sha256": "c6818bc3b10f78321600bc490e682d18e771cd33297e7cbb52cf8d06e78b8ce9"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/component.h": {
+      "bytes": 2990,
+      "sha256": "7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/generated.lean": {
+      "bytes": 15033,
+      "sha256": "1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/metadata.json": {
+      "bytes": 96880,
+      "sha256": "2f94dfedf7510f410c97a8ca1e259d1b0a4c587a4efa90f3fcf11a88aacfecae"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/model.json": {
+      "bytes": 145827,
+      "sha256": "b5d1a5fbfe45174f198f0754bc9ebedb1a94c37d7dc2fb090c0d8a1e3f945fff"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/component/native-component.json": {
+      "bytes": 47761,
+      "sha256": "d5b7d5a1c11c062c3579082a497be6eccbd23bd28877a3a431ed509bd6e0e60a"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/include/inheritedcheckedrecords.h": {
+      "bytes": 4163,
+      "sha256": "0deed2753b3c4180038932ed2c5f83693ffcce52ca9b7e8cf9e94defc414ee37"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/native-c-adapter.json": {
+      "bytes": 1423,
+      "sha256": "c53355e250672b153444b0d009925ef7e00e03ed7c9df0b878f07a8da1a7786d"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/package-receipt.json": {
+      "bytes": 51766,
+      "sha256": "b3860ac6e43f4b7d97fd2d6b628b6ff959d3fc25b485cc589a37459e58c4c9ef"
+    },
+    "lean_inheritedcheckedrecords/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libcomponent_95491bb762dabafaf0ed.so": {
+      "bytes": 74832,
+      "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libinheritedcheckedrecords.so": {
+      "bytes": 49328,
+      "sha256": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lean_inheritedcheckedrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_inheritedcheckedrecords/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "receiptSha256": "b3860ac6e43f4b7d97fd2d6b628b6ff959d3fc25b485cc589a37459e58c4c9ef",
+  "retained": [
+    "inheritedcheckedrecords-1.0.0.dist-info/METADATA",
+    "inheritedcheckedrecords-1.0.0.dist-info/RECORD",
+    "inheritedcheckedrecords-1.0.0.dist-info/WHEEL",
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices.json",
+    "inheritedcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "inheritedcheckedrecords-1.0.0.dist-info/top_level.txt",
+    "lean_inheritedcheckedrecords/__init__.py",
+    "lean_inheritedcheckedrecords/__init__.pyi",
+    "lean_inheritedcheckedrecords/_native.py",
+    "lean_inheritedcheckedrecords/lean_bridge/README.md",
+    "lean_inheritedcheckedrecords/lean_bridge/binding-manifest.json",
+    "lean_inheritedcheckedrecords/lean_bridge/component/allocation-guard.h",
+    "lean_inheritedcheckedrecords/lean_bridge/component/artifacts.json",
+    "lean_inheritedcheckedrecords/lean_bridge/component/binding-ir.json",
+    "lean_inheritedcheckedrecords/lean_bridge/component/component.h",
+    "lean_inheritedcheckedrecords/lean_bridge/component/generated.lean",
+    "lean_inheritedcheckedrecords/lean_bridge/component/metadata.json",
+    "lean_inheritedcheckedrecords/lean_bridge/component/model.json",
+    "lean_inheritedcheckedrecords/lean_bridge/component/native-component.json",
+    "lean_inheritedcheckedrecords/lean_bridge/include/inheritedcheckedrecords.h",
+    "lean_inheritedcheckedrecords/lean_bridge/native-c-adapter.json",
+    "lean_inheritedcheckedrecords/lean_bridge/package-receipt.json",
+    "lean_inheritedcheckedrecords/lean_bridge/runtime.json",
+    "lean_inheritedcheckedrecords/py.typed"
+  ]
+}

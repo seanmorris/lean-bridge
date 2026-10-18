@@ -36,7 +36,8 @@ export {
 	inheritedCheckedRecordPythonEvidence
 } from "./inherited-checked-record-python-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordPythonEvidenceSha256 = null;
+export const inheritedCheckedRecordPythonEvidenceSha256
+	= "0537016f9dc5e486ef864b3c2be179557a542f0e34c57ca9bc52ac41ad8d37ac";
 
 const controlKeys = [
 	"recordControls", "resourceControls", "environmentControls"

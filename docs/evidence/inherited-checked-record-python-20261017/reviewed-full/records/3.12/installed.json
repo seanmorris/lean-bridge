@@ -1,0 +1,35 @@
+{
+  "arguments": [
+    "consumer.py",
+    "--reviewed"
+  ],
+  "closure": {
+    "baselineSha256": "63249c54c2f6b78805fd3759eef3df99d8f698801984d178d25c89f0a1d1f1c5",
+    "environmentSha256": "2deed3543db96d3d10ffc36d43eb936a29672601b55c26c22d232d3a3221649d",
+    "interpreterSha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e",
+    "python": "3.12.15"
+  },
+  "counts": {
+    "calls": 3355,
+    "checks": 7240,
+    "hostRejections": 7,
+    "recoveries": 256,
+    "rejections": 1288,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3355
+  },
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\": 3355, \"checks\": 7240, \"hostRejections\": 7, \"recoveries\": 256, \"rejections\": 1288, \"rounds\": 256, \"snapshotControls\": 8, \"snapshots\": 3355}\n"
+  }
+}

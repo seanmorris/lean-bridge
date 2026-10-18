@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "-X",
+    "pycache_prefix=/tmp/lean-bridge-inherited-checked-record-python-49x6Pn/python-3.12/.inherited-python-pip-bytecode-DvoRpd",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--no-index",
+    "--no-deps",
+    "--no-cache-dir",
+    "--no-compile",
+    "/tmp/lean-bridge-inherited-checked-record-python-49x6Pn/handoff/archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "Processing /tmp/lean-bridge-inherited-checked-record-python-49x6Pn/handoff/archives/inheritedcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl\nInstalling collected packages: inheritedcheckedrecords\nSuccessfully installed inheritedcheckedrecords-1.0.0\n"
+  }
+}

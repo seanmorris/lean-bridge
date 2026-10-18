@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied",
+    "version": 1
+  },
+  "component": "inheritedcheckedrecords@1.0.0",
+  "bindingIrSha256": "28c8b49afbb68f485ac895d36ae218873c93571d5d6e33f23b9839d37ebc74da",
+  "publicModule": "lean_inheritedcheckedrecords/__init__.py",
+  "typeStub": "lean_inheritedcheckedrecords/__init__.pyi",
+  "internalModule": "lean_inheritedcheckedrecords/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Span",
+    "Ticket",
+    "Stamped",
+    "TicketAlias",
+    "aliased",
+    "echo",
+    "first",
+    "nested",
+    "normalized",
+    "pair",
+    "produce",
+    "produce_stamped"
+  ],
+  "files": [
+    "lean_inheritedcheckedrecords/__init__.py",
+    "lean_inheritedcheckedrecords/__init__.pyi",
+    "lean_inheritedcheckedrecords/_native.py",
+    "lean_inheritedcheckedrecords/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "additional-identity-and-effects",
+      "reason": "Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}
