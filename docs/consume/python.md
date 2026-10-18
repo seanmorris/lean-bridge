@@ -721,9 +721,12 @@ author roots. After author removal, offline installations run the unchanged
 caller on CPython 3.11.16 and 3.12.14 before and after relocation, for four
 executions per selection. The same wheel spans both interpreter floors. The
 retained local runs use Linux x64/glibc 2.36. Invalid nested fields preserve the
-complete Python object graph, and a later valid call succeeds. Generic,
-recursive or inherited checked records, other index kinds, open dependent or
-zero-payload records, callbacks and owned positions remain separate work.
+complete Python object graph, and a later valid call succeeds. [Inherited
+checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
+separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
+or recursive checked records, value-carrying receiver-dependent inherited fields,
+other index kinds, open dependent or zero-payload records, callbacks and owned
+positions remain separate work.
 The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-python.yml)
 rebuilds all four selections on both supported Python floors.
 

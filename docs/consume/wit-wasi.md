@@ -989,9 +989,11 @@ compiler-free runs use Wasmtime 42.0.1 and wasm-tools 1.245.1 on Linux
 x64/glibc 2.36. Invalid nested fields preserve the complete Component Model
 value tree and output sentinel, and a later valid call succeeds. The component
 requires its packaged native Lean host; it is not a standalone WASI command.
-Generic, recursive or inherited checked records, other index kinds, open
-dependent or zero-payload records, callbacks and owned positions remain
-separate work.
+[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
+separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
+or recursive checked records, value-carrying receiver-dependent inherited fields,
+other index kinds, open dependent or zero-payload records, callbacks and owned
+positions remain separate work.
 The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-wit.yml)
 rebuilds all four selections through the pinned Wasmtime host on Ubuntu 24.04.
 

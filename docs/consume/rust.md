@@ -721,10 +721,13 @@ Cargo 1.90.0 on Linux x64/glibc 2.36 with a glibc 2.36 package floor and a 20.0
 load-admission ceiling. Invalid nested fields preserve the complete Rust value
 graph, and a later valid call succeeds. The
 [dedicated workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-rust.yml)
-owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. Generic, recursive
-or inherited checked records, other index kinds, open dependent or zero-payload
-records, callbacks and owned positions remain separate work. Constructor
-dispatch and peak memory were not measured.
+owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. [Inherited
+checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
+separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
+or recursive checked records, value-carrying receiver-dependent inherited fields,
+other index kinds, open dependent or zero-payload records, callbacks and owned
+positions remain separate work. Constructor dispatch and peak memory were not
+measured.
 
 ### Checked values
 

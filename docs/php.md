@@ -901,10 +901,12 @@ author roots. After author and build removal, offline installations run unchange
 weak and strict callers before and after relocation, for four executions per
 selection. The retained local runs use PHP 8.2.33 and Composer 2.5.5 on Linux
 x64/glibc 2.36. Invalid nested fields preserve the complete PHP object graph,
-and a later valid call succeeds. Generic, recursive or inherited checked
-records, other index kinds, open dependent or zero-payload records, callbacks
-and owned positions remain separate work. Consumer PHP source remains required
-at runtime. These results apply to native PHP, not PHP-Wasm.
+and a later valid call succeeds. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md)
+separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
+or recursive checked records, value-carrying receiver-dependent inherited fields,
+other index kinds, open dependent or zero-payload records, callbacks and owned
+positions remain separate work. Consumer PHP source remains required at runtime.
+These results apply to native PHP, not PHP-Wasm.
 The [native PHP recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php.yml)
 rebuilds all four selections on Ubuntu 24.04.
 
@@ -945,10 +947,12 @@ relocated before unchanged weak and strict callers run in eight Node and four
 Chromium startup/lazy contexts, for twelve executions per selection. The runs
 use wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Invalid nested
 fields preserve the complete caller graph, and a later valid call succeeds.
-Consumer PHP source remains required at runtime. Generic, recursive or inherited
-checked records, other index kinds, open dependent or zero-payload records,
-callbacks and owned positions remain separate work. These runs do not establish
-other PHP or browser versions.
+Consumer PHP source remains required at runtime. [Inherited checked-record
+acceptance](evidence/inherited-checked-record-promotion-20261018.md) separately
+covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive
+checked records, value-carrying receiver-dependent inherited fields, other index
+kinds, open dependent or zero-payload records, callbacks and owned positions
+remain separate work. These runs do not establish other PHP or browser versions.
 The [PHP-Wasm recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-php-wasm.yml)
 rebuilds all four Node/Chromium selections on Ubuntu 24.04.
 

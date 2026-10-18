@@ -732,9 +732,11 @@ the installed runtime performs only the selected `Fin`, `Subtype`, and record
 boundary checks. The [dedicated workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-perl.yml)
 rebuilds all four selections on Ubuntu 24.04 with the glibc 2.38 floor.
 
-Generic, recursive and inherited checked records, other index kinds, open
-dependent or zero-payload records, callbacks and owned positions remain
-unfinished.
+[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
+separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
+or recursive checked records, value-carrying receiver-dependent inherited fields,
+other index kinds, open dependent or zero-payload records, callbacks and owned
+positions remain unfinished.
 
 ## Values and cleanup
 

@@ -1,0 +1,582 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-docs-closure-source-v1",
+  "predecessorCommit": "eedf89a7a2ba05e5c3a442660ff80dd5564fd51a",
+  "draftParentCommit": "eedf89a7a2ba05e5c3a442660ff80dd5564fd51a",
+  "pathsSha256": "4d4164e991821eba0e1aaec7b937fb30e486ae38b0b76fa5deab1407a3e82339",
+  "pinCount": 59,
+  "pinUpdates": [
+    {
+      "path": "docs/consume/c.md",
+      "previousSha256": "5e35c1407304469a1851dfbfc5153968e7c0afb67cc3451539b3abbe27c8474b",
+      "currentSha256": "ad56f3ff4351b0f4ae11271d927b4a9b2ad1776d16ee363e5ab2750af6fe0671",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "85bc7dade9ed111488ae9aa965868d005fa759a7c3e69c44bc55af1fc7547410",
+      "currentSha256": "3c49877a1da08434b83b0a014b8c02f10bd39d216ecb0c50d41c7e78afe1c252",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622",
+      "currentSha256": "e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15",
+      "count": 5
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "previousSha256": "a8c1f4ca32173221c8b12b6af5d4d488d5d0798c56c54a85b673dfccf8585283",
+      "currentSha256": "693748276f5db5ad52966fe307de29cb19f767cd420302ea82af3d0d52e9cd0d",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/python.md",
+      "previousSha256": "be32589327288a36fa5df76ffaff16ba8b9189c44eaa65e6728e9e64bee2dafc",
+      "currentSha256": "175897a186b0f5de48e6ed0b0e6cc0d0c7fdabfdb3d0d4b6d1a02a2a3f6e065e",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "e7f872266a620d4337cd20a00b5918ab9e12138102fbc71e417d380e0c048125",
+      "currentSha256": "22dfcf1e98ced9a6340163b8bcab75c66bad9ebc7692c8056a50669db11f862d",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "previousSha256": "c9121a9b4e1f2b3fc7a5e3a0017fe77b5cf95d80b72335f5ad1be48f5135769d",
+      "currentSha256": "2bd668e5786fb83a2d05114464f59a04e2ae63f550abcb09acd06459b14985d8",
+      "count": 1
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "d61c98c84002b6aa369040c45d816c9e8cc97fae155db1e8828262430b344422",
+      "currentSha256": "b9efcb708c6c93c0cda677949111e75ba92e57a30561a0baf25d4a210062fef5",
+      "count": 2
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b",
+      "currentSha256": "3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2",
+      "count": 18
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373",
+      "currentSha256": "14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11",
+      "count": 22
+    },
+    {
+      "path": "docs/php.md",
+      "previousSha256": "2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10",
+      "currentSha256": "863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a",
+      "count": 6
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-inherited-checked-record-docs-closure-source-history.mjs",
+      "currentSha256": "d7d566681864d105d1394fb3fbf66727da978f39a87b3e2799badb3dc2a76769"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-docs-closure-source-history.mjs",
+      "currentSha256": "93a3a628d51da19f3056f721e1e463c5dc1c5976c75276ab48e5d937ca33e598"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-docs-closure-source-history-tests.mjs",
+      "currentSha256": "c8bb9784ca1a572a07bd635cf9d8b449e0dde1facb9449b42dbbe5c964fbfbab"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "5f4a87b3b6417b1a5d0094f2f36f3c627d2e6b1fad11b993de8430534ced9dab",
+      "currentSha256": "c1762fc6f263101fc11714cc8c798eb8c2ca3e05a268f38ba08a939079b5080c",
+      "edits": [
+        {
+          "start": 47198,
+          "previous": "          \"sha256\": \"077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622\"\n",
+          "current": "          \"sha256\": \"e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15\"\n"
+        },
+        {
+          "start": 49666,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        },
+        {
+          "start": 168568,
+          "previous": "          \"sha256\": \"d61c98c84002b6aa369040c45d816c9e8cc97fae155db1e8828262430b344422\"\n",
+          "current": "          \"sha256\": \"b9efcb708c6c93c0cda677949111e75ba92e57a30561a0baf25d4a210062fef5\"\n"
+        },
+        {
+          "start": 181878,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        },
+        {
+          "start": 196777,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        },
+        {
+          "start": 222432,
+          "previous": "          \"sha256\": \"c9121a9b4e1f2b3fc7a5e3a0017fe77b5cf95d80b72335f5ad1be48f5135769d\"\n",
+          "current": "          \"sha256\": \"2bd668e5786fb83a2d05114464f59a04e2ae63f550abcb09acd06459b14985d8\"\n"
+        },
+        {
+          "start": 230967,
+          "previous": "          \"sha256\": \"be32589327288a36fa5df76ffaff16ba8b9189c44eaa65e6728e9e64bee2dafc\"\n",
+          "current": "          \"sha256\": \"175897a186b0f5de48e6ed0b0e6cc0d0c7fdabfdb3d0d4b6d1a02a2a3f6e065e\"\n"
+        },
+        {
+          "start": 239397,
+          "previous": "          \"sha256\": \"077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622\"\n",
+          "current": "          \"sha256\": \"e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15\"\n"
+        },
+        {
+          "start": 248412,
+          "previous": "          \"sha256\": \"e7f872266a620d4337cd20a00b5918ab9e12138102fbc71e417d380e0c048125\"\n",
+          "current": "          \"sha256\": \"22dfcf1e98ced9a6340163b8bcab75c66bad9ebc7692c8056a50669db11f862d\"\n"
+        },
+        {
+          "start": 256783,
+          "previous": "          \"sha256\": \"5e35c1407304469a1851dfbfc5153968e7c0afb67cc3451539b3abbe27c8474b\"\n",
+          "current": "          \"sha256\": \"ad56f3ff4351b0f4ae11271d927b4a9b2ad1776d16ee363e5ab2750af6fe0671\"\n"
+        },
+        {
+          "start": 256932,
+          "previous": "          \"sha256\": \"85bc7dade9ed111488ae9aa965868d005fa759a7c3e69c44bc55af1fc7547410\"\n",
+          "current": "          \"sha256\": \"3c49877a1da08434b83b0a014b8c02f10bd39d216ecb0c50d41c7e78afe1c252\"\n"
+        },
+        {
+          "start": 266657,
+          "previous": "          \"sha256\": \"a8c1f4ca32173221c8b12b6af5d4d488d5d0798c56c54a85b673dfccf8585283\"\n",
+          "current": "          \"sha256\": \"693748276f5db5ad52966fe307de29cb19f767cd420302ea82af3d0d52e9cd0d\"\n"
+        },
+        {
+          "start": 1072635,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1072794,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1080224,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1080383,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1086825,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1086984,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1093933,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1094092,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1101427,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1101586,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1108483,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1108642,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1116084,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1116243,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1126365,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1126524,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1138698,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1138857,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1149945,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1157831,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1168255,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1178373,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1192157,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1192316,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1224700,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1224859,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1254979,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1255138,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1287946,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1288105,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1329356,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1329515,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1329656,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        },
+        {
+          "start": 1351949,
+          "previous": "          \"sha256\": \"077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622\"\n",
+          "current": "          \"sha256\": \"e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15\"\n"
+        },
+        {
+          "start": 1355204,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1355363,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1355504,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        },
+        {
+          "start": 1374327,
+          "previous": "          \"sha256\": \"077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622\"\n",
+          "current": "          \"sha256\": \"e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15\"\n"
+        },
+        {
+          "start": 1377884,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1378043,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1393994,
+          "previous": "          \"sha256\": \"077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622\"\n",
+          "current": "          \"sha256\": \"e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15\"\n"
+        },
+        {
+          "start": 1397576,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1397735,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1417384,
+          "previous": "          \"sha256\": \"d61c98c84002b6aa369040c45d816c9e8cc97fae155db1e8828262430b344422\"\n",
+          "current": "          \"sha256\": \"b9efcb708c6c93c0cda677949111e75ba92e57a30561a0baf25d4a210062fef5\"\n"
+        },
+        {
+          "start": 1418061,
+          "previous": "          \"sha256\": \"898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b\"\n",
+          "current": "          \"sha256\": \"3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2\"\n"
+        },
+        {
+          "start": 1418220,
+          "previous": "          \"sha256\": \"7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373\"\n",
+          "current": "          \"sha256\": \"14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11\"\n"
+        },
+        {
+          "start": 1428884,
+          "previous": "          \"sha256\": \"2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10\"\n",
+          "current": "          \"sha256\": \"863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a\"\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/c.md",
+      "previousSha256": "5e35c1407304469a1851dfbfc5153968e7c0afb67cc3451539b3abbe27c8474b",
+      "currentSha256": "ad56f3ff4351b0f4ae11271d927b4a9b2ad1776d16ee363e5ab2750af6fe0671",
+      "edits": [
+        {
+          "start": 38229,
+          "previous": "Those four ordinary/reviewed and full/result-only selections reproduce complete packages from two author roots, install offline after author removal and replay the C11/GMP caller unchanged after physical relocation. Invalid graphs preserve caller data and the initialized output before a later valid call proves recovery. The local runs used Linux x64/glibc 2.36 and do not establish execution at the glibc 2.38 release floor. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-native.yml) requires the same four selections at that floor. Generic, recursive and inherited checked records, other index kinds, open dependent records, callbacks and owned positions remain unreviewed.\n",
+          "current": "Those four ordinary/reviewed and full/result-only selections reproduce complete packages from two author roots, install offline after author removal and replay the C11/GMP caller unchanged after physical relocation. Invalid graphs preserve caller data and the initialized output before a later valid call proves recovery. The local runs used Linux x64/glibc 2.36 and do not establish execution at the glibc 2.38 release floor. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-native.yml) requires the same four selections at that floor. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, callbacks and owned positions remain unreviewed.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "85bc7dade9ed111488ae9aa965868d005fa759a7c3e69c44bc55af1fc7547410",
+      "currentSha256": "3c49877a1da08434b83b0a014b8c02f10bd39d216ecb0c50d41c7e78afe1c252",
+      "edits": [
+        {
+          "start": 13652,
+          "previous": "All four ordinary/reviewed and full/result-only selections reproduce complete packages from two author roots, install offline after author removal and replay the independent C++20 caller unchanged after physical relocation. Invalid graphs preserve caller values before a later valid call proves recovery. The local runs used Linux x64/glibc 2.36 and do not establish execution at the glibc 2.38 release floor. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-native.yml) requires the same four selections at that floor. Generic, recursive and inherited checked records, other index kinds, open dependent records, callbacks and owned positions remain unreviewed.\n",
+          "current": "All four ordinary/reviewed and full/result-only selections reproduce complete packages from two author roots, install offline after author removal and replay the independent C++20 caller unchanged after physical relocation. Invalid graphs preserve caller values before a later valid call proves recovery. The local runs used Linux x64/glibc 2.36 and do not establish execution at the glibc 2.38 release floor. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-native.yml) requires the same four selections at that floor. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, callbacks and owned positions remain unreviewed.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "077de4163a574a75e32fc8bf18f87dfb1b9661d8f83d205fcb4f37d92e5b7622",
+      "currentSha256": "e755680e770316671098f7edab56ee33ee05c50692e8843fe8e746d912700f15",
+      "edits": [
+        {
+          "start": 38080,
+          "previous": "The [nested checked-record archive](../evidence/nested-checked-record-dotnet-20261016/index.json) adds a generated `Packet` with a `Fin 10` digit and checked `Nat` subtype word. Full packages check direct and repeated parameters, arrays, Lists, options, tuples, both `Result` branches, enclosing record fields and active variant fields. Separate standalone result-only packages return arrays and options without input-constructor metadata. Ordinary source and independently reviewed IR each reproduce the complete NuGet package from two author roots, remove author sources before offline restore, replay unchanged callers after relocating the installation and run again after deleting consumer sources. Rejected graphs stay unchanged and later valid calls recover. These archived runs use .NET SDK 8.0.424 and shared framework 8.0.30 on Linux x64/glibc 2.36 with 64-bit machine words. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-dotnet.yml) checks the same four selections on Ubuntu 24.04 with the glibc 2.38 floor. Generic, recursive, inherited, callback and owned forms remain outside this evidence.\n",
+          "current": "The [nested checked-record archive](../evidence/nested-checked-record-dotnet-20261016/index.json) adds a generated `Packet` with a `Fin 10` digit and checked `Nat` subtype word. Full packages check direct and repeated parameters, arrays, Lists, options, tuples, both `Result` branches, enclosing record fields and active variant fields. Separate standalone result-only packages return arrays and options without input-constructor metadata. Ordinary source and independently reviewed IR each reproduce the complete NuGet package from two author roots, remove author sources before offline restore, replay unchanged callers after relocating the installation and run again after deleting consumer sources. Rejected graphs stay unchanged and later valid calls recover. These archived runs use .NET SDK 8.0.424 and shared framework 8.0.30 on Linux x64/glibc 2.36 with 64-bit machine words. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-dotnet.yml) checks the same four selections on Ubuntu 24.04 with the glibc 2.38 floor. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive checked records, value-carrying receiver-dependent inherited fields, callbacks and owned forms remain outside this evidence.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/perl.md",
+      "previousSha256": "a8c1f4ca32173221c8b12b6af5d4d488d5d0798c56c54a85b673dfccf8585283",
+      "currentSha256": "693748276f5db5ad52966fe307de29cb19f767cd420302ea82af3d0d52e9cd0d",
+      "edits": [
+        {
+          "start": 36766,
+          "previous": "Generic, recursive and inherited checked records, other index kinds, open\ndependent or zero-payload records, callbacks and owned positions remain\nunfinished.\n",
+          "current": "[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain unfinished.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/python.md",
+      "previousSha256": "be32589327288a36fa5df76ffaff16ba8b9189c44eaa65e6728e9e64bee2dafc",
+      "currentSha256": "175897a186b0f5de48e6ed0b0e6cc0d0c7fdabfdb3d0d4b6d1a02a2a3f6e065e",
+      "edits": [
+        {
+          "start": 34706,
+          "previous": "complete Python object graph, and a later valid call succeeds. Generic,\nrecursive or inherited checked records, other index kinds, open dependent or\nzero-payload records, callbacks and owned positions remain separate work.\n",
+          "current": "complete Python object graph, and a later valid call succeeds. [Inherited\nchecked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "e7f872266a620d4337cd20a00b5918ab9e12138102fbc71e417d380e0c048125",
+      "currentSha256": "22dfcf1e98ced9a6340163b8bcab75c66bad9ebc7692c8056a50669db11f862d",
+      "edits": [
+        {
+          "start": 35205,
+          "previous": "Generic, recursive or inherited checked records, other index kinds, open\ndependent or zero-payload records, callbacks and owned positions remain\nseparate work.\n",
+          "current": "[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/rust.md",
+      "previousSha256": "c9121a9b4e1f2b3fc7a5e3a0017fe77b5cf95d80b72335f5ad1be48f5135769d",
+      "currentSha256": "2bd668e5786fb83a2d05114464f59a04e2ae63f550abcb09acd06459b14985d8",
+      "edits": [
+        {
+          "start": 36852,
+          "previous": "owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. Generic, recursive\nor inherited checked records, other index kinds, open dependent or zero-payload\nrecords, callbacks and owned positions remain separate work. Constructor\ndispatch and peak memory were not measured.\n",
+          "current": "owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. [Inherited\nchecked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain separate work. Constructor dispatch and peak memory were not\nmeasured.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "d61c98c84002b6aa369040c45d816c9e8cc97fae155db1e8828262430b344422",
+      "currentSha256": "b9efcb708c6c93c0cda677949111e75ba92e57a30561a0baf25d4a210062fef5",
+      "edits": [
+        {
+          "start": 52984,
+          "previous": "Generic, recursive or inherited checked records, other index kinds, open\ndependent or zero-payload records, callbacks and owned positions remain\nseparate work.\n",
+          "current": "[Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain separate work.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "5f10077a1cb7d17c06eb161207d7730f7087a941e9d5ea591be678eeed19cc6e",
+      "currentSha256": "67b0e0f244828d22e36d9996d7421ff0ce5fc1d5d754522c2f173be44d865624",
+      "edits": [
+        {
+          "start": 75820,
+          "previous": "The npm mapping is established for those exact acyclic shapes. Generic, recursive or inherited checked records, other index kinds, open dependent or zero-payload records, callbacks, and owned positions remain unverified. Every other consumer profile has its own installed archive for the same tested copied boundary; no host's evidence is borrowed for npm. The [cross-target author guide](lean/existing-package.md#export-a-record-with-proof-fields) links each archive and keeps their runtime-specific limits separate.\n",
+          "current": "The npm mapping is established for those exact acyclic shapes. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent or zero-payload records, callbacks, and owned positions remain unverified. Every other consumer profile has its own installed archive for the same tested copied boundary; no host's evidence is borrowed for npm. The [cross-target author guide](lean/existing-package.md#export-a-record-with-proof-fields) links each archive and keeps their runtime-specific limits separate.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "898684ecdd1ebb936cc6a6e784cbcd80af38e1930084aa2ba5b406f45afdb33b",
+      "currentSha256": "3467490e9598a5a0c810211822d6e1f8e2a0a5d62be740038798f2ac162f56f2",
+      "edits": [
+        {
+          "start": 28109,
+          "previous": "The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent runtime fields and recursive generic records remain unsupported. Proof-bearing records require the separate [checked-record mapping](#export-a-record-with-proof-fields); inheritance acceptance does not establish that combination. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.\n",
+          "current": "The compiler builds the parent-alias index once per request when needed, with a limit of 65,536 declarations. Exceeding that limit refuses declarations that need discovery; unrelated exports remain available. Value-dependent runtime fields and recursive generic records remain unsupported. Proof-bearing inherited records use the separate [checked-record mapping](#export-a-record-with-proof-fields); its installed acceptance covers the exact checked inheritance contract described there, not arbitrary combinations of inheritance and refinements. The [source checks](../../tests/generic-inheritance.test.mjs) cover parent aliases, universe instances, imported dependencies, ambiguity and the discovery limit; [plain inheritance checks](../../tests/inherited-records.test.mjs) also cover overlapping parents and a checked `Fin` field inside a parent.\n"
+        },
+        {
+          "start": 55809,
+          "previous": "Nested support is established only for the archived acyclic `Packet`, `Holder`, `Choice`, and listed copied-container forms in npm, C/C++, .NET, Java, Kotlin, Perl, [native PHP](../evidence/nested-checked-record-php-20261016/index.json), [Python](../evidence/nested-checked-record-python-20261016/index.json), [Ruby](../evidence/nested-checked-record-ruby-20261016/index.json), [WIT/WASI](../evidence/nested-checked-record-wit-20261016/index.json), [PHP-Wasm](../evidence/nested-checked-record-php-wasm-20261016/index.json) and [Rust](../evidence/nested-checked-record-rust-20261016/index.json). Generic, recursive and inherited checked records, open value-dependent fields, other index kinds, zero-payload records, callbacks and owned positions remain unsupported. npm uses private ABI 8 for its proof-free carriers.\n",
+          "current": "Nested support is established only for the archived acyclic `Packet`, `Holder`, `Choice`, and listed copied-container forms in npm, C/C++, .NET, Java, Kotlin, Perl, [native PHP](../evidence/nested-checked-record-php-20261016/index.json), [Python](../evidence/nested-checked-record-python-20261016/index.json), [Ruby](../evidence/nested-checked-record-ruby-20261016/index.json), [WIT/WASI](../evidence/nested-checked-record-wit-20261016/index.json), [PHP-Wasm](../evidence/nested-checked-record-php-wasm-20261016/index.json) and [Rust](../evidence/nested-checked-record-rust-20261016/index.json). npm uses private ABI 8 for its proof-free carriers.\n\n#### Checked inherited records\n\n[Installed inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) covers the exact acyclic `Span → Ticket → Stamped` chain in all seventeen consumer profiles. Keep every parent as its named nested subobject. At each public input site, select the outer record constructor and mirror the parent hierarchy under `refinement.fields`, selecting each checked parent and refined payload constructor independently. The adapter applies those constructors in dependency order, then the outer constructor; a rejection preserves the caller's complete value, and a later valid call can recover. Repeated parameters may select different constructor trees. Lean-produced `Ticket` and `Stamped` results carry their own proofs, so result-only packages project the same proof-free payload hierarchy without input-constructor metadata. The [ordinary configuration fixture](../../tests/helpers/inherited-checked-record-fixture.mjs) and [Lean fixture](../../tests/fixtures/onboarding/inherited-checked-records/InheritedCheckedRecords.lean) show the complete contract.\n\nThat acceptance does not cover generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open value-dependent or zero-payload records, callbacks or owned positions.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "7c15841bf14782c5b373bca840bdaab5c75af25d74d23120372d6159422db373",
+      "currentSha256": "14884d048681d05e1b7e249c10b419643a0ec3b03f7e32f793b7eec22e033a11",
+      "edits": [
+        {
+          "start": 25560,
+          "previous": "For a record whose proofs relate its fields, use a [checked constructor over the payload fields](existing-package.md#export-a-record-with-proof-fields). The host supplies no proof. The compiler checks each input through the selected Lean constructor and erases proofs from Lean-produced results. Closed `Nat` indices stay in type metadata. Top-level inputs and results have installed acceptance in C/C++, Node JavaScript/TypeScript, browser pages, React, workers, Python, Rust, Ruby, .NET, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI. npm has [installed nested acceptance](../evidence/nested-checked-record-browser-20261016/index.json), C/C++ have an [installed nested archive](../evidence/nested-checked-record-native-20261016/index.json), .NET has an [installed NuGet archive](../evidence/nested-checked-record-dotnet-20261016/index.json), Java/Kotlin have an [installed Maven archive](../evidence/nested-checked-record-jvm-20261016/index.json), Perl has an [installed CPAN archive](../evidence/nested-checked-record-perl-20261016/index.json), native PHP has an [installed Composer archive](../evidence/nested-checked-record-php-20261016/index.json), Python has an [installed wheel archive](../evidence/nested-checked-record-python-20261016/index.json), Ruby has an [installed gem archive](../evidence/nested-checked-record-ruby-20261016/index.json), WIT/WASI has an [installed component archive](../evidence/nested-checked-record-wit-20261016/index.json), PHP-Wasm has an [installed Node/Chromium archive](../evidence/nested-checked-record-php-wasm-20261016/index.json), and Rust has an [installed Cargo archive](../evidence/nested-checked-record-rust-20261016/index.json). They cover direct and repeated parameters, arrays, lists, options, products, `Except`/`Result`, enclosing record fields, active variant fields and constructor-free container results. Select the record constructor and each nested checked field's constructor independently at every public input site; only an active variant branch runs. Generic, recursive, inherited, callback, owned and open dependent combinations remain unfinished.\n",
+          "current": "For a record whose proofs relate its fields, use a [checked constructor over the payload fields](existing-package.md#export-a-record-with-proof-fields). The host supplies no proof. The compiler checks each input through the selected Lean constructor and erases proofs from Lean-produced results. Closed `Nat` indices stay in type metadata. Top-level inputs and results have installed acceptance in C/C++, Node JavaScript/TypeScript, browser pages, React, workers, Python, Rust, Ruby, .NET, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI. npm has [installed nested acceptance](../evidence/nested-checked-record-browser-20261016/index.json), C/C++ have an [installed nested archive](../evidence/nested-checked-record-native-20261016/index.json), .NET has an [installed NuGet archive](../evidence/nested-checked-record-dotnet-20261016/index.json), Java/Kotlin have an [installed Maven archive](../evidence/nested-checked-record-jvm-20261016/index.json), Perl has an [installed CPAN archive](../evidence/nested-checked-record-perl-20261016/index.json), native PHP has an [installed Composer archive](../evidence/nested-checked-record-php-20261016/index.json), Python has an [installed wheel archive](../evidence/nested-checked-record-python-20261016/index.json), Ruby has an [installed gem archive](../evidence/nested-checked-record-ruby-20261016/index.json), WIT/WASI has an [installed component archive](../evidence/nested-checked-record-wit-20261016/index.json), PHP-Wasm has an [installed Node/Chromium archive](../evidence/nested-checked-record-php-wasm-20261016/index.json), and Rust has an [installed Cargo archive](../evidence/nested-checked-record-rust-20261016/index.json). They cover direct and repeated parameters, arrays, lists, options, products, `Except`/`Result`, enclosing record fields, active variant fields and constructor-free container results. [Installed inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) additionally covers the tested acyclic `Span → Ticket → Stamped` chain, with independently selected parent and child constructors and proof-free results. Select the record constructor and each nested checked field's constructor independently at every public input site; only an active variant branch runs. Generic or recursive checked records, value-carrying receiver-dependent inherited fields, callback, owned and open dependent combinations remain unfinished.\n"
+        }
+      ]
+    },
+    {
+      "path": "docs/php.md",
+      "previousSha256": "2993b05c38867538bc57c9cd83e01f3b6c90006e723b9ec3c2602a66e250ef10",
+      "currentSha256": "863548e868bece233b5bba369f52130cfc3d78805a4607d4ed685fec4650511a",
+      "edits": [
+        {
+          "start": 47531,
+          "previous": "and a later valid call succeeds. Generic, recursive or inherited checked\nrecords, other index kinds, open dependent or zero-payload records, callbacks\nand owned positions remain separate work. Consumer PHP source remains required\nat runtime. These results apply to native PHP, not PHP-Wasm.\n",
+          "current": "and a later valid call succeeds. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md)\nseparately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic\nor recursive checked records, value-carrying receiver-dependent inherited fields,\nother index kinds, open dependent or zero-payload records, callbacks and owned\npositions remain separate work. Consumer PHP source remains required at runtime.\nThese results apply to native PHP, not PHP-Wasm.\n"
+        },
+        {
+          "start": 50550,
+          "previous": "Consumer PHP source remains required at runtime. Generic, recursive or inherited\nchecked records, other index kinds, open dependent or zero-payload records,\ncallbacks and owned positions remain separate work. These runs do not establish\nother PHP or browser versions.\n",
+          "current": "Consumer PHP source remains required at runtime. [Inherited checked-record\nacceptance](evidence/inherited-checked-record-promotion-20261018.md) separately\ncovers the tested proof-free `Span → Ticket → Stamped` chain. Generic or recursive\nchecked records, value-carrying receiver-dependent inherited fields, other index\nkinds, open dependent or zero-payload records, callbacks and owned positions\nremain separate work. These runs do not establish other PHP or browser versions.\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f3e0c9389f08eb253f4e66647d26e4e58eff0d050c468fe2c5f0cc6e532bb0cb",
+      "currentSha256": "07d1d36f8a87a2a44b978649c0206e39308da7426fc634a9ede18c2c3f07e781",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordDocsClosureSource, inheritedCheckedRecordDocsClosureChangedPaths } from \"./inherited-checked-record-docs-closure-source-history.mjs\";\n"
+        },
+        {
+          "start": 76739,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordDocsClosureSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 89557,
+          "previous": "\t...inheritedCheckedRecordPromotionChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordDocsClosureChangedPaths\n\t, ...inheritedCheckedRecordPromotionChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/lean-author-documentation.test.mjs",
+      "previousSha256": "aaeab95b97f666ac627fa3a403f37f5be457de34c2ca5b936ac0d1dbd7e2164c",
+      "currentSha256": "0530f3b5e5ad1702a7b3bc35d1125902c2340f8542778ae6ed9a07db3354d4dc",
+      "edits": [
+        {
+          "start": 287,
+          "previous": "",
+          "current": "import \"./helpers/inherited-checked-record-docs-closure-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
