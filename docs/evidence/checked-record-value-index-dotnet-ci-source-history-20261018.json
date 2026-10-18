@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-dotnet-ci-source-v1",
+  "predecessorCommit": "772247ae77d20c972e822b28d827889355bffa49",
+  "draftParentCommit": "ec64960fc068020279664e1190146562f203b7c9",
+  "pathsSha256": "cabde957ec709c2019871e1d91e26b373ce7d0ca41eafc05500aa2c9e3a37f74",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0",
+      "currentSha256": "8d04b2a7220f612d0740c8bf965b9ee27db19a96243e87bc8868cd89fb52d246",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": ".github/workflows/checked-record-value-index-dotnet.yml",
+      "currentSha256": "9150d043e7830611443bf3abe19352a40da9a361c66cdb3075ea9d413aa89a24"
+    },
+    {
+      "path": "scripts/check-checked-record-value-index-dotnet-ci.mjs",
+      "currentSha256": "76783059abaa0be1ace40ad22f5b96669c0ffa803bcedfd1a53663c06744fbbd"
+    },
+    {
+      "path": "scripts/run-checked-record-value-index-dotnet-ci.sh",
+      "currentSha256": "5b0a2d0cd158c664b14d3a72c3855be512bd5532c1ef6c9af413587bd332390a"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-handoff.mjs",
+      "currentSha256": "9cbddbf3e49cc27384ec90c460f8facbf875a78d883e964f9e5445f8a5f8eba5"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-policy-tests.mjs",
+      "currentSha256": "20a70ba79d31ee44354406e49bd93ef66220fb664a8e0e9f6fb4a3470e0d85c1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-report.mjs",
+      "currentSha256": "c3ee767ef2f2c570f5979b3634277266675a345fba983aa022e0c7451458e7b3"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-shell-tests.mjs",
+      "currentSha256": "30eec3545d20013252ebb3fd2e20f21457bda8572ccbec1dfb3cf9813ef987f5"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-tools.mjs",
+      "currentSha256": "bb8f64c2b6c15f497686d436f6c114749ef9c6e67e34dd12387176e573328c75"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-workflow-tests.mjs",
+      "currentSha256": "713e5bf255f2a2617ede015f1ea4f9b36a8e403508709ba864f4af414ad161fc"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-workflow.mjs",
+      "currentSha256": "3cc11a66dba603d6b25decc61ea23e318a974d27e5a13b7b786a05d62726032f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-controls.mjs",
+      "currentSha256": "0422b243664d5dab20bb91164a74c4c836e45fcdd7dbf70b19029f99e8414b08"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-dotnet-ci-source-history.mjs",
+      "currentSha256": "25a473a23ab830f011eb244f4ce260fa2ecb0bbb065890a6ee58078edb6518ac"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-source-history-tests.mjs",
+      "currentSha256": "7e9e17dedc74dafbc958bffd6b25343faec79c6d3055ad9750ccdf7917babe25"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-ci-source-history.mjs",
+      "currentSha256": "6273c2e7c741668cdb8fad967259c24c01ea69379718829158f81716f051ede0"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "501a03cce81f190a9121ad8e03d1bc9ad1e8d5d6eac74431b45d409462930437",
+      "currentSha256": "7f90b08daaa913aaf501c50a9eee5c52279c333470bbb224c3235e14b06f305c",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n",
+          "current": "          \"sha256\": \"8d04b2a7220f612d0740c8bf965b9ee27db19a96243e87bc8868cd89fb52d246\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n",
+          "current": "          \"sha256\": \"8d04b2a7220f612d0740c8bf965b9ee27db19a96243e87bc8868cd89fb52d246\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0\"\n",
+          "current": "          \"sha256\": \"8d04b2a7220f612d0740c8bf965b9ee27db19a96243e87bc8868cd89fb52d246\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-dotnet.test.mjs",
+      "previousSha256": "33fb826fa7a0eccb7b453e4547cac220d4a1e3c71e068cca8dea2d65b9ea3840",
+      "currentSha256": "a73aa299061df4fec8008512c449f6af8c08e67faee73b8afa8391631ae8a815",
+      "edits": [
+        {
+          "start": 249,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-dotnet-ci-policy-tests.mjs\";\nimport \"./helpers/checked-record-value-index-dotnet-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-value-index-dotnet-ci-workflow-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2a4042ad9c21a185b78b1c6513b2a49a44db7d7c5e48190d12fc07e6433eb9c0",
+      "currentSha256": "8d04b2a7220f612d0740c8bf965b9ee27db19a96243e87bc8868cd89fb52d246",
+      "edits": [
+        {
+          "start": 4788,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-dotnet-ci-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-dotnet/dotnet.cs",
+      "previousSha256": "5b89371502a58609d1dfa9b84ba2f9ad85f8f6835e84148572fac066b49e32e5",
+      "currentSha256": "ca7ec525fea0f5180fe3d7a736ae825c0a513580d18fdd594d54db45521365b5",
+      "edits": [
+        {
+          "start": 1521,
+          "previous": "",
+          "current": "    static bool NullRefused(Action call)\n    {\n        ++calls;\n        try { call(); }\n        catch (ArgumentNullException error)\n        {\n            return error.GetType() == typeof(ArgumentNullException)\n                && error.ParamName == \"value\";\n        }\n        return false;\n    }\n\n"
+        },
+        {
+          "start": 6196,
+          "previous": "",
+          "current": "        Check(NullRefused(() => Api.TrueBoolIndex(null!))\n            , \"null checked-record input is refused by the host boundary\");\n        ++rejections; Check(Recover(), \"recover after null host refusal\");\n"
+        },
+        {
+          "start": 7330,
+          "previous": "        Check(calls == 28 && rejections == 6 && recoveries == 6, \"full totals\");\n",
+          "current": "        Check(calls == 30 && rejections == 7 && recoveries == 7, \"full totals\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-fixture-tests.mjs",
+      "previousSha256": "90377b329a3904e49d2f5137b25b748f04148e3611bf63e2797ac8c52b700cc8",
+      "currentSha256": "a578fbb39c3be6b77c28e52bc864931d8cc776eba98b45a4571e5eab786f67a9",
+      "edits": [
+        {
+          "start": 5103,
+          "previous": "",
+          "current": "\tassert.match(source, /ArgumentNullException/u);\n\tassert.match(source, /Api\\.TrueBoolIndex\\(null!\\)/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-fixture.mjs",
+      "previousSha256": "4ea3992ab0c959255f4c1fb9357c783ba273b4adccc42665b58d24c6c21f4179",
+      "currentSha256": "4e2587971d27d8e5bca5a24eb417a9a634c7f75f96eb19d6d05413c68f7e511b",
+      "edits": [
+        {
+          "start": 627,
+          "previous": "\tfull: Object.freeze({ calls: 28, checks: 29, recoveries: 6, rejections: 6 })\n",
+          "current": "\tfull: Object.freeze({ calls: 30, checks: 31, recoveries: 7, rejections: 7 })\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-installed-static-tests.mjs",
+      "previousSha256": "b58aba73aa1dc9f4fadd613e4a67fab0f20c5fd6f28f1187a4bc4a8da5bd4b34",
+      "currentSha256": "aa87b0fb37923af5b86bd07628dc1ba8d648cc51bd6e2498ce04b2cb86903d57",
+      "edits": [
+        {
+          "start": 5194,
+          "previous": "",
+          "current": "\t\tassert.ok(paths.includes(\n\t\t\t\"handoff/archives/Checkedrecordvalueindices.Api.1.0.0.nupkg\"\n\t\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-installed-tests.mjs",
+      "previousSha256": "d14578efe4aa643a5dfaff640789eb4f58bd38c7237139b3e32e38f53f23beb2",
+      "currentSha256": "fe324b67ab93f6c042426dc68a677c9407f57424b6048e8c1ccfea6d193a7bab",
+      "edits": [
+        {
+          "start": 3135,
+          "previous": "\t\t\t\"tests/fixtures/checked-record-value-index-dotnet/dotnet.cs\"\n",
+          "current": "\t\t\t\".github/workflows/checked-record-value-index-dotnet.yml\"\n\t\t\t, \"scripts/check-checked-record-value-index-dotnet-ci.mjs\"\n\t\t\t, \"scripts/run-checked-record-value-index-dotnet-ci.sh\"\n\t\t\t, \"tests/fixtures/checked-record-value-index-dotnet/dotnet.cs\"\n\t\t\t, \"tests/helpers/checked-record-value-index-dotnet-ci-handoff.mjs\"\n\t\t\t, \"tests/helpers/checked-record-value-index-dotnet-ci-report.mjs\"\n\t\t\t, \"tests/helpers/checked-record-value-index-dotnet-ci-tools.mjs\"\n\t\t\t, \"tests/helpers/checked-record-value-index-dotnet-controls.mjs\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-model-records.mjs",
+      "previousSha256": "2b9cefc1d86b9c0402eef9dff8eb198cc98286bbf046142891ccf40f8a1e29c4",
+      "currentSha256": "87e76f01141c89890bc0c015f1e5426c8448ce05c81fdb6b662dc9dec43a1358",
+      "edits": [
+        {
+          "start": 3328,
+          "previous": "\t\tassert.equal(reviewedContractDifference(expected, model.bindingIr), null);\n",
+          "current": "\t\tassert.equal(reviewedContractDifference(expected, model.bindingIr), null\n\t\t\t, `build-${attempt} independently reconciles with reviewed Binding IR`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-report.mjs",
+      "previousSha256": "38d282e44a086da57fa1c447ec3fc612b59c6875bb1bea577b9d3004c40fbe37",
+      "currentSha256": "0523a1825da67ec0a95b219eed6d5ed87c6161ced953f96822113a30ffeed412",
+      "edits": [
+        {
+          "start": 1546,
+          "previous": "",
+          "current": "import {\n\tcheckedRecordValueIndexDotnetHandoffRecords\n} from \"./checked-record-value-index-dotnet-ci-handoff.mjs\";\n"
+        },
+        {
+          "start": 3503,
+          "previous": "",
+          "current": "\t\t, ...checkedRecordValueIndexDotnetHandoffRecords\n"
+        },
+        {
+          "start": 7102,
+          "previous": "\tassert.deepEqual(report.runtime, runtimeRecord);\n\tassert.deepEqual(await json(\"runtime.json\"), runtimeRecord);\n",
+          "current": "\tassert.deepEqual(report.runtime, runtimeRecord, \"Independent runtime record\");\n\tassert.deepEqual(await json(\"runtime.json\"), runtimeRecord\n\t\t, \"Retained runtime record\");\n"
+        },
+        {
+          "start": 8741,
+          "previous": "\tassert.equal((await read(\"consumer.cs\")).toString(), caller);\n",
+          "current": "\tassert.equal((await read(\"consumer.cs\")).toString(), caller\n\t\t, \"Installed C# caller source\");\n"
+        },
+        {
+          "start": 10139,
+          "previous": "\t\t\t, checkedRecordValueIndexDotnetCounts[mode]);\n",
+          "current": "\t\t\t, checkedRecordValueIndexDotnetCounts[mode]\n\t\t\t, `${stage} value-index counts`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ce1e17d28ab896201ffcb5f27193f8bc6c1c9d4ba3a4398765a89b57d320f735",
+      "currentSha256": "eaf4381f0111aea9fe0ef755dfda0aa834c5ed34b8b538047d66426038c3073b",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexDotnetCiSource, checkedRecordValueIndexDotnetCiChangedPaths } from \"./checked-record-value-index-dotnet-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 80141,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexDotnetCiSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 95904,
+          "previous": "\t...sourceHistoryMilestoneAssertionRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexDotnetCiChangedPaths\n\t, ...sourceHistoryMilestoneAssertionRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}

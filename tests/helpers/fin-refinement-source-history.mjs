@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexDotnetCiSource, checkedRecordValueIndexDotnetCiChangedPaths } from "./checked-record-value-index-dotnet-ci-source-history.mjs";
 import { beforeSourceHistoryMilestoneAssertionRepairSource, sourceHistoryMilestoneAssertionRepairChangedPaths } from "./source-history-milestone-assertion-repair.mjs";
 import { beforeCheckedRecordValueIndexDotnetInstalledSource, checkedRecordValueIndexDotnetInstalledChangedPaths } from "./checked-record-value-index-dotnet-installed-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetSource, checkedRecordValueIndexDotnetChangedPaths } from "./checked-record-value-index-dotnet-source-history.mjs";
@@ -974,6 +975,10 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedRecordValueIndexDotnetCiSource(
+		path, source, expected
+	);
+	if(sha256(source) === expected) return source;
 	source = beforeSourceHistoryMilestoneAssertionRepairSource(
 		path, source, expected
 	);
@@ -1283,7 +1288,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...sourceHistoryMilestoneAssertionRepairChangedPaths
+	...checkedRecordValueIndexDotnetCiChangedPaths
+	, ...sourceHistoryMilestoneAssertionRepairChangedPaths
 	, ...checkedRecordValueIndexDotnetInstalledChangedPaths
 	, ...checkedRecordValueIndexDotnetChangedPaths
 	, ...valueIndexBrowserLintChangedPaths
