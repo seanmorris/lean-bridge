@@ -21,6 +21,7 @@ import {
 	, reverseCheckedJavaScriptDispositionUpdate
 } from "./checked-javascript-disposition-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
@@ -42,7 +43,9 @@ test("checked-JavaScript disposition repair has one exact reversible lineage", a
 		, sha256(JSON.stringify(checkedJavaScriptDispositionCurrentChangedPaths)));
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCheckedJavaScriptDispositionSource);
 		const previous = git(["show"
 			, `${checkedJavaScriptDispositionPredecessor}:${update.path}`]);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -151,10 +154,12 @@ test("checked-JavaScript disposition closes prior unrecorded Core transitions", 
 		for(const transition of transitions)
 		{
 			const update = transition.updates.find(item => item.path === path);
+			const atTransition = git(["show"
+				, `${transition.commit}:${path}`]);
 			for(const expectedSha256 of [update.currentSha256
 				, update.previousSha256])
 				assert.equal(sha256(beforeFinRefinementSource(
-					path, current, expectedSha256
+					path, atTransition, expectedSha256
 				)), expectedSha256, `${path} ${expectedSha256}`);
 		}
 	}
@@ -165,7 +170,8 @@ test("checked-JavaScript disposition additions are immutable", async () => {
 		checkedJavaScriptDispositionHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedJavaScriptDispositionPredecessor}:${addition.path}`]
@@ -179,8 +185,12 @@ test("checked-JavaScript disposition refreshes only matching live pins", async (
 	assert.equal(record.pinCount, record.pinUpdates.reduce(
 		(count, pin) => count + pin.count, 0));
 	assert.equal(record.pinCount, 418);
-	const inventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"));
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === "docs/type-surface.v1.json");
+	assert.ok(inventoryUpdate);
+	const inventory = JSON.parse(await sourceAtFinHistoryMilestone(
+		inventoryUpdate.path, inventoryUpdate.currentSha256
+		, beforeCheckedJavaScriptDispositionSource));
 	for(const update of record.pinUpdates)
 	{
 		const files = inventory.evidence.flatMap(entry => entry.files)

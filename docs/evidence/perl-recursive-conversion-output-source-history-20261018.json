@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "milestone": "perl-recursive-conversion-output-source-v1",
+  "predecessorCommit": "68b5d31fdcb5b6da0debcedc5528ebc066bff19c",
+  "draftParentCommit": "68b5d31fdcb5b6da0debcedc5528ebc066bff19c",
+  "pathsSha256": "68c53d496f62e826d7e2ea7e0264b3dd37058334ecd840ea570c50e37305d4aa",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "outputTransition": {
+    "receiptPath": "docs/evidence/perl-recursive-conversions-20260923.json",
+    "receiptSha256": "e5a990073852c99cc29cf2ec8d58d35844e5a183a01aa9d45a2edb4c9526acc1",
+    "previousSourceSha256": "a3b78bfd4200c9a189b6ab05a01cfee9297a7c1c9e26d6d262d181b979cef1a7",
+    "currentSourceSha256": "a98e5c03f56b94f8c775cca6be782f2b60e861ff2997f26fd5c2e6639cdfb2ad",
+    "stableXsSha256": "a08f1dab42a9dfbf42657cada90fc3cd215b8d67eb08bb80860e8eb428df5f76",
+    "stableValuesSha256": "e0a538822ea8c72f259ccfcfa097e33ac991a6417c156a753004dc72978b4322",
+    "inputs": [
+      {
+        "path": "src/backends/c/copied-graph-layout.mjs",
+        "previousSha256": "d3682b19adfb22fc39560d60c03daeb4b1f14593b2f190a3c4327956148d9f3d",
+        "currentSha256": "bf3e31b5ba6c37446b34db7fe830259c9108df3508de0a76ba8009bb9267737d"
+      },
+      {
+        "path": "src/backends/perl/copied-graph-conversions.mjs",
+        "previousSha256": "eac9937c2361496fd38011e812b3a0c1f37cbbb386e3ea46b666f75e65391c42",
+        "currentSha256": "eac9937c2361496fd38011e812b3a0c1f37cbbb386e3ea46b666f75e65391c42"
+      },
+      {
+        "path": "src/backends/perl/copied-graph-runtime.mjs",
+        "previousSha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f",
+        "currentSha256": "cd2f2b345c66a7f5f1a82f4e75a47985ce5b5dd8dd464f05bc24982e4f2e325f"
+      },
+      {
+        "path": "src/backends/perl/copied-graph-values.mjs",
+        "previousSha256": "01990917bc261d4875f96fad26918563617f0ce3c8e462b8340efbb9f0eef734",
+        "currentSha256": "9e690e9e28018094f3e798eef0449b333a0d750b317b2704b6594086aecef0ca"
+      },
+      {
+        "path": "src/backends/perl/copied-graph-xs.mjs",
+        "previousSha256": "a493440cd6a34d11860ab8c98e06abd8715866e4e2077b2fc3bf1472a84a8610",
+        "currentSha256": "15212a9e3fb7a4d68bf18232bb5380bf7de5dc6bc662a470dcd9d6831b898a54"
+      },
+      {
+        "path": "tests/helpers/native-recursive-reviewed.mjs",
+        "previousSha256": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439",
+        "currentSha256": "110c4cd45b95b3f0660cac0aae48f0db3af989b21e79fec83aa3baad75d3e439"
+      }
+    ]
+  },
+  "additions": [
+    {
+      "path": "scripts/update-perl-recursive-conversion-output-source-history.mjs",
+      "currentSha256": "83be61336cc6bddf38d06b1ad33873d92c7e2356969a4c428c812b8e04cc39d7"
+    },
+    {
+      "path": "tests/helpers/perl-recursive-conversion-output-source-history.mjs",
+      "currentSha256": "9af7e475587b5a68d46bf908c112db1401ab5d85ea56ba746ea9e57a8a799ac1"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "57899741b6ab3f281fae9879f26958e8533bb5bf44c8ac85395d70fc91bfc63d",
+      "currentSha256": "e37525d6a19ff7f33f2438e3a81ffaae0389a2361211a4571e72aa1d1a6ba844",
+      "edits": [
+        {
+          "start": 922,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1870,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCheckedJavaScriptDispositionSource);\n"
+        },
+        {
+          "start": 6929,
+          "previous": "",
+          "current": "\t\t\tconst atTransition = git([\"show\"\n\t\t\t\t, `${transition.commit}:${path}`]);\n"
+        },
+        {
+          "start": 7139,
+          "previous": "\t\t\t\t\tpath, current, expectedSha256\n",
+          "current": "\t\t\t\t\tpath, atTransition, expectedSha256\n"
+        },
+        {
+          "start": 7462,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n"
+        },
+        {
+          "start": 8108,
+          "previous": "\tconst inventory = JSON.parse(await readFile(\n\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "current": "\tconst inventoryUpdate = record.updates.find(update =>\n\t\tupdate.path === \"docs/type-surface.v1.json\");\n\tassert.ok(inventoryUpdate);\n\tconst inventory = JSON.parse(await sourceAtFinHistoryMilestone(\n\t\tinventoryUpdate.path, inventoryUpdate.currentSha256\n\t\t, beforeCheckedJavaScriptDispositionSource));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "651ca0ef6bfc8742bd5fd15cfe086694c2579a8831f8f558dc73d45b946dd5be",
+      "currentSha256": "489f9ecd401f01b3b47699535b767e70e33ed5ba39e4f88e1c0b91af0f6a7053",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePerlRecursiveConversionOutputSource, perlRecursiveConversionOutputChangedPaths } from \"./perl-recursive-conversion-output-source-history.mjs\";\n"
+        },
+        {
+          "start": 77236,
+          "previous": "",
+          "current": "\tsource = beforePerlRecursiveConversionOutputSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 90436,
+          "previous": "\t...mutualCheckedRecordNativeReviewChangedPaths\n",
+          "current": "\t...perlRecursiveConversionOutputChangedPaths\n\t, ...mutualCheckedRecordNativeReviewChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-copied-graph-conversions.test.mjs",
+      "previousSha256": "4864ffb7cfef8ee0d9b048f91bfaecc62b5c99105050362f40f51af4706de397",
+      "currentSha256": "bf71cc348eb62140a5a53349ff6f9e38d12060397267e81d3ba1a9fdcf38ac47",
+      "edits": [
+        {
+          "start": 139,
+          "previous": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\nimport { mkdtemp, readFile, readdir, rm } from \"node:fs/promises\";\n"
+        },
+        {
+          "start": 302,
+          "previous": "import { join } from \"node:path\";\n",
+          "current": "import { join, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 715,
+          "previous": "",
+          "current": "import {\n\tassertPerlRecursiveConversionOutputTransition\n\t, perlRecursiveConversionOutputAddedPaths\n\t, perlRecursiveConversionOutputChangedPaths\n\t, perlRecursiveConversionOutputDraftParent\n\t, perlRecursiveConversionOutputHistoryPath\n\t, perlRecursiveConversionOutputPredecessor\n\t, reversePerlRecursiveConversionOutputUpdate\n} from \"./helpers/perl-recursive-conversion-output-source-history.mjs\";\nimport { finRefinementNormalizationPaths } from \"./helpers/fin-refinement-source-history.mjs\";\nimport { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1835,
+          "previous": "",
+          "current": "const git = args => execFileSync(\"git\", args, {\n\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n});\n\ntest(\"Perl recursive conversion output repair has one exact reversible lineage\", async () => {\n\tconst record = JSON.parse(await readFile(\n\t\tperlRecursiveConversionOutputHistoryPath, \"utf8\"));\n\tassert.equal(record.schemaVersion, 1);\n\tassert.equal(record.milestone\n\t\t, \"perl-recursive-conversion-output-source-v1\");\n\tassert.equal(record.predecessorCommit\n\t\t, perlRecursiveConversionOutputPredecessor);\n\tassert.equal(record.draftParentCommit\n\t\t, perlRecursiveConversionOutputDraftParent);\n\tassert.deepEqual(record.updates.map(update => update.path)\n\t\t, perlRecursiveConversionOutputChangedPaths);\n\tassert.deepEqual(record.additions.map(item => item.path)\n\t\t, perlRecursiveConversionOutputAddedPaths);\n\tassert.equal(record.pathsSha256, sha256(JSON.stringify(\n\t\tperlRecursiveConversionOutputChangedPaths)));\n\tassert.equal(record.pinCount, 0);\n\tassert.deepEqual(record.pinUpdates, []);\n\tfor(const update of record.updates)\n\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n\t\tconst previous = git([\"show\"\n\t\t\t, `${perlRecursiveConversionOutputPredecessor}:${update.path}`]);\n\t\tassert.equal(sha256(current), update.currentSha256, update.path);\n\t\tassert.equal(sha256(previous), update.previousSha256, update.path);\n\t\tassert.equal(reversePerlRecursiveConversionOutputUpdate(\n\t\t\tcurrent, update), previous, update.path);\n\t\tassert.ok(finRefinementNormalizationPaths.includes(update.path));\n\t\tfor(const mutate of [\n\t\t\titem => { item.path = \"unknown\"; }\n\t\t\t, item => { item.previousSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.currentSha256 = \"0\".repeat(64); }\n\t\t\t, item => { item.edits = []; }\n\t\t\t, item => { item.edits[0].start = -1; }\n\t\t\t, item => { item.edits[0].current += \"unknown\"; }\n\t\t]) {\n\t\t\tconst changed = structuredClone(update);\n\t\t\tmutate(changed);\n\t\t\tassert.throws(() => reversePerlRecursiveConversionOutputUpdate(\n\t\t\t\tcurrent, changed));\n\t\t}\n\t}\n\tfor(const addition of record.additions)\n\t{\n\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n\t\tassert.notEqual(spawnSync(\"git\", [\"cat-file\", \"-e\"\n\t\t\t, `${perlRecursiveConversionOutputPredecessor}:${addition.path}`]\n\t\t, { stdio: \"ignore\" }).status, 0, addition.path);\n\t}\n});\n\ntest(\"Perl recursive conversion output history writer refuses another checkout\"\n\t, async t => {\n\t\tconst root = await mkdtemp(join(\n\t\t\ttmpdir(), \"lean-bridge-perl-conversion-output-guard-\"));\n\t\tt.after(() => rm(root, { recursive: true, force: true }));\n\t\tconst environment = Object.fromEntries(Object.entries(process.env)\n\t\t\t.filter(([key]) => !key.startsWith(\"GIT_\")));\n\t\tconst localGit = args => execFileSync(\"git\", args, {\n\t\t\tcwd: root, env: environment, stdio: \"pipe\"\n\t\t});\n\t\tlocalGit([\"init\", \"--quiet\"]);\n\t\tlocalGit([\"-c\", \"user.name=Test\", \"-c\"\n\t\t\t, \"user.email=test@example.invalid\", \"-c\", \"commit.gpgsign=false\"\n\t\t\t, \"commit\", \"--allow-empty\", \"--quiet\", \"-m\", \"unrelated\"]);\n\t\tconst result = spawnSync(process.execPath, [resolve(\n\t\t\t\"scripts/update-perl-recursive-conversion-output-source-history.mjs\"\n\t\t)], { cwd: root, env: environment, encoding: \"utf8\" });\n\t\tassert.equal(result.status, 1);\n\t\tassert.match(result.stderr, /must stay on its exact draft parent/u);\n\t\tassert.deepEqual(await readdir(root), [\".git\"]);\n\t}\n);\n"
+        },
+        {
+          "start": 5290,
+          "previous": "\tconst receipt = JSON.parse(await readFile(\"docs/evidence/perl-recursive-conversions-20260923.json\", \"utf8\"));\n",
+          "current": "\tconst receiptPath = \"docs/evidence/perl-recursive-conversions-20260923.json\";\n\tconst receipt = JSON.parse(await readFile(receiptPath, \"utf8\"));\n"
+        },
+        {
+          "start": 7199,
+          "previous": "",
+          "current": "\tassertPerlRecursiveConversionOutputTransition(receiptPath, receipt, compiled);\n"
+        },
+        {
+          "start": 7378,
+          "previous": "\t\tassert.equal(observation.sourceSha256, sha256(compiled.source));\n",
+          "current": ""
+        }
+      ]
+    }
+  ]
+}

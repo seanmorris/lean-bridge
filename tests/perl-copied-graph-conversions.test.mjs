@@ -4,14 +4,26 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateCopiedPerlGraphConversions } from "../src/backends/perl/copied-graph-conversions.mjs";
 import { generateCopiedPerlGraphXs } from "../src/backends/perl/copied-graph-xs.mjs";
 import { nativeRecursiveReviewedIr } from "./helpers/native-recursive-reviewed.mjs";
+import {
+	assertPerlRecursiveConversionOutputTransition
+	, perlRecursiveConversionOutputAddedPaths
+	, perlRecursiveConversionOutputChangedPaths
+	, perlRecursiveConversionOutputDraftParent
+	, perlRecursiveConversionOutputHistoryPath
+	, perlRecursiveConversionOutputPredecessor
+	, reversePerlRecursiveConversionOutputUpdate
+} from "./helpers/perl-recursive-conversion-output-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import { assertAdministrativeSourceUpdate } from "./helpers/test-registration-history.mjs";
 import { perlAliasGraphIr } from "./helpers/perl-graph-values-fixture.mjs";
 import { perlConversionIr, perlGraphCommands, perlGraphIsolatedXs, preparePerlGraphProbe, compilePerlGraphProbe } from "./helpers/perl-graph-probes.mjs";
@@ -19,9 +31,89 @@ import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 
 const generate = ir => generateCopiedPerlGraphConversions(ir, "LeanBridge::Recursive");
+const git = args => execFileSync("git", args, {
+	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+});
+
+test("Perl recursive conversion output repair has one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		perlRecursiveConversionOutputHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "perl-recursive-conversion-output-source-v1");
+	assert.equal(record.predecessorCommit
+		, perlRecursiveConversionOutputPredecessor);
+	assert.equal(record.draftParentCommit
+		, perlRecursiveConversionOutputDraftParent);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, perlRecursiveConversionOutputChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, perlRecursiveConversionOutputAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		perlRecursiveConversionOutputChangedPaths)));
+	assert.equal(record.pinCount, 0);
+	assert.deepEqual(record.pinUpdates, []);
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256);
+		const previous = git(["show"
+			, `${perlRecursiveConversionOutputPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reversePerlRecursiveConversionOutputUpdate(
+			current, update), previous, update.path);
+		assert.ok(finRefinementNormalizationPaths.includes(update.path));
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits = []; }
+			, item => { item.edits[0].start = -1; }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update);
+			mutate(changed);
+			assert.throws(() => reversePerlRecursiveConversionOutputUpdate(
+				current, changed));
+		}
+	}
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await readFile(addition.path))
+			, addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${perlRecursiveConversionOutputPredecessor}:${addition.path}`]
+		, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("Perl recursive conversion output history writer refuses another checkout"
+	, async t => {
+		const root = await mkdtemp(join(
+			tmpdir(), "lean-bridge-perl-conversion-output-guard-"));
+		t.after(() => rm(root, { recursive: true, force: true }));
+		const environment = Object.fromEntries(Object.entries(process.env)
+			.filter(([key]) => !key.startsWith("GIT_")));
+		const localGit = args => execFileSync("git", args, {
+			cwd: root, env: environment, stdio: "pipe"
+		});
+		localGit(["init", "--quiet"]);
+		localGit(["-c", "user.name=Test", "-c"
+			, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+			, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+		const result = spawnSync(process.execPath, [resolve(
+			"scripts/update-perl-recursive-conversion-output-source-history.mjs"
+		)], { cwd: root, env: environment, encoding: "utf8" });
+		assert.equal(result.status, 1);
+		assert.match(result.stderr, /must stay on its exact draft parent/u);
+		assert.deepEqual(await readdir(root), [".git"]);
+	}
+);
 
 test("recorded Perl conversions bind all four ABIs without claiming installed CPAN support", async () => {
-	const receipt = JSON.parse(await readFile("docs/evidence/perl-recursive-conversions-20260923.json", "utf8"));
+	const receiptPath = "docs/evidence/perl-recursive-conversions-20260923.json";
+	const receipt = JSON.parse(await readFile(receiptPath, "utf8"));
 	assert.equal(receipt.planNode, 1219); assert.equal(receipt.installedPackage, false);
 	for(const [path, hash] of Object.entries(receipt.sourceHashes)) await assertAdministrativeSourceUpdate(path, hash);
 	const model = generate(perlConversionIr());
@@ -43,10 +135,10 @@ test("recorded Perl conversions bind all four ABIs without claiming installed CP
 	assert.deepEqual(receipt.native.observations.map(item => item.reviewed), [false, true]);
 	const ir = nativeRecursiveReviewedIr(); ir.declarations.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 	const compiled = generateCopiedPerlGraphXs(ir, "LeanBridge::Recursive");
+	assertPerlRecursiveConversionOutputTransition(receiptPath, receipt, compiled);
 	for(const observation of receipt.native.observations)
 	{
 		assert.equal(observation.exports, 18);
-		assert.equal(observation.sourceSha256, sha256(compiled.source));
 		assert.equal(observation.xsSha256, sha256(compiled.xs));
 		assert.equal(observation.valuesSha256, sha256(compiled.valuesSource));
 		assert.equal(observation.probeSha256, sha256(await readFile("tests/fixtures/structured-types/recursive-perl-lean.pl")));
