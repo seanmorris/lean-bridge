@@ -10,7 +10,6 @@ import { cp, lstat, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import test from "node:test";
-import "./helpers/checked-record-value-index-foundation-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { assertRefinement } from "../src/abi/refinements.mjs";
