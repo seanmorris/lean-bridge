@@ -174,6 +174,35 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 /**
+ * Keep callback contracts Fin-only after the shared structural validator has
+ * authenticated their transport shape. Copied records and variants may carry
+ * nested Fin bounds, but callback contracts cannot select checked constructors.
+ *
+ * @param refinement - A validated callback refinement tree.
+ */
+export const assertCallbackFinRefinement = refinement => {
+	if(refinement === null || refinement.kind === "fin") return;
+	if(refinement.kind === "record")
+	{
+		refinement.fields.forEach(field =>
+			assertCallbackFinRefinement(field.refinement));
+		return;
+	}
+	if(refinement.kind === "variant")
+	{
+		refinement.cases.forEach(branch => branch.fields.forEach(field =>
+			assertCallbackFinRefinement(field.refinement)));
+		return;
+	}
+	if(["array", "list", "option", "tuple", "result"].includes(refinement.kind))
+	{
+		refinement.arguments.forEach(assertCallbackFinRefinement);
+		return;
+	}
+	throw new TypeError("Callback refinements support only Fin constraints");
+};
+
+/**
  * Validate callback constraints against an erased callable signature. Copied
  * nominal Fin trees require the enclosing document's type definitions.
  *
@@ -193,8 +222,13 @@ export const callbackRefinement = (signature, value, types = []) => {
 		, representation: "copied"
 		, source: { declaration: definition.id?.startsWith("lean:") ? definition.id.slice(5) : null, extensions: {} }
 	});
-	for(const [index, refinement] of value.parameters.entries()) assertRefinement(refinement, signature.parameters[index], 1, structural, definitions);
+	for(const [index, refinement] of value.parameters.entries())
+	{
+		assertRefinement(refinement, signature.parameters[index], 1, structural, definitions);
+		assertCallbackFinRefinement(refinement);
+	}
 	assertRefinement(value.result, signature.result, 1, structural, definitions);
+	assertCallbackFinRefinement(value.result);
 	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
 	return value;
 };

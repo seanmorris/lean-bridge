@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { assertComponentStructuredCallableBindings, componentStructuredCallableSignatureText } from "../src/abi/component-structured-callables.mjs";
+import { callbackRefinement } from "../src/abi/refinements.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { generateComponentStructuredCallableAdapters } from "../src/build/component-structured-callable-adapters.mjs";
@@ -61,6 +62,12 @@ test("Fin callback keys retain bounds and authenticate compiler and public metad
 		const forged = structuredClone(generated.plan); mutate(forged);
 		assert.throws(() => validateCompilerAdapterPlan(forged));
 	}
+	const schemaSubtype = structuredClone(generated.plan);
+	schemaSubtype.privateAbi.callbacks[0].refinements.result = {
+		kind: "subtype", constructor: "Structured.checked"
+	};
+	await assert.rejects(() => assertJsonSchema(
+		"compiler-adapter-plan", schemaSubtype));
 	const mismatched = structuredClone(abi); mismatched.callbacks[0].refinements.result.bound = "5";
 	assert.throws(() => assertComponentStructuredCallableBindings(mismatched, ir), /refinement mismatch/);
 });
@@ -144,7 +151,24 @@ test("structured callbacks still reject constructor-selected nominal trees", () 
 			, refinement: field.name === "count"
 				? { kind: "subtype", constructor: "Structured.checkedCount" } : null })) });
 	callback.source.extensions["lean-lang.org/refinements"] = { parameters: [selected()], result: selected() };
-	assert.throws(() => plan(ir), /Nominal Subtype selections cannot share a component with callbacks yet/u);
+	assert.throws(() => plan(ir), /only Fin constraints/u);
+	for(const site of ["parameter", "result"])
+	{
+		const bare = finCallback();
+		const definition = bare.types.find(type => type.kind === "callback");
+		const subtype = { kind: "subtype", constructor: "Structured.checkedCount" };
+		const refinements = { parameters: [site === "parameter" ? subtype : null]
+			, result: site === "result" ? subtype : null };
+		definition.source.extensions["lean-lang.org/refinements"] = refinements;
+		const signature = {
+			parameters: definition.callable.parameters.map(parameter => parameter.type)
+			, result: definition.callable.result.type
+		};
+		assert.throws(() => callbackRefinement(signature, refinements, bare.types)
+			, /only Fin constraints/u);
+		assert.throws(() => plan(bare), /only Fin constraints/u);
+		assert.throws(() => generateJavaScriptPackage(bare), /only Fin constraints/u);
+	}
 });
 
 test("structured compiler admission matches independent acyclic, recursive and mixed primitive contracts", async () => {

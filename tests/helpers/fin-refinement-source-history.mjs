@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackFinGateRepairSource, callbackFinGateRepairChangedPaths } from "./callback-fin-gate-repair-source-history.mjs";
 import { beforeDownstreamFinCiRepairHistoricalSource, beforeDownstreamFinCiRepairSource, downstreamFinCiRepairChangedPaths, downstreamFinCiRepairHistoricalPaths } from "./downstream-fin-ci-repair-source-history.mjs";
 import { beforeHistoryHubReachabilityRepairSource, historyHubReachabilityRepairChangedPaths } from "./history-hub-reachability-repair-source-history.mjs";
 import { beforeInheritedCheckedRecordFoundationVerifierSource, inheritedCheckedRecordFoundationVerifierChangedPaths, inheritedCheckedRecordFoundationVerifierHistoricalPaths } from "./inherited-checked-record-foundation-verifier-source-history.mjs";
@@ -961,6 +962,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCallbackFinGateRepairSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeDownstreamFinCiRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeHistoryHubReachabilityRepairSource(path, source, expected);
@@ -1230,7 +1233,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...downstreamFinCiRepairChangedPaths
+	...callbackFinGateRepairChangedPaths
+	, ...downstreamFinCiRepairChangedPaths
 	, ...downstreamFinCiRepairHistoricalPaths
 	, ...historyHubReachabilityRepairChangedPaths
 	, ...inheritedCheckedRecordFoundationVerifierChangedPaths
