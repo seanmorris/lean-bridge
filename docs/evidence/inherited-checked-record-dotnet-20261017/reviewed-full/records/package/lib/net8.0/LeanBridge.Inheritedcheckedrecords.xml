@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Inheritedcheckedrecords</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Span">
+            <summary>A copied Lean record.</summary>
+            <param name="Lo">Contract type: <c>nat</c>.</param>
+            <param name="Hi">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Span.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="Lo">Contract type: <c>nat</c>.</param>
+            <param name="Hi">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Span.Lo">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Span.Hi">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Ticket">
+            <summary>A copied Lean record.</summary>
+            <param name="ToSpan">Contract type: <c>Span</c>.</param>
+            <param name="Word">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Ticket.#ctor(LeanBridge.Inheritedcheckedrecords.Span,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="ToSpan">Contract type: <c>Span</c>.</param>
+            <param name="Word">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Ticket.ToSpan">
+            <summary>Contract type: <c>Span</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Ticket.Word">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Stamped">
+            <summary>A copied Lean record.</summary>
+            <param name="ToTicket">Contract type: <c>Ticket</c>.</param>
+            <param name="Mark">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Stamped.#ctor(LeanBridge.Inheritedcheckedrecords.Ticket,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+            <param name="ToTicket">Contract type: <c>Ticket</c>.</param>
+            <param name="Mark">Contract type: <c>nat</c>.</param>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Stamped.ToTicket">
+            <summary>Contract type: <c>Ticket</c>.</summary>
+        </member>
+        <member name="P:LeanBridge.Inheritedcheckedrecords.Stamped.Mark">
+            <summary>Contract type: <c>nat</c>.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+            <remarks>Copied Lean aliases use their CLR target values. The binding manifest preserves their contract identities.
+            <list type="table">
+            <item><term><c>TicketAlias</c></term><description><c>Ticket</c> projects to <c>Ticket</c>.</description></item>
+            </list></remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Aliased(LeanBridge.Inheritedcheckedrecords.Ticket)">
+            <param name="value0">Contract type: <c>TicketAlias</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.mkTicket; value0.toSpan checked by InheritedCheckedRecords.normalizeSpan; value0.word checked by InheritedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Echo(LeanBridge.Inheritedcheckedrecords.Ticket)">
+            <param name="value0">Contract type: <c>Ticket</c>.</param>
+            <returns>Contract type: <c>Ticket</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.normalizeTicket; value0.toSpan checked by InheritedCheckedRecords.mkSpan; value0.word checked by InheritedCheckedRecords.normalizeWord; result projects proof-backed record payload fields; result.toSpan projects proof-backed record payload fields; result.word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.First(LeanBridge.Inheritedcheckedrecords.Ticket)">
+            <param name="value0">Contract type: <c>Ticket</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.mkTicket; value0.toSpan checked by InheritedCheckedRecords.mkSpan; value0.word checked by InheritedCheckedRecords.mkWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Nested(LeanBridge.Inheritedcheckedrecords.Stamped)">
+            <param name="value0">Contract type: <c>Stamped</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.mkStamped; value0.toTicket checked by InheritedCheckedRecords.mkTicket; value0.toTicket.toSpan checked by InheritedCheckedRecords.mkSpan; value0.toTicket.word checked by InheritedCheckedRecords.mkWord; value0.mark &lt; 8.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Normalized(LeanBridge.Inheritedcheckedrecords.Ticket)">
+            <param name="value0">Contract type: <c>Ticket</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.normalizeTicket; value0.toSpan checked by InheritedCheckedRecords.normalizeSpan; value0.word checked by InheritedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Pair(LeanBridge.Inheritedcheckedrecords.Ticket,LeanBridge.Inheritedcheckedrecords.Ticket)">
+            <param name="value0">Contract type: <c>Ticket</c>.</param>
+            <param name="value1">Contract type: <c>Ticket</c>.</param>
+            <returns>Contract type: <c>nat</c>.</returns>
+            <remarks>Checked Lean Fin bounds: value0 checked by InheritedCheckedRecords.mkTicket; value0.toSpan checked by InheritedCheckedRecords.mkSpan; value0.word checked by InheritedCheckedRecords.mkWord; value1 checked by InheritedCheckedRecords.normalizeTicket; value1.toSpan checked by InheritedCheckedRecords.normalizeSpan; value1.word checked by InheritedCheckedRecords.normalizeWord.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Produce(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Ticket</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields; result.toSpan projects proof-backed record payload fields; result.word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.ProduceStamped(System.Numerics.BigInteger)">
+            <param name="value0">Contract type: <c>nat</c>.</param>
+            <returns>Contract type: <c>Stamped</c>.</returns>
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields; result.toTicket projects proof-backed record payload fields; result.toTicket.toSpan projects proof-backed record payload fields; result.toTicket.word projects the Subtype base value; result.mark &lt; 8.</remarks>
+        </member>
+    </members>
+</doc>

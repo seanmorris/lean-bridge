@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+  "componentReceiptSha256": "002ba6ed602e2d3c2205a11a7a7aa196113be7b84cf618412d050ffe38525a46",
+  "files": {
+    "README.md": {
+      "bytes": 928,
+      "sha256": "ce768476867741ce0f7d25cac66f1a2b52a32704944d82c10891fc772d7ca8f8"
+    },
+    "binding-manifest.json": {
+      "bytes": 924,
+      "sha256": "55380e35d8872c3852dd76c6e79ef4087ec1350f67d03fe8b0be76d88fdc1f92"
+    },
+    "include/inheritedcheckedrecords.h": {
+      "bytes": 4163,
+      "sha256": "5776a2ae5207e615b581db05b58622623011f1d97facf8db1f03c97c88ec554d"
+    },
+    "internal/inheritedcheckedrecords_runtime.h": {
+      "bytes": 2114,
+      "sha256": "e5eaf6253b8c1c7e11517da8ec9bcac27fb1febce93dea3125ec06d1ca6d98e1"
+    },
+    "lib/libinheritedcheckedrecords.so": {
+      "bytes": 49328,
+      "sha256": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27"
+    },
+    "src/inheritedcheckedrecords.c": {
+      "bytes": 11862,
+      "sha256": "69c1b6bcce63a77f740e053b03798efb46fdc2d17e23c9c93bd6a2c52081396c"
+    },
+    "src/native.c": {
+      "bytes": 25207,
+      "sha256": "16ec422a2be7dfff98ceed6f65e837935df3988121a36daabda621c7ab6d2cf1"
+    }
+  },
+  "library": "libinheritedcheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1
+}

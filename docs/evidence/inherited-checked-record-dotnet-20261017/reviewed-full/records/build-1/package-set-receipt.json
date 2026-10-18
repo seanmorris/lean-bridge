@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51397292,
+          "path": "archives/Inheritedcheckedrecords.Api.1.0.0.nupkg",
+          "sha256": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Inheritedcheckedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "74646dc971e345f0d7f77c4f235f304b937237e42f724eb031ae2fbf80f1b452"
+  }
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Inheritedcheckedrecords</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Span">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Span.#ctor(System.Numerics.BigInteger,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Ticket">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Ticket.#ctor(LeanBridge.Inheritedcheckedrecords.Span,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Stamped">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Stamped.#ctor(LeanBridge.Inheritedcheckedrecords.Ticket,System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Inheritedcheckedrecords.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.Produce(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields; result.toSpan projects proof-backed record payload fields; result.word projects the Subtype base value.</remarks>
+        </member>
+        <member name="M:LeanBridge.Inheritedcheckedrecords.Api.ProduceStamped(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields; result.toTicket projects proof-backed record payload fields; result.toTicket.toSpan projects proof-backed record payload fields; result.toTicket.word projects the Subtype base value; result.mark &lt; 8.</remarks>
+        </member>
+    </members>
+</doc>

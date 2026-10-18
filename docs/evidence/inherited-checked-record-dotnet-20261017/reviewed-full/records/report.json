@@ -1,0 +1,893 @@
+{
+  "apiProbe": {
+    "assemblySha256": "4c25ff8b2ac6886c3efbf01559fc118b59add4e15c04560a4944b9bbf7c5ae99",
+    "build": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "  Probe -> /tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/api-probe/out/Probe.dll\n\nBuild succeeded.\n    0 Warning(s)\n    0 Error(s)\n\nTime Elapsed 00:00:01.23\n"
+    },
+    "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/api-probe",
+    "diagnostics": {
+      "$schema": "http://json.schemastore.org/sarif-2.1.0",
+      "runs": [
+        {
+          "columnKind": "utf16CodeUnits",
+          "invocations": [
+            {
+              "executionSuccessful": true,
+              "ruleConfigurationOverrides": [
+                {
+                  "configuration": {
+                    "level": "error"
+                  },
+                  "descriptor": {
+                    "id": "SYSLIB1098",
+                    "index": 11
+                  }
+                },
+                {
+                  "configuration": {
+                    "level": "error"
+                  },
+                  "descriptor": {
+                    "id": "SYSLIB1099",
+                    "index": 12
+                  }
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "analyzerExecutionTime": "0.108"
+          },
+          "results": [],
+          "tool": {
+            "driver": {
+              "dottedQuadFileVersion": "4.11.0.0",
+              "name": "Microsoft (R) Visual C# Compiler",
+              "rules": [
+                {
+                  "defaultConfiguration": {
+                    "level": "note"
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1045",
+                  "id": "SYSLIB1045",
+                  "properties": {
+                    "category": "Performance",
+                    "executionTimeInPercentage": "3",
+                    "executionTimeInSeconds": "0.004"
+                  },
+                  "shortDescription": {
+                    "text": "Convert to 'GeneratedRegexAttribute'."
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "note"
+                  },
+                  "fullDescription": {
+                    "text": "Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time"
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1054",
+                  "id": "SYSLIB1054",
+                  "properties": {
+                    "category": "Interoperability",
+                    "executionTimeInPercentage": "12",
+                    "executionTimeInSeconds": "0.013"
+                  },
+                  "shortDescription": {
+                    "text": "Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "A type with a 'System.Runtime.InteropServices.CustomMarshallerAttribute' must specify a non-'null' managed type"
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1055",
+                  "id": "SYSLIB1055",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.002"
+                  },
+                  "shortDescription": {
+                    "text": "Invalid 'CustomMarshallerAttribute' usage"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "The unmanaged type for a custom marshaller must be a C# unmanaged type."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1056",
+                  "id": "SYSLIB1056",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.002"
+                  },
+                  "shortDescription": {
+                    "text": "Specified marshaller type is invalid"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "A stateless value marshaller that supports marshalling from managed to unmanaged must provide a one-parameter 'ConvertToUnmanaged' method that takes the managed value as the parameter and returns a value of the 'unmanaged' type."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1057",
+                  "id": "SYSLIB1057",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.002"
+                  },
+                  "shortDescription": {
+                    "text": "Marshaller type does not have the required shape"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "An entry-point type for marshalling a given type must have a 'System.Runtime.InteropServices.CustomMarshallerAttribute' that specifies this type as the managed type."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1058",
+                  "id": "SYSLIB1058",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "<1",
+                    "executionTimeInSeconds": "<0.001"
+                  },
+                  "shortDescription": {
+                    "text": "Invalid 'NativeMarshallingAttribute' usage"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "A marshaller type must either be a stateless static class or a stateful value type. A non-static class is not allowed."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1060",
+                  "id": "SYSLIB1060",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.002"
+                  },
+                  "shortDescription": {
+                    "text": "Specified marshaller type is invalid"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "The return type of 'GetPinnableReference' (after accounting for 'ref') must be blittable."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1061",
+                  "id": "SYSLIB1061",
+                  "properties": {
+                    "category": "Usage",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.002"
+                  },
+                  "shortDescription": {
+                    "text": "Marshaller type has incompatible method signatures"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "fullDescription": {
+                    "text": "Using 'GeneratedComInterfaceAttribute' and 'InterfaceTypeAttribute' is not supported with 'ComInterfaceType' value '{0}'."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1090",
+                  "id": "SYSLIB1090",
+                  "properties": {
+                    "category": "ComInterfaceGenerator",
+                    "executionTimeInPercentage": "<1",
+                    "executionTimeInSeconds": "<0.001"
+                  },
+                  "shortDescription": {
+                    "text": "'GeneratedComInterfaceType' does not support the 'ComInterfaceType' value supplied to 'InterfaceTypeAttribute' on the same type."
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "note"
+                  },
+                  "fullDescription": {
+                    "text": "Use 'GeneratedComInterfaceAttribute' instead of 'ComImportAttribute' to generate COM marshalling code at compile time"
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1096",
+                  "id": "SYSLIB1096",
+                  "properties": {
+                    "category": "Interoperability",
+                    "executionTimeInPercentage": "6",
+                    "executionTimeInSeconds": "0.007"
+                  },
+                  "shortDescription": {
+                    "text": "Convert to 'GeneratedComInterface'"
+                  }
+                },
+                {
+                  "defaultConfiguration": {
+                    "level": "note"
+                  },
+                  "fullDescription": {
+                    "text": "This type implements at least one type with the 'GeneratedComInterfaceAttribute' attribute. Add the 'GeneratedComClassAttribute' to enable passing this type to COM and exposing the COM interfaces for the types with the 'GeneratedComInterfaceAttribute' from objects of this type."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1097",
+                  "id": "SYSLIB1097",
+                  "properties": {
+                    "category": "Interoperability",
+                    "executionTimeInPercentage": "57",
+                    "executionTimeInSeconds": "0.062"
+                  },
+                  "shortDescription": {
+                    "text": "Add 'GeneratedComClassAttribute' to enable passing objects of this type to COM"
+                  }
+                },
+                {
+                  "fullDescription": {
+                    "text": ".NET COM hosting with 'EnableComHosting' only supports built-in COM interop. It does not support source-generated COM interop with 'GeneratedComInterfaceAttribute'."
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1098",
+                  "id": "SYSLIB1098",
+                  "properties": {
+                    "category": "Interoperability",
+                    "executionTimeInPercentage": "1",
+                    "executionTimeInSeconds": "0.001"
+                  },
+                  "shortDescription": {
+                    "text": ".NET COM hosting with 'EnableComHosting' does not support interfaces with the 'GeneratedComInterfaceAttribute'"
+                  }
+                },
+                {
+                  "fullDescription": {
+                    "text": "COM Interop APIs on 'System.Runtime.InteropServices.Marshal' do not support source-generated COM and will fail at runtime"
+                  },
+                  "helpUri": "https://learn.microsoft.com/dotnet/fundamentals/syslib-diagnostics/syslib1099",
+                  "id": "SYSLIB1099",
+                  "properties": {
+                    "category": "Interoperability",
+                    "executionTimeInPercentage": "16",
+                    "executionTimeInSeconds": "0.017"
+                  },
+                  "shortDescription": {
+                    "text": "COM Interop APIs on 'System.Runtime.InteropServices.Marshal' do not support source-generated COM"
+                  }
+                }
+              ],
+              "semanticVersion": "4.11.0",
+              "version": "4.11.0-3.25569.22 (3fb752d4)"
+            }
+          }
+        }
+      ],
+      "version": "2.1.0"
+    },
+    "outputs": {
+      "Probe.dll": {
+        "bytes": 4608,
+        "sha256": "34e01f761751b679e0ffefe076630f30c6d8811e04381224475ab4e6fc9a4cd2"
+      }
+    },
+    "restore": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "  Determining projects to restore...\n  Restored /tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/api-probe/Probe.csproj (in 39 ms).\n"
+    }
+  },
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Inheritedcheckedrecords.Api.1.0.0.nupkg": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231"
+      },
+      "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+      "modelSha256": "edf4af6649e2642616924a43f1e68ff9c1970e1b5f4e1e25773245e2383aff79",
+      "receiptSha256": "0d0e57cffa93a8889a58ce6c6fb6b396553fa0262547aca639782a17313f9392"
+    },
+    {
+      "archives": {
+        "archives/Inheritedcheckedrecords.Api.1.0.0.nupkg": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231"
+      },
+      "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+      "modelSha256": "edf4af6649e2642616924a43f1e68ff9c1970e1b5f4e1e25773245e2383aff79",
+      "receiptSha256": "0d0e57cffa93a8889a58ce6c6fb6b396553fa0262547aca639782a17313f9392"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No C# constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "409c72bb1e3ace8db466d1275a0be8d3ad98f82f2b59cdcfb40c65447dc919ce",
+  "independentBuilds": 2,
+  "installation": {
+    "archive": {
+      "bytes": 51397292,
+      "path": "archives/Inheritedcheckedrecords.Api.1.0.0.nupkg",
+      "sha256": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231"
+    },
+    "closure": {
+      "buildInputsSha256": "cd93b0ab391dd891994aacf7788ec4dcd5fc300d430569ada901b9952d10051c",
+      "cacheFilesSha256": "b1cce0fd097142fc96d7068a1b152146bbb8ed004702086e33a39b0f95540074",
+      "deployedFilesSha256": "73dd788e6c94886c43bc41716964da6c11bf3112da7c004347f3a71a895769f8",
+      "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+      "packageFileSetSha256": "7b1d648997386b069985a227685250077009991138081d47f341111a15713478",
+      "receiptSha256": "04fa202fb28a6b5d269bcaac56910505e2f4eb4d5154c9b09af77b2e3c5908cc"
+    },
+    "compiled": {
+      "assembly": "LeanBridge.Inheritedcheckedrecords",
+      "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+      "evidence": {
+        "componentId": "inheritedcheckedrecords@1.0.0",
+        "componentReceiptSha256": "002ba6ed602e2d3c2205a11a7a7aa196113be7b84cf618412d050ffe38525a46",
+        "libraries": {
+          "libcomponent_95491bb762dabafaf0ed.so": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4",
+          "libinheritedcheckedrecords.so": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27",
+          "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "library": "libinheritedcheckedrecords.so",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      "files": {
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 8120,
+          "sha256": "b9e913b6f949d5a00a8af426cca986fb2a8c502eb76536ba9d19199eda79aa55"
+        },
+        "binding-manifest.json": {
+          "bytes": 1576,
+          "sha256": "03f29dea043b60e21011e1f13fe60251093fa8a5874c496d4f3ba23d276cb91c"
+        },
+        "global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lib/net8.0/LeanBridge.Inheritedcheckedrecords.deps.json": {
+          "bytes": 472,
+          "sha256": "0f2a68703cc5e02d8827ab2f37ff194c8a5799f38fb5799c7ca2936b7b956d59"
+        },
+        "lib/net8.0/LeanBridge.Inheritedcheckedrecords.dll": {
+          "bytes": 23552,
+          "sha256": "4c25ff8b2ac6886c3efbf01559fc118b59add4e15c04560a4944b9bbf7c5ae99"
+        },
+        "lib/net8.0/LeanBridge.Inheritedcheckedrecords.xml": {
+          "bytes": 8233,
+          "sha256": "3945da07dee3110ca4cb4fa58fcd779f34a78b058cbe19443dadbc56cc11518e"
+        },
+        "src/LeanBridge.Inheritedcheckedrecords/Api.cs": {
+          "bytes": 7855,
+          "sha256": "3dcc8abd19aa8f8b08152578977be3b02be4960a6c192455faad44648ea85309"
+        },
+        "src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj": {
+          "bytes": 619,
+          "sha256": "cffc56fa477fe8726a5243660648537edc90d65ae74437e22197d3e3af154453"
+        },
+        "src/LeanBridge.Inheritedcheckedrecords/Runtime.cs": {
+          "bytes": 22001,
+          "sha256": "d9244a9c220fc9d96497cec206ef2ba564ada541b28535810bc5c83e8c4ddd7d"
+        }
+      },
+      "profile": "native-library-v1",
+      "schemaVersion": 1,
+      "sdk": "8.0.424"
+    },
+    "evidence": {
+      "componentId": "inheritedcheckedrecords@1.0.0",
+      "componentReceiptSha256": "002ba6ed602e2d3c2205a11a7a7aa196113be7b84cf618412d050ffe38525a46",
+      "libraries": {
+        "libcomponent_95491bb762dabafaf0ed.so": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4",
+        "libinheritedcheckedrecords.so": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27",
+        "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "library": "libinheritedcheckedrecords.so",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "files": {
+      "Inheritedcheckedrecords.Api.nuspec": {
+        "bytes": 485,
+        "sha256": "290bbe192118a0b5c02bcbc8282f0a11177aa1ab4567d5fc44e271471a4632dd"
+      },
+      "README.md": {
+        "bytes": 8468,
+        "sha256": "fd7e275d1f3857f7c7de1e09e18fd0f68f3d2dae08a4fa626592bf339dc07d08"
+      },
+      "[Content_Types].xml": {
+        "bytes": 939,
+        "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+      },
+      "_rels/.rels": {
+        "bytes": 271,
+        "sha256": "990da4fed557dbe8998b932648f0da143643f4034c8965544eeaaa5aeb8a0d8f"
+      },
+      "lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "lean-bridge/component/artifacts.json": {
+        "bytes": 1533,
+        "sha256": "fc07f343affbd3d3f3eca28698849c6d2afcb9af9f90c1f7d3b051d1b207e69b"
+      },
+      "lean-bridge/component/binding-ir.json": {
+        "bytes": 42655,
+        "sha256": "3cee2000f407be77873e3fc71ac5471b9fe3340c989c825a9b9c0f8c3d076d9c"
+      },
+      "lean-bridge/component/component.h": {
+        "bytes": 2990,
+        "sha256": "7036c2e9751171f34a852665c22c662fac6b845bfaeb57f404583755ac2b275c"
+      },
+      "lean-bridge/component/generated.lean": {
+        "bytes": 15033,
+        "sha256": "1d762ab395b959d6ba4feb3773a0982d85a3cea0a40ee05b166ea6e50eb74c89"
+      },
+      "lean-bridge/component/metadata.json": {
+        "bytes": 96880,
+        "sha256": "2f94dfedf7510f410c97a8ca1e259d1b0a4c587a4efa90f3fcf11a88aacfecae"
+      },
+      "lean-bridge/component/model.json": {
+        "bytes": 145832,
+        "sha256": "edf4af6649e2642616924a43f1e68ff9c1970e1b5f4e1e25773245e2383aff79"
+      },
+      "lean-bridge/component/native-component.json": {
+        "bytes": 47766,
+        "sha256": "002ba6ed602e2d3c2205a11a7a7aa196113be7b84cf618412d050ffe38525a46"
+      },
+      "lean-bridge/dotnet/binding-manifest.json": {
+        "bytes": 1576,
+        "sha256": "03f29dea043b60e21011e1f13fe60251093fa8a5874c496d4f3ba23d276cb91c"
+      },
+      "lean-bridge/dotnet/global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/Api.cs": {
+        "bytes": 7855,
+        "sha256": "3dcc8abd19aa8f8b08152578977be3b02be4960a6c192455faad44648ea85309"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj": {
+        "bytes": 619,
+        "sha256": "cffc56fa477fe8726a5243660648537edc90d65ae74437e22197d3e3af154453"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/Runtime.cs": {
+        "bytes": 22001,
+        "sha256": "d9244a9c220fc9d96497cec206ef2ba564ada541b28535810bc5c83e8c4ddd7d"
+      },
+      "lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/licenses/source-notices.json": {
+        "bytes": 2126,
+        "sha256": "8c8d6cbc7fc50e1f080dfe24202266d752e36ebb9b6f149c760b112e1451af0c"
+      },
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/native-c-adapter.json": {
+        "bytes": 1423,
+        "sha256": "1c030c807dccdba71365177c160537c5d3fc4c3fa7024b421c2bb8a060f6e24d"
+      },
+      "lean-bridge/native-dotnet.json": {
+        "bytes": 2575,
+        "sha256": "65a601bb68c9fed8ecd68da8e05b50ec6dd42382e240c7a29b18151feaf2f4f1"
+      },
+      "lean-bridge/package-receipt.json": {
+        "bytes": 51634,
+        "sha256": "04fa202fb28a6b5d269bcaac56910505e2f4eb4d5154c9b09af77b2e3c5908cc"
+      },
+      "lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      "lib/net8.0/LeanBridge.Inheritedcheckedrecords.dll": {
+        "bytes": 23552,
+        "sha256": "4c25ff8b2ac6886c3efbf01559fc118b59add4e15c04560a4944b9bbf7c5ae99"
+      },
+      "lib/net8.0/LeanBridge.Inheritedcheckedrecords.xml": {
+        "bytes": 8233,
+        "sha256": "3945da07dee3110ca4cb4fa58fcd779f34a78b058cbe19443dadbc56cc11518e"
+      },
+      "runtimes/linux-x64/native/libcomponent_95491bb762dabafaf0ed.so": {
+        "bytes": 74832,
+        "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+      },
+      "runtimes/linux-x64/native/libinheritedcheckedrecords.so": {
+        "bytes": 49328,
+        "sha256": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27"
+      },
+      "runtimes/linux-x64/native/liblean_bridge_native.so": {
+        "bytes": 21632,
+        "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+      },
+      "runtimes/linux-x64/native/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      }
+    },
+    "receiptSha256": "04fa202fb28a6b5d269bcaac56910505e2f4eb4d5154c9b09af77b2e3c5908cc",
+    "retained": [
+      "Inheritedcheckedrecords.Api.nuspec",
+      "README.md",
+      "[Content_Types].xml",
+      "_rels/.rels",
+      "lean-bridge/component/allocation-guard.h",
+      "lean-bridge/component/artifacts.json",
+      "lean-bridge/component/binding-ir.json",
+      "lean-bridge/component/component.h",
+      "lean-bridge/component/generated.lean",
+      "lean-bridge/component/metadata.json",
+      "lean-bridge/component/model.json",
+      "lean-bridge/component/native-component.json",
+      "lean-bridge/dotnet/binding-manifest.json",
+      "lean-bridge/dotnet/global.json",
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/Api.cs",
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj",
+      "lean-bridge/dotnet/src/LeanBridge.Inheritedcheckedrecords/Runtime.cs",
+      "lean-bridge/licenses/Lean-LICENSE",
+      "lean-bridge/licenses/Lean-LICENSES",
+      "lean-bridge/licenses/LeanBridge-LICENSE",
+      "lean-bridge/licenses/source-notices.json",
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "lean-bridge/native-c-adapter.json",
+      "lean-bridge/native-dotnet.json",
+      "lean-bridge/package-receipt.json",
+      "lean-bridge/runtime.json",
+      "lib/net8.0/LeanBridge.Inheritedcheckedrecords.xml"
+    ]
+  },
+  "installerCommandLogs": "Closed installer retains input/build-input/output identities, not restore/build stdout",
+  "mode": "full",
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "cd93b0ab391dd891994aacf7788ec4dcd5fc300d430569ada901b9952d10051c",
+        "cacheFilesSha256": "b1cce0fd097142fc96d7068a1b152146bbb8ed004702086e33a39b0f95540074",
+        "deployedFilesSha256": "73dd788e6c94886c43bc41716964da6c11bf3112da7c004347f3a71a895769f8",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "7b1d648997386b069985a227685250077009991138081d47f341111a15713478",
+        "receiptSha256": "04fa202fb28a6b5d269bcaac56910505e2f4eb4d5154c9b09af77b2e3c5908cc"
+      },
+      "counts": {
+        "checks": 7204,
+        "recoveries": 256,
+        "rejections": 1286,
+        "rounds": 256,
+        "snapshotControls": 8,
+        "snapshots": 3342
+      },
+      "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":7204,\"rejections\":1286,\"recoveries\":256,\"snapshots\":3342,\"snapshotControls\":8,\"rounds\":256}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "cd93b0ab391dd891994aacf7788ec4dcd5fc300d430569ada901b9952d10051c",
+        "cacheFilesSha256": "b1cce0fd097142fc96d7068a1b152146bbb8ed004702086e33a39b0f95540074",
+        "deployedFilesSha256": "73dd788e6c94886c43bc41716964da6c11bf3112da7c004347f3a71a895769f8",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "7b1d648997386b069985a227685250077009991138081d47f341111a15713478",
+        "receiptSha256": "04fa202fb28a6b5d269bcaac56910505e2f4eb4d5154c9b09af77b2e3c5908cc"
+      },
+      "counts": {
+        "checks": 7204,
+        "recoveries": 256,
+        "rejections": 1286,
+        "rounds": 256,
+        "snapshotControls": 8,
+        "snapshots": 3342
+      },
+      "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":7204,\"rejections\":1286,\"recoveries\":256,\"snapshots\":3342,\"snapshotControls\":8,\"rounds\":256}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "73dd788e6c94886c43bc41716964da6c11bf3112da7c004347f3a71a895769f8"
+      },
+      "counts": {
+        "checks": 7204,
+        "recoveries": 256,
+        "rejections": 1286,
+        "rounds": 256,
+        "snapshotControls": 8,
+        "snapshots": 3342
+      },
+      "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":7204,\"rejections\":1286,\"recoveries\":256,\"snapshots\":3342,\"snapshotControls\":8,\"rounds\":256}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d",
+  "receipt": {
+    "component": {
+      "id": "inheritedcheckedrecords@1.0.0",
+      "name": "inheritedcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51397292,
+            "path": "archives/Inheritedcheckedrecords.Api.1.0.0.nupkg",
+            "sha256": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Inheritedcheckedrecords.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "74646dc971e345f0d7f77c4f235f304b937237e42f724eb031ae2fbf80f1b452"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15392792576,
+          "freeBytes": 75990384640,
+          "load": 1.22
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15392780288,
+          "freeBytes": 75990364160,
+          "load": 1.22
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15028396032,
+          "freeBytes": 75887353856,
+          "load": 1.23
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15056232448,
+          "freeBytes": 75887132672,
+          "load": 1.12
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-6BaElX/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated"
+}

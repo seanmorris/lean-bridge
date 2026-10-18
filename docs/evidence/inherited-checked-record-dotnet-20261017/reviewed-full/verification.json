@@ -1,0 +1,57 @@
+{
+  "archiveSha256": "1b37325e645550c331c1b37aa7f7338d73cdf5dfaa969f08ff50875b55e4d231",
+  "archiveSha512": "pBvPU7rPG7GZ5a88jSBLI1P+rU2FtL3Aowg1Pc7NMqWivq11kchT5ti+NmHb6vmag59e0OZe9E5uSk4kplC07A==",
+  "counts": {
+    "checks": 7204,
+    "recoveries": 256,
+    "rejections": 1286,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3342
+  },
+  "dispatchObserved": false,
+  "executions": 3,
+  "floor": "2.38",
+  "framework": {
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "generatorModules": 18,
+  "mode": "full",
+  "producerCommit": "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d",
+  "records": 76,
+  "route": "reviewed",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "toolchain": {
+    "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  }
+}

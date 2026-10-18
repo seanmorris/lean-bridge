@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-v1",
+  "target": "dotnet",
+  "component": "inheritedcheckedrecords@1.0.0",
+  "bindingIrSha256": "d39f552b02decb4e7ff5756c50874692f9d86aa3e728bda5c7576d52864da8db",
+  "namespace": "LeanBridge.Inheritedcheckedrecords",
+  "assembly": "LeanBridge.Inheritedcheckedrecords",
+  "files": [
+    "src/LeanBridge.Inheritedcheckedrecords/Api.cs",
+    "src/LeanBridge.Inheritedcheckedrecords/Runtime.cs",
+    "src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Inheritedcheckedrecords/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Inheritedcheckedrecords/Runtime.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj",
+    "NuGet.Config"
+  ],
+  "aliases": [
+    {
+      "id": "lean:InheritedCheckedRecords.TicketAlias",
+      "name": "TicketAlias",
+      "target": {
+        "id": "lean:InheritedCheckedRecords.Ticket",
+        "kind": "named"
+      },
+      "managedType": "Ticket"
+    }
+  ],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

@@ -36,7 +36,8 @@ export {
 	inheritedCheckedRecordDotnetEvidence
 } from "./inherited-checked-record-dotnet-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordDotnetEvidenceSha256 = null;
+export const inheritedCheckedRecordDotnetEvidenceSha256
+	= "5eca5f33284fe8862d8133aa92110dfd6d1b7e938701e1bfdabdc2302882a62f";
 
 const handoff = Object.freeze([
 	"handoff/package-set-receipt.json"

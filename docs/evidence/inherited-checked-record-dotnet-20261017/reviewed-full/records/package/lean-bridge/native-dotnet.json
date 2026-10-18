@@ -1,0 +1,61 @@
+{
+  "assembly": "LeanBridge.Inheritedcheckedrecords",
+  "bindingIrSha256": "e8a7a0a93f1504e7bf54b71b7294c4baf36d862c043b23ede016b1b7c74a1357",
+  "evidence": {
+    "componentId": "inheritedcheckedrecords@1.0.0",
+    "componentReceiptSha256": "002ba6ed602e2d3c2205a11a7a7aa196113be7b84cf618412d050ffe38525a46",
+    "libraries": {
+      "libcomponent_95491bb762dabafaf0ed.so": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4",
+      "libinheritedcheckedrecords.so": "b09a8be0f302ce8d24b60c0477ff0ce498d7132614ca3566a0371865217feb27",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libinheritedcheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "NuGet.Config": {
+      "bytes": 74,
+      "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+    },
+    "README.md": {
+      "bytes": 8120,
+      "sha256": "b9e913b6f949d5a00a8af426cca986fb2a8c502eb76536ba9d19199eda79aa55"
+    },
+    "binding-manifest.json": {
+      "bytes": 1576,
+      "sha256": "03f29dea043b60e21011e1f13fe60251093fa8a5874c496d4f3ba23d276cb91c"
+    },
+    "global.json": {
+      "bytes": 104,
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    "lib/net8.0/LeanBridge.Inheritedcheckedrecords.deps.json": {
+      "bytes": 472,
+      "sha256": "0f2a68703cc5e02d8827ab2f37ff194c8a5799f38fb5799c7ca2936b7b956d59"
+    },
+    "lib/net8.0/LeanBridge.Inheritedcheckedrecords.dll": {
+      "bytes": 23552,
+      "sha256": "4c25ff8b2ac6886c3efbf01559fc118b59add4e15c04560a4944b9bbf7c5ae99"
+    },
+    "lib/net8.0/LeanBridge.Inheritedcheckedrecords.xml": {
+      "bytes": 8233,
+      "sha256": "3945da07dee3110ca4cb4fa58fcd779f34a78b058cbe19443dadbc56cc11518e"
+    },
+    "src/LeanBridge.Inheritedcheckedrecords/Api.cs": {
+      "bytes": 7855,
+      "sha256": "3dcc8abd19aa8f8b08152578977be3b02be4960a6c192455faad44648ea85309"
+    },
+    "src/LeanBridge.Inheritedcheckedrecords/LeanBridge.Inheritedcheckedrecords.csproj": {
+      "bytes": 619,
+      "sha256": "cffc56fa477fe8726a5243660648537edc90d65ae74437e22197d3e3af154453"
+    },
+    "src/LeanBridge.Inheritedcheckedrecords/Runtime.cs": {
+      "bytes": 22001,
+      "sha256": "d9244a9c220fc9d96497cec206ef2ba564ada541b28535810bc5c83e8c4ddd7d"
+    }
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 1,
+  "sdk": "8.0.424"
+}

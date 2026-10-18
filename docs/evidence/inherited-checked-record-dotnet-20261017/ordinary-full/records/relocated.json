@@ -1,0 +1,57 @@
+{
+  "closure": {
+    "buildInputsSha256": "c95596b3adf890cc7739e9ecfe5387eb53713a9485329c11199f2df8ecb7b56d",
+    "cacheFilesSha256": "23f19cfc42996b9193d491812c7aa9396b2215222e51cfc2108994d3bdd8a73d",
+    "deployedFilesSha256": "4889d578774f8273fda6567411bb7fa6806c1bf5a9b05332c0bc430cd8ad91bc",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "7b1d648997386b069985a227685250077009991138081d47f341111a15713478",
+    "receiptSha256": "70deb1e973a759fa6ac4634a0516269723ff5dd76090d0dff4c7e8da1601aa34"
+  },
+  "counts": {
+    "checks": 7204,
+    "recoveries": 256,
+    "rejections": 1286,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3342
+  },
+  "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-NoziUX/consumer-relocated",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+    "cwd": "/tmp/lean-bridge-inherited-checked-record-dotnet-NoziUX/consumer-relocated",
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-inherited-checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":7204,\"rejections\":1286,\"recoveries\":256,\"snapshots\":3342,\"snapshotControls\":8,\"rounds\":256}\n"
+  },
+  "stage": "relocated"
+}

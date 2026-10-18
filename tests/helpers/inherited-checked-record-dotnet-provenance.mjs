@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordDotnetEvidence
 	= "docs/evidence/inherited-checked-record-dotnet-20261017";
-export const inheritedCheckedRecordDotnetProducer = null;
-export const inheritedCheckedRecordDotnetChecker = null;
-export const inheritedCheckedRecordDotnetArchiver = null;
+export const inheritedCheckedRecordDotnetProducer
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordDotnetChecker
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordDotnetArchiver
+	= "fd6cec142b01c9b6ac9537bfd728a46045a4e8c9";
 export const inheritedCheckedRecordDotnetEvidenceLoadCeiling = 6;
 export const inheritedCheckedRecordDotnetEvidenceFloor = "2.38";
 export const inheritedCheckedRecordDotnetSelections = Object.freeze([
