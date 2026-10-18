@@ -18,9 +18,18 @@ const checkout = `      - name: Check out the exact revision
           fetch-depth: 0
           persist-credentials: false
 `;
+const aggregateCheckout = `      - name: Check out the exact aggregate revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+`;
 const assertHistoryCheckout = source => {
-	assert.equal(source.split("uses: actions/checkout@").length, 2);
-	assert.ok(source.includes(checkout), "Core must fetch all original producer commits without persisting credentials");
+	assert.equal(source.split("uses: actions/checkout@").length, 4);
+	assert.equal(source.split(checkout).length, 3
+		, "Static and contract jobs must fetch every original producer commit");
+	assert.equal(source.split(aggregateCheckout).length, 2
+		, "The aggregate must read the exact current tree without retaining credentials");
 };
 
 test("Core CI requires complete Git history for original producer authentication", async () => {
@@ -30,6 +39,7 @@ test("Core CI requires complete Git history for original producer authentication
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
 		, source.replace("fetch-depth: 0", "fetch-depth: 100")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
+		, source.replace("fetch-depth: 1", "fetch-depth: 0")
 		, source.replace("        with:\n", "        if: false\n        with:\n")]) {
 		assert.notEqual(changed, source);
 		assert.throws(() => assertHistoryCheckout(changed));

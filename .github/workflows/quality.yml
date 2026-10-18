@@ -13,10 +13,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  quality:
+  static:
+    name: Static quality contract
     runs-on: ubuntu-24.04
-    # A required hosted run reached the former 90-minute ceiling as the evidence suite grew.
-    timeout-minutes: 180
+    timeout-minutes: 30
     steps:
       - name: Check out the exact revision
         uses: actions/checkout@v6
@@ -42,7 +42,90 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Install C/GMP contract-test headers
         run: sudo apt-get update && sudo apt-get install -y libgmp-dev
-      - name: Run lint, checked JavaScript, documentation, and contract tests
+      - name: Run inventory, lint, and checked JavaScript
         run: |
           source scripts/env.sh
-          npm run check:core
+          npm run env:check:core
+          npm run lint
+          npm run typecheck
+
+  contract:
+    name: Contract shard ${{ matrix.shard }}/6
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          # Evidence tests authenticate source bytes at their original producer commits.
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Restore pinned wasm-tools
+        uses: actions/cache@v5
+        with:
+          path: |
+            .toolchains/downloads/wasm-tools-*.tar.gz
+            .toolchains/wasm-tools
+          key: core-wasm-tools-${{ runner.os }}-${{ hashFiles('scripts/bootstrap-toolchains.sh') }}
+      - name: Install pinned wasm-tools
+        run: bash scripts/bootstrap-toolchains.sh --wasm-tools-only
+      - name: Install dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Install C/GMP contract-test headers
+        run: sudo apt-get update && sudo apt-get install -y libgmp-dev
+      - name: Run one closed contract shard
+        run: |
+          source scripts/env.sh
+          bash scripts/run-test-profile.sh contract \
+            --shard "${{ matrix.shard }}/6" \
+            --shard-manifest "build/core-shards/core-shard-${{ matrix.shard }}.json"
+      - name: Preserve the exact shard manifest
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: core-shard-${{ matrix.shard }}-${{ github.sha }}
+          path: build/core-shards/core-shard-${{ matrix.shard }}.json
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
+
+  quality:
+    name: quality
+    if: always()
+    needs: [static, contract]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the exact aggregate revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Download every shard manifest
+        uses: actions/download-artifact@v8
+        with:
+          pattern: core-shard-*-${{ github.sha }}
+          path: build/core-shards
+          merge-multiple: true
+      - name: Authenticate the complete contract partition
+        run: node scripts/check-core-contract-shards.mjs build/core-shards
+      - name: Require static quality and every contract shard
+        env:
+          STATIC_RESULT: ${{ needs.static.result }}
+          CONTRACT_RESULT: ${{ needs.contract.result }}
+        run: |
+          test "$STATIC_RESULT" = success
+          test "$CONTRACT_RESULT" = success

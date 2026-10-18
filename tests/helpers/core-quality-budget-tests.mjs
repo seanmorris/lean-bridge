@@ -5,35 +5,83 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import {
+	collectCoreContractTestPaths, collectRepositoryTestPaths
+	, coreContractShardLabels
+	, coreContractShardManifest, verifyCoreContractShardManifests
+} from "../../scripts/core-contract-shards.mjs";
 
 const assertCoreQualityBudget = source => {
-	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)];
-	assert.equal(timeouts.length, 1, "Core quality must have one explicit job timeout");
-	assert.equal(Number(timeouts[0][1]), 180, "Core quality must retain its reviewed 180-minute bound");
-	assert.equal([...source.matchAll(/^\s+npm run check:core\s*$/gmu)].length, 1
-		, "Core quality must execute the complete check:core contract exactly once");
-	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*0\s*$/gmu)].length, 1
-		, "Core quality must retain all producer history");
-	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 1
-		, "Core quality checkout must not persist credentials");
+	const timeouts = [...source.matchAll(/^\s+timeout-minutes:\s*(\d+)\s*$/gmu)]
+		.map(match => Number(match[1]));
+	assert.deepEqual(timeouts, [30, 180, 10]
+		, "Static, contract-shard, and aggregate jobs retain explicit bounds");
+	assert.match(source
+		, /strategy:\n {6}fail-fast: false\n {6}matrix:\n {8}shard: \[1, 2, 3, 4, 5, 6\]/u
+		, "Core must run one closed six-shard matrix without cancelling siblings");
+	assert.match(source, /name: Contract shard \$\{\{ matrix\.shard \}\}\/6/u
+		, "Every shard must expose its fixed denominator in the hosted job name");
+	assert.equal([...source.matchAll(/^\s+npm run env:check:core\s*$/gmu)].length, 1
+		, "Core inventory must execute exactly once");
+	assert.equal([...source.matchAll(/^\s+npm run lint\s*$/gmu)].length, 1
+		, "Core lint must execute exactly once");
+	assert.equal([...source.matchAll(/^\s+npm run typecheck\s*$/gmu)].length, 1
+		, "Core checked JavaScript must execute exactly once");
+	assert.equal([...source.matchAll(/^\s+bash scripts\/run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/6" \\\n\s+--shard-manifest "build\/core-shards\/core-shard-\$\{\{ matrix\.shard \}\}\.json"\s*$/gmu)].length, 1
+		, "Every matrix cell must execute its exact contract shard");
+	assert.doesNotMatch(source, /^\s+npm run check:core\s*$/mu
+		, "Static checks and contract shards must not be recombined in one timed job");
+	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*0\s*$/gmu)].length, 2
+		, "Static and contract jobs must retain all producer history");
+	assert.equal([...source.matchAll(/^\s+fetch-depth:\s*1\s*$/gmu)].length, 1
+		, "The aggregate must recompute closure from the exact current tree");
+	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
+		, "No checkout may persist credentials");
+	assert.match(source, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
+	assert.match(source, /if-no-files-found: error/u);
+	assert.match(source, /overwrite: true/u);
+	assert.match(source, /uses: actions\/download-artifact@v8/u);
+	assert.match(source, /pattern: core-shard-\*-\$\{\{ github\.sha \}\}/u);
+	assert.match(source, /merge-multiple: true/u);
+	assert.equal([...source.matchAll(/^\s+run: node scripts\/check-core-contract-shards\.mjs build\/core-shards\s*$/gmu)].length, 1
+		, "The aggregate must authenticate shard closure before accepting results");
+	assert.match(source, / {2}quality:\n {4}name: quality\n {4}if: always\(\)\n {4}needs: \[static, contract\]/u
+		, "The stable quality check must aggregate static and every matrix result");
+	assert.match(source, /STATIC_RESULT: \$\{\{ needs\.static\.result \}\}/u);
+	assert.match(source, /CONTRACT_RESULT: \$\{\{ needs\.contract\.result \}\}/u);
+	assert.equal([...source.matchAll(/^\s+test "\$STATIC_RESULT" = success\s*$/gmu)].length, 1);
+	assert.equal([...source.matchAll(/^\s+test "\$CONTRACT_RESULT" = success\s*$/gmu)].length, 1);
 	assert.ok(!/^\s+continue-on-error:\s*true\s*$/mu.test(source), "Core quality failures must remain fatal");
 };
 
-const assertCoreProcessBudget = source => {
+const assertCoreProcessBudget = (source, shards) => {
 	assert.equal([...source.matchAll(/requested === "contract" && process\.env\.CI === "true"/gu)].length, 1
 		, "Only the hosted Core profile must use the resource bound");
 	assert.equal([...source.matchAll(/"--test-concurrency=2"/gu)].length, 1
 		, "Hosted Core must run at most two contract files concurrently");
+	assert.match(source, /arguments_\.length !== 4 \|\| arguments_\[0\] !== "--shard"/u);
+	assert.match(source, /arguments_\[2\] !== "--shard-manifest" \|\| requested !== "contract"/u
+		, "Only the complete contract profile may emit a shard manifest");
+	assert.match(source, /const manifest = shard \? coreContractShardManifest\(complete, shard\) : null/u);
+	assert.match(source, /const selected = manifest\?\.selection\.files \?\? complete/u
+		, "The runner must execute the exact authenticated selection");
+	assert.match(source, /await writeFile\(shardManifestPath, canonicalJson\(manifest\)\)/u);
+	assert.match(shards, /export const coreContractShardCount = 6;/u);
+	assert.match(shards, /position % coreContractShardCount === index - 1/u);
+	assert.match(shards, /assert\.deepEqual\(files\.toSorted\(\), paths\)/u
+		, "The aggregate must require a disjoint full-file union");
 	assert.equal([...source.matchAll(/"--max-old-space-size=4096"/gu)].length, 1
 		, "Each hosted Core process must have a visible 4 GiB heap failure bound");
 	assert.match(source, /const childEnvironment = boundedHostedCore \? \{\n\t\.\.\.process\.env\n\t, NODE_OPTIONS:/u
 		, "Hosted Core must bound only the hosted contract environment");
 	assert.match(source, /NODE_OPTIONS: \[process\.env\.NODE_OPTIONS, "--max-old-space-size=4096"\]\s*\.filter\(Boolean\)\.join\(" "\)/u
 		, "Hosted Core must preserve prior Node options and append its reviewed heap bound");
-	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \["--test-concurrency=2"\] : \[\], \.\.\.selected\s*\]/u
-		, "Hosted Core must execute every selected contract test under the bound");
+	assert.match(source, /"--test", \.\.\.boundedHostedCore \? \["--test-concurrency=2"\] : \[\], \.\.\.selected\n\]/u
+		, "Hosted Core must pass every explicitly selected shard file to Node");
 	assert.match(source, /\], \{ cwd: root, env: childEnvironment, stdio: "inherit" \}\);/u
 		, "Hosted Core must spawn the child with the bounded environment");
 };
@@ -106,32 +154,48 @@ const checkedRecordEvidencePartitions = Object.freeze({
 	]
 });
 
-test("Core quality has a bounded budget for the complete evidence contract", async () => {
+test("Core quality has bounded static, sharded contract, and aggregate gates", async () => {
 	const source = await readFile(".github/workflows/quality.yml", "utf8");
 	assertCoreQualityBudget(source);
-	for(const changed of [
+	for(const [index, changed] of [
 		source.replace("timeout-minutes: 180", "timeout-minutes: 90")
-		, source.replace("timeout-minutes: 180", "timeout-minutes: 179")
-		, source.replace("timeout-minutes: 180", "timeout-minutes: 181")
-		, source.replace("    timeout-minutes: 180\n", "")
-		, source.replace("    timeout-minutes: 180\n", "    timeout-minutes: 180\n    timeout-minutes: 180\n")
-		, source.replace("npm run check:core", "npm run lint")
-		, source.replace("npm run check:core", "npm run check:core -- --test-name-pattern smoke")
+		, source.replace("shard: [1, 2, 3, 4, 5, 6]", "shard: [1, 2, 3, 4, 5]")
+		, source.replace("shard: [1, 2, 3, 4, 5, 6]", "shard: [1, 2, 3, 4, 5, 5]")
+		, source.replace("${{ matrix.shard }}/6", "${{ matrix.shard }}/5")
+		, source.replace("fail-fast: false", "fail-fast: true")
+		, source.replace("npm run env:check:core", "npm run lint")
+		, source.replace("npm run typecheck", "npm run lint")
+		, source.replace('--shard "${{ matrix.shard }}/6"'
+			, '--test-name-pattern "${{ matrix.shard }}/6"')
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
+		, source.replace("needs: [static, contract]", "needs: [static]")
+		, source.replace("if: always()", "if: success()")
+		, source.replace("merge-multiple: true", "merge-multiple: false")
+		, source.replace("overwrite: true", "overwrite: false")
+		, source.replace("check-core-contract-shards.mjs", "snapshot-core-contract-shards.mjs")
+		, source.replace('test "$CONTRACT_RESULT" = success', "true")
 		, source.replace("        run: |\n          source scripts/env.sh\n", "        continue-on-error: true\n        run: |\n          source scripts/env.sh\n")
-	]) {
-		assert.notEqual(changed, source);
-		assert.throws(() => assertCoreQualityBudget(changed));
+	].entries()) {
+		assert.notEqual(changed, source, `workflow mutation ${index}`);
+		assert.throws(() => assertCoreQualityBudget(changed), undefined
+			, `workflow mutation ${index}`);
 	}
 });
 
-test("Hosted Core bounds concurrent history replay without truncating the profile", async () => {
-	const source = await readFile("scripts/run-test-profile.mjs", "utf8");
-	assertCoreProcessBudget(source);
-	for(const changed of [
+test("Hosted Core bounds each closed shard without truncating the profile", async () => {
+	const [source, shards] = await Promise.all([
+		readFile("scripts/run-test-profile.mjs", "utf8")
+		, readFile("scripts/core-contract-shards.mjs", "utf8")
+	]);
+	assertCoreProcessBudget(source, shards);
+	for(const [index, changed] of [
 		source.replace("--test-concurrency=2", "--test-concurrency=3")
 		, source.replace("--max-old-space-size=4096", "--max-old-space-size=8192")
+		, source.replace('arguments_[2] !== "--shard-manifest"', 'arguments_[2] !== "--optional-manifest"')
+		, source.replace('requested !== "contract"', 'requested !== "all"')
+		, source.replace("manifest?.selection.files", "complete.slice(0, 10)")
+		, source.replace("canonicalJson(manifest)", '"accepted"')
 		, source.replace(" && process.env.CI === \"true\"", "")
 		, source.replace("...selected", "...selected.slice(0, 10)")
 		, source.replace("env: childEnvironment", "env: process.env")
@@ -139,9 +203,51 @@ test("Hosted Core bounds concurrent history replay without truncating the profil
 		, source.replace("[process.env.NODE_OPTIONS, \"--max-old-space-size=4096\"]"
 			, "[\"--max-old-space-size=4096\", process.env.NODE_OPTIONS]")
 		, source.replace("...boundedHostedCore ? [\"--test-concurrency=2\"] : []", "...[]")
+	].entries()) {
+		assert.notEqual(changed, source, `runner mutation ${index}`);
+		assert.throws(() => assertCoreProcessBudget(changed, shards), undefined
+			, `runner mutation ${index}`);
+	}
+});
+
+test("Core shard enumeration has one repository-wide code-unit order", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-core-shards-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	await mkdir(join(root, "tests", "internal"), { recursive: true });
+	for(const path of [
+		"tests/a_b.test.mjs", "tests/a-b.test.mjs"
+		, "tests/internal/z.test.mjs", "tests/internal-x.test.mjs"
 	]) {
-		assert.notEqual(changed, source);
-		assert.throws(() => assertCoreProcessBudget(changed));
+		await writeFile(join(root, path), "");
+	}
+	assert.deepEqual(await collectRepositoryTestPaths(root), [
+		"tests/a-b.test.mjs", "tests/a_b.test.mjs"
+		, "tests/internal-x.test.mjs", "tests/internal/z.test.mjs"
+	]);
+});
+
+test("Core shard manifests cover every contract file exactly once", async () => {
+	const paths = await collectCoreContractTestPaths();
+	assert.ok(paths.length > 800);
+	const manifests = coreContractShardLabels.map(label =>
+		coreContractShardManifest(paths, label));
+	const accepted = verifyCoreContractShardManifests(paths, manifests);
+	assert.deepEqual(accepted, {
+		schemaVersion: 1, partition: "sorted-index-modulo-v1", shards: 6
+		, contractFiles: paths.length, contractSha256: manifests[0].contract.sha256
+	});
+	assert.deepEqual(manifests.map(item => item.selection.count)
+		, Array.from({ length: 6 }, (_, index) =>
+			Math.ceil((paths.length - index) / 6)));
+	for(const mutate of [
+		values => values.pop()
+		, values => { values[5] = structuredClone(values[4]); }
+		, values => { values[0].selection.files[0] = values[1].selection.files[0]; }
+		, values => { values[0].contract.sha256 = "0".repeat(64); }
+		, values => { values[0].unexpected = true; }
+	]) {
+		const changed = structuredClone(manifests); mutate(changed);
+		assert.throws(() => verifyCoreContractShardManifests(paths, changed));
 	}
 });
 

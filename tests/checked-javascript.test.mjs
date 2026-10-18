@@ -48,7 +48,7 @@ test("the required typecheck uses strict checkJs for exactly the adopted modules
 	assert.deepEqual(config.include.toSorted(), manifest.checked.toSorted());
 });
 
-test("the default and CI quality gates execute the same core contract", async () => {
+test("the default and CI quality gates cover the same core contract", async () => {
 	const [packageDocument, workflow] = await Promise.all([
 		readFile(resolve(root, "package.json"), "utf8").then(JSON.parse)
 		, readFile(resolve(root, ".github/workflows/quality.yml"), "utf8")
@@ -58,6 +58,10 @@ test("the default and CI quality gates execute the same core contract", async ()
 	assert.match(workflow, /node-version: 22/);
 	assert.match(workflow, /bootstrap-toolchains\.sh --wasm-tools-only/);
 	assert.match(workflow, /npm ci --ignore-scripts/);
-	assert.match(workflow, /source scripts\/env\.sh[\s\S]*npm run check:core/);
+	for(const command of ["env:check:core", "lint", "typecheck"])
+		assert.equal(workflow.match(new RegExp(`npm run ${command}`, "gu"))?.length, 1);
+	assert.match(workflow
+		, /run-test-profile\.sh contract \\\n\s+--shard "\$\{\{ matrix\.shard \}\}\/6"/u);
+	assert.match(workflow, /check-core-contract-shards\.mjs build\/core-shards/u);
 	assert.match(workflow, /permissions:\n\s+contents: read/);
 });
