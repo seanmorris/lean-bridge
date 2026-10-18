@@ -19,9 +19,11 @@ export const nominalPrimitiveSupplementProducer
 export const nominalPrimitiveSupplementChecker
 	= "bee9e875e1bc9bcbc6c164b32c038035c6f72951";
 /** Pinned only after the one-shot archiver is committed and executed. */
-export const nominalPrimitiveSupplementArchiver = null;
+export const nominalPrimitiveSupplementArchiver
+	= "fd805a15dd1dfcfd5c589234683f528fbdd3518b";
 /** Pinned only after every retained byte has been independently checked. */
-export const nominalPrimitiveSupplementEvidenceSha256 = null;
+export const nominalPrimitiveSupplementEvidenceSha256
+	= "50cbb736b83c774fe4f038e7bb5b2b6ab3a804dd86b94cd4980e58d97286f1e1";
 
 export const nominalPrimitiveSupplementHosted = Object.freeze({
 	repository: "seanmorris/lean-bridge"

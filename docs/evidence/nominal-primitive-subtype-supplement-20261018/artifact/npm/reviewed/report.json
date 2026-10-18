@@ -1,0 +1,76 @@
+{
+  "archiveSha256": "302238528cb14b32f5b6c6cff5c621244e2948a4d04a33a7d4549c6cd48fc576",
+  "callers": {
+    "fixtures/javascript-supplement.mjs": "a37d4272732d112635ac81ca540628b68bbac256544a1c05c9e3348ae9b1cfef",
+    "fixtures/javascript.mjs": "4122d96c2e50858d4dd534a9465e56e6b9b7e3eb8f9c03f31c4595963a94bb4a",
+    "index.mjs": "7484d4f4f71dd06ef5cf332d374c787fad208d6b67e0e104af0ec8e298bedaba"
+  },
+  "counts": {
+    "checks": 126,
+    "rejections": 23,
+    "strictValues": 17,
+    "variantRefusals": 6
+  },
+  "host": "npm",
+  "leanBuild": false,
+  "mode": "full",
+  "observations": [
+    {
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":126,\"rejections\":23,\"strictValues\":17,\"variantRefusals\":6}\n"
+      }
+    },
+    {
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":126,\"rejections\":23,\"strictValues\":17,\"variantRefusals\":6}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "originalPackage": true,
+  "producerCommit": "caff60b7f6acf60e06988f003b2823c0d2e0319e",
+  "receipt": {
+    "bindingIrSha256": "35133987661701050c7c643c8ca8063a4f0a205b9b59c316b3d45d2a294238ae",
+    "component": {
+      "id": "nominalprimitivesubtypes@1.0.0",
+      "name": "nominalprimitivesubtypes",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "49f779b4fb0fb93f33d645fed1924f96031d12d17fa54599f1276952d0d46591",
+    "componentBundleSha256": "c499456e6a53d0e6083bcfc670b7ab964d25abf301d21ec8dd782dd1fc37659b",
+    "componentIdentitySha256": "d71d4d134233d66098e586a7f5dcae8c9319a9ddd21fac4992bcb1c73fe239b2",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "nominalprimitivesubtypes-1.0.0.tgz",
+      "package": "nominalprimitivesubtypes@1.0.0",
+      "sha256": "93a848718b2766aaeddce83a90295411830e0cae984f06e323587ed320fa7e7d"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "829938aef3a0447d5bee048444b2c308588c00188b31e5552445326ae39a4f1a",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.1dfdae25ae6d2ccd7eac4b21f16af42f1cfa1650f98f24ee34d9bc880d180052",
+      "sha256": "7f8d008944a9a3f1b67473ac7752b0844a593f3fd5d516b3f5cf6cb5eb4d6629"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "612a377f3eebaaa7dde892d09358376d05455aabae5c6a72319bea305aaf152d"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relocatedInstallation": true,
+  "route": "reviewed",
+  "schemaVersion": 1
+}

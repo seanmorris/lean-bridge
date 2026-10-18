@@ -1,0 +1,76 @@
+TAP version 13
+# Subtest: supplemental primitive caller covers seventeen strict values and six variant refusals
+ok 1 - supplemental primitive caller covers seventeen strict values and six variant refusals
+  ---
+  duration_ms: 10.590286
+  type: 'test'
+  ...
+# Subtest: supplemental primitive caller detects relaxed constructors, strict outputs and branch swaps
+ok 2 - supplemental primitive caller detects relaxed constructors, strict outputs and branch swaps
+  ---
+  duration_ms: 14.371347
+  type: 'test'
+  ...
+# Subtest: supplemental Python caller agrees with the shared caller oracle on both routes
+ok 3 - supplemental Python caller agrees with the shared caller oracle on both routes
+  ---
+  duration_ms: 65.366861
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived npm ordinary full package
+ok 4 - supplemental primitive-base callers replay the archived npm ordinary full package
+  ---
+  duration_ms: 3372.774098
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived npm reviewed full package
+ok 5 - supplemental primitive-base callers replay the archived npm reviewed full package
+  ---
+  duration_ms: 3236.487377
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived Python 3.11 ordinary full wheel
+ok 6 - supplemental primitive-base callers replay the archived Python 3.11 ordinary full wheel
+  ---
+  duration_ms: 24977.943857
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived Python 3.12 ordinary full wheel
+ok 7 - supplemental primitive-base callers replay the archived Python 3.12 ordinary full wheel
+  ---
+  duration_ms: 17924.478176
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived Python 3.11 reviewed full wheel
+ok 8 - supplemental primitive-base callers replay the archived Python 3.11 reviewed full wheel
+  ---
+  duration_ms: 20827.269832
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived Python 3.12 reviewed full wheel
+ok 9 - supplemental primitive-base callers replay the archived Python 3.12 reviewed full wheel
+  ---
+  duration_ms: 17165.817005
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived ordinary full package in three browser contexts
+ok 10 - supplemental primitive-base callers replay the archived ordinary full package in three browser contexts
+  ---
+  duration_ms: 61644.850796
+  type: 'test'
+  ...
+# Subtest: supplemental primitive-base callers replay the archived reviewed full package in three browser contexts
+ok 11 - supplemental primitive-base callers replay the archived reviewed full package in three browser contexts
+  ---
+  duration_ms: 52329.130401
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 202288.595845

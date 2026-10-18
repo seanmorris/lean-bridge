@@ -1,0 +1,200 @@
+[
+  {
+    "engine": "chromium",
+    "observation": {
+      "hostVersion": "151.0.7922.34",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "first",
+    "variant": "production"
+  },
+  {
+    "engine": "chromium",
+    "observation": {
+      "hostVersion": "151.0.7922.34",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "rerun",
+    "variant": "production"
+  },
+  {
+    "engine": "chromium",
+    "observation": {
+      "hostVersion": "151.0.7922.34",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "failure-recovery",
+    "variant": "production"
+  },
+  {
+    "engine": "firefox",
+    "observation": {
+      "hostVersion": "153.0",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "first",
+    "variant": "production"
+  },
+  {
+    "engine": "firefox",
+    "observation": {
+      "hostVersion": "153.0",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "rerun",
+    "variant": "production"
+  },
+  {
+    "engine": "firefox",
+    "observation": {
+      "hostVersion": "153.0",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "failure-recovery",
+    "variant": "production"
+  },
+  {
+    "engine": "webkit",
+    "observation": {
+      "hostVersion": "26.5",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "first",
+    "variant": "production"
+  },
+  {
+    "engine": "webkit",
+    "observation": {
+      "hostVersion": "26.5",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "rerun",
+    "variant": "production"
+  },
+  {
+    "engine": "webkit",
+    "observation": {
+      "hostVersion": "26.5",
+      "module": "nominalprimitivesubtypes",
+      "profile": "browser-javascript",
+      "realm": "window",
+      "results": {
+        "checks": 126,
+        "mode": "full",
+        "module": "nominalprimitivesubtypes",
+        "rejections": 23,
+        "resultOnly": false,
+        "route": "ordinary",
+        "strictValues": 17,
+        "variantRefusals": 6
+      },
+      "schemaVersion": 1
+    },
+    "phase": "failure-recovery",
+    "variant": "production"
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "archiveSha256": "6ca71a8845f0025aad297334f8c72dd4e6b90228697e02bde65c84b2ff36aa7b",
+  "consumerSha256": "dca0ea80f85e981164eebfbbbc59647614bbd553ac432ced9e49adf8acab4f7a",
+  "counts": {
+    "checks": 126,
+    "rejections": 23,
+    "strictValues": 17,
+    "variantRefusals": 6
+  },
+  "host": "python",
+  "leanBuild": false,
+  "minor": "3.12",
+  "mode": "full",
+  "observations": [
+    {
+      "arguments": [
+        "consumer.py",
+        "--reviewed"
+      ],
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\": 126, \"rejections\": 23, \"strictValues\": 17, \"variantRefusals\": 6}\n"
+      }
+    },
+    {
+      "arguments": [
+        "consumer.py",
+        "--reviewed"
+      ],
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\": 126, \"rejections\": 23, \"strictValues\": 17, \"variantRefusals\": 6}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "originalPackage": true,
+  "producerCommit": "b1be97044c7dd9f21f58c8b63bd6a4518c145f04",
+  "python": "3.12.15",
+  "receiptSha256": "6840a2245f7fefd403e34afe3e54e6c0fc81bda019c9d8eebe61300cffb318a0",
+  "relocatedInstallation": true,
+  "route": "reviewed",
+  "schemaVersion": 1,
+  "wheelSha256": "3db9405f7a33f2a502d9e89cc8bb148079cbb25e96cc12b91d4c0f8a0d7f5df3"
+}
