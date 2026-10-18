@@ -56,6 +56,18 @@ static class Consumer
         return false;
     }
 
+    static bool NullRefused(Action call)
+    {
+        ++calls;
+        try { call(); }
+        catch (ArgumentNullException error)
+        {
+            return error.GetType() == typeof(ArgumentNullException)
+                && error.ParamName == "value";
+        }
+        return false;
+    }
+
     static bool Recover()
     {
         var value = new ZeroToken(N(99));
@@ -145,6 +157,9 @@ static class Consumer
         Check(ShapeRefused(() => Api.ZeroNatIndex(zero)) && zero.Count == N(-1)
             , "negative Token field preserves input");
         ++rejections; Check(Recover(), "recover after second shape refusal");
+        Check(NullRefused(() => Api.TrueBoolIndex(null!))
+            , "null checked-record input is refused by the host boundary");
+        ++rejections; Check(Recover(), "recover after null host refusal");
 #endif
 
         ++calls; Check(Api.ProduceTrueBool().Count == N(0), "produce true Bool");
@@ -161,7 +176,7 @@ static class Consumer
 #if RESULT_ONLY
         Check(calls == 8 && rejections == 0 && recoveries == 0, "result-only totals");
 #else
-        Check(calls == 28 && rejections == 6 && recoveries == 6, "full totals");
+        Check(calls == 30 && rejections == 7 && recoveries == 7, "full totals");
 #endif
     }
 }

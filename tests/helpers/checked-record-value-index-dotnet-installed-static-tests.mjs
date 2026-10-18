@@ -129,5 +129,8 @@ test("value-index .NET retained records are route-complete and unique", () => {
 			, route.endsWith("reviewed-ir"));
 		assert.equal(paths.includes("api-probe/out/Probe.dll")
 			, !route.startsWith("result-only-"));
+		assert.ok(paths.includes(
+			"handoff/archives/Checkedrecordvalueindices.Api.1.0.0.nupkg"
+		));
 	}
 });

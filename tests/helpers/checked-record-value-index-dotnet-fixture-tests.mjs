@@ -103,6 +103,8 @@ test("value-index C# caller is immutable and independently counted", async () =>
 	assert.match(source, /BigInteger\.One << 128/u);
 	assert.match(source, /zero\.GetType\(\) != wide\.GetType\(\)/u);
 	assert.match(source, /ArgumentOutOfRangeException/u);
+	assert.match(source, /ArgumentNullException/u);
+	assert.match(source, /Api\.TrueBoolIndex\(null!\)/u);
 	assert.match(source, /StringComparison\.Ordinal/u);
 	assert.match(source, /arguments\[0\] == "--runtime"/u);
 	assert.match(source, /RuntimeInformation\.FrameworkDescription/u);

@@ -72,7 +72,8 @@ export const checkCheckedRecordValueIndexDotnetModels = async ({
 		validatePackageSetReceipt(receipt); validateBindingIr(model.bindingIr);
 		assert.deepEqual(receipt, report.receipt);
 		assertCheckedRecordValueIndexProvenance(model.bindingIr);
-		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
+		assert.equal(reviewedContractDifference(expected, model.bindingIr), null
+			, `build-${attempt} independently reconciles with reviewed Binding IR`);
 		assert.equal(model.bindingIrSha256, hashBindingIr(model.bindingIr));
 		assert.equal(model.profile, "native-library-v1");
 		assert.equal(model.pointerBits, 64);

@@ -21,6 +21,9 @@ import { checkCheckedRecordValueIndexDotnetEnvironment, checkedRecordValueIndexD
 import { checkCheckedRecordValueIndexDotnetToolsRecord, checkCheckedRecordValueIndexDotnetFrameworkRecord } from "./checked-record-value-index-dotnet-runtime-records.mjs";
 import { checkCheckedRecordValueIndexDotnetProbeRecords } from "./checked-record-value-index-dotnet-probe-records.mjs";
 import { checkedRecordValueIndexDotnetAssembly } from "./checked-record-value-index-dotnet-package.mjs";
+import {
+	checkedRecordValueIndexDotnetHandoffRecords
+} from "./checked-record-value-index-dotnet-ci-handoff.mjs";
 
 /**
  * Enumerate the exact original records required by one installed selection.
@@ -55,6 +58,7 @@ export const checkedRecordValueIndexDotnetRecords = (route, nuget, context) => {
 			, `inputs/library/${checkedRecordValueIndexDotnetAssembly}.dll`
 			, ...mode === "full" ? ["out/Probe.dll"] : []]
 			.map(path => `api-probe/${path}`)
+		, ...checkedRecordValueIndexDotnetHandoffRecords
 	].sort();
 };
 
@@ -115,8 +119,9 @@ export const checkCheckedRecordValueIndexDotnetReport = async (read, {
 	assert.equal(report.installerCommandLogs, "Closed installer retains input/build-input/output identities, not restore/build stdout");
 	const runtimeRecord = { platform: runtime.platform, arch: runtime.arch
 		, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" } };
-	assert.deepEqual(report.runtime, runtimeRecord);
-	assert.deepEqual(await json("runtime.json"), runtimeRecord);
+	assert.deepEqual(report.runtime, runtimeRecord, "Independent runtime record");
+	assert.deepEqual(await json("runtime.json"), runtimeRecord
+		, "Retained runtime record");
 	assert.equal(report.resourceChecks.length, 4);
 	assert.deepEqual(await json("resources.json"), report.resourceChecks);
 	for(const check of report.resourceChecks)
@@ -146,7 +151,8 @@ export const checkCheckedRecordValueIndexDotnetReport = async (read, {
 	const caller = await checkedRecordValueIndexDotnetCaller(
 		route, path => checkedRecordValueIndexDotnetOriginal(consumerCommit, path)
 	);
-	assert.equal((await read("consumer.cs")).toString(), caller);
+	assert.equal((await read("consumer.cs")).toString(), caller
+		, "Installed C# caller source");
 	const { context, root, closure } = await checkCheckedRecordValueIndexDotnetEnvironment({
 		read, json, nuget, packageReceipt, tools, archiveSha512, caller
 	});
@@ -173,7 +179,8 @@ export const checkCheckedRecordValueIndexDotnetReport = async (read, {
 		}
 		else assert.deepEqual(observation.closure, closure);
 		assert.deepEqual(observation.counts
-			, checkedRecordValueIndexDotnetCounts[mode]);
+			, checkedRecordValueIndexDotnetCounts[mode]
+			, `${stage} value-index counts`);
 		assert.deepEqual(Object.keys(observation.run).sort(), ["code", "stderr", "stdout"]);
 		assert.equal(observation.run.code, 0); assert.equal(observation.run.stderr, "");
 		parseCheckedRecordValueIndexDotnetResult(observation.run.stdout, route);

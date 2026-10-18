@@ -16,7 +16,7 @@ export const checkedRecordValueIndexDotnetTarget = Object.freeze({
 	name: "Checkedrecordvalueindices.Api", version: "1.0.0"
 });
 export const checkedRecordValueIndexDotnetCounts = Object.freeze({
-	full: Object.freeze({ calls: 28, checks: 29, recoveries: 6, rejections: 6 })
+	full: Object.freeze({ calls: 30, checks: 31, recoveries: 7, rejections: 7 })
 	, "result-only": Object.freeze({
 		calls: 8, checks: 9, recoveries: 0, rejections: 0
 	})

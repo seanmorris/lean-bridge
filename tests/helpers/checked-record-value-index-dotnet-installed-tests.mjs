@@ -76,7 +76,14 @@ for(const route of selected.routes) test(
 		], { encoding: "utf8" });
 		assert.equal(status, "", "Installed evidence requires a clean source tree");
 		for(const path of [
-			"tests/fixtures/checked-record-value-index-dotnet/dotnet.cs"
+			".github/workflows/checked-record-value-index-dotnet.yml"
+			, "scripts/check-checked-record-value-index-dotnet-ci.mjs"
+			, "scripts/run-checked-record-value-index-dotnet-ci.sh"
+			, "tests/fixtures/checked-record-value-index-dotnet/dotnet.cs"
+			, "tests/helpers/checked-record-value-index-dotnet-ci-handoff.mjs"
+			, "tests/helpers/checked-record-value-index-dotnet-ci-report.mjs"
+			, "tests/helpers/checked-record-value-index-dotnet-ci-tools.mjs"
+			, "tests/helpers/checked-record-value-index-dotnet-controls.mjs"
 			, "tests/helpers/checked-record-value-index-dotnet-fixture.mjs"
 			, "tests/helpers/checked-record-value-index-dotnet-package.mjs"
 			, "tests/helpers/checked-record-value-index-dotnet-probe.mjs"
