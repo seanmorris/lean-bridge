@@ -1,0 +1,59 @@
+{
+  "apiMode": "full",
+  "arguments": [
+    "consumer.pl",
+    "--reviewed"
+  ],
+  "callerInputsUnchanged": true,
+  "compilerFreeExecution": true,
+  "compilerFreeReplay": true,
+  "configuration": "5.38.2-threaded",
+  "consumerSha256": "c2368a96ff9abcf7eee995a560fc8a7747147604fb5edb38797ea3ec78dccf4c",
+  "counts": {
+    "calls": 3355,
+    "checks": 7240,
+    "hostRejections": 7,
+    "recoveries": 256,
+    "rejections": 1288,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3355
+  },
+  "executableSha256": "73c84af43bbd1524a381c4bee3fb8fbdb687c9f6337bb33f0c42275a3c6db4c5",
+  "extractedDistributionsRemoved": true,
+  "identity": {
+    "archname": "x86_64-linux-thread-multi",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": "define",
+    "usemultiplicity": "define",
+    "version": "5.38.2"
+  },
+  "installMode": "build-xs",
+  "installationCCompilerAvailable": true,
+  "installedBytesUnchanged": true,
+  "installedFilesSha256": "292c95cda358281290f5273708c6fb2feef8b41124629ed7a4920939efcc34e3",
+  "leanCompilerUnavailable": true,
+  "nativePayloadUnchanged": true,
+  "offlineInstall": true,
+  "proofFieldsAbsent": true,
+  "relocatedInstallation": true,
+  "repeatedRuns": 2,
+  "resultSha256": "5847085e074a9cd9c8b3c6e125eb305e9b8d92760f45606f4c883995b0330fed",
+  "route": "reviewed",
+  "sourceUnchangedAfterReplay": true,
+  "traces": [
+    {
+      "manifestSha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba",
+      "receiptSha256": "0be979fdc46efef949169794dac41a252e1a536aed2107002feccb7f42fa89b8",
+      "role": "runtime",
+      "traceSha256": "fa092f59c927f5cb5948350ec33d275aa67a92f48f93288a8c1ddc20f5f4f7fc"
+    },
+    {
+      "manifestSha256": "681f725f5daef46fc07f9e54e72a06e6cfe14dac47ebe1f22d3aef2a6910c641",
+      "receiptSha256": "e2241ec7259a8b2c087d4d7c4c3218e0fe2bfbf48629699a33d0d82ec764a4dc",
+      "role": "component",
+      "traceSha256": "1ff8eabfc60399a04a8f54888645c712aa7e3f3070bd9f67a07d701dc7569630"
+    }
+  ]
+}

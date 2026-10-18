@@ -146,15 +146,15 @@ test("inherited promotion refuses missing, reordered, forged and duplicate evide
 		, [...references, references[0]]])
 		await assert.rejects(promoteInheritedCheckedRecords(original, changed));
 	for(const mutate of [
-		item => { item.profiles.pop(); }
-		, item => { item.positions.pop(); }
-		, item => { item.revision = "0".repeat(40); }
-		, item => { item.files.pop(); }
-		, item => { item.artifacts.pop(); }
-		, item => { item.scope = "Every inherited record works"; }
+		item => ({ ...item, profiles: item.profiles.slice(0, -1) })
+		, item => ({ ...item, positions: item.positions.slice(0, -1) })
+		, item => ({ ...item, revision: "0".repeat(40) })
+		, item => ({ ...item, files: item.files.slice(0, -1) })
+		, item => ({ ...item, artifacts: item.artifacts.slice(0, -1) })
+		, item => ({ ...item, scope: "Every inherited record works" })
 	]) {
-		const changed = structuredClone(references);
-		mutate(changed[0]);
+		const changed = [...references];
+		changed[0] = mutate(changed[0]);
 		await assert.rejects(promoteInheritedCheckedRecords(original, changed));
 	}
 });

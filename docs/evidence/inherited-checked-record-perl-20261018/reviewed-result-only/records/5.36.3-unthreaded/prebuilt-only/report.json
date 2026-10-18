@@ -1,0 +1,60 @@
+{
+  "apiMode": "result-only",
+  "arguments": [
+    "consumer.pl",
+    "--result-only",
+    "--reviewed"
+  ],
+  "callerInputsUnchanged": true,
+  "compilerFreeExecution": true,
+  "compilerFreeReplay": true,
+  "configuration": "5.36.3-unthreaded",
+  "consumerSha256": "c2368a96ff9abcf7eee995a560fc8a7747147604fb5edb38797ea3ec78dccf4c",
+  "counts": {
+    "calls": 522,
+    "checks": 1570,
+    "hostRejections": 4,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 6,
+    "snapshots": 522
+  },
+  "executableSha256": "fb153cd5109c858bf3a7ed5bbbf1fd6e2c9ffa4465b22cca52ca2e497cbcfbf3",
+  "extractedDistributionsRemoved": true,
+  "identity": {
+    "archname": "x86_64-linux",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": null,
+    "usemultiplicity": null,
+    "version": "5.36.3"
+  },
+  "installMode": "prebuilt-only",
+  "installationCCompilerAvailable": false,
+  "installedBytesUnchanged": true,
+  "installedFilesSha256": "52fa56447a762c06eab20ff291fc19c379aeb4cb26222af420f96c345fe21e21",
+  "leanCompilerUnavailable": true,
+  "nativePayloadUnchanged": true,
+  "offlineInstall": true,
+  "proofFieldsAbsent": true,
+  "relocatedInstallation": true,
+  "repeatedRuns": 2,
+  "resultSha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d",
+  "route": "reviewed",
+  "sourceUnchangedAfterReplay": true,
+  "traces": [
+    {
+      "manifestSha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba",
+      "receiptSha256": "3aeed4d9c3cb28bfe0e521d48716718124b73e2021e41dd33eec6eaec1c9116e",
+      "role": "runtime",
+      "traceSha256": "3843926eb6fddcd1e04316e89ace0521a829296727b36a01f334b30ea5a6485f"
+    },
+    {
+      "manifestSha256": "8f4dfa0372ba2be44385daab4076b5cbdfd506df6cefa62a8467dcde19167de4",
+      "receiptSha256": "919ef4499d093b42d720750b1a97aece0b3965a903dc8fb432cbd8add7697e6a",
+      "role": "component",
+      "traceSha256": "e7e3e676b7d49f9c541167bc6d16a1784733ee34bc04645bfc9b56aa8ac0b692"
+    }
+  ]
+}

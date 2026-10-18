@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/InheritedCheckedRecords.pm",
+      "sha256": "223e6ccf993c61aacf9ba9de4e6d922635fd0c561c0fc0c6942b381e35397699"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/InheritedCheckedRecords/native/libcomponent_95491bb762dabafaf0ed.so",
+      "sha256": "53509628e8748849ffa17fca90c68c15ad1be2ae6340b47f9ab5c1ab751ebbd4"
+    },
+    {
+      "origin": "prebuilt-xs",
+      "path": "auto/LeanBridge/InheritedCheckedRecords/InheritedCheckedRecords.so",
+      "sha256": "dcfef527282f6fec67eed891e5a857965ccd4ed4217da85c6f9a7efc7c49cff9"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "prebuilt-xs",
+  "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+  "schemaVersion": 1
+}

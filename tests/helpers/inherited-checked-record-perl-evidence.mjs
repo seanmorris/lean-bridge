@@ -31,7 +31,8 @@ export {
 	inheritedCheckedRecordPerlEvidence
 } from "./inherited-checked-record-perl-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordPerlEvidenceSha256 = null;
+export const inheritedCheckedRecordPerlEvidenceSha256
+	= "34f432dc470be2f3c55828eaa2357f022726cdba2f0f5c5f1d821de45a11aa7d";
 
 const controlKeys = [
 	"recordControls", "resourceControls", "interpreterControls"
@@ -39,7 +40,7 @@ const controlKeys = [
 ];
 const expectedControls = (records, mode) => ({
 	recordControls: records * 2, resourceControls: 7, interpreterControls: 4
-	, modelControls: mode === "full" ? 6 : 5
+	, modelControls: mode === "full" ? 13 : 12
 	, executionControls: 12, packageControls: 4
 });
 const safePath = path => typeof path === "string" && path.length > 0

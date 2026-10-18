@@ -1,0 +1,59 @@
+{
+  "apiMode": "result-only",
+  "arguments": [
+    "consumer.pl",
+    "--result-only"
+  ],
+  "callerInputsUnchanged": true,
+  "compilerFreeExecution": true,
+  "compilerFreeReplay": true,
+  "configuration": "5.36.3-threaded",
+  "consumerSha256": "c2368a96ff9abcf7eee995a560fc8a7747147604fb5edb38797ea3ec78dccf4c",
+  "counts": {
+    "calls": 522,
+    "checks": 1570,
+    "hostRejections": 4,
+    "recoveries": 0,
+    "rejections": 0,
+    "rounds": 256,
+    "snapshotControls": 6,
+    "snapshots": 522
+  },
+  "executableSha256": "270618384ba236795bfbfc0e2b8f6415d6c8cd4214ffa720dcb7ac1a2dcec2fe",
+  "extractedDistributionsRemoved": true,
+  "identity": {
+    "archname": "x86_64-linux-thread-multi",
+    "ivsize": "8",
+    "ptrsize": "8",
+    "useithreads": "define",
+    "usemultiplicity": "define",
+    "version": "5.36.3"
+  },
+  "installMode": "prebuilt-only",
+  "installationCCompilerAvailable": false,
+  "installedBytesUnchanged": true,
+  "installedFilesSha256": "611a438cfbee1f92c9ed56857b633c21c071f5a88ae22ea83c1626bcf03edc92",
+  "leanCompilerUnavailable": true,
+  "nativePayloadUnchanged": true,
+  "offlineInstall": true,
+  "proofFieldsAbsent": true,
+  "relocatedInstallation": true,
+  "repeatedRuns": 2,
+  "resultSha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d",
+  "route": "ordinary",
+  "sourceUnchangedAfterReplay": true,
+  "traces": [
+    {
+      "manifestSha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba",
+      "receiptSha256": "5a4e6e3c68b596bfc5482ee5f97b0bae8b7a1d75a81d2ce6aa6760e33ce814f8",
+      "role": "runtime",
+      "traceSha256": "ce214458785291646464c2662c4caa92eeb6917e38b9d3117a755bff1045b6cd"
+    },
+    {
+      "manifestSha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9",
+      "receiptSha256": "818db62d17d1069efa3b4205c73e1eedbfe832199c3dee50f265fbef151072e6",
+      "role": "component",
+      "traceSha256": "94412a876174f17f814da77e75f177c94490423a3f6f6ec2a826b58645df2088"
+    }
+  ]
+}

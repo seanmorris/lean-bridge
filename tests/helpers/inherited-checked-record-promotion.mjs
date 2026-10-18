@@ -242,6 +242,18 @@ export const inheritedCheckedRecordLaneReferences = async (
 	return referencesForLane(lane, read);
 };
 
+// Keep the immutable cached baseline private so callers cannot mutate it.
+const authenticateInheritedCheckedRecordReferences = async read => {
+	const references = [];
+	for(const lane of inheritedCheckedRecordPromotionLanes)
+		references.push(...await referencesForLane(lane, read));
+	assert.equal(references.length, 44);
+	assert.equal(new Set(references.map(item => item.id)).size, references.length);
+	return references;
+};
+const exactInheritedCheckedRecordReferences = () =>
+	defaultReferences ??= authenticateInheritedCheckedRecordReferences(readFile);
+
 /**
  * Authenticate all eleven archives serially and derive exactly 44 references.
  * Serial verification keeps disk and memory pressure bounded on the full tree.
@@ -249,18 +261,10 @@ export const inheritedCheckedRecordLaneReferences = async (
  * @param read - Repository-relative evidence reader.
  */
 export const inheritedCheckedRecordReferences = async (read = readFile) => {
-	if(read === readFile && defaultReferences)
-		return structuredClone(await defaultReferences);
-	const checking = (async () => {
-		const references = [];
-		for(const lane of inheritedCheckedRecordPromotionLanes)
-			references.push(...await referencesForLane(lane, read));
-		assert.equal(references.length, 44);
-		assert.equal(new Set(references.map(item => item.id)).size, references.length);
-		return references;
-	})();
-	if(read === readFile) defaultReferences = checking;
-	return structuredClone(await checking);
+	const references = read === readFile
+		? await exactInheritedCheckedRecordReferences()
+		: await authenticateInheritedCheckedRecordReferences(read);
+	return structuredClone(references);
 };
 
 const removeUnreviewedInheritance = text => text
@@ -297,7 +301,8 @@ const hostSuffix = "; also carries the tested proof-free inherited Span, Ticket 
  * @param references - Independently authenticated installed references.
  */
 export const promoteInheritedCheckedRecords = async (original, references) => {
-	assert.deepEqual(references, await inheritedCheckedRecordReferences());
+	assert.deepEqual(references
+		, await exactInheritedCheckedRecordReferences());
 	const inventory = structuredClone(original);
 	const validatorPaths = [
 		"tests/helpers/inherited-checked-record-promotion.mjs"

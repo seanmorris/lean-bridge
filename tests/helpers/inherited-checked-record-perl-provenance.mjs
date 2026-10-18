@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordPerlEvidence
 	= "docs/evidence/inherited-checked-record-perl-20261018";
-export const inheritedCheckedRecordPerlProducer = null;
-export const inheritedCheckedRecordPerlChecker = null;
-export const inheritedCheckedRecordPerlArchiver = null;
+export const inheritedCheckedRecordPerlProducer
+	= "bee9e875e1bc9bcbc6c164b32c038035c6f72951";
+export const inheritedCheckedRecordPerlChecker
+	= "bee9e875e1bc9bcbc6c164b32c038035c6f72951";
+export const inheritedCheckedRecordPerlArchiver
+	= "0a935424e7e338b3556e8a7b00507044e581361d";
 export const inheritedCheckedRecordPerlEvidenceLoadCeiling = 8;
 export const inheritedCheckedRecordPerlEvidenceFloor = "2.38";
 export const inheritedCheckedRecordPerlSelections = Object.freeze([

@@ -22,6 +22,15 @@ import {
 	, reverseInheritedCheckedRecordPerlArgumentsUpdate
 } from "./helpers/inherited-checked-record-perl-arguments-source-history.mjs";
 import {
+	beforeInheritedCheckedRecordPerlArchiveSource
+	, inheritedCheckedRecordPerlArchiveAddedPaths
+	, inheritedCheckedRecordPerlArchiveChangedPaths
+	, inheritedCheckedRecordPerlArchiveDraftParent
+	, inheritedCheckedRecordPerlArchiveHistoryPath
+	, inheritedCheckedRecordPerlArchivePredecessor
+	, reverseInheritedCheckedRecordPerlArchiveUpdate
+} from "./helpers/inherited-checked-record-perl-archive-source-history.mjs";
+import {
 	beforeInheritedCheckedRecordPerlSource
 	, inheritedCheckedRecordPerlAddedPaths
 	, inheritedCheckedRecordPerlChangedPaths
@@ -68,6 +77,93 @@ import {
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+});
+
+test("inherited Perl archive pins have one exact reversible lineage", async () => {
+	const record = JSON.parse(await readFile(
+		inheritedCheckedRecordPerlArchiveHistoryPath, "utf8"));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone
+		, "inherited-checked-record-perl-archive-source-v1");
+	assert.equal(record.predecessorCommit
+		, inheritedCheckedRecordPerlArchivePredecessor);
+	assert.equal(record.draftParentCommit
+		, inheritedCheckedRecordPerlArchiveDraftParent);
+	assert.deepEqual(record.updates.map(update => update.path)
+		, inheritedCheckedRecordPerlArchiveChangedPaths);
+	assert.deepEqual(record.additions.map(item => item.path)
+		, inheritedCheckedRecordPerlArchiveAddedPaths);
+	assert.equal(record.pathsSha256, sha256(JSON.stringify(
+		inheritedCheckedRecordPerlArchiveChangedPaths)));
+	for(const update of record.updates)
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeInheritedCheckedRecordPerlArchiveSource
+		);
+		const previous = git(["show"
+			, `${inheritedCheckedRecordPerlArchivePredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
+		assert.equal(sha256(previous), update.previousSha256, update.path);
+		assert.equal(reverseInheritedCheckedRecordPerlArchiveUpdate(
+			current, update), previous, update.path);
+		assert.equal(beforeInheritedCheckedRecordPerlArchiveSource(
+			update.path, current), previous, update.path);
+		assert.equal(beforeInheritedCheckedRecordPerlArchiveSource(
+			update.path, current, update.currentSha256), current, update.path);
+		assert.equal(beforeFinRefinementSource(
+			update.path, current, update.previousSha256), previous, update.path);
+		const unknown = current + "unknown";
+		assert.equal(beforeInheritedCheckedRecordPerlArchiveSource(
+			update.path, unknown), unknown, update.path);
+		for(const mutate of [
+			item => { item.path = "unknown"; }
+			, item => { item.previousSha256 = "0".repeat(64); }
+			, item => { item.currentSha256 = "0".repeat(64); }
+			, item => { item.edits = []; }
+			, item => { item.edits[0].start = -1; }
+			, item => { item.edits[0].current += "unknown"; }
+		]) {
+			const changed = structuredClone(update); mutate(changed);
+			assert.throws(() =>
+				reverseInheritedCheckedRecordPerlArchiveUpdate(current, changed));
+		}
+	}
+});
+
+test("inherited Perl archive history closes additions", async () => {
+	const record = JSON.parse(await readFile(
+		inheritedCheckedRecordPerlArchiveHistoryPath, "utf8"));
+	for(const addition of record.additions)
+	{
+		assert.equal(sha256(await readFile(addition.path))
+			, addition.currentSha256, addition.path);
+		assert.notEqual(spawnSync("git", ["cat-file", "-e"
+			, `${inheritedCheckedRecordPerlArchivePredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+	}
+});
+
+test("inherited Perl archive-history writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-inherited-record-perl-archive-guard-"
+	));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const environment = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const localGit = args => execFileSync("git", args, {
+		cwd: root, env: environment, stdio: "pipe"
+	});
+	localGit(["init", "--quiet"]);
+	localGit(["-c", "user.name=Test", "-c"
+		, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-inherited-checked-record-perl-archive-source-history.mjs"
+	)], { cwd: root, env: environment, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /must stay on its exact draft parent/u);
+	assert.deepEqual(await readdir(root), [".git"]);
 });
 
 test("inherited Perl verifier hardening has one exact reversible lineage", async () => {

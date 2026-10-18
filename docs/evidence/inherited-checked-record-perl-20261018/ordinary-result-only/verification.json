@@ -1,0 +1,702 @@
+{
+  "builds": 2,
+  "configurations": [
+    "5.36.3-threaded",
+    "5.36.3-unthreaded",
+    "5.38.2-threaded",
+    "5.38.2-unthreaded"
+  ],
+  "executions": 16,
+  "floor": "2.38",
+  "handoff": [
+    {
+      "bytes": 75416,
+      "path": "handoff/archives/LeanBridge-InheritedCheckedRecords-1.000.tar.gz",
+      "sha256": "270716831531ea709b9a2e28efdd05a78580906d525f2bf965f7bed668af09a7"
+    },
+    {
+      "bytes": 51397607,
+      "path": "handoff/archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+      "sha256": "c228af9110ba0b81d73a1fdf58d4435a68ab6c6ab0913382435ce0a2ee22de80"
+    },
+    {
+      "bytes": 2105,
+      "path": "handoff/package-set-receipt.json",
+      "sha256": "7af313d3006ca887e34d329f2112c8fc845786c917068f9eb47298e149c47ef0"
+    },
+    {
+      "bytes": 91,
+      "path": "handoff/package-set-receipt.json.sha256",
+      "sha256": "c67f26447eee3afdcb37ea73e44022594e8c2e7ec6d82ccdf526b1366ac95b0c"
+    }
+  ],
+  "installModes": [
+    "prebuilt-only",
+    "build-xs"
+  ],
+  "interpreterSha256": {
+    "5.36.3-threaded": "270618384ba236795bfbfc0e2b8f6415d6c8cd4214ffa720dcb7ac1a2dcec2fe",
+    "5.36.3-unthreaded": "fb153cd5109c858bf3a7ed5bbbf1fd6e2c9ffa4465b22cca52ca2e497cbcfbf3",
+    "5.38.2-threaded": "73c84af43bbd1524a381c4bee3fb8fbdb687c9f6337bb33f0c42275a3c6db4c5",
+    "5.38.2-unthreaded": "bb7f5231e80d0a4196b9e0e4e941a8eb35aa14d2a072ebc1d2e0c700ff806471"
+  },
+  "maxLoad": 8,
+  "mode": "result-only",
+  "name": "ordinary-result-only",
+  "producerCommit": "bee9e875e1bc9bcbc6c164b32c038035c6f72951",
+  "records": [
+    {
+      "bytes": 1691,
+      "path": "5.36.3-threaded/build-xs/component-install-receipt.json",
+      "sha256": "0448e7c417055e1a3aee4511ec0515706b53daa0755bcf7667159f7ab2fb8fd8"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.36.3-threaded/build-xs/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.36.3-threaded/build-xs/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 856,
+      "path": "5.36.3-threaded/build-xs/component-trace.json",
+      "sha256": "0fbf340aa4c4af30e58c43442539c558c9c71ffa7bcbad27c0b7625c8ac4e2a4"
+    },
+    {
+      "bytes": 4739,
+      "path": "5.36.3-threaded/build-xs/installed-files.json",
+      "sha256": "f68a98948803994d30d21a1d1bbb94605aa3e8a6f70ff02bca1e901266c21cfd"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-threaded/build-xs/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-threaded/build-xs/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-threaded/build-xs/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-threaded/build-xs/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1990,
+      "path": "5.36.3-threaded/build-xs/report.json",
+      "sha256": "06e88fa41ee754e47a86f852948ade7cd6abfbc1888e9c97128a01ea6c07a62d"
+    },
+    {
+      "bytes": 1619,
+      "path": "5.36.3-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "ea02eea8b3c46d6e14ff33ca4234eb93e365f00395d071eba64a48d7950dc2b0"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.36.3-threaded/build-xs/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.36.3-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "5.36.3-threaded/build-xs/runtime-trace.json",
+      "sha256": "76db3d7d6a7ce3a285375cc63d70082743815fc9f6a0cd111d8a4c14bdcad3cc"
+    },
+    {
+      "bytes": 531,
+      "path": "5.36.3-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "818db62d17d1069efa3b4205c73e1eedbfe832199c3dee50f265fbef151072e6"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.36.3-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.36.3-threaded/prebuilt-only/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 844,
+      "path": "5.36.3-threaded/prebuilt-only/component-trace.json",
+      "sha256": "94412a876174f17f814da77e75f177c94490423a3f6f6ec2a826b58645df2088"
+    },
+    {
+      "bytes": 4737,
+      "path": "5.36.3-threaded/prebuilt-only/installed-files.json",
+      "sha256": "611a438cfbee1f92c9ed56857b633c21c071f5a88ae22ea83c1626bcf03edc92"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-threaded/prebuilt-only/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-threaded/prebuilt-only/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-threaded/prebuilt-only/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-threaded/prebuilt-only/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1996,
+      "path": "5.36.3-threaded/prebuilt-only/report.json",
+      "sha256": "fc620f400cb124afe018ca57fbcd6b3c1fd534ce06aaf0ea60458cd395f90bec"
+    },
+    {
+      "bytes": 531,
+      "path": "5.36.3-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "5a4e6e3c68b596bfc5482ee5f97b0bae8b7a1d75a81d2ce6aa6760e33ce814f8"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.36.3-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.36.3-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "5.36.3-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "ce214458785291646464c2662c4caa92eeb6917e38b9d3117a755bff1045b6cd"
+    },
+    {
+      "bytes": 1608,
+      "path": "5.36.3-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "f3c80de70633197991898a8c13836cc1f75a80ebf83c0b565007717f8826817b"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.36.3-unthreaded/build-xs/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.36.3-unthreaded/build-xs/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 856,
+      "path": "5.36.3-unthreaded/build-xs/component-trace.json",
+      "sha256": "8421e8bf2e5d62c99d77b61f84d0b554c8e0ea103fde9e7976b54aae8b8fa497"
+    },
+    {
+      "bytes": 4414,
+      "path": "5.36.3-unthreaded/build-xs/installed-files.json",
+      "sha256": "d04128093cdf6ada286366742363e96b5d9bf0270155899dc0417d20edf1e888"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-unthreaded/build-xs/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-unthreaded/build-xs/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-unthreaded/build-xs/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-unthreaded/build-xs/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1971,
+      "path": "5.36.3-unthreaded/build-xs/report.json",
+      "sha256": "911eb018ed8327c16d6cb0117a170cb9c09d3429cc3814d450bd899252f9c53d"
+    },
+    {
+      "bytes": 1536,
+      "path": "5.36.3-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "320879ec3abe47e78d0baf1d2a4bd91b7f40dee49cb7a1dc0afac1a14a2bc127"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.36.3-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.36.3-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "5.36.3-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "0fc9fcb957aedcb653f8c62682b7ed3bd285996e7e30a249f6235ef2a3b9c718"
+    },
+    {
+      "bytes": 506,
+      "path": "5.36.3-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "919ef4499d093b42d720750b1a97aece0b3965a903dc8fb432cbd8add7697e6a"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.36.3-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.36.3-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 844,
+      "path": "5.36.3-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "e7e3e676b7d49f9c541167bc6d16a1784733ee34bc04645bfc9b56aa8ac0b692"
+    },
+    {
+      "bytes": 4412,
+      "path": "5.36.3-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "0b9a3b75462b5c8aa3bec079af9270ebe501cf7863b1ee0cf1afd4f2d8c96579"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-unthreaded/prebuilt-only/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-unthreaded/prebuilt-only/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.36.3-unthreaded/prebuilt-only/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.36.3-unthreaded/prebuilt-only/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1977,
+      "path": "5.36.3-unthreaded/prebuilt-only/report.json",
+      "sha256": "63cc172247dc6b310660b3a742f503660e2c1690d1e859447b3e5b4699ba8830"
+    },
+    {
+      "bytes": 506,
+      "path": "5.36.3-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "3aeed4d9c3cb28bfe0e521d48716718124b73e2021e41dd33eec6eaec1c9116e"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.36.3-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.36.3-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "5.36.3-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "3843926eb6fddcd1e04316e89ace0521a829296727b36a01f334b30ea5a6485f"
+    },
+    {
+      "bytes": 1691,
+      "path": "5.38.2-threaded/build-xs/component-install-receipt.json",
+      "sha256": "1d45ce245464303f7172b3f98142ec1e244353722997cf6ded26823abbc6350d"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.38.2-threaded/build-xs/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.38.2-threaded/build-xs/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 856,
+      "path": "5.38.2-threaded/build-xs/component-trace.json",
+      "sha256": "111e6c22cdeb6d2c6a0ebc693c6da971ff4db7799d1ffcb529d5457e4e4ae800"
+    },
+    {
+      "bytes": 4739,
+      "path": "5.38.2-threaded/build-xs/installed-files.json",
+      "sha256": "ce84b94b21ef4c58935dc2c9873d701e500988b19a892168661a90ae49b4ce6c"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-threaded/build-xs/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-threaded/build-xs/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-threaded/build-xs/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-threaded/build-xs/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1990,
+      "path": "5.38.2-threaded/build-xs/report.json",
+      "sha256": "c7a5e7206f421b61c554dcd1dd85121abdddfd8d584898518ef824530a50cfc1"
+    },
+    {
+      "bytes": 1619,
+      "path": "5.38.2-threaded/build-xs/runtime-install-receipt.json",
+      "sha256": "0be979fdc46efef949169794dac41a252e1a536aed2107002feccb7f42fa89b8"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.38.2-threaded/build-xs/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.38.2-threaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "5.38.2-threaded/build-xs/runtime-trace.json",
+      "sha256": "fa092f59c927f5cb5948350ec33d275aa67a92f48f93288a8c1ddc20f5f4f7fc"
+    },
+    {
+      "bytes": 531,
+      "path": "5.38.2-threaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "e168b7cbac4944c6e4b3eea8636bddba50cec0e5db35d5a6e91bc8c58604d2fc"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.38.2-threaded/prebuilt-only/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.38.2-threaded/prebuilt-only/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 844,
+      "path": "5.38.2-threaded/prebuilt-only/component-trace.json",
+      "sha256": "f271d09836d5c6356d020e6ec2d44a24b3c973ad78c1efc377a8d71e23656438"
+    },
+    {
+      "bytes": 4737,
+      "path": "5.38.2-threaded/prebuilt-only/installed-files.json",
+      "sha256": "580ae3f97bd2f6d8ca897b11c06c1312f63e0a3ec8ad40561447245bbd26a8ab"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-threaded/prebuilt-only/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-threaded/prebuilt-only/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-threaded/prebuilt-only/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-threaded/prebuilt-only/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1996,
+      "path": "5.38.2-threaded/prebuilt-only/report.json",
+      "sha256": "611538d034bf9d8a387f9f86149280a8597d7de5a6bcea5add866286a45eadd4"
+    },
+    {
+      "bytes": 531,
+      "path": "5.38.2-threaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "2cfdd7683737ea5ef5412e4fcb08ee05733306390827722cb9bccf34005ac67c"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.38.2-threaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.38.2-threaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "5.38.2-threaded/prebuilt-only/runtime-trace.json",
+      "sha256": "4fc2fee0dd8795218a02b3faaf37989befa254fe4391c0893b41356b0d14521a"
+    },
+    {
+      "bytes": 1608,
+      "path": "5.38.2-unthreaded/build-xs/component-install-receipt.json",
+      "sha256": "b95c650ae9252cd3677984fc6c429e25b5bc66f161598ad1f6dabdb11a0494a0"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.38.2-unthreaded/build-xs/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.38.2-unthreaded/build-xs/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 856,
+      "path": "5.38.2-unthreaded/build-xs/component-trace.json",
+      "sha256": "994d79f1bd7f23cc63ae6e3e5763c9ec813eba66db728446ac2568d0f7be4ae5"
+    },
+    {
+      "bytes": 4414,
+      "path": "5.38.2-unthreaded/build-xs/installed-files.json",
+      "sha256": "08fbca3d3080c6c66d3c02f1be6103ecb36fcd79dd0c96fe630352bdc2530422"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-unthreaded/build-xs/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-unthreaded/build-xs/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-unthreaded/build-xs/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-unthreaded/build-xs/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1971,
+      "path": "5.38.2-unthreaded/build-xs/report.json",
+      "sha256": "22eec25dce22c69f9c0f70d24c43d972cef4e9c6dbbcd4e183c087d244ed419a"
+    },
+    {
+      "bytes": 1536,
+      "path": "5.38.2-unthreaded/build-xs/runtime-install-receipt.json",
+      "sha256": "d3d6d2ee1d9f4fada5fa780997c9fd4ddaaba23b83d9e85265c63b93a77c328d"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.38.2-unthreaded/build-xs/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.38.2-unthreaded/build-xs/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3415,
+      "path": "5.38.2-unthreaded/build-xs/runtime-trace.json",
+      "sha256": "b9637fa0dbe1056058b332b6c2b32bde17b1f992b520a7d991f4aa8f3a00c50e"
+    },
+    {
+      "bytes": 506,
+      "path": "5.38.2-unthreaded/prebuilt-only/component-install-receipt.json",
+      "sha256": "6dbec6ba8ae3295be5ef26aae5affdab4d498cbb282228cdada68dbed6a0f12c"
+    },
+    {
+      "bytes": 7527,
+      "path": "5.38.2-unthreaded/prebuilt-only/component-manifest.json",
+      "sha256": "b3a297344217d1a65ee3080cdf0ad27bfbb7c7e77647c8df1f12c18381fbd0a9"
+    },
+    {
+      "bytes": 7612,
+      "path": "5.38.2-unthreaded/prebuilt-only/component-source.xs",
+      "sha256": "6897673f1fbd807145d56bf5a4a68521a9b147ad790f2ad1219a21e6d9e44901"
+    },
+    {
+      "bytes": 844,
+      "path": "5.38.2-unthreaded/prebuilt-only/component-trace.json",
+      "sha256": "5195237621bc61e4cbc80fd776142e7139007d67ad935a3fec1e64b038780c4e"
+    },
+    {
+      "bytes": 4412,
+      "path": "5.38.2-unthreaded/prebuilt-only/installed-files.json",
+      "sha256": "2de912bac12fdb135cbdcdaf36f583b058c951cd7a73be2fb9d3e8882373640f"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-unthreaded/prebuilt-only/installed-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-unthreaded/prebuilt-only/installed.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 192,
+      "path": "5.38.2-unthreaded/prebuilt-only/relocated-process.json",
+      "sha256": "769f9af2434c5698474feb86c4cb31110788b7ed7749dcba762873c6af8cf8ca"
+    },
+    {
+      "bytes": 160,
+      "path": "5.38.2-unthreaded/prebuilt-only/relocated.json",
+      "sha256": "630e9f3eaa3f3e33a562c4d5e1c54633758f6b05669095514ddc200eeed56a3d"
+    },
+    {
+      "bytes": 1977,
+      "path": "5.38.2-unthreaded/prebuilt-only/report.json",
+      "sha256": "b76ff9b86d26357da4ddfddfb4f3a79e4889b4569df77e799cf679598604619c"
+    },
+    {
+      "bytes": 506,
+      "path": "5.38.2-unthreaded/prebuilt-only/runtime-install-receipt.json",
+      "sha256": "6fc6c1b56ac480d3e1567bd9e8bd3ef288e5b34791af95644ca1bf095bb4047b"
+    },
+    {
+      "bytes": 8392,
+      "path": "5.38.2-unthreaded/prebuilt-only/runtime-manifest.json",
+      "sha256": "a942e1db92997cfbdd493188cd01a1c0442ae9f42baffbb801b1ef5b190de4ba"
+    },
+    {
+      "bytes": 11859,
+      "path": "5.38.2-unthreaded/prebuilt-only/runtime-source.xs",
+      "sha256": "81d13b2e342bd0eb6c5ecfe1643156b761c4fc25315a913686b7a02ae118f0f1"
+    },
+    {
+      "bytes": 3403,
+      "path": "5.38.2-unthreaded/prebuilt-only/runtime-trace.json",
+      "sha256": "8c900b4446b52446a92af3aa5ec18acdfa6d1644998b47044da02b09935b99a6"
+    },
+    {
+      "bytes": 3011,
+      "path": "build-0/InheritedCheckedRecords.lean",
+      "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+    },
+    {
+      "bytes": 1247,
+      "path": "build-0/author-inputs.json",
+      "sha256": "43842d2278bc26e5792bdd73b66652f523ba628e71c2d1fe2a84ad0b795314c7"
+    },
+    {
+      "bytes": 299,
+      "path": "build-0/lean-bridge.exports.json",
+      "sha256": "bcfdbc2b3a2cb2b57cf89c319371d183bd63958aed9f9a91d61cd0058ac88182"
+    },
+    {
+      "bytes": 32673,
+      "path": "build-0/model.json",
+      "sha256": "9c50239b082c63bcc7c345de0d1d9b7502053179085810fa9ddb42bdf0777caa"
+    },
+    {
+      "bytes": 2105,
+      "path": "build-0/package-set-receipt.json",
+      "sha256": "7af313d3006ca887e34d329f2112c8fc845786c917068f9eb47298e149c47ef0"
+    },
+    {
+      "bytes": 3011,
+      "path": "build-1/InheritedCheckedRecords.lean",
+      "sha256": "daecdc61827a8ec5eca58522d2f67b69eb1ed81cbc1cedd91132e38d6361f53c"
+    },
+    {
+      "bytes": 1243,
+      "path": "build-1/author-inputs.json",
+      "sha256": "e0605b47da6822c7b0b426834904fb712fe6d1680ef7dd0ccdab3848c16b8a84"
+    },
+    {
+      "bytes": 299,
+      "path": "build-1/lean-bridge.exports.json",
+      "sha256": "bcfdbc2b3a2cb2b57cf89c319371d183bd63958aed9f9a91d61cd0058ac88182"
+    },
+    {
+      "bytes": 32673,
+      "path": "build-1/model.json",
+      "sha256": "9c50239b082c63bcc7c345de0d1d9b7502053179085810fa9ddb42bdf0777caa"
+    },
+    {
+      "bytes": 2105,
+      "path": "build-1/package-set-receipt.json",
+      "sha256": "7af313d3006ca887e34d329f2112c8fc845786c917068f9eb47298e149c47ef0"
+    },
+    {
+      "bytes": 299,
+      "path": "configuration.json",
+      "sha256": "bcfdbc2b3a2cb2b57cf89c319371d183bd63958aed9f9a91d61cd0058ac88182"
+    },
+    {
+      "bytes": 12558,
+      "path": "consumer.pl",
+      "sha256": "c2368a96ff9abcf7eee995a560fc8a7747147604fb5edb38797ea3ec78dccf4c"
+    },
+    {
+      "bytes": 10335,
+      "path": "expected.binding-ir.json",
+      "sha256": "ae9934172549b1337b2ff0f70155e5e43cf3848e1dc665b5f0991b9e306aabca"
+    },
+    {
+      "bytes": 1933,
+      "path": "interpreters.json",
+      "sha256": "0e31a6e8512fc2ed30f298051373a554ab5dfa93327d3e8f1bb2bbd9dba8347d"
+    },
+    {
+      "bytes": 23967,
+      "path": "report.json",
+      "sha256": "a894fbea73ef7844dff0230ddec008b0cac0cfce674ddf16c7cc58333063af0a"
+    },
+    {
+      "bytes": 1796,
+      "path": "resources.json",
+      "sha256": "d5b41b13a88102353d03e4715f8c2c510e5d12d501f17905ccdb4310b3a15679"
+    },
+    {
+      "bytes": 123,
+      "path": "runtime.json",
+      "sha256": "aab4e87b44257869dbbf2b903d19c9c0252200e248bdaca1451a4c8f98497536"
+    }
+  ],
+  "reportSha256": "a894fbea73ef7844dff0230ddec008b0cac0cfce674ddf16c7cc58333063af0a",
+  "route": "ordinary",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "schemaVersion": 1
+}
