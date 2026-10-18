@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-dotnet-source-v1",
+  "predecessorCommit": "e6fffe186f08fd148c158150104d406561c89e37",
+  "draftParentCommit": "58622253b3671a756b458bcb43155bf9e5a28a21",
+  "pathsSha256": "05f5a50d9038a3b02ebb1b483f7eb5d628b55e8c144605b5d089155025c06eae",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2",
+      "currentSha256": "f089c20e2e4068bcb101cb878d8dcdd486eb468c725a3bdc00d656c7e7d85e58",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "tests/checked-record-value-index-dotnet.test.mjs",
+      "currentSha256": "c8d7496d70da7889be6142da26ae7c7e3ff4240893cd8c1a07b956f622f4a6bb"
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-dotnet/dotnet.cs",
+      "currentSha256": "522e2814c84e666e0d35205acd41d964a50af58429ce585702c279bbe72fbcaa"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-fixture-tests.mjs",
+      "currentSha256": "55ba4ef674a8e6bdb56cac54893f4395e4d85401fcfc109af2ff1314946f06c0"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-fixture.mjs",
+      "currentSha256": "4ea3992ab0c959255f4c1fb9357c783ba273b4adccc42665b58d24c6c21f4179"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-dotnet-source-history.mjs",
+      "currentSha256": "0c8cf8d39ce6f38a0b845a481c00c1848d593400fbe8bb97ed83a4c0b9c92d31"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-source-history.mjs",
+      "currentSha256": "2324420a8c6509966d0b4fbd7c37df0ea1e2f65e8bb66b5bfad182de1a3f8acc"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-source-history-tests.mjs",
+      "currentSha256": "10e69ef0161799ae20cd1d8a6c3763854a5c5ea275721b2d24ec490a5b47227f"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c9d205db306ba929ec13c0459a5abe2fe333846d12468d9794981117a40ca4a1",
+      "currentSha256": "2a90d3d3597de28fcb836fd7c3bdc47cb26c1fe69569eaece47e4514767b47db",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n",
+          "current": "          \"sha256\": \"f089c20e2e4068bcb101cb878d8dcdd486eb468c725a3bdc00d656c7e7d85e58\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n",
+          "current": "          \"sha256\": \"f089c20e2e4068bcb101cb878d8dcdd486eb468c725a3bdc00d656c7e7d85e58\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2\"\n",
+          "current": "          \"sha256\": \"f089c20e2e4068bcb101cb878d8dcdd486eb468c725a3bdc00d656c7e7d85e58\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "21adc988dfc44b82f3647894ab87b76da9a4c773f42e73a8ffa10ca1d27651ac",
+      "currentSha256": "5bcb820a03500f5621967be7cc8ce167bfa7877d35358854492869771bc0bbc0",
+      "edits": [
+        {
+          "start": 12331,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-dotnet\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "32633572debe63331cf3577cd6512d42e8c2e7872f659e44eaffec159116a4c2",
+      "currentSha256": "f089c20e2e4068bcb101cb878d8dcdd486eb468c725a3bdc00d656c7e7d85e58",
+      "edits": [
+        {
+          "start": 4548,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-dotnet-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "81f3e0bdbedfda4c181dc9d8a9f1e0ea6e89b33a25e4b960b18f4a0b7579f86c",
+      "currentSha256": "66fc544e6ffd1c933df8980b209bdec20e06fd1183868170cbccebc011240ed0",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexDotnetSource, checkedRecordValueIndexDotnetChangedPaths } from \"./checked-record-value-index-dotnet-source-history.mjs\";\n"
+        },
+        {
+          "start": 79620,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexDotnetSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 94974,
+          "previous": "\t...valueIndexBrowserLintChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexDotnetChangedPaths\n\t, ...valueIndexBrowserLintChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
