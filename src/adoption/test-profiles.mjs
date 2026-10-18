@@ -8,6 +8,8 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "nominal-primitive-subtype-supplement-ci"
+		, "nominal-primitive-subtype-supplement-evidence"
 		, "structural-subtype-entry-evidence"
 		, "structural-subtype-entry-installed"
 		, "structural-subtype-entry"
