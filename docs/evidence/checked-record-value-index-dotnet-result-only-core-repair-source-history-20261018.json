@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-dotnet-result-only-core-repair-v1",
+  "predecessorCommit": "e054b746803364268b0a052746f7ae439b97972d",
+  "draftParentCommit": "0716fff5544296b8e8f8ad0a63741f928cf5f4d4",
+  "pathsSha256": "e5aaec0c1e92be9c92da7afdeb1f809f5afa2d86b85652539f5f2d0c566af48e",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7",
+      "currentSha256": "f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-dotnet-result-only-core-repair-source-history.mjs",
+      "currentSha256": "477d4bd773d9c62e6018eabcc298a8da2e17ae02a15f2f27ad73cb87695a7798"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-result-only-core-repair-source-history-tests.mjs",
+      "currentSha256": "acc55300a43110a859ad27615cd933af0f3792261293230af2664007e64249d5"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-result-only-core-repair-source-history.mjs",
+      "currentSha256": "1b564961059612d68c3d1fbd9bd371b19f2fef36adeb8ed255ed28f5d9dfe666"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "371e2527946084044e19d1d36553ce697a6b09079a72b5ac92085e0f0013632d",
+      "currentSha256": "f42c723c846252b438a0cd2787abf3aa44859e7a508a967c1aa7b0e297299a75",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n",
+          "current": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n",
+          "current": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7\"\n",
+          "current": "          \"sha256\": \"f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "1e61c1e534b2b434f70abffa3eed447db1dd9e719028c0982478c5e0101164c7",
+      "currentSha256": "f518284bd4f10eac87191c529e80f52c86affc639c43ad7c0ec6f5fbb3252a50",
+      "edits": [
+        {
+          "start": 5138,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-dotnet-result-only-core-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "5bcb820a03500f5621967be7cc8ce167bfa7877d35358854492869771bc0bbc0",
+      "currentSha256": "4bc54c9f3d045b802f5b219f2c3371df2107e47c0c461da751e8e46aa18acd1e",
+      "edits": [
+        {
+          "start": 12371,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-dotnet-evidence\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-dotnet/dotnet.cs",
+      "previousSha256": "ca7ec525fea0f5180fe3d7a736ae825c0a513580d18fdd594d54db45521365b5",
+      "currentSha256": "8cb4be18074be3bd4930725de570c7e5342549ded2912b7c62f95cf5834406cf",
+      "edits": [
+        {
+          "start": 208,
+          "previous": "    static int checks;\n    static int calls;\n    static int rejections;\n    static int recoveries;\n",
+          "current": "    static int checks = 0;\n    static int calls = 0;\n    static int rejections = 0;\n    static int recoveries = 0;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-dotnet-fixture-tests.mjs",
+      "previousSha256": "a578fbb39c3be6b77c28e52bc864931d8cc776eba98b45a4571e5eab786f67a9",
+      "currentSha256": "6a626444a6d2528f9ae51d9a4831d1a36e4d5016f7a0ec43439189ae60a62472",
+      "edits": [
+        {
+          "start": 5385,
+          "previous": "",
+          "current": "\tfor(const counter of [\"calls\", \"checks\", \"recoveries\", \"rejections\"])\n\t\tassert.match(source, new RegExp(`static int ${counter} = 0;`, \"u\"));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f67022245d2d7ca2bc64c9e7c984a23c3e71c7aef4a6094fd63013a154b2a1f0",
+      "currentSha256": "792b163c2994cefde08e69e742989c7100bb100f7c31c504963511af26e5b151",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexDotnetResultOnlyCoreRepairSource, checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths } from \"./checked-record-value-index-dotnet-result-only-core-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 80783,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexDotnetResultOnlyCoreRepairSource(\n\t\tpath, source, expected\n\t);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 96988,
+          "previous": "\t...checkedRecordValueIndexNativeDotnetVerifierRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths\n\t, ...checkedRecordValueIndexNativeDotnetVerifierRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
