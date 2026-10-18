@@ -11,9 +11,12 @@ import {
 
 export const inheritedCheckedRecordRubyEvidence
 	= "docs/evidence/inherited-checked-record-ruby-20261017";
-export const inheritedCheckedRecordRubyProducer = null;
-export const inheritedCheckedRecordRubyChecker = null;
-export const inheritedCheckedRecordRubyArchiver = null;
+export const inheritedCheckedRecordRubyProducer
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordRubyChecker
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordRubyArchiver
+	= "9aee3a3b71727134d4b26afd871eee44d9070746";
 export const inheritedCheckedRecordRubyEvidenceLoadCeiling = 8;
 export const inheritedCheckedRecordRubyEvidenceFloor = "2.38";
 export const inheritedCheckedRecordRubySelections = Object.freeze([

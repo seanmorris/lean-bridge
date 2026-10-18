@@ -1,0 +1,31 @@
+{
+  "args": [
+    "consumer.rb"
+  ],
+  "closure": {
+    "environmentSha256": "b20c124065faf9bac79326c30938c00f15a7bbb8ccc6d626ebaf5a1cf8ab9e8f",
+    "gemspecSha256": "5a21dcad322ed2f24824dcc1cc55ff0b487af8301f12d4f4c7469e8d9388f898",
+    "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+    "packageFileSetSha256": "0cc76a85613b24b2fd46e167c84e8714d258ffaea3849b84c22d7fddde41586f",
+    "receiptSha256": "3ecfb0b1fbb35bb7ff2aee61e9df82012c5eb6377d378bc7105125e9282b096e"
+  },
+  "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+  "counts": {
+    "calls": 3355,
+    "checks": 7240,
+    "hostRejections": 7,
+    "recoveries": 256,
+    "rejections": 1288,
+    "rounds": 256,
+    "snapshotControls": 8,
+    "snapshots": 3355
+  },
+  "cwd": "/tmp/lean-bridge-inherited-checked-record-ruby-fFeu1Y/consumer-relocated",
+  "gems": "/tmp/lean-bridge-inherited-checked-record-ruby-fFeu1Y/consumer-relocated/gems",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":7240,\"rejections\":1288,\"hostRejections\":7,\"calls\":3355,\"recoveries\":256,\"snapshots\":3355,\"snapshotControls\":8,\"rounds\":256}\n"
+  }
+}

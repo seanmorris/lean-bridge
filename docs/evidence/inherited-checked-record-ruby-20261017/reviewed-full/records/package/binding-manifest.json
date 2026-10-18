@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "inheritedcheckedrecords@1.0.0",
+  "bindingIrSha256": "f2e9322e587fa6ac74b24e8777586e71382c52e105211892222f4777c44456f2",
+  "namespace": "LeanBridge::Inheritedcheckedrecords",
+  "files": [
+    "lib/lean_bridge/inheritedcheckedrecords.rb",
+    "lib/lean_bridge/inheritedcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/inheritedcheckedrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/inheritedcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ],
+  "aliases": [
+    {
+      "id": "lean:InheritedCheckedRecords.TicketAlias",
+      "name": "TicketAlias",
+      "target": {
+        "id": "lean:InheritedCheckedRecords.Ticket",
+        "kind": "named"
+      },
+      "rubyType": "LeanBridge::Inheritedcheckedrecords::Ticket"
+    }
+  ]
+}

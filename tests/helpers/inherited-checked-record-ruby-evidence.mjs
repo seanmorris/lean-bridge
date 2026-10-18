@@ -33,7 +33,8 @@ export {
 	inheritedCheckedRecordRubyEvidence
 } from "./inherited-checked-record-ruby-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordRubyEvidenceSha256 = null;
+export const inheritedCheckedRecordRubyEvidenceSha256
+	= "16c66b83949bf95444ec28a180a3dff4ebeae784cb65fed7a2d78cc9d88eb088";
 
 const controlKeys = [
 	"recordControls", "resourceControls", "environmentControls"

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "inheritedcheckedrecords@1.0.0",
+    "name": "inheritedcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50085888,
+          "path": "archives/inheritedcheckedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "0aba06d2b9324c5645c2a35eea9bde06b80f46832896c44745dab421943477e3"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "inheritedcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "8003c26edf146614d597c9b48552a607b4176f7b0c95b403ff0db2647774a586",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "11128438f8d3efb89d5f439eb9b219eabd679844348ca0171edd571b2f471d67"
+  }
+}
