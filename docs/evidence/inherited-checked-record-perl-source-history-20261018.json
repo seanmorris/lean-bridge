@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "milestone": "inherited-checked-record-perl-source-v1",
+  "predecessorCommit": "3b25f500c6cb9301df3e69b4d1890d777e65314f",
+  "draftParentCommit": "36216f36fd559d736b81ae68ff8bd7040fa0e495",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": ".github/workflows/inherited-checked-record-perl.yml",
+      "currentSha256": "577d40b3bb6075d8b5e2be5db7dd985c892800c82d338da3627c63b7375ab9d4"
+    },
+    {
+      "path": "scripts/archive-inherited-checked-record-perl-evidence.mjs",
+      "currentSha256": "f3577e5fc0380160196934ecfaf18ae258cf30e708512c256d661426bdfcd6e0"
+    },
+    {
+      "path": "scripts/check-inherited-checked-record-perl-ci.mjs",
+      "currentSha256": "6822e87a577dfec85d52b54ec17e0ea056e1d4655638bc2587c995ba06f35785"
+    },
+    {
+      "path": "scripts/run-inherited-checked-record-perl-ci.sh",
+      "currentSha256": "218fb8717295609ff9c674ac56382c1d39ef1e4f22327b9d79ffeec20d7a4217"
+    },
+    {
+      "path": "scripts/update-inherited-checked-record-perl-source-history.mjs",
+      "currentSha256": "94d5d17ef11b9f761ae29a1418f77223500f5960c79676634dbe9063eef9d6f6"
+    },
+    {
+      "path": "tests/fixtures/inherited-checked-record-consumers/perl.pl",
+      "currentSha256": "3f6e9f4f9652d7cfb388fcdc58f20903ed03e468d13ebf5aea49e83c6d4c9925"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-report-tests.mjs",
+      "currentSha256": "7826b80daaff6ef7110e10933dd68edb6fef7701b10114261d9216f053b1231c"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-report.mjs",
+      "currentSha256": "200288b588a448a272eba493cc95f1e3013512e998a6dc765f94505f9bd409ea"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-shell-tests.mjs",
+      "currentSha256": "aaf76acbf6a9c9cefbbac0b262689ec56ba10ecc749b328bb52347cd73febd89"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-workflow-tests.mjs",
+      "currentSha256": "c6e6a8b6e3221ec1d5b910e44fa9a3d4b283b0034cc68bf24ced7076c8490bed"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-ci-workflow.mjs",
+      "currentSha256": "2d9e86ee872fdea8dcf96388c845f485cc673c9ac411f2be3683166b6102d720"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-controls-tests.mjs",
+      "currentSha256": "905d8187ef7ca9bb533aeedb664f8aea47556a6751668053b05c0e3c279c55ab"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-controls.mjs",
+      "currentSha256": "d1e531a706a767031627aaa7975e58aea87ffecf5ecd89aa66b3773dbea90c14"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-evidence-sources-tests.mjs",
+      "currentSha256": "851a50698da2e334d937902ce12c1bedecde57de27fb53c6ecc559e25af781cd"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-evidence-sources.mjs",
+      "currentSha256": "ca667776de7b2b829214a4c7301c35bd957722e4f5f22da9c13d19c2f0ff4441"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-evidence-tests.mjs",
+      "currentSha256": "740af6ca601208513abc8e77522e9e7d376cf2a5bf2e7752f6f087f2296082f4"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-evidence.mjs",
+      "currentSha256": "64d7f34a3d81d508b994a3803dd5d4707d49fba66aed56c63146a362db4a3c18"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-fixture-tests.mjs",
+      "currentSha256": "4dd297907a222dc36c1c6df9225f512b8d24ee2a68679e9a75556a71ae239b06"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-fixture.mjs",
+      "currentSha256": "05e577bb3d3b9afb41b7f7b7139b47e5aaa284f562f6534dfcf143359dd1c0a0"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-install.mjs",
+      "currentSha256": "a41efaeeaa7bc05cf7171a9427175b176f992c049756c3605faa86619286415a"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-installed-tests.mjs",
+      "currentSha256": "dafefa51df7eeb385823f8d8e508ec18642eb7867fe795c05be4ef07916135d1"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-model.pl",
+      "currentSha256": "df05e125606f4452b502aa6e80adee9c9423fd7193b4ee1a5dc1cb4440c99f4d"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-provenance.mjs",
+      "currentSha256": "f3912d239622a3bc363c2cff85b2450d31f587de8088a6928a0d1577986199b4"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-records.mjs",
+      "currentSha256": "61014e4ccdb4a10948052ec767c386071e9acd069ef5116e4f040dbc403f8f84"
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-perl-source-history.mjs",
+      "currentSha256": "66ef969a3a5062bfc1c89489618d64b3aa2c6200895445f9874cfc08897069fe"
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-evidence.test.mjs",
+      "currentSha256": "7df5fb7abc1dbca9b5d72ef3a8ae4a0b74ed65026ce6193903a3db9f5d291327"
+    },
+    {
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "currentSha256": "6018d4d53a034bba7170b3121745bb6c69b55ec1ad3ea21f5cd354834062d0b8"
+    },
+    {
+      "path": "tests/inherited-checked-record-perl.test.mjs",
+      "currentSha256": "e9e8b78a5a531da9e63267984db65fccc4fbbf63dca318e5ee288f3c33538889"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "2059175f56608704a7efd90bb6bec02da2e0bd3b0cb0918a5e33362348699541",
+      "currentSha256": "f339b9da5bc2ad926d86ec1e362c0e93bbbca83be09c26d6fe90e020cddf38b5",
+      "edits": [
+        {
+          "start": 11138,
+          "previous": "",
+          "current": "\t\t, \"inherited-checked-record-perl\"\n\t\t, \"inherited-checked-record-perl-evidence\"\n\t\t, \"inherited-checked-record-perl-source-history\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2dc10f8a40bd71ff978b09df6c6a97c918654d13f09437116cd476cf0c95fc0d",
+      "currentSha256": "33a6014ab48d4e8afc2b4cd5ed12dff4f584fe1c8ec4173cedf195037845d563",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeInheritedCheckedRecordPerlSource, inheritedCheckedRecordPerlChangedPaths } from \"./inherited-checked-record-perl-source-history.mjs\";\n"
+        },
+        {
+          "start": 74368,
+          "previous": "",
+          "current": "\tsource = beforeInheritedCheckedRecordPerlSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 84836,
+          "previous": "\t...inheritedCheckedRecordPhpPinRepairChangedPaths\n",
+          "current": "\t...inheritedCheckedRecordPerlChangedPaths\n\t, ...inheritedCheckedRecordPhpPinRepairChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
