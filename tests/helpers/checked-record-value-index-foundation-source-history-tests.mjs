@@ -94,7 +94,11 @@ test("checked-record value-index admission closes every addition", async () => {
 	));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+			, beforeCheckedRecordValueIndexFoundationSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedRecordValueIndexFoundationPredecessor}:${addition.path}`]
@@ -102,12 +106,16 @@ test("checked-record value-index admission closes every addition", async () => {
 	}
 });
 
-test("checked-record value-index admission refreshes exactly its live pins", async () => {
+test("checked-record value-index admission refreshes exactly its milestone pins", async () => {
 	const record = JSON.parse(await readFile(
 		checkedRecordValueIndexFoundationHistoryPath, "utf8"
 	));
 	assert.equal(record.pinCount, 384);
 	const inventoryPath = "docs/type-surface.v1.json";
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === inventoryPath
+	);
+	assert.ok(inventoryUpdate);
 	const previousSource = git(["show"
 		, `${checkedRecordValueIndexFoundationPredecessor}:${inventoryPath}`]);
 	const expected = JSON.parse(previousSource);
@@ -132,8 +140,11 @@ test("checked-record value-index admission refreshes exactly its live pins", asy
 		count += found;
 	}
 	assert.equal(count, record.pinCount);
-	assert.equal(await readFile(inventoryPath, "utf8")
-		, JSON.stringify(expected, null, 2) + "\n");
+	const current = await sourceAtFinHistoryMilestone(
+		inventoryPath, inventoryUpdate.currentSha256
+		, beforeCheckedRecordValueIndexFoundationSource
+	);
+	assert.equal(current, JSON.stringify(expected, null, 2) + "\n");
 });
 
 test("checked-record value-index history writer refuses another checkout", async t => {

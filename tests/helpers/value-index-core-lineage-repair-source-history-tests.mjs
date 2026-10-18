@@ -144,7 +144,11 @@ test("value-index Core lineage repair closes additions and live pins", async () 
 	));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+			, beforeValueIndexCoreLineageRepairSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${valueIndexCoreLineageRepairPredecessor}:${addition.path}`]
@@ -152,6 +156,10 @@ test("value-index Core lineage repair closes additions and live pins", async () 
 	}
 	assert.equal(record.pinCount, 3);
 	const inventoryPath = "docs/type-surface.v1.json";
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === inventoryPath
+	);
+	assert.ok(inventoryUpdate);
 	const previousSource = git(["show"
 		, `${valueIndexCoreLineageRepairPredecessor}:${inventoryPath}`]);
 	const expected = JSON.parse(previousSource);
@@ -175,8 +183,11 @@ test("value-index Core lineage repair closes additions and live pins", async () 
 		assert.equal(found, pin.count, pin.path); count += found;
 	}
 	assert.equal(count, record.pinCount);
-	assert.equal(await readFile(inventoryPath, "utf8")
-		, JSON.stringify(expected, null, 2) + "\n");
+	const current = await sourceAtFinHistoryMilestone(
+		inventoryPath, inventoryUpdate.currentSha256
+		, beforeValueIndexCoreLineageRepairSource
+	);
+	assert.equal(current, JSON.stringify(expected, null, 2) + "\n");
 });
 
 test("value-index Core lineage writer refuses another checkout", async t => {

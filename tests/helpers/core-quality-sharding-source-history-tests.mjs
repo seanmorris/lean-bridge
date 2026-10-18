@@ -84,7 +84,10 @@ test("Core quality sharding closes every addition", async () => {
 	));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256, beforeCoreQualityShardingSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${coreQualityShardingPredecessor}:${addition.path}`]
@@ -92,12 +95,16 @@ test("Core quality sharding closes every addition", async () => {
 	}
 });
 
-test("Core quality sharding refreshes exactly its live pins", async () => {
+test("Core quality sharding refreshes exactly its milestone pins", async () => {
 	const record = JSON.parse(await readFile(
 		coreQualityShardingHistoryPath, "utf8"
 	));
 	assert.equal(record.pinCount, 4);
 	const inventoryPath = "docs/type-surface.v1.json";
+	const inventoryUpdate = record.updates.find(update =>
+		update.path === inventoryPath
+	);
+	assert.ok(inventoryUpdate);
 	const previousSource = git(["show"
 		, `${coreQualityShardingPredecessor}:${inventoryPath}`]);
 	const expected = JSON.parse(previousSource);
@@ -122,8 +129,11 @@ test("Core quality sharding refreshes exactly its live pins", async () => {
 		count += found;
 	}
 	assert.equal(count, record.pinCount);
-	assert.equal(await readFile(inventoryPath, "utf8")
-		, JSON.stringify(expected, null, 2) + "\n");
+	const current = await sourceAtFinHistoryMilestone(
+		inventoryPath, inventoryUpdate.currentSha256
+		, beforeCoreQualityShardingSource
+	);
+	assert.equal(current, JSON.stringify(expected, null, 2) + "\n");
 });
 
 test("Core quality-sharding history writer refuses another checkout", async t => {
