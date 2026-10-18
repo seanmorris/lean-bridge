@@ -38,6 +38,34 @@ const original = (commit, path) => execFileSync("git", [
 	"show", `${commit}:${checkedRecordValueIndexFixtureRoot}/${path}`
 ], { maxBuffer: 16 * 1024 * 1024 });
 
+// Independently enrich reviewed named types with the positional record shape
+// that the native projection must carry. Reviewed constructor selections name
+// only the checked constructor; result records deliberately select none.
+const recordRefinement = (expected, type, constructor) => {
+	if(type?.kind !== "named") return null;
+	const record = expected.types.find(item => item.id === type.id);
+	assert.ok(record, type.id);
+	assert.equal(record.kind, "record", type.id);
+	return {
+		kind: "checked-record", definition: record.source.declaration
+		, constructor, fields: record.fields.map(field => field.name)
+	};
+};
+const nativeRefinements = (expected, declaration) => {
+	const selected = declaration.source.extensions?.[refinementsKey];
+	const parameters = declaration.parameters.map((parameter, index) => {
+		const refinement = selected?.parameters[index];
+		if(refinement === null || refinement === undefined) return null;
+		assert.equal(refinement.kind, "checked-record");
+		return recordRefinement(
+			expected, parameter.type, refinement.constructor);
+	});
+	return {
+		parameters
+		, result: recordRefinement(expected, declaration.result?.type, null)
+	};
+};
+
 /**
  * Complete route-relative retained-file closure before controls are added.
  *
@@ -183,7 +211,7 @@ export const checkCheckedRecordValueIndexNativeReport = async (
 				value.source.declaration === item.name);
 			assert.ok(declaration, item.name);
 			assert.deepEqual(item.refinements
-				, declaration.source.extensions?.[refinementsKey], item.name);
+				, nativeRefinements(expected, declaration), item.name);
 		}
 		const receiptBytes = await read(`${prefix}/package-set-receipt.json`);
 		receipt = json(receiptBytes, `${prefix} receipt`);

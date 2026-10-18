@@ -104,9 +104,14 @@ export const checkCheckedRecordValueIndexDotnetControls = async (
 			}
 		]
 		, ["missing value-index record"
-			, /references unknown type lean:CheckedRecordValueIndices\.Off/u
+			, /Exact value-index record set/u
 			, ir => {
-				ir.types = ir.types.filter(type => type.name !== "Off");
+				const id = "lean:CheckedRecordValueIndices.Off";
+				ir.types = ir.types.filter(type => type.id !== id);
+				ir.declarations = ir.declarations.filter(declaration => ![
+					...declaration.parameters.map(parameter => parameter.type)
+					, declaration.result?.type
+				].some(type => type?.id === id));
 			}
 		]
 	];
