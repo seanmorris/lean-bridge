@@ -51,6 +51,20 @@ test("Perl inventory adds only two ordinary observations and reviewed-container 
 	);
 	const current = JSON.parse(source), previous = JSON.parse(beforePerlRelocatedPromotionSource(path, source));
 	const expected = await promotePerlRelocatedInventory(previous);
+	for(const evidence of expected.evidence.slice(previous.evidence.length))
+	{
+		const recorded = current.evidence.find(item => item.id === evidence.id);
+		assert.ok(recorded, evidence.id);
+		for(const file of evidence.files)
+		{
+			const pin = recorded.files.find(item => item.path === file.path);
+			assert.ok(pin, file.path);
+			assert.equal(sha256(await sourceAtFinHistoryMilestone(
+				file.path, pin.sha256
+			)), pin.sha256, file.path);
+			file.sha256 = pin.sha256;
+		}
+	}
 	const history = JSON.parse(await readFile(perlRelocatedPromotionHistoryPath));
 	for(const evidence of expected.evidence.slice(0, previous.evidence.length)) for(const file of evidence.files)
 	{
