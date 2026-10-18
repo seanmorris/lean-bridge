@@ -6,10 +6,10 @@ using LeanBridge.Checkedrecordvalueindices;
 
 static class Consumer
 {
-    static int checks;
-    static int calls;
-    static int rejections;
-    static int recoveries;
+    static int checks = 0;
+    static int calls = 0;
+    static int rejections = 0;
+    static int recoveries = 0;
 
     static BigInteger N(long value) => new(value);
     static BigInteger Huge() => (BigInteger.One << 128) + BigInteger.One;

@@ -108,6 +108,8 @@ test("value-index C# caller is immutable and independently counted", async () =>
 	assert.match(source, /StringComparison\.Ordinal/u);
 	assert.match(source, /arguments\[0\] == "--runtime"/u);
 	assert.match(source, /RuntimeInformation\.FrameworkDescription/u);
+	for(const counter of ["calls", "checks", "recoveries", "rejections"])
+		assert.match(source, new RegExp(`static int ${counter} = 0;`, "u"));
 	assert.match(source, /#if !RESULT_ONLY[\s\S]*?#endif/u);
 	for(const route of checkedRecordValueIndexDotnetRoutes)
 	{
