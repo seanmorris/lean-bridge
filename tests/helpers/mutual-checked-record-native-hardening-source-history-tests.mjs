@@ -84,7 +84,9 @@ test("recursive native hardening authenticates additions and the wrapper deletio
 		mutualCheckedRecordNativeHardeningHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const source = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256);
+		assert.equal(sha256(source)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${mutualCheckedRecordNativeHardeningPredecessor}:${addition.path}`]
@@ -134,8 +136,9 @@ test("recursive native hardening closes registration, provenance and archive gap
 	]) assert.ok(producer.includes(source), source);
 	const archive = await readFile("scripts/archive-mutual-checked-record-native.mjs", "utf8");
 	assert.match(archive, /mkdtemp/u);
-	assert.match(archive, /"unzip", \["-Z1", artifactZip\]/u);
-	assert.match(archive, /"unzip", \["-q", artifactZip, "-d", extracted\]/u);
+	assert.match(archive, /"\/usr\/bin\/unzip", \["-Z1", artifactZip\]/u);
+	assert.match(archive
+		, /"\/usr\/bin\/unzip", \["-q", artifactZip, "-d", extracted\]/u);
 	assert.doesNotMatch(archive, /hostedRoot, "artifact"/u);
 	assert.match(archive, /archiver: archiveCommit/u);
 });

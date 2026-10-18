@@ -31,6 +31,7 @@ import {
 import "./helpers/mutual-checked-record-native-ci-tests.mjs";
 import "./helpers/mutual-checked-record-native-hardening-source-history-tests.mjs";
 import "./helpers/mutual-checked-record-native-installed-tests.mjs";
+import "./helpers/mutual-checked-record-native-review-source-history-tests.mjs";
 import "./helpers/mutual-checked-record-npm-installed-tests.mjs";
 import "./helpers/mutual-checked-record-npm-source-history-tests.mjs";
 import "./helpers/mutual-checked-record-source-history-tests.mjs";

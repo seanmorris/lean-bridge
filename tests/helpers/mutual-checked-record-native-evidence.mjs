@@ -10,10 +10,15 @@ import { extname, posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { moduleSpecifiers } from "./module-closure.mjs";
 import {
-	checkMutualCheckedRecordNativeControls
+	assertMutualCheckedRecordNativeCurrentReplay
+	, checkMutualCheckedRecordNativeControls
 } from "./mutual-checked-record-native-controls.mjs";
 import {
+	assertMutualCheckedRecordNativeCiTap
+} from "./mutual-checked-record-native-ci-report.mjs";
+import {
 	assertMutualCheckedRecordNativeRecordPaths
+	, checkMutualCheckedRecordNativeHistoricalControls
 	, mutualCheckedRecordNativeRecords, mutualCheckedRecordNativeRoutes
 } from "./mutual-checked-record-native-report.mjs";
 
@@ -87,6 +92,12 @@ const producerData = Object.freeze([
 	, ...["c.c", "cpp.cpp"].map(path =>
 		`tests/fixtures/mutual-checked-record-consumers/${path}`)
 ]);
+const producerDynamicEntries = Object.freeze([
+	"tests/helpers/mutual-checked-record-fixture.mjs"
+	, "tests/helpers/mutual-checked-record-native-controls.mjs"
+	, "src/backends/c/generate.mjs", "src/backends/c/gmp-projection.mjs"
+	, "src/backends/cpp/generate.mjs", "src/backends/cpp/boost.mjs"
+]);
 
 /**
  * Select every source byte that produced, checked and archived the hosted records.
@@ -103,6 +114,7 @@ export const mutualCheckedRecordNativeEvidenceSources = revisions => {
 			, paths: [
 				...closure(revisions.producer
 					, ["tests/helpers/mutual-checked-record-native-installed-tests.mjs"])
+				, ...closure(revisions.producer, producerDynamicEntries)
 				, ...producerData
 			]
 		}
@@ -196,7 +208,7 @@ export const checkMutualCheckedRecordNativeEvidence = async (read = readFile) =>
 	}
 	assert.deepEqual(index.runs.map(item => item.route)
 		, [...mutualCheckedRecordNativeRoutes]);
-	const checkedRuns = [];
+	const archivedRuns = [], checkedRuns = [];
 	for(const run of index.runs)
 	{
 		exactKeys(run, [
@@ -220,23 +232,30 @@ export const checkMutualCheckedRecordNativeEvidence = async (read = readFile) =>
 			.map(path => path.slice(prefix.length)).sort();
 		assertMutualCheckedRecordNativeRecordPaths(routeFiles, run.route, receipt);
 		assert.equal(run.recordCount, records.length);
-		const checked = await checkMutualCheckedRecordNativeControls(archivedRead, {
+		const options = {
 			route: run.route, producerCommit: index.producerCommit
 			, runtime: index.runtime, floor: index.floor
-		});
-		assert.equal(run.reportSha256, checked.reportSha256);
+		};
+		const archived = await checkMutualCheckedRecordNativeHistoricalControls(
+			archivedRead, options);
+		const checked = await checkMutualCheckedRecordNativeControls(
+			archivedRead, options);
+		assertMutualCheckedRecordNativeCurrentReplay(archived, checked);
+		assert.equal(run.reportSha256, archived.reportSha256);
+		assertMutualCheckedRecordNativeCiTap(
+			files.get(tapPath).toString(), run.route);
 		assert.equal(run.tapSha256, sha256(files.get(tapPath)));
 		assert.equal(run.verificationSha256, sha256(files.get(verificationPath)));
-		assert.equal(run.bindingIrSha256, checked.bindingIrSha256);
-		assert.equal(run.independentBuilds, checked.independentBuilds);
-		assert.deepEqual(run.profiles, checked.profiles);
-		assert.deepEqual(run.controls, checked.controls);
-		assert.deepEqual(run.artifacts, checked.artifacts);
-		assert.equal(files.get(verificationPath).toString(), canonicalJson(checked));
-		assert.equal(archivedRead("controls.json").toString(), canonicalJson(checked));
+		assert.equal(run.bindingIrSha256, archived.bindingIrSha256);
+		assert.equal(run.independentBuilds, archived.independentBuilds);
+		assert.deepEqual(run.profiles, archived.profiles);
+		assert.deepEqual(run.controls, archived.controls);
+		assert.deepEqual(run.artifacts, archived.artifacts);
+		assert.equal(files.get(verificationPath).toString(), canonicalJson(archived));
+		assert.equal(archivedRead("controls.json").toString(), canonicalJson(archived));
 		expectedPaths.push(tapPath, verificationPath
 			, ...records.map(path => prefix + path));
-		checkedRuns.push(checked);
+		archivedRuns.push(archived); checkedRuns.push(checked);
 	}
 	expectedPaths.push("toolchain.log");
 	assert.ok(files.get("toolchain.log").length > 0);
@@ -245,6 +264,7 @@ export const checkMutualCheckedRecordNativeEvidence = async (read = readFile) =>
 		producerCommit: index.producerCommit, checkerCommit: index.checkerCommit
 		, archiveCommit: index.archiveCommit, hostedRun: index.hostedRun
 		, runtime: index.runtime, floor: index.floor, runs: checkedRuns
+		, archivedRuns
 		, files: index.files, selectedSources: index.selectedSources
 		, limitations: index.limitations, installedProfiles: ["c", "cpp"]
 		, hostedAcceptance: true, supportPromoted: false

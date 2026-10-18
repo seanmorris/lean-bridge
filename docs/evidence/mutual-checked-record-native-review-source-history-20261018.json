@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 1,
+  "milestone": "mutual-checked-record-native-review-source-v1",
+  "predecessorCommit": "6ee571bb17efd72158343c5fa1aa3f8f98c8d879",
+  "draftParentCommit": "6ee571bb17efd72158343c5fa1aa3f8f98c8d879",
+  "pathsSha256": "937087e54967ade2c3377d854b2e1aaae94e7de52d13bf278841bef3cc1e4f5b",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "scripts/update-mutual-checked-record-native-review-source-history.mjs",
+      "currentSha256": "de5d932d33d0fe280363a05d5a185f19a4c542de3118e7faff65302c7ef580e5"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-review-source-history.mjs",
+      "currentSha256": "98c6694c4d178185963d5973ce411470b81df67dbd583e385d596b8ee66efb5b"
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-review-source-history-tests.mjs",
+      "currentSha256": "c4f157411899305ad30c1b1392b859ff3c987984bf65aaa3524164202e1e2145"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/archive-mutual-checked-record-native.mjs",
+      "previousSha256": "e57a467ca7a376da914b4980484778059d4a7b7b6245da70e3aa490c2f86a8dc",
+      "currentSha256": "0997ddea4a3e395fd6c532c00e1e48f045e22abc10178d32d0f291c1593e152e",
+      "edits": [
+        {
+          "start": 683,
+          "previous": "\tcheckMutualCheckedRecordNativeControls\n",
+          "current": "\tassertMutualCheckedRecordNativeCurrentReplay\n\t, checkMutualCheckedRecordNativeControls\n"
+        },
+        {
+          "start": 1085,
+          "previous": "",
+          "current": "\t, checkMutualCheckedRecordNativeHistoricalControls\n"
+        },
+        {
+          "start": 3450,
+          "previous": "const zipEntries = execFileSync(\"unzip\", [\"-Z1\", artifactZip]\n",
+          "current": "const zipEntries = execFileSync(\"/usr/bin/unzip\", [\"-Z1\", artifactZip]\n"
+        },
+        {
+          "start": 4286,
+          "previous": "\texecFileSync(\"unzip\", [\"-q\", artifactZip, \"-d\", extracted]);\n",
+          "current": "\texecFileSync(\"/usr/bin/unzip\", [\"-q\", artifactZip, \"-d\", extracted]);\n"
+        },
+        {
+          "start": 6455,
+          "previous": "\t\tconst checked = await checkMutualCheckedRecordNativeControls(read, {\n",
+          "current": "\t\tconst options = {\n"
+        },
+        {
+          "start": 6516,
+          "previous": "\t\t});\n",
+          "current": "\t\t};\n\t\tconst archived = await checkMutualCheckedRecordNativeHistoricalControls(\n\t\t\tread, options);\n\t\tconst current = await checkMutualCheckedRecordNativeControls(read, options);\n\t\tassertMutualCheckedRecordNativeCurrentReplay(archived, current);\n"
+        },
+        {
+          "start": 7087,
+          "previous": "\t\tassert.equal(verification.toString(), canonicalJson(checked));\n\t\tassert.equal((await read(\"controls.json\")).toString(), canonicalJson(checked));\n",
+          "current": "\t\tassert.equal(verification.toString(), canonicalJson(archived));\n\t\tassert.equal((await read(\"controls.json\")).toString(), canonicalJson(archived));\n"
+        },
+        {
+          "start": 7497,
+          "previous": "\t\t\t, reportSha256: checked.reportSha256\n",
+          "current": "\t\t\t, reportSha256: archived.reportSha256\n"
+        },
+        {
+          "start": 7608,
+          "previous": "\t\t\t, bindingIrSha256: checked.bindingIrSha256\n\t\t\t, independentBuilds: checked.independentBuilds\n\t\t\t, profiles: checked.profiles, controls: checked.controls\n\t\t\t, artifacts: checked.artifacts\n",
+          "current": "\t\t\t, bindingIrSha256: archived.bindingIrSha256\n\t\t\t, independentBuilds: archived.independentBuilds\n\t\t\t, profiles: archived.profiles, controls: archived.controls\n\t\t\t, artifacts: archived.artifacts\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a32574b7b413679a4b4ebba74c78afdb7a10c6154e00a40e381191b41dd1ce57",
+      "currentSha256": "651ca0ef6bfc8742bd5fd15cfe086694c2579a8831f8f558dc73d45b946dd5be",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeMutualCheckedRecordNativeReviewSource, mutualCheckedRecordNativeReviewChangedPaths } from \"./mutual-checked-record-native-review-source-history.mjs\";\n"
+        },
+        {
+          "start": 77078,
+          "previous": "",
+          "current": "\tsource = beforeMutualCheckedRecordNativeReviewSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 90153,
+          "previous": "\t...mutualCheckedRecordNativeHardeningChangedPaths\n",
+          "current": "\t...mutualCheckedRecordNativeReviewChangedPaths\n\t, ...mutualCheckedRecordNativeHardeningChangedPaths\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-controls.mjs",
+      "previousSha256": "e5df1f9065bb7695f330ff6e341f07369e2491f3083985edad13e898411b343a",
+      "currentSha256": "8cac8ed478152af0f96bfc90bb0575018219cbe6a03c4d1611448b5b460d10e5",
+      "edits": [
+        {
+          "start": 674,
+          "previous": "",
+          "current": "const stableSummaryKeys = Object.freeze([\n\t\"route\", \"producerCommit\", \"runtime\", \"floor\", \"reportSha256\"\n\t, \"bindingIrSha256\", \"recordPaths\", \"independentBuilds\", \"profiles\"\n\t, \"artifacts\"\n]);\n\n/**\n * Require a current replay to preserve every semantic result while allowing\n * later verifier revisions to add (but never remove) destructive controls.\n *\n * @param archived - Summary emitted by the exact hosted producer/checker.\n * @param current - Summary replayed by the current verifier.\n */\nexport const assertMutualCheckedRecordNativeCurrentReplay = (\n\tarchived, current\n) => {\n\tfor(const key of stableSummaryKeys)\n\t\tassert.deepEqual(current[key], archived[key], `current replay ${key}`);\n\tassert.ok(archived.controls && current.controls, \"current replay controls\");\n\tfor(const [key, count] of Object.entries(archived.controls))\n\t{\n\t\tassert.ok(Number.isSafeInteger(count) && count > 0\n\t\t\t, `archived control count ${key}`);\n\t\tassert.ok(Number.isSafeInteger(current.controls[key])\n\t\t\t&& current.controls[key] >= count, `current control count ${key}`);\n\t}\n};\n"
+        },
+        {
+          "start": 2848,
+          "previous": "\tconst reject = changes => assert.rejects(\n\t\tcheckMutualCheckedRecordNativeReport(path => read(path, changes), options));\n",
+          "current": "\tconst reject = (changes, matcher) => assert.rejects(\n\t\tcheckMutualCheckedRecordNativeReport(path => read(path, changes), options)\n\t\t, matcher);\n"
+        },
+        {
+          "start": 3392,
+          "previous": "\n\tfor(const mutate of [\n\t\tvalue => { value.reproducible = false; }\n\t\t, value => { value.independentBuilds = 1; }\n\t\t, value => { value.declaredGlibcFloor = \"2.35\"; }\n\t\t, value => { value.producerCommit = \"0\".repeat(40); }\n\t\t, value => { value.authorInputsUnchanged = false; }\n\t\t, value => { value.route = value.route === \"ordinary\" ? \"reviewed\" : \"ordinary\"; }\n\t\t, value => { value.profiles.pop(); }\n\t\t, value => { value.relocated = false; }\n\t\t, value => { value.sourceFree = false; }\n\t\t, value => { value.runtime.glibc.stdout = \"glibc 2.35\\n\"; }\n",
+          "current": "\tawait assert.rejects(checkMutualCheckedRecordNativeReport(path =>\n\t\tpath === \"configuration.json\" ? undefined : read(path), options)\n\t, /Missing native record: configuration\\.json/u);\n\trecordControls++;\n\n\tfor(const [mutate, matcher] of [\n\t\t[value => { value.reproducible = false; }, /report reproducible/u]\n\t\t, [value => { value.independentBuilds = 1; }, /report independent builds/u]\n\t\t, [value => { value.declaredGlibcFloor = \"2.35\"; }, /report declared glibc floor/u]\n\t\t, [value => { value.producerCommit = \"0\".repeat(40); }, /report producer commit/u]\n\t\t, [value => { value.authorInputsUnchanged = false; }, /report author inputs unchanged/u]\n\t\t, [value => {\n\t\t\tvalue.route = value.route === \"ordinary\" ? \"reviewed\" : \"ordinary\";\n\t\t}\n\t\t, /report route/u]\n\t\t, [value => { value.profiles.pop(); }, /report profiles/u]\n\t\t, [value => { value.relocated = false; }, /report relocated/u]\n\t\t, [value => { value.sourceFree = false; }, /report source free/u]\n\t\t, [value => { value.runtime.glibc.stdout = \"glibc 2.35\\n\"; }, /report runtime/u]\n"
+        },
+        {
+          "start": 4490,
+          "previous": "\t\tawait reject(new Map([[\"report.json\", canonical(report)]]));\n",
+          "current": "\t\tawait reject(new Map([[\"report.json\", canonical(report)]]), matcher);\n"
+        },
+        {
+          "start": 4586,
+          "previous": "\tfor(const position of [0, 1]) for(const mutate of [\n\t\tvalue => { value.checks++; }\n\t\t, value => { value.relocatedReplay.stdout = \"mutual-checked-record-ok:0\\n\"; }\n\t\t, value => { value.consumerSha256 = \"0\".repeat(64); }\n\t\t, value => { value.compilerFreeReplay = false; }\n",
+          "current": "\tfor(const position of [0, 1]) for(const [mutate, label] of [\n\t\t[value => { value.checks++; }, \"check count\"]\n\t\t, [value => {\n\t\t\tvalue.relocatedReplay.stdout = \"mutual-checked-record-ok:0\\n\";\n\t\t}\n\t\t, \"replay\"]\n\t\t, [value => { value.consumerSha256 = \"0\".repeat(64); }, \"consumer digest\"]\n\t\t, [value => { value.compilerFreeReplay = false; }, \"compilerFreeReplay\"]\n"
+        },
+        {
+          "start": 5232,
+          "previous": "\t\t]));\n",
+          "current": "\t\t]), new RegExp(`${profile.profile} ${label}|${profile.profile}\\\\.${label}`, \"u\"));\n"
+        },
+        {
+          "start": 5344,
+          "previous": "\tfor(const mutate of [\n\t\tmodel => { model.exports.pop(); }\n\t\t, model => { model.sourceIdentity.extractorSha256 = \"0\".repeat(64); }\n\t\t, model => { model.pointerBits = 32; }\n\t\t, model => { model.sourceIdentity.sourceNoticesSha256 = \"0\".repeat(64); }\n\t\t, model => {\n",
+          "current": "\tfor(const [mutate, matcher] of [\n\t\t[model => { model.exports.pop(); }, /model export names/u]\n\t\t, [model => {\n\t\t\tmodel.sourceIdentity.extractorSha256 = \"0\".repeat(64);\n\t\t}\n\t\t, /extractor identity/u]\n\t\t, [model => { model.pointerBits = 32; }, /pointer width/u]\n\t\t, [model => {\n\t\t\tmodel.sourceIdentity.sourceNoticesSha256 = \"0\".repeat(64);\n\t\t}\n\t\t, /source notices identity/u]\n\t\t, [model => {\n"
+        },
+        {
+          "start": 5819,
+          "previous": "\t\t, model => {\n",
+          "current": "\t\t, /toolchain identity/u]\n\t\t, [model => {\n"
+        },
+        {
+          "start": 6026,
+          "previous": "\t\t, ...options.route === \"reviewed\" ? [model => {\n",
+          "current": "\t\t, /MutualCheckedRecords\\.first/u]\n\t\t, ...options.route === \"reviewed\" ? [[model => {\n"
+        },
+        {
+          "start": 6186,
+          "previous": "\t\t}] : []\n",
+          "current": "\t\t}\n\t\t, /reviewed source digest/u]] : []\n"
+        },
+        {
+          "start": 6590,
+          "previous": "\t\tawait reject(changes);\n",
+          "current": "\t\tawait reject(changes, matcher);\n"
+        },
+        {
+          "start": 7683,
+          "previous": "\t\tawait reject(changes);\n",
+          "current": "\t\tawait reject(changes, /source tree identity/u);\n"
+        },
+        {
+          "start": 9886,
+          "previous": "\t\tawait reject(changes);\n",
+          "current": "\t\tawait reject(changes, /include\\/mutualcheckedrecords\\.h/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-evidence.mjs",
+      "previousSha256": "0adc3d17f8ad88e26a839034de86c3538e45410d9f15baa87c751da99f40d57b",
+      "currentSha256": "0f1ae24e0775bd6bb9df778e99548e9c59e0a48641256ecc77a0f88007178244",
+      "edits": [
+        {
+          "start": 412,
+          "previous": "\tcheckMutualCheckedRecordNativeControls\n",
+          "current": "\tassertMutualCheckedRecordNativeCurrentReplay\n\t, checkMutualCheckedRecordNativeControls\n"
+        },
+        {
+          "start": 563,
+          "previous": "",
+          "current": "\tassertMutualCheckedRecordNativeCiTap\n} from \"./mutual-checked-record-native-ci-report.mjs\";\nimport {\n"
+        },
+        {
+          "start": 709,
+          "previous": "",
+          "current": "\t, checkMutualCheckedRecordNativeHistoricalControls\n"
+        },
+        {
+          "start": 3840,
+          "previous": "",
+          "current": "const producerDynamicEntries = Object.freeze([\n\t\"tests/helpers/mutual-checked-record-fixture.mjs\"\n\t, \"tests/helpers/mutual-checked-record-native-controls.mjs\"\n\t, \"src/backends/c/generate.mjs\", \"src/backends/c/gmp-projection.mjs\"\n\t, \"src/backends/cpp/generate.mjs\", \"src/backends/cpp/boost.mjs\"\n]);\n"
+        },
+        {
+          "start": 4756,
+          "previous": "",
+          "current": "\t\t\t\t, ...closure(revisions.producer, producerDynamicEntries)\n"
+        },
+        {
+          "start": 8935,
+          "previous": "\tconst checkedRuns = [];\n",
+          "current": "\tconst archivedRuns = [], checkedRuns = [];\n"
+        },
+        {
+          "start": 9958,
+          "previous": "\t\tconst checked = await checkMutualCheckedRecordNativeControls(archivedRead, {\n",
+          "current": "\t\tconst options = {\n"
+        },
+        {
+          "start": 10084,
+          "previous": "\t\t});\n\t\tassert.equal(run.reportSha256, checked.reportSha256);\n",
+          "current": "\t\t};\n\t\tconst archived = await checkMutualCheckedRecordNativeHistoricalControls(\n\t\t\tarchivedRead, options);\n\t\tconst checked = await checkMutualCheckedRecordNativeControls(\n\t\t\tarchivedRead, options);\n\t\tassertMutualCheckedRecordNativeCurrentReplay(archived, checked);\n\t\tassert.equal(run.reportSha256, archived.reportSha256);\n\t\tassertMutualCheckedRecordNativeCiTap(\n\t\t\tfiles.get(tapPath).toString(), run.route);\n"
+        },
+        {
+          "start": 10628,
+          "previous": "\t\tassert.equal(run.bindingIrSha256, checked.bindingIrSha256);\n\t\tassert.equal(run.independentBuilds, checked.independentBuilds);\n\t\tassert.deepEqual(run.profiles, checked.profiles);\n\t\tassert.deepEqual(run.controls, checked.controls);\n\t\tassert.deepEqual(run.artifacts, checked.artifacts);\n\t\tassert.equal(files.get(verificationPath).toString(), canonicalJson(checked));\n\t\tassert.equal(archivedRead(\"controls.json\").toString(), canonicalJson(checked));\n",
+          "current": "\t\tassert.equal(run.bindingIrSha256, archived.bindingIrSha256);\n\t\tassert.equal(run.independentBuilds, archived.independentBuilds);\n\t\tassert.deepEqual(run.profiles, archived.profiles);\n\t\tassert.deepEqual(run.controls, archived.controls);\n\t\tassert.deepEqual(run.artifacts, archived.artifacts);\n\t\tassert.equal(files.get(verificationPath).toString(), canonicalJson(archived));\n\t\tassert.equal(archivedRead(\"controls.json\").toString(), canonicalJson(archived));\n"
+        },
+        {
+          "start": 11175,
+          "previous": "\t\tcheckedRuns.push(checked);\n",
+          "current": "\t\tarchivedRuns.push(archived); checkedRuns.push(checked);\n"
+        },
+        {
+          "start": 11610,
+          "previous": "",
+          "current": "\t\t, archivedRuns\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-hardening-source-history-tests.mjs",
+      "previousSha256": "c207221abd5a67ba437a8aa6be7d528965a620a9bf46671b03f9d06c808289d0",
+      "currentSha256": "903a1c596426da238becdcf8f6ff5cca16271f71e5fc206fa84ad644adf96289",
+      "edits": [
+        {
+          "start": 3814,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256);\n\t\tassert.equal(sha256(source)\n"
+        },
+        {
+          "start": 6189,
+          "previous": "\tassert.match(archive, /\"unzip\", \\[\"-Z1\", artifactZip\\]/u);\n\tassert.match(archive, /\"unzip\", \\[\"-q\", artifactZip, \"-d\", extracted\\]/u);\n",
+          "current": "\tassert.match(archive, /\"\\/usr\\/bin\\/unzip\", \\[\"-Z1\", artifactZip\\]/u);\n\tassert.match(archive\n\t\t, /\"\\/usr\\/bin\\/unzip\", \\[\"-q\", artifactZip, \"-d\", extracted\\]/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-installed-tests.mjs",
+      "previousSha256": "39a7fb76cdd2b2f7ee7fbd6793637a03589f7931f301d89451c38feb8adad127",
+      "currentSha256": "735963726ee5aad1d41535b71046bf7eff0b04382923d22de3915b298997a67e",
+      "edits": [
+        {
+          "start": 391,
+          "previous": "",
+          "current": "import { isDeepStrictEqual } from \"node:util\";\n"
+        },
+        {
+          "start": 4994,
+          "previous": "",
+          "current": "\t\tlet authorInputsUnchanged = true;\n"
+        },
+        {
+          "start": 5838,
+          "previous": "\t\t\tassert.deepEqual(await lakeInputState(projectRoot), sourceBefore\n\t\t\t\t, \"Author source remains unchanged\");\n",
+          "current": "\t\t\tconst sourceAfter = await lakeInputState(projectRoot);\n\t\t\tconst unchanged = isDeepStrictEqual(sourceAfter, sourceBefore);\n\t\t\tauthorInputsUnchanged &&= unchanged;\n\t\t\tassert.equal(unchanged, true, \"Author source remains unchanged\");\n"
+        },
+        {
+          "start": 7318,
+          "previous": "",
+          "current": "\t\t\tawait saveLakeFile(output, `build-${attempt}/author-inputs-after.json`\n\t\t\t\t, canonicalJson(sourceAfter));\n"
+        },
+        {
+          "start": 10474,
+          "previous": "\t\t\t, runtime, declaredGlibcFloor: floor, authorInputsUnchanged: true\n",
+          "current": "\t\t\t, runtime, declaredGlibcFloor: floor, authorInputsUnchanged\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/mutual-checked-record-native-report.mjs",
+      "previousSha256": "03f7aa50c3f0e4c1ecc7b9b8246b3ea656f29484e61e01babbedec9a62b866d7",
+      "currentSha256": "3e59dfffb19ff223d3750b2528d1ec308c829cc8cd04c04da2502eb3e02a7e32",
+      "edits": [
+        {
+          "start": 130,
+          "previous": "import { mkdtemp, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, posix } from \"node:path\";\n",
+          "current": "import { mkdir, mkdtemp, rm } from \"node:fs/promises\";\nimport { join, posix, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 2199,
+          "previous": "const historicalFixtures = new Map();\n",
+          "current": "const historicalModules = new Map();\n\nconst historicalModule = (producerCommit, entry) => {\n\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\tassert.ok(/^(?:src|tests)\\//u.test(entry) && entry.endsWith(\".mjs\")\n\t\t&& posix.normalize(entry) === entry, entry);\n\tconst key = `${producerCommit}:${entry}`;\n\tif(!historicalModules.has(key)) historicalModules.set(key, (async () => {\n\t\tconst closure = new Map();\n\t\tconst visit = path => {\n\t\t\tassert.ok(/^(?:src|tests)\\//u.test(path)\n\t\t\t\t&& posix.normalize(path) === path, path);\n\t\t\tif(closure.has(path)) return;\n\t\t\tconst bytes = original(producerCommit, path), source = bytes.toString();\n\t\t\tclosure.set(path, bytes);\n\t\t\tfor(const specifier of moduleSpecifiers(source, path))\n\t\t\t{\n\t\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\t\tvisit(posix.extname(joined) === \"\" ? `${joined}.mjs` : joined);\n\t\t\t}\n\t\t};\n\t\tvisit(entry);\n\t\tconst historyRoot = resolve(\"build\");\n\t\tawait mkdir(historyRoot, { recursive: true });\n\t\tconst directory = await mkdtemp(join(\n\t\t\thistoryRoot, \".mutual-checked-record-history-\"));\n\t\ttry\n\t\t{\n\t\t\tfor(const [path, bytes] of closure)\n\t\t\t\tawait saveLakeFile(directory, path, bytes);\n\t\t\treturn await import(pathToFileURL(join(directory, entry)).href);\n\t\t}\n\t\tfinally\n\t\t{ await rm(directory, { recursive: true }); }\n\t})());\n\treturn historicalModules.get(key);\n};\n"
+        },
+        {
+          "start": 3839,
+          "previous": "export const mutualCheckedRecordNativeFixture = producerCommit => {\n\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\tif(!historicalFixtures.has(producerCommit)) historicalFixtures.set(\n\t\tproducerCommit, (async () => {\n\t\t\tconst entry = \"tests/helpers/mutual-checked-record-fixture.mjs\";\n\t\t\tconst closure = new Map();\n\t\t\tconst visit = path => {\n\t\t\t\tassert.ok(/^(?:src|tests)\\//u.test(path)\n\t\t\t\t\t&& posix.normalize(path) === path, path);\n\t\t\t\tif(closure.has(path)) return;\n\t\t\t\tconst bytes = original(producerCommit, path), source = bytes.toString();\n\t\t\t\tclosure.set(path, bytes);\n\t\t\t\tfor(const specifier of moduleSpecifiers(source, path))\n\t\t\t\t{\n\t\t\t\t\tconst joined = posix.normalize(posix.join(posix.dirname(path), specifier));\n\t\t\t\t\tvisit(posix.extname(joined) === \"\" ? `${joined}.mjs` : joined);\n\t\t\t\t}\n\t\t\t};\n\t\t\tvisit(entry);\n\t\t\tconst directory = await mkdtemp(join(\n\t\t\t\ttmpdir(), \"lean-bridge-mutual-checked-record-fixture-\"));\n\t\t\ttry\n\t\t\t{\n\t\t\t\tfor(const [path, bytes] of closure)\n\t\t\t\t\tawait saveLakeFile(directory, path, bytes);\n\t\t\t\tconst fixture = await import(pathToFileURL(join(directory, entry)).href);\n\t\t\t\tassert.equal(fixture.mutualCheckedRecordFixtureRoot\n\t\t\t\t\t, mutualCheckedRecordFixtureRoot);\n\t\t\t\tassert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);\n\t\t\t\tfor(const name of [\n\t\t\t\t\t\"mutualCheckedRecordConfiguration\", \"mutualCheckedRecordReview\"\n\t\t\t\t]) assert.equal(typeof fixture[name], \"function\", name);\n\t\t\t\tassert.ok(fixture.mutualCheckedRecordRefinements\n\t\t\t\t\t&& typeof fixture.mutualCheckedRecordRefinements === \"object\");\n\t\t\t\treturn fixture;\n\t\t\t}\n\t\t\tfinally\n\t\t\t{ await rm(directory, { recursive: true }); }\n\t\t})());\n\treturn historicalFixtures.get(producerCommit);\n",
+          "current": "export const mutualCheckedRecordNativeFixture = async producerCommit => {\n\tconst fixture = await historicalModule(producerCommit\n\t\t, \"tests/helpers/mutual-checked-record-fixture.mjs\");\n\tassert.equal(fixture.mutualCheckedRecordFixtureRoot\n\t\t, mutualCheckedRecordFixtureRoot);\n\tassert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);\n\tfor(const name of [\n\t\t\"mutualCheckedRecordConfiguration\", \"mutualCheckedRecordReview\"\n\t]) assert.equal(typeof fixture[name], \"function\", name);\n\tassert.ok(fixture.mutualCheckedRecordRefinements\n\t\t&& typeof fixture.mutualCheckedRecordRefinements === \"object\");\n\treturn fixture;\n};\n\n/**\n * Replay the exact controls implementation committed with a hosted producer.\n * This authenticates immutable checker output without forcing future verifiers\n * to reproduce an older control-count summary.\n *\n * @param read - Reader relative to one retained route.\n * @param options - Exact producer, route, runtime and floor.\n */\nexport const checkMutualCheckedRecordNativeHistoricalControls = async (\n\tread, options\n) => {\n\tconst module = await historicalModule(options.producerCommit\n\t\t, \"tests/helpers/mutual-checked-record-native-controls.mjs\");\n\tassert.equal(typeof module.checkMutualCheckedRecordNativeControls\n\t\t, \"function\");\n\treturn module.checkMutualCheckedRecordNativeControls(read, options);\n"
+        },
+        {
+          "start": 6165,
+          "previous": "",
+          "current": "\t\t, \"author-inputs-after.json\"\n"
+        },
+        {
+          "start": 9899,
+          "previous": "\t\tassert.equal(model.profile, \"native-library-v1\");\n\t\tassert.equal(model.pointerBits, 64);\n\t\tassert.equal(model.byteOrder, \"little\");\n",
+          "current": "\t\tassert.equal(model.profile, \"native-library-v1\", \"native profile\");\n\t\tassert.equal(model.pointerBits, 64, \"pointer width\");\n\t\tassert.equal(model.byteOrder, \"little\", \"byte order\");\n"
+        },
+        {
+          "start": 10260,
+          "previous": "\t\t\t, expected.declarations.map(item => item.id.slice(5)).sort());\n",
+          "current": "\t\t\t, expected.declarations.map(item => item.id.slice(5)).sort()\n\t\t\t, \"model export names\");\n"
+        },
+        {
+          "start": 11346,
+          "previous": "\t\t\t, sha256(original(producerCommit, \"src/analyze/NativeExports.lean\")));\n",
+          "current": "\t\t\t, sha256(original(producerCommit, \"src/analyze/NativeExports.lean\"))\n\t\t\t, \"extractor identity\");\n"
+        },
+        {
+          "start": 11673,
+          "previous": "\t\tassert.equal(identity.sourceTreeSha256, treeSha256);\n\t\tassert.equal(identity.sourceNoticesSha256, sha256(canonicalJson(notices)));\n",
+          "current": "\t\tassert.equal(identity.sourceTreeSha256, treeSha256, \"source tree identity\");\n\t\tassert.equal(identity.sourceNoticesSha256, sha256(canonicalJson(notices))\n\t\t\t, \"source notices identity\");\n"
+        },
+        {
+          "start": 12023,
+          "previous": "\t\tassert.equal(identity.request.metadata.toolchain, toolchain);\n",
+          "current": "\t\tassert.equal(identity.request.metadata.toolchain, toolchain\n\t\t\t, \"toolchain identity\");\n"
+        },
+        {
+          "start": 12402,
+          "previous": "\t\t\tassert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(expected)));\n",
+          "current": "\t\t\tassert.equal(identity.reviewedBindingIr.sourceSha256\n\t\t\t\t, sha256(canonicalJson(expected)), \"reviewed source digest\");\n"
+        },
+        {
+          "start": 13205,
+          "previous": "",
+          "current": "\t\tconst after = await json(prefix + \"author-inputs-after.json\");\n\t\tassert.deepEqual(after, snapshot, \"author input state unchanged\");\n"
+        },
+        {
+          "start": 13588,
+          "previous": "\t\t\tassert.equal(item.mode & 0o170000, 0o100000);\n",
+          "current": "\t\t\tassert.equal(item.mode, 0o100644, `${item.path} mode`);\n"
+        },
+        {
+          "start": 23118,
+          "previous": "\tconst bytes = async path => Buffer.from(await read(path));\n",
+          "current": "\tconst bytes = async path => {\n\t\tconst value = await read(path);\n\t\tassert.ok(value !== undefined && value !== null\n\t\t\t, `Missing native record: ${path}`);\n\t\treturn Buffer.from(value);\n\t};\n"
+        },
+        {
+          "start": 23751,
+          "previous": "\tassert.equal(report.schemaVersion, 1);\n\tassert.equal(report.route, route);\n\tassert.deepEqual(report.profiles, [...mutualCheckedRecordNativeProfiles]);\n\tassert.equal(report.producerCommit, producerCommit);\n\tassert.equal(report.reproducible, true);\n\tassert.equal(report.independentBuilds, 2);\n\tassert.equal(report.authorInputsUnchanged, true);\n\tassert.equal(report.relocated, true);\n\tassert.equal(report.sourceFree, true);\n\tassert.equal(report.declaredGlibcFloor, floor);\n",
+          "current": "\tassert.equal(report.schemaVersion, 1, \"report schema version\");\n\tassert.equal(report.route, route, \"report route\");\n\tassert.deepEqual(report.profiles, [...mutualCheckedRecordNativeProfiles]\n\t\t, \"report profiles\");\n\tassert.equal(report.producerCommit, producerCommit, \"report producer commit\");\n\tassert.equal(report.reproducible, true, \"report reproducible\");\n\tassert.equal(report.independentBuilds, 2, \"report independent builds\");\n\tassert.equal(report.authorInputsUnchanged, true\n\t\t, \"report author inputs unchanged\");\n\tassert.equal(report.relocated, true, \"report relocated\");\n\tassert.equal(report.sourceFree, true, \"report source free\");\n\tassert.equal(report.declaredGlibcFloor, floor, \"report declared glibc floor\");\n"
+        },
+        {
+          "start": 24624,
+          "previous": "\tassert.deepEqual(report.runtime, observedRuntime);\n",
+          "current": "\tassert.deepEqual(report.runtime, observedRuntime, \"report runtime\");\n"
+        },
+        {
+          "start": 25682,
+          "previous": "\t\tassert.equal(profileReport.route, route);\n\t\tassert.equal(profileReport.checks, mutualCheckedRecordNativeChecks[profile]);\n\t\tassert.equal(profileReport.consumerSha256, sha256(consumer));\n\t\tassert.deepEqual(profileReport.relocatedReplay, expectedResult(profile));\n",
+          "current": "\t\tassert.equal(profileReport.route, route, `${profile} route`);\n\t\tassert.equal(profileReport.checks, mutualCheckedRecordNativeChecks[profile]\n\t\t\t, `${profile} check count`);\n\t\tassert.equal(profileReport.consumerSha256, sha256(consumer)\n\t\t\t, `${profile} consumer digest`);\n\t\tassert.deepEqual(profileReport.relocatedReplay, expectedResult(profile)\n\t\t\t, `${profile} replay`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/mutual-checked-records.test.mjs",
+      "previousSha256": "0764aa685788850aed84766bf8ebc4378b1998225c054d3cc6860b98069bb6bd",
+      "currentSha256": "94f88b30a7bd9fa667b455a5f8aca9dbaf34392ab748e8d84fae077836591398",
+      "edits": [
+        {
+          "start": 1914,
+          "previous": "",
+          "current": "import \"./helpers/mutual-checked-record-native-review-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

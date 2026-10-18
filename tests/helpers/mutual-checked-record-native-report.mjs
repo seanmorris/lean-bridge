@@ -4,9 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join, posix } from "node:path";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { join, posix, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
 	reviewedContractDifference, reviewedSourceSelection
@@ -56,7 +55,43 @@ const expectedResult = profile => ({
 	, stdout: `mutual-checked-record-ok:${mutualCheckedRecordNativeChecks[profile]}\n`
 });
 const fixturePath = path => `${mutualCheckedRecordFixtureRoot}/${path}`;
-const historicalFixtures = new Map();
+const historicalModules = new Map();
+
+const historicalModule = (producerCommit, entry) => {
+	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	assert.ok(/^(?:src|tests)\//u.test(entry) && entry.endsWith(".mjs")
+		&& posix.normalize(entry) === entry, entry);
+	const key = `${producerCommit}:${entry}`;
+	if(!historicalModules.has(key)) historicalModules.set(key, (async () => {
+		const closure = new Map();
+		const visit = path => {
+			assert.ok(/^(?:src|tests)\//u.test(path)
+				&& posix.normalize(path) === path, path);
+			if(closure.has(path)) return;
+			const bytes = original(producerCommit, path), source = bytes.toString();
+			closure.set(path, bytes);
+			for(const specifier of moduleSpecifiers(source, path))
+			{
+				const joined = posix.normalize(posix.join(posix.dirname(path), specifier));
+				visit(posix.extname(joined) === "" ? `${joined}.mjs` : joined);
+			}
+		};
+		visit(entry);
+		const historyRoot = resolve("build");
+		await mkdir(historyRoot, { recursive: true });
+		const directory = await mkdtemp(join(
+			historyRoot, ".mutual-checked-record-history-"));
+		try
+		{
+			for(const [path, bytes] of closure)
+				await saveLakeFile(directory, path, bytes);
+			return await import(pathToFileURL(join(directory, entry)).href);
+		}
+		finally
+		{ await rm(directory, { recursive: true }); }
+	})());
+	return historicalModules.get(key);
+};
 
 /**
  * Load the exact fixture specification and its relative module closure from the
@@ -65,46 +100,36 @@ const historicalFixtures = new Map();
  *
  * @param producerCommit - Exact producing Git commit.
  */
-export const mutualCheckedRecordNativeFixture = producerCommit => {
-	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
-	if(!historicalFixtures.has(producerCommit)) historicalFixtures.set(
-		producerCommit, (async () => {
-			const entry = "tests/helpers/mutual-checked-record-fixture.mjs";
-			const closure = new Map();
-			const visit = path => {
-				assert.ok(/^(?:src|tests)\//u.test(path)
-					&& posix.normalize(path) === path, path);
-				if(closure.has(path)) return;
-				const bytes = original(producerCommit, path), source = bytes.toString();
-				closure.set(path, bytes);
-				for(const specifier of moduleSpecifiers(source, path))
-				{
-					const joined = posix.normalize(posix.join(posix.dirname(path), specifier));
-					visit(posix.extname(joined) === "" ? `${joined}.mjs` : joined);
-				}
-			};
-			visit(entry);
-			const directory = await mkdtemp(join(
-				tmpdir(), "lean-bridge-mutual-checked-record-fixture-"));
-			try
-			{
-				for(const [path, bytes] of closure)
-					await saveLakeFile(directory, path, bytes);
-				const fixture = await import(pathToFileURL(join(directory, entry)).href);
-				assert.equal(fixture.mutualCheckedRecordFixtureRoot
-					, mutualCheckedRecordFixtureRoot);
-				assert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);
-				for(const name of [
-					"mutualCheckedRecordConfiguration", "mutualCheckedRecordReview"
-				]) assert.equal(typeof fixture[name], "function", name);
-				assert.ok(fixture.mutualCheckedRecordRefinements
-					&& typeof fixture.mutualCheckedRecordRefinements === "object");
-				return fixture;
-			}
-			finally
-			{ await rm(directory, { recursive: true }); }
-		})());
-	return historicalFixtures.get(producerCommit);
+export const mutualCheckedRecordNativeFixture = async producerCommit => {
+	const fixture = await historicalModule(producerCommit
+		, "tests/helpers/mutual-checked-record-fixture.mjs");
+	assert.equal(fixture.mutualCheckedRecordFixtureRoot
+		, mutualCheckedRecordFixtureRoot);
+	assert.equal(fixture.mutualCheckedRecordModule, mutualCheckedRecordModule);
+	for(const name of [
+		"mutualCheckedRecordConfiguration", "mutualCheckedRecordReview"
+	]) assert.equal(typeof fixture[name], "function", name);
+	assert.ok(fixture.mutualCheckedRecordRefinements
+		&& typeof fixture.mutualCheckedRecordRefinements === "object");
+	return fixture;
+};
+
+/**
+ * Replay the exact controls implementation committed with a hosted producer.
+ * This authenticates immutable checker output without forcing future verifiers
+ * to reproduce an older control-count summary.
+ *
+ * @param read - Reader relative to one retained route.
+ * @param options - Exact producer, route, runtime and floor.
+ */
+export const checkMutualCheckedRecordNativeHistoricalControls = async (
+	read, options
+) => {
+	const module = await historicalModule(options.producerCommit
+		, "tests/helpers/mutual-checked-record-native-controls.mjs");
+	assert.equal(typeof module.checkMutualCheckedRecordNativeControls
+		, "function");
+	return module.checkMutualCheckedRecordNativeControls(read, options);
 };
 
 /**
@@ -133,6 +158,7 @@ export const mutualCheckedRecordNativeRecords = (route, receipt) => {
 	validatePackageSetReceipt(receipt);
 	const build = [
 		`${mutualCheckedRecordModule}.lean`, "author-inputs.json"
+		, "author-inputs-after.json"
 		, "lean-bridge.exports.json", "model.json", "package-set-receipt.json"
 		, ...route === "reviewed" ? ["api.binding-ir.json"] : []
 	];
@@ -222,13 +248,14 @@ const checkModels = async ({ read, json, report, route, producerCommit }) => {
 		validatePackageSetReceipt(receipt);
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
 		assert.equal(model.bindingIrSha256, hashBindingIr(model.bindingIr));
-		assert.equal(model.profile, "native-library-v1");
-		assert.equal(model.pointerBits, 64);
-		assert.equal(model.byteOrder, "little");
+		assert.equal(model.profile, "native-library-v1", "native profile");
+		assert.equal(model.pointerBits, 64, "pointer width");
+		assert.equal(model.byteOrder, "little", "byte order");
 		assert.equal(model.schemaVersion, route === "reviewed" ? 5 : 4);
 		assert.deepEqual(model.component, component);
 		assert.deepEqual(model.exports.map(item => item.name).sort()
-			, expected.declarations.map(item => item.id.slice(5)).sort());
+			, expected.declarations.map(item => item.id.slice(5)).sort()
+			, "model export names");
 		for(const item of model.exports)
 		{
 			assert.deepEqual(item.refinements
@@ -249,24 +276,28 @@ const checkModels = async ({ read, json, report, route, producerCommit }) => {
 		assert.equal(identity.exportConfigurationSource, canonicalJson(configuration));
 		assert.equal(identity.exportConfigurationSha256, sha256(canonicalJson(configuration)));
 		assert.equal(identity.extractorSha256
-			, sha256(original(producerCommit, "src/analyze/NativeExports.lean")));
+			, sha256(original(producerCommit, "src/analyze/NativeExports.lean"))
+			, "extractor identity");
 		digest(identity.leanCompilerSha256);
 		assert.match(identity.leanCommit, /^[a-f0-9]{40}$/u);
 		const toolchain = inputs["lean-toolchain"].toString().trim();
 		assert.equal(identity.leanVersion, toolchain.split(":v").at(-1));
-		assert.equal(identity.sourceTreeSha256, treeSha256);
-		assert.equal(identity.sourceNoticesSha256, sha256(canonicalJson(notices)));
+		assert.equal(identity.sourceTreeSha256, treeSha256, "source tree identity");
+		assert.equal(identity.sourceNoticesSha256, sha256(canonicalJson(notices))
+			, "source notices identity");
 		assert.equal(identity.lakeDependencies, undefined);
 		assert.deepEqual(identity.request.metadata.modules.map(item => item.sourceSha256)
 			, [sha256(source)]);
-		assert.equal(identity.request.metadata.toolchain, toolchain);
+		assert.equal(identity.request.metadata.toolchain, toolchain
+			, "toolchain identity");
 		let selection = configuration;
 		if(route === "reviewed")
 		{
 			assert.deepEqual(await json(prefix + "api.binding-ir.json"), expected);
 			assert.equal(identity.reviewedBindingIr.path, "api.binding-ir.json");
 			assert.equal(identity.reviewedBindingIr.source, canonicalJson(expected));
-			assert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(expected)));
+			assert.equal(identity.reviewedBindingIr.sourceSha256
+				, sha256(canonicalJson(expected)), "reviewed source digest");
 			assert.equal(identity.reviewedBindingIr.semanticSha256, hashBindingIr(expected));
 			selection = reviewedSourceSelection(identity.reviewedBindingIr);
 		}
@@ -279,12 +310,14 @@ const checkModels = async ({ read, json, report, route, producerCommit }) => {
 			assert.deepEqual(identity.request[key], [mutualCheckedRecordModule]);
 		assert.equal(identity.request.profile, "native-library-v1");
 		const snapshot = await json(prefix + "author-inputs.json");
+		const after = await json(prefix + "author-inputs-after.json");
+		assert.deepEqual(after, snapshot, "author input state unchanged");
 		assert.deepEqual(snapshot.map(item => item.path), Object.keys(inputs).sort());
 		for(const item of snapshot)
 		{
 			exactKeys(item, ["path", "sha256", "mode", "mtime", "ctime"], item.path);
 			assert.equal(item.sha256, sha256(inputs[item.path]));
-			assert.equal(item.mode & 0o170000, 0o100000);
+			assert.equal(item.mode, 0o100644, `${item.path} mode`);
 			assert.ok(Number.isFinite(item.mtime) && item.mtime > 0);
 			assert.ok(Number.isFinite(item.ctime) && item.ctime > 0);
 		}
@@ -474,7 +507,12 @@ export const checkMutualCheckedRecordNativeReport = async (read, options) => {
 	assert.equal(runtime.arch, "x64");
 	assert.match(runtime.glibc, /^2\.[0-9]+$/u);
 	assert.ok(Number(runtime.glibc.split(".")[1]) >= Number(floor.split(".")[1]));
-	const bytes = async path => Buffer.from(await read(path));
+	const bytes = async path => {
+		const value = await read(path);
+		assert.ok(value !== undefined && value !== null
+			, `Missing native record: ${path}`);
+		return Buffer.from(value);
+	};
 	const json = async path => canonical(await bytes(path), path);
 	const reportBytes = await bytes("report.json");
 	const report = canonical(reportBytes, "report.json");
@@ -484,21 +522,23 @@ export const checkMutualCheckedRecordNativeReport = async (read, options) => {
 		, "declaredGlibcFloor", "authorInputsUnchanged", "reproducible"
 		, "independentBuilds", "relocated", "sourceFree"
 	], "report keys");
-	assert.equal(report.schemaVersion, 1);
-	assert.equal(report.route, route);
-	assert.deepEqual(report.profiles, [...mutualCheckedRecordNativeProfiles]);
-	assert.equal(report.producerCommit, producerCommit);
-	assert.equal(report.reproducible, true);
-	assert.equal(report.independentBuilds, 2);
-	assert.equal(report.authorInputsUnchanged, true);
-	assert.equal(report.relocated, true);
-	assert.equal(report.sourceFree, true);
-	assert.equal(report.declaredGlibcFloor, floor);
+	assert.equal(report.schemaVersion, 1, "report schema version");
+	assert.equal(report.route, route, "report route");
+	assert.deepEqual(report.profiles, [...mutualCheckedRecordNativeProfiles]
+		, "report profiles");
+	assert.equal(report.producerCommit, producerCommit, "report producer commit");
+	assert.equal(report.reproducible, true, "report reproducible");
+	assert.equal(report.independentBuilds, 2, "report independent builds");
+	assert.equal(report.authorInputsUnchanged, true
+		, "report author inputs unchanged");
+	assert.equal(report.relocated, true, "report relocated");
+	assert.equal(report.sourceFree, true, "report source free");
+	assert.equal(report.declaredGlibcFloor, floor, "report declared glibc floor");
 	const observedRuntime = {
 		platform: runtime.platform, arch: runtime.arch
 		, glibc: { code: 0, stdout: `glibc ${runtime.glibc}\n`, stderr: "" }
 	};
-	assert.deepEqual(report.runtime, observedRuntime);
+	assert.deepEqual(report.runtime, observedRuntime, "report runtime");
 	assert.deepEqual(await json("runtime.json"), observedRuntime);
 	const { model, receipt } = await checkModels({
 		read: bytes, json, report, route, producerCommit
@@ -520,10 +560,13 @@ export const checkMutualCheckedRecordNativeReport = async (read, options) => {
 		], `${profile} report keys`);
 		assert.deepEqual(profileReport
 			, report.reports.find(item => item.profile === profile));
-		assert.equal(profileReport.route, route);
-		assert.equal(profileReport.checks, mutualCheckedRecordNativeChecks[profile]);
-		assert.equal(profileReport.consumerSha256, sha256(consumer));
-		assert.deepEqual(profileReport.relocatedReplay, expectedResult(profile));
+		assert.equal(profileReport.route, route, `${profile} route`);
+		assert.equal(profileReport.checks, mutualCheckedRecordNativeChecks[profile]
+			, `${profile} check count`);
+		assert.equal(profileReport.consumerSha256, sha256(consumer)
+			, `${profile} consumer digest`);
+		assert.deepEqual(profileReport.relocatedReplay, expectedResult(profile)
+			, `${profile} replay`);
 		assert.deepEqual(profileReport.packages
 			, receipt.packages.filter(pkg => pkg.target === profile));
 		for(const key of [

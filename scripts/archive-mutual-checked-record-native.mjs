@@ -18,7 +18,8 @@ import {
 	assertMutualCheckedRecordNativeCiTap
 } from "../tests/helpers/mutual-checked-record-native-ci-report.mjs";
 import {
-	checkMutualCheckedRecordNativeControls
+	assertMutualCheckedRecordNativeCurrentReplay
+	, checkMutualCheckedRecordNativeControls
 } from "../tests/helpers/mutual-checked-record-native-controls.mjs";
 import {
 	mutualCheckedRecordNativeEvidence, mutualCheckedRecordNativeEvidenceSources
@@ -26,6 +27,7 @@ import {
 } from "../tests/helpers/mutual-checked-record-native-evidence.mjs";
 import {
 	assertMutualCheckedRecordNativeRecordPaths
+	, checkMutualCheckedRecordNativeHistoricalControls
 	, mutualCheckedRecordNativeRecords, mutualCheckedRecordNativeRoutes
 } from "../tests/helpers/mutual-checked-record-native-report.mjs";
 
@@ -71,7 +73,7 @@ const safeZipPath = path => {
 		&& !value.startsWith("/") && value.split("/").every(part =>
 		part.length > 0 && part !== "." && part !== "..");
 };
-const zipEntries = execFileSync("unzip", ["-Z1", artifactZip]
+const zipEntries = execFileSync("/usr/bin/unzip", ["-Z1", artifactZip]
 	, { encoding: "utf8", maxBuffer: 64 * 1024 ** 2 }).split("\n").filter(Boolean);
 assert.ok(zipEntries.length > 0 && new Set(zipEntries).size === zipEntries.length);
 for(const path of zipEntries) assert.ok(safeZipPath(path), path);
@@ -90,7 +92,7 @@ const paths = async (root, prefix = "") => {
 const extracted = await mkdtemp(join(tmpdir(), "lean-bridge-recursive-native-artifact-"));
 try
 {
-	execFileSync("unzip", ["-q", artifactZip, "-d", extracted]);
+	execFileSync("/usr/bin/unzip", ["-q", artifactZip, "-d", extracted]);
 	const zipFiles = zipEntries.filter(path => !path.endsWith("/")).sort();
 	for(const directory of zipEntries.filter(path => path.endsWith("/")))
 		assert.ok(zipFiles.some(path => path.startsWith(directory)), directory);
@@ -138,29 +140,33 @@ try
 		const tap = await readFile(tapPath, "utf8");
 		assertMutualCheckedRecordNativeCiTap(tap, route);
 		const read = path => readFile(join(routeRoot, path));
-		const checked = await checkMutualCheckedRecordNativeControls(read, {
+		const options = {
 			route, producerCommit, runtime, floor
-		});
+		};
+		const archived = await checkMutualCheckedRecordNativeHistoricalControls(
+			read, options);
+		const current = await checkMutualCheckedRecordNativeControls(read, options);
+		assertMutualCheckedRecordNativeCurrentReplay(archived, current);
 		const receipt = JSON.parse(await read("build-0/package-set-receipt.json"));
 		const records = [...mutualCheckedRecordNativeRecords(route, receipt)
 			, "controls.json"].sort();
 		assertMutualCheckedRecordNativeRecordPaths(
 			await paths(routeRoot), route, receipt);
 		const verification = await readFile(verificationPath);
-		assert.equal(verification.toString(), canonicalJson(checked));
-		assert.equal((await read("controls.json")).toString(), canonicalJson(checked));
+		assert.equal(verification.toString(), canonicalJson(archived));
+		assert.equal((await read("controls.json")).toString(), canonicalJson(archived));
 		for(const path of records)
 			await putFile(`${route}/records/${path}`, join(routeRoot, path));
 		await putFile(`${route}/run.tap`, tapPath);
 		await putFile(`${route}/verification.json`, verificationPath);
 		runs.push({
 			route, recordCount: records.length
-			, reportSha256: checked.reportSha256
+			, reportSha256: archived.reportSha256
 			, verificationSha256: sha256(verification), tapSha256: sha256(tap)
-			, bindingIrSha256: checked.bindingIrSha256
-			, independentBuilds: checked.independentBuilds
-			, profiles: checked.profiles, controls: checked.controls
-			, artifacts: checked.artifacts
+			, bindingIrSha256: archived.bindingIrSha256
+			, independentBuilds: archived.independentBuilds
+			, profiles: archived.profiles, controls: archived.controls
+			, artifacts: archived.artifacts
 		});
 	}
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);

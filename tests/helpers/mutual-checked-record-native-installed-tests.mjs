@@ -9,6 +9,7 @@ import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promis
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { isDeepStrictEqual } from "node:util";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
@@ -98,6 +99,7 @@ for(const route of routes) test(
 		await saveLakeFile(output, "expected.binding-ir.json", canonicalJson(expected));
 		const consumer = join(root, "consumer"), handoff = join(consumer, "handoff");
 		const builds = [];
+		let authorInputsUnchanged = true;
 		for(const attempt of [0, 1])
 		{
 			const author = join(root, `author-${attempt}`);
@@ -114,8 +116,10 @@ for(const route of routes) test(
 				error.message += `: ${JSON.stringify(error.details)}`;
 				throw error;
 			});
-			assert.deepEqual(await lakeInputState(projectRoot), sourceBefore
-				, "Author source remains unchanged");
+			const sourceAfter = await lakeInputState(projectRoot);
+			const unchanged = isDeepStrictEqual(sourceAfter, sourceBefore);
+			authorInputsUnchanged &&= unchanged;
+			assert.equal(unchanged, true, "Author source remains unchanged");
 			const modelBytes = await readFile(join(outputRoot, "native/component/model.json"));
 			const model = JSON.parse(modelBytes);
 			assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
@@ -135,6 +139,8 @@ for(const route of routes) test(
 			await saveLakeFile(output, `build-${attempt}/model.json`, modelBytes);
 			await saveLakeFile(output, `build-${attempt}/package-set-receipt.json`, receiptBytes);
 			await saveLakeFile(output, `build-${attempt}/author-inputs.json`, canonicalJson(sourceBefore));
+			await saveLakeFile(output, `build-${attempt}/author-inputs-after.json`
+				, canonicalJson(sourceAfter));
 			for(const name of [
 				`${mutualCheckedRecordModule}.lean`, "lean-bridge.exports.json"
 				, ...route === "reviewed" ? ["api.binding-ir.json"] : []
@@ -195,7 +201,7 @@ for(const route of routes) test(
 			schemaVersion: 1, route, profiles, builds, reports
 			, producerCommit
 			, expectedBindingIrSha256: hashBindingIr(expected)
-			, runtime, declaredGlibcFloor: floor, authorInputsUnchanged: true
+			, runtime, declaredGlibcFloor: floor, authorInputsUnchanged
 			, reproducible: true, independentBuilds: 2
 			, relocated: true, sourceFree: true
 		}));

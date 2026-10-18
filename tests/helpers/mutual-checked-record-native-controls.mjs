@@ -17,6 +17,33 @@ import {
 } from "./mutual-checked-record-native-report.mjs";
 
 const canonical = value => Buffer.from(canonicalJson(value));
+const stableSummaryKeys = Object.freeze([
+	"route", "producerCommit", "runtime", "floor", "reportSha256"
+	, "bindingIrSha256", "recordPaths", "independentBuilds", "profiles"
+	, "artifacts"
+]);
+
+/**
+ * Require a current replay to preserve every semantic result while allowing
+ * later verifier revisions to add (but never remove) destructive controls.
+ *
+ * @param archived - Summary emitted by the exact hosted producer/checker.
+ * @param current - Summary replayed by the current verifier.
+ */
+export const assertMutualCheckedRecordNativeCurrentReplay = (
+	archived, current
+) => {
+	for(const key of stableSummaryKeys)
+		assert.deepEqual(current[key], archived[key], `current replay ${key}`);
+	assert.ok(archived.controls && current.controls, "current replay controls");
+	for(const [key, count] of Object.entries(archived.controls))
+	{
+		assert.ok(Number.isSafeInteger(count) && count > 0
+			, `archived control count ${key}`);
+		assert.ok(Number.isSafeInteger(current.controls[key])
+			&& current.controls[key] >= count, `current control count ${key}`);
+	}
+};
 
 /**
  * Require originals and reject coordinated record, model, source and package changes.
@@ -41,8 +68,9 @@ export const checkMutualCheckedRecordNativeControls = async (
 		return value;
 	};
 	const json = path => JSON.parse(originals.get(path));
-	const reject = changes => assert.rejects(
-		checkMutualCheckedRecordNativeReport(path => read(path, changes), options));
+	const reject = (changes, matcher) => assert.rejects(
+		checkMutualCheckedRecordNativeReport(path => read(path, changes), options)
+		, matcher);
 
 	let recordControls = 0, reportControls = 0, executionControls = 0;
 	let modelControls = 0, sourceTreeControls = 0, packageControls = 0;
@@ -53,30 +81,40 @@ export const checkMutualCheckedRecordNativeControls = async (
 			retained.filter(item => item !== path), options.route, receipt), undefined, path);
 		recordControls++;
 	}
+	await assert.rejects(checkMutualCheckedRecordNativeReport(path =>
+		path === "configuration.json" ? undefined : read(path), options)
+	, /Missing native record: configuration\.json/u);
+	recordControls++;
 
-	for(const mutate of [
-		value => { value.reproducible = false; }
-		, value => { value.independentBuilds = 1; }
-		, value => { value.declaredGlibcFloor = "2.35"; }
-		, value => { value.producerCommit = "0".repeat(40); }
-		, value => { value.authorInputsUnchanged = false; }
-		, value => { value.route = value.route === "ordinary" ? "reviewed" : "ordinary"; }
-		, value => { value.profiles.pop(); }
-		, value => { value.relocated = false; }
-		, value => { value.sourceFree = false; }
-		, value => { value.runtime.glibc.stdout = "glibc 2.35\n"; }
+	for(const [mutate, matcher] of [
+		[value => { value.reproducible = false; }, /report reproducible/u]
+		, [value => { value.independentBuilds = 1; }, /report independent builds/u]
+		, [value => { value.declaredGlibcFloor = "2.35"; }, /report declared glibc floor/u]
+		, [value => { value.producerCommit = "0".repeat(40); }, /report producer commit/u]
+		, [value => { value.authorInputsUnchanged = false; }, /report author inputs unchanged/u]
+		, [value => {
+			value.route = value.route === "ordinary" ? "reviewed" : "ordinary";
+		}
+		, /report route/u]
+		, [value => { value.profiles.pop(); }, /report profiles/u]
+		, [value => { value.relocated = false; }, /report relocated/u]
+		, [value => { value.sourceFree = false; }, /report source free/u]
+		, [value => { value.runtime.glibc.stdout = "glibc 2.35\n"; }, /report runtime/u]
 	]){
 		const report = json("report.json");
 		mutate(report);
-		await reject(new Map([["report.json", canonical(report)]]));
+		await reject(new Map([["report.json", canonical(report)]]), matcher);
 		reportControls++;
 	}
 
-	for(const position of [0, 1]) for(const mutate of [
-		value => { value.checks++; }
-		, value => { value.relocatedReplay.stdout = "mutual-checked-record-ok:0\n"; }
-		, value => { value.consumerSha256 = "0".repeat(64); }
-		, value => { value.compilerFreeReplay = false; }
+	for(const position of [0, 1]) for(const [mutate, label] of [
+		[value => { value.checks++; }, "check count"]
+		, [value => {
+			value.relocatedReplay.stdout = "mutual-checked-record-ok:0\n";
+		}
+		, "replay"]
+		, [value => { value.consumerSha256 = "0".repeat(64); }, "consumer digest"]
+		, [value => { value.compilerFreeReplay = false; }, "compilerFreeReplay"]
 	]){
 		const report = json("report.json");
 		const profile = structuredClone(report.reports[position]);
@@ -85,26 +123,35 @@ export const checkMutualCheckedRecordNativeControls = async (
 		await reject(new Map([
 			["report.json", canonical(report)]
 			, [`${profile.profile}/report.json`, canonical(profile)]
-		]));
+		]), new RegExp(`${profile.profile} ${label}|${profile.profile}\\.${label}`, "u"));
 		executionControls++;
 	}
 
-	for(const mutate of [
-		model => { model.exports.pop(); }
-		, model => { model.sourceIdentity.extractorSha256 = "0".repeat(64); }
-		, model => { model.pointerBits = 32; }
-		, model => { model.sourceIdentity.sourceNoticesSha256 = "0".repeat(64); }
-		, model => {
+	for(const [mutate, matcher] of [
+		[model => { model.exports.pop(); }, /model export names/u]
+		, [model => {
+			model.sourceIdentity.extractorSha256 = "0".repeat(64);
+		}
+		, /extractor identity/u]
+		, [model => { model.pointerBits = 32; }, /pointer width/u]
+		, [model => {
+			model.sourceIdentity.sourceNoticesSha256 = "0".repeat(64);
+		}
+		, /source notices identity/u]
+		, [model => {
 			model.sourceIdentity.request.metadata.toolchain = "leanprover/lean4:v0.0.0";
 		}
-		, model => {
+		, /toolchain identity/u]
+		, [model => {
 			const tree = model.exports.find(item =>
 				item.name === "MutualCheckedRecords.first").refinements.parameters[0];
 			tree.fields[1].refinement.bound = "4";
 		}
-		, ...options.route === "reviewed" ? [model => {
+		, /MutualCheckedRecords\.first/u]
+		, ...options.route === "reviewed" ? [[model => {
 			model.sourceIdentity.reviewedBindingIr.sourceSha256 = "0".repeat(64);
-		}] : []
+		}
+		, /reviewed source digest/u]] : []
 	]){
 		const model = json("build-0/model.json"), report = json("report.json");
 		mutate(model);
@@ -115,7 +162,7 @@ export const checkMutualCheckedRecordNativeControls = async (
 			report.builds[attempt].modelSha256 = sha256(modelBytes);
 		}
 		changes.set("report.json", canonical(report));
-		await reject(changes);
+		await reject(changes, matcher);
 		modelControls++;
 	}
 
@@ -138,7 +185,7 @@ export const checkMutualCheckedRecordNativeControls = async (
 		changes.set("handoff/package-set-receipt.json", finalReceiptBytes);
 		changes.set("handoff/package-set-receipt.json.sha256", Buffer.from(
 			`${sha256(finalReceiptBytes)}  package-set-receipt.json\n`));
-		await reject(changes);
+		await reject(changes, /source tree identity/u);
 		sourceTreeControls++;
 	}
 
@@ -188,7 +235,7 @@ export const checkMutualCheckedRecordNativeControls = async (
 			, ...[0, 1].map(attempt =>
 				[`build-${attempt}/package-set-receipt.json`, receiptBytes])
 		]);
-		await reject(changes);
+		await reject(changes, /include\/mutualcheckedrecords\.h/u);
 		packageControls++;
 	}
 
