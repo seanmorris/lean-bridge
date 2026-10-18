@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "milestone": "value-index-core-lineage-repair-source-v1",
+  "predecessorCommit": "f68eae559386b67172464c0a67e366c923283b11",
+  "draftParentCommit": "228e0f114c5ae574c4a3907d250dfce6fc11af65",
+  "pathsSha256": "05cc28c0413be961a4410a8b75d203fcb8f5e35e8385f4e8422ad69ea375ee39",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "dd88f8b568c9b8c6524062254006e6a6d7784de0dd3825b2879091d09b41a1fc",
+      "currentSha256": "ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-value-index-core-lineage-repair-source-history.mjs",
+      "currentSha256": "a2eecfa31ce4910087fd24c4d6831c5aff5b9d3ae6460a012361df70b52eb31c"
+    },
+    {
+      "path": "tests/helpers/value-index-core-lineage-repair-source-history.mjs",
+      "currentSha256": "0f93d0534b286a377eda9df6bbb265f2c587eb4dd18ca4b205d0a7e0b5e294b2"
+    },
+    {
+      "path": "tests/helpers/value-index-core-lineage-repair-source-history-tests.mjs",
+      "currentSha256": "2964fd4bfaa98527ffc6e1ca767403268ad71d1fdb64444d35d361e4898140de"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousCommit": "c1f471569d1855d990bc5e6fb94454f7620e5bab",
+      "currentCommit": "fc5d255a48e863bfee9624def578b82c851d0566",
+      "previousSha256": "e854c03cb3a8be5545366f0bb6009a7a5f4c48d85bbf2e500d4d9df11f48b749",
+      "currentSha256": "21adc988dfc44b82f3647894ab87b76da9a4c773f42e73a8ffa10ca1d27651ac",
+      "edits": [
+        {
+          "start": 12331,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-native\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousCommit": "6cfd228a7ea5b0677cd5c9068203e67e5ee399d7",
+      "currentCommit": "c1f471569d1855d990bc5e6fb94454f7620e5bab",
+      "previousSha256": "6c5c9687c4246163a14140e200d5d6b056c6493bb3b1a679b584576357f12c08",
+      "currentSha256": "e854c03cb3a8be5545366f0bb6009a7a5f4c48d85bbf2e500d4d9df11f48b749",
+      "edits": [
+        {
+          "start": 12290,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-browser\"\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a82a48ad187f3c851fe2c1e03b59d82e62b3c8bbecd3d096bb26dea764f4887a",
+      "currentSha256": "a4a3b47c9bd1680b816cced2c1ad89668c13e828d4990ef6dd5bd962dafa180b",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"dd88f8b568c9b8c6524062254006e6a6d7784de0dd3825b2879091d09b41a1fc\"\n",
+          "current": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"dd88f8b568c9b8c6524062254006e6a6d7784de0dd3825b2879091d09b41a1fc\"\n",
+          "current": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"dd88f8b568c9b8c6524062254006e6a6d7784de0dd3825b2879091d09b41a1fc\"\n",
+          "current": "          \"sha256\": \"ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-records.test.mjs",
+      "previousSha256": "7902ad459fe166452c39c55704bc44f83554dfc849773f54b4501e758993918d",
+      "currentSha256": "3ea935d7062ecb731e2e7dc25d9fb2f966762334f997b16c5da730cc66949fdf",
+      "edits": [
+        {
+          "start": 542,
+          "previous": "import \"./helpers/checked-record-value-index-foundation-source-history-tests.mjs\";\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "dd88f8b568c9b8c6524062254006e6a6d7784de0dd3825b2879091d09b41a1fc",
+      "currentSha256": "ac9084c0cdda1da3888cd5e3bec1a9201164c7a396843bc800cf05d047b98a64",
+      "edits": [
+        {
+          "start": 4318,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-foundation-source-history-tests.mjs\";\nimport \"./helpers/value-index-core-lineage-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d61a35fb257a59cffafde1a149b0a0c57116350d23da3c710ba2a31fbe181754",
+      "currentSha256": "8165152bd4ef5a8dff28ff3fce1a3a564067907aeaaff3dea34813d2314cea85",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeValueIndexCoreLineageRepairSource, valueIndexCoreLineageRepairChangedPaths, valueIndexCoreLineageRepairHistoricalPaths } from \"./value-index-core-lineage-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 79327,
+          "previous": "",
+          "current": "\tsource = beforeValueIndexCoreLineageRepairSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 94439,
+          "previous": "\t...coreQualityShardingChangedPaths\n",
+          "current": "\t...valueIndexCoreLineageRepairChangedPaths\n\t, ...valueIndexCoreLineageRepairHistoricalPaths\n\t, ...coreQualityShardingChangedPaths\n"
+        }
+      ]
+    }
+  ]
+}
