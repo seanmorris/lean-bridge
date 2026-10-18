@@ -323,6 +323,7 @@ const profileManifest = Object.freeze({
 		, "checked-record-browser-foundation"
 		, "checked-record-browser-ci"
 		, "checked-record-browser-promotion"
+		, "checked-record-value-index-browser"
 		, "checked-record-alias-admission-source-history"
 		, "checked-record-php-wasm-foundation"
 		, "checked-record-php-wasm-evidence-ci"
