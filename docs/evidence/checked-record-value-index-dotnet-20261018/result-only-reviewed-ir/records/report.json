@@ -1,0 +1,832 @@
+{
+  "apiProbe": {
+    "assemblySha256": "199a6c34ade329ddbdacda92cbf28d657d043d74192fe0f934ec8e19d3d59dba",
+    "build": {
+      "code": 1,
+      "stderr": "",
+      "stdout": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'TrueBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'FalseBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'AbStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'EmptyStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'UnicodeStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EmptySizedIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'ZeroNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'WideNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n\nBuild FAILED.\n\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'TrueBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'FalseBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'AbStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'EmptyStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'UnicodeStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EmptySizedIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'ZeroNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'WideNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n    0 Warning(s)\n    8 Error(s)\n\nTime Elapsed 00:00:01.65\n"
+    },
+    "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe",
+    "diagnostics": {
+      "$schema": "http://json.schemastore.org/sarif-2.1.0",
+      "runs": [
+        {
+          "columnKind": "utf16CodeUnits",
+          "results": [
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 59,
+                      "endLine": 5,
+                      "startColumn": 46,
+                      "startLine": 5
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'TrueBoolIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 60,
+                      "endLine": 6,
+                      "startColumn": 46,
+                      "startLine": 6
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'FalseBoolIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 59,
+                      "endLine": 7,
+                      "startColumn": 46,
+                      "startLine": 7
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'AbStringIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 62,
+                      "endLine": 8,
+                      "startColumn": 46,
+                      "startLine": 8
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EmptyStringIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 64,
+                      "endLine": 9,
+                      "startColumn": 46,
+                      "startLine": 9
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'UnicodeStringIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 61,
+                      "endLine": 10,
+                      "startColumn": 46,
+                      "startLine": 10
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'EmptySizedIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 58,
+                      "endLine": 11,
+                      "startColumn": 46,
+                      "startLine": 11
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'ZeroNatIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            },
+            {
+              "level": "error",
+              "locations": [
+                {
+                  "physicalLocation": {
+                    "artifactLocation": {
+                      "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                    },
+                    "region": {
+                      "endColumn": 58,
+                      "endLine": 12,
+                      "startColumn": 46,
+                      "startLine": 12
+                    }
+                  }
+                }
+              ],
+              "message": {
+                "text": "'Api' does not contain a definition for 'WideNatIndex'"
+              },
+              "ruleId": "CS0117",
+              "ruleIndex": 0
+            }
+          ],
+          "tool": {
+            "driver": {
+              "dottedQuadFileVersion": "4.11.0.0",
+              "name": "Microsoft (R) Visual C# Compiler",
+              "rules": [
+                {
+                  "defaultConfiguration": {
+                    "level": "error"
+                  },
+                  "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0117)",
+                  "id": "CS0117",
+                  "properties": {
+                    "category": "Compiler",
+                    "tags": [
+                      "Compiler",
+                      "Telemetry",
+                      "NotConfigurable"
+                    ]
+                  }
+                }
+              ],
+              "semanticVersion": "4.11.0",
+              "version": "4.11.0-3.25569.22 (3fb752d4)"
+            }
+          }
+        }
+      ],
+      "version": "2.1.0"
+    },
+    "outputs": {},
+    "restore": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "  Determining projects to restore...\n  Restored /tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj (in 64 ms).\n"
+    }
+  },
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Checkedrecordvalueindices.Api.1.0.0.nupkg": "c6ddd098051981b7897237c8aa3b2449772a6aeac472789f886ae8d9fcf56cab"
+      },
+      "authorInputsSha256": "86bd7857807657af2b18f73cb98181b4c443fef3d6941d8951457c0abac42e7a",
+      "bindingIrSha256": "31aad431e3eaa5e6204971916ee7c03816e97d99755362d3662e7e0c3d431696",
+      "modelSha256": "197c4e55658cff0ad3925545348a60249eb8b46d6f73f12af270a16c45f6be0f",
+      "receiptSha256": "76d79036db6142a74d742c6a72c4207affdb659e941ed4f3d287e935d7ea0d7f"
+    },
+    {
+      "archives": {
+        "archives/Checkedrecordvalueindices.Api.1.0.0.nupkg": "c6ddd098051981b7897237c8aa3b2449772a6aeac472789f886ae8d9fcf56cab"
+      },
+      "authorInputsSha256": "86bd7857807657af2b18f73cb98181b4c443fef3d6941d8951457c0abac42e7a",
+      "bindingIrSha256": "31aad431e3eaa5e6204971916ee7c03816e97d99755362d3662e7e0c3d431696",
+      "modelSha256": "197c4e55658cff0ad3925545348a60249eb8b46d6f73f12af270a16c45f6be0f",
+      "receiptSha256": "76d79036db6142a74d742c6a72c4207affdb659e941ed4f3d287e935d7ea0d7f"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumerCommit": "59d50c538589be9f2fd2460a7e4a1d383130ff00",
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No C# constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "d435ff28d89f0e9d90f853816c1a3fe45e2d9740a5efa6c37e7fe8b757b7b093",
+  "independentBuilds": 2,
+  "installation": {
+    "archive": {
+      "bytes": 51373204,
+      "path": "archives/Checkedrecordvalueindices.Api.1.0.0.nupkg",
+      "sha256": "c6ddd098051981b7897237c8aa3b2449772a6aeac472789f886ae8d9fcf56cab"
+    },
+    "closure": {
+      "buildInputsSha256": "ff7bead9dfbf932b9942258a861472b860632ca8b9b3741be0c92806ff9cc8fa",
+      "cacheFilesSha256": "6f0ac26d608a146eb0b6346b92c80aee663c10c20693c9314881959c5095ddc3",
+      "deployedFilesSha256": "5da96a243ded473db0d5caef8c1248de3d890fe97ad8797821b6f95042df170a",
+      "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+      "packageFileSetSha256": "17e7fa2888e48cd6fac9cdb5462d4932d625b5b09ac5d9d788a6fc6e1695a9fd",
+      "receiptSha256": "6fa5619e43eb636d93b7ce08fbdd7a8f36eddcba1e4c6e1db68404c3d67b37c6"
+    },
+    "compiled": {
+      "assembly": "LeanBridge.Checkedrecordvalueindices",
+      "bindingIrSha256": "31aad431e3eaa5e6204971916ee7c03816e97d99755362d3662e7e0c3d431696",
+      "evidence": {
+        "componentId": "checkedrecordvalueindices@1.0.0",
+        "componentReceiptSha256": "cf732958681bef7027edb3338ed7fa6169e403c37a1f53f12b1a3bd066cbe64e",
+        "libraries": {
+          "libcheckedrecordvalueindices.so": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697",
+          "libcomponent_767c615eabad08d77709.so": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625",
+          "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+          "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "library": "libcheckedrecordvalueindices.so",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      "files": {
+        "NuGet.Config": {
+          "bytes": 74,
+          "sha256": "9508cae5f76364f56e80eb97cb16493977243cf38e5cca6284e3d74f83b20a2c"
+        },
+        "README.md": {
+          "bytes": 4303,
+          "sha256": "34c58eb377cc267a7a16a5a9f407cf1dea04731de7983ff01ed1be02c7d2ea33"
+        },
+        "binding-manifest.json": {
+          "bytes": 1347,
+          "sha256": "bb8d82b1fe9f37278014e214e99977cd65056af7b1911308ef5df5f0daed1add"
+        },
+        "global.json": {
+          "bytes": 104,
+          "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+        },
+        "lib/net8.0/LeanBridge.Checkedrecordvalueindices.deps.json": {
+          "bytes": 478,
+          "sha256": "c18dbb8858724ecb8ba160ade59cd1663c4ca4739622e67b83465de00215617a"
+        },
+        "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll": {
+          "bytes": 29184,
+          "sha256": "199a6c34ade329ddbdacda92cbf28d657d043d74192fe0f934ec8e19d3d59dba"
+        },
+        "lib/net8.0/LeanBridge.Checkedrecordvalueindices.xml": {
+          "bytes": 4985,
+          "sha256": "cf09113492e8941a3c3f2877383f7b86b08173c8a45785a3caa317163d6c78fb"
+        },
+        "src/LeanBridge.Checkedrecordvalueindices/Api.cs": {
+          "bytes": 6752,
+          "sha256": "5beaab9ab4c3c051fec5f8bf96ede7a61204782c95fc4044492280bc10a44578"
+        },
+        "src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj": {
+          "bytes": 621,
+          "sha256": "d0946acaf49703777aa16f55ac1e31394d635adab8095e00c7611b08f3245cc8"
+        },
+        "src/LeanBridge.Checkedrecordvalueindices/Runtime.cs": {
+          "bytes": 25836,
+          "sha256": "ad1a3f0981ac7b880390c1b124df3cbd424b4bcecfed9e9a0e13d441c9e400bd"
+        }
+      },
+      "profile": "native-library-v1",
+      "schemaVersion": 1,
+      "sdk": "8.0.424"
+    },
+    "evidence": {
+      "componentId": "checkedrecordvalueindices@1.0.0",
+      "componentReceiptSha256": "cf732958681bef7027edb3338ed7fa6169e403c37a1f53f12b1a3bd066cbe64e",
+      "libraries": {
+        "libcheckedrecordvalueindices.so": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697",
+        "libcomponent_767c615eabad08d77709.so": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625",
+        "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+        "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "library": "libcheckedrecordvalueindices.so",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "files": {
+      "Checkedrecordvalueindices.Api.nuspec": {
+        "bytes": 487,
+        "sha256": "356d754ab23bf7e2d912efb4f952e47fc239c12f76ac060627db4c01ec78c4ae"
+      },
+      "README.md": {
+        "bytes": 4655,
+        "sha256": "2d8769e63d92a9a9f602f631507ac4979fc0ae09c400d676c1ddcd8803f63791"
+      },
+      "[Content_Types].xml": {
+        "bytes": 939,
+        "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+      },
+      "_rels/.rels": {
+        "bytes": 273,
+        "sha256": "66215fc9713424aac71ffe0add3d20e3f3e15478d07d80a8155ef94ee58039ac"
+      },
+      "lean-bridge/component/allocation-guard.h": {
+        "bytes": 1309,
+        "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+      },
+      "lean-bridge/component/artifacts.json": {
+        "bytes": 1531,
+        "sha256": "eafa37f5b1d81012c491887f24860dfe478f16329b6489f4a2cf74a892178635"
+      },
+      "lean-bridge/component/binding-ir.json": {
+        "bytes": 23979,
+        "sha256": "e1dcfb52bee4ca335828e36d4b5cf1e82d54d9f2543acdade24c3f937d16e4d4"
+      },
+      "lean-bridge/component/component.h": {
+        "bytes": 1781,
+        "sha256": "c492d3bf06a6de01a3f6c4ca0c2b151afbba6052166f8c6982673360649b3ee5"
+      },
+      "lean-bridge/component/generated.lean": {
+        "bytes": 8091,
+        "sha256": "ae21fdcea0756a53730efe47cbd11b40719873f74cae7f59ba8b033f37803d93"
+      },
+      "lean-bridge/component/metadata.json": {
+        "bytes": 48400,
+        "sha256": "b9a31c998360ce86a83d7862cad3de449c6f4bbe79a2ab7c52eed8b6fa37ed31"
+      },
+      "lean-bridge/component/model.json": {
+        "bytes": 86722,
+        "sha256": "197c4e55658cff0ad3925545348a60249eb8b46d6f73f12af270a16c45f6be0f"
+      },
+      "lean-bridge/component/native-component.json": {
+        "bytes": 29312,
+        "sha256": "cf732958681bef7027edb3338ed7fa6169e403c37a1f53f12b1a3bd066cbe64e"
+      },
+      "lean-bridge/dotnet/binding-manifest.json": {
+        "bytes": 1347,
+        "sha256": "bb8d82b1fe9f37278014e214e99977cd65056af7b1911308ef5df5f0daed1add"
+      },
+      "lean-bridge/dotnet/global.json": {
+        "bytes": 104,
+        "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Api.cs": {
+        "bytes": 6752,
+        "sha256": "5beaab9ab4c3c051fec5f8bf96ede7a61204782c95fc4044492280bc10a44578"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj": {
+        "bytes": 621,
+        "sha256": "d0946acaf49703777aa16f55ac1e31394d635adab8095e00c7611b08f3245cc8"
+      },
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Runtime.cs": {
+        "bytes": 25836,
+        "sha256": "ad1a3f0981ac7b880390c1b124df3cbd424b4bcecfed9e9a0e13d441c9e400bd"
+      },
+      "lean-bridge/licenses/Lean-LICENSE": {
+        "bytes": 9160,
+        "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+      },
+      "lean-bridge/licenses/Lean-LICENSES": {
+        "bytes": 81854,
+        "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+      },
+      "lean-bridge/licenses/LeanBridge-LICENSE": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/licenses/source-notices.json": {
+        "bytes": 2135,
+        "sha256": "9b564264a7ecbb8007eeca9ec718ebb4229a3306d52397db339714a9bed50371"
+      },
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+        "bytes": 1093,
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      "lean-bridge/native-c-adapter.json": {
+        "bytes": 1434,
+        "sha256": "e1050d3ef38d16b87159b5442d1efb4222a26c18a54600940d1bd9ff03aec98a"
+      },
+      "lean-bridge/native-dotnet.json": {
+        "bytes": 2597,
+        "sha256": "831fd43acc02fdba3bbf24c6bf75f064cd321574243059b348dfba2c5ae364a3"
+      },
+      "lean-bridge/package-receipt.json": {
+        "bytes": 33122,
+        "sha256": "6fa5619e43eb636d93b7ce08fbdd7a8f36eddcba1e4c6e1db68404c3d67b37c6"
+      },
+      "lean-bridge/runtime.json": {
+        "bytes": 1466,
+        "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      },
+      "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll": {
+        "bytes": 29184,
+        "sha256": "199a6c34ade329ddbdacda92cbf28d657d043d74192fe0f934ec8e19d3d59dba"
+      },
+      "lib/net8.0/LeanBridge.Checkedrecordvalueindices.xml": {
+        "bytes": 4985,
+        "sha256": "cf09113492e8941a3c3f2877383f7b86b08173c8a45785a3caa317163d6c78fb"
+      },
+      "runtimes/linux-x64/native/libcheckedrecordvalueindices.so": {
+        "bytes": 35992,
+        "sha256": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697"
+      },
+      "runtimes/linux-x64/native/libcomponent_767c615eabad08d77709.so": {
+        "bytes": 34840,
+        "sha256": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625"
+      },
+      "runtimes/linux-x64/native/liblean_bridge_native.so": {
+        "bytes": 21632,
+        "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+      },
+      "runtimes/linux-x64/native/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      }
+    },
+    "receiptSha256": "6fa5619e43eb636d93b7ce08fbdd7a8f36eddcba1e4c6e1db68404c3d67b37c6",
+    "retained": [
+      "Checkedrecordvalueindices.Api.nuspec",
+      "README.md",
+      "[Content_Types].xml",
+      "_rels/.rels",
+      "lean-bridge/component/allocation-guard.h",
+      "lean-bridge/component/artifacts.json",
+      "lean-bridge/component/binding-ir.json",
+      "lean-bridge/component/component.h",
+      "lean-bridge/component/generated.lean",
+      "lean-bridge/component/metadata.json",
+      "lean-bridge/component/model.json",
+      "lean-bridge/component/native-component.json",
+      "lean-bridge/dotnet/binding-manifest.json",
+      "lean-bridge/dotnet/global.json",
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Api.cs",
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj",
+      "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Runtime.cs",
+      "lean-bridge/licenses/Lean-LICENSE",
+      "lean-bridge/licenses/Lean-LICENSES",
+      "lean-bridge/licenses/LeanBridge-LICENSE",
+      "lean-bridge/licenses/source-notices.json",
+      "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+      "lean-bridge/native-c-adapter.json",
+      "lean-bridge/native-dotnet.json",
+      "lean-bridge/package-receipt.json",
+      "lean-bridge/runtime.json",
+      "lib/net8.0/LeanBridge.Checkedrecordvalueindices.xml"
+    ]
+  },
+  "installerCommandLogs": "Closed installer retains input/build-input/output identities, not restore/build stdout",
+  "mode": "result-only",
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "ff7bead9dfbf932b9942258a861472b860632ca8b9b3741be0c92806ff9cc8fa",
+        "cacheFilesSha256": "6f0ac26d608a146eb0b6346b92c80aee663c10c20693c9314881959c5095ddc3",
+        "deployedFilesSha256": "5da96a243ded473db0d5caef8c1248de3d890fe97ad8797821b6f95042df170a",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "17e7fa2888e48cd6fac9cdb5462d4932d625b5b09ac5d9d788a6fc6e1695a9fd",
+        "receiptSha256": "6fa5619e43eb636d93b7ce08fbdd7a8f36eddcba1e4c6e1db68404c3d67b37c6"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "ff7bead9dfbf932b9942258a861472b860632ca8b9b3741be0c92806ff9cc8fa",
+        "cacheFilesSha256": "6f0ac26d608a146eb0b6346b92c80aee663c10c20693c9314881959c5095ddc3",
+        "deployedFilesSha256": "5da96a243ded473db0d5caef8c1248de3d890fe97ad8797821b6f95042df170a",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "17e7fa2888e48cd6fac9cdb5462d4932d625b5b09ac5d9d788a6fc6e1695a9fd",
+        "receiptSha256": "6fa5619e43eb636d93b7ce08fbdd7a8f36eddcba1e4c6e1db68404c3d67b37c6"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "5da96a243ded473db0d5caef8c1248de3d890fe97ad8797821b6f95042df170a"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "59d50c538589be9f2fd2460a7e4a1d383130ff00",
+  "receipt": {
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51373204,
+            "path": "archives/Checkedrecordvalueindices.Api.1.0.0.nupkg",
+            "sha256": "c6ddd098051981b7897237c8aa3b2449772a6aeac472789f886ae8d9fcf56cab"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Checkedrecordvalueindices.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "31aad431e3eaa5e6204971916ee7c03816e97d99755362d3662e7e0c3d431696",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "dd439e167578ffd8b5619f38ff31b7349f9c2488884a90e3c399761e0b81f165"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15447101440,
+          "freeBytes": 73921839104,
+          "load": 1.08
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15445311488,
+          "freeBytes": 73921818624,
+          "load": 1.08
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 14919200768,
+          "freeBytes": 73818873856,
+          "load": 1.17
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15412346880,
+          "freeBytes": 73818718208,
+          "load": 1.35
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "result-only-reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated"
+}

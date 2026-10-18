@@ -11,10 +11,14 @@ import {
 
 export const checkedRecordValueIndexDotnetEvidence
 	= "docs/evidence/checked-record-value-index-dotnet-20261018";
-export const checkedRecordValueIndexDotnetProducer = null;
-export const checkedRecordValueIndexDotnetConsumer = null;
-export const checkedRecordValueIndexDotnetChecker = null;
-export const checkedRecordValueIndexDotnetArchiver = null;
+export const checkedRecordValueIndexDotnetProducer
+	= "59d50c538589be9f2fd2460a7e4a1d383130ff00";
+export const checkedRecordValueIndexDotnetConsumer
+	= "59d50c538589be9f2fd2460a7e4a1d383130ff00";
+export const checkedRecordValueIndexDotnetChecker
+	= "59d50c538589be9f2fd2460a7e4a1d383130ff00";
+export const checkedRecordValueIndexDotnetArchiver
+	= "48bf81cd13da3c526d6ad7f37cb968e5a5a4a948";
 export const checkedRecordValueIndexDotnetEvidenceLoadCeiling = 6;
 export const checkedRecordValueIndexDotnetEvidenceFloor = "2.38";
 export const checkedRecordValueIndexDotnetSelections = Object.freeze([

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "generator": "dotnet-copied-v1",
+  "target": "dotnet",
+  "component": "checkedrecordvalueindices@1.0.0",
+  "bindingIrSha256": "31aad431e3eaa5e6204971916ee7c03816e97d99755362d3662e7e0c3d431696",
+  "namespace": "LeanBridge.Checkedrecordvalueindices",
+  "assembly": "LeanBridge.Checkedrecordvalueindices",
+  "files": [
+    "src/LeanBridge.Checkedrecordvalueindices/Api.cs",
+    "src/LeanBridge.Checkedrecordvalueindices/Runtime.cs",
+    "src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj",
+    "NuGet.Config",
+    "README.md"
+  ],
+  "publicFiles": [
+    "src/LeanBridge.Checkedrecordvalueindices/Api.cs"
+  ],
+  "internalFiles": [
+    "src/LeanBridge.Checkedrecordvalueindices/Runtime.cs"
+  ],
+  "packageFiles": [
+    "src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj",
+    "NuGet.Config"
+  ],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary packages admit copied values and synchronous primitive callables, not resources, compound callables or async delivery."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "Compiled releases target .NET 8 on Linux x86-64 with glibc."
+    }
+  ]
+}

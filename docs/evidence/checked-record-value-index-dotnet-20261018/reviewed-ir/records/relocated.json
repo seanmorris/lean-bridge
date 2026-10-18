@@ -1,0 +1,55 @@
+{
+  "closure": {
+    "buildInputsSha256": "a0b66d5b19f58705a6001b5aa52fd814186ee8abaa3890bc0a014741a11e6b6b",
+    "cacheFilesSha256": "d96b3971f30413264608a3730fb1aca9ae63374d6add4b2f42a11e74f45bc444",
+    "deployedFilesSha256": "5f526fd293ede2a9737eef82bc352ca3d7485234d73c332d2d906bc45ac60d8c",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "17e7fa2888e48cd6fac9cdb5462d4932d625b5b09ac5d9d788a6fc6e1695a9fd",
+    "receiptSha256": "8e36a4f985637606d45e1a8217be6d6a9923fa23226f2f0599964c1a59dba8c8"
+  },
+  "counts": {
+    "calls": 30,
+    "checks": 31,
+    "recoveries": 7,
+    "rejections": 7
+  },
+  "cwd": "/tmp/lean-bridge-value-index-dotnet-pMuNpT/consumer-relocated",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+    "cwd": "/tmp/lean-bridge-value-index-dotnet-pMuNpT/consumer-relocated",
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":30,\"checks\":31,\"recoveries\":7,\"rejections\":7}\n"
+  },
+  "stage": "relocated"
+}

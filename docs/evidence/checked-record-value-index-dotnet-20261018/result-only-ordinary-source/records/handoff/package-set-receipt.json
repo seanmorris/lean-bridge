@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51370030,
+          "path": "archives/Checkedrecordvalueindices.Api.1.0.0.nupkg",
+          "sha256": "acdf948241783b97093f5a327a3e3a01babf6f7ae766cd973bd58a30db0cda3b"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Checkedrecordvalueindices.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e522464b8a5f70b02d9ffcd03deb2cdab074488953358d1619ff1d38c3b785db",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "8fa922e09612d21a0512c80ec43f31ddd0cc0ee4d5e2bad455f6e69452fee27d"
+  }
+}

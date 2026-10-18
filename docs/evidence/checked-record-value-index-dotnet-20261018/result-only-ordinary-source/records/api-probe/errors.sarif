@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-2.1.0",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'TrueBoolIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 5,
+                  "startColumn": 46,
+                  "endLine": 5,
+                  "endColumn": 59
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'FalseBoolIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 6,
+                  "startColumn": 46,
+                  "endLine": 6,
+                  "endColumn": 60
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'AbStringIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 7,
+                  "startColumn": 46,
+                  "endLine": 7,
+                  "endColumn": 59
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'EmptyStringIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 8,
+                  "startColumn": 46,
+                  "endLine": 8,
+                  "endColumn": 62
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'UnicodeStringIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 46,
+                  "endLine": 9,
+                  "endColumn": 64
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'EmptySizedIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 46,
+                  "endLine": 10,
+                  "endColumn": 61
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'ZeroNatIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 46,
+                  "endLine": 11,
+                  "endColumn": 58
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CS0117",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "text": "'Api' does not contain a definition for 'WideNatIndex'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "file:///tmp/lean-bridge-value-index-dotnet-5Rn0e3/api-probe/probe.cs"
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 46,
+                  "endLine": 12,
+                  "endColumn": 58
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Microsoft (R) Visual C# Compiler",
+          "version": "4.11.0-3.25569.22 (3fb752d4)",
+          "dottedQuadFileVersion": "4.11.0.0",
+          "semanticVersion": "4.11.0",
+          "rules": [
+            {
+              "id": "CS0117",
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0117)",
+              "properties": {
+                "category": "Compiler",
+                "tags": [
+                  "Compiler",
+                  "Telemetry",
+                  "NotConfigurable"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}

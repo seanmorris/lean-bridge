@@ -1,0 +1,234 @@
+{
+  "build": {
+    "code": 1,
+    "stderr": "",
+    "stdout": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'TrueBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'FalseBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'AbStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'EmptyStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'UnicodeStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EmptySizedIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'ZeroNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'WideNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n\nBuild FAILED.\n\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(5,46): error CS0117: 'Api' does not contain a definition for 'TrueBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(6,46): error CS0117: 'Api' does not contain a definition for 'FalseBoolIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(7,46): error CS0117: 'Api' does not contain a definition for 'AbStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(8,46): error CS0117: 'Api' does not contain a definition for 'EmptyStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(9,46): error CS0117: 'Api' does not contain a definition for 'UnicodeStringIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(10,46): error CS0117: 'Api' does not contain a definition for 'EmptySizedIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(11,46): error CS0117: 'Api' does not contain a definition for 'ZeroNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs(12,46): error CS0117: 'Api' does not contain a definition for 'WideNatIndex' [/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj]\n    0 Warning(s)\n    8 Error(s)\n\nTime Elapsed 00:00:01.65\n"
+  },
+  "cwd": "/tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe",
+  "diagnostics": {
+    "$schema": "http://json.schemastore.org/sarif-2.1.0",
+    "runs": [
+      {
+        "columnKind": "utf16CodeUnits",
+        "results": [
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 59,
+                    "endLine": 5,
+                    "startColumn": 46,
+                    "startLine": 5
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'TrueBoolIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 60,
+                    "endLine": 6,
+                    "startColumn": 46,
+                    "startLine": 6
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'FalseBoolIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 59,
+                    "endLine": 7,
+                    "startColumn": 46,
+                    "startLine": 7
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'AbStringIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 62,
+                    "endLine": 8,
+                    "startColumn": 46,
+                    "startLine": 8
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'EmptyStringIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 64,
+                    "endLine": 9,
+                    "startColumn": 46,
+                    "startLine": 9
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'UnicodeStringIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 61,
+                    "endLine": 10,
+                    "startColumn": 46,
+                    "startLine": 10
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'EmptySizedIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 58,
+                    "endLine": 11,
+                    "startColumn": 46,
+                    "startLine": 11
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'ZeroNatIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          },
+          {
+            "level": "error",
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "file:///tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/probe.cs"
+                  },
+                  "region": {
+                    "endColumn": 58,
+                    "endLine": 12,
+                    "startColumn": 46,
+                    "startLine": 12
+                  }
+                }
+              }
+            ],
+            "message": {
+              "text": "'Api' does not contain a definition for 'WideNatIndex'"
+            },
+            "ruleId": "CS0117",
+            "ruleIndex": 0
+          }
+        ],
+        "tool": {
+          "driver": {
+            "dottedQuadFileVersion": "4.11.0.0",
+            "name": "Microsoft (R) Visual C# Compiler",
+            "rules": [
+              {
+                "defaultConfiguration": {
+                  "level": "error"
+                },
+                "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0117)",
+                "id": "CS0117",
+                "properties": {
+                  "category": "Compiler",
+                  "tags": [
+                    "Compiler",
+                    "Telemetry",
+                    "NotConfigurable"
+                  ]
+                }
+              }
+            ],
+            "semanticVersion": "4.11.0",
+            "version": "4.11.0-3.25569.22 (3fb752d4)"
+          }
+        }
+      }
+    ],
+    "version": "2.1.0"
+  },
+  "outputs": {},
+  "restore": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "  Determining projects to restore...\n  Restored /tmp/lean-bridge-value-index-dotnet-WlRyfB/api-probe/Probe.csproj (in 64 ms).\n"
+  }
+}

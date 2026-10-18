@@ -1,0 +1,49 @@
+{
+  "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+  "interpreter": {
+    "bytes": 71744,
+    "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+  },
+  "measurements": [
+    {
+      "args": [
+        "--list-sdks"
+      ],
+      "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-pMuNpT/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "8.0.424 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk]\n"
+      }
+    },
+    {
+      "args": [
+        "--version"
+      ],
+      "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-pMuNpT/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "8.0.424\n"
+      }
+    },
+    {
+      "args": [
+        "--list-runtimes"
+      ],
+      "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+      "cwd": "/tmp/lean-bridge-value-index-dotnet-pMuNpT/toolchain",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Microsoft.AspNetCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App]\n"
+      }
+    }
+  ],
+  "sdk": {
+    "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk",
+    "version": "8.0.424"
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Checkedrecordvalueindices.Api/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libcheckedrecordvalueindices.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libcomponent_767c615eabad08d77709.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/liblean_bridge_native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libleanshared.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Checkedrecordvalueindices.Api/1.0.0": {
+      "sha512": "X0KqZn2FlnG4glZOZT2n+2LyLiWMz1h2gHF/zGOUZznE4+6vAqJe/VDTG9mBtxSSLRvMHiKFXtQwW+Bhdq2e5Q==",
+      "type": "package",
+      "path": "checkedrecordvalueindices.api/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        "README.md",
+        "checkedrecordvalueindices.api.1.0.0.nupkg.sha512",
+        "checkedrecordvalueindices.api.nuspec",
+        "lean-bridge/component/allocation-guard.h",
+        "lean-bridge/component/artifacts.json",
+        "lean-bridge/component/binding-ir.json",
+        "lean-bridge/component/component.h",
+        "lean-bridge/component/generated.lean",
+        "lean-bridge/component/metadata.json",
+        "lean-bridge/component/model.json",
+        "lean-bridge/component/native-component.json",
+        "lean-bridge/dotnet/binding-manifest.json",
+        "lean-bridge/dotnet/global.json",
+        "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Api.cs",
+        "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj",
+        "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Runtime.cs",
+        "lean-bridge/licenses/Lean-LICENSE",
+        "lean-bridge/licenses/Lean-LICENSES",
+        "lean-bridge/licenses/LeanBridge-LICENSE",
+        "lean-bridge/licenses/source-notices.json",
+        "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+        "lean-bridge/native-c-adapter.json",
+        "lean-bridge/native-dotnet.json",
+        "lean-bridge/package-receipt.json",
+        "lean-bridge/runtime.json",
+        "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll",
+        "lib/net8.0/LeanBridge.Checkedrecordvalueindices.xml",
+        "runtimes/linux-x64/native/libcheckedrecordvalueindices.so",
+        "runtimes/linux-x64/native/libcomponent_767c615eabad08d77709.so",
+        "runtimes/linux-x64/native/liblean_bridge_native.so",
+        "runtimes/linux-x64/native/libleanshared.so"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Checkedrecordvalueindices.Api >= 1.0.0 <= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/packages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/Consumer.csproj",
+      "projectName": "Consumer",
+      "projectPath": "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/Consumer.csproj",
+      "packagesPath": "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/packages",
+      "outputPath": "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "/tmp/lean-bridge-value-index-dotnet-5Rn0e3/consumer/feed": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "allWarningsAsErrors": true,
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "false",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Checkedrecordvalueindices.Api": {
+            "target": "Package",
+            "version": "[1.0.0, 1.0.0]"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk/8.0.424/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

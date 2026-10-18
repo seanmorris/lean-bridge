@@ -1,0 +1,67 @@
+{
+  "archiveSha256": "0ca9bf456c0c580b74270f1333c8acebef0aac4ac10668e54e35d7a968033d12",
+  "archiveSha512": "v0CPXbSu7z3W8sRmGsF5r6ttfaZyGyQN90ykO+xnDy8jyIm8r14Dcoq59GREu7Am9PSMeDcusiVADsY2t/zNyw==",
+  "consumerCommit": "59d50c538589be9f2fd2460a7e4a1d383130ff00",
+  "controls": {
+    "callerControls": 1,
+    "gitBindingControls": 1,
+    "observationControls": 1,
+    "packageControls": 1,
+    "provenanceControls": 5,
+    "reconciliationControls": 1,
+    "recordControls": 2,
+    "records": 77,
+    "runtimeControls": 1
+  },
+  "counts": {
+    "calls": 30,
+    "checks": 31,
+    "recoveries": 7,
+    "rejections": 7
+  },
+  "dispatchObserved": false,
+  "executions": 3,
+  "floor": "2.38",
+  "framework": {
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "generatorModules": 18,
+  "mode": "full",
+  "producerCommit": "59d50c538589be9f2fd2460a7e4a1d383130ff00",
+  "records": 77,
+  "route": "ordinary-source",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "toolchain": {
+    "command": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-value-index-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  }
+}

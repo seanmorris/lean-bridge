@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LeanBridge.Checkedrecordvalueindices</name>
+    </assembly>
+    <members>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.Unit">
+            <summary>The sole runtime value of Lean Unit.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.LeanBridgeException">
+            <summary>A failure reported by a compiled Lean call.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.Ab">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Ab.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.EmptySized">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.EmptySized.#ctor(System.Numerics.BigInteger[])">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.EmptyToken">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.EmptyToken.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.Off">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Off.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.On">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.On.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.UnicodeToken">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.UnicodeToken.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.WideToken">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.WideToken.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.ZeroToken">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.ZeroToken.#ctor(System.Numerics.BigInteger)">
+            <summary>A copied Lean record.</summary>
+        </member>
+        <member name="T:LeanBridge.Checkedrecordvalueindices.Api">
+            <summary>The functions selected by the Lean package author.</summary>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceAb">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceEmptySized">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceEmptyString(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceFalseBool">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceTrueBool">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceUnicodeString(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceWideNat(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+        <member name="M:LeanBridge.Checkedrecordvalueindices.Api.ProduceZeroNat(System.Numerics.BigInteger)">
+            <remarks>Checked Lean Fin bounds: result projects proof-backed record payload fields.</remarks>
+        </member>
+    </members>
+</doc>

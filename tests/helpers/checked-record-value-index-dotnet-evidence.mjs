@@ -36,7 +36,8 @@ export {
 	checkedRecordValueIndexDotnetEvidence
 } from "./checked-record-value-index-dotnet-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const checkedRecordValueIndexDotnetEvidenceSha256 = null;
+export const checkedRecordValueIndexDotnetEvidenceSha256
+	= "56b823c66218e714bf625b9da1760ca4bee04791d0350aa939f51feeb3453dca";
 
 const controlKeys = Object.freeze([
 	"records", "recordControls", "provenanceControls"

@@ -1,0 +1,280 @@
+{
+  "assembly": "LeanBridge.Checkedrecordvalueindices",
+  "bindingIrSha256": "e522464b8a5f70b02d9ffcd03deb2cdab074488953358d1619ff1d38c3b785db",
+  "compiledProjectionSha256": "37b9bd2340e364024de94278f54ebd6f70867c2cc5b7251cc3427f39d103652c",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "ecosystem": "nuget",
+  "files": {
+    "Checkedrecordvalueindices.Api.nuspec": {
+      "bytes": 487,
+      "sha256": "356d754ab23bf7e2d912efb4f952e47fc239c12f76ac060627db4c01ec78c4ae"
+    },
+    "README.md": {
+      "bytes": 4655,
+      "sha256": "2d8769e63d92a9a9f602f631507ac4979fc0ae09c400d676c1ddcd8803f63791"
+    },
+    "[Content_Types].xml": {
+      "bytes": 939,
+      "sha256": "f40a2ae0edf63af7046ff54e97e247dd6b2cf07e5d650a8b6d9c51370378b42b"
+    },
+    "_rels/.rels": {
+      "bytes": 273,
+      "sha256": "66215fc9713424aac71ffe0add3d20e3f3e15478d07d80a8155ef94ee58039ac"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "a0c886f2d94e63d31b0e7b611668da275be4332e04a64d8e45d8e4ac470d44c2"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 26130,
+      "sha256": "d2851337dd9959d6beb094cf4b3ec61892f14c3eef17150824ea078266184a2d"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 1781,
+      "sha256": "c492d3bf06a6de01a3f6c4ca0c2b151afbba6052166f8c6982673360649b3ee5"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 8091,
+      "sha256": "ae21fdcea0756a53730efe47cbd11b40719873f74cae7f59ba8b033f37803d93"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 48400,
+      "sha256": "06e7ea574a11d4781ccacc3e024dbe1f683974c13663da8dae0b010e5ba20e75"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 68598,
+      "sha256": "e7516e7a761bbb46f29f14da08bab6fdc162889e95a2e8c533aa7e3392ad6178"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 8885,
+      "sha256": "64a241adf7ba9b8e1c448c0208cecde114abd82b3f158dbb43a776f514c79fe6"
+    },
+    "lean-bridge/dotnet/binding-manifest.json": {
+      "bytes": 1347,
+      "sha256": "7cdef63787350611d361ad301f932180a9a6a5b4bc743f084b5bc2732290bfd4"
+    },
+    "lean-bridge/dotnet/global.json": {
+      "bytes": 104,
+      "sha256": "d4e6e7df1a6d56e08602d954df0d6f0ed938e95b4924eb4348603f5db82e29bc"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Api.cs": {
+      "bytes": 6736,
+      "sha256": "9093af8548b482bb9093a4d32b45a431bb787d02c8d255664df4b8426c356f2c"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/LeanBridge.Checkedrecordvalueindices.csproj": {
+      "bytes": 621,
+      "sha256": "d0946acaf49703777aa16f55ac1e31394d635adab8095e00c7611b08f3245cc8"
+    },
+    "lean-bridge/dotnet/src/LeanBridge.Checkedrecordvalueindices/Runtime.cs": {
+      "bytes": 25836,
+      "sha256": "808c91854f8d15ef45cfef731c7320ebc7d3c6fe14fe5e193e4ee89c714ff1db"
+    },
+    "lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/licenses/source-notices.json": {
+      "bytes": 4253,
+      "sha256": "15d54f238e5bb470a474ce2b271526cecba0b370b6ddcf20ad744e0c5fc6e695"
+    },
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "1e4b25bf9afd796615fb992dad2b187954370d427b9d3d5165845f8ccd730492"
+    },
+    "lean-bridge/native-dotnet.json": {
+      "bytes": 2597,
+      "sha256": "37b9bd2340e364024de94278f54ebd6f70867c2cc5b7251cc3427f39d103652c"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lib/net8.0/LeanBridge.Checkedrecordvalueindices.dll": {
+      "bytes": 29184,
+      "sha256": "32d195e0564c67397fa743e804e96d56676566782d03833a26a878b501e40e7a"
+    },
+    "lib/net8.0/LeanBridge.Checkedrecordvalueindices.xml": {
+      "bytes": 4985,
+      "sha256": "cf09113492e8941a3c3f2877383f7b86b08173c8a45785a3caa317163d6c78fb"
+    },
+    "runtimes/linux-x64/native/libcheckedrecordvalueindices.so": {
+      "bytes": 35992,
+      "sha256": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697"
+    },
+    "runtimes/linux-x64/native/libcomponent_767c615eabad08d77709.so": {
+      "bytes": 34840,
+      "sha256": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625"
+    },
+    "runtimes/linux-x64/native/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "runtimes/linux-x64/native/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-nuget-package",
+  "name": "Checkedrecordvalueindices.Api",
+  "namespace": "LeanBridge.Checkedrecordvalueindices",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "ce5afb0acb1116424ac8274c0ae6a62822420aa9f875ca7a7aa81439c252c419",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"CheckedRecordValueIndices.produceAb\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptySized\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptyString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceFalseBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceTrueBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceUnicodeString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceWideNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceZeroNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"CheckedRecordValueIndices.produceTrueBool\",\n    \"CheckedRecordValueIndices.produceFalseBool\",\n    \"CheckedRecordValueIndices.produceAb\",\n    \"CheckedRecordValueIndices.produceEmptyString\",\n    \"CheckedRecordValueIndices.produceUnicodeString\",\n    \"CheckedRecordValueIndices.produceEmptySized\",\n    \"CheckedRecordValueIndices.produceZeroNat\",\n    \"CheckedRecordValueIndices.produceWideNat\"\n  ],\n  \"modules\": [\n    \"CheckedRecordValueIndices\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"nuget\": {\n      \"name\": \"Checkedrecordvalueindices.Api\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "7ecc15c54b07535647a25615b81bef4afef3a6d9663c7e6c73620264f4ff1ccf",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 164112,
+          "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+          "sha256": "92a72bcb099e7c6508d3a65f03f7a306a32d623d1829bc2f1a6112a0382c637b"
+        },
+        "module": "CheckedRecordValueIndices",
+        "source": {
+          "bytes": 2928,
+          "path": "CheckedRecordValueIndices.lean",
+          "sha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "CheckedRecordValueIndices.produceAb": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptySized": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptyString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceFalseBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceTrueBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceUnicodeString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceWideNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceZeroNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "CheckedRecordValueIndices"
+      ],
+      "exports": [
+        "CheckedRecordValueIndices.produceTrueBool",
+        "CheckedRecordValueIndices.produceFalseBool",
+        "CheckedRecordValueIndices.produceAb",
+        "CheckedRecordValueIndices.produceEmptyString",
+        "CheckedRecordValueIndices.produceUnicodeString",
+        "CheckedRecordValueIndices.produceEmptySized",
+        "CheckedRecordValueIndices.produceZeroNat",
+        "CheckedRecordValueIndices.produceWideNat"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d142a1fb70cad47db7ec4bad1a854bad3dbd07fb8c29543b3254ac12d4795d74",
+        "modules": [
+          {
+            "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+            "name": "CheckedRecordValueIndices",
+            "sourcePath": "CheckedRecordValueIndices.lean",
+            "sourceSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecordValueIndices"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "15d54f238e5bb470a474ce2b271526cecba0b370b6ddcf20ad744e0c5fc6e695",
+    "sourceTreeSha256": "8fa922e09612d21a0512c80ec43f31ddd0cc0ee4d5e2bad455f6e69452fee27d"
+  },
+  "version": "1.0.0"
+}
