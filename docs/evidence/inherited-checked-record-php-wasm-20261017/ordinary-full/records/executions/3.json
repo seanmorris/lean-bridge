@@ -1,0 +1,37 @@
+{
+  "arrangement": "embedded",
+  "loading": "lazy",
+  "mode": "strict",
+  "observation": {
+    "calls": 2839,
+    "checks": 5680,
+    "php": "8.4.1",
+    "recoveries": 256,
+    "rejections": 1291,
+    "rounds": 256,
+    "snapshots": 2839,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_inheritedcheckedrecords_fb4bb97d37d81438.so",
+        "liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "node"
+}

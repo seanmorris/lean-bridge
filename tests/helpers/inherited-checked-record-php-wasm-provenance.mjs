@@ -14,9 +14,12 @@ import {
 
 export const inheritedCheckedRecordPhpWasmEvidence
 	= "docs/evidence/inherited-checked-record-php-wasm-20261017";
-export const inheritedCheckedRecordPhpWasmProducer = null;
-export const inheritedCheckedRecordPhpWasmChecker = null;
-export const inheritedCheckedRecordPhpWasmArchiver = null;
+export const inheritedCheckedRecordPhpWasmProducer
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordPhpWasmChecker
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
+export const inheritedCheckedRecordPhpWasmArchiver
+	= "7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d";
 export const inheritedCheckedRecordPhpWasmLoadCeiling = 8;
 export { inheritedCheckedRecordPhpWasmSelections };
 

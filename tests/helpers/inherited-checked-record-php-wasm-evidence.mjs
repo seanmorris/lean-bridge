@@ -33,7 +33,8 @@ export {
 	inheritedCheckedRecordPhpWasmEvidence
 } from "./inherited-checked-record-php-wasm-provenance.mjs";
 /** Pinned only after a hosted artifact is independently archived. */
-export const inheritedCheckedRecordPhpWasmEvidenceSha256 = null;
+export const inheritedCheckedRecordPhpWasmEvidenceSha256
+	= "7caa08e30ed7c05d20e065f882b7c87d998a1ed7e039e9b18b0f2a49b14accdd";
 
 const safePath = path => typeof path === "string"
 	&& /^[A-Za-z0-9_.+@$/[\]-]+$/u.test(path) && !path.startsWith("/")

@@ -1,0 +1,38 @@
+/**
+ * Producer resource admission records for inherited checked-record PHP-Wasm acceptance.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import {
+	inheritedCheckedRecordPhpWasmLoadCeilings
+} from "./inherited-checked-record-php-wasm-fixture.mjs";
+
+export const inheritedCheckedRecordPhpWasmLoadCeiling = 8;
+
+/**
+ * Require bounded waits that end on the first admitted sample.
+ *
+ * @param resource - One original resource wait record.
+ * @param maxLoad - Exclusive host-load ceiling selected by the producer.
+ */
+export const assertInheritedCheckedRecordPhpWasmResources = (
+	resource, maxLoad = inheritedCheckedRecordPhpWasmLoadCeiling
+) => {
+	assert.ok(inheritedCheckedRecordPhpWasmLoadCeilings.includes(maxLoad));
+	assert.deepEqual(Object.keys(resource).sort(), ["observations", "waits"]);
+	assert.ok(Number.isSafeInteger(resource.waits)
+		&& resource.waits >= 0 && resource.waits <= 20);
+	assert.equal(resource.observations.length, resource.waits + 1);
+	for(const [index, sample] of resource.observations.entries())
+	{
+		assert.deepEqual(Object.keys(sample).sort(), [
+			"availableBytes", "freeBytes", "load"
+		]);
+		for(const key of ["availableBytes", "freeBytes"])
+			assert.ok(Number.isSafeInteger(sample[key])
+				&& sample[key] >= 2 * 1024 ** 3);
+		assert.ok(Number.isFinite(sample.load) && sample.load >= 0);
+		assert.equal(sample.load < maxLoad, index === resource.waits);
+	}
+};
