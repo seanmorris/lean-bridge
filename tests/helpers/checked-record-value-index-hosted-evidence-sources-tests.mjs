@@ -12,6 +12,7 @@ import {
 	, checkedRecordValueIndexHostedOriginal
 	, checkedRecordValueIndexJvmEvidenceSources
 	, checkedRecordValueIndexNativeEvidenceSources
+	, checkedRecordValueIndexPerlEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -93,6 +94,23 @@ test("value-index JVM evidence closes Java/Kotlin production, consumption and ch
 		, ["checker", ".github/workflows/checked-record-value-index-jvm.yml"]
 		, ["checker", "scripts/check-checked-record-value-index-jvm-ci.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-jvm-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index Perl evidence closes CPAN production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexPerlEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-perl/perl.pl"]
+		, ["consumer", "tests/helpers/checked-record-value-index-perl-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-perl.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-perl-ci.mjs"]
+		, ["archiver", "scripts/archive-checked-record-value-index-perl-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });
