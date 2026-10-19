@@ -139,6 +139,10 @@ const checkedRecordEvidencePartitions = Object.freeze({
 		, "checked-record-php-wasm-reconcile-tests.mjs"
 		, "checked-record-php-wasm-installed-tests.mjs"
 	]
+	, "tests/checked-record-value-index-php-wasm.test.mjs": [
+		"checked-record-value-index-php-wasm-fixture-tests.mjs"
+		, "checked-record-value-index-php-wasm-lean-tests.mjs"
+	]
 	, "tests/checked-record-php-wasm-evidence-ci.test.mjs": [
 		"checked-record-php-wasm-history-tests.mjs"
 		, "checked-record-php-wasm-evidence-tests.mjs"
@@ -267,7 +271,7 @@ test("checked-record evidence runs in bounded process-isolated partitions", asyn
 		observed.push(...imports);
 	}
 	assert.equal(new Set(observed).size, observed.length);
-	assert.equal(observed.length, 45);
+	assert.equal(observed.length, 47);
 });
 
 test("recursive checked-record whitespace rules stay inside each archive", async () => {
