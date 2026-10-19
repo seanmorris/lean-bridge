@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-jvm-native-repair-source-v1",
+  "predecessorCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "draftParentCommit": "22f7329ae14196d1c3539cf3e2fa4cb983aa882e",
+  "pathsSha256": "384cf6aadd4e9b5ec88d55800aec34bec6b9263e045e0c791bdb92366a42897a",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551",
+      "currentSha256": "8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": ".github/workflows/checked-record-value-index-jvm.yml",
+      "currentSha256": "e2d7f8ee6f0cc8669069ee4062603a3f763098c61c7431d8cf268bcaef4710cd"
+    },
+    {
+      "path": "scripts/check-checked-record-value-index-jvm-ci.mjs",
+      "currentSha256": "7b2ce43e618361fdb373c1f061fe7f658f5656e930b2bae12ce06973366fb3da"
+    },
+    {
+      "path": "scripts/run-checked-record-value-index-jvm-ci.sh",
+      "currentSha256": "71bcd147d508279b61bd72c0f3c01f89532820d5ce9ac3a68706999ef4306f21"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-handoff.mjs",
+      "currentSha256": "80dcd10a978968f6bd155af8e16c430bc6bafa890b272d9679cfa98599db3a82"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-policy-tests.mjs",
+      "currentSha256": "0b59704ae2d2222dffb262ab83d38b3476b35c4d882604b05c73a77ae96dd0f2"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-report.mjs",
+      "currentSha256": "bb01b36776853c846983167269a4e16c8ab4bbc1cc93aadf20a271bf0267e28b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-shell-tests.mjs",
+      "currentSha256": "a1a46ca9f3ad36ceda8cd6bfed451023fab8e6b5c874e0a032c752f7ccf84e67"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-workflow-tests.mjs",
+      "currentSha256": "929268f8760e20dd7a6890ac10536efe48b0a2f8da65ff948bd0b0e5c25139df"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-ci-workflow.mjs",
+      "currentSha256": "36b45085c30504f5e83a99366455d90b251776575b5a837099c033ab80d48fa7"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-installed-static-tests.mjs",
+      "currentSha256": "292c97df995e287595187d94d71f9fe5c6cb0b5d2d2e709247e8aee1a28a4ea4"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-installed-tests.mjs",
+      "currentSha256": "5eb41c41c8bf4728d19535954ef7b147e7ec9b814c09c6bffcbcc51c446f61b7"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-package.mjs",
+      "currentSha256": "90eb7b7c8a098d1c3e518b526a02b0d422640d130001ccfb6549fd7f34b8c9f1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-probe.mjs",
+      "currentSha256": "2b5f53fd15d20f57b234f2072d201d0369a170fc12efe5ad9e241960ccb53fb9"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-report.mjs",
+      "currentSha256": "99f5c2ee5b431bb40ab06b68285a96ba85c66a3ec7f00f672b3d61ff851ba1ba"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-jvm-native-repair-source-history.mjs",
+      "currentSha256": "83f6f1db07fc9d81299c939fa4281d7711731bfcdbb51550dc2192e128f87ab1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-native-repair-source-history-tests.mjs",
+      "currentSha256": "fba2011e8018542afcb4047376dd93bceaa54d81407436c418e5ab0e78043d62"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-native-repair-source-history.mjs",
+      "currentSha256": "963a6631df0e952480d00ac90a8d5009d46a6f0facbf72b5d3ca3929e9a752d2"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4d05af4a6a348fd3a0e48a6c350c52680868d2f3450479e5e2092e60a4cd0266",
+      "currentSha256": "10b454fab8b0c77133e706aa359e6e67d3ce263a9e2527118be55f32c54effe7",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n",
+          "current": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n",
+          "current": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n",
+          "current": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-jvm.test.mjs",
+      "previousSha256": "9f29064d1c2efa3a24722e18fe43bdf5e23ce2d66c1351703f9b18f36c0ee459",
+      "currentSha256": "65ca1faf4b092a90bafed0d56a6f444ebc63445cef077cfb3df36fe3773acbba",
+      "edits": [
+        {
+          "start": 215,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-jvm-installed-static-tests.mjs\";\nimport \"./helpers/checked-record-value-index-jvm-ci-policy-tests.mjs\";\nimport \"./helpers/checked-record-value-index-jvm-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-value-index-jvm-ci-workflow-tests.mjs\";\nimport \"./helpers/checked-record-value-index-jvm-installed-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551",
+      "currentSha256": "8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54",
+      "edits": [
+        {
+          "start": 5683,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-jvm-native-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-native/c.c",
+      "previousSha256": "bf2af4e977b1e5857fe075e1b9697dd2e275b606209a7d96175ead871b6d282b",
+      "currentSha256": "865961bf02314d668fa3380129fe345aa6d4134d943e591f98f35ff224093d58",
+      "edits": [
+        {
+          "start": 5009,
+          "previous": "    &error, \"Nat must be nonnegative\")\n",
+          "current": "    &error, \"Invalid copied value, negative Nat or 16 MiB call limit exceeded\")\n"
+        },
+        {
+          "start": 5343,
+          "previous": "    &error, \"Nat must be nonnegative\")\n",
+          "current": "    &error, \"Invalid copied value, negative Nat or 16 MiB call limit exceeded\")\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-fixture-tests.mjs",
+      "previousSha256": "a8997c96db86e9709077970d5808c7d2716871526347a9169cf13ebc56fbe8ce",
+      "currentSha256": "ae90a939caf33294a6025a9362055621ab23c50a749d71e480dba7763890dd62",
+      "edits": [
+        {
+          "start": 3329,
+          "previous": "\t\t\t\t, caller.rejections ? 2 : 0);\n",
+          "current": "\t\t\t\t, profile === \"cpp\" && caller.rejections ? 2 : 0);\n\t\t\tassert.equal((caller.source.match(\n\t\t\t\t/Invalid copied value, negative Nat or 16 MiB call limit exceeded/gu\n\t\t\t) ?? []).length, profile === \"c\" && caller.rejections ? 2 : 0);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9e68d04a071c62b4d9309955fbd2389034578e1fc989196e58242edbc5360984",
+      "currentSha256": "a7da1a43805417bd892c0a9d907a9944b40a6d4b4845a94ca7180420538ebb6e",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexJvmNativeRepairSource, checkedRecordValueIndexJvmNativeRepairChangedPaths } from \"./checked-record-value-index-jvm-native-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 98380,
+          "previous": "\t...coreFirstRunResidualRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexJvmNativeRepairChangedPaths\n\t, ...coreFirstRunResidualRepairChangedPaths\n"
+        },
+        {
+          "start": 115771,
+          "previous": "\tlet previous = beforeCoreFirstRunResidualRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexJvmNativeRepairSource(\n"
+        },
+        {
+          "start": 115862,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCoreFirstRunResidualRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}
