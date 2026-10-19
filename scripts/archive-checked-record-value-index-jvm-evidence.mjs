@@ -95,19 +95,17 @@ try
 	]);
 	const hostedRoot = join(extracted.root, "checked-record-value-index-jvm-ci");
 	assert.deepEqual((await readdir(hostedRoot)).sort(), [
-		...checkedRecordValueIndexJvmRoutes, "records"
+		...checkedRecordValueIndexJvmRoutes
 	].sort());
-	assert.deepEqual((await readdir(join(hostedRoot, "records"))).sort()
-		, [...checkedRecordValueIndexJvmRoutes].sort());
 	let runtime, tools;
 	const runs = [];
 	for(const route of checkedRecordValueIndexJvmRoutes)
 	{
 		const cell = join(hostedRoot, route);
 		assert.deepEqual((await readdir(cell)).sort(), [
-			"run.tap", "verification.json"
+			"records", "run.tap", "verification.json"
 		]);
-		const recordsRoot = join(hostedRoot, "records", route);
+		const recordsRoot = join(cell, "records", route);
 		const paths = await nativeArtifactPaths(recordsRoot);
 		const tap = await readFile(join(cell, "run.tap"));
 		const verification = await readFile(join(cell, "verification.json"));
