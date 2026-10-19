@@ -81,6 +81,29 @@ const sourceAt = (commit, path) => execFileSync("git", ["show", `${commit}:${pat
 const memberIdentity = bytes => ({ bytes: Buffer.byteLength(bytes), sha256: sha256(bytes) });
 
 /**
+ * Bind the complete immutable author-input inventory without treating its
+ * timestamp fields as reproducible source content.
+ *
+ * @param producerCommit - Immutable producer revision.
+ * @param selection - Closed route selection.
+ */
+const checkedRecordValueIndexPhpAuthorInputs = (producerCommit, selection) => {
+	const root = "tests/fixtures/onboarding/checked-record-value-indices";
+	const source = name => sourceAt(producerCommit, `${root}/${name}`);
+	const expected = {
+		"CheckedRecordValueIndices.lean": source("CheckedRecordValueIndices.lean")
+		, "LICENSE": source("LICENSE")
+		, "lakefile.toml": source("lakefile.toml")
+		, "lean-toolchain": source("lean-toolchain")
+		, "package.json": source("package.json")
+		, "lean-bridge.exports.json": Buffer.from(canonicalJson(selection.configuration))
+	};
+	if(selection.reviewed)
+		expected["api.binding-ir.json"] = Buffer.from(canonicalJson(selection.expected));
+	return Object.fromEntries(Object.entries(expected).map(([path, bytes]) => [path, sha256(bytes)]));
+};
+
+/**
  * Recheck every route record without trusting the producer's control flow.
  *
  * @param read - Selection-relative retained-byte reader.
@@ -134,6 +157,8 @@ export const checkCheckedRecordValueIndexPhpReport = async (read, {
 	assert.deepEqual(report.runtime, { platform: runtime.platform, arch: runtime.arch, glibc: `glibc ${runtime.glibc}` });
 	assert.equal(report.declaredGlibcFloor, floor); assert.equal(report.expectedBindingIrSha256, hashBindingIr(selection.expected));
 	assert.deepEqual(report.configuration, selection.configuration); assert.equal(report.independentBuilds, 2);
+	assert.deepEqual(await json("configuration.json"), selection.configuration);
+	assert.deepEqual(await json("expected.binding-ir.json"), selection.expected);
 	for(const key of ["reproducible", "authorInputsUnchanged", "sourceRemovedBeforeInstallation", "offlineInstall", "compilerFreeReplay", "relocatedInstallation", "consumerSourceRequired"])
 		assert.equal(report[key], true, key);
 	assert.deepEqual(report.dispatch, { observed: false, reason: "No PHP constructor/source entry counters in this installed acceptance" });
@@ -143,6 +168,7 @@ export const checkCheckedRecordValueIndexPhpReport = async (read, {
 	assertNominalSubtypePhpToolRecords(tools, { phpVersion, composerVersion });
 	assert.deepEqual(await json("runtime.json"), report.runtime);
 	const modelHashes = [];
+	const expectedInputs = checkedRecordValueIndexPhpAuthorInputs(producerCommit, selection);
 	for(const [index, build] of report.builds.entries())
 	{
 		assert.deepEqual(Object.keys(build).sort(), ["archives", "bindingIrSha256", "modelSha256", "receiptSha256"]);
@@ -151,10 +177,22 @@ export const checkCheckedRecordValueIndexPhpReport = async (read, {
 		assert.equal(reviewedContractDifference(selection.expected, model.bindingIr), null);
 		if(selection.reviewed) assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(selection.expected));
 		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
-		assert.deepEqual(await json(`build-${index}/package-set-receipt.json`).then(value => canonicalJson(value))
-			, canonicalJson(report.receipt));
-		const inputs = await read(`build-${index}/author-inputs.json`);
-		assert.equal(inputs.toString(), canonicalJson(JSON.parse(inputs.toString())));
+		const receiptBytes = await read(`build-${index}/package-set-receipt.json`);
+		assert.equal(receiptBytes.toString(), canonicalJson(JSON.parse(receiptBytes.toString())));
+		assert.equal(sha256(receiptBytes), build.receiptSha256);
+		assert.deepEqual(JSON.parse(receiptBytes), report.receipt);
+		assert.deepEqual(build.archives, Object.fromEntries(report.receipt.packages.flatMap(pkg => pkg.artifacts
+			.map(artifact => [artifact.path, artifact.sha256]))));
+		const inputs = await json(`build-${index}/author-inputs.json`);
+		assert.deepEqual(inputs.map(item => item.path), Object.keys(expectedInputs).sort());
+		for(const item of inputs)
+		{
+			assert.deepEqual(Object.keys(item).sort(), ["ctime", "mode", "mtime", "path", "sha256"]);
+			assert.equal(item.sha256, expectedInputs[item.path]);
+			assert.equal(item.mode & 0o170000, 0o100000);
+			for(const key of ["ctime", "mtime"])
+				assert.ok(Number.isFinite(item[key]) && item[key] > 0, `Author ${item.path} ${key}`);
+		}
 		assert.deepEqual(await read(`build-${index}/CheckedRecordValueIndices.lean`)
 			, sourceAt(producerCommit, "tests/fixtures/onboarding/checked-record-value-indices/CheckedRecordValueIndices.lean"));
 		assert.deepEqual(JSON.parse((await read(`build-${index}/lean-bridge.exports.json`)).toString())
