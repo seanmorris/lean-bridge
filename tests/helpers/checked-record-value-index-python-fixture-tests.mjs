@@ -4,14 +4,22 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { promisify } from "node:util";
+import { execFile } from "node:child_process";
 import test from "node:test";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
 import { auditPythonPackage } from "../../src/backends/python/package-audit.mjs";
 import {
 	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
+	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonExpected
 	, checkedRecordValueIndexPythonSelection, checkedRecordValueIndexPythonTarget
 } from "./checked-record-value-index-python-fixture.mjs";
+
+const run = promisify(execFile);
 
 const instantiation = "lean-lang.org/instantiation";
 const erasedProofs = "lean-lang.org/erased-proofs";
@@ -102,4 +110,23 @@ test("Python copied bindings generate every checked-record value-index surface a
 		if(resultOnly) assert.doesNotMatch(publicSource, /def true_bool_index\(/u);
 		else assert.match(publicSource, /def true_bool_index\(/u);
 	}
+});
+
+test("value-index Python caller keeps source routes, recovery and result-only boundaries independent", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-value-index-python-caller-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const caller = await checkedRecordValueIndexPythonCaller();
+	assert.match(caller, /def check_value_index_records\(api/u);
+	assert.match(caller, /import lean_checkedrecordvalueindices as installed/u);
+	const path = join(root, "caller.py"); await writeFile(path, caller);
+	const model = resolve("tests/helpers/checked-record-value-index-python-model.py");
+	const result = await run(process.env.LEAN_BRIDGE_PYTHON ?? "/usr/bin/python3", [
+		"-I", "-B", model, path
+	]);
+	assert.equal(result.stderr, "");
+	const values = JSON.parse(result.stdout);
+	assert.deepEqual(values, checkedRecordValueIndexPythonRoutes.map(route => ({
+		route, ...checkedRecordValueIndexPythonExpected(route)
+	})));
+	assert.equal(await checkedRecordValueIndexPythonCaller(), caller);
 });
