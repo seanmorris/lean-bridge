@@ -888,6 +888,11 @@ cover ordinary-source and independently reviewed packages, including packages
 that only return checked records. They test `Interval`, `Sized 3` and
 `Bounded 0 101`.
 
+The [closed value-index archive](evidence/checked-record-value-index-php-promotion-20261019.md)
+adds top-level copied records indexed by closed `Bool`, `String`, and `Nat`
+values on the same native-PHP path. `Brick\Math\BigInteger` carries Nat payload
+fields; the index remains authenticated Lean metadata rather than a PHP field.
+
 The [nested checked-record archive](evidence/nested-checked-record-php-20261016/index.json)
 adds the acyclic `Packet`, `Holder` and `ChoicePacket` forms. The nested `Packet`
 contains a `Fin 10` digit and a checked `Nat` word, both represented by
