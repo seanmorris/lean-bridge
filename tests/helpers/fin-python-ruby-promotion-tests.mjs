@@ -13,6 +13,7 @@ import { beforeFinPythonRubyPromotionSource, finPythonRubyPromotionHistoryPath }
 import "./fin-python-ruby-promotion-source-history-tests.mjs";
 import "./fin-python-ruby-host-notes-source-history-tests.mjs";
 import { beforeFinNativeBatchPromotionSource } from "./fin-native-batch-promotion-source-history.mjs";
+import { finPythonRubyHostNotesHistoryPath } from "./fin-python-ruby-host-notes-source-history.mjs";
 import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 const promotedSurfaceSource = () => sourceAtFinHistoryRecord(
@@ -30,7 +31,11 @@ const readPromotedSurface = async () => {
 };
 
 test("Python/Ruby promotion notes preserve host-specific runtime and earlier observation facts", async () => {
-	const { document } = await readPromotedSurface();
+	// 1909701 rewrote these notes after the promotion record; read that milestone.
+	const document = JSON.parse(await sourceAtFinHistoryRecord(
+		finPythonRubyHostNotesHistoryPath, "docs/type-surface.v1.json"
+		, beforeFinNativeBatchPromotionSource
+	));
 	for(const profile of ["python", "ruby"])
 		for(const source of ["ordinary-source", "reviewed-ir"])
 		{

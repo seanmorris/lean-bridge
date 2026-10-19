@@ -13,10 +13,6 @@ const upgrades = new Map([
 	["tests/ruby-variant-contract.test.mjs", [[
 		'\tassert.match(native, /value\\.instance_of\\?\\(Signal::Data\\)/);'
 		, '\tassert.match(native, /exact\\?\\(value, Signal::Data\\)/);\n\tassert.match(native, /STORED_FIELD\\.bind_call\\(value, :@count\\)/);'
-	]
-	, [
-		'\t\tconst ir = contract(); ir.types.find(type => type.name === "Signal").cases[2].fields[0].name = name;\n\t\tassert.throws(() => compileCopiedRubyModel(ir), /(?:collid|reserved)/);'
-		, '\t\tconst ir = contract();\n\t\tconst fields = ir.types.find(type => type.name === "Signal").cases[2].fields;\n\t\tfields[0].name = name;\n\t\tconst signal = compileCopiedRubyModel(ir).surface.copies.find(\n\t\t\tcopy => copy.variant?.name === "Signal"\n\t\t);\n\t\tassert.equal(signal.cases[2].fields[0].rubyName, `${name}_`);\n\t\tfields[1].name = `${name}_`;\n\t\tassert.throws(() => compileCopiedRubyModel(ir), /collid/);'
 	]]]
 	, ["tests/ruby-variant-evidence.test.mjs", [
 		[fixtureImport, `${fixtureImport}\nimport { assertRubyVariantSourceHash } from "./helpers/ruby-source-history.mjs";`]

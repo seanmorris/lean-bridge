@@ -169,7 +169,7 @@ export const checkNominalPrimitiveSubtypeRustEvidence = async (read = readFile, 
 		expectedPaths.push(...retained.map(path => preservedPrefix + path));
 		assert.deepEqual(preserved.fixPaths, fixPaths);
 		const patchPath = "preserved/ordinary-full-r1/fix.patch", patch = get(patchPath);
-		const expectedPatch = execFileSync("git", ["diff", `${nominalPrimitiveSubtypeRustInterruptedProducer}..${nominalPrimitiveSubtypeRustProducer}`, "--", ...fixPaths]);
+		const expectedPatch = execFileSync("git", ["diff", "--abbrev=7", `${nominalPrimitiveSubtypeRustInterruptedProducer}..${nominalPrimitiveSubtypeRustProducer}`, "--", ...fixPaths]);
 		assert.deepEqual(patch, expectedPatch); assert.equal(preserved.fixPatchSha256, sha256(patch)); expectedPaths.push(patchPath);
 		for(const path of fixPaths)
 		{

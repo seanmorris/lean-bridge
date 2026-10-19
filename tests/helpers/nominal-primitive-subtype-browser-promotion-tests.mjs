@@ -10,11 +10,9 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeBrowserProducer } from "./nominal-primitive-subtype-browser-archive.mjs";
-import { beforeNominalPrimitiveSubtypeNativePromotionPins } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserPromotionHistoryPath, nominalPrimitiveSubtypeBrowserPromotionPredecessor } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypeBrowserReferences, promoteNominalPrimitiveSubtypeBrowser, nominalPrimitiveSubtypeBrowserProfiles, nominalPrimitiveSubtypeBrowserConversion, nominalPrimitiveSubtypeBrowserLimit, nominalPrimitiveSubtypeBrowserField } from "./nominal-primitive-subtype-browser-promotion.mjs";
-import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -89,7 +87,10 @@ test("primitive-base browser promotion rejects narrowed evidence, invented host 
 
 test("primitive-base browser promotion supplements eighteen existing cells and preserves every other profile and stage", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeBrowserReferences();
-	const proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeBrowserPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeBrowser(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeBrowserPromotionHistoryPath
@@ -98,7 +99,9 @@ test("primitive-base browser promotion supplements eighteen existing cells and p
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 532); assert.equal(proposed.observations.length, 595);
-	assert.deepEqual(proposed.evidence.slice(0, 528), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeBrowserPromotionHistoryPath, proposed
+	).evidence.slice(0, 528), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(528), proposed.evidence.slice(528));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

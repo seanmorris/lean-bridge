@@ -13,8 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeNativeProducer } from "./nominal-primitive-subtype-native-archive.mjs";
 import { nominalPrimitiveSubtypeNativePromotionHistoryPath, nominalPrimitiveSubtypeNativePromotionPredecessor } from "./nominal-primitive-subtype-native-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNativeReferences, promoteNominalPrimitiveSubtypeNative, nominalPrimitiveSubtypeNativeProfiles, nominalPrimitiveSubtypeNativeConversion, nominalPrimitiveSubtypeNativeLimit, nominalPrimitiveSubtypeNativeField } from "./nominal-primitive-subtype-native-promotion.mjs";
-import { beforePrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -80,7 +79,10 @@ test("primitive-base Native promotion rejects narrowed references, new hosts and
 
 test("primitive-base Native promotion supplements twelve existing C/C++ cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeNativeReferences();
-	const proposed = beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeNative(original, references));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeNativePromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeNative(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeNativePromotionHistoryPath
@@ -89,7 +91,9 @@ test("primitive-base Native promotion supplements twelve existing C/C++ cells an
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 536); assert.equal(proposed.observations.length, 595);
-	assert.deepEqual(proposed.evidence.slice(0, 532), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeNativePromotionHistoryPath, proposed
+	).evidence.slice(0, 532), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(532), proposed.evidence.slice(532));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

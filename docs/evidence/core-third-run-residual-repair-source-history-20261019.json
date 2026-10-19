@@ -1,0 +1,680 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-third-run-residual-repair-v1",
+  "predecessorCommit": "37aa16e249564b181e626f268e5c4920f8e2b467",
+  "pathsSha256": "5e18470a05df0f47d08de219dd8a5c9a3f2b60d167f39af3d814f5b84ca320e2",
+  "pinCount": 55,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851",
+      "currentSha256": "20832dd09fc796bcda6b06ff347bd1c7f0001153b32ccbde180164d8f2531309",
+      "count": 3
+    },
+    {
+      "path": "tests/helpers/browser-generic-promotion-source-history-tests.mjs",
+      "previousSha256": "72afc43eecc37f7af3697dfff383ab9618e13a903f65be49f4c5861c2f6f78e8",
+      "currentSha256": "f99d25508e8d9e69ee4fa786d6be6520ceffb6b35074b93cfd4fdaea98b02fcf",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
+      "previousSha256": "f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687",
+      "currentSha256": "c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175",
+      "count": 18
+    },
+    {
+      "path": "tests/helpers/generic-record-npm-closure-tests.mjs",
+      "previousSha256": "36925fcd90e7743a93ffde0c2c62531ef74d67c39811f680638bd3e95d40518b",
+      "currentSha256": "3896610be8475bb14d39642918ddb890d80e0e705c4644c45f6d6c94c2ce83b7",
+      "count": 1
+    },
+    {
+      "path": "tests/helpers/inherited-record-promotion-tests.mjs",
+      "previousSha256": "f232a8b2f1653fad4735b6ac013f48ce3c0f9269944e9089bbccba8e3d07dd36",
+      "currentSha256": "a6782b6a436a2bdb63849e9232bdf7b014421189aa8017e8720a3a5423d517f3",
+      "count": 3
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+      "previousSha256": "1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05",
+      "currentSha256": "69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-tests.mjs",
+      "previousSha256": "a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179",
+      "currentSha256": "a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-npm-promotion-tests.mjs",
+      "previousSha256": "ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792",
+      "currentSha256": "673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-tests.mjs",
+      "previousSha256": "f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e",
+      "currentSha256": "f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-python-promotion-tests.mjs",
+      "previousSha256": "72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae",
+      "currentSha256": "773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-tests.mjs",
+      "previousSha256": "3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f",
+      "currentSha256": "a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-rust-evidence.mjs",
+      "previousSha256": "ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7",
+      "currentSha256": "4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/ruby-source-history.mjs",
+      "previousSha256": "f62bc877dd690f569bad7aca0860fa36780bc63950e5bc83dde67c2b60334059",
+      "currentSha256": "5b2d10758080779cfb96d4fdcf1874fbeeb548a957781d95eda9d42afb6a6248",
+      "count": 1
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-core-third-run-residual-repair-source-history.mjs",
+      "currentSha256": "6234507714fb28d2c39ddb53f56853df1816f73075b4124ea3cd1de12ca744ff"
+    },
+    {
+      "path": "tests/helpers/core-third-run-residual-repair-source-history-tests.mjs",
+      "currentSha256": "3c46cbc5d37c30f7338599d3a59b057a1824267d415f3d3a53bb96196148fc58"
+    },
+    {
+      "path": "tests/helpers/core-third-run-residual-repair-source-history.mjs",
+      "currentSha256": "71e1efa7291e903fe3e030337517eb0b93916928f325abcc7966beb7c5d4a76b"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "2ced98e0c745add39f42d5186d5e46c3abfd888a9d348e2ea85d8375b9a43a6c",
+      "currentSha256": "a67ae48321e455455f6044b2c58bd213ac6d1396ce4fac07a896ae44f0f13091",
+      "edits": [
+        {
+          "start": 253604,
+          "previous": "          \"sha256\": \"f62bc877dd690f569bad7aca0860fa36780bc63950e5bc83dde67c2b60334059\"\n",
+          "current": "          \"sha256\": \"5b2d10758080779cfb96d4fdcf1874fbeeb548a957781d95eda9d42afb6a6248\"\n"
+        },
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n",
+          "current": "          \"sha256\": \"20832dd09fc796bcda6b06ff347bd1c7f0001153b32ccbde180164d8f2531309\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n",
+          "current": "          \"sha256\": \"20832dd09fc796bcda6b06ff347bd1c7f0001153b32ccbde180164d8f2531309\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n",
+          "current": "          \"sha256\": \"20832dd09fc796bcda6b06ff347bd1c7f0001153b32ccbde180164d8f2531309\"\n"
+        },
+        {
+          "start": 1734354,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1737660,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1740986,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1744343,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1747644,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1750947,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1754229,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1757535,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1760861,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1764218,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1767519,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1770822,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1774133,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1777435,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1780757,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1784110,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1787407,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1790706,
+          "previous": "          \"sha256\": \"f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687\"\n",
+          "current": "          \"sha256\": \"c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175\"\n"
+        },
+        {
+          "start": 1910524,
+          "previous": "          \"sha256\": \"72afc43eecc37f7af3697dfff383ab9618e13a903f65be49f4c5861c2f6f78e8\"\n",
+          "current": "          \"sha256\": \"f99d25508e8d9e69ee4fa786d6be6520ceffb6b35074b93cfd4fdaea98b02fcf\"\n"
+        },
+        {
+          "start": 1934550,
+          "previous": "          \"sha256\": \"f232a8b2f1653fad4735b6ac013f48ce3c0f9269944e9089bbccba8e3d07dd36\"\n",
+          "current": "          \"sha256\": \"a6782b6a436a2bdb63849e9232bdf7b014421189aa8017e8720a3a5423d517f3\"\n"
+        },
+        {
+          "start": 1940860,
+          "previous": "          \"sha256\": \"f232a8b2f1653fad4735b6ac013f48ce3c0f9269944e9089bbccba8e3d07dd36\"\n",
+          "current": "          \"sha256\": \"a6782b6a436a2bdb63849e9232bdf7b014421189aa8017e8720a3a5423d517f3\"\n"
+        },
+        {
+          "start": 1947197,
+          "previous": "          \"sha256\": \"f232a8b2f1653fad4735b6ac013f48ce3c0f9269944e9089bbccba8e3d07dd36\"\n",
+          "current": "          \"sha256\": \"a6782b6a436a2bdb63849e9232bdf7b014421189aa8017e8720a3a5423d517f3\"\n"
+        },
+        {
+          "start": 1953728,
+          "previous": "          \"sha256\": \"36925fcd90e7743a93ffde0c2c62531ef74d67c39811f680638bd3e95d40518b\"\n",
+          "current": "          \"sha256\": \"3896610be8475bb14d39642918ddb890d80e0e705c4644c45f6d6c94c2ce83b7\"\n"
+        },
+        {
+          "start": 6788857,
+          "previous": "          \"sha256\": \"ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792\"\n",
+          "current": "          \"sha256\": \"673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8\"\n"
+        },
+        {
+          "start": 6814377,
+          "previous": "          \"sha256\": \"ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792\"\n",
+          "current": "          \"sha256\": \"673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8\"\n"
+        },
+        {
+          "start": 6839925,
+          "previous": "          \"sha256\": \"ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792\"\n",
+          "current": "          \"sha256\": \"673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8\"\n"
+        },
+        {
+          "start": 6865445,
+          "previous": "          \"sha256\": \"ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792\"\n",
+          "current": "          \"sha256\": \"673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8\"\n"
+        },
+        {
+          "start": 6891115,
+          "previous": "          \"sha256\": \"72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae\"\n",
+          "current": "          \"sha256\": \"773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310\"\n"
+        },
+        {
+          "start": 6922828,
+          "previous": "          \"sha256\": \"72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae\"\n",
+          "current": "          \"sha256\": \"773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310\"\n"
+        },
+        {
+          "start": 6955015,
+          "previous": "          \"sha256\": \"72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae\"\n",
+          "current": "          \"sha256\": \"773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310\"\n"
+        },
+        {
+          "start": 6987198,
+          "previous": "          \"sha256\": \"72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae\"\n",
+          "current": "          \"sha256\": \"773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310\"\n"
+        },
+        {
+          "start": 7020366,
+          "previous": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n",
+          "current": "          \"sha256\": \"69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9\"\n"
+        },
+        {
+          "start": 7082013,
+          "previous": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n",
+          "current": "          \"sha256\": \"69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9\"\n"
+        },
+        {
+          "start": 7144076,
+          "previous": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n",
+          "current": "          \"sha256\": \"69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9\"\n"
+        },
+        {
+          "start": 7205723,
+          "previous": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n",
+          "current": "          \"sha256\": \"69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9\"\n"
+        },
+        {
+          "start": 7267248,
+          "previous": "          \"sha256\": \"a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179\"\n",
+          "current": "          \"sha256\": \"a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35\"\n"
+        },
+        {
+          "start": 7300996,
+          "previous": "          \"sha256\": \"a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179\"\n",
+          "current": "          \"sha256\": \"a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35\"\n"
+        },
+        {
+          "start": 7335015,
+          "previous": "          \"sha256\": \"a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179\"\n",
+          "current": "          \"sha256\": \"a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35\"\n"
+        },
+        {
+          "start": 7369233,
+          "previous": "          \"sha256\": \"a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179\"\n",
+          "current": "          \"sha256\": \"a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35\"\n"
+        },
+        {
+          "start": 7404461,
+          "previous": "          \"sha256\": \"f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e\"\n",
+          "current": "          \"sha256\": \"f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd\"\n"
+        },
+        {
+          "start": 7478657,
+          "previous": "          \"sha256\": \"f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e\"\n",
+          "current": "          \"sha256\": \"f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd\"\n"
+        },
+        {
+          "start": 7553817,
+          "previous": "          \"sha256\": \"f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e\"\n",
+          "current": "          \"sha256\": \"f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd\"\n"
+        },
+        {
+          "start": 7628264,
+          "previous": "          \"sha256\": \"f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e\"\n",
+          "current": "          \"sha256\": \"f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd\"\n"
+        },
+        {
+          "start": 7703199,
+          "previous": "          \"sha256\": \"3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f\"\n",
+          "current": "          \"sha256\": \"a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189\"\n"
+        },
+        {
+          "start": 7734331,
+          "previous": "          \"sha256\": \"3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f\"\n",
+          "current": "          \"sha256\": \"a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189\"\n"
+        },
+        {
+          "start": 7765847,
+          "previous": "          \"sha256\": \"3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f\"\n",
+          "current": "          \"sha256\": \"a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189\"\n"
+        },
+        {
+          "start": 7797445,
+          "previous": "          \"sha256\": \"3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f\"\n",
+          "current": "          \"sha256\": \"a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189\"\n"
+        },
+        {
+          "start": 7828884,
+          "previous": "          \"sha256\": \"ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7\"\n",
+          "current": "          \"sha256\": \"4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b\"\n"
+        },
+        {
+          "start": 7978164,
+          "previous": "          \"sha256\": \"ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7\"\n",
+          "current": "          \"sha256\": \"4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b\"\n"
+        },
+        {
+          "start": 8127982,
+          "previous": "          \"sha256\": \"ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7\"\n",
+          "current": "          \"sha256\": \"4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b\"\n"
+        },
+        {
+          "start": 8277728,
+          "previous": "          \"sha256\": \"ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7\"\n",
+          "current": "          \"sha256\": \"4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851",
+      "currentSha256": "20832dd09fc796bcda6b06ff347bd1c7f0001153b32ccbde180164d8f2531309",
+      "edits": [
+        {
+          "start": 4538,
+          "previous": "",
+          "current": "import \"./helpers/core-third-run-residual-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/browser-generic-promotion-source-history-tests.mjs",
+      "previousSha256": "72afc43eecc37f7af3697dfff383ab9618e13a903f65be49f4c5861c2f6f78e8",
+      "currentSha256": "f99d25508e8d9e69ee4fa786d6be6520ceffb6b35074b93cfd4fdaea98b02fcf",
+      "edits": [
+        {
+          "start": 1179,
+          "previous": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 3881,
+          "previous": "",
+          "current": "\t// Unchanged evidence inputs have no ledger update; reach their milestone pins instead.\n\tconst promoted = new Set(JSON.parse(await readFile(browserGenericPromotionHistoryPath, \"utf8\"))\n\t\t.updates.map(update => update.path));\n\tconst pinned = new Map(document.evidence.at(-1).files.map(file => [file.path, file.sha256]));\n"
+        },
+        {
+          "start": 4237,
+          "previous": "\t\tfile.sha256 = sha256(await sourceAtFinHistoryRecord(\n\t\t\tbrowserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource\n\t\t));\n",
+          "current": "\t\tfile.sha256 = sha256(promoted.has(file.path)\n\t\t\t? await sourceAtFinHistoryRecord(\n\t\t\t\tbrowserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource\n\t\t\t)\n\t\t\t: await sourceAtFinHistoryMilestone(file.path, pinned.get(file.path)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-ci-report.mjs",
+      "previousSha256": "a5cbfb849ee0930b5f23740afb7eac73abd9d7d1942abfdd1ba083002733c7c0",
+      "currentSha256": "e39027fb21eac57754dfd513e72b960fc8b198aaf9f3b76846d8e5e82be43b03",
+      "edits": [
+        {
+          "start": 3886,
+          "previous": "\tassertCheckedRecordValueIndexNativeTap(controlsTap, 12, 4);\n",
+          "current": "\tassertCheckedRecordValueIndexNativeTap(controlsTap, 17, 4);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-python-ruby-promotion-tests.mjs",
+      "previousSha256": "f521012da27d8bc8e37e53c5b284986e85103d89af50abc2c2be24b2522c5687",
+      "currentSha256": "c7835f37bff45d690c7a2fd24a452a498b3d9b2551e0c8db38ff26d67fd3b175",
+      "edits": [
+        {
+          "start": 888,
+          "previous": "",
+          "current": "import { finPythonRubyHostNotesHistoryPath } from \"./fin-python-ruby-host-notes-source-history.mjs\";\n"
+        },
+        {
+          "start": 1693,
+          "previous": "\tconst { document } = await readPromotedSurface();\n",
+          "current": "\t// 1909701 rewrote these notes after the promotion record; read that milestone.\n\tconst document = JSON.parse(await sourceAtFinHistoryRecord(\n\t\tfinPythonRubyHostNotesHistoryPath, \"docs/type-surface.v1.json\"\n\t\t, beforeFinNativeBatchPromotionSource\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "272fbd81553c32e10dd662e6e52dee3bb068c0533fa657fb79aa6e210a8a7c18",
+      "currentSha256": "987b15f10397015c3d306feaf799ac85d478ff6ec2b5abcf8cc362220e248640",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from \"./core-third-run-residual-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 99059,
+          "previous": "\t...checkedRecordValueIndexNativeBindingIrChangedPaths\n",
+          "current": "\t...coreThirdRunResidualRepairChangedPaths\n\t, ...checkedRecordValueIndexNativeBindingIrChangedPaths\n"
+        },
+        {
+          "start": 116655,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexNativeBindingIrSource(\n",
+          "current": "\tif(expected !== undefined && sha256(text) === expected) return source;\n\tlet previous = beforeCoreThirdRunResidualRepairSource(\n"
+        },
+        {
+          "start": 116915,
+          "previous": "",
+          "current": "\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexNativeBindingIrSource(\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/generic-record-npm-closure-tests.mjs",
+      "previousSha256": "36925fcd90e7743a93ffde0c2c62531ef74d67c39811f680638bd3e95d40518b",
+      "currentSha256": "3896610be8475bb14d39642918ddb890d80e0e705c4644c45f6d6c94c2ce83b7",
+      "edits": [
+        {
+          "start": 4775,
+          "previous": "",
+          "current": "\t// Stop at the milestone pins; the factory reports live digests.\n\tconst pinned = new Map(document.evidence.at(-1).files.map(file => [file.path, file.sha256]));\n"
+        },
+        {
+          "start": 5027,
+          "previous": "\t\t\tfile.path, file.sha256, beforePerlRefinementHostedSource\n",
+          "current": "\t\t\tfile.path, pinned.get(file.path), beforePerlRefinementHostedSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-record-promotion-tests.mjs",
+      "previousSha256": "f232a8b2f1653fad4735b6ac013f48ce3c0f9269944e9089bbccba8e3d07dd36",
+      "currentSha256": "a6782b6a436a2bdb63849e9232bdf7b014421189aa8017e8720a3a5423d517f3",
+      "edits": [
+        {
+          "start": 5807,
+          "previous": "\tfor(const entry of evidence) for(const file of entry.files)\n\t\tfile.sha256 = sha256(await sourceAtFinHistoryMilestone(\n\t\t\tfile.path, file.sha256, beforeRubyGdbCiSource\n\t\t));\n",
+          "current": "\t// Stop at the milestone pins; the factory reports live digests.\n\tconst added = document.evidence.slice(previous.evidence.length);\n\tassert.equal(added.length, evidence.length);\n\tfor(const [index, entry] of evidence.entries())\n\t{\n\t\tconst pinned = new Map(added[index].files.map(file => [file.path, file.sha256]));\n\t\tfor(const file of entry.files)\n\t\t\tfile.sha256 = sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\tfile.path, pinned.get(file.path), beforeRubyGdbCiSource\n\t\t\t));\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+      "previousSha256": "1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05",
+      "currentSha256": "69af7d37b7ec9369d00e8ef5fdbecb1917b85c19d4a730fc6c5b8d22cd3393e9",
+      "edits": [
+        {
+          "start": 585,
+          "previous": "import { beforeNominalPrimitiveSubtypeNativePromotionPins } from \"./nominal-primitive-subtype-native-promotion-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 1070,
+          "previous": "import { beforePrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5964,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeNativePromotionPins(beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeBrowser(original, references)));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeBrowserPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeBrowser(original, references)\n\t);\n"
+        },
+        {
+          "start": 6559,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 528), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeBrowserPromotionHistoryPath, proposed\n\t).evidence.slice(0, 528), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-tests.mjs",
+      "previousSha256": "a1d69992988e0460537afe8f19862ce20d11faf9cf7c66f198e282bb7a0c1179",
+      "currentSha256": "a683f0a83df1893bb66cb199306db7941e107b2d43ffee0a42ada91270f29c35",
+      "edits": [
+        {
+          "start": 1111,
+          "previous": "import { beforePrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5839,
+          "previous": "\tconst proposed = beforePrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeNative(original, references));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeNativePromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeNative(original, references)\n\t);\n"
+        },
+        {
+          "start": 6431,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 532), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeNativePromotionHistoryPath, proposed\n\t).evidence.slice(0, 532), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-npm-promotion-tests.mjs",
+      "previousSha256": "ea6136bca64d521d022827a3127b1b6947c283a8758e57bc28a430507668e792",
+      "currentSha256": "673063192703d837a50050786f01e5cdc8d42410ded2899eb9e6b0820a2485b8",
+      "edits": [
+        {
+          "start": 629,
+          "previous": "import { beforeNominalPrimitiveSubtypePythonPromotionPins } from \"./nominal-primitive-subtype-python-promotion-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 1074,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 4913,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalPrimitiveSubtypeNpm(original, references));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeNpmPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeNpm(original, references)\n\t);\n"
+        },
+        {
+          "start": 5496,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 520), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeNpmPromotionHistoryPath, proposed\n\t).evidence.slice(0, 520), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-tests.mjs",
+      "previousSha256": "f1e9907499ef63ddeab65e36e2075b212814c56beef8462965d5f27220fcf17e",
+      "currentSha256": "f25b31c738bd65610351bf246c5a07649619c9c545a837d77dcf7e78060e8fcd",
+      "edits": [
+        {
+          "start": 1087,
+          "previous": "import { beforeNominalPrimitiveSubtypeRubyPromotionPins } from \"./nominal-primitive-subtype-ruby-promotion-history.mjs\";\nimport { beforeNominalPrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6872,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeRubyPromotionPins(beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypePerl(original, references)));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypePerlPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypePerl(original, references)\n\t);\n"
+        },
+        {
+          "start": 7508,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypePerlPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-python-promotion-tests.mjs",
+      "previousSha256": "72b0148913148421c5fa6e872fffc6d911ec4d285fe8faa274f161a0917c84ae",
+      "currentSha256": "773fc953594cdaedf6668a4ed52d5e278ee9b387b16b12196b7246315b088310",
+      "edits": [
+        {
+          "start": 814,
+          "previous": "import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from \"./nominal-primitive-subtype-browser-promotion-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 1112,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 5661,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeBrowserPromotionPins(await promoteNominalPrimitiveSubtypePython(original, references));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypePythonPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypePython(original, references)\n\t);\n"
+        },
+        {
+          "start": 6253,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, 524), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypePythonPromotionHistoryPath, proposed\n\t).evidence.slice(0, 524), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-tests.mjs",
+      "previousSha256": "3aa8bca06d97335b3050d0817b9426cb242169ec7d76ffd8cb81f6e4b4663a1f",
+      "currentSha256": "a6eee75929c2e5d4784a914f0eee3f4be6dd94774f86b84afe63cc5e68590189",
+      "edits": [
+        {
+          "start": 805,
+          "previous": "import { beforeNominalPrimitiveSubtypeRustPromotionPins } from \"./nominal-primitive-subtype-rust-promotion-history.mjs\";\n",
+          "current": ""
+        },
+        {
+          "start": 1100,
+          "previous": "import { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "current": "import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from \"./source-history-test-source.mjs\";\n"
+        },
+        {
+          "start": 6342,
+          "previous": "\tconst proposed = beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeRuby(original, references));\n",
+          "current": "\tconst proposed = withHistoryMilestoneSourcePins(\n\t\tnominalPrimitiveSubtypeRubyPromotionHistoryPath\n\t\t, await promoteNominalPrimitiveSubtypeRuby(original, references)\n\t);\n"
+        },
+        {
+          "start": 6978,
+          "previous": "\tassert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);\n",
+          "current": "\tassert.deepEqual(withHistorySourcePins(\n\t\tnominalPrimitiveSubtypeRubyPromotionHistoryPath, proposed\n\t).evidence.slice(0, original.evidence.length), original.evidence);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-rust-evidence.mjs",
+      "previousSha256": "ea90507e48dbc23ce4a44249ff7c89e732f2f9a4723e63c13ecd472f611ae0b7",
+      "currentSha256": "4ca4c358436470440269c653228a48ce65b9d0bf5b16be2150993c2330966c2b",
+      "edits": [
+        {
+          "start": 10238,
+          "previous": "\t\tconst expectedPatch = execFileSync(\"git\", [\"diff\", `${nominalPrimitiveSubtypeRustInterruptedProducer}..${nominalPrimitiveSubtypeRustProducer}`, \"--\", ...fixPaths]);\n",
+          "current": "\t\tconst expectedPatch = execFileSync(\"git\", [\"diff\", \"--abbrev=7\", `${nominalPrimitiveSubtypeRustInterruptedProducer}..${nominalPrimitiveSubtypeRustProducer}`, \"--\", ...fixPaths]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/ruby-source-history.mjs",
+      "previousSha256": "f62bc877dd690f569bad7aca0860fa36780bc63950e5bc83dde67c2b60334059",
+      "currentSha256": "5b2d10758080779cfb96d4fdcf1874fbeeb548a957781d95eda9d42afb6a6248",
+      "edits": [
+        {
+          "start": 754,
+          "previous": "\t]\n\t, [\n\t\t'\\t\\tconst ir = contract(); ir.types.find(type => type.name === \"Signal\").cases[2].fields[0].name = name;\\n\\t\\tassert.throws(() => compileCopiedRubyModel(ir), /(?:collid|reserved)/);'\n\t\t, '\\t\\tconst ir = contract();\\n\\t\\tconst fields = ir.types.find(type => type.name === \"Signal\").cases[2].fields;\\n\\t\\tfields[0].name = name;\\n\\t\\tconst signal = compileCopiedRubyModel(ir).surface.copies.find(\\n\\t\\t\\tcopy => copy.variant?.name === \"Signal\"\\n\\t\\t);\\n\\t\\tassert.equal(signal.cases[2].fields[0].rubyName, `${name}_`);\\n\\t\\tfields[1].name = `${name}_`;\\n\\t\\tassert.throws(() => compileCopiedRubyModel(ir), /collid/);'\n",
+          "current": ""
+        }
+      ]
+    }
+  ]
+}

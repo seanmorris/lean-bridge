@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
 import { beforeCoreSecondRunResidualRepairSource, coreSecondRunResidualRepairChangedPaths } from "./core-second-run-residual-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexJvmNullBoundarySource, checkedRecordValueIndexJvmNullBoundaryChangedPaths } from "./checked-record-value-index-jvm-null-boundary-source-history.mjs";
@@ -1320,7 +1321,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexNativeBindingIrChangedPaths
+	...coreThirdRunResidualRepairChangedPaths
+	, ...checkedRecordValueIndexNativeBindingIrChangedPaths
 	, ...coreSecondRunResidualRepairChangedPaths
 	, ...checkedRecordValueIndexJvmNullBoundaryChangedPaths
 	, ...checkedRecordValueIndexJvmNativeRepairChangedPaths
@@ -1725,11 +1727,16 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
-	let previous = beforeCheckedRecordValueIndexNativeBindingIrSource(
+	if(expected !== undefined && sha256(text) === expected) return source;
+	let previous = beforeCoreThirdRunResidualRepairSource(
 		path, text, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCoreSecondRunResidualRepairSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexNativeBindingIrSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;

@@ -13,9 +13,7 @@ import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypePerlProducers } from "./nominal-primitive-subtype-perl-archive.mjs";
 import { nominalPrimitiveSubtypePerlPromotionHistoryPath, nominalPrimitiveSubtypePerlPromotionPredecessor } from "./nominal-primitive-subtype-perl-promotion-history.mjs";
 import { nominalPrimitiveSubtypePerlReferences, promoteNominalPrimitiveSubtypePerl, nominalPrimitiveSubtypePerlProfiles, nominalPrimitiveSubtypePerlConversion, nominalPrimitiveSubtypePerlLimit, nominalPrimitiveSubtypePerlField } from "./nominal-primitive-subtype-perl-promotion.mjs";
-import { beforeNominalPrimitiveSubtypeRubyPromotionPins } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 const abis = ["5.36.3-threaded", "5.36.3-unthreaded", "5.38.2-threaded", "5.38.2-unthreaded"];
@@ -98,7 +96,10 @@ test("primitive-base Perl promotion rejects narrowed references, new hosts and o
 
 test("primitive-base Perl promotion supplements six existing Perl cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypePerlReferences();
-	const proposed = beforeNominalPrimitiveSubtypeRubyPromotionPins(beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypePerl(original, references)));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypePerlPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypePerl(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypePerlPromotionHistoryPath
@@ -107,7 +108,9 @@ test("primitive-base Perl promotion supplements six existing Perl cells and pres
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4); assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypePerlPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length), proposed.evidence.slice(original.evidence.length));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

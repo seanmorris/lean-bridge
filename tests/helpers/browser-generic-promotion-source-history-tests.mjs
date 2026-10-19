@@ -15,7 +15,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeReviewedInstantiationArchiveSource } from "./reviewed-instantiation-archive-source-history.mjs";
 import { beforeBrowserGenericPromotionSource, browserGenericPromotionChangedPaths, browserGenericPromotionHistoryPath, browserGenericPromotionPredecessor, reverseBrowserGenericPromotionUpdate } from "./browser-generic-promotion-source-history.mjs";
 import { browserGenericCommandQualification, browserGenericEvidence, browserGenericEvidenceId, browserGenericObservation, browserGenericObservationId, browserGenericReceiptPath } from "./browser-generic-promotion.mjs";
-import { sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./source-at-fin-history-milestone.mjs";
 
 test("browser generic promotion authenticates every source predecessor and rejects unknown edits", async () => {
 	const record = JSON.parse(await readFile(browserGenericPromotionHistoryPath, "utf8"));
@@ -54,10 +54,16 @@ test("browser generic promotion changes exactly six ordinary signature cells and
 	// The current factory qualifies its reproduction command; this test preserves the older wording.
 	assert.ok(evidence.scope.endsWith(browserGenericCommandQualification));
 	evidence.scope = evidence.scope.slice(0, -browserGenericCommandQualification.length);
+	// Unchanged evidence inputs have no ledger update; reach their milestone pins instead.
+	const promoted = new Set(JSON.parse(await readFile(browserGenericPromotionHistoryPath, "utf8"))
+		.updates.map(update => update.path));
+	const pinned = new Map(document.evidence.at(-1).files.map(file => [file.path, file.sha256]));
 	for(const file of evidence.files)
-		file.sha256 = sha256(await sourceAtFinHistoryRecord(
-			browserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource
-		));
+		file.sha256 = sha256(promoted.has(file.path)
+			? await sourceAtFinHistoryRecord(
+				browserGenericPromotionHistoryPath, file.path, beforeReviewedInstantiationArchiveSource
+			)
+			: await sourceAtFinHistoryMilestone(file.path, pinned.get(file.path)));
 	assert.deepEqual(document.evidence.slice(previous.evidence.length), [evidence]);
 	const before = typeSurfaceCells(previous, contracts), after = typeSurfaceCells(document, contracts);
 	assert.equal(before.length, after.length);

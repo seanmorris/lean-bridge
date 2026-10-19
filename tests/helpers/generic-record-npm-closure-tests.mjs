@@ -77,9 +77,11 @@ test("hosted npm reconciliation changes exactly twelve ordinary Node scopes and 
 		if(update) file.sha256 = update.currentSha256;
 	}
 	const hosted = await genericNpmClosureEvidence();
+	// Stop at the milestone pins; the factory reports live digests.
+	const pinned = new Map(document.evidence.at(-1).files.map(file => [file.path, file.sha256]));
 	for(const file of hosted.files)
 		file.sha256 = sha256(await sourceAtFinHistoryMilestone(
-			file.path, file.sha256, beforePerlRefinementHostedSource
+			file.path, pinned.get(file.path), beforePerlRefinementHostedSource
 		));
 	assert.deepEqual(document.evidence, [...reconcileGenericNpmEarlierEvidence(expected), hosted]);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))

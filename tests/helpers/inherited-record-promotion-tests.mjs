@@ -91,10 +91,17 @@ test("inherited record reconciliation changes exactly fourteen scopes without ch
 	}
 	assert.deepEqual(document.evidence.slice(0, previous.evidence.length), previous.evidence);
 	const evidence = await inheritedRecordPromotedEvidence();
-	for(const entry of evidence) for(const file of entry.files)
-		file.sha256 = sha256(await sourceAtFinHistoryMilestone(
-			file.path, file.sha256, beforeRubyGdbCiSource
-		));
+	// Stop at the milestone pins; the factory reports live digests.
+	const added = document.evidence.slice(previous.evidence.length);
+	assert.equal(added.length, evidence.length);
+	for(const [index, entry] of evidence.entries())
+	{
+		const pinned = new Map(added[index].files.map(file => [file.path, file.sha256]));
+		for(const file of entry.files)
+			file.sha256 = sha256(await sourceAtFinHistoryMilestone(
+				file.path, pinned.get(file.path), beforeRubyGdbCiSource
+			));
+	}
 	assert.deepEqual(document.evidence.slice(previous.evidence.length), evidence);
 	for(const key of Object.keys(previous).filter(key => !["observations", "evidence"].includes(key)))
 		assert.deepEqual(document[key], previous[key]);

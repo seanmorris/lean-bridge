@@ -12,9 +12,8 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypePythonProducer } from "./nominal-primitive-subtype-python-archive.mjs";
 import { nominalPrimitiveSubtypePythonPromotionHistoryPath, nominalPrimitiveSubtypePythonPromotionPredecessor } from "./nominal-primitive-subtype-python-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeBrowserPromotionPins } from "./nominal-primitive-subtype-browser-promotion-history.mjs";
 import { nominalPrimitiveSubtypePythonReferences, promoteNominalPrimitiveSubtypePython, nominalPrimitiveSubtypePythonProfiles, nominalPrimitiveSubtypePythonConversion, nominalPrimitiveSubtypePythonLimit, nominalPrimitiveSubtypePythonField } from "./nominal-primitive-subtype-python-promotion.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypePythonPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -80,7 +79,10 @@ test("primitive-base Python promotion rejects narrowed references, new hosts and
 
 test("primitive-base Python promotion supplements six existing Python cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypePythonReferences();
-	const proposed = beforeNominalPrimitiveSubtypeBrowserPromotionPins(await promoteNominalPrimitiveSubtypePython(original, references));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypePythonPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypePython(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypePythonPromotionHistoryPath
@@ -89,7 +91,9 @@ test("primitive-base Python promotion supplements six existing Python cells and 
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 528); assert.equal(proposed.observations.length, 595);
-	assert.deepEqual(proposed.evidence.slice(0, 524), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypePythonPromotionHistoryPath, proposed
+	).evidence.slice(0, 524), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(524), proposed.evidence.slice(524));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

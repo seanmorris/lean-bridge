@@ -11,10 +11,9 @@ import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../sr
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeNpmProducer } from "./nominal-primitive-subtype-npm-archive.mjs";
-import { beforeNominalPrimitiveSubtypePythonPromotionPins } from "./nominal-primitive-subtype-python-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmPromotionHistoryPath, nominalPrimitiveSubtypeNpmPromotionPredecessor } from "./nominal-primitive-subtype-npm-promotion-history.mjs";
 import { nominalPrimitiveSubtypeNpmReferences, promoteNominalPrimitiveSubtypeNpm, nominalPrimitiveSubtypeNpmProfiles, nominalPrimitiveSubtypeNpmConversion, nominalPrimitiveSubtypeNpmLimit, nominalPrimitiveSubtypeNpmField } from "./nominal-primitive-subtype-npm-promotion.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeNpmPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -72,7 +71,10 @@ test("primitive-base npm promotion rejects narrowed references, new hosts and ov
 
 test("primitive-base npm promotion supplements twelve existing Node cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeNpmReferences();
-	const proposed = beforeNominalPrimitiveSubtypePythonPromotionPins(await promoteNominalPrimitiveSubtypeNpm(original, references));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeNpmPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeNpm(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeNpmPromotionHistoryPath
@@ -81,7 +83,9 @@ test("primitive-base npm promotion supplements twelve existing Node cells and pr
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, 524); assert.equal(proposed.observations.length, 595);
-	assert.deepEqual(proposed.evidence.slice(0, 520), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeNpmPromotionHistoryPath, proposed
+	).evidence.slice(0, 520), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(520), proposed.evidence.slice(520));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));

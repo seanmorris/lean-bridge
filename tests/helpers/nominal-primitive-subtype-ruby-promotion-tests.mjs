@@ -12,7 +12,6 @@ import { compileDocumentationPage } from "../../scripts/generate-site-content.mj
 import { docPages } from "../../site/registry.mjs";
 import { nominalPrimitiveSubtypeRubyProducer } from "./nominal-primitive-subtype-ruby-provenance.mjs";
 import { nominalPrimitiveSubtypeRubyPromotionHistoryPath, nominalPrimitiveSubtypeRubyPromotionPredecessor } from "./nominal-primitive-subtype-ruby-promotion-history.mjs";
-import { beforeNominalPrimitiveSubtypeRustPromotionPins } from "./nominal-primitive-subtype-rust-promotion-history.mjs";
 import {
 	nominalPrimitiveSubtypeRubyConversion
 	, nominalPrimitiveSubtypeRubyField
@@ -21,7 +20,7 @@ import {
 	, nominalPrimitiveSubtypeRubyReferences
 	, promoteNominalPrimitiveSubtypeRuby
 } from "./nominal-primitive-subtype-ruby-promotion.mjs";
-import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
+import { sourceAtHistoryMilestone, withHistoryMilestoneSourcePins, withHistorySourcePins } from "./source-history-test-source.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", `${nominalPrimitiveSubtypeRubyPromotionPredecessor}:docs/type-surface.v1.json`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
 
@@ -101,7 +100,10 @@ test("primitive-base Ruby promotion rejects narrowed references, new hosts and o
 
 test("primitive-base Ruby promotion supplements six existing Ruby cells and preserves all other observations", async () => {
 	const original = predecessor(), references = await nominalPrimitiveSubtypeRubyReferences();
-	const proposed = beforeNominalPrimitiveSubtypeRustPromotionPins(await promoteNominalPrimitiveSubtypeRuby(original, references));
+	const proposed = withHistoryMilestoneSourcePins(
+		nominalPrimitiveSubtypeRubyPromotionHistoryPath
+		, await promoteNominalPrimitiveSubtypeRuby(original, references)
+	);
 	const { document: current, ...contracts } = await readTypeSurface();
 	const document = JSON.parse(sourceAtHistoryMilestone(
 		nominalPrimitiveSubtypeRubyPromotionHistoryPath
@@ -110,7 +112,9 @@ test("primitive-base Ruby promotion supplements six existing Ruby cells and pres
 	assert.ok(current.evidence.length >= document.evidence.length);
 	validateTypeSurface(proposed, contracts);
 	assert.equal(proposed.evidence.length, original.evidence.length + 4); assert.equal(proposed.observations.length, original.observations.length);
-	assert.deepEqual(proposed.evidence.slice(0, original.evidence.length), original.evidence);
+	assert.deepEqual(withHistorySourcePins(
+		nominalPrimitiveSubtypeRubyPromotionHistoryPath, proposed
+	).evidence.slice(0, original.evidence.length), original.evidence);
 	assert.deepEqual(document.observations, proposed.observations);
 	assert.deepEqual(document.evidence.slice(original.evidence.length), proposed.evidence.slice(original.evidence.length));
 	const changedObservations = proposed.observations.filter((item, index) => JSON.stringify(item) !== JSON.stringify(original.observations[index]));
