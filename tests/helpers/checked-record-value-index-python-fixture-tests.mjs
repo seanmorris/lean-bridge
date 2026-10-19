@@ -14,6 +14,10 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
 import { auditPythonPackage } from "../../src/backends/python/package-audit.mjs";
 import {
+	assertCheckedRecordValueIndexPythonIdentity
+	, checkedRecordValueIndexPythonNativeEvidence
+} from "./checked-record-value-index-python-wheel.mjs";
+import {
 	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
 	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonCallerArgs
 	, checkedRecordValueIndexPythonExpected, parseCheckedRecordValueIndexPythonResult
@@ -137,6 +141,53 @@ test("Python copied bindings generate every checked-record value-index surface a
 		if(resultOnly) assert.doesNotMatch(publicSource, /def true_bool_index\(/u);
 		else assert.match(publicSource, /def true_bool_index\(/u);
 	}
+});
+
+test("value-index Python wheel identity rejects changed package and native evidence", () => {
+	const model = {
+		bindingIrSha256: "a".repeat(64), component: { id: "synthetic" }
+		, sourceIdentity: { fixture: true }
+	};
+	const pkg = {
+		target: "pypi", ecosystem: "pypi", role: "component"
+		, profile: "native-library-v1", runtimeDelivery: "embedded", requires: []
+		, name: "checkedrecordvalueindices", version: "1.0.0"
+		, runtimeIdentity: "b".repeat(64)
+		, artifacts: [{ path: "archives/checkedrecordvalueindices-1.0.0-py3-none-manylinux_2_38_x86_64.whl" }]
+	};
+	const receipt = {
+		schemaVersion: 1, kind: "lean-bridge-ordinary-python-package"
+		, ecosystem: "pypi", moduleName: checkedRecordValueIndexPythonPackage
+		, name: pkg.name, version: pkg.version
+		, runtimeIdentity: pkg.runtimeIdentity, bindingIrSha256: model.bindingIrSha256
+		, component: model.component, sourceIdentity: model.sourceIdentity
+		, glibcMinimumVersion: "2.38", tag: "py3-none-manylinux_2_38_x86_64"
+	};
+	assertCheckedRecordValueIndexPythonIdentity(receipt, pkg, model, "2.38");
+	for(const key of Object.keys(receipt))
+		assert.throws(() => assertCheckedRecordValueIndexPythonIdentity(
+			{ ...receipt, [key]: "changed" }, pkg, model, "2.38"));
+	for(const key of Object.keys(pkg))
+		assert.throws(() => assertCheckedRecordValueIndexPythonIdentity(
+			receipt, { ...pkg, [key]: "changed" }, model, "2.38"));
+	assert.throws(() => assertCheckedRecordValueIndexPythonIdentity(
+		receipt, { ...pkg, artifacts: [] }, model, "2.38"));
+	const runtime = { files: {}, value: 1 };
+	const component = {
+		runtimeIdentity: "c".repeat(64), bindingIrSha256: "d".repeat(64)
+		, library: "component.so", nativeLibrary: { sha256: "e".repeat(64) }
+	};
+	const adapter = {
+		runtimeIdentity: component.runtimeIdentity
+		, bindingIrSha256: component.bindingIrSha256
+		, componentReceiptSha256: "h".repeat(64), library: "adapter.so"
+		, files: { "lib/adapter.so": { sha256: "f".repeat(64) }
+		}
+	};
+	assert.throws(() => checkedRecordValueIndexPythonNativeEvidence({
+		runtimeIdentity: "g".repeat(64), bindingIrSha256: component.bindingIrSha256
+		, files: {}
+	}, component, adapter, runtime));
 });
 
 test("value-index Python caller keeps source routes, recovery and result-only boundaries independent", async t => {

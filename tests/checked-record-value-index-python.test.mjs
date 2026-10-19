@@ -5,3 +5,4 @@
  * @file
  */
 import "./helpers/checked-record-value-index-python-fixture-tests.mjs";
+import "./helpers/checked-record-value-index-python-installed-tests.mjs";
