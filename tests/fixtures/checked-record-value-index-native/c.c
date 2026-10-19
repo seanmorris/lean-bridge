@@ -88,12 +88,12 @@ int main(void) {
   ++rejections; CHECK(recover(&zero, out, &error));
   mpz_set_si(on.count, -1); mpz_set_ui(out, 77);
   CHECK(rejected(RUN(checkedrecordvalueindices_true_bool_index(&on, out, &error)),
-    &error, "Nat must be nonnegative")
+    &error, "Invalid copied value, negative Nat or 16 MiB call limit exceeded")
     && mpz_cmp_si(on.count, -1) == 0 && mpz_cmp_ui(out, 77) == 0);
   ++rejections; CHECK(recover(&zero, out, &error));
   mpz_set_si(zero.count, -1); mpz_set_ui(out, 77);
   CHECK(rejected(RUN(checkedrecordvalueindices_zero_nat_index(&zero, out, &error)),
-    &error, "Nat must be nonnegative")
+    &error, "Invalid copied value, negative Nat or 16 MiB call limit exceeded")
     && mpz_cmp_si(zero.count, -1) == 0 && mpz_cmp_ui(out, 77) == 0);
   ++rejections; CHECK(recover(&zero, out, &error));
 

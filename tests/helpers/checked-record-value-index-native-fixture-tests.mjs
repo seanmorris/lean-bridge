@@ -65,7 +65,10 @@ test("value-index native callers distinguish semantic, shape and reviewed errors
 			assert.equal(caller.calls, caller.rejections ? 28 : 8);
 			assert.equal(caller.rejections, caller.recoveries);
 			assert.equal((caller.source.match(/Nat must be nonnegative/gu) ?? []).length
-				, caller.rejections ? 2 : 0);
+				, profile === "cpp" && caller.rejections ? 2 : 0);
+			assert.equal((caller.source.match(
+				/Invalid copied value, negative Nat or 16 MiB call limit exceeded/gu
+			) ?? []).length, profile === "c" && caller.rejections ? 2 : 0);
 			assert.equal((caller.source.match(/was rejected by CheckedRecordValueIndices/gu)
 				?? []).length, caller.rejections ? 4 : 0);
 			assert.equal((caller.source.match(/"value0 was rejected/gu) ?? []).length
