@@ -10,6 +10,7 @@ import test from "node:test";
 import {
 	checkedRecordValueIndexBrowserEvidenceSources
 	, checkedRecordValueIndexHostedOriginal
+	, checkedRecordValueIndexJvmEvidenceSources
 	, checkedRecordValueIndexNativeEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
@@ -73,6 +74,24 @@ test("value-index native evidence closes C/C++ production, consumption and check
 		, ["checker", ".github/workflows/checked-record-value-index-native.yml"]
 		, ["checker", "scripts/check-checked-record-value-index-native-ci.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-native-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index JVM evidence closes Java/Kotlin production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexJvmEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-jvm/java.java"]
+		, ["producer", "tests/fixtures/checked-record-value-index-jvm/kotlin.kt"]
+		, ["consumer", "tests/helpers/checked-record-value-index-jvm-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-jvm.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-jvm-ci.mjs"]
+		, ["archiver", "scripts/archive-checked-record-value-index-jvm-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });
