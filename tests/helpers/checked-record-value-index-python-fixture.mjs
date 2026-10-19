@@ -9,6 +9,7 @@
  */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { isAbsolute } from "node:path";
 import {
 	checkedRecordValueIndexBrowserRoutes
 	, checkedRecordValueIndexBrowserSelection
@@ -22,6 +23,53 @@ export const checkedRecordValueIndexPythonTarget = Object.freeze({
 });
 export const checkedRecordValueIndexPythonPackage
 	= `lean_${checkedRecordValueIndexPackage}`;
+export const checkedRecordValueIndexPythonMinors = Object.freeze(["3.11", "3.12"]);
+
+/**
+ * Reject disabled partial selections and ambient Python fallbacks before any
+ * author build or consumer install starts.
+ *
+ * @param environment - Explicit host environment.
+ */
+export const checkedRecordValueIndexPythonRunSelection = environment => {
+	const prefix = "LEAN_BRIDGE_VALUE_INDEX_PYTHON_", flag = environment[prefix + "TEST"];
+	assert.ok(flag === undefined || ["0", "1"].includes(flag), "Invalid value-index Python TEST");
+	const select = (name, permitted) => {
+		const raw = environment[prefix + name];
+		if(raw !== undefined)
+		{
+			assert.equal(typeof raw, "string", `Invalid value-index Python ${name}`);
+			assert.equal(flag, "1", `Explicit value-index Python ${name} requires TEST=1`);
+		}
+		const selected = raw === undefined ? permitted : raw.split(",");
+		assert.ok(selected.length && selected.every(value => permitted.includes(value)), `Invalid value-index Python ${name}`);
+		assert.equal(new Set(selected).size, selected.length, `Duplicate value-index Python ${name}`);
+		return selected;
+	};
+	for(const name of [prefix + "OUTPUT", "LEAN_BRIDGE_VALUE_INDEX_PYTHONS"])
+		if(environment[name] !== undefined)
+			assert.equal(flag, "1", `Explicit ${name} requires TEST=1`);
+	return {
+		enabled: flag === "1"
+		, routes: select("ROUTES", checkedRecordValueIndexPythonRoutes)
+	};
+};
+
+/**
+ * Bind both declared CPython floors to distinct absolute executables.
+ *
+ * @param raw - JSON object mapping every declared minor to an executable.
+ */
+export const checkedRecordValueIndexPythonExecutables = raw => {
+	assert.equal(typeof raw, "string", "Select both Python toolchains explicitly");
+	const values = JSON.parse(raw);
+	assert.ok(values && typeof values === "object" && !Array.isArray(values));
+	assert.deepEqual(Object.keys(values).sort(), checkedRecordValueIndexPythonMinors);
+	for(const value of Object.values(values))
+		assert.ok(typeof value === "string" && isAbsolute(value) && !/[\0\r\n]/u.test(value), "Select absolute Python executables");
+	assert.equal(new Set(Object.values(values)).size, checkedRecordValueIndexPythonMinors.length, "Select distinct Python executables");
+	return Object.fromEntries(checkedRecordValueIndexPythonMinors.map(minor => [minor, values[minor]]));
+};
 
 /**
  * Independent installed-caller totals, separate from package implementation.

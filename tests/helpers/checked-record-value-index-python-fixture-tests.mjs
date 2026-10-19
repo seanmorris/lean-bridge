@@ -17,7 +17,9 @@ import {
 	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
 	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonCallerArgs
 	, checkedRecordValueIndexPythonExpected, parseCheckedRecordValueIndexPythonResult
-	, checkedRecordValueIndexPythonSelection, checkedRecordValueIndexPythonTarget
+	, checkedRecordValueIndexPythonExecutables, checkedRecordValueIndexPythonMinors
+	, checkedRecordValueIndexPythonRunSelection, checkedRecordValueIndexPythonSelection
+	, checkedRecordValueIndexPythonTarget
 } from "./checked-record-value-index-python-fixture.mjs";
 
 const run = promisify(execFile);
@@ -70,6 +72,26 @@ test("value-index Python selections retain every independent author route", () =
 		]);
 	}
 	assert.throws(() => checkedRecordValueIndexPythonSelection("ordinary"));
+	assert.deepEqual(checkedRecordValueIndexPythonRunSelection({}), {
+		enabled: false, routes: checkedRecordValueIndexPythonRoutes
+	});
+	assert.deepEqual(checkedRecordValueIndexPythonRunSelection({
+		LEAN_BRIDGE_VALUE_INDEX_PYTHON_TEST: "1"
+		, LEAN_BRIDGE_VALUE_INDEX_PYTHON_ROUTES: "ordinary-source"
+	}), { enabled: true, routes: ["ordinary-source"] });
+	for(const environment of [
+		{ LEAN_BRIDGE_VALUE_INDEX_PYTHON_TEST: "2" }
+		, { LEAN_BRIDGE_VALUE_INDEX_PYTHON_ROUTES: "ordinary-source" }
+		, { LEAN_BRIDGE_VALUE_INDEX_PYTHON_TEST: "1", LEAN_BRIDGE_VALUE_INDEX_PYTHON_ROUTES: "ordinary" }
+		, { LEAN_BRIDGE_VALUE_INDEX_PYTHON_TEST: "1", LEAN_BRIDGE_VALUE_INDEX_PYTHON_ROUTES: "ordinary-source,ordinary-source" }
+	]) assert.throws(() => checkedRecordValueIndexPythonRunSelection(environment));
+	assert.deepEqual(checkedRecordValueIndexPythonExecutables(JSON.stringify({
+		"3.11": "/opt/python311", "3.12": "/opt/python312"
+	})), { "3.11": "/opt/python311", "3.12": "/opt/python312" });
+	for(const value of ["{}", JSON.stringify({ "3.11": "/same", "3.12": "/same" })
+		, JSON.stringify({ "3.11": "relative", "3.12": "/opt/python312" })])
+		assert.throws(() => checkedRecordValueIndexPythonExecutables(value));
+	assert.deepEqual(checkedRecordValueIndexPythonMinors, ["3.11", "3.12"]);
 });
 
 test("Python copied bindings retain closed value-index provenance in their authenticated IR", () => {
