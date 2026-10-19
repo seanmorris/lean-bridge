@@ -62,7 +62,9 @@ test("recursive checked-record PHP caller detects every result, input and cycle 
 	}
 	const model = resolve("tests/helpers/recursive-checked-record-php-model.php");
 	const brick = join(root, "dependencies/brick-math/autoload.php");
-	const run = await runCopied(php, ["-d", "display_errors=stderr", model
+	// Hosted runners load Xdebug, whose 256-frame guard aborts the 100-level snapshot probe.
+	const run = await runCopied(php, ["-d", "display_errors=stderr"
+		, "-d", "xdebug.mode=off", model
 		, join(root, "consumer.php"), brick, ...apis], root);
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout);

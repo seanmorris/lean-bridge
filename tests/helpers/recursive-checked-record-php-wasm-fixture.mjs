@@ -24,7 +24,7 @@ export const recursiveCheckedRecordPhpWasmFixtures = Object.freeze(["recursive",
 export const recursiveCheckedRecordPhpWasmLoadCeilings = Object.freeze([8, 12, 16, 20]);
 /** The shared native-PHP caller; PHP-Wasm carries the identical blob and never forks it. */
 export const recursiveCheckedRecordPhpWasmCaller = "tests/fixtures/recursive-checked-record-consumers/php-native.php";
-export const recursiveCheckedRecordPhpWasmCallerBlob = "ffcaefd02d94a939bd91c573a6f11a1075fbd1d9";
+export const recursiveCheckedRecordPhpWasmCallerBlob = "dfaf8e4953fedaf3a2686d1af46e473d2d5787a3";
 const fixtures = {
 	recursive: {
 		root: recursiveCheckedRecordFixtureRoot

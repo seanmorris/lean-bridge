@@ -135,8 +135,10 @@ test("recursive checked-record PHP-Wasm caller detects every fault on the genuin
 		apis.push(join(root, fixture, "surface.php"));
 	}
 	const brick = join(root, "dependencies/brick-math/autoload.php");
-	const args = ["-d", "display_errors=stderr", resolve(model)
-		, resolve(recursiveCheckedRecordPhpWasmCaller), brick, ...apis];
+	// Hosted runners load Xdebug, whose 256-frame guard aborts the 100-level snapshot probe.
+	const args = ["-d", "display_errors=stderr", "-d", "xdebug.mode=off"
+		, resolve(model), resolve(recursiveCheckedRecordPhpWasmCaller)
+		, brick, ...apis];
 	const run = await runCopied(php, args, root);
 	assert.equal(run.stderr, "");
 	const result = JSON.parse(run.stdout);
