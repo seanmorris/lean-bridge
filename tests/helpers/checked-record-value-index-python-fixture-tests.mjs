@@ -15,7 +15,8 @@ import { generateCopiedPythonPackage } from "../../src/backends/python/copied-va
 import { auditPythonPackage } from "../../src/backends/python/package-audit.mjs";
 import {
 	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
-	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonExpected
+	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonCallerArgs
+	, checkedRecordValueIndexPythonExpected, parseCheckedRecordValueIndexPythonResult
 	, checkedRecordValueIndexPythonSelection, checkedRecordValueIndexPythonTarget
 } from "./checked-record-value-index-python-fixture.mjs";
 
@@ -63,6 +64,10 @@ test("value-index Python selections retain every independent author route", () =
 		});
 		assert.equal(selection.resultOnly, route.startsWith("result-only-"));
 		assert.equal(selection.reviewed, route.endsWith("reviewed-ir"));
+		assert.deepEqual(checkedRecordValueIndexPythonCallerArgs(route), [
+			...selection.resultOnly ? ["--result-only"] : []
+			, ...selection.reviewed ? ["--reviewed"] : []
+		]);
 	}
 	assert.throws(() => checkedRecordValueIndexPythonSelection("ordinary"));
 });
@@ -125,8 +130,15 @@ test("value-index Python caller keeps source routes, recovery and result-only bo
 	]);
 	assert.equal(result.stderr, "");
 	const values = JSON.parse(result.stdout);
-	assert.deepEqual(values, checkedRecordValueIndexPythonRoutes.map(route => ({
-		route, ...checkedRecordValueIndexPythonExpected(route)
-	})));
+	assert.deepEqual(values, checkedRecordValueIndexPythonRoutes.map(route => {
+		const expected = { route, ...checkedRecordValueIndexPythonExpected(route) };
+		assert.deepEqual(parseCheckedRecordValueIndexPythonResult(
+			`${JSON.stringify(checkedRecordValueIndexPythonExpected(route))}\n`, route)
+			, checkedRecordValueIndexPythonExpected(route));
+		return expected;
+	}));
+	assert.throws(() => parseCheckedRecordValueIndexPythonResult("{}\n", "ordinary-source"));
+	assert.throws(() => parseCheckedRecordValueIndexPythonResult(
+		"{}", "ordinary-source"));
 	assert.equal(await checkedRecordValueIndexPythonCaller(), caller);
 });

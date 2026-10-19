@@ -41,6 +41,32 @@ export const checkedRecordValueIndexPythonCaller = () => readFile(
 );
 
 /**
+ * Preserve only route-derived switches; the installed caller source is shared.
+ *
+ * @param route - Exact full/result-only and ordinary/reviewed route.
+ */
+export const checkedRecordValueIndexPythonCallerArgs = route => {
+	const selection = checkedRecordValueIndexPythonSelection(route);
+	return [
+		...selection.resultOnly ? ["--result-only"] : []
+		, ...selection.reviewed ? ["--reviewed"] : []
+	];
+};
+
+/**
+ * Require exactly the independent installed-caller receipt for a route.
+ *
+ * @param stdout - Complete process stdout.
+ * @param route - Exact full/result-only and ordinary/reviewed route.
+ */
+export const parseCheckedRecordValueIndexPythonResult = (stdout, route) => {
+	assert.equal(typeof stdout, "string"); assert.ok(stdout.endsWith("\n"));
+	const result = JSON.parse(stdout);
+	assert.deepEqual(result, checkedRecordValueIndexPythonExpected(route));
+	return result;
+};
+
+/**
  * Preserve the independently authored ordinary/reviewed route while changing
  * only the consumer coordinate. The Binding IR remains compiler authority.
  *
