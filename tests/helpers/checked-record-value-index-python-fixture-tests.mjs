@@ -1,0 +1,105 @@
+/**
+ * Cheap compiler-model controls for Python value-index checked records.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import test from "node:test";
+import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
+import { generateCopiedPythonPackage } from "../../src/backends/python/copied-values.mjs";
+import { auditPythonPackage } from "../../src/backends/python/package-audit.mjs";
+import {
+	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
+	, checkedRecordValueIndexPythonSelection, checkedRecordValueIndexPythonTarget
+} from "./checked-record-value-index-python-fixture.mjs";
+
+const instantiation = "lean-lang.org/instantiation";
+const erasedProofs = "lean-lang.org/erased-proofs";
+const expectedIndices = Object.freeze({
+	On: ["Flagged", [{ kind: "value", type: { kind: "primitive", name: "bool" }, value: "true" }]]
+	, Off: ["Flagged", [{ kind: "value", type: { kind: "primitive", name: "bool" }, value: "false" }]]
+	, Ab: ["Labeled", [{ kind: "value", type: { kind: "primitive", name: "string" }, value: "ab" }]]
+	, EmptySized: ["Sized", [{ kind: "value", type: { kind: "primitive", name: "nat" }, value: "0" }]]
+	, ZeroToken: ["Token", [
+		{ kind: "primitive", name: "nat" }
+		, { kind: "value", type: { kind: "primitive", name: "nat" }, value: "0" }
+	]]
+	, WideToken: ["Token", [
+		{ kind: "primitive", name: "nat" }
+		, { kind: "value", type: { kind: "primitive", name: "nat" }, value: "340282366920938463463374607431768211457" }
+	]]
+	, EmptyToken: ["Token", [
+		{ kind: "primitive", name: "string" }
+		, { kind: "value", type: { kind: "primitive", name: "string" }, value: "" }
+	]]
+	, UnicodeToken: ["Token", [
+		{ kind: "primitive", name: "string" }
+		, { kind: "value", type: { kind: "primitive", name: "string" }, value: "λ🌱" }
+	]]
+});
+
+test("value-index Python selections retain every independent author route", () => {
+	assert.equal(checkedRecordValueIndexPythonPackage, "lean_checkedrecordvalueindices");
+	assert.deepEqual(checkedRecordValueIndexPythonTarget, {
+		name: "checkedrecordvalueindices", version: "1.0.0"
+	});
+	assert.deepEqual(checkedRecordValueIndexPythonRoutes, [
+		"ordinary-source", "reviewed-ir"
+		, "result-only-ordinary-source", "result-only-reviewed-ir"
+	]);
+	for(const route of checkedRecordValueIndexPythonRoutes)
+	{
+		const selection = checkedRecordValueIndexPythonSelection(route);
+		assert.deepEqual(selection.configuration.targets, {
+			pypi: checkedRecordValueIndexPythonTarget
+		});
+		assert.equal(selection.resultOnly, route.startsWith("result-only-"));
+		assert.equal(selection.reviewed, route.endsWith("reviewed-ir"));
+	}
+	assert.throws(() => checkedRecordValueIndexPythonSelection("ordinary"));
+});
+
+test("Python copied bindings retain closed value-index provenance in their authenticated IR", () => {
+	for(const route of checkedRecordValueIndexPythonRoutes)
+	{
+		const { expected, resultOnly } = checkedRecordValueIndexPythonSelection(route);
+		assert.equal(expected.types.length, Object.keys(expectedIndices).length);
+		assert.equal(expected.declarations.length, resultOnly ? 8 : 16);
+		for(const definition of expected.types)
+		{
+			const [structure, arguments_] = expectedIndices[definition.name];
+			assert.deepEqual(definition.source.extensions[instantiation], {
+				structure: `CheckedRecordValueIndices.${structure}`
+				, arguments: arguments_
+			});
+			assert.ok(Array.isArray(definition.source.extensions[erasedProofs].fields));
+		}
+	}
+});
+
+test("Python copied bindings generate every checked-record value-index surface and bind its IR", () => {
+	for(const route of checkedRecordValueIndexPythonRoutes)
+	{
+		const { expected, resultOnly } = checkedRecordValueIndexPythonSelection(route);
+		const files = generateCopiedPythonPackage(expected);
+		const publicSource = files[`${checkedRecordValueIndexPythonPackage}/__init__.py`];
+		const nativeSource = files[`${checkedRecordValueIndexPythonPackage}/_native.py`];
+		const audited = auditPythonPackage(expected, files);
+		assert.equal(audited.bindingIrSha256, hashBindingIr(expected));
+		assert.ok(publicSource.includes("@_dataclass(frozen=True, slots=True)"));
+		for(const record of Object.keys(expectedIndices))
+			assert.match(publicSource, new RegExp(`class ${record}:`, "u"));
+		for(const declaration of expected.declarations)
+			assert.match(publicSource, new RegExp(`def ${declaration.name.replace(/([A-Z])/gu, "_$1").toLowerCase()}\\(`, "u"));
+		assert.match(nativeSource, /_check\(_fn0\(/u);
+		const changed = structuredClone(expected);
+		changed.types.find(type => type.name === "On").source.extensions[instantiation]
+			.arguments[0].value = "false";
+		assert.notEqual(hashBindingIr(changed), hashBindingIr(expected));
+		assert.throws(() => auditPythonPackage(changed, files), {
+			code: "binding-ir-drift"
+		});
+		if(resultOnly) assert.doesNotMatch(publicSource, /def true_bool_index\(/u);
+		else assert.match(publicSource, /def true_bool_index\(/u);
+	}
+});
