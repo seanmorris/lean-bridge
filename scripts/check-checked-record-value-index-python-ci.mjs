@@ -19,14 +19,15 @@ assert.equal(relative(root, tapPath).startsWith(".."), false, "TAP must remain w
 const glibc = execFileSync("/usr/bin/getconf", ["GNU_LIBC_VERSION"], { encoding: "utf8" }).trim();
 assert.match(glibc, /^glibc 2\.[0-9]+$/u);
 const runtime = { platform: process.platform, arch: process.arch, glibc: glibc.slice(6) };
+const tap = await readFile(tapPath, "utf8");
+const read = async path => {
+	assert.equal(typeof path, "string");
+	const destination = resolve(root, path);
+	assert.equal(relative(root, destination).startsWith(".."), false, "Record escapes retained output");
+	return readFile(destination);
+};
+assert.equal((await read("run.tap")).toString(), tap, "Retained TAP drift");
 const result = await checkCheckedRecordValueIndexPythonCiRecords(process.argv.slice(2), {
-	tap: await readFile(tapPath, "utf8")
-	, read: async path => {
-		assert.equal(typeof path, "string");
-		const destination = resolve(root, path);
-		assert.equal(relative(root, destination).startsWith(".."), false, "Record escapes retained output");
-		return readFile(destination);
-	}
-	, runtime
+	tap, read, runtime
 });
 process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);

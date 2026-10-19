@@ -154,7 +154,7 @@ export const checkCheckedRecordValueIndexPythonReport = async (
 	}
 	return {
 		route, producerCommit, runtime, floor
-		, records: 1 + 2 + 1 + report.reports.length * 5
+		, records: 1 + 2 + 2 + report.reports.length * 5
 		, executions: report.reports.length * 2
 		, archiveSha256: wheel.archive.sha256
 		, reportSha256: sha256(await read("report.json"))

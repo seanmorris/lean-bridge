@@ -29,7 +29,8 @@ for route in ordinary-source reviewed-ir result-only-ordinary-source result-only
   name="installed value-index checked-record Python packages reproduce and relocate for $route"
   node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="^${name//+/\\+}$" \
     tests/helpers/checked-record-value-index-python-installed-tests.mjs 2>&1 | tee "$output/run.tap"
+  cp "$output/run.tap" "$output/records/$route/run.tap"
   node scripts/check-checked-record-value-index-python-ci.mjs --route "$route" \
-    --producer "$revision" --directory "$output/records/$route" --tap "$output/run.tap" \
+    --producer "$revision" --directory "$output/records/$route" --tap "$output/records/$route/run.tap" \
     --glibc 2.38 | tee "$output/verification.json"
 done
