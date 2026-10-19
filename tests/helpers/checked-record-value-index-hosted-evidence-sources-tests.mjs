@@ -12,7 +12,7 @@ import {
 	, checkedRecordValueIndexHostedOriginal
 	, checkedRecordValueIndexJvmEvidenceSources
 	, checkedRecordValueIndexNativeEvidenceSources
-	, checkedRecordValueIndexPerlEvidenceSources
+	, checkedRecordValueIndexPerlEvidenceSources, checkedRecordValueIndexPhpEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -111,6 +111,24 @@ test("value-index Perl evidence closes CPAN production, consumption and checking
 		, ["checker", ".github/workflows/checked-record-value-index-perl.yml"]
 		, ["checker", "scripts/check-checked-record-value-index-perl-ci.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-perl-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index native-PHP evidence closes Composer production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexPhpEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "src/backends/php/brick-math.source.json"]
+		, ["consumer", "tests/fixtures/checked-record-value-index-php/php.php"]
+		, ["checker", ".github/workflows/checked-record-value-index-php.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-php-ci.mjs"]
+		, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
+		, ["archiver", "scripts/archive-checked-record-value-index-php-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });

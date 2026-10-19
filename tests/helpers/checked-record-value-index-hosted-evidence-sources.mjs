@@ -71,6 +71,9 @@ const jvmCallers = ["java.java", "kotlin.kt"].map(
 const perlCallers = ["perl.pl"].map(
 	path => `tests/fixtures/checked-record-value-index-perl/${path}`
 );
+const phpCallers = ["php.php"].map(
+	path => `tests/fixtures/checked-record-value-index-php/${path}`
+);
 const commonData = [
 	...fixture, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -312,6 +315,61 @@ export const checkedRecordValueIndexPerlEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-checked-record-value-index-perl-evidence.mjs"
+				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted native-PHP artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const checkedRecordValueIndexPhpEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/checked-record-value-index-php-installed-tests.mjs"
+				])
+				, ...commonData, ...phpCallers
+				, "src/backends/php/brick-math.source.json"
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/checked-record-value-index-php-fixture.mjs"
+				])
+				, ...phpCallers
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-checked-record-value-index-php-ci.mjs"
+					, "tests/checked-record-value-index-php.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/checked-record-value-index-php.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-checked-record-value-index-php-ci.sh"
+				, "scripts/select-nominal-subtype-php-ci-tools.mjs"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-checked-record-value-index-php-evidence.mjs"
 				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
 			])
 		}
