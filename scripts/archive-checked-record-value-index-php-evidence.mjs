@@ -16,6 +16,9 @@ import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import {
+	checkCheckedRecordValueIndexPhpCiRecords
+} from "../tests/helpers/checked-record-value-index-php-ci-report.mjs";
+import {
 	checkedRecordValueIndexPhpRoutes, checkedRecordValueIndexPhpSelection
 } from "../tests/helpers/checked-record-value-index-php-fixture.mjs";
 import {
@@ -73,16 +76,20 @@ const putFile = async (path, source) => {
 		, sha256: await checkedRecordValueIndexHostedDigest(source), source
 	});
 };
-const check = (route, records, tap, observed, tools) => {
+const check = async (route, records, tap, observed, tools, paths) => {
 	const args = [
-		"scripts/check-checked-record-value-index-php-ci.mjs"
-		, "--route", route, "--producer", revision, "--directory", records
+		"--route", route, "--producer", revision, "--directory", records
 		, "--tap", tap, "--glibc", observed.floor
 		, "--php", tools.selected.php, "--composer", tools.selected.composer
 		, "--php-version", tools.selected.phpVersion
 		, "--composer-version", tools.selected.composerVersion
 	];
-	return JSON.parse(execFileSync(process.execPath, args, { encoding: "utf8" }));
+	const rechecked = await checkCheckedRecordValueIndexPhpCiRecords(args, {
+		tap: await readFile(tap, "utf8"), read: path => readFile(join(records, path))
+		, runtime: observed.runtime, tools
+	});
+	assert.deepEqual(paths, rechecked.records, `${route} retained records`);
+	return rechecked;
 };
 const extracted = await extractCheckedRecordValueIndexHostedArtifact(selected["artifact-zip"]);
 const partsRoot = await mkdtemp(join(tmpdir(), "lean-bridge-value-index-php-zip-"));
@@ -112,7 +119,8 @@ try
 		const observed = JSON.parse(verification);
 		assert.equal(verification.toString(), canonicalJson(observed), `${route} checker output`);
 		runtime ??= observed.runtime; assert.deepEqual(observed.runtime, runtime, `${route} runtime identity`);
-		const rechecked = check(route, recordsRoot, join(cell, "run.tap"), observed, tools);
+		const rechecked = await check(route, recordsRoot, join(cell, "run.tap")
+			, observed, tools, paths);
 		assert.equal(verification.toString(), canonicalJson(rechecked), `${route} checker replay`);
 		for(const path of paths) await putFile(`${route}/records/${path}`, join(recordsRoot, path));
 		for(const name of ["run.tap", "verification.json"])
