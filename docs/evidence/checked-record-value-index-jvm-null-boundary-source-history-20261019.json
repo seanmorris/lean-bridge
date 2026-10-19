@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-jvm-null-boundary-source-v1",
+  "predecessorCommit": "7cbe4dd60ffa7e484219110f22d6953991092520",
+  "draftParentCommit": "dbcb121d073f4f1f34bbeea8e1658fd31a69045e",
+  "pathsSha256": "ad435f5e0acfd6ae9209e07c2b2491c5196d0f65064ac652a1e7c637fb68cb9e",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-jvm-null-boundary-source-history.mjs",
+      "currentSha256": "ce2ba8d513fbed7b9c2083879dd79f89130eb40f8ea7e0504d08b4a0739176fc"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-null-boundary-source-history-tests.mjs",
+      "currentSha256": "8d99e458586358421fe308731bbf9c1c098818d8d4ad3b255b085f586918cbb2"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-jvm-null-boundary-source-history.mjs",
+      "currentSha256": "8a0a1fbeaa2ef5f74a628c524de2660fbec4e387f9255e1aa7e79cab6830da70"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/fixtures/checked-record-value-index-jvm/kotlin.kt",
+      "previousSha256": "2c36e6032bd0ee2d4cac4d6a5f14953715b9b1d4c5c2bed6451aa648ad083f5f",
+      "currentSha256": "e02156272ee9ce4c942a1908d64c11477a3966050b9f2151f1f985f963857c25",
+      "edits": [
+        {
+          "start": 1552,
+          "previous": "",
+          "current": "        // Kotlin inserts its own non-null parameter guard before the bridge.\n        // Its diagnostic text is runtime-version detail; the exact NPE is the\n        // stable host-boundary behavior being checked here.\n"
+        },
+        {
+          "start": 1838,
+          "previous": "            && cause.message == null\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-jvm.test.mjs",
+      "previousSha256": "65ca1faf4b092a90bafed0d56a6f444ebc63445cef077cfb3df36fe3773acbba",
+      "currentSha256": "433b05dc7c73b0011f2d09ca3ae8e994146726b8c73adec12493aca8890854e4",
+      "edits": [
+        {
+          "start": 578,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-jvm-null-boundary-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a7da1a43805417bd892c0a9d907a9944b40a6d4b4845a94ca7180420538ebb6e",
+      "currentSha256": "d87864271ecd3c2d43bce3259c3effac9a00b36976cae7d4c22c69ac41d667a1",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexJvmNullBoundarySource, checkedRecordValueIndexJvmNullBoundaryChangedPaths } from \"./checked-record-value-index-jvm-null-boundary-source-history.mjs\";\n"
+        },
+        {
+          "start": 98568,
+          "previous": "\t...checkedRecordValueIndexJvmNativeRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexJvmNullBoundaryChangedPaths\n\t, ...checkedRecordValueIndexJvmNativeRepairChangedPaths\n"
+        },
+        {
+          "start": 116016,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexJvmNativeRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexJvmNullBoundarySource(\n"
+        },
+        {
+          "start": 116107,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexJvmNativeRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}

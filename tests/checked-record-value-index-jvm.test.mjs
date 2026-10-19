@@ -10,3 +10,4 @@ import "./helpers/checked-record-value-index-jvm-ci-policy-tests.mjs";
 import "./helpers/checked-record-value-index-jvm-ci-shell-tests.mjs";
 import "./helpers/checked-record-value-index-jvm-ci-workflow-tests.mjs";
 import "./helpers/checked-record-value-index-jvm-installed-tests.mjs";
+import "./helpers/checked-record-value-index-jvm-null-boundary-source-history-tests.mjs";
