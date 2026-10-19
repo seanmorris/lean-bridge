@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-native-binding-ir-source-v1",
+  "predecessorCommit": "df22aa02bea72c3de550f15ab00b2a89b70f279e",
+  "draftParentCommit": "6135b91bc84dae8f7e901b13f3d84b736b828794",
+  "pathsSha256": "e7d2f453cfe09465e8af774dba64a3b0f83b4d1434ad98ff2d7b1c460bb388a2",
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-native-report-tests.mjs",
+      "currentSha256": "a24e0201be98913fc2a993dcd6252ee13948e8ef7a4f478aa16744ce7251643b"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-native-binding-ir-source-history.mjs",
+      "currentSha256": "f4385736f189b51c08a5d2dedafdc1508485bfebba3d4bb0d926948da6c9ea67"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-binding-ir-source-history-tests.mjs",
+      "currentSha256": "1ef974868c2281ca66d386d7eabbf91a2f70052c02883ee814acbd43c14ca7ab"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-binding-ir-source-history.mjs",
+      "currentSha256": "5888757f6dab82a9a30693c480fe14060f087ff6d7a0969f8b05fde058d14aa5"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-native.test.mjs",
+      "previousSha256": "2d50812afd940ee2fa3be67b8138b5677a40e07fb001adee4ec956a5a83a296d",
+      "currentSha256": "6b863ac10d6352541a72267236473767c9fc98d066023393612764a89c8c5f00",
+      "edits": [
+        {
+          "start": 240,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-native-report-tests.mjs\";\nimport \"./helpers/checked-record-value-index-native-binding-ir-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-report.mjs",
+      "previousSha256": "567fe5c72280ed99b0c656f8ecfb9ad9f3b3b6a9a31a5e78734d804579303189",
+      "currentSha256": "ff3bac929ad059fa5d5dbf98dffa33b585bfa7424e6b0227f8302a77e183ef8e",
+      "edits": [
+        {
+          "start": 1626,
+          "previous": "",
+          "current": "/**\n * Bind an installed native package to the compiler-derived Binding IR, not to\n * the independently reviewed contract that it reconciles with.\n *\n * @param packageReceipt - Parsed receipt found beside installed headers.\n * @param report - Route provenance with both compiler build digests.\n * @param profile - C or C++ target used in the error label.\n */\nexport const assertCheckedRecordValueIndexNativeInstalledBindingIr = (\n\tpackageReceipt, report, profile\n) => {\n\tassert.ok(Array.isArray(report.builds) && report.builds.length === 2);\n\tconst [first, second] = report.builds;\n\tassert.equal(first.bindingIrSha256, second.bindingIrSha256\n\t\t, \"Reproducible native Binding IR\");\n\tassert.equal(packageReceipt.bindingIrSha256, first.bindingIrSha256\n\t\t, `${profile} installed compiler Binding IR`);\n};\n\n"
+        },
+        {
+          "start": 14470,
+          "previous": "\t\tassert.equal(packageReceipt.bindingIrSha256, report.expectedBindingIrSha256\n\t\t\t, `${profile} installed binding IR`);\n",
+          "current": "\t\tassertCheckedRecordValueIndexNativeInstalledBindingIr(\n\t\t\tpackageReceipt, report, profile\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d87864271ecd3c2d43bce3259c3effac9a00b36976cae7d4c22c69ac41d667a1",
+      "currentSha256": "1825f34e6589cf0629b026bfb1bae0c415932ba5fcf99cbbda81fa8620820d0f",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from \"./checked-record-value-index-native-binding-ir-source-history.mjs\";\n"
+        },
+        {
+          "start": 98756,
+          "previous": "\t...checkedRecordValueIndexJvmNullBoundaryChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexNativeBindingIrChangedPaths\n\t, ...checkedRecordValueIndexJvmNullBoundaryChangedPaths\n"
+        },
+        {
+          "start": 116261,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexJvmNullBoundarySource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexNativeBindingIrSource(\n"
+        },
+        {
+          "start": 116352,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexJvmNullBoundarySource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}
