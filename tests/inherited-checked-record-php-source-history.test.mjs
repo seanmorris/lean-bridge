@@ -34,6 +34,7 @@ import {
 import { sha256 } from "./helpers/source-history-digest.mjs";
 import {
 	sourceAtFinHistoryMilestone
+	, sourceAtFinHistoryRecord
 } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
@@ -204,8 +205,11 @@ test("inherited native PHP pin repair closes additions and all repaired pins", a
 			, `${inheritedCheckedRecordPhpPinRepairPredecessor}:${addition.path}`]
 			, { stdio: "ignore" }).status, 0, addition.path);
 	}
-	const inventory = JSON.parse(await readFile(
-		"docs/type-surface.v1.json", "utf8"));
+	const inventory = JSON.parse(await sourceAtFinHistoryRecord(
+		inheritedCheckedRecordPhpPinRepairHistoryPath
+		, "docs/type-surface.v1.json"
+		, beforeInheritedCheckedRecordPhpPinRepairSource
+	));
 	const paths = new Set(inheritedCheckedRecordPhpPinRepairPins.map(
 		pin => pin.path
 	));

@@ -12,20 +12,38 @@ import test from "node:test";
 import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { readTypeSurface } from "../src/adoption/type-surface.mjs";
-import { beforeFinRefinementSource, finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
+import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-history.mjs";
 import { assertPerlScalarPromotion, perlScalarEvidenceIds, perlScalarOrdinaryId, perlScalarReviewedId, promotePerlScalarInventory, promotePerlScalarObservations } from "./helpers/perl-scalar-promotion.mjs";
 import { beforePerlScalarPromotionSource, perlScalarPromotionChangedPaths, perlScalarPromotionHistoryPath, perlScalarPromotionPredecessor, reversePerlScalarPromotionUpdate } from "./helpers/perl-scalar-promotion-source-history.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
 import { beforeWasmEntrySupplementSource } from "./helpers/wasm-entry-supplement-source-history.mjs";
 
-const historicalRead = async path => {
-	const bytes = await readFile(path);
-	return finRefinementNormalizationPaths.includes(path)
-		? Buffer.from(beforeWasmEntrySupplementSource(path, bytes.toString("utf8"))) : bytes;
+const sourceAtPerlScalarMilestone = path => sourceAtFinHistoryRecord(
+	perlScalarPromotionHistoryPath, path, beforeWasmEntrySupplementSource
+);
+
+const milestoneRead = current => {
+	const pins = new Map();
+	for(const evidence of current.evidence)
+	{
+		for(const file of evidence.files)
+		{
+			assert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256
+				, `Conflicting Perl scalar source pin ${file.path}`);
+			pins.set(file.path, file.sha256);
+		}
+	}
+	return async path => {
+		const bytes = await readFile(path), expected = pins.get(path);
+		if(expected === undefined || sha256(bytes) === expected) return bytes;
+		return Buffer.from(await sourceAtFinHistoryMilestone(path, expected));
+	};
 };
 
 const snapshot = async () => {
-	const path = "docs/type-surface.v1.json", source = (await historicalRead(path)).toString("utf8");
-	return { current: JSON.parse(source), previous: JSON.parse(beforePerlScalarPromotionSource(path, source)), history: JSON.parse(await readFile(perlScalarPromotionHistoryPath)) };
+	const path = "docs/type-surface.v1.json", source = await sourceAtPerlScalarMilestone(path);
+	const current = JSON.parse(source);
+	return { current, previous: JSON.parse(beforePerlScalarPromotionSource(path, source)), history: JSON.parse(await readFile(perlScalarPromotionHistoryPath)), read: milestoneRead(current) };
 };
 
 test("Perl scalar promotion authenticates exact predecessors and rejects unknown edits", async () => {
@@ -35,7 +53,7 @@ test("Perl scalar promotion authenticates exact predecessors and rejects unknown
 	assert.deepEqual(history.updates.map(update => update.path), perlScalarPromotionChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = (await historicalRead(update.path)).toString("utf8"), previous = reversePerlScalarPromotionUpdate(current, update);
+		const current = await sourceAtPerlScalarMilestone(update.path), previous = reversePerlScalarPromotionUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforePerlScalarPromotionSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -51,8 +69,8 @@ test("Perl scalar promotion authenticates exact predecessors and rejects unknown
 });
 
 test("Perl scalar inventory reconciles ordinary coverage and supplements reviewed execution without overlapping cells", async () => {
-	const { current, previous, history } = await snapshot();
-	await assertPerlScalarPromotion(current, previous, history.updates, historicalRead);
+	const { current, previous, history, read } = await snapshot();
+	await assertPerlScalarPromotion(current, previous, history.updates, read);
 	assert.equal(previous.observations.length, 499); assert.equal(current.observations.length, 499);
 	assert.deepEqual((await readTypeSurface()).document, JSON.parse(await readFile("docs/type-surface.v1.json")));
 	assert.equal(previous.evidence.length, 292); assert.equal(current.evidence.length, 294);
@@ -81,11 +99,12 @@ test("Perl scalar inventory reconciles ordinary coverage and supplements reviewe
 	assert.ok(ordinary.conversionNotes.fin.startsWith(oldOrdinary.conversionNotes.fin));
 	assert.throws(() => promotePerlScalarObservations(current.observations), /already recorded/u);
 	assert.throws(() => promotePerlScalarObservations(previous.observations.filter(item => item.id !== perlScalarReviewedId)));
-	for(const entry of current.evidence) for(const file of entry.files) assert.equal(sha256(await historicalRead(file.path)), file.sha256, file.path);
+	for(const entry of current.evidence) for(const file of entry.files)
+		assert.equal(sha256(await read(file.path)), file.sha256, file.path);
 });
 
 test("Perl scalar evidence binds both routes, four ABIs and original binary ZIP identities", async () => {
-	const { current } = await snapshot();
+	const { current, read } = await snapshot();
 	for(const [index, id] of perlScalarEvidenceIds.entries())
 	{
 		const entry = current.evidence.find(item => item.id === id);
@@ -96,7 +115,7 @@ test("Perl scalar evidence binds both routes, four ABIs and original binary ZIP 
 		assert.ok(entry.artifacts.every(file => file.path.split("/")[1] === (index ? "reviewed" : "ordinary")));
 		assert.equal(entry.files.filter(file => file.path.endsWith(".zip")).length, 8);
 		for(const text of ["2024 public checks", "1000 rejection/recovery cycles", "Four LD_PRELOAD controls", "do not count typed-adapter entries", "minimum-libc machine", "full build documents are absent"]) assert.ok(entry.scope.includes(text), text);
-		for(const file of entry.files) assert.equal(sha256(await historicalRead(file.path)), file.sha256);
+		for(const file of entry.files) assert.equal(sha256(await read(file.path)), file.sha256);
 	}
 	const consumer = await readFile("docs/consume/perl.md", "utf8");
 	assert.ok(consumer.includes("perl-scalar-20261009.md"));
@@ -109,7 +128,7 @@ test("Perl scalar evidence binds both routes, four ABIs and original binary ZIP 
 });
 
 test("Perl scalar promotion refuses widened scope, misattribution and rewrites of older claims", async () => {
-	const { current, previous, history } = await snapshot();
+	const { current, previous, history, read } = await snapshot();
 	const ordinary = value => value.observations.find(item => item.id === perlScalarOrdinaryId);
 	const reviewed = value => value.observations.find(item => item.id === perlScalarReviewedId);
 	const mutations = [
@@ -130,9 +149,9 @@ test("Perl scalar promotion refuses widened scope, misattribution and rewrites o
 	for(const mutate of mutations)
 	{
 		const copy = structuredClone(current); mutate(copy);
-		await assert.rejects(assertPerlScalarPromotion(copy, previous, history.updates, historicalRead));
+		await assert.rejects(assertPerlScalarPromotion(copy, previous, history.updates, read));
 	}
-	await assert.rejects(promotePerlScalarInventory(current, historicalRead), /Already recorded/u);
+	await assert.rejects(promotePerlScalarInventory(current, read), /Already recorded/u);
 });
 
 test("Perl scalar promotion updater refuses an unrelated HEAD before writing", async t => {

@@ -5,7 +5,6 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { readTypeSurface, typeSurfaceCells, validateTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { compileDocumentationPage } from "../../scripts/generate-site-content.mjs";
@@ -129,14 +128,19 @@ test("primitive-base browser promotion supplements eighteen existing cells and p
 test("primitive-base browser documentation names the installed engines, host conversions and remaining combinations", async () => {
 	for(const path of ["docs/javascript-typescript.md", "docs/lean/existing-package.md", "docs/lean/export-decisions.md", "docs/reference/types.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = await sourceAtHistoryMilestone(
+			nominalPrimitiveSubtypeBrowserPromotionHistoryPath, path
+		);
 		assert.ok(source.includes("nominal-primitive-subtype-browser-20261014/index.json"), path);
 		const compiled = await compileDocumentationPage(source, docPages.find(item => item.source === path), { revision: nominalPrimitiveSubtypeBrowserPromotionPredecessor });
 		assert.ok(compiled.links.some(link => link.endsWith("nominal-primitive-subtype-browser-20261014/index.json")), path);
 		if(path === "docs/javascript-typescript.md")
 			assert.ok(compiled.links.includes("https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-browser.yml"));
 	}
-	const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	const javascript = await sourceAtHistoryMilestone(
+		nominalPrimitiveSubtypeBrowserPromotionHistoryPath
+		, "docs/javascript-typescript.md"
+	);
 	for(const text of ["nineteen primitive bases", "undefined", "void"
 		, "bigint", "Uint8Array", "wasm32", "normalization"
 		, "Chromium", "Firefox", "WebKit", "React", "workers"

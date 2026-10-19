@@ -74,17 +74,19 @@ test("per-use nominal choices select graph carriers without relying on shared Fi
 });
 
 test("public component generation checks original provenance before flattening nominal layouts", () => {
-	for(const mutate of [
-		document => { envelope(document).source.extensions["lean-lang.org/instantiation"] = {}; }
-		, document => { envelope(document).source.extensions["lean-lang.org/erased-proofs"] = ["proof"]; }
-		, document => { envelope(document).source.declaration = "Other.Envelope"; }
-		, document => { envelope(document).representation = "identity"; }
-		, document => { named(document, "first").parameters[0].ownership = "borrow"; }
-		, document => { named(document, "echo").result.ownership = "lease"; }
-		, document => { document.types.push(...callableReviewedIr().types.filter(type => type.kind === "callback")); }
+	const provenanceFailure
+		= /Refinement does not match|copied|callbacks|ownership/u;
+	for(const [mutate, expected] of [
+		[document => { envelope(document).source.extensions["lean-lang.org/instantiation"] = {}; }, provenanceFailure]
+		, [document => { envelope(document).source.extensions["lean-lang.org/erased-proofs"] = ["proof"]; }, provenanceFailure]
+		, [document => { envelope(document).source.declaration = "Other.Envelope"; }, provenanceFailure]
+		, [document => { envelope(document).representation = "identity"; }, provenanceFailure]
+		, [document => { named(document, "first").parameters[0].ownership = "borrow"; }, provenanceFailure]
+		, [document => { named(document, "echo").result.ownership = "lease"; }, provenanceFailure]
+		, [document => { document.types.push(...callableReviewedIr().types.filter(type => type.kind === "callback")); }, /unused callback signature/u]
 	]) {
 		const document = nominalSubtypeReviewedFixture(); mutate(document);
-		assert.throws(() => createComponentPrivateAbi(document), /Refinement does not match|copied|callbacks|ownership/u);
+		assert.throws(() => createComponentPrivateAbi(document), expected);
 	}
 });
 

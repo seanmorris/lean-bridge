@@ -19,6 +19,12 @@ const observationId = reference => reference.sourcePath === "reviewed-ir"
 	? `reviewed-fin-${reference.caller}-scalar-containers`
 	: `native-fin-${({ "php-native": "php", "wit-wasi": "wit", java: "jvm", kotlin: "jvm" })[reference.caller] ?? reference.caller}-ordinary-source`;
 const scalarScope = "The separately dated scalar measurements count the mirror, impossible and label source functions and their three adapters. Rejected calls enter neither source nor adapter; valid calls, including recovery after rejection, enter their own source and adapter once. These measurements do not cover containers, products, fields, callbacks, Subtype, other hosts or hosted CI.";
+const scalarDispatchInventoryCommonPins = new Map([
+	["tests/fin-dispatch-references.test.mjs", "68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7"]
+	, ["tests/helpers/fin-dispatch-references.mjs", "980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda"]
+	, ["tests/fin-scalar-dispatch-inventory.test.mjs", "2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf"]
+	, ["tests/helpers/fin-scalar-dispatch-inventory.mjs", "611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f"]
+]);
 
 /**
  * Build the complete expected observation array from its immutable predecessor.
@@ -98,9 +104,15 @@ export const scalarDispatchInventoryEvidence = async references => {
 		return { id: reference.id, kind: "installed"
 			, revision: reference.revision, command: reference.command
 			, scope: `${reference.sourcePath} ${reference.caller}: ${reference.checks} public checks. ${reference.scope}. ${reference.instrument} measures three Lean source functions and their three adapters, with independent per-call recounts. ${reference.environment}. Consumer SHA-256 ${reference.consumerSha256}; probe SHA-256 ${reference.probeSha256}. Source pins are selected identities, not a complete dependency closure. Older container, product and field measurements are unchanged.`
-			// This builder describes the earlier scalar inventory milestone. Later source-only
-			// transitions preserve its exact identities; current pins are checked separately.
-			, files: await Promise.all(files.map(async path => ({ path, sha256: sha256(beforeReviewedFinRefusalSource(path, await readFile(path, "utf8"))) })))
+			// This builder describes the earlier scalar inventory milestone. Its four
+			// common sources were added by that transition, so no predecessor update can
+			// reconstruct them. Retain their authenticated milestone identities directly;
+			// the contract test independently reconstructs and hashes every pinned source.
+			, files: await Promise.all(files.map(async path => ({
+				path
+				, sha256: scalarDispatchInventoryCommonPins.get(path)
+					?? sha256(beforeReviewedFinRefusalSource(path, await readFile(path, "utf8")))
+			})))
 			, artifacts: Object.entries(report.archives).map(([path, sha256]) => ({ path: `${reference.id}/${path}`, sha256 })) };
 	}));
 };

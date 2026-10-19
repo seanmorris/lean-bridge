@@ -1,0 +1,707 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-first-run-residual-repair-v1",
+  "predecessorCommit": "f5395d5762bc21ffbf255a627d878e791140ae71",
+  "pathsSha256": "d2ddaf6b3b19307efcee7d129bb0c728e0ac3438fa170e8e579289cd42e9ec22",
+  "pinCount": 56,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3",
+      "currentSha256": "4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551",
+      "count": 3
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a",
+      "currentSha256": "97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/fin-scalar-dispatch-inventory.mjs",
+      "previousSha256": "b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9",
+      "currentSha256": "c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0",
+      "count": 12
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+      "previousSha256": "77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4",
+      "currentSha256": "1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-npm-promotion-tests.mjs",
+      "previousSha256": "1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8",
+      "currentSha256": "7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d",
+      "count": 4
+    },
+    {
+      "path": "tests/helpers/structural-subtype-promotion-tests.mjs",
+      "previousSha256": "6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c",
+      "currentSha256": "bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a",
+      "count": 24
+    },
+    {
+      "path": "tests/perl-scalar-promotion.test.mjs",
+      "previousSha256": "f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce",
+      "currentSha256": "819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9",
+      "count": 2
+    },
+    {
+      "path": "tests/php-collection-evidence.test.mjs",
+      "previousSha256": "5065a9b0e703c767b0f9374be33e815ba629551338967b31b34ca94a5910166b",
+      "currentSha256": "d68c4432325dd116da130b9f45d6d2ee586a404fd14c3e37cd6dfa329f9edcc3",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-core-first-run-residual-repair-source-history.mjs",
+      "currentSha256": "a28e20ae084718311a233141f3884cc17d03c790b010627f48a80e3906e0d239"
+    },
+    {
+      "path": "tests/helpers/core-first-run-residual-repair-source-history-tests.mjs",
+      "currentSha256": "ff1e1562c3414e66d46f146b093aada704e205904ab117f5023a886f38905d87"
+    },
+    {
+      "path": "tests/helpers/core-first-run-residual-repair-source-history.mjs",
+      "currentSha256": "5f315a94b221b23aa61135d64521f74aa2c30a6ab48254aeaa28212a7f03540c"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4757a96bdc52d5e70ae40dae010cbb8ef8f23454f7cf5559cf477238f67b58bf",
+      "currentSha256": "4d05af4a6a348fd3a0e48a6c350c52680868d2f3450479e5e2092e60a4cd0266",
+      "edits": [
+        {
+          "start": 205595,
+          "previous": "          \"sha256\": \"5065a9b0e703c767b0f9374be33e815ba629551338967b31b34ca94a5910166b\"\n",
+          "current": "          \"sha256\": \"d68c4432325dd116da130b9f45d6d2ee586a404fd14c3e37cd6dfa329f9edcc3\"\n"
+        },
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n",
+          "current": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n"
+        },
+        {
+          "start": 1153869,
+          "previous": "          \"sha256\": \"5065a9b0e703c767b0f9374be33e815ba629551338967b31b34ca94a5910166b\"\n",
+          "current": "          \"sha256\": \"d68c4432325dd116da130b9f45d6d2ee586a404fd14c3e37cd6dfa329f9edcc3\"\n"
+        },
+        {
+          "start": 1388789,
+          "previous": "          \"sha256\": \"5065a9b0e703c767b0f9374be33e815ba629551338967b31b34ca94a5910166b\"\n",
+          "current": "          \"sha256\": \"d68c4432325dd116da130b9f45d6d2ee586a404fd14c3e37cd6dfa329f9edcc3\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n",
+          "current": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n",
+          "current": "          \"sha256\": \"4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551\"\n"
+        },
+        {
+          "start": 1956212,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1960858,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1965613,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1971472,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1977206,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1982756,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1988451,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1994149,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 1999964,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 2006589,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 2013222,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 2019857,
+          "previous": "          \"sha256\": \"b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9\"\n",
+          "current": "          \"sha256\": \"c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0\"\n"
+        },
+        {
+          "start": 2159018,
+          "previous": "          \"sha256\": \"f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce\"\n",
+          "current": "          \"sha256\": \"819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9\"\n"
+        },
+        {
+          "start": 2175536,
+          "previous": "          \"sha256\": \"f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce\"\n",
+          "current": "          \"sha256\": \"819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9\"\n"
+        },
+        {
+          "start": 3854571,
+          "previous": "          \"sha256\": \"f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a\"\n",
+          "current": "          \"sha256\": \"97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3\"\n"
+        },
+        {
+          "start": 3892824,
+          "previous": "          \"sha256\": \"f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a\"\n",
+          "current": "          \"sha256\": \"97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3\"\n"
+        },
+        {
+          "start": 3931096,
+          "previous": "          \"sha256\": \"f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a\"\n",
+          "current": "          \"sha256\": \"97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3\"\n"
+        },
+        {
+          "start": 3970768,
+          "previous": "          \"sha256\": \"f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a\"\n",
+          "current": "          \"sha256\": \"97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3\"\n"
+        },
+        {
+          "start": 4010233,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4029252,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4048438,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4072478,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4096518,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4120558,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4144449,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4163165,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4181881,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4198976,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4216083,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4239869,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4263637,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4284123,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4304616,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4332856,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4361094,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4385934,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4410880,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4475944,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4541323,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4587804,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4634331,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4669392,
+          "previous": "          \"sha256\": \"6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c\"\n",
+          "current": "          \"sha256\": \"bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a\"\n"
+        },
+        {
+          "start": 4939957,
+          "previous": "          \"sha256\": \"1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8\"\n",
+          "current": "          \"sha256\": \"7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d\"\n"
+        },
+        {
+          "start": 4956939,
+          "previous": "          \"sha256\": \"1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8\"\n",
+          "current": "          \"sha256\": \"7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d\"\n"
+        },
+        {
+          "start": 4973879,
+          "previous": "          \"sha256\": \"1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8\"\n",
+          "current": "          \"sha256\": \"7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d\"\n"
+        },
+        {
+          "start": 4990861,
+          "previous": "          \"sha256\": \"1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8\"\n",
+          "current": "          \"sha256\": \"7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d\"\n"
+        },
+        {
+          "start": 7020366,
+          "previous": "          \"sha256\": \"77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4\"\n",
+          "current": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n"
+        },
+        {
+          "start": 7082013,
+          "previous": "          \"sha256\": \"77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4\"\n",
+          "current": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n"
+        },
+        {
+          "start": 7144076,
+          "previous": "          \"sha256\": \"77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4\"\n",
+          "current": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n"
+        },
+        {
+          "start": 7205723,
+          "previous": "          \"sha256\": \"77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4\"\n",
+          "current": "          \"sha256\": \"1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3",
+      "currentSha256": "4920b91551138e8b7e2235690e64bd04fdc6a7c8edce0d64638c9ab41ab68551",
+      "edits": [
+        {
+          "start": 4385,
+          "previous": "",
+          "current": "import \"./helpers/core-first-run-residual-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-perl-promotion-tests.mjs",
+      "previousSha256": "f2d2ba7da157885b705cb2adc7c334a77b1aae95b376f9c8a8772d458b76d58a",
+      "currentSha256": "97b117ab9b36b5a7713eb2e8baa66a3a26c7a3bcfcb9a9683bf1230066af80a3",
+      "edits": [
+        {
+          "start": 1347,
+          "previous": "",
+          "current": "const checkedRecordPerlGuideCommit\n\t= \"41f04691eafefa2b4794a43ca89d20d03173e7fa\";\nconst sourceAtCheckedRecordPerlGuideMilestone = path => execFileSync(\n\t\"git\", [\"show\", `${checkedRecordPerlGuideCommit}:${path}`]\n\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 }\n);\n"
+        },
+        {
+          "start": 8273,
+          "previous": "\tconst perl = await readFile(\"docs/consume/perl.md\", \"utf8\");\n",
+          "current": "\tconst perl = sourceAtCheckedRecordPerlGuideMilestone(\n\t\t\"docs/consume/perl.md\"\n\t);\n"
+        },
+        {
+          "start": 9020,
+          "previous": "\tconst author = await readFile(\"docs/lean/existing-package.md\", \"utf8\");\n",
+          "current": "\tconst author = sourceAtCheckedRecordPerlGuideMilestone(\n\t\t\"docs/lean/existing-package.md\"\n\t);\n"
+        },
+        {
+          "start": 9814,
+          "previous": "\tconst decisions = await readFile(\"docs/lean/export-decisions.md\", \"utf8\");\n",
+          "current": "\tconst decisions = sourceAtCheckedRecordPerlGuideMilestone(\n\t\t\"docs/lean/export-decisions.md\"\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "bfa71aa79e120d6508f484956701f844b8666881048d54a5f2175afb9b0ffe0a",
+      "currentSha256": "3331489dcab7a9b9dda3450440438c2444405a48009a086be465ca428c878b2f",
+      "edits": [
+        {
+          "start": 4379,
+          "previous": "\tfor(const mutate of [\n\t\tdocument => { envelope(document).source.extensions[\"lean-lang.org/instantiation\"] = {}; }\n\t\t, document => { envelope(document).source.extensions[\"lean-lang.org/erased-proofs\"] = [\"proof\"]; }\n\t\t, document => { envelope(document).source.declaration = \"Other.Envelope\"; }\n\t\t, document => { envelope(document).representation = \"identity\"; }\n\t\t, document => { named(document, \"first\").parameters[0].ownership = \"borrow\"; }\n\t\t, document => { named(document, \"echo\").result.ownership = \"lease\"; }\n\t\t, document => { document.types.push(...callableReviewedIr().types.filter(type => type.kind === \"callback\")); }\n",
+          "current": "\tconst provenanceFailure\n\t\t= /Refinement does not match|copied|callbacks|ownership/u;\n\tfor(const [mutate, expected] of [\n\t\t[document => { envelope(document).source.extensions[\"lean-lang.org/instantiation\"] = {}; }, provenanceFailure]\n\t\t, [document => { envelope(document).source.extensions[\"lean-lang.org/erased-proofs\"] = [\"proof\"]; }, provenanceFailure]\n\t\t, [document => { envelope(document).source.declaration = \"Other.Envelope\"; }, provenanceFailure]\n\t\t, [document => { envelope(document).representation = \"identity\"; }, provenanceFailure]\n\t\t, [document => { named(document, \"first\").parameters[0].ownership = \"borrow\"; }, provenanceFailure]\n\t\t, [document => { named(document, \"echo\").result.ownership = \"lease\"; }, provenanceFailure]\n\t\t, [document => { document.types.push(...callableReviewedIr().types.filter(type => type.kind === \"callback\")); }, /unused callback signature/u]\n"
+        },
+        {
+          "start": 5339,
+          "previous": "\t\tassert.throws(() => createComponentPrivateAbi(document), /Refinement does not match|copied|callbacks|ownership/u);\n",
+          "current": "\t\tassert.throws(() => createComponentPrivateAbi(document), expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c365f582be26b52550237101e1ed7586ad28e1797d1525bcaa6b8b5ce3a84091",
+      "currentSha256": "9e68d04a071c62b4d9309955fbd2389034578e1fc989196e58242edbc5360984",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCoreFirstRunResidualRepairSource, coreFirstRunResidualRepairChangedPaths } from \"./core-first-run-residual-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 98192,
+          "previous": "\t...coreTerminalReachabilityChangedPaths\n",
+          "current": "\t...coreFirstRunResidualRepairChangedPaths\n\t, ...coreTerminalReachabilityChangedPaths\n"
+        },
+        {
+          "start": 115526,
+          "previous": "\tlet previous = beforeCoreTerminalReachabilityRepairSource(\n",
+          "current": "\tlet previous = beforeCoreFirstRunResidualRepairSource(\n"
+        },
+        {
+          "start": 115605,
+          "previous": "",
+          "current": "\t);\n\tprevious = beforeCoreTerminalReachabilityRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-scalar-dispatch-inventory.mjs",
+      "previousSha256": "b3952ba5a03e2376db79bc99577de0cee464093fde0ffb51265276c0aa3100b9",
+      "currentSha256": "c49afe316eb78ed6f037cd97bcc8e0ec0635417cd2790e7eb245244e17edb7d0",
+      "edits": [
+        {
+          "start": 1465,
+          "previous": "",
+          "current": "const scalarDispatchInventoryCommonPins = new Map([\n\t[\"tests/fin-dispatch-references.test.mjs\", \"68fc9e291db99302443ca10bd7198e3c5a1ec90dbe5514e5e712b6d831c10da7\"]\n\t, [\"tests/helpers/fin-dispatch-references.mjs\", \"980ee8ee85590f3cdf28df70eef010176c25777d1d06fd5aea46cf16cac7adda\"]\n\t, [\"tests/fin-scalar-dispatch-inventory.test.mjs\", \"2176af0d66f7f30a4946a76a2bc62b8277b77c4db92bc1ef44dcd779fd8c1caf\"]\n\t, [\"tests/helpers/fin-scalar-dispatch-inventory.mjs\", \"611696e3225a7aac28284802b63dd944d6fec725f9004526b3103458c689307f\"]\n]);\n"
+        },
+        {
+          "start": 7327,
+          "previous": "\t\t\t// This builder describes the earlier scalar inventory milestone. Later source-only\n\t\t\t// transitions preserve its exact identities; current pins are checked separately.\n\t\t\t, files: await Promise.all(files.map(async path => ({ path, sha256: sha256(beforeReviewedFinRefusalSource(path, await readFile(path, \"utf8\"))) })))\n",
+          "current": "\t\t\t// This builder describes the earlier scalar inventory milestone. Its four\n\t\t\t// common sources were added by that transition, so no predecessor update can\n\t\t\t// reconstruct them. Retain their authenticated milestone identities directly;\n\t\t\t// the contract test independently reconstructs and hashes every pinned source.\n\t\t\t, files: await Promise.all(files.map(async path => ({\n\t\t\t\tpath\n\t\t\t\t, sha256: scalarDispatchInventoryCommonPins.get(path)\n\t\t\t\t\t?? sha256(beforeReviewedFinRefusalSource(path, await readFile(path, \"utf8\")))\n\t\t\t})))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-record-archive-source-history-tests.mjs",
+      "previousSha256": "5a7ab7cc47b4257475887cc2c6a40432194ae81aeed1879f42708e015be6bbbf",
+      "currentSha256": "9f2711d50e93e17064994fc3a32c2fccecb3d824aaf64ab1f72b777b76ac077f",
+      "edits": [
+        {
+          "start": 918,
+          "previous": "import { sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from \"./source-at-fin-history-milestone.mjs\";\n\nconst sourceAtProducerUpdate = update => sourceAtFinHistoryMilestone(\n\tupdate.path, update.currentSha256, beforePerlXsBudgetSource\n);\n"
+        },
+        {
+          "start": 3099,
+          "previous": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\tinheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource\n\t\t), expected = inheritedRecordArchiveProducerPins[update.path];\n",
+          "current": "\t\tconst source = await sourceAtProducerUpdate(update);\n\t\tconst expected = inheritedRecordArchiveProducerPins[update.path];\n"
+        },
+        {
+          "start": 4106,
+          "previous": "\t\tconst source = await sourceAtFinHistoryRecord(\n\t\t\tinheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource\n\t\t), changed = source + \"\\n// unknown edit\\n\";\n",
+          "current": "\t\tconst source = record.updates.includes(update)\n\t\t\t? await sourceAtFinHistoryRecord(\n\t\t\t\tinheritedRecordArchiveHistoryPath, update.path, beforePerlXsBudgetSource\n\t\t\t) : await sourceAtProducerUpdate(update);\n\t\tconst changed = source + \"\\n// unknown edit\\n\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-tests.mjs",
+      "previousSha256": "77680d31d9bcde88ad7fae227125f22b6f0d087df40e0241e7357c8ad4d107f4",
+      "currentSha256": "1b97bacd36d9c0f16cc054a06683d76e6ce3f6f4b7d72c1823f79220ec6e5b05",
+      "edits": [
+        {
+          "start": 203,
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "current": ""
+        },
+        {
+          "start": 8882,
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\t\tconst source = await sourceAtHistoryMilestone(\n\t\t\tnominalPrimitiveSubtypeBrowserPromotionHistoryPath, path\n\t\t);\n"
+        },
+        {
+          "start": 9569,
+          "previous": "\tconst javascript = await readFile(\"docs/javascript-typescript.md\", \"utf8\");\n",
+          "current": "\tconst javascript = await sourceAtHistoryMilestone(\n\t\tnominalPrimitiveSubtypeBrowserPromotionHistoryPath\n\t\t, \"docs/javascript-typescript.md\"\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/nominal-subtype-npm-promotion-tests.mjs",
+      "previousSha256": "1839f9698dd48853605035b5ae6b63819a894d98e109f2f7e1d929051c464ec8",
+      "currentSha256": "7bfddcf6e6b0c9ec9e4d14090ac3d99120fda84da5239892b4e0b8732f0a339d",
+      "edits": [
+        {
+          "start": 8749,
+          "previous": "\tconst javascript = beforeNominalSubtypeJvmPromotionSource(\n\t\tjavascriptPath, sourceAtHistoryMilestone(\n\t\t\tnominalSubtypeJvmPromotionHistoryPath, javascriptPath\n\t\t)\n",
+          "current": "\tconst javascript = sourceAtHistoryMilestone(\n\t\tnominalSubtypeNpmPromotionHistoryPath, javascriptPath\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-entry-report.mjs",
+      "previousSha256": "7b7366ed3a5c7908ca4538280dd35a39a5a4c236d27e971ba1322a28a44932cf",
+      "currentSha256": "c5972521662ba8b876d55dd8f8b24cc6536b6801898ce69ec8bb9a0e48a259ce",
+      "edits": [
+        {
+          "start": 1444,
+          "previous": "",
+          "current": "const beforeUnusedUnitBinderRename = (model, header) => {\n\tconst current = \"lean_object * _unit\", previous = \"lean_object * unit\";\n\tconst count = model.types.filter(type => type.kind === \"option\").length;\n\tassert.ok(count > 0);\n\tassert.equal(header.split(current).length - 1, count\n\t\t, \"historical structural-entry adapters rename only unused Option Unit binders\");\n\treturn header.replaceAll(current, previous);\n};\n\n"
+        },
+        {
+          "start": 6328,
+          "previous": "\t\t, \"component.h\": generateNativeLeanAdapters(model).header\n",
+          "current": "\t\t, \"component.h\": beforeUnusedUnitBinderRename(\n\t\t\tmodel, generateNativeLeanAdapters(model).header\n\t\t)\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/structural-subtype-promotion-tests.mjs",
+      "previousSha256": "6bc402d6be69a9bf9d34d59443de5ee037ecce92d8ba5a1c374872e269ea0d3c",
+      "currentSha256": "bcc6389167b5807f8dcf1083fd7b0fd7c34d5558eaf37bcd1309dd1f40429e2a",
+      "edits": [
+        {
+          "start": 992,
+          "previous": "",
+          "current": "const structuralGuideCommit = \"61c695a42befc6f9aaa16503a7b6a310dc9b3b58\";\nconst sourceAtStructuralGuideMilestone = path => execFileSync(\"git\", [\"show\", `${structuralGuideCommit}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n"
+        },
+        {
+          "start": 1755,
+          "previous": "\t\tconst source = await readFile(path, \"utf8\");\n",
+          "current": "\t\tconst source = sourceAtStructuralGuideMilestone(path);\n"
+        },
+        {
+          "start": 3412,
+          "previous": "\tconst author = await readFile(\"docs/lean/existing-package.md\", \"utf8\");\n",
+          "current": "\tconst author = sourceAtStructuralGuideMilestone(\"docs/lean/existing-package.md\");\n"
+        },
+        {
+          "start": 3961,
+          "previous": "\tconst guide = await readFile(\"docs/lean/export-decisions.md\", \"utf8\");\n",
+          "current": "\tconst guide = sourceAtStructuralGuideMilestone(\"docs/lean/export-decisions.md\");\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/inherited-checked-record-php-source-history.test.mjs",
+      "previousSha256": "1df484caf3c44a520368313b33137c376b5e6eca033d78cbd674279f4f9f76d1",
+      "currentSha256": "50ed5537983aa65a9350a309a834211bfdf52cac97f81eb731589205b166e78e",
+      "edits": [
+        {
+          "start": 1494,
+          "previous": "",
+          "current": "\t, sourceAtFinHistoryRecord\n"
+        },
+        {
+          "start": 8779,
+          "previous": "\tconst inventory = JSON.parse(await readFile(\n\t\t\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "current": "\tconst inventory = JSON.parse(await sourceAtFinHistoryRecord(\n\t\tinheritedCheckedRecordPhpPinRepairHistoryPath\n\t\t, \"docs/type-surface.v1.json\"\n\t\t, beforeInheritedCheckedRecordPhpPinRepairSource\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/perl-scalar-promotion.test.mjs",
+      "previousSha256": "f753db79c126c0112beb86917152647a939eeea54b6038616b8c5a99d99047ce",
+      "currentSha256": "819b17630ec6ebd0e6bb80c74f4449830d2222cbe914c2b81f13482f543e37e9",
+      "edits": [
+        {
+          "start": 584,
+          "previous": "import { beforeFinRefinementSource, finRefinementNormalizationPaths } from \"./helpers/fin-refinement-source-history.mjs\";\n",
+          "current": "import { beforeFinRefinementSource } from \"./helpers/fin-refinement-source-history.mjs\";\n"
+        },
+        {
+          "start": 1113,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from \"./helpers/source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1335,
+          "previous": "const historicalRead = async path => {\n\tconst bytes = await readFile(path);\n\treturn finRefinementNormalizationPaths.includes(path)\n\t\t? Buffer.from(beforeWasmEntrySupplementSource(path, bytes.toString(\"utf8\"))) : bytes;\n",
+          "current": "const sourceAtPerlScalarMilestone = path => sourceAtFinHistoryRecord(\n\tperlScalarPromotionHistoryPath, path, beforeWasmEntrySupplementSource\n);\n\nconst milestoneRead = current => {\n\tconst pins = new Map();\n\tfor(const evidence of current.evidence)\n\t{\n\t\tfor(const file of evidence.files)\n\t\t{\n\t\t\tassert.ok(!pins.has(file.path) || pins.get(file.path) === file.sha256\n\t\t\t\t, `Conflicting Perl scalar source pin ${file.path}`);\n\t\t\tpins.set(file.path, file.sha256);\n\t\t}\n\t}\n\treturn async path => {\n\t\tconst bytes = await readFile(path), expected = pins.get(path);\n\t\tif(expected === undefined || sha256(bytes) === expected) return bytes;\n\t\treturn Buffer.from(await sourceAtFinHistoryMilestone(path, expected));\n\t};\n"
+        },
+        {
+          "start": 2073,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = (await historicalRead(path)).toString(\"utf8\");\n\treturn { current: JSON.parse(source), previous: JSON.parse(beforePerlScalarPromotionSource(path, source)), history: JSON.parse(await readFile(perlScalarPromotionHistoryPath)) };\n",
+          "current": "\tconst path = \"docs/type-surface.v1.json\", source = await sourceAtPerlScalarMilestone(path);\n\tconst current = JSON.parse(source);\n\treturn { current, previous: JSON.parse(beforePerlScalarPromotionSource(path, source)), history: JSON.parse(await readFile(perlScalarPromotionHistoryPath)), read: milestoneRead(current) };\n"
+        },
+        {
+          "start": 2889,
+          "previous": "\t\tconst current = (await historicalRead(update.path)).toString(\"utf8\"), previous = reversePerlScalarPromotionUpdate(current, update);\n",
+          "current": "\t\tconst current = await sourceAtPerlScalarMilestone(update.path), previous = reversePerlScalarPromotionUpdate(current, update);\n"
+        },
+        {
+          "start": 4150,
+          "previous": "\tconst { current, previous, history } = await snapshot();\n\tawait assertPerlScalarPromotion(current, previous, history.updates, historicalRead);\n",
+          "current": "\tconst { current, previous, history, read } = await snapshot();\n\tawait assertPerlScalarPromotion(current, previous, history.updates, read);\n"
+        },
+        {
+          "start": 6745,
+          "previous": "\tfor(const entry of current.evidence) for(const file of entry.files) assert.equal(sha256(await historicalRead(file.path)), file.sha256, file.path);\n",
+          "current": "\tfor(const entry of current.evidence) for(const file of entry.files)\n\t\tassert.equal(sha256(await read(file.path)), file.sha256, file.path);\n"
+        },
+        {
+          "start": 6997,
+          "previous": "\tconst { current } = await snapshot();\n",
+          "current": "\tconst { current, read } = await snapshot();\n"
+        },
+        {
+          "start": 8030,
+          "previous": "\t\tfor(const file of entry.files) assert.equal(sha256(await historicalRead(file.path)), file.sha256);\n",
+          "current": "\t\tfor(const file of entry.files) assert.equal(sha256(await read(file.path)), file.sha256);\n"
+        },
+        {
+          "start": 9008,
+          "previous": "\tconst { current, previous, history } = await snapshot();\n",
+          "current": "\tconst { current, previous, history, read } = await snapshot();\n"
+        },
+        {
+          "start": 10257,
+          "previous": "\t\tawait assert.rejects(assertPerlScalarPromotion(copy, previous, history.updates, historicalRead));\n",
+          "current": "\t\tawait assert.rejects(assertPerlScalarPromotion(copy, previous, history.updates, read));\n"
+        },
+        {
+          "start": 10350,
+          "previous": "\tawait assert.rejects(promotePerlScalarInventory(current, historicalRead), /Already recorded/u);\n",
+          "current": "\tawait assert.rejects(promotePerlScalarInventory(current, read), /Already recorded/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/php-collection-evidence.test.mjs",
+      "previousSha256": "5065a9b0e703c767b0f9374be33e815ba629551338967b31b34ca94a5910166b",
+      "currentSha256": "d68c4432325dd116da130b9f45d6d2ee586a404fd14c3e37cd6dfa329f9edcc3",
+      "edits": [
+        {
+          "start": 1455,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 10362,
+          "previous": "\t\tassert.equal(run.sourceSha256, sha256(await readFile(run.test)));\n",
+          "current": "\t\tassert.equal(run.sourceSha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\trun.test, run.sourceSha256\n\t\t)));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/recursive-wit-test-registration-history.test.mjs",
+      "previousSha256": "009bb6126987a4622bdad816d6df4e5b2ecc3c5fa6f9f423b17b0031f4dcf2af",
+      "currentSha256": "4f75e10dea79a0c9e3463d2c5ae198d07515d1fad06511c99d1afe93af7c54ab",
+      "edits": [
+        {
+          "start": 3965,
+          "previous": "\tconst inventory = JSON.parse(await readFile(\"docs/type-surface.v1.json\", \"utf8\"));\n",
+          "current": "\tconst sourceAtMilestone = finHistoryMilestoneSource(\n\t\trecord.updates, beforeRecursiveWitTestRegistrationSource\n\t);\n\tconst inventory = JSON.parse(await sourceAtMilestone(\n\t\t\"docs/type-surface.v1.json\"\n\t));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/ruby-copied-graph-values.test.mjs",
+      "previousSha256": "7f0e43712d8ab5dd8efc068560584c91dafb0b7a8cf07fffacf9579253b27bce",
+      "currentSha256": "1a0b644ea9af948948e47ac444f1eda68ec48ad95d79cb1e039219e7dab14ef3",
+      "edits": [
+        {
+          "start": 4324,
+          "previous": "\t\tassert.throws(() => generateCopiedRubyGraphValues(ir), /reserved|duplicat|invalid/i);\n",
+          "current": "\t\tconst model = generateCopiedRubyGraphValues(ir);\n\t\tconst link = model.types.find(type => type.publicType === \"Link\");\n\t\tassert.equal(link.fields[0].leanName, field);\n\t\tassert.equal(link.fields[0].publicName, `${field}_`);\n\t\tassert.match(model.source, new RegExp(`attr_reader :${field}_`, \"u\"));\n"
+        },
+        {
+          "start": 4624,
+          "previous": "",
+          "current": "\tconst escapedCollision = linkedIr();\n\tescapedCollision.types[0].fields[0].name = \"end\";\n\tescapedCollision.types[0].fields[1].name = \"end_\";\n\tassert.throws(() => generateCopiedRubyGraphValues(escapedCollision)\n\t\t, /reserved|duplicat|invalid/i);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/wasm-entry-supplement-history.test.mjs",
+      "previousSha256": "03f153d652dc4da91b54ba0e573ed7b0ed980092c93a2c64dd5c3fbb34acb25f",
+      "currentSha256": "f8a748a9f2810d52fc7496e09c40dc67a397f192212964b29833f7f66347b8a3",
+      "edits": [
+        {
+          "start": 1125,
+          "previous": "import { sourceAtFinHistoryRecord } from \"./helpers/source-at-fin-history-milestone.mjs\";\n",
+          "current": "import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from \"./helpers/source-at-fin-history-milestone.mjs\";\n\nconst wasmEntrySupplementTestPath = \"tests/wasm-entry-supplement.test.mjs\";\nconst wasmEntrySupplementTestSha256\n\t= \"5647d6ffdc49b3c460550defade251f0d690cad23d588ce13690da6abf063a46\";\n\nconst readAtWasmEntrySupplement = async path => path === wasmEntrySupplementTestPath\n\t? Buffer.from(await sourceAtFinHistoryMilestone(\n\t\tpath, wasmEntrySupplementTestSha256\n\t))\n\t: readFile(path);\n"
+        },
+        {
+          "start": 3782,
+          "previous": "\tconst expected = await supplementWasmEntryInventory(previous);\n",
+          "current": "\tconst expected = await supplementWasmEntryInventory(\n\t\tprevious, readAtWasmEntrySupplement\n\t);\n"
+        }
+      ]
+    }
+  ]
+}

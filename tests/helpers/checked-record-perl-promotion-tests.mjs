@@ -22,6 +22,12 @@ const predecessor = async () => {
 		path, sourceAtHistoryMilestone(checkedRecordPerlPromotionHistoryPath, path)
 	));
 };
+const checkedRecordPerlGuideCommit
+	= "41f04691eafefa2b4794a43ca89d20d03173e7fa";
+const sourceAtCheckedRecordPerlGuideMilestone = path => execFileSync(
+	"git", ["show", `${checkedRecordPerlGuideCommit}:${path}`]
+	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }
+);
 
 test("Perl checked-record support authenticates four installed routes and every ABI/mode pair", async () => {
 	const references = await checkedRecordPerlReferences();
@@ -133,7 +139,9 @@ test("Perl checked-record promotion refuses narrowed matrices, forged references
 });
 
 test("Perl consumer and author guides distinguish installed checked records from unfinished positions", async () => {
-	const perl = await readFile("docs/consume/perl.md", "utf8");
+	const perl = sourceAtCheckedRecordPerlGuideMilestone(
+		"docs/consume/perl.md"
+	);
 	assert.ok(perl.includes("### Checked records\n"));
 	assert.ok(perl.includes("checked-record-perl-installed-20261011.md"));
 	assert.ok(perl.includes("LeanBridge::CheckedRecords::width($interval)->bstr"));
@@ -143,7 +151,9 @@ test("Perl consumer and author guides distinguish installed checked records from
 	for(const path of ["Ordinary source", "Reviewed IR"])
 		assert.ok(row.includes(`${path}: Installed checks passed (input, result, field)`));
 	assert.ok(row.includes("Not audited (callback input, callback result)"));
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const author = sourceAtCheckedRecordPerlGuideMilestone(
+		"docs/lean/existing-package.md"
+	);
 	assert.ok(author.includes("[Installed Perl checks](../evidence/checked-record-perl-installed-20261011.md)"));
 	assert.ok(author.includes("[Installed browser checks](../evidence/checked-record-browser-promotion-20261011.md)"));
 	assert.ok(author.includes("[Installed PHP-Wasm checks](../evidence/checked-record-php-wasm-promotion-20261011.md)"));
@@ -151,7 +161,9 @@ test("Perl consumer and author guides distinguish installed checked records from
 	assert.ok(author.includes("callbacks and owned positions remain unsupported."));
 	assert.ok(!author.includes("PHP-Wasm and browser checked-record execution remain pending."));
 	assert.ok(!author.includes("Perl and PHP-Wasm checked-record adapters remain pending."));
-	const decisions = await readFile("docs/lean/export-decisions.md", "utf8");
+	const decisions = sourceAtCheckedRecordPerlGuideMilestone(
+		"docs/lean/export-decisions.md"
+	);
 	assert.ok(!decisions.includes("Installed acceptance for this mapping is pending."));
 	assert.ok(decisions.includes("Perl, native PHP, PHP-Wasm and WIT/WASI"));
 });

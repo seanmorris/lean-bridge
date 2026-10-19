@@ -13,12 +13,14 @@ import { structuralSubtypeArchives, structuralSubtypeProfiles, structuralSubtype
 import { structuralSubtypeConfiguration } from "./structural-subtype-installed-fixture.mjs";
 
 const predecessor = () => JSON.parse(execFileSync("git", ["show", "e844290c9bc4eb1052dcbce6e730f96e59165990:docs/type-surface.v1.json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }));
+const structuralGuideCommit = "61c695a42befc6f9aaa16503a7b6a310dc9b3b58";
+const sourceAtStructuralGuideMilestone = path => execFileSync("git", ["show", `${structuralGuideCommit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
 
 test("structural Subtype guides describe the installed scope and use the actual author fixture", async () => {
 	const nominalFieldGuides = [...["c", "cpp", "perl", "python", "ruby", "rust", "dotnet", "java", "kotlin", "wit-wasi"].map(name => `docs/consume/${name}.md`), "docs/javascript-typescript.md", "docs/php.md"];
 	for(const path of [...["c", "cpp", "python", "rust", "ruby", "dotnet", "java", "kotlin", "perl", "wit-wasi"].map(name => `docs/consume/${name}.md`), "docs/javascript-typescript.md", "docs/php.md"])
 	{
-		const source = await readFile(path, "utf8");
+		const source = sourceAtStructuralGuideMilestone(path);
 		const row = source.split("\n").find(line => line.startsWith("| `Subtype /"));
 		assert.ok(row.includes(structuralSubtypeConversion), path);
 		if(path === "docs/javascript-typescript.md")
@@ -45,12 +47,12 @@ test("structural Subtype guides describe the installed scope and use the actual 
 		assert.ok(source.replace(/\s+/gu, " ").includes("hosted release-floor acceptance"), path);
 		assert.doesNotMatch(source, /Only top-level parameters and results are supported|Nested and callback\nSubtype support remains separate|Subtypes nested in containers, record fields or callback signatures\nare not supported/u);
 	}
-	const author = await readFile("docs/lean/existing-package.md", "utf8");
+	const author = sourceAtStructuralGuideMilestone("docs/lean/existing-package.md");
 	const row = author.split("\n").find(line => line.startsWith("| `Subtype` inside"));
 	assert.equal((row.match(/Installed/gu) ?? []).length, 5);
 	assert.ok(author.includes("Packages combining refinements with graph, owned or callable transports remain rejected."));
 	assert.doesNotMatch(author, /Structural-container compiler and adapter checks are implemented; installed acceptance is still pending|Nested, nominal-field and callback Subtypes remain unsupported/u);
-	const guide = await readFile("docs/lean/export-decisions.md", "utf8");
+	const guide = sourceAtStructuralGuideMilestone("docs/lean/export-decisions.md");
 	const section = guide.split("### Select constructors inside containers\n")[1].split("## Check each consumer representation")[0];
 	assert.ok(section.includes("`StructuralSubtypes.lean`"));
 	assert.ok(section.includes("`lean-bridge.exports.json`"));

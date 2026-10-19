@@ -77,8 +77,17 @@ test("Ruby graph names reject helper and member collisions before generation", (
 	for(const field of ["freeze", "hash", "initialize", "deconstruct_keys", "end", "next"])
 	{
 		const ir = linkedIr(); ir.types[0].fields[0].name = field;
-		assert.throws(() => generateCopiedRubyGraphValues(ir), /reserved|duplicat|invalid/i);
+		const model = generateCopiedRubyGraphValues(ir);
+		const link = model.types.find(type => type.publicType === "Link");
+		assert.equal(link.fields[0].leanName, field);
+		assert.equal(link.fields[0].publicName, `${field}_`);
+		assert.match(model.source, new RegExp(`attr_reader :${field}_`, "u"));
 	}
+	const escapedCollision = linkedIr();
+	escapedCollision.types[0].fields[0].name = "end";
+	escapedCollision.types[0].fields[1].name = "end_";
+	assert.throws(() => generateCopiedRubyGraphValues(escapedCollision)
+		, /reserved|duplicat|invalid/i);
 	for(const name of ["graph-values", "native", "some"])
 		assert.throws(() => generateCopiedRubyGraphValues(renamed(nativeRecursiveReviewedIr(), name)), /reserved/);
 	const duplicate = nativeRecursiveReviewedIr(), spine = duplicate.types.find(type => type.name === "Spine");

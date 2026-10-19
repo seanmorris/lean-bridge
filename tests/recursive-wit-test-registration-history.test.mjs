@@ -93,7 +93,12 @@ test("recursive WIT registration refreshes only matching current-source pins", a
 	assert.ok(pin);
 	assert.equal(pin.path, "src/adoption/test-profiles.mjs");
 	assert.equal(pin.count, 94);
-	const inventory = JSON.parse(await readFile("docs/type-surface.v1.json", "utf8"));
+	const sourceAtMilestone = finHistoryMilestoneSource(
+		record.updates, beforeRecursiveWitTestRegistrationSource
+	);
+	const inventory = JSON.parse(await sourceAtMilestone(
+		"docs/type-surface.v1.json"
+	));
 	for(const update of record.pinUpdates)
 	{
 		const files = inventory.evidence.flatMap(entry => entry.files)

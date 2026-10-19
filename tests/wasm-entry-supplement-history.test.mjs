@@ -16,7 +16,17 @@ import { beforeFinRefinementSource } from "./helpers/fin-refinement-source-histo
 import { beforeArrayRolloutSource } from "./helpers/generic-record-array-rollout-source-history.mjs";
 import { supplementWasmEntryInventory, wasmEntrySupplementObservations } from "./helpers/wasm-entry-supplement.mjs";
 import { beforeWasmEntrySupplementSource, reverseWasmEntrySupplementUpdate, wasmEntrySupplementChangedPaths, wasmEntrySupplementHistoryPath, wasmEntrySupplementPredecessor } from "./helpers/wasm-entry-supplement-source-history.mjs";
-import { sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+import { sourceAtFinHistoryMilestone, sourceAtFinHistoryRecord } from "./helpers/source-at-fin-history-milestone.mjs";
+
+const wasmEntrySupplementTestPath = "tests/wasm-entry-supplement.test.mjs";
+const wasmEntrySupplementTestSha256
+	= "5647d6ffdc49b3c460550defade251f0d690cad23d588ce13690da6abf063a46";
+
+const readAtWasmEntrySupplement = async path => path === wasmEntrySupplementTestPath
+	? Buffer.from(await sourceAtFinHistoryMilestone(
+		path, wasmEntrySupplementTestSha256
+	))
+	: readFile(path);
 
 test("Wasm entry supplement history authenticates exact source transitions and refuses unknown edits", async () => {
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
@@ -49,7 +59,9 @@ test("Wasm entry inventory adds sixteen reports, preserves older claims and auth
 	);
 	const current = JSON.parse(source), previous = JSON.parse(beforeWasmEntrySupplementSource(path, source));
 	const history = JSON.parse(await readFile(wasmEntrySupplementHistoryPath));
-	const expected = await supplementWasmEntryInventory(previous);
+	const expected = await supplementWasmEntryInventory(
+		previous, readAtWasmEntrySupplement
+	);
 	let refreshed = 0;
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)
 	{

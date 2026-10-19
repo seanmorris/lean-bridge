@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCoreFirstRunResidualRepairSource, coreFirstRunResidualRepairChangedPaths } from "./core-first-run-residual-repair-source-history.mjs";
 import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource, coreTerminalReachabilityChangedPaths, coreTerminalReachabilityTerminalPaths } from "./core-terminal-reachability-source-history.mjs";
 import { beforeCoreFirstRunRepairSource, coreFirstRunRepairChangedPaths } from "./core-first-run-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetArchiveSource, checkedRecordValueIndexDotnetArchiveChangedPaths } from "./checked-record-value-index-dotnet-archive-source-history.mjs";
@@ -1315,7 +1316,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreTerminalReachabilityChangedPaths
+	...coreFirstRunResidualRepairChangedPaths
+	, ...coreTerminalReachabilityChangedPaths
 	, ...coreTerminalReachabilityTerminalPaths
 	, ...coreFirstRunRepairChangedPaths
 	, ...checkedRecordValueIndexDotnetArchiveChangedPaths
@@ -1715,8 +1717,11 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
-	let previous = beforeCoreTerminalReachabilityRepairSource(
+	let previous = beforeCoreFirstRunResidualRepairSource(
 		path, text, expected
+	);
+	previous = beforeCoreTerminalReachabilityRepairSource(
+		path, previous, expected
 	);
 	previous = path === typeSurfacePath
 		? normalizeExactTypeSurfaceHistory(previous, expected)

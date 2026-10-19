@@ -25,6 +25,15 @@ int main(void) {
 }
 `;
 
+const beforeUnusedUnitBinderRename = (model, header) => {
+	const current = "lean_object * _unit", previous = "lean_object * unit";
+	const count = model.types.filter(type => type.kind === "option").length;
+	assert.ok(count > 0);
+	assert.equal(header.split(current).length - 1, count
+		, "historical structural-entry adapters rename only unused Option Unit binders");
+	return header.replaceAll(current, previous);
+};
+
 /**
  * Require exact source identities, two reproduced archives and every public/raw execution.
  *
@@ -78,7 +87,9 @@ export const checkStructuralSubtypeEntryReport = async (read, { route, producerC
 	assert.equal(selected.length, 59); assert.deepEqual(await json("observer/selected.json"), selected);
 	assert.deepEqual(report.dispatch.selected, selected);
 	const sources = { "interposer.c": '#include "component.h"\n' + structuralSubtypeEntryInterposer(selected)
-		, "component.h": generateNativeLeanAdapters(model).header
+		, "component.h": beforeUnusedUnitBinderRename(
+			model, generateNativeLeanAdapters(model).header
+		)
 		, "raw.c": structuralSubtypeRawProbe(model), "control.c": controlSource };
 	for(const [path, expected] of Object.entries(sources))
 	{

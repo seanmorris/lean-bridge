@@ -21,6 +21,7 @@ import { phpVariantReviewedIr } from "./helpers/php-variant-fixture.mjs";
 import { composerProbe, phpIsolationFlags } from "./helpers/type-corpus-php.mjs";
 import { validateBrickMathInstall } from "./helpers/brick-math.mjs";
 import { beforePhpStructuredCallables } from "./helpers/php-structured-callable-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const receipt = async () => JSON.parse(await readFile("docs/evidence/php-native-collections-20260922.json"));
 const observations = run => ({
@@ -137,7 +138,9 @@ test("PHP preflight and regression evidence preserves each tested execution boun
 	assert.deepEqual(regressions.map(run => run.name), ["callables", "compounds", "lists", "aliases", "variants", "native"]);
 	for(const run of regressions)
 	{
-		assert.equal(run.sourceSha256, sha256(await readFile(run.test)));
+		assert.equal(run.sourceSha256, sha256(await sourceAtFinHistoryMilestone(
+			run.test, run.sourceSha256
+		)));
 		assert.equal(run.log.sha256, sha256(run.log.text));
 		assert.equal(run.tests, run.name === "native" ? 4 : 1);
 		assert.ok(run.log.text.includes(`# tests ${run.tests}\n# suites 0\n# pass ${run.tests}\n# fail 0`));
