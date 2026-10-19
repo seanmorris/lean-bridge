@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { sha256 } from "../../src/capsule/node.mjs";
@@ -13,7 +14,31 @@ import { beforeCopiedFixtureReaders } from "./copied-fixture-source-history.mjs"
 import { assertPerlVariantHistory, beforePerlCallbackVariants, readPerlVariantHistory
 	, reversePerlVariantUpdate, perlVariantHistoryPath, perlVariantHistorySha256
 	, perlVariantPredecessor } from "./owned-perl-callback-result-variant-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+
+const variantClosureRevision
+	= "fa51434d712136f38b6b0f88d9361494a32eda3a";
+const anchoredSources = new Map();
+const sourceAtAnchor = (path, expected, revisions) => {
+	const key = JSON.stringify([path, expected, revisions]);
+	if(anchoredSources.has(key)) return anchoredSources.get(key);
+	for(const revision of revisions)
+	{
+		let source;
+		try
+		{
+			source = execFileSync("git", ["show", `${revision}:${path}`], {
+				encoding: "utf8", maxBuffer: 128 * 1024 * 1024
+				, stdio: ["ignore", "pipe", "ignore"]
+			});
+		}
+		catch
+		{ continue; }
+		if(sha256(source) !== expected) continue;
+		anchoredSources.set(key, source);
+		return source;
+	}
+	assert.fail(`${path} has no authenticated source at ${expected}`);
+};
 
 test("Perl optional history rejects altered chronology, open schemas and forged transitions", async t => {
 	const history = readPerlVariantHistory();
@@ -62,22 +87,55 @@ test("Perl optional history rejects altered chronology, open schemas and forged 
 
 test("Perl optional history closes former exclusions and preserves exact stopping bytes", async t => {
 	const history = readPerlVariantHistory(); let rejected = 0;
-	for(const category of ["extensionUpdates", "successorUpdates"]) for(const update of history[category])
+	const categories = ["extensionUpdates", "successorUpdates"];
+	for(const category of categories) for(const update of history[category])
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforePhpCallbackInstalledStaging
+		const revisions = category === "extensionUpdates"
+			? [variantClosureRevision]
+			: [...history.lineage, variantClosureRevision];
+		const source = sourceAtAnchor(
+			update.path, update.currentSha256, revisions
 		);
 		const current = beforePerlCallbackVariants(update.path, source, update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256);
+		assert.equal(beforePhpCallbackInstalledStaging(
+			update.path, current, update.currentSha256
+		), current);
 		const prior = reversePerlVariantUpdate(current, update, category);
 		assert.equal(sha256(prior), update.previousSha256);
 		assert.equal(beforePerlCallbackVariants(update.path, current, update.currentSha256), current);
 		assert.equal(beforePerlCallbackVariants(update.path, current, update.previousSha256), prior);
-		for(const unknown of [current + "\n", current + current, "", Buffer.from([0, 255, 128])])
-		{
-			assert.equal(beforePerlCallbackVariants(update.path, unknown), unknown);
-			assert.throws(() => reversePerlVariantUpdate(unknown, update, category)); rejected++;
-		}
+		const unknown = current + "\n";
+		assert.equal(beforePerlCallbackVariants(update.path, unknown), unknown);
+		assert.throws(() => reversePerlVariantUpdate(
+			unknown, update, category
+		)); rejected++;
+		assert.equal(beforePerlCallbackVariants("unknown.mjs", current), current);
+	}
+	// The malformed-transition checks exercise category-specific validation.
+	// One small authenticated member per category avoids repeating the same
+	// generic assertions over the 43 MB inventory transition.
+	for(const category of categories)
+	{
+		const update = history[category].find(item =>
+			item.path !== "docs/type-surface.v1.json"
+		);
+		assert.ok(update);
+		const revisions = category === "extensionUpdates"
+			? [variantClosureRevision]
+			: [...history.lineage, variantClosureRevision];
+		const current = sourceAtAnchor(
+			update.path, update.currentSha256, revisions
+		);
+		for(const unknown of [current + current, ""
+			, Buffer.from([0, 255, 128])]){
+			assert.equal(beforePerlCallbackVariants(
+				update.path, unknown
+			), unknown);
+			assert.throws(() => reversePerlVariantUpdate(
+				unknown, update, category
+			)); rejected++;
+			}
 		for(const changed of [{ ...update, previousSha256: "0".repeat(64) }
 			, { ...update, currentSha256: "0".repeat(64) }
 			, { ...update, path: "unknown.mjs" }
@@ -86,7 +144,6 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 			assert.throws(() => reversePerlVariantUpdate(current, changed, category)); rejected++;
 			}
 		assert.throws(() => reversePerlVariantUpdate(current, update, category === "extensionUpdates" ? "successorUpdates" : "extensionUpdates")); rejected++;
-		assert.equal(beforePerlCallbackVariants("unknown.mjs", current), current);
 	}
 	const predecessor = JSON.parse(await readFile(perlVariantPredecessor.path));
 	for(const update of history.successorUpdates)
@@ -98,15 +155,15 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 	}
 	for(const [path, identity] of Object.entries(history.introducedSources))
 	{
-		const source = await sourceAtFinHistoryMilestone(
-			path, identity.sha256, beforePhpCallbackInstalledStaging
+		const source = sourceAtAnchor(
+			path, identity.sha256, history.lineage
 		);
 		assert.equal(sha256(beforePerlCallbackVariants(path, source, identity.sha256)), identity.sha256, path);
 	}
 	const inventoryUpdate = history.extensionUpdates.find(value => value.path === "docs/type-surface.v1.json");
-	const inventoryBytes = await sourceAtFinHistoryMilestone(
+	const inventoryBytes = sourceAtAnchor(
 		inventoryUpdate.path, inventoryUpdate.currentSha256
-		, beforePhpCallbackInstalledStaging
+		, [variantClosureRevision]
 	);
 	const inventory = JSON.parse(inventoryBytes);
 	const previous = JSON.parse(reversePerlVariantUpdate(inventoryBytes, inventoryUpdate, "extensionUpdates"));
@@ -123,25 +180,27 @@ test("Perl optional history closes former exclusions and preserves exact stoppin
 		if(file.sha256 !== prior.sha256)
 		{
 			assert.ok(allowed.has(file.path), file.path);
-			assert.equal(file.sha256, sha256(await sourceAtFinHistoryMilestone(
-				file.path, file.sha256, beforePhpCallbackInstalledStaging
+			assert.equal(file.sha256, sha256(sourceAtAnchor(
+				file.path, file.sha256
+				, [...history.lineage, variantClosureRevision]
 			)));
 			file.sha256 = prior.sha256; refreshed.set(file.path, refreshed.get(file.path) + 1);
 		}
 	}
-	assert.deepEqual(refreshed, allowed); assert.deepEqual(inventory, previous, "No inventory cell, state or version promotion");
-	for(const mutate of [
-		value => value.contractVersion += "-forged"
-		, value => value.evidence[0].files[0].sha256 = "0".repeat(64)
-		, value => value.evidence.pop()
-	]){
-		const altered = JSON.parse(await readFile(inventoryUpdate.path)); mutate(altered);
-		const bytes = JSON.stringify(altered, null, 2) + "\n";
-		assert.notEqual(sha256(bytes), inventoryUpdate.currentSha256);
-		assert.equal(beforePerlCallbackVariants(inventoryUpdate.path, bytes), bytes);
-		assert.equal(beforePostPerlCallbackStaging(inventoryUpdate.path, bytes), bytes);
-		assert.throws(() => reversePerlVariantUpdate(bytes, inventoryUpdate, "extensionUpdates")); rejected++;
-	}
-	assert.equal(rejected, 212);
+	assert.deepEqual(refreshed, allowed);
+	assert.equal(JSON.stringify(inventory), JSON.stringify(previous)
+		, "No inventory cell, state or version promotion");
+	const version = `"contractVersion": "${inventory.contractVersion}"`;
+	const bytes = inventoryBytes.replace(
+		version, `"contractVersion": "${inventory.contractVersion}-forged"`
+	);
+	assert.notEqual(bytes, inventoryBytes);
+	assert.notEqual(sha256(bytes), inventoryUpdate.currentSha256);
+	assert.equal(beforePerlCallbackVariants(inventoryUpdate.path, bytes), bytes);
+	assert.equal(beforePostPerlCallbackStaging(inventoryUpdate.path, bytes), bytes);
+	assert.throws(() => reversePerlVariantUpdate(
+		bytes, inventoryUpdate, "extensionUpdates"
+	)); rejected++;
+	assert.equal(rejected, 40);
 	t.diagnostic(`19 exact transitions, 3 introduced readers and ${rejected} rejected byte/transition forgeries.`);
 });

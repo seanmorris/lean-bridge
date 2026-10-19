@@ -34,12 +34,16 @@ test("Perl callback source history authenticates complete transitions and reject
 	for(const update of history.updates)
 	{
 		const current = Buffer.from(beforePostPerlCallbackStaging(update.path, await readFile(update.path)));
-		const prior = beforeOwnedPerlCallbackResults(update.path, current);
+		const prior = beforeOwnedPerlCallbackResults(
+			update.path, current, update.previousSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedPerlCallbackResults(update.path, current, update.currentSha256), current);
 		assert.equal(beforeOwnedPerlCallbackResults(update.path, current, update.previousSha256), prior);
-		assert.equal(beforeOwnedPerlCallbackResults(update.path, prior), prior);
+		assert.equal(beforeOwnedPerlCallbackResults(
+			update.path, prior, update.previousSha256
+		), prior);
 		for(const unknown of [current + "\n", current + current, "", Buffer.from([0, 255, 128, 192])])
 		{
 			assert.equal(beforeOwnedPerlCallbackResults(update.path, unknown), unknown);

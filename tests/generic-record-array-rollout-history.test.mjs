@@ -15,12 +15,28 @@ import { readTypeSurface } from "../src/adoption/type-surface.mjs";
 import { beforeFinRefinementSource, finRefinementNormalizationPaths } from "./helpers/fin-refinement-source-history.mjs";
 import { supplementArrayRolloutInventory } from "./helpers/generic-record-array-rollout.mjs";
 import { arrayRolloutChangedPaths, arrayRolloutHistoryPath, arrayRolloutPredecessor, beforeArrayRolloutSource, reverseArrayRolloutUpdate } from "./helpers/generic-record-array-rollout-source-history.mjs";
-import { beforeFinDiagnosticSource } from "./helpers/native-fin-diagnostic-source-history.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
-const historicalRead = async path => {
-	const bytes = await readFile(path);
-	return finRefinementNormalizationPaths.includes(path)
-		? Buffer.from(beforeFinDiagnosticSource(path, bytes.toString("utf8"))) : bytes;
+const arrayRolloutIntegration
+	= "ff71335c762628da47887bfd4f208e62c39b94b7";
+const historicalSources = new Map();
+const historicalRead = (path, expected = undefined) => {
+	const key = JSON.stringify([path, expected]);
+	if(!historicalSources.has(key)) historicalSources.set(key, (async () => {
+		const milestone = execFileSync(
+			"git", ["show", `${arrayRolloutIntegration}:${path}`]
+			, { maxBuffer: 128 * 1024 * 1024 }
+		);
+		if(!finRefinementNormalizationPaths.includes(path))
+		{
+			if(expected !== undefined) assert.equal(sha256(milestone), expected);
+			return milestone;
+		}
+		return Buffer.from(await sourceAtFinHistoryMilestone(
+			path, expected ?? sha256(milestone)
+		));
+	})());
+	return historicalSources.get(key);
 };
 
 test("Array rollout history authenticates every exact predecessor and refuses unrecorded changes", async () => {
@@ -30,7 +46,9 @@ test("Array rollout history authenticates every exact predecessor and refuses un
 	assert.deepEqual(history.updates.map(item => item.path), arrayRolloutChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = (await historicalRead(update.path)).toString("utf8"), previous = reverseArrayRolloutUpdate(current, update);
+		const current = (await historicalRead(
+			update.path, update.currentSha256
+		)).toString("utf8"), previous = reverseArrayRolloutUpdate(current, update);
 		assert.equal(sha256(previous), update.previousSha256);
 		assert.equal(beforeArrayRolloutSource(update.path, current), previous);
 		assert.equal(beforeFinRefinementSource(update.path, current, update.previousSha256), previous);
@@ -46,9 +64,14 @@ test("Array rollout history authenticates every exact predecessor and refuses un
 });
 
 test("Array rollout inventory changes match the supplement and every current source pin", async () => {
-	const path = "docs/type-surface.v1.json", source = (await historicalRead(path)).toString("utf8"), current = JSON.parse(source);
-	const previous = JSON.parse(beforeArrayRolloutSource(path, source));
 	const history = JSON.parse(await readFile(arrayRolloutHistoryPath));
+	const path = "docs/type-surface.v1.json";
+	const update = history.updates.find(item => item.path === path);
+	assert.ok(update);
+	const source = (await historicalRead(
+		path, update.currentSha256
+	)).toString("utf8"), current = JSON.parse(source);
+	const previous = JSON.parse(beforeArrayRolloutSource(path, source));
 	const expected = await supplementArrayRolloutInventory(previous, historicalRead);
 	let refreshed = 0;
 	for(const entry of expected.evidence.slice(0, previous.evidence.length)) for(const file of entry.files)

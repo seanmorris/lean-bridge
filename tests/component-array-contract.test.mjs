@@ -66,6 +66,8 @@ import "./helpers/core-quality-budget-tests.mjs";
 import "./helpers/core-quality-budget-history-tests.mjs";
 import "./helpers/core-quality-sharding-source-history-tests.mjs";
 import "./helpers/core-first-run-repair-source-history-tests.mjs";
+import "./helpers/core-terminal-reachability-source-history-tests.mjs";
+import "./helpers/owned-dotnet-span-runtime-history-tests.mjs";
 import "./helpers/checked-record-value-index-foundation-source-history-tests.mjs";
 import "./helpers/value-index-core-lineage-repair-source-history-tests.mjs";
 import "./helpers/value-index-browser-lint-source-history-tests.mjs";

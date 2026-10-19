@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "milestone": "owned-dotnet-span-runtime-v1",
+  "transitionCommit": "dc8f1a7151f3259e7e217449a8385559cd7e1d36",
+  "note": "dc8f1a7 qualified Span<byte> as global::System.Span<byte> in copied .NET Runtime.cs; reverse only exact whole-file digests",
+  "entries": [
+    {
+      "path": "src/LeanBridge.Aliases/Runtime.cs",
+      "currentSha256": "11a36545c06ee2a1e1e869d00cacf1f85411fca6c30ef2fc54ffaf56043175be",
+      "previousSha256": "f5f27684f9481257467024eac3be10cb2c827543747ff7087dfbb73ed00d8e1a",
+      "edits": [
+        {
+          "start": 6857,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 7937,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 9494,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 9947,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    },
+    {
+      "path": "src/LeanBridge.Callables/Runtime.cs",
+      "currentSha256": "bd9908c35a2cb1b48bc7b0e09893f601d1dbc648f99f5e38802752e9650fe532",
+      "previousSha256": "643aecc13da9fcb20dbf8e15afb586300d5e13fb6dcafcc12b98ce51ca4991b2",
+      "edits": [
+        {
+          "start": 19139,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 20219,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 21776,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 22229,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    },
+    {
+      "path": "src/LeanBridge.Collections/Runtime.cs",
+      "currentSha256": "6d04fd0d6243f5bbc18cb98a1510146d4ca18f2c3dcaed37b847d49156c713c6",
+      "previousSha256": "af340b83a7c859d90548654e322fd35a9ef59d21c5930c769b8326ee5573de2d",
+      "edits": [
+        {
+          "start": 37911,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 41265,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 49313,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 51872,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    },
+    {
+      "path": "src/LeanBridge.Compounds/Runtime.cs",
+      "currentSha256": "df51c0cb26e57897fd3b8661f8f4fb9cb51eb095c135cffde8d1c961a62c6006",
+      "previousSha256": "f6231282f80d806477f2dcf74ac6367d81266a1fd447b1c98ba0ecd51a52b694",
+      "edits": [
+        {
+          "start": 31500,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 34495,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 40815,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 42735,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    },
+    {
+      "path": "src/LeanBridge.Lists/Runtime.cs",
+      "currentSha256": "b31d0055e18791e56daa7474b8f0b7aa8a608732bb225b3072959e3073a6d72b",
+      "previousSha256": "2cd0f26dcb5adad69f7acb11dee0c2b125d53920836295d54048fb79e43db949",
+      "edits": [
+        {
+          "start": 25085,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 27299,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 32098,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 33601,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    },
+    {
+      "path": "src/LeanBridge.Variants/Runtime.cs",
+      "currentSha256": "9e387edd31274ceb282bbcef4fb81d3e6813555d9afcc0e03bbaf0518fda180e",
+      "previousSha256": "8633495adbff198270e258a7f3b164decb0fd373cf4562b0fb2b293ed4ec02d3",
+      "edits": [
+        {
+          "start": 8404,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 18585,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 19665,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        },
+        {
+          "start": 21182,
+          "current": "global::System.Span<byte>",
+          "previous": "Span<byte>"
+        }
+      ]
+    }
+  ]
+}

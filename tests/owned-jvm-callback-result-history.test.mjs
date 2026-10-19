@@ -39,11 +39,15 @@ test("JVM callback source history authenticates complete transitions and rejects
 	for(const update of history.updates)
 	{
 		const current = Buffer.from(beforeOwnedPerlCallbackResults(update.path, await readFile(update.path)));
-		const prior = beforeOwnedJvmCallbackResults(update.path, current);
+		const prior = beforeOwnedJvmCallbackResults(
+			update.path, current, update.previousSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforeOwnedJvmCallbackResults(update.path, current, update.currentSha256), current);
-		assert.equal(beforeOwnedJvmCallbackResults(update.path, prior), prior);
+		assert.equal(beforeOwnedJvmCallbackResults(
+			update.path, prior, update.previousSha256
+		), prior);
 		for(const unknown of [current + "\n", current + current, ""])
 		{
 			assert.equal(beforeOwnedJvmCallbackResults(update.path, unknown), unknown);

@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNativeForkRepair, nativeForkRepairNormalizationPaths } from "./native-fork-repair-history.mjs";
+import { beforeOwnedDotnetSpanRuntime } from "./owned-dotnet-span-runtime-history.mjs";
 
 export const ownedDotnetProcessBaseline = "02d067429ab3b2b72d38270ea9c491c81017fe2f";
 export const ownedDotnetProcessPath = "docs/evidence/owned-dotnet-process-20260927.json";
@@ -51,6 +52,7 @@ const record = () => cached ??= JSON.parse(readFileSync(ownedDotnetProcessPath, 
  * @param update - Path, full digests and ordered literal edits.
  */
 export const reverseOwnedDotnetProcess = (source, update) => {
+	source = beforeOwnedDotnetSpanRuntime(update.path, source, update.currentSha256);
 	source = beforeNativeForkRepair(update.path, source, update.currentSha256);
 	assert.equal(sha256(source), update.currentSha256, update.path);
 	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
@@ -102,6 +104,8 @@ export const ownedDotnetProcessHistoricalBytes = (path, bytes, expected) => owne
  * @param expected - Exact identity stored in the immutable earlier receipt.
  */
 export const beforeOwnedDotnetProcessGenerated = (path, source, expected) => {
+	if(sha256(source) === expected) return source;
+	source = beforeOwnedDotnetSpanRuntime(path, source, expected);
 	const digest = sha256(source);
 	if(digest === expected) return source;
 	const update = record().generatedUpdates.find(item => item.path === path

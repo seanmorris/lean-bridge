@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource, coreTerminalReachabilityChangedPaths, coreTerminalReachabilityTerminalPaths } from "./core-terminal-reachability-source-history.mjs";
 import { beforeCoreFirstRunRepairSource, coreFirstRunRepairChangedPaths } from "./core-first-run-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetArchiveSource, checkedRecordValueIndexDotnetArchiveChangedPaths } from "./checked-record-value-index-dotnet-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetResultOnlyCoreRepairSource, checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths } from "./checked-record-value-index-dotnet-result-only-core-repair-source-history.mjs";
@@ -1314,7 +1315,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreFirstRunRepairChangedPaths
+	...coreTerminalReachabilityChangedPaths
+	, ...coreTerminalReachabilityTerminalPaths
+	, ...coreFirstRunRepairChangedPaths
 	, ...checkedRecordValueIndexDotnetArchiveChangedPaths
 	, ...checkedRecordValueIndexJvmChangedPaths
 	, ...checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths
@@ -1711,8 +1714,15 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
  */
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
-	const text = source.toString(), previous = path === typeSurfacePath
-		? normalizeExactTypeSurfaceHistory(text, expected)
-		: normalizeFinRefinementSource(path, text, expected);
+	const text = source.toString();
+	let previous = beforeCoreTerminalReachabilityRepairSource(
+		path, text, expected
+	);
+	previous = path === typeSurfacePath
+		? normalizeExactTypeSurfaceHistory(previous, expected)
+		: normalizeFinRefinementSource(path, previous, expected);
+	previous = beforeCoreTerminalReachabilitySource(
+		path, previous, expected
+	);
 	return previous === text ? source : previous;
 };

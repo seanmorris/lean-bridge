@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-terminal-reachability-v1",
+  "predecessorCommit": "a6cd0f01f03d1bf79d53597840008fe0457b675f",
+  "pathsSha256": "405220ec8123650408b52393236f3caf0b054765b7f09ffc80c534c230ad1324",
+  "pinCount": 3,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "a15c76f8077c67f263f54aa6cc6882c5f95de7369fb08605a3944a618bc3d2d4",
+      "currentSha256": "55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3",
+      "count": 3
+    }
+  ],
+  "additions": [
+    {
+      "path": "docs/evidence/owned-dotnet-span-runtime-history-20261018.json",
+      "currentSha256": "605bf5d49060ef6347af7347d48860068441a682fb08ca14c57d29bf85685b75"
+    },
+    {
+      "path": "scripts/update-core-terminal-reachability-source-history.mjs",
+      "currentSha256": "c5b8d94086f928e9dadef54cc8ca4d69e85006420391a6ffeea6a37d00ac2a9f"
+    },
+    {
+      "path": "tests/helpers/core-terminal-reachability-source-history-tests.mjs",
+      "currentSha256": "d15c05a32ad1c205c1b4f22df37a1c640a693e71fd1f7282f7ccab731d3b6957"
+    },
+    {
+      "path": "tests/helpers/core-terminal-reachability-source-history.mjs",
+      "currentSha256": "0e7d587c3d421b68504c660b81b5d36ee0b02ad6b840a5681a1e6209c031af4c"
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-span-runtime-history-tests.mjs",
+      "currentSha256": "3bb667c44b6b1ce84be99286cd271eedb9ce28054ae9ae3676011a7c93e3b006"
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-span-runtime-history.mjs",
+      "currentSha256": "d137f7d8a433b1f36a0046b8fae3a668f92f847e787fdc506026f208894ff812"
+    }
+  ],
+  "terminalEntries": [
+    {
+      "path": "tests/helpers/inherited-checked-record-php-evidence.mjs",
+      "expectedCommit": "4268943dc4bdd1f7a8dca256075b75c64594f437",
+      "currentCommit": "16a722de655f2d6b691b9c0e26d1ad945337445a",
+      "expectedSha256": "95c96619924f1657a1c54c4a162fc115baf03f99229ea5de20a5a0085e16e2eb",
+      "currentSha256": "e4f3086ee1b7e87f6e46fcc98c6c609661486f67ca6e2957dc8664890644e0d3",
+      "edits": [
+        {
+          "start": 1235,
+          "previous": "export const inheritedCheckedRecordPhpEvidenceSha256 = null;\n",
+          "current": "export const inheritedCheckedRecordPhpEvidenceSha256\n\t= \"fab6f47368402da87eac5827124c4a16d66ca261e9d2299f44f463c311890ee1\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-php-provenance.mjs",
+      "expectedCommit": "de9d1316c340a39de8d608475689526b176d9df5",
+      "currentCommit": "16a722de655f2d6b691b9c0e26d1ad945337445a",
+      "expectedSha256": "a45af0b5d5a18aebe4506ce4aa707def0ff4885f41cf4a8272707142f677b3e2",
+      "currentSha256": "bb35baff47818fd553dbf538c140699bc85932a1d89e71ef29ad7a38ad3829f6",
+      "edits": [
+        {
+          "start": 421,
+          "previous": "export const inheritedCheckedRecordPhpProducer = null;\nexport const inheritedCheckedRecordPhpChecker = null;\nexport const inheritedCheckedRecordPhpArchiver = null;\n",
+          "current": "export const inheritedCheckedRecordPhpProducer\n\t= \"4e194c3e38dd61608cfe72ba253351b8c7fc8fce\";\nexport const inheritedCheckedRecordPhpChecker\n\t= \"4e194c3e38dd61608cfe72ba253351b8c7fc8fce\";\nexport const inheritedCheckedRecordPhpArchiver\n\t= \"6ab99139ced26f09758e339b3284c2e31c1ee419\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-evidence.mjs",
+      "expectedCommit": "de17a9463fe0d51b4c5464b295d262aae670e4a3",
+      "currentCommit": "9aee3a3b71727134d4b26afd871eee44d9070746",
+      "expectedSha256": "d90ce79b584e42fb75e3918b3023e53180258852eb072176d74bcf1350c37df7",
+      "currentSha256": "4869f87e663e904765542ea78d22314bd4ce84a65851c67e10d4175eb4be290d",
+      "edits": [
+        {
+          "start": 1410,
+          "previous": "export const inheritedCheckedRecordPythonEvidenceSha256 = null;\n",
+          "current": "export const inheritedCheckedRecordPythonEvidenceSha256\n\t= \"0537016f9dc5e486ef864b3c2be179557a542f0e34c57ca9bc52ac41ad8d37ac\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-python-provenance.mjs",
+      "expectedCommit": "de17a9463fe0d51b4c5464b295d262aae670e4a3",
+      "currentCommit": "9aee3a3b71727134d4b26afd871eee44d9070746",
+      "expectedSha256": "dd034a13e33dcff6c9bef840adf699b6b41da5984c1d562414db619c9aaf3c35",
+      "currentSha256": "dc707922c52981e13041ca44a1f7fe2eaf57ce78fcd05f2fedf8fbaf0ad6c696",
+      "edits": [
+        {
+          "start": 429,
+          "previous": "export const inheritedCheckedRecordPythonProducer = null;\nexport const inheritedCheckedRecordPythonChecker = null;\nexport const inheritedCheckedRecordPythonArchiver = null;\n",
+          "current": "export const inheritedCheckedRecordPythonProducer\n\t= \"7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d\";\nexport const inheritedCheckedRecordPythonChecker\n\t= \"7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d\";\nexport const inheritedCheckedRecordPythonArchiver\n\t= \"7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-evidence.mjs",
+      "expectedCommit": "3f7f275e55d9c84e707e1d1e1553fdd40d2e0e5",
+      "currentCommit": "fd6cec142b01c9b6ac9537bfd728a46045a4e8c9",
+      "expectedSha256": "90a914261e15ddb2b6531bf064b1acc4be1dc88d39462a11a03bd0659de8b90c",
+      "currentSha256": "f3a3480467ec91e98d1dabcbd959887e38b8d7a6e4862a00daed0f4009a66ed6",
+      "edits": [
+        {
+          "start": 1271,
+          "previous": "export const inheritedCheckedRecordRubyEvidenceSha256 = null;\n",
+          "current": "export const inheritedCheckedRecordRubyEvidenceSha256\n\t= \"16c66b83949bf95444ec28a180a3dff4ebeae784cb65fed7a2d78cc9d88eb088\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/inherited-checked-record-ruby-provenance.mjs",
+      "expectedCommit": "3f7f275e55d9c84e707e1d1e1553fdd40d2e0e5",
+      "currentCommit": "fd6cec142b01c9b6ac9537bfd728a46045a4e8c9",
+      "expectedSha256": "1db7ec154e327bd5322c508c643a4dd197c594088a6b5ab765c2615b1acf3cd5",
+      "currentSha256": "b6560fc1b0baf7a16898fd201f69edc71c0040ae83ea2515d5a037be0581bca3",
+      "edits": [
+        {
+          "start": 419,
+          "previous": "export const inheritedCheckedRecordRubyProducer = null;\nexport const inheritedCheckedRecordRubyChecker = null;\nexport const inheritedCheckedRecordRubyArchiver = null;\n",
+          "current": "export const inheritedCheckedRecordRubyProducer\n\t= \"7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d\";\nexport const inheritedCheckedRecordRubyChecker\n\t= \"7cf1c5f993e8cdb1ce68265891b9c00a8950fb7d\";\nexport const inheritedCheckedRecordRubyArchiver\n\t= \"9aee3a3b71727134d4b26afd871eee44d9070746\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-borrow-history.mjs",
+      "expectedCommit": "2e422bde5449fd6578af0d4c27256e7110ec3c48",
+      "currentCommit": "dec8d558423d1b1c2ec4b95999ea8779adb60091",
+      "expectedSha256": "3e08221d509fbfdcd9ee722c44d5019f5da8d8c856f938058e16de9b91800a70",
+      "currentSha256": "61c0eeb911454e0a0209e4b16bc20ca5fa6bc6ac55338dfcf752e4debb3f4a51",
+      "edits": [
+        {
+          "start": 228,
+          "previous": "import { beforeOwnedBorrowCi, ownedBorrowCiChangedPaths } from \"./owned-borrow-ci-history.mjs\";\n",
+          "current": "import { beforeOwnedBorrowCi, ownedBorrowCiNormalizationPaths } from \"./owned-borrow-ci-history.mjs\";\n"
+        },
+        {
+          "start": 2562,
+          "previous": "export const ownedBorrowNormalizationPaths = [...new Set([...ownedBorrowChangedPaths, ...ownedBorrowCiChangedPaths])].sort();\n",
+          "current": "export const ownedBorrowNormalizationPaths = [...new Set([...ownedBorrowChangedPaths, ...ownedBorrowCiNormalizationPaths])].sort();\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-ci.mjs",
+      "expectedCommit": "bffb781a7a0926b93dcef46c2bc03efecab86cf3",
+      "currentCommit": "fa51434d712136f38b6b0f88d9361494a32eda3a",
+      "expectedSha256": "352b5452d4d02563e3eaf8a27f97fe6d40867ed7fdc7abe15d6890e43dd02308",
+      "currentSha256": "41e9fbf34d062dea5c88677fab5eccfabf26bbd0db3c0644b3b04928720bd9ad",
+      "edits": [
+        {
+          "start": 2652,
+          "previous": "",
+          "current": " * @param legacy - Check only the immutable predecessor's combined-only gate.\n"
+        },
+        {
+          "start": 2734,
+          "previous": "export const assertOwnedPerlCallbackResultCi = (workflow, manifest) => {\n\tassert.equal(manifest.scripts[\"test:owned-perl-callback-results\"], ownedPerlCallbackResultScript);\n\tassert.equal(manifest.scripts[\"test:owned-perl-callback-evidence\"], ownedPerlCallbackEvidenceScript);\n",
+          "current": "export const assertOwnedPerlCallbackResultCi = (workflow, manifest, legacy = false) => {\n\tassert.equal(typeof legacy, \"boolean\");\n\tconst resultScript = legacy ? ownedPerlCallbackResultScript\n\t\t.replace(\"LEAN_BRIDGE_OWNED_PERL_CALLBACK_RESULT_VARIANT_PACKAGE_TEST=1 \", \"\")\n\t\t.replace(\" \" + helper(\"variant-packaging-tests\"), \"\") : ownedPerlCallbackResultScript;\n\tconst evidenceScript = legacy ? ownedPerlCallbackEvidenceScript.replace(\" \" + helper(\"variant-evidence-tests\"), \"\") : ownedPerlCallbackEvidenceScript;\n\tconst reports = legacy ? ownedPerlCallbackResultReports.filter(path => !path.startsWith(\"build/owned-perl-callback-result-variants/\")) : ownedPerlCallbackResultReports;\n\tassert.equal(manifest.scripts[\"test:owned-perl-callback-results\"], resultScript);\n\tassert.equal(manifest.scripts[\"test:owned-perl-callback-evidence\"], evidenceScript);\n"
+        },
+        {
+          "start": 5054,
+          "previous": "\tfor(const [step, count, kind] of [[runtime, 41, \"results\"], [evidence, 16, \"evidence\"]])\n",
+          "current": "\tfor(const [step, count, kind] of [[runtime, legacy ? 37 : 41, \"results\"], [evidence, legacy ? 14 : 16, \"evidence\"]])\n"
+        },
+        {
+          "start": 6077,
+          "previous": "\t\t\t, ...kind === \"results\" ? ownedPerlCallbackResultReports.map(path => \"test -s \" + path) : []];\n",
+          "current": "\t\t\t, ...kind === \"results\" ? reports.map(path => \"test -s \" + path) : []];\n"
+        },
+        {
+          "start": 6936,
+          "previous": "\t\t, \"owned-perl-callback-result-variants/\"\n",
+          "current": "\t\t, ...legacy ? [] : [\"owned-perl-callback-result-variants/\"]\n"
+        },
+        {
+          "start": 7470,
+          "previous": "\treturn { tests: 41, evidenceTests: 16, reports: 22, perls: 4, failurePropagated: true };\n",
+          "current": "\treturn { tests: legacy ? 37 : 41, evidenceTests: legacy ? 14 : 16\n\t\t, reports: reports.length, perls: 4, failurePropagated: true };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-variant-evidence-tests.mjs",
+      "expectedCommit": "7d07f9b3555ad5f4211ddf36118bb16b0cf3693c",
+      "currentCommit": "fa51434d712136f38b6b0f88d9361494a32eda3a",
+      "expectedSha256": "b69e891248f289905360b1939aa88d11a78adaf097e1b80ca3283d78d1614748",
+      "currentSha256": "4687c0bf1f613db1aca1bda514fd2d89f3a3838434c5f667754ed893ccc60e26",
+      "edits": [
+        {
+          "start": 766,
+          "previous": "",
+          "current": "import { beforePostPerlCallbackStaging } from \"./post-perl-callback-staging-history.mjs\";\n"
+        },
+        {
+          "start": 1266,
+          "previous": "const source = readFile;\n",
+          "current": "let recordedSources;\nconst source = async path => {\n\tif(!recordedSources)\n\t{\n\t\tconst first = (await reports())[ownedPerlCallbackVariantReports[0]];\n\t\trecordedSources = new Map(first.cli.files.map(value => [value.path, value.sha256]));\n\t}\n\tconst bytes = await readFile(path), expected = recordedSources.get(path);\n\treturn expected ? beforePostPerlCallbackStaging(path, bytes, expected) : bytes;\n};\n"
+        },
+        {
+          "start": 10420,
+          "previous": "",
+          "current": "\t\t\tassert.notEqual(JSON.stringify(altered), JSON.stringify(report), `${name}: ${label}`);\n"
+        },
+        {
+          "start": 11006,
+          "previous": "",
+          "current": "\t\tassert.notEqual(JSON.stringify(incomplete), JSON.stringify(original));\n"
+        },
+        {
+          "start": 11252,
+          "previous": "",
+          "current": "\t\tassert.notEqual(JSON.stringify(additional), JSON.stringify(original));\n"
+        },
+        {
+          "start": 11938,
+          "previous": "",
+          "current": "\t\t\tassert.notEqual(JSON.stringify(altered), JSON.stringify(report));\n"
+        },
+        {
+          "start": 13394,
+          "previous": "",
+          "current": "\t\tassert.equal(altered.equals(tar), false);\n"
+        },
+        {
+          "start": 14327,
+          "previous": "",
+          "current": "\t\tassert.equal(changedTar.equals(tar), false);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-variant-evidence.mjs",
+      "expectedCommit": "7d07f9b3555ad5f4211ddf36118bb16b0cf3693c",
+      "currentCommit": "fa51434d712136f38b6b0f88d9361494a32eda3a",
+      "expectedSha256": "a41784aa70cb7fcc73c4c1f055095ba6b9fbf60cad19222733fad05dbec56b9f",
+      "currentSha256": "cd5b21f47a2da5305e37f2a65c48dc47ca2fa9062ab81d9c8e74fe9b86d7eebe",
+      "edits": [
+        {
+          "start": 20096,
+          "previous": "",
+          "current": " * Parse complete ordered Node TAP, including metadata and the captured shell exit.\n *\n * @param text - Unmodified actual TAP and external exit marker.\n * @param blocks - Independently expected titles and per-test diagnostics.\n */\nexport const assertOwnedPerlCallbackVariantTap = (text, blocks) => {\n\tassert.equal(typeof text, \"string\"); assert.ok(blocks.length > 0);\n\tconst lines = text.split(\"\\n\"); let cursor = 0;\n\tconst take = expected => assert.equal(lines[cursor++], expected, `TAP line ${cursor}`);\n\tconst duration = prefix => {\n\t\tconst line = lines[cursor++]; assert.equal(typeof line, \"string\");\n\t\tassert.ok(line.startsWith(prefix)); const number = line.slice(prefix.length);\n\t\tassert.match(number, /^(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$/u);\n\t\tassert.ok(Number.isFinite(Number(number)) && Number(number) > 0);\n\t};\n\ttake(\"TAP version 13\");\n\tfor(const [index, { title, diagnostics }] of blocks.entries())\n\t{\n\t\ttake(\"# Subtest: \" + title); take(`ok ${index + 1} - ${title}`);\n\t\ttake(\"  ---\"); duration(\"  duration_ms: \"); take(\"  type: 'test'\"); take(\"  ...\");\n\t\tfor(const diagnostic of diagnostics) take(diagnostic);\n\t}\n\ttake(\"1..\" + blocks.length);\n\tfor(const [key, value] of Object.entries({ tests: blocks.length, suites: 0, pass: blocks.length, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))\n\t\ttake(\"# \" + key + \" \" + value);\n\tduration(\"# duration_ms \"); take(\"ACTUAL_NODE_EXIT=0\"); take(\"\");\n\tassert.equal(cursor, lines.length, \"Trailing or duplicated TAP content\");\n};\n\n/**\n"
+        },
+        {
+          "start": 22199,
+          "previous": "\tconst titles = names.map(name => {\n\t\tconst item = reports[name]; return `installed CPAN callback-result owners (${item.mode}, ${item.variant})`;\n\t});\n\tconst count = names.length, lines = run.text.split(\"\\n\");\n\tassert.equal(lines[0], \"TAP version 13\");\n\tassert.deepEqual(lines.slice(-2), [\"ACTUAL_NODE_EXIT=0\", \"\"]);\n\tassert.deepEqual(lines.filter(line => line.startsWith(\"ACTUAL_NODE_EXIT=\")), [\"ACTUAL_NODE_EXIT=0\"]);\n\tassert.deepEqual(lines.filter(line => /^1\\.\\./u.test(line)), [`1..${count}`]);\n\tassert.deepEqual(lines.filter(line => line.startsWith(\"# Subtest: \")), titles.map(title => \"# Subtest: \" + title));\n\tassert.deepEqual(lines.filter(line => /^ok [0-9]/u.test(line)), titles.map((title, index) => `ok ${index + 1} - ${title}`));\n\tfor(const [key, value] of Object.entries({ tests: count, suites: 0, pass: count, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))\n\t\tassert.deepEqual(lines.filter(line => line.startsWith(\"# \" + key + \" \")), [\"# \" + key + \" \" + value]);\n\tassert.doesNotMatch(run.text, /^not ok|# SKIP|# TODO|Bail out!/mu);\n\tconst diagnostics = names.flatMap(name => {\n",
+          "current": "\tconst blocks = names.map(name => {\n"
+        },
+        {
+          "start": 22310,
+          "previous": "\t\treturn [prefix + `first real ${item.producerInterface} producer`\n",
+          "current": "\t\treturn { title: `installed CPAN callback-result owners (${item.mode}, ${item.variant})`\n\t\t\t, diagnostics: [prefix + `first real ${item.producerInterface} producer`\n"
+        },
+        {
+          "start": 22793,
+          "previous": "\t\t\t\t, runtimeExecutions: 2, assetRejections: 6 }))];\n",
+          "current": "\t\t\t\t, runtimeExecutions: 2, assetRejections: 6 }))] };\n"
+        },
+        {
+          "start": 22853,
+          "previous": "\tassert.deepEqual(lines.filter(line => /^# (?:ordinary|reviewed)\\/|^# \\{/u.test(line)), diagnostics);\n\tfor(const line of lines) assert.ok(line === \"\" || line === \"TAP version 13\" || line === \"ACTUAL_NODE_EXIT=0\"\n\t\t|| diagnostics.includes(line) || /^# Subtest: |^ok [0-9]+ - |^1\\.\\.[0-9]+$|^# (?:tests|suites|pass|fail|cancelled|skipped|todo) [0-9]+$|^# duration_ms [0-9.]+$|^ {2}(?:---|\\.\\.\\.|duration_ms: [0-9.]+|type: 'test')$/u.test(line), line);\n",
+          "current": "\tassertOwnedPerlCallbackVariantTap(run.text, blocks);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-ruby-transfer-evidence.mjs",
+      "expectedCommit": "2e422bde5449fd6578af0d4c27256e7110ec3c48",
+      "currentCommit": "764032d07d36cb442ebb90b24078bb2b50e9184d",
+      "expectedSha256": "7ecaeb06a9c02d9c611ca0b482edc5bfea166e9b03478fa812eb7938b3041013",
+      "currentSha256": "a2446f4e1850ec4c93848e71341797813f0ad43718adfecef2790a09a1a14d72",
+      "edits": [
+        {
+          "start": 422,
+          "previous": "import { generateOwnedRubyPackage } from \"../../src/backends/ruby/owned-package.mjs\";\nimport { ownedRubyRuntime } from \"../../src/backends/ruby/owned-runtime.mjs\";\n",
+          "current": "import { historicalOwnedRubyCallbackPackage as generateOwnedRubyPackage\n\t, historicalOwnedRubyCallbackRuntime as ownedRubyRuntime } from \"./owned-ruby-callback-generated-history.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-borrow-evidence.test.mjs",
+      "expectedCommit": "2e422bde5449fd6578af0d4c27256e7110ec3c48",
+      "currentCommit": "dec8d558423d1b1c2ec4b95999ea8779adb60091",
+      "expectedSha256": "4a605cbf1c2d1d93821c98e7633a030bc9e74d05962f5a9897682cc5ef984167",
+      "currentSha256": "3c362779b6ffba2fe4a3f3e090a0840de269ab966d7943112e8d56820f471140",
+      "edits": [
+        {
+          "start": 268,
+          "previous": "",
+          "current": "import { beforeOwnedCppBorrow } from \"./helpers/owned-cpp-borrow-history.mjs\";\n"
+        },
+        {
+          "start": 3689,
+          "previous": "\t\tconst source = await readFile(update.path, \"utf8\"), unknown = source + \"\\n/* unrelated */\\n\";\n",
+          "current": "\t\tconst source = beforeOwnedCppBorrow(update.path, await readFile(update.path, \"utf8\"), update.currentSha256), unknown = source + \"\\n/* unrelated */\\n\";\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "88f0f5fd5a5e4fe4902989c9c5e179275b1320396e22e292519a6718d9b6bbb5",
+      "currentSha256": "4757a96bdc52d5e70ae40dae010cbb8ef8f23454f7cf5559cf477238f67b58bf",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"a15c76f8077c67f263f54aa6cc6882c5f95de7369fb08605a3944a618bc3d2d4\"\n",
+          "current": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"a15c76f8077c67f263f54aa6cc6882c5f95de7369fb08605a3944a618bc3d2d4\"\n",
+          "current": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"a15c76f8077c67f263f54aa6cc6882c5f95de7369fb08605a3944a618bc3d2d4\"\n",
+          "current": "          \"sha256\": \"55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "a15c76f8077c67f263f54aa6cc6882c5f95de7369fb08605a3944a618bc3d2d4",
+      "currentSha256": "55c49025dc736272a2c6c3ef23dfe4d8f4e0308887f9d87899e2efcba96385c3",
+      "edits": [
+        {
+          "start": 4385,
+          "previous": "",
+          "current": "import \"./helpers/core-terminal-reachability-source-history-tests.mjs\";\nimport \"./helpers/owned-dotnet-span-runtime-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/generic-record-array-rollout-history.test.mjs",
+      "previousSha256": "a222a1b6e3bf4ffb65a2b30910c0d59f5bc3f962ba5ae7afc49310b90bf40afa",
+      "currentSha256": "63d2f1c91eeda1d8a38222b10735ce7cb08c38b9eb1ccfad4d7d78427e5ff60f",
+      "edits": [
+        {
+          "start": 1016,
+          "previous": "import { beforeFinDiagnosticSource } from \"./helpers/native-fin-diagnostic-source-history.mjs\";\n",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1110,
+          "previous": "const historicalRead = async path => {\n\tconst bytes = await readFile(path);\n\treturn finRefinementNormalizationPaths.includes(path)\n\t\t? Buffer.from(beforeFinDiagnosticSource(path, bytes.toString(\"utf8\"))) : bytes;\n",
+          "current": "const arrayRolloutIntegration\n\t= \"ff71335c762628da47887bfd4f208e62c39b94b7\";\nconst historicalSources = new Map();\nconst historicalRead = (path, expected = undefined) => {\n\tconst key = JSON.stringify([path, expected]);\n\tif(!historicalSources.has(key)) historicalSources.set(key, (async () => {\n\t\tconst milestone = execFileSync(\n\t\t\t\"git\", [\"show\", `${arrayRolloutIntegration}:${path}`]\n\t\t\t, { maxBuffer: 128 * 1024 * 1024 }\n\t\t);\n\t\tif(!finRefinementNormalizationPaths.includes(path))\n\t\t{\n\t\t\tif(expected !== undefined) assert.equal(sha256(milestone), expected);\n\t\t\treturn milestone;\n\t\t}\n\t\treturn Buffer.from(await sourceAtFinHistoryMilestone(\n\t\t\tpath, expected ?? sha256(milestone)\n\t\t));\n\t})());\n\treturn historicalSources.get(key);\n"
+        },
+        {
+          "start": 2327,
+          "previous": "\t\tconst current = (await historicalRead(update.path)).toString(\"utf8\"), previous = reverseArrayRolloutUpdate(current, update);\n",
+          "current": "\t\tconst current = (await historicalRead(\n\t\t\tupdate.path, update.currentSha256\n\t\t)).toString(\"utf8\"), previous = reverseArrayRolloutUpdate(current, update);\n"
+        },
+        {
+          "start": 3544,
+          "previous": "\tconst path = \"docs/type-surface.v1.json\", source = (await historicalRead(path)).toString(\"utf8\"), current = JSON.parse(source);\n\tconst previous = JSON.parse(beforeArrayRolloutSource(path, source));\n",
+          "current": ""
+        },
+        {
+          "start": 3614,
+          "previous": "",
+          "current": "\tconst path = \"docs/type-surface.v1.json\";\n\tconst update = history.updates.find(item => item.path === path);\n\tassert.ok(update);\n\tconst source = (await historicalRead(\n\t\tpath, update.currentSha256\n\t)).toString(\"utf8\"), current = JSON.parse(source);\n\tconst previous = JSON.parse(beforeArrayRolloutSource(path, source));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2b37e0dd5fd9d2cff108ba89601b3304522607be36756d8cbbb2f27830d9986f",
+      "currentSha256": "c365f582be26b52550237101e1ed7586ad28e1797d1525bcaa6b8b5ce3a84091",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource, coreTerminalReachabilityChangedPaths, coreTerminalReachabilityTerminalPaths } from \"./core-terminal-reachability-source-history.mjs\";\n"
+        },
+        {
+          "start": 98042,
+          "previous": "\t...coreFirstRunRepairChangedPaths\n",
+          "current": "\t...coreTerminalReachabilityChangedPaths\n\t, ...coreTerminalReachabilityTerminalPaths\n\t, ...coreFirstRunRepairChangedPaths\n"
+        },
+        {
+          "start": 115298,
+          "previous": "\tconst text = source.toString(), previous = path === typeSurfacePath\n\t\t? normalizeExactTypeSurfaceHistory(text, expected)\n\t\t: normalizeFinRefinementSource(path, text, expected);\n",
+          "current": "\tconst text = source.toString();\n\tlet previous = beforeCoreTerminalReachabilityRepairSource(\n\t\tpath, text, expected\n\t);\n\tprevious = path === typeSurfacePath\n\t\t? normalizeExactTypeSurfaceHistory(previous, expected)\n\t\t: normalizeFinRefinementSource(path, previous, expected);\n\tprevious = beforeCoreTerminalReachabilitySource(\n\t\tpath, previous, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-dotnet-process-history.mjs",
+      "previousSha256": "f1175afb63e079d6435d8fe0878c0a44215fa515cec0a73e537c7443d13adbbe",
+      "currentSha256": "b896acc3683d15c1e9d92eda915d91d1ed1ae2adc96c8ea02eeb1616fb143434",
+      "edits": [
+        {
+          "start": 338,
+          "previous": "",
+          "current": "import { beforeOwnedDotnetSpanRuntime } from \"./owned-dotnet-span-runtime-history.mjs\";\n"
+        },
+        {
+          "start": 2499,
+          "previous": "",
+          "current": "\tsource = beforeOwnedDotnetSpanRuntime(update.path, source, update.currentSha256);\n"
+        },
+        {
+          "start": 4965,
+          "previous": "",
+          "current": "\tif(sha256(source) === expected) return source;\n\tsource = beforeOwnedDotnetSpanRuntime(path, source, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-history-tests.mjs",
+      "previousSha256": "1ec942f3cb60f9de6a59287dfee2c57a01cb7d9b477b3f851a5044bb0348e841",
+      "currentSha256": "972387f7ec831ef67c86411860b434926b4a3abba9d5ce02a397ceff923421a7",
+      "edits": [
+        {
+          "start": 2273,
+          "previous": "\t\tconst prior = beforeOwnedPerlCallbackResults(update.path, current);\n",
+          "current": "\t\tconst prior = beforeOwnedPerlCallbackResults(\n\t\t\tupdate.path, current, update.previousSha256\n\t\t);\n"
+        },
+        {
+          "start": 2709,
+          "previous": "\t\tassert.equal(beforeOwnedPerlCallbackResults(update.path, prior), prior);\n",
+          "current": "\t\tassert.equal(beforeOwnedPerlCallbackResults(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-perl-callback-result-variant-history-tests.mjs",
+      "previousSha256": "db65a5ab763227bebb6bae13b41e5bee2c9cf8c70d2681f5b52c6b480011b4fd",
+      "currentSha256": "1717a7cc72ff04c5fb42a05f7ea7b24b1f159307e907b712c8e11599db82a010",
+      "edits": [
+        {
+          "start": 155,
+          "previous": "",
+          "current": "import { execFileSync } from \"node:child_process\";\n"
+        },
+        {
+          "start": 853,
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "current": "\nconst variantClosureRevision\n\t= \"fa51434d712136f38b6b0f88d9361494a32eda3a\";\nconst anchoredSources = new Map();\nconst sourceAtAnchor = (path, expected, revisions) => {\n\tconst key = JSON.stringify([path, expected, revisions]);\n\tif(anchoredSources.has(key)) return anchoredSources.get(key);\n\tfor(const revision of revisions)\n\t{\n\t\tlet source;\n\t\ttry\n\t\t{\n\t\t\tsource = execFileSync(\"git\", [\"show\", `${revision}:${path}`], {\n\t\t\t\tencoding: \"utf8\", maxBuffer: 128 * 1024 * 1024\n\t\t\t\t, stdio: [\"ignore\", \"pipe\", \"ignore\"]\n\t\t\t});\n\t\t}\n\t\tcatch\n\t\t{ continue; }\n\t\tif(sha256(source) !== expected) continue;\n\t\tanchoredSources.set(key, source);\n\t\treturn source;\n\t}\n\tassert.fail(`${path} has no authenticated source at ${expected}`);\n};\n"
+        },
+        {
+          "start": 4356,
+          "previous": "\tfor(const category of [\"extensionUpdates\", \"successorUpdates\"]) for(const update of history[category])\n",
+          "current": "\tconst categories = [\"extensionUpdates\", \"successorUpdates\"];\n\tfor(const category of categories) for(const update of history[category])\n"
+        },
+        {
+          "start": 4495,
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforePhpCallbackInstalledStaging\n",
+          "current": "\t\tconst revisions = category === \"extensionUpdates\"\n\t\t\t? [variantClosureRevision]\n\t\t\t: [...history.lineage, variantClosureRevision];\n\t\tconst source = sourceAtAnchor(\n\t\t\tupdate.path, update.currentSha256, revisions\n"
+        },
+        {
+          "start": 4858,
+          "previous": "",
+          "current": "\t\tassert.equal(beforePhpCallbackInstalledStaging(\n\t\t\tupdate.path, current, update.currentSha256\n\t\t), current);\n"
+        },
+        {
+          "start": 5285,
+          "previous": "\t\tfor(const unknown of [current + \"\\n\", current + current, \"\", Buffer.from([0, 255, 128])])\n\t\t{\n\t\t\tassert.equal(beforePerlCallbackVariants(update.path, unknown), unknown);\n\t\t\tassert.throws(() => reversePerlVariantUpdate(unknown, update, category)); rejected++;\n\t\t}\n",
+          "current": "\t\tconst unknown = current + \"\\n\";\n\t\tassert.equal(beforePerlCallbackVariants(update.path, unknown), unknown);\n\t\tassert.throws(() => reversePerlVariantUpdate(\n\t\t\tunknown, update, category\n\t\t)); rejected++;\n\t\tassert.equal(beforePerlCallbackVariants(\"unknown.mjs\", current), current);\n\t}\n\t// The malformed-transition checks exercise category-specific validation.\n\t// One small authenticated member per category avoids repeating the same\n\t// generic assertions over the 43 MB inventory transition.\n\tfor(const category of categories)\n\t{\n\t\tconst update = history[category].find(item =>\n\t\t\titem.path !== \"docs/type-surface.v1.json\"\n\t\t);\n\t\tassert.ok(update);\n\t\tconst revisions = category === \"extensionUpdates\"\n\t\t\t? [variantClosureRevision]\n\t\t\t: [...history.lineage, variantClosureRevision];\n\t\tconst current = sourceAtAnchor(\n\t\t\tupdate.path, update.currentSha256, revisions\n\t\t);\n\t\tfor(const unknown of [current + current, \"\"\n\t\t\t, Buffer.from([0, 255, 128])]){\n\t\t\tassert.equal(beforePerlCallbackVariants(\n\t\t\t\tupdate.path, unknown\n\t\t\t), unknown);\n\t\t\tassert.throws(() => reversePerlVariantUpdate(\n\t\t\t\tunknown, update, category\n\t\t\t)); rejected++;\n\t\t\t}\n"
+        },
+        {
+          "start": 6980,
+          "previous": "\t\tassert.equal(beforePerlCallbackVariants(\"unknown.mjs\", current), current);\n",
+          "current": ""
+        },
+        {
+          "start": 7536,
+          "previous": "\t\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\tpath, identity.sha256, beforePhpCallbackInstalledStaging\n",
+          "current": "\t\tconst source = sourceAtAnchor(\n\t\t\tpath, identity.sha256, history.lineage\n"
+        },
+        {
+          "start": 7834,
+          "previous": "\tconst inventoryBytes = await sourceAtFinHistoryMilestone(\n",
+          "current": "\tconst inventoryBytes = sourceAtAnchor(\n"
+        },
+        {
+          "start": 7928,
+          "previous": "\t\t, beforePhpCallbackInstalledStaging\n",
+          "current": "\t\t, [variantClosureRevision]\n"
+        },
+        {
+          "start": 8721,
+          "previous": "\t\t\tassert.equal(file.sha256, sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\tfile.path, file.sha256, beforePhpCallbackInstalledStaging\n",
+          "current": "\t\t\tassert.equal(file.sha256, sha256(sourceAtAnchor(\n\t\t\t\tfile.path, file.sha256\n\t\t\t\t, [...history.lineage, variantClosureRevision]\n"
+        },
+        {
+          "start": 8953,
+          "previous": "\tassert.deepEqual(refreshed, allowed); assert.deepEqual(inventory, previous, \"No inventory cell, state or version promotion\");\n\tfor(const mutate of [\n\t\tvalue => value.contractVersion += \"-forged\"\n\t\t, value => value.evidence[0].files[0].sha256 = \"0\".repeat(64)\n\t\t, value => value.evidence.pop()\n\t]){\n\t\tconst altered = JSON.parse(await readFile(inventoryUpdate.path)); mutate(altered);\n\t\tconst bytes = JSON.stringify(altered, null, 2) + \"\\n\";\n\t\tassert.notEqual(sha256(bytes), inventoryUpdate.currentSha256);\n\t\tassert.equal(beforePerlCallbackVariants(inventoryUpdate.path, bytes), bytes);\n\t\tassert.equal(beforePostPerlCallbackStaging(inventoryUpdate.path, bytes), bytes);\n\t\tassert.throws(() => reversePerlVariantUpdate(bytes, inventoryUpdate, \"extensionUpdates\")); rejected++;\n\t}\n\tassert.equal(rejected, 212);\n",
+          "current": "\tassert.deepEqual(refreshed, allowed);\n\tassert.equal(JSON.stringify(inventory), JSON.stringify(previous)\n\t\t, \"No inventory cell, state or version promotion\");\n\tconst version = `\"contractVersion\": \"${inventory.contractVersion}\"`;\n\tconst bytes = inventoryBytes.replace(\n\t\tversion, `\"contractVersion\": \"${inventory.contractVersion}-forged\"`\n\t);\n\tassert.notEqual(bytes, inventoryBytes);\n\tassert.notEqual(sha256(bytes), inventoryUpdate.currentSha256);\n\tassert.equal(beforePerlCallbackVariants(inventoryUpdate.path, bytes), bytes);\n\tassert.equal(beforePostPerlCallbackStaging(inventoryUpdate.path, bytes), bytes);\n\tassert.throws(() => reversePerlVariantUpdate(\n\t\tbytes, inventoryUpdate, \"extensionUpdates\"\n\t)); rejected++;\n\tassert.equal(rejected, 40);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/php-callback-installed-staging-history.mjs",
+      "previousSha256": "65a11e34c893688d2249b04c5f11125d5b23de16c60b97dad32f12e638cc2ba1",
+      "currentSha256": "c8df741c5059da5706fd24e7a7a5356347a9777c178a00856ccefee2901fffea",
+      "edits": [
+        {
+          "start": 315,
+          "previous": "",
+          "current": "import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource } from \"./core-terminal-reachability-source-history.mjs\";\n"
+        },
+        {
+          "start": 9700,
+          "previous": "",
+          "current": "\tsource = beforeCoreTerminalReachabilityRepairSource(path, source, expected);\n"
+        },
+        {
+          "start": 9968,
+          "previous": "\treturn update && current !== expected && current === update.currentSha256\n",
+          "current": "\tconst previous = update && current !== expected && current === update.currentSha256\n"
+        },
+        {
+          "start": 10117,
+          "previous": "",
+          "current": "\treturn beforeCoreTerminalReachabilitySource(path, previous, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/post-perl-callback-staging-history-tests.mjs",
+      "previousSha256": "ae13214291ec3f9c4113b0009ef4dc15810a5b72443a2f45bd52ceec7a16186a",
+      "currentSha256": "f08804a21888bf59cf08f3ca0bbfcd2bc2ec565f2617303a244771b03c7e9829",
+      "edits": [
+        {
+          "start": 1622,
+          "previous": "\t\tconst prior = beforePostPerlCallbackStaging(update.path, current);\n",
+          "current": "\t\tconst prior = beforePostPerlCallbackStaging(\n\t\t\tupdate.path, current, update.previousSha256\n\t\t);\n"
+        },
+        {
+          "start": 1956,
+          "previous": "\t\tassert.equal(beforePostPerlCallbackStaging(update.path, prior), prior);\n",
+          "current": "\t\tassert.equal(beforePostPerlCallbackStaging(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-jvm-callback-result-history.test.mjs",
+      "previousSha256": "5975f8d9449edb6eb05c865c29b1cacc2713973f4dce524a9c6a4922b151fdb1",
+      "currentSha256": "3c394ddded5a2ad4c2e00733abbcc05dce664b7d3080a22e03dda544f140acba",
+      "edits": [
+        {
+          "start": 2778,
+          "previous": "\t\tconst prior = beforeOwnedJvmCallbackResults(update.path, current);\n",
+          "current": "\t\tconst prior = beforeOwnedJvmCallbackResults(\n\t\t\tupdate.path, current, update.previousSha256\n\t\t);\n"
+        },
+        {
+          "start": 3112,
+          "previous": "\t\tassert.equal(beforeOwnedJvmCallbackResults(update.path, prior), prior);\n",
+          "current": "\t\tassert.equal(beforeOwnedJvmCallbackResults(\n\t\t\tupdate.path, prior, update.previousSha256\n\t\t), prior);\n"
+        }
+      ]
+    }
+  ]
+}

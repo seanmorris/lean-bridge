@@ -26,11 +26,15 @@ test("post-Perl callback staging reverses complete registered bytes and preserve
 	{
 		const source = beforePhpCallbackInstalledStaging(update.path, await readFile(update.path));
 		const current = Buffer.from(beforeWitCallbackRuntimeStaging(update.path, source));
-		const prior = beforePostPerlCallbackStaging(update.path, current);
+		const prior = beforePostPerlCallbackStaging(
+			update.path, current, update.previousSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(sha256(prior), update.previousSha256, update.path);
 		assert.equal(beforePostPerlCallbackStaging(update.path, current, update.currentSha256), current);
-		assert.equal(beforePostPerlCallbackStaging(update.path, prior), prior);
+		assert.equal(beforePostPerlCallbackStaging(
+			update.path, prior, update.previousSha256
+		), prior);
 		for(const unknown of [current + "\n", current + current, "", Buffer.from([0, 255, 128, 192])])
 		{
 			assert.equal(beforePostPerlCallbackStaging(update.path, unknown), unknown);

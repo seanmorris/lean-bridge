@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
+import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource } from "./core-terminal-reachability-source-history.mjs";
 import { beforePhpCallbackAcceptance } from "./php-callback-acceptance-history.mjs";
 
 export const phpCallbackInstalledHistoryPath = "docs/evidence/php-callback-installed-staging-source-history-20261003.json";
@@ -206,9 +207,11 @@ export const reversePhpCallbackInstalledUpdate = (source, update) => {
  * @param expected - Optional exact stopping identity.
  */
 export const beforePhpCallbackInstalledStaging = (path, source, expected) => {
+	source = beforeCoreTerminalReachabilityRepairSource(path, source, expected);
 	source = beforePhpCallbackAcceptance(path, source, expected);
 	const update = readPhpCallbackInstalledHistory().updates.find(value => value.path === path);
 	const current = sha256(source);
-	return update && current !== expected && current === update.currentSha256
+	const previous = update && current !== expected && current === update.currentSha256
 		? reversePhpCallbackInstalledUpdate(source, update) : source;
+	return beforeCoreTerminalReachabilitySource(path, previous, expected);
 };
