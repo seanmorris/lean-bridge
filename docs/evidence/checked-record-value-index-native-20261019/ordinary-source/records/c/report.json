@@ -1,0 +1,52 @@
+{
+  "calls": 28,
+  "checks": 29,
+  "closure": {
+    "packageFileSetSha256": "c69d3d48a51626f39bea08eaadaf440ca76f380f6d0509542d547c01acececf7",
+    "receiptSha256": "223cf9d2e29f6efd6a0eb769071ef268708e1a30f1c06cf79976dfefabfe7f7a"
+  },
+  "compilerFreePath": true,
+  "consumerSha256": "865961bf02314d668fa3380129fe345aa6d4134d943e591f98f35ff224093d58",
+  "immutableCallerAssertions": true,
+  "installed": {
+    "calls": 28,
+    "checks": 29,
+    "recoveries": 6,
+    "rejections": 6
+  },
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53854851,
+          "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+          "sha256": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "checkedrecordvalueindices",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "recoveries": 6,
+  "rejections": 6,
+  "relocated": {
+    "calls": 28,
+    "checks": 29,
+    "recoveries": 6,
+    "rejections": 6
+  },
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "route": "ordinary-source",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

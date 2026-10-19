@@ -1,0 +1,234 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/checkedrecordvalueindices-1.0.0-c.tar.gz": "aab98558f90f7bf1d9ff638c4be41dff439c0db72f6aee75266c2558703dfe4e",
+        "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+      },
+      "authorInputsSha256": "fe0b17250143ad51f6ec910eeea7dd7f88ad236e82ee01adfacd661cb493c2f3",
+      "bindingIrSha256": "c64781d3081a01859ff7352840e300b936dcb0a153f20a5449fd469f9b8823f5",
+      "modelSha256": "9a202c80683f857acb7ecdb3f567b6643f57f4ee975e24ece4180da18b91d2bc",
+      "receiptSha256": "e351e65e3c4e91a8b6c77dca34e92dabbc4ed5d8943d84143753059fe3105455"
+    },
+    {
+      "archives": {
+        "archives/checkedrecordvalueindices-1.0.0-c.tar.gz": "aab98558f90f7bf1d9ff638c4be41dff439c0db72f6aee75266c2558703dfe4e",
+        "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+      },
+      "authorInputsSha256": "fe0b17250143ad51f6ec910eeea7dd7f88ad236e82ee01adfacd661cb493c2f3",
+      "bindingIrSha256": "c64781d3081a01859ff7352840e300b936dcb0a153f20a5449fd469f9b8823f5",
+      "modelSha256": "9a202c80683f857acb7ecdb3f567b6643f57f4ee975e24ece4180da18b91d2bc",
+      "receiptSha256": "e351e65e3c4e91a8b6c77dca34e92dabbc4ed5d8943d84143753059fe3105455"
+    }
+  ],
+  "compilerFreePath": true,
+  "configuration": {
+    "modules": [
+      "CheckedRecordValueIndices"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerCommit": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+  "declaredGlibcFloor": "2.38",
+  "expectedBindingIrSha256": "25831177b6b96d1bdbfaa485f828aeaefa6f8d0c574deccde5f6381a8d61ff3d",
+  "immutableCallerAssertions": true,
+  "independentBuilds": 2,
+  "negativeControls": {
+    "checkedRefusals": 4,
+    "recoveries": 6,
+    "shapeRefusals": 2
+  },
+  "offlineInstall": true,
+  "producerCommit": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53857727,
+            "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+            "sha256": "aab98558f90f7bf1d9ff638c4be41dff439c0db72f6aee75266c2558703dfe4e"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51784525,
+            "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+            "sha256": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "c64781d3081a01859ff7352840e300b936dcb0a153f20a5449fd469f9b8823f5",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "e5926e09c67bb1bb93f43c92ad0e40caf673ffab73a9020d1e99b9aefb3924c0"
+    }
+  },
+  "relocatedInstallation": true,
+  "reports": [
+    {
+      "calls": 28,
+      "checks": 29,
+      "closure": {
+        "packageFileSetSha256": "c69d3d48a51626f39bea08eaadaf440ca76f380f6d0509542d547c01acececf7",
+        "receiptSha256": "d3363fcee90835c79effaf80191d2f797a84894dc0207621c768a2104ae68cb2"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "37cef285f624e80c6e0fa6272db7d714f8c60df419402dd7791ef66c3b80e662",
+      "immutableCallerAssertions": true,
+      "installed": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53857727,
+              "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+              "sha256": "aab98558f90f7bf1d9ff638c4be41dff439c0db72f6aee75266c2558703dfe4e"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "recoveries": 6,
+      "rejections": 6,
+      "relocated": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "route": "reviewed-ir",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "calls": 28,
+      "checks": 29,
+      "closure": {
+        "packageFileSetSha256": "6416489f55921fa07a747cc2f55b7ee58b907e22ec34adf927237abd83180b4a",
+        "receiptSha256": "d37cacacf646529c0a1d66ede6a2510f5cdb3ba351e190fe14b2671d59577d2e"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "68d253815d445899e5f83196d0287bae777c81c3c0706411e15604b8c85e7b75",
+      "immutableCallerAssertions": true,
+      "installed": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51784525,
+              "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+              "sha256": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "recoveries": 6,
+      "rejections": 6,
+      "relocated": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "route": "reviewed-ir",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "route": "reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cpp": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceCommitClean": true,
+  "sourceRemovedBeforeInstallation": true
+}

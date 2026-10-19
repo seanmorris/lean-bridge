@@ -1,0 +1,78 @@
+{
+  "calls": 56,
+  "controls": {
+    "destructiveMutations": 13,
+    "fastPasses": 8,
+    "skippedInstalledRoutes": 4
+  },
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53854851,
+            "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+            "sha256": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51780269,
+            "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+            "sha256": "5b033f8c3a6ca187a00f5a7467bb8f57192d62cf25779c2f6274a7d62cbda411"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "00475d60226741e6a96cdc23948945de45eac560b9f64e938ace4d9ec7aa0576",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "f06bd959e044258ecfda69b9ea64f4b060f7e5f8f27866b6d661ab67631b3fca"
+    }
+  },
+  "recoveries": 12,
+  "rejections": 12,
+  "reportSha256": "d1c3f43612f6f8173fadf690710d5a3f09ff1ee1a3a5be6322b5882415c725e6",
+  "route": "ordinary-source",
+  "sourceIdentities": {
+    "checker": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+    "consumer": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+    "producer": "0e2283a4f4c0db48b7bdc7a85d119598a981324b"
+  }
+}

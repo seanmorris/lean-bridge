@@ -1,0 +1,593 @@
+{
+  "schemaVersion": 3,
+  "component": {
+    "id": "poc/lean-alpha@0.0.0",
+    "name": "Lean Alpha",
+    "version": "0.0.0"
+  },
+  "producers": [
+    {
+      "id": "lean",
+      "adapter": "lean4",
+      "adapterVersion": 1,
+      "tool": "Lean",
+      "toolVersion": "4.19.0",
+      "extensions": {
+        "lean-lang.org/module": "Alpha"
+      }
+    },
+    {
+      "id": "bridge",
+      "adapter": "lean-wasm-bridge",
+      "adapterVersion": 1,
+      "tool": "Lean Bridge",
+      "toolVersion": "0.0.0-poc",
+      "extensions": {}
+    }
+  ],
+  "types": [
+    {
+      "id": "lean:Alpha.Payload",
+      "name": "Payload",
+      "kind": "record",
+      "representation": "copied",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [
+        {
+          "name": "enabled",
+          "type": { "kind": "primitive", "name": "bool" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "Whether processing is enabled.",
+            "details": ""
+          }
+        },
+        {
+          "name": "count",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "An unsigned 32-bit count.",
+            "details": ""
+          }
+        },
+        {
+          "name": "label",
+          "type": { "kind": "primitive", "name": "string" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "A Unicode label.",
+            "details": ""
+          }
+        },
+        {
+          "name": "bytes",
+          "type": { "kind": "primitive", "name": "bytes" },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "An uninterpreted byte sequence.",
+            "details": ""
+          }
+        },
+        {
+          "name": "values",
+          "type": {
+            "kind": "apply",
+            "constructor": "array",
+            "arguments": [{ "kind": "primitive", "name": "uint32" }]
+          },
+          "mutability": "immutable",
+          "documentation": {
+            "summary": "A sequence of unsigned 32-bit values.",
+            "details": ""
+          }
+        }
+      ],
+      "target": null,
+      "resource": null,
+      "callable": null,
+      "cases": [],
+      "host": null,
+      "documentation": {
+        "summary": "A copied value used to test rich primitive preservation.",
+        "details": "The bridge preserves field types across the ABI instead of serializing the record as JSON."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Payload",
+        "extensions": {
+          "lean-lang.org/export": "record"
+        }
+      },
+      "assurance": ["assurance:Alpha.Payload.layout"]
+    },
+    {
+      "id": "lean:Alpha.Box",
+      "name": "Box",
+      "kind": "resource",
+      "representation": "identity",
+      "mutability": "read",
+      "typeParameters": [],
+      "fields": [],
+      "target": null,
+      "resource": {
+        "kindId": "resource:Alpha.Box",
+        "disposal": "required",
+        "fallback": "queued-finalizer",
+        "cycles": "explicit-cut"
+      },
+      "callable": null,
+      "cases": [],
+      "host": null,
+      "documentation": {
+        "summary": "An identity-bearing Lean object with deterministic disposal.",
+        "details": "Generated host wrappers are canonical within one shared runtime."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Box",
+        "extensions": {
+          "lean-lang.org/export": "resource"
+        }
+      },
+      "assurance": ["assurance:Alpha.Box.identity"]
+    },
+    {
+      "id": "lean:Alpha.Transform",
+      "name": "Transform",
+      "kind": "callback",
+      "representation": "identity",
+      "mutability": "immutable",
+      "typeParameters": [],
+      "fields": [],
+      "target": null,
+      "resource": null,
+      "callable": {
+        "invocation": "many",
+        "reentry": "same-agent",
+        "selfDisposal": "reject",
+        "parameters": [
+          {
+            "name": "value",
+            "type": { "kind": "primitive", "name": "uint32" },
+            "ownership": "copy",
+            "lifetime": null,
+            "mutability": "immutable",
+            "optional": false,
+            "default": null
+          }
+        ],
+        "result": {
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null
+        },
+        "effects": ["fails", "host-call"],
+        "failure": {
+          "mode": "declared",
+          "errors": ["error:callback-threw"],
+          "unexpected": "poison-runtime"
+        },
+        "resultMode": "value"
+      },
+      "cases": [],
+      "host": null,
+      "documentation": {
+        "summary": "A synchronous transform that can cross the boundary in either direction.",
+        "details": "Generated bindings preserve function identity and project an exported Lean closure as a normal host callable."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Transform",
+        "extensions": {
+          "lean-lang.org/export": "callback"
+        }
+      },
+      "assurance": ["assurance:Alpha.withCallback.boundary"]
+    }
+  ],
+  "declarations": [
+    {
+      "id": "lean:Alpha.box",
+      "name": "box",
+      "kind": "constructor",
+      "owner": "lean:Alpha.Box",
+      "overloadKey": "box(uint32)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.box.boundary"],
+      "documentation": {
+        "summary": "Construct a Box owned by the caller.",
+        "details": "The generated wrapper exposes a native constructor or factory and hides token transport."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.box",
+        "extensions": {
+          "lean-lang.org/export": "constructor"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.Box.read",
+      "name": "read",
+      "kind": "method",
+      "owner": "lean:Alpha.Box",
+      "overloadKey": "Box.read()",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "call", "anchor": null },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "read",
+      "effects": ["reads-resource", "fails"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:disposed-resource"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.Box.read.boundary"],
+      "documentation": {
+        "summary": "Read the value stored in a Box.",
+        "details": "The receiver remains borrowed for the duration of the call."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.Box.read",
+        "extensions": {
+          "lean-lang.org/export": "method"
+        }
+      }
+    },
+    {
+      "id": "bridge:Alpha.Box.identity",
+      "name": "identity",
+      "kind": "method",
+      "owner": "lean:Alpha.Box",
+      "overloadKey": "Box.identity()",
+      "typeParameters": [],
+      "receiver": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "call", "anchor": null },
+        "mutability": "read"
+      },
+      "parameters": [],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Box" },
+        "ownership": "borrow",
+        "lifetime": { "scope": "receiver", "anchor": "receiver" }
+      },
+      "mutability": "read",
+      "effects": ["fails"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:disposed-resource"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.Box.identity"] ,
+      "documentation": {
+        "summary": "Return the canonical wrapper for the receiver.",
+        "details": "Repeated projection of one live runtime object preserves host object identity."
+      },
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.Box.identity",
+        "extensions": {
+          "lean-wasm.org/intrinsic": "canonical-wrapper"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.roundTrip",
+      "name": "roundTrip",
+      "kind": "function",
+      "owner": null,
+      "overloadKey": "roundTrip(Payload)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "payload",
+          "type": { "kind": "named", "id": "lean:Alpha.Payload" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Payload" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.roundTrip.boundary"],
+      "documentation": {
+        "summary": "Round-trip a typed copied record.",
+        "details": "The generated binding adapts booleans, fixed-width integers, strings, bytes, and arrays without a JSON protocol."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.roundTrip",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.withCallback",
+      "name": "withCallback",
+      "kind": "function",
+      "owner": null,
+      "overloadKey": "withCallback(uint32,Transform)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "value",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        },
+        {
+          "name": "transform",
+          "type": { "kind": "named", "id": "lean:Alpha.Transform" },
+          "ownership": "borrow",
+          "lifetime": { "scope": "call", "anchor": null },
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "primitive", "name": "uint32" },
+        "ownership": "copy",
+        "lifetime": null
+      },
+      "mutability": "immutable",
+      "effects": ["allocates", "fails", "host-call"],
+      "failure": {
+        "mode": "declared",
+        "errors": ["error:callback-threw"],
+        "unexpected": "poison-runtime"
+      },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.withCallback.boundary"],
+      "documentation": {
+        "summary": "Call a JavaScript transform from Lean and return to Lean before producing the result.",
+        "details": "The generated API accepts a normal function. Callback tokens, nested frames, marshalling, and cleanup remain internal."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.withCallback",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
+    },
+    {
+      "id": "lean:Alpha.makeAdder",
+      "name": "makeAdder",
+      "kind": "function",
+      "owner": null,
+      "overloadKey": "makeAdder(uint32)",
+      "typeParameters": [],
+      "receiver": null,
+      "parameters": [
+        {
+          "name": "base",
+          "type": { "kind": "primitive", "name": "uint32" },
+          "ownership": "copy",
+          "lifetime": null,
+          "mutability": "immutable",
+          "optional": false,
+          "default": null
+        }
+      ],
+      "result": {
+        "type": { "kind": "named", "id": "lean:Alpha.Transform" },
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      },
+      "mutability": "immutable",
+      "effects": ["allocates"],
+      "failure": { "mode": "none", "errors": [], "unexpected": "poison-runtime" },
+      "resultMode": "value",
+      "capabilities": ["capability:shared-runtime"],
+      "assurance": ["assurance:Alpha.makeAdder.boundary"],
+      "documentation": {
+        "summary": "Return a Lean closure as an ordinary callable owned by the host.",
+        "details": "The generated function validates arguments, preserves canonical identity, and provides deterministic disposal."
+      },
+      "source": {
+        "producer": "lean",
+        "declaration": "Alpha.makeAdder",
+        "extensions": {
+          "lean-lang.org/export": "function"
+        }
+      }
+    }
+  ],
+  "errors": [
+    {
+      "id": "error:disposed-resource",
+      "name": "DisposedResource",
+      "category": "boundary",
+      "payload": null,
+      "documentation": {
+        "summary": "A host wrapper referred to a resource that has been disposed.",
+        "details": "Generated bindings report this condition before calling the target function."
+      }
+    },
+    {
+      "id": "error:callback-threw",
+      "name": "CallbackThrew",
+      "category": "boundary",
+      "payload": null,
+      "documentation": {
+        "summary": "A host callback threw while Lean was waiting for its result.",
+        "details": "The bridge unwinds the nested callback frames and rethrows the original host error."
+      }
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "capability:shared-runtime",
+      "category": "runtime",
+      "requirement": "required",
+      "documentation": {
+        "summary": "The component uses the application shared runtime.",
+        "details": "The package does not embed a private Lean runtime, heap, memory, or table."
+      }
+    }
+  ],
+  "assurance": [
+    {
+      "id": "assurance:Alpha.Payload.layout",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.Payload",
+      "claim": "The copied ABI frame preserves the declared field types.",
+      "theorems": [],
+      "assumptions": ["The bridge generator and target ABI adapter implement Binding IR version 2."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "typed-value-frame",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/typed-value-frame.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.Box.identity",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.Box",
+      "claim": "One live runtime object maps to one canonical host wrapper.",
+      "theorems": [],
+      "assumptions": ["The runtime registry enforces generation-safe token validation."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "generation-safe-registry",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/generation-safe-registries.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.box.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.box",
+      "claim": "The generated constructor preserves the declared ownership transition.",
+      "theorems": [],
+      "assumptions": ["The current POC does not prove generated wrapper correctness."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.box",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.Box.read.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.Box.read",
+      "claim": "The generated method preserves the declared receiver borrow.",
+      "theorems": [],
+      "assumptions": ["The current POC does not prove generated wrapper correctness."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.Box.read",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.roundTrip.boundary",
+      "state": "unverified",
+      "subject": "lean:Alpha.roundTrip",
+      "claim": "The wrapper preserves every copied field across the host boundary.",
+      "theorems": [],
+      "assumptions": ["The current POC tests representative values rather than all values."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "Alpha.roundTrip",
+        "extensions": {}
+      }
+    },
+    {
+      "id": "assurance:Alpha.withCallback.boundary",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.withCallback",
+      "claim": "The generated callback adapter preserves function identity, unsigned integer values, nested frame order, and deterministic cleanup.",
+      "theorems": [],
+      "assumptions": ["The JavaScript callback registry and generated C closure adapter implement callback signature version 1."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "callback-signature-v1",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/callback-signature-plan.md"
+        }
+      }
+    },
+    {
+      "id": "assurance:Alpha.makeAdder.boundary",
+      "state": "trusted-boundary",
+      "subject": "lean:Alpha.makeAdder",
+      "claim": "The generated closure projection preserves callable identity, nested frame order, unsigned integer values, and deterministic cleanup.",
+      "theorems": [],
+      "assumptions": ["The Lean handle table, weak reverse cache, and fixed callback adapter implement callback signature version 1."],
+      "source": {
+        "producer": "bridge",
+        "declaration": "callback-signature-v1",
+        "extensions": {
+          "lean-wasm.org/evidence": "docs/evidence/callback-signature-plan.md"
+        }
+      }
+    }
+  ],
+  "documentation": {
+    "summary": "Language-neutral binding contract for the Alpha POC component.",
+    "details": "JavaScript, C, Rust, Python, and future backends consume the same semantic declaration graph."
+  }
+}

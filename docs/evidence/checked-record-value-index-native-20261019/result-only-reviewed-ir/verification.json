@@ -1,0 +1,78 @@
+{
+  "calls": 16,
+  "controls": {
+    "destructiveMutations": 13,
+    "fastPasses": 8,
+    "skippedInstalledRoutes": 4
+  },
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53837033,
+            "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+            "sha256": "5d667667c4f1a989e220f3b72d2b228acba937fb4b0664a47bb75546ab264071"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51765002,
+            "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+            "sha256": "39624157a08bcf77f000eb24cceee44478a3949aef497636dee91dde5c67f226"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "bdb35403e18d0f1a32a779fdc988e784d017c9950b334fbd90d4fbce863d6590",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "465057c77901642f1b6883931b8d0cee7b126a85a9ca0f7f3d523bc63da24bdd"
+    }
+  },
+  "recoveries": 0,
+  "rejections": 0,
+  "reportSha256": "e7474dfbd7f3355f7ad73ffe636cadcd7637d087f5482f025860cda3eff2f6f1",
+  "route": "result-only-reviewed-ir",
+  "sourceIdentities": {
+    "checker": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+    "consumer": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+    "producer": "0e2283a4f4c0db48b7bdc7a85d119598a981324b"
+  }
+}

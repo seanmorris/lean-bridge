@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: native Binding IR report repair has one reversible lineage
+ok 1 - native Binding IR report repair has one reversible lineage
+  ---
+  duration_ms: 37.729503
+  type: 'test'
+  ...
+# Subtest: native Binding IR report repair closes its exact committed tree
+ok 2 - native Binding IR report repair closes its exact committed tree
+  ---
+  duration_ms: 15.636294
+  type: 'test'
+  ...
+# Subtest: native Binding IR report repair closes every added source
+ok 3 - native Binding IR report repair closes every added source
+  ---
+  duration_ms: 23.431057
+  type: 'test'
+  ...
+# Subtest: native Binding IR history writer refuses another checkout
+ok 4 - native Binding IR history writer refuses another checkout
+  ---
+  duration_ms: 65.58974
+  type: 'test'
+  ...
+# Subtest: value-index native selections preserve all four independent author routes
+ok 5 - value-index native selections preserve all four independent author routes
+  ---
+  duration_ms: 21.453904
+  type: 'test'
+  ...
+# Subtest: value-index native callers distinguish semantic, shape and reviewed errors
+ok 6 - value-index native callers distinguish semantic, shape and reviewed errors
+  ---
+  duration_ms: 15.438521
+  type: 'test'
+  ...
+# Subtest: independent C11/GMP and C++20 callers compile against generated public headers
+ok 7 - independent C11/GMP and C++20 callers compile against generated public headers
+  ---
+  duration_ms: 5426.848227
+  type: 'test'
+  ...
+# Subtest: value-index native hosted checker closes CLI scope and terminal TAP
+ok 8 - value-index native hosted checker closes CLI scope and terminal TAP
+  ---
+  duration_ms: 2.964828
+  type: 'test'
+  ...
+# Subtest: native runtime snapshot is canonical and agrees with direct observation
+ok 9 - native runtime snapshot is canonical and agrees with direct observation
+  ---
+  duration_ms: 57.349365
+  type: 'test'
+  ...
+# Subtest: value-index native workflow requires all routes and preserves failures
+ok 10 - value-index native workflow requires all routes and preserves failures
+  ---
+  duration_ms: 2.323805
+  type: 'test'
+  ...
+# Subtest: value-index native runner serializes exact routes and source identities
+ok 11 - value-index native runner serializes exact routes and source identities
+  ---
+  duration_ms: 4.772565
+  type: 'test'
+  ...
+# Subtest: native evidence controls cover semantic, Git, package, caller and runtime drift
+ok 12 - native evidence controls cover semantic, Git, package, caller and runtime drift
+  ---
+  duration_ms: 0.853328
+  type: 'test'
+  ...
+# Subtest: installed value-index records reproduce and relocate in C/C++ for ordinary-source
+ok 13 - installed value-index records reproduce and relocate in C/C++ for ordinary-source # SKIP
+  ---
+  duration_ms: 0.317412
+  type: 'test'
+  ...
+# Subtest: installed value-index records reproduce and relocate in C/C++ for reviewed-ir
+ok 14 - installed value-index records reproduce and relocate in C/C++ for reviewed-ir # SKIP
+  ---
+  duration_ms: 0.084706
+  type: 'test'
+  ...
+# Subtest: installed value-index records reproduce and relocate in C/C++ for result-only-ordinary-source
+ok 15 - installed value-index records reproduce and relocate in C/C++ for result-only-ordinary-source # SKIP
+  ---
+  duration_ms: 0.059879
+  type: 'test'
+  ...
+# Subtest: installed value-index records reproduce and relocate in C/C++ for result-only-reviewed-ir
+ok 16 - installed value-index records reproduce and relocate in C/C++ for result-only-reviewed-ir # SKIP
+  ---
+  duration_ms: 0.048833
+  type: 'test'
+  ...
+# Subtest: native installed packages retain the compiler IR after reviewed reconciliation
+ok 17 - native installed packages retain the compiler IR after reviewed reconciliation
+  ---
+  duration_ms: 0.819348
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 4
+# todo 0
+# duration_ms 6113.791604

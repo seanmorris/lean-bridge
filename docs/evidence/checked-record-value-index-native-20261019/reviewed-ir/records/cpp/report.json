@@ -1,0 +1,52 @@
+{
+  "calls": 28,
+  "checks": 29,
+  "closure": {
+    "packageFileSetSha256": "6416489f55921fa07a747cc2f55b7ee58b907e22ec34adf927237abd83180b4a",
+    "receiptSha256": "d37cacacf646529c0a1d66ede6a2510f5cdb3ba351e190fe14b2671d59577d2e"
+  },
+  "compilerFreePath": true,
+  "consumerSha256": "68d253815d445899e5f83196d0287bae777c81c3c0706411e15604b8c85e7b75",
+  "immutableCallerAssertions": true,
+  "installed": {
+    "calls": 28,
+    "checks": 29,
+    "recoveries": 6,
+    "rejections": 6
+  },
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51784525,
+          "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+          "sha256": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "checkedrecordvalueindices",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "cpp",
+  "recoveries": 6,
+  "rejections": 6,
+  "relocated": {
+    "calls": 28,
+    "checks": 29,
+    "recoveries": 6,
+    "rejections": 6
+  },
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "route": "reviewed-ir",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

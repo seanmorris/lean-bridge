@@ -1,0 +1,450 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/checkedrecordvalueindices-1.0.0-c.tar.gz": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5",
+        "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz": "5b033f8c3a6ca187a00f5a7467bb8f57192d62cf25779c2f6274a7d62cbda411"
+      },
+      "authorInputsSha256": "3ee31b783db4fe0d6bdd5fd6c9dad39778112dcc33663328808690ee0c90c10c",
+      "bindingIrSha256": "00475d60226741e6a96cdc23948945de45eac560b9f64e938ace4d9ec7aa0576",
+      "modelSha256": "a474bc96841ebf4e3b1ddf3cbb456a3629d2daefe1f6085c40d86e5d44e69b0f",
+      "receiptSha256": "9b6240dc6b31dac54748ca6559ad90be13cef57a34fbc3217aed69efefca0860"
+    },
+    {
+      "archives": {
+        "archives/checkedrecordvalueindices-1.0.0-c.tar.gz": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5",
+        "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz": "5b033f8c3a6ca187a00f5a7467bb8f57192d62cf25779c2f6274a7d62cbda411"
+      },
+      "authorInputsSha256": "3ee31b783db4fe0d6bdd5fd6c9dad39778112dcc33663328808690ee0c90c10c",
+      "bindingIrSha256": "00475d60226741e6a96cdc23948945de45eac560b9f64e938ace4d9ec7aa0576",
+      "modelSha256": "a474bc96841ebf4e3b1ddf3cbb456a3629d2daefe1f6085c40d86e5d44e69b0f",
+      "receiptSha256": "9b6240dc6b31dac54748ca6559ad90be13cef57a34fbc3217aed69efefca0860"
+    }
+  ],
+  "compilerFreePath": true,
+  "configuration": {
+    "contracts": {
+      "CheckedRecordValueIndices.abStringIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkAb"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.emptySizedIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkEmptySized"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.emptyStringIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkEmptyToken"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.falseBoolIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkOff"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceAb": {
+        "parameters": [],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceEmptySized": {
+        "parameters": [],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceEmptyString": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceFalseBool": {
+        "parameters": [],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceTrueBool": {
+        "parameters": [],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceUnicodeString": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceWideNat": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.produceZeroNat": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.trueBoolIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkOn"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.unicodeStringIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkUnicodeToken"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.wideNatIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkWideToken"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      },
+      "CheckedRecordValueIndices.zeroNatIndex": {
+        "parameters": [
+          {
+            "lifetime": null,
+            "ownership": "copy",
+            "refinement": {
+              "constructor": "CheckedRecordValueIndices.mkZeroToken"
+            }
+          }
+        ],
+        "result": {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      }
+    },
+    "exports": [
+      "CheckedRecordValueIndices.trueBoolIndex",
+      "CheckedRecordValueIndices.falseBoolIndex",
+      "CheckedRecordValueIndices.abStringIndex",
+      "CheckedRecordValueIndices.emptyStringIndex",
+      "CheckedRecordValueIndices.unicodeStringIndex",
+      "CheckedRecordValueIndices.emptySizedIndex",
+      "CheckedRecordValueIndices.zeroNatIndex",
+      "CheckedRecordValueIndices.wideNatIndex",
+      "CheckedRecordValueIndices.produceTrueBool",
+      "CheckedRecordValueIndices.produceFalseBool",
+      "CheckedRecordValueIndices.produceAb",
+      "CheckedRecordValueIndices.produceEmptyString",
+      "CheckedRecordValueIndices.produceUnicodeString",
+      "CheckedRecordValueIndices.produceEmptySized",
+      "CheckedRecordValueIndices.produceZeroNat",
+      "CheckedRecordValueIndices.produceWideNat"
+    ],
+    "modules": [
+      "CheckedRecordValueIndices"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "c": {
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      },
+      "cpp": {
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerCommit": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+  "declaredGlibcFloor": "2.38",
+  "expectedBindingIrSha256": "25831177b6b96d1bdbfaa485f828aeaefa6f8d0c574deccde5f6381a8d61ff3d",
+  "immutableCallerAssertions": true,
+  "independentBuilds": 2,
+  "negativeControls": {
+    "checkedRefusals": 4,
+    "recoveries": 6,
+    "shapeRefusals": 2
+  },
+  "offlineInstall": true,
+  "producerCommit": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53854851,
+            "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+            "sha256": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51780269,
+            "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+            "sha256": "5b033f8c3a6ca187a00f5a7467bb8f57192d62cf25779c2f6274a7d62cbda411"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "checkedrecordvalueindices",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "00475d60226741e6a96cdc23948945de45eac560b9f64e938ace4d9ec7aa0576",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "f06bd959e044258ecfda69b9ea64f4b060f7e5f8f27866b6d661ab67631b3fca"
+    }
+  },
+  "relocatedInstallation": true,
+  "reports": [
+    {
+      "calls": 28,
+      "checks": 29,
+      "closure": {
+        "packageFileSetSha256": "c69d3d48a51626f39bea08eaadaf440ca76f380f6d0509542d547c01acececf7",
+        "receiptSha256": "223cf9d2e29f6efd6a0eb769071ef268708e1a30f1c06cf79976dfefabfe7f7a"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "865961bf02314d668fa3380129fe345aa6d4134d943e591f98f35ff224093d58",
+      "immutableCallerAssertions": true,
+      "installed": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53854851,
+              "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+              "sha256": "436ce5fb5f780d6482e8d7a0f556a6046d51b5da1375d486959ac73f5c884cc5"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "c",
+      "recoveries": 6,
+      "rejections": 6,
+      "relocated": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "route": "ordinary-source",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "calls": 28,
+      "checks": 29,
+      "closure": {
+        "packageFileSetSha256": "6416489f55921fa07a747cc2f55b7ee58b907e22ec34adf927237abd83180b4a",
+        "receiptSha256": "121f7b77864be94da73eb9fab9598d9cd8673126ae793cbd329758fc8e5620af"
+      },
+      "compilerFreePath": true,
+      "consumerSha256": "0bfdf8640d2975d058697ebb5603ef546f42d744e5a4d28c67db3444e20a59dd",
+      "immutableCallerAssertions": true,
+      "installed": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "offlineInstall": true,
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 51780269,
+              "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+              "sha256": "5b033f8c3a6ca187a00f5a7467bb8f57192d62cf25779c2f6274a7d62cbda411"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profile": "cpp",
+      "recoveries": 6,
+      "rejections": 6,
+      "relocated": {
+        "calls": 28,
+        "checks": 29,
+        "recoveries": 6,
+        "rejections": 6
+      },
+      "relocatedInstallation": true,
+      "repeatExecution": true,
+      "route": "ordinary-source",
+      "schemaVersion": 1,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "reproducible": true,
+  "route": "ordinary-source",
+  "runtime": {
+    "arch": "x64",
+    "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "cpp": "c++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "glibc": "2.39",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceCommitClean": true,
+  "sourceRemovedBeforeInstallation": true
+}

@@ -1,0 +1,81 @@
+{
+  "accepted": {
+    "calls": 56,
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "receipt": {
+      "component": {
+        "id": "checkedrecordvalueindices@1.0.0",
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      },
+      "kind": "lean-bridge-package-set-receipt",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53857727,
+              "path": "archives/checkedrecordvalueindices-1.0.0-c.tar.gz",
+              "sha256": "aab98558f90f7bf1d9ff638c4be41dff439c0db72f6aee75266c2558703dfe4e"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51784525,
+              "path": "archives/checkedrecordvalueindices-1.0.0-cpp.tar.gz",
+              "sha256": "c582a4369d8baa2cd4cbc58265d59fa1ba263bedd9bcb4ae70f604eefd84060d"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "checkedrecordvalueindices",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profiles": [
+        {
+          "bindingIrSha256": "c64781d3081a01859ff7352840e300b936dcb0a153f20a5449fd469f9b8823f5",
+          "id": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+        }
+      ],
+      "schemaVersion": 1,
+      "source": {
+        "treeSha256": "e5926e09c67bb1bb93f43c92ad0e40caf673ffab73a9020d1e99b9aefb3924c0"
+      }
+    },
+    "recoveries": 12,
+    "rejections": 12,
+    "reportSha256": "c7e9c826f51ba5906920b3e0f775c04f144898f4e8f513ef05717872fc2a9d23",
+    "route": "reviewed-ir"
+  },
+  "callerControls": 1,
+  "checkerCommit": "0e2283a4f4c0db48b7bdc7a85d119598a981324b",
+  "executionRecordControls": 1,
+  "gitBindingControls": 1,
+  "installedIrControls": 1,
+  "observationControls": 1,
+  "packageControls": 1,
+  "provenanceControls": 5,
+  "reconciliationControls": 1,
+  "runtimeControls": 1,
+  "schemaVersion": 1
+}
