@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { promisify } from "node:util";
@@ -17,6 +17,10 @@ import {
 	assertCheckedRecordValueIndexPythonIdentity
 	, checkedRecordValueIndexPythonNativeEvidence
 } from "./checked-record-value-index-python-wheel.mjs";
+import {
+	assertCheckedRecordValueIndexPythonCiTap
+	, checkedRecordValueIndexPythonCiTestName, parseCheckedRecordValueIndexPythonCiArgs
+} from "./checked-record-value-index-python-ci-report.mjs";
 import {
 	checkedRecordValueIndexPythonPackage, checkedRecordValueIndexPythonRoutes
 	, checkedRecordValueIndexPythonCaller, checkedRecordValueIndexPythonCallerArgs
@@ -188,6 +192,58 @@ test("value-index Python wheel identity rejects changed package and native evide
 		runtimeIdentity: "g".repeat(64), bindingIrSha256: component.bindingIrSha256
 		, files: {}
 	}, component, adapter, runtime));
+});
+
+test("value-index Python hosted checker closes its route and complete TAP stream", () => {
+	const options = {
+		route: "ordinary-source", producer: "a".repeat(40), directory: "records"
+		, tap: "original.tap", glibc: "2.38"
+	};
+	const args = Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]);
+	assert.deepEqual(parseCheckedRecordValueIndexPythonCiArgs(args), options);
+	const name = checkedRecordValueIndexPythonCiTestName(options.route);
+	const tap = `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2\n`;
+	assertCheckedRecordValueIndexPythonCiTap(tap, options.route);
+	for(const changed of [
+		args.slice(2), [...args, "--route", options.route]
+		, args.with(1, "ordinary"), args.with(args.indexOf("--glibc") + 1, "latest")
+	]) assert.throws(() => parseCheckedRecordValueIndexPythonCiArgs(changed));
+	for(const changed of [tap.replace("# fail 0", "# fail 1")
+		, tap.replace("ok 1", "not ok 1"), tap.replace("# skipped 0", "# skipped 1")])
+		assert.throws(() => assertCheckedRecordValueIndexPythonCiTap(changed, options.route));
+});
+
+test("value-index Python workflow retains every route, both floors and failures", async () => {
+	const workflow = await readFile(
+		".github/workflows/checked-record-value-index-python.yml", "utf8");
+	const runner = await readFile("scripts/run-checked-record-value-index-python-ci.sh", "utf8");
+	const verifyWorkflow = source => {
+		assert.ok(source.startsWith("name: Installed value-index checked records in Python\n"));
+		for(const required of [
+			"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			, "runs-on: ubuntu-24.04", "timeout-minutes: 210"
+			, "timeout-minutes: 110", "python-version: \"3.11\""
+			, "python-version: \"3.12\"", "persist-credentials: false"
+			, "bash scripts/run-checked-record-value-index-python-ci.sh"
+			, "if: always()\n        uses: actions/upload-artifact@v7"
+			, "if-no-files-found: error"
+			, "if: always() && steps.acceptance.outcome != 'success'\n        run: exit 1"
+		]) assert.ok(source.includes(required), required);
+		assert.doesNotMatch(source, /continue-on-error:|strategy:|matrix:|needs:/u);
+	};
+	verifyWorkflow(workflow);
+	for(const changed of [
+		workflow.replace("workflow_dispatch:\n", "")
+		, workflow.replace("persist-credentials: false", "persist-credentials: true")
+		, workflow.replace("if-no-files-found: error", "if-no-files-found: warn")
+		, workflow.replace("timeout-minutes: 110", "timeout-minutes: 10")
+	]) assert.throws(() => verifyWorkflow(changed));
+	assert.match(runner, /set -euo pipefail/u);
+	assert.match(runner, /ordinary-source reviewed-ir result-only-ordinary-source result-only-reviewed-ir/u);
+	assert.match(runner, /LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2\.38/u);
+	assert.match(runner, /--producer "\$revision" --directory "\$output\/records\/\$route"/u);
+	assert.match(runner, /--glibc 2\.38/u);
+	assert.doesNotMatch(runner, /curl|pip install .*https?:/u);
 });
 
 test("value-index Python caller keeps source routes, recovery and result-only boundaries independent", async t => {

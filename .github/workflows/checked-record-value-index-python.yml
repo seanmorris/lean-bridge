@@ -1,0 +1,91 @@
+name: Installed value-index checked records in Python
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checked-record-value-index-python-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checked-record-value-index-python:
+    name: Four value-index checked-record selections on both Python floors
+    runs-on: ubuntu-24.04
+    timeout-minutes: 210
+    env:
+      LEAN_NUM_THREADS: "1"
+      LEAN_BRIDGE_LAKE_ENGINE: build/locked-lake-engine/bin/lean-bridge-component-engine
+    steps:
+      - name: Check out the exact revision and original evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+      - name: Select Python 3.11
+        id: python311
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Select Python 3.12
+        id: python312
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config python3-venv ripgrep unzip xz-utils zip zstd
+      - name: Install dependencies and pinned compiler tools
+        timeout-minutes: 30
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node --test --test-name-pattern='Nix component engine source boundary|filtered Nix engine' tests/engine-execution-request.test.mjs
+          bash scripts/bootstrap-toolchains.sh
+      - name: Build the locked component engine
+        timeout-minutes: 40
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          nix build .#component-build-engine --out-link build/locked-lake-engine 2>&1 | tee build/checked-record-value-index-python-engine.log
+          test -x build/locked-lake-engine/bin/lean-bridge-component-engine
+      - name: Require every source route and API mode on both Python floors
+        id: acceptance
+        timeout-minutes: 110
+        shell: bash
+        env:
+          VALUE_INDEX_PYTHON_311: ${{ steps.python311.outputs.python-path }}
+          VALUE_INDEX_PYTHON_312: ${{ steps.python312.outputs.python-path }}
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-checked-record-value-index-python-ci.sh "$VALUE_INDEX_PYTHON_311" "$VALUE_INDEX_PYTHON_312"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: checked-record-value-index-python-${{ github.sha }}
+          path: |
+            build/checked-record-value-index-python-ci/
+            build/checked-record-value-index-python-engine.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed value-index Python acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
