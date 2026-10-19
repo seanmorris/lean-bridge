@@ -328,6 +328,7 @@ const profileManifest = Object.freeze({
 		, "checked-record-value-index-dotnet-evidence"
 		, "checked-record-value-index-jvm"
 		, "checked-record-value-index-native"
+		, "checked-record-value-index-perl"
 		, "checked-record-alias-admission-source-history"
 		, "checked-record-php-wasm-foundation"
 		, "checked-record-php-wasm-evidence-ci"

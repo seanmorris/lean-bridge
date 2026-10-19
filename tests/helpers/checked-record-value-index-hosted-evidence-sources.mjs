@@ -300,7 +300,7 @@ export const checkedRecordValueIndexPerlEvidenceSources = revisions => {
 			, paths: [
 				...closure(revisions.checker, [
 					"scripts/check-checked-record-value-index-perl-ci.mjs"
-					, "tests/helpers/checked-record-value-index-perl-ci-report-tests.mjs"
+					, "tests/checked-record-value-index-perl.test.mjs"
 				])
 				, boundedApt
 				, ".github/workflows/checked-record-value-index-perl.yml"
