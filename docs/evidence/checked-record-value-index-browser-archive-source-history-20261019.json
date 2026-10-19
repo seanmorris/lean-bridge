@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-browser-archive-source-v1",
+  "predecessorCommit": "42f841b82394cb71043bcfaf063be57542b5d0c9",
+  "draftParentCommit": "29c05805e774cf4d6850083a85788398a128d581",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-browser-20261019",
+    "indexSha256": "c776acf181b38744191bddbfbe515f14e515d59eaa94e4a942acddc8c76b34e0",
+    "indexedFileCount": 2227,
+    "addedFileCount": 2228
+  },
+  "pathsSha256": "f069bb95b6a785a5c7915ef54c1dc88aa36bca29650f381b3b9a91c9b775fe8a",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-evidence-tests.mjs",
+      "currentSha256": "25a6559104093397f06028ce9eb927ff286e3084c7b5ae55f5c38290739a393d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-evidence.mjs",
+      "currentSha256": "8d6e20b89bde40f63780e08c8889d8226ece1fe5e08eed217719770fdcdf0824"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-browser-archive-source-history.mjs",
+      "currentSha256": "56052d9db462f1015479d8b22c46fbe21aea47d6f5c2c06245ad48234ecef666"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-archive-source-history-tests.mjs",
+      "currentSha256": "b16e8bb7a6685afac23a577caf5ed9eba7921a5a8e7006f57d2a205b2cc7687d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-archive-source-history.mjs",
+      "currentSha256": "a7de10b2d547e149088a8bcf1f1c510dad7ad5ead84f62c6745ac0c7796351d4"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-browser.test.mjs",
+      "previousSha256": "9827fba11f11c710046dbbb966fc2204382057bd37bc413eb63db8db0c97ac32",
+      "currentSha256": "badd861cd6a7a3322788b2592db458858a0848d84afa21ac54070930d6eba222",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-browser-evidence-tests.mjs\";\nimport \"./helpers/checked-record-value-index-browser-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9e68d04a071c62b4d9309955fbd2389034578e1fc989196e58242edbc5360984",
+      "currentSha256": "baec867f5419df394927a2cc6e016053722160c370beaf73b293bb95d7dbafc6",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexBrowserArchiveSource, checkedRecordValueIndexBrowserArchiveChangedPaths } from \"./checked-record-value-index-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 98376,
+          "previous": "\t...coreFirstRunResidualRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexBrowserArchiveChangedPaths\n\t, ...coreFirstRunResidualRepairChangedPaths\n"
+        },
+        {
+          "start": 115766,
+          "previous": "\tlet previous = beforeCoreFirstRunResidualRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexBrowserArchiveSource(\n"
+        },
+        {
+          "start": 115856,
+          "previous": "",
+          "current": "\t);\n\tprevious = beforeCoreFirstRunResidualRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}
