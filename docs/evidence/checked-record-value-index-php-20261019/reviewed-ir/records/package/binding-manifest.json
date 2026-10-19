@@ -1,0 +1,54 @@
+{
+  "bindingIrSha256": "f06c870a681d8b7f655a90ba376aa5cfd29ab7b79cae3195d420eb4cb101607f",
+  "component": "checkedrecordvalueindices@1.0.0",
+  "exports": [
+    "LeanCheckedrecordvalueindices\\Bytes",
+    "LeanCheckedrecordvalueindices\\LeanBridgeError",
+    "LeanCheckedrecordvalueindices\\Ab",
+    "LeanCheckedrecordvalueindices\\EmptySized",
+    "LeanCheckedrecordvalueindices\\EmptyToken",
+    "LeanCheckedrecordvalueindices\\Off",
+    "LeanCheckedrecordvalueindices\\On",
+    "LeanCheckedrecordvalueindices\\UnicodeToken",
+    "LeanCheckedrecordvalueindices\\WideToken",
+    "LeanCheckedrecordvalueindices\\ZeroToken",
+    "LeanCheckedrecordvalueindices\\ab_string_index",
+    "LeanCheckedrecordvalueindices\\empty_sized_index",
+    "LeanCheckedrecordvalueindices\\empty_string_index",
+    "LeanCheckedrecordvalueindices\\false_bool_index",
+    "LeanCheckedrecordvalueindices\\produce_ab",
+    "LeanCheckedrecordvalueindices\\produce_empty_sized",
+    "LeanCheckedrecordvalueindices\\produce_empty_string",
+    "LeanCheckedrecordvalueindices\\produce_false_bool",
+    "LeanCheckedrecordvalueindices\\produce_true_bool",
+    "LeanCheckedrecordvalueindices\\produce_unicode_string",
+    "LeanCheckedrecordvalueindices\\produce_wide_nat",
+    "LeanCheckedrecordvalueindices\\produce_zero_nat",
+    "LeanCheckedrecordvalueindices\\true_bool_index",
+    "LeanCheckedrecordvalueindices\\unicode_string_index",
+    "LeanCheckedrecordvalueindices\\wide_nat_index",
+    "LeanCheckedrecordvalueindices\\zero_nat_index"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "a40ed697abeece5bdec189ea735148e9af4aa918b892528d7f1eb8a941748e22",
+    "src/Api.php": "2d6b1e8d528fdbe6a59dca678689da330ecc4c8a11854f56e9913c9e5a1d75de",
+    "src/Internal/Native.php": "46a8a9576c8de5ac42a1fe45e9d3e50ccb09f91efba87b7be89a409f097d8d43",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanCheckedrecordvalueindices",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,30 @@
+#include <lean/lean.h>
+#include <stdint.h>
+LEAN_CASSERT(sizeof(size_t) * 8 == 64);
+lean_object * lb_4d7bad0a7665bc1e177e4091(lean_object * _unit);
+lean_object * lb_2cb2ac73cad1bf0e92f223f2(lean_object * _unit);
+lean_object * lb_1c301039413f26b466ffc0ac(lean_object * a0);
+lean_object * lb_4aa58b13819217d37533c8be(lean_object * _unit);
+lean_object * lb_fa4a826e4cfc4b858bea336d(lean_object * _unit);
+lean_object * lb_c3c99619aef987f5fd710b1d(lean_object * a0);
+lean_object * lb_ee4a5ad2bcd3cf6bb8065218(lean_object * a0);
+lean_object * lb_de7d470e18379efff61de31b(lean_object * a0);
+lean_object * lb_te6e782ea1d9b18dc3e44_make(lean_object * a0);
+lean_object * lb_te6e782ea1d9b18dc3e44_get0(lean_object * value);
+lean_object * lb_t97a1bccb66cfd61c7d52_make(lean_object * a0);
+lean_object * lb_t97a1bccb66cfd61c7d52_get0(lean_object * value);
+lean_object * lb_t0ac37d04b2c3f2e53e25_make(lean_object * a0);
+lean_object * lb_t0ac37d04b2c3f2e53e25_get0(lean_object * value);
+lean_object * lb_ta9c042e57916781102d9_make(lean_object * a0);
+lean_object * lb_ta9c042e57916781102d9_get0(lean_object * value);
+lean_object * lb_td74f96c3ad55654fb4e2_make(lean_object * a0);
+lean_object * lb_td74f96c3ad55654fb4e2_get0(lean_object * value);
+lean_object * lb_ta8d5e8c0b6bc9e7e0253_make(lean_object * a0);
+lean_object * lb_ta8d5e8c0b6bc9e7e0253_get0(lean_object * value);
+lean_object * lb_t15b03e27f4c8772be0ea_make(lean_object * a0);
+lean_object * lb_t15b03e27f4c8772be0ea_get0(lean_object * value);
+lean_object * lb_tcd43cc36cead5a0e3bc7_make(lean_object * a0);
+lean_object * lb_tcd43cc36cead5a0e3bc7_get0(lean_object * value);
+lean_object * lb_native_nat_text(lean_object * value);
+lean_object * lb_native_int_text(lean_object * value);
+lean_object * lb_native_int_parse(lean_object * value);

@@ -1,0 +1,35 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php",
+    "--reviewed"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "9cdc9b3abb5b35ab3cdf47f0aaa1ab865768333316176f38a5eae1348a84e3bb",
+    "packageFileSetSha256": "0bfdf698bc09eef5dff8ea276951163f134b9518ed5897640d0bbd108cc07fae",
+    "receiptSha256": "6cfca30b60aadd4a16d04560ee16c58a7d7dcd0ab3796b51283262dfaf97e18c",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "fa6111f7b5394aaf570d0bf082a27469063c273c9e4e67fd97adbe311ea3de3a"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "calls": 28,
+    "checks": 65,
+    "recoveries": 6,
+    "rejections": 6,
+    "snapshots": 20
+  },
+  "cwd": "/tmp/lean-bridge-value-index-php-wwspdN/consumer",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":28,\"checks\":65,\"recoveries\":6,\"rejections\":6,\"snapshots\":20}\n"
+  },
+  "strictness": "strict"
+}

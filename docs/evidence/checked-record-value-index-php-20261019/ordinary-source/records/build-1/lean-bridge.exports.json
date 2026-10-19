@@ -1,0 +1,228 @@
+{
+  "contracts": {
+    "CheckedRecordValueIndices.abStringIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkAb"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.emptySizedIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkEmptySized"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.emptyStringIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkEmptyToken"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.falseBoolIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkOff"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceAb": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceEmptySized": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceEmptyString": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceFalseBool": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceTrueBool": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceUnicodeString": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceWideNat": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceZeroNat": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.trueBoolIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkOn"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.unicodeStringIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkUnicodeToken"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.wideNatIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkWideToken"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.zeroNatIndex": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "CheckedRecordValueIndices.mkZeroToken"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "CheckedRecordValueIndices.trueBoolIndex",
+    "CheckedRecordValueIndices.falseBoolIndex",
+    "CheckedRecordValueIndices.abStringIndex",
+    "CheckedRecordValueIndices.emptyStringIndex",
+    "CheckedRecordValueIndices.unicodeStringIndex",
+    "CheckedRecordValueIndices.emptySizedIndex",
+    "CheckedRecordValueIndices.zeroNatIndex",
+    "CheckedRecordValueIndices.wideNatIndex",
+    "CheckedRecordValueIndices.produceTrueBool",
+    "CheckedRecordValueIndices.produceFalseBool",
+    "CheckedRecordValueIndices.produceAb",
+    "CheckedRecordValueIndices.produceEmptyString",
+    "CheckedRecordValueIndices.produceUnicodeString",
+    "CheckedRecordValueIndices.produceEmptySized",
+    "CheckedRecordValueIndices.produceZeroNat",
+    "CheckedRecordValueIndices.produceWideNat"
+  ],
+  "modules": [
+    "CheckedRecordValueIndices"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-native": {
+      "name": "example/checkedrecordvalueindices",
+      "version": "1.0.0"
+    }
+  }
+}

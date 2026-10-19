@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51359843,
+          "path": "archives/example-checkedrecordvalueindices-1.0.0-linux-x86_64.zip",
+          "sha256": "a7e8d6c80f60a85863d7bf41794a8d5a7ef0bcd3cf26614455d54d1088adabf8"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/checkedrecordvalueindices",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "41243f30741e0b2932dd1456849c80ef2c45067b94095103eb8a1e9c295ce820",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7463d315946efe4fbe46aa53513ef10ed459301e87c7afd6ce667bf03d42c126"
+  }
+}

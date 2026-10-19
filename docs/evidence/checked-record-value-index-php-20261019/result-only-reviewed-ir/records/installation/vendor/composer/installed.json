@@ -1,0 +1,88 @@
+{
+    "packages": [
+        {
+            "name": "brick/math",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///tmp/lean-bridge-value-index-php-K3T1gB/consumer/feed/brick-math-1.0.0.zip",
+                "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Math\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Brick\\Math\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Arbitrary-precision arithmetic library",
+            "keywords": [
+                "Arbitrary-precision",
+                "Arithmetic",
+                "BigDecimal",
+                "BigInteger",
+                "BigNumber",
+                "BigRational",
+                "Bignum",
+                "Brick",
+                "Decimal",
+                "Integer",
+                "Math",
+                "Mathematics",
+                "Rational"
+            ],
+            "install-path": "../brick/math"
+        },
+        {
+            "name": "example/checkedrecordvalueindices",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///tmp/lean-bridge-value-index-php-K3T1gB/consumer/feed/component.zip"
+            },
+            "require": {
+                "brick/math": "1.0.0",
+                "ext-ffi": "*",
+                "php": ">=8.2 <9"
+            },
+            "type": "library",
+            "extra": {
+                "lean-bridge": {
+                    "glibcMinimumVersion": "2.38",
+                    "licenses": "licenses/",
+                    "namespace": "LeanCheckedrecordvalueindices",
+                    "platform": "linux-x86_64",
+                    "profile": "ordinary-php-cli-ffi-v1"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/Api.php"
+                ]
+            },
+            "description": "Compiled Lean API with generated PHP copied-value conversions",
+            "install-path": "../example/checkedrecordvalueindices"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

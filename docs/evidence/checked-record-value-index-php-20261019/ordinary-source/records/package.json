@@ -1,0 +1,163 @@
+{
+  "archive": {
+    "bytes": 51373669,
+    "path": "archives/example-checkedrecordvalueindices-1.0.0-linux-x86_64.zip",
+    "sha256": "28e33a9d407425fc97876d7062c526ad861edddb24d4a41c310ce48783efc7a5"
+  },
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "0a3be1aa4bb9bc5cd57b2b49e373110a0b299016e4c327bdf00230240b103637",
+    "packageFileSetSha256": "0bfdf698bc09eef5dff8ea276951163f134b9518ed5897640d0bbd108cc07fae",
+    "receiptSha256": "8b96748b73321e780150dc235e6b2b3cfb56710d3534e022870c1e1f5d51fcfc",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "2aec860ec24fd741a70808cd80623e7f6fca4f50df5dca045b2a5b7cbf1f4f82"
+  },
+  "evidence": {
+    "componentId": "checkedrecordvalueindices@1.0.0",
+    "componentReceiptSha256": "d3f54e4bde88f6edfaa9dddeecf9e09dad90a707390a05cbac6b56ecfd0aa2ea",
+    "libraries": {
+      "libcheckedrecordvalueindices.so": "5cfe7d6326c0bdfd323d394261e6e9aa161de72a33dfccb0f18488c59a3e9e15",
+      "libcomponent_767c615eabad08d77709.so": "39941bbf2ec5f61793b17581a6f4e1e79725ec63f2fd2a6d5a5cbfa7274ae1e6",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libcheckedrecordvalueindices.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "README.md": {
+      "bytes": 6701,
+      "sha256": "c94da3ce95df0cc8772e93061a9b0d677739eba01ef93e55da6c82bc1b77e2a0"
+    },
+    "binding-manifest.json": {
+      "bytes": 2243,
+      "sha256": "c3e94c3a1172039ea32c775776b99f594bd2535ee820001fd4c33c52bdcef1f9"
+    },
+    "composer.json": {
+      "bytes": 568,
+      "sha256": "a1f4bcdf2d6414f7307ba9003be0be7f52ccc5843ce21628897c69886eee4740"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1533,
+      "sha256": "808e419e573b9618b6bab2f70065dbf9e06ec82a8e98e403cd5b9ba859ba5647"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 44378,
+      "sha256": "c5a0ee9e82baee45988c13965dfb53afc140006c37a23f5fafa1c446b6fa0e84"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 2837,
+      "sha256": "931a7d07bc4e4a502b2df4d5ad1dde68362d0a12cd96fc1677fb670df43a7dcc"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 15498,
+      "sha256": "aa1893acd2de87a2b1296b6f13575523a8c146adb61a86d499d01077825bd5c7"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 73057,
+      "sha256": "abcd144455797137c59a9af2da13e36bc75a696088c60b65befa7489f39e6c6d"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 118894,
+      "sha256": "5d06a69a8ddbbd3b5d3c39934ef6c2fc3a7ba7e7e47c66908580857105b9b7f9"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 17109,
+      "sha256": "d3f54e4bde88f6edfaa9dddeecf9e09dad90a707390a05cbac6b56ecfd0aa2ea"
+    },
+    "lean-bridge/include/checkedrecordvalueindices.h": {
+      "bytes": 7563,
+      "sha256": "bd82f948f5f32a412ff930b1f9786df59c1042a6b882eb8bf33cf1013f04bbe7"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "e47e81c9d926ff409eb1183fc932dd18defd324945d08d72f8f4b04c80bf3655"
+    },
+    "lean-bridge/package-receipt.json": {
+      "bytes": 18708,
+      "sha256": "8b96748b73321e780150dc235e6b2b3cfb56710d3534e022870c1e1f5d51fcfc"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 7785,
+      "sha256": "9b9cc32257b0201d7071ac0474248ce9412437803b205d2b97daf5e35c26a9b4"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcheckedrecordvalueindices.so": {
+      "bytes": 63176,
+      "sha256": "5cfe7d6326c0bdfd323d394261e6e9aa161de72a33dfccb0f18488c59a3e9e15"
+    },
+    "native/linux-x64/libcomponent_767c615eabad08d77709.so": {
+      "bytes": 54160,
+      "sha256": "39941bbf2ec5f61793b17581a6f4e1e79725ec63f2fd2a6d5a5cbfa7274ae1e6"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/Api.php": {
+      "bytes": 9553,
+      "sha256": "0a3d0b7d95782ce6458f6d8fbe29d7a632f9bae619568f7fb75f89e52db8e92a"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 43411,
+      "sha256": "30ccdaa7464917b52c5f9697f1e816df181c6c2584861d8eb4697325c8e7ada9"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    }
+  },
+  "receiptSha256": "8b96748b73321e780150dc235e6b2b3cfb56710d3534e022870c1e1f5d51fcfc",
+  "retained": [
+    "README.md",
+    "binding-manifest.json",
+    "composer.json",
+    "lean-bridge/component/allocation-guard.h",
+    "lean-bridge/component/artifacts.json",
+    "lean-bridge/component/binding-ir.json",
+    "lean-bridge/component/component.h",
+    "lean-bridge/component/generated.lean",
+    "lean-bridge/component/metadata.json",
+    "lean-bridge/component/model.json",
+    "lean-bridge/component/native-component.json",
+    "lean-bridge/include/checkedrecordvalueindices.h",
+    "lean-bridge/native-c-adapter.json",
+    "lean-bridge/package-receipt.json",
+    "lean-bridge/runtime.json",
+    "licenses/Lean-LICENSE",
+    "licenses/Lean-LICENSES",
+    "licenses/LeanBridge-LICENSE",
+    "licenses/source-notices.json",
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php"
+  ]
+}

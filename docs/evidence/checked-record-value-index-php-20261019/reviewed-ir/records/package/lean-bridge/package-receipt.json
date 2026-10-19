@@ -1,0 +1,317 @@
+{
+  "bindingIrSha256": "f06c870a681d8b7f655a90ba376aa5cfd29ab7b79cae3195d420eb4cb101607f",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "ecosystem": "composer",
+  "files": {
+    "README.md": {
+      "bytes": 6717,
+      "sha256": "a40ed697abeece5bdec189ea735148e9af4aa918b892528d7f1eb8a941748e22"
+    },
+    "binding-manifest.json": {
+      "bytes": 2243,
+      "sha256": "d8fe78ed97d2c941bb3db79d823f6593105c69cd8a77e0c69d6191ccbd316d21"
+    },
+    "composer.json": {
+      "bytes": 568,
+      "sha256": "a1f4bcdf2d6414f7307ba9003be0be7f52ccc5843ce21628897c69886eee4740"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1533,
+      "sha256": "7b82326e2849ea516a7e45e7912c4dad088a286fc62f5c1cfab3a4d9bf7da1b9"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 42098,
+      "sha256": "9264511f02d5225afc75c2cbb1bb49a2b40c5e5c4e00f06fed5045595ee647c6"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 2837,
+      "sha256": "931a7d07bc4e4a502b2df4d5ad1dde68362d0a12cd96fc1677fb670df43a7dcc"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 15498,
+      "sha256": "aa1893acd2de87a2b1296b6f13575523a8c146adb61a86d499d01077825bd5c7"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 73057,
+      "sha256": "3300e6a5215130b11250d372fcae5b6fc8485706c0cedb82571f4685e2c4512f"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 147473,
+      "sha256": "be1b7942eb2cb82973204345e063e259fe4be72b5cd5422f6b07441cb46b8955"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 48120,
+      "sha256": "41ee978a686d5790a1b77d7661130d62a7610b5cf819b892d39fe4749501853b"
+    },
+    "lean-bridge/include/checkedrecordvalueindices.h": {
+      "bytes": 7587,
+      "sha256": "76528ae91cacf069e184eb793ed1f246f766e31171f99742d3da8b87ecb381de"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "b5fe27165576afa81632011fe777aca0b0d366ac68e4863e83abf5d9e241eb26"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "licenses/source-notices.json": {
+      "bytes": 2144,
+      "sha256": "db973b100e91e690f0eddcabc803bdfb368968b5d12763196519f5df2a96a354"
+    },
+    "licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcheckedrecordvalueindices.so": {
+      "bytes": 63176,
+      "sha256": "fdcddf87c8fdd6f792ecda1b280d4d23ef8a6c0e6c01aa0eb346c2c33dcf34da"
+    },
+    "native/linux-x64/libcomponent_767c615eabad08d77709.so": {
+      "bytes": 54160,
+      "sha256": "39941bbf2ec5f61793b17581a6f4e1e79725ec63f2fd2a6d5a5cbfa7274ae1e6"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/Api.php": {
+      "bytes": 9641,
+      "sha256": "2d6b1e8d528fdbe6a59dca678689da330ecc4c8a11854f56e9913c9e5a1d75de"
+    },
+    "src/Internal/Native.php": {
+      "bytes": 43411,
+      "sha256": "46a8a9576c8de5ac42a1fe45e9d3e50ccb09f91efba87b7be89a409f097d8d43"
+    },
+    "src/Internal/Runtime.php": {
+      "bytes": 4336,
+      "sha256": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-php-package",
+  "name": "example/checkedrecordvalueindices",
+  "namespace": "LeanCheckedrecordvalueindices",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "80a22fd7dd028720c691ae706c4c1ca28f06c30a589238d62f18e77c0a5148b7",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"CheckedRecordValueIndices\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"php-native\": {\n      \"name\": \"example/checkedrecordvalueindices\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "7ecc15c54b07535647a25615b81bef4afef3a6d9663c7e6c73620264f4ff1ccf",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 164112,
+          "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+          "sha256": "92a72bcb099e7c6508d3a65f03f7a306a32d623d1829bc2f1a6112a0382c637b"
+        },
+        "module": "CheckedRecordValueIndices",
+        "source": {
+          "bytes": 2928,
+          "path": "CheckedRecordValueIndices.lean",
+          "sha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "CheckedRecordValueIndices.abStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkAb"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.emptySizedIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkEmptySized"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.emptyStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkEmptyToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.falseBoolIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkOff"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.trueBoolIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkOn"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.unicodeStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkUnicodeToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.wideNatIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkWideToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.zeroNatIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkZeroToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "CheckedRecordValueIndices"
+      ],
+      "exports": [
+        "CheckedRecordValueIndices.abStringIndex",
+        "CheckedRecordValueIndices.emptySizedIndex",
+        "CheckedRecordValueIndices.emptyStringIndex",
+        "CheckedRecordValueIndices.falseBoolIndex",
+        "CheckedRecordValueIndices.produceAb",
+        "CheckedRecordValueIndices.produceEmptySized",
+        "CheckedRecordValueIndices.produceEmptyString",
+        "CheckedRecordValueIndices.produceFalseBool",
+        "CheckedRecordValueIndices.produceTrueBool",
+        "CheckedRecordValueIndices.produceUnicodeString",
+        "CheckedRecordValueIndices.produceWideNat",
+        "CheckedRecordValueIndices.produceZeroNat",
+        "CheckedRecordValueIndices.trueBoolIndex",
+        "CheckedRecordValueIndices.unicodeStringIndex",
+        "CheckedRecordValueIndices.wideNatIndex",
+        "CheckedRecordValueIndices.zeroNatIndex"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "c54e260b9e04c67d04b22dd57ffffe866a58b477d5450ee1fe5a519ffdc9efbb",
+        "modules": [
+          {
+            "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+            "name": "CheckedRecordValueIndices",
+            "sourcePath": "CheckedRecordValueIndices.lean",
+            "sourceSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecordValueIndices"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "25831177b6b96d1bdbfaa485f828aeaefa6f8d0c574deccde5f6381a8d61ff3d",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"checkedrecordvalueindices@1.0.0\",\n    \"name\": \"checkedrecordvalueindices\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.trueBoolIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"trueBoolIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.trueBoolIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.On\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.trueBoolIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkOn\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.falseBoolIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"falseBoolIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.falseBoolIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.Off\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.falseBoolIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkOff\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.abStringIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"abStringIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.abStringIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.Ab\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.abStringIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkAb\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.emptyStringIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"emptyStringIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.emptyStringIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.EmptyToken\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.emptyStringIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkEmptyToken\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.unicodeStringIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"unicodeStringIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.unicodeStringIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.UnicodeToken\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.unicodeStringIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkUnicodeToken\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.emptySizedIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"emptySizedIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.emptySizedIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.EmptySized\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.emptySizedIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkEmptySized\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.zeroNatIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"zeroNatIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.zeroNatIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.ZeroToken\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.zeroNatIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkZeroToken\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.wideNatIndex\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"wideNatIndex\",\n      \"overloadKey\": \"CheckedRecordValueIndices.wideNatIndex\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:CheckedRecordValueIndices.WideToken\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.wideNatIndex\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"CheckedRecordValueIndices.mkWideToken\",\n                \"kind\": \"checked-record\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceTrueBool\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceTrueBool\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceTrueBool\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.On\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceTrueBool\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceFalseBool\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceFalseBool\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceFalseBool\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.Off\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceFalseBool\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceAb\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceAb\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceAb\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.Ab\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceAb\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceEmptyString\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceEmptyString\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceEmptyString\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.EmptyToken\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceEmptyString\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceUnicodeString\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceUnicodeString\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceUnicodeString\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.UnicodeToken\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceUnicodeString\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceEmptySized\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceEmptySized\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceEmptySized\",\n      \"owner\": null,\n      \"parameters\": [],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.EmptySized\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceEmptySized\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceZeroNat\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceZeroNat\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceZeroNat\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.ZeroToken\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceZeroNat\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:CheckedRecordValueIndices.produceWideNat\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"produceWideNat\",\n      \"overloadKey\": \"CheckedRecordValueIndices.produceWideNat\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:CheckedRecordValueIndices.WideToken\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.produceWideNat\",\n        \"extensions\": {},\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.On\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"On\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.On\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"set\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"bool\"\n                },\n                \"value\": \"true\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Flagged\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.Off\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Off\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.Off\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"set\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"bool\"\n                },\n                \"value\": \"false\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Flagged\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"size\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.Ab\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Ab\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.Ab\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"named\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"string\"\n                },\n                \"value\": \"ab\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Labeled\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.EmptyToken\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"EmptyToken\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.EmptyToken\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"fixed\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"string\"\n              },\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"string\"\n                },\n                \"value\": \"\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Token\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.UnicodeToken\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"UnicodeToken\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.UnicodeToken\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"fixed\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"string\"\n              },\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"string\"\n                },\n                \"value\": \"λ🌱\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Token\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"data\",\n          \"type\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              }\n            ],\n            \"constructor\": \"array\",\n            \"kind\": \"apply\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.EmptySized\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"EmptySized\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.EmptySized\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"sized\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"0\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Sized\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.ZeroToken\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"ZeroToken\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.ZeroToken\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"fixed\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              },\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"0\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Token\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"count\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:CheckedRecordValueIndices.WideToken\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"WideToken\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"CheckedRecordValueIndices.WideToken\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"fixed\"\n            ]\n          },\n          \"lean-lang.org/instantiation\": {\n            \"arguments\": [\n              {\n                \"kind\": \"primitive\",\n                \"name\": \"nat\"\n              },\n              {\n                \"kind\": \"value\",\n                \"type\": {\n                  \"kind\": \"primitive\",\n                  \"name\": \"nat\"\n                },\n                \"value\": \"340282366920938463463374607431768211457\"\n              }\n            ],\n            \"structure\": \"CheckedRecordValueIndices.Token\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "0616b30c1aeeabce4f0b4486deff4fea6b6608dde6daf0116be831730bef16a8"
+    },
+    "sourceNoticesSha256": "db973b100e91e690f0eddcabc803bdfb368968b5d12763196519f5df2a96a354",
+    "sourceTreeSha256": "b755574606e6e20d901ec056d08507d3b87c7807caa51f8a30e38772a4e3e30e"
+  },
+  "version": "1.0.0"
+}

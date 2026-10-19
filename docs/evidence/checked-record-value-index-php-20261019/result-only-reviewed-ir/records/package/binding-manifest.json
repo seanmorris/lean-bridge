@@ -1,0 +1,46 @@
+{
+  "bindingIrSha256": "41243f30741e0b2932dd1456849c80ef2c45067b94095103eb8a1e9c295ce820",
+  "component": "checkedrecordvalueindices@1.0.0",
+  "exports": [
+    "LeanCheckedrecordvalueindices\\Bytes",
+    "LeanCheckedrecordvalueindices\\LeanBridgeError",
+    "LeanCheckedrecordvalueindices\\Ab",
+    "LeanCheckedrecordvalueindices\\EmptySized",
+    "LeanCheckedrecordvalueindices\\EmptyToken",
+    "LeanCheckedrecordvalueindices\\Off",
+    "LeanCheckedrecordvalueindices\\On",
+    "LeanCheckedrecordvalueindices\\UnicodeToken",
+    "LeanCheckedrecordvalueindices\\WideToken",
+    "LeanCheckedrecordvalueindices\\ZeroToken",
+    "LeanCheckedrecordvalueindices\\produce_ab",
+    "LeanCheckedrecordvalueindices\\produce_empty_sized",
+    "LeanCheckedrecordvalueindices\\produce_empty_string",
+    "LeanCheckedrecordvalueindices\\produce_false_bool",
+    "LeanCheckedrecordvalueindices\\produce_true_bool",
+    "LeanCheckedrecordvalueindices\\produce_unicode_string",
+    "LeanCheckedrecordvalueindices\\produce_wide_nat",
+    "LeanCheckedrecordvalueindices\\produce_zero_nat"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "0d0e223032c6b310de2fbd9a1d2fa6624ecb7cc8bdf162898223339729f5e446",
+    "src/Api.php": "c451c1e26f70dfe2e2631a1352a9560f564cbe4b5419a181463f7c3b7bc324b7",
+    "src/Internal/Native.php": "788c07d0aba7fc7fb2ce58960409b8eafe2ffe41185bc68c36a295eec073d542",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanCheckedrecordvalueindices",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

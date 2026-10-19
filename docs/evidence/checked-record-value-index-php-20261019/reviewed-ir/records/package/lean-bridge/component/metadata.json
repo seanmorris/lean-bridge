@@ -1,0 +1,2137 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.Ab",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 25,
+            "endLine": 25,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 25
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.EmptySized",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 28,
+            "endLine": 26,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 26
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.EmptyToken",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 36,
+            "endLine": 29,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 29
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.Off",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 27,
+            "endLine": 24,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 24
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.On",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 25,
+            "endLine": 23,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 23
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.UnicodeToken",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 41,
+            "endLine": 30,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 30
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.WideToken",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 69,
+            "endLine": 28,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 28
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.ZeroToken",
+          "kind": "abbreviation",
+          "parameters": [],
+          "projection": {
+            "expression": "Type",
+            "reason": "type-declaration",
+            "status": "unsupported"
+          },
+          "resultExpression": "Type",
+          "selected": false,
+          "source": {
+            "endColumn": 31,
+            "endLine": 27,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 27
+          },
+          "theoremReferences": [],
+          "typeExpression": "Type",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.abStringIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.Ab"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Labeled.mk",
+                    "erased": [
+                      "named"
+                    ],
+                    "fields": [
+                      {
+                        "name": "size",
+                        "projection": "CheckedRecordValueIndices.Labeled.size",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.Ab",
+                    "name": "CheckedRecordValueIndices.Ab",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "String",
+                            "name": "string"
+                          },
+                          "value": "ab"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Labeled"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkAb",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 62,
+            "endLine": 48,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 48
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.Ab → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.emptySizedIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.EmptySized"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": true,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Sized.mk",
+                    "erased": [
+                      "sized"
+                    ],
+                    "fields": [
+                      {
+                        "name": "data",
+                        "projection": "CheckedRecordValueIndices.Sized.data",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "element": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "kind": "array"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.EmptySized",
+                    "name": "CheckedRecordValueIndices.EmptySized",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "value": "0"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Sized"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkEmptySized",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 77,
+            "endLine": 51,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 51
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.EmptySized → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.emptyStringIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.EmptyToken"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Token.mk",
+                    "erased": [
+                      "fixed"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Token.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.EmptyToken",
+                    "name": "CheckedRecordValueIndices.EmptyToken",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "String",
+                          "name": "string"
+                        },
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "String",
+                            "name": "string"
+                          },
+                          "value": ""
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Token"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkEmptyToken",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 74,
+            "endLine": 49,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 49
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.EmptyToken → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.falseBoolIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.Off"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Flagged.mk",
+                    "erased": [
+                      "set"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Flagged.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.Off",
+                    "name": "CheckedRecordValueIndices.Off",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "uint8_t",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Bool",
+                            "name": "bool"
+                          },
+                          "value": "false"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Flagged"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkOff",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 65,
+            "endLine": 47,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 47
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.Off → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkAb",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "size",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Labeled \"ab\"",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.Ab",
+          "selected": false,
+          "source": {
+            "endColumn": 57,
+            "endLine": 38,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 37
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.Ab",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkEmptySized",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "data",
+              "typeExpression": "Array.{0} Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Sized 0",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.EmptySized",
+          "selected": false,
+          "source": {
+            "endColumn": 52,
+            "endLine": 40,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 39
+          },
+          "theoremReferences": [],
+          "typeExpression": "Array.{0} Nat → Option.{0} CheckedRecordValueIndices.EmptySized",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkEmptyToken",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Token String\n  \"\"",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.EmptyToken",
+          "selected": false,
+          "source": {
+            "endColumn": 71,
+            "endLine": 43,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.EmptyToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkOff",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Flagged\n  Bool.false",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.Off",
+          "selected": false,
+          "source": {
+            "endColumn": 60,
+            "endLine": 36,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.Off",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Exact, site-selected constructors for host-supplied records. ",
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkOn",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Flagged\n  Bool.true",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.On",
+          "selected": false,
+          "source": {
+            "endColumn": 59,
+            "endLine": 34,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 32
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.On",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkUnicodeToken",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Token String\n  \"λ🌱\"",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.UnicodeToken",
+          "selected": false,
+          "source": {
+            "endColumn": 75,
+            "endLine": 44,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 44
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.UnicodeToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkWideToken",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Token Nat\n  340282366920938463463374607431768211457",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.WideToken",
+          "selected": false,
+          "source": {
+            "endColumn": 69,
+            "endLine": 42,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 42
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.WideToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.mkZeroToken",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "expression": "nested and field-refined generic checked records require a reviewed projection: CheckedRecordValueIndices.Token Nat 0",
+            "reason": "unsupported-native-type",
+            "status": "unsupported"
+          },
+          "resultExpression": "Option.{0} CheckedRecordValueIndices.ZeroToken",
+          "selected": false,
+          "source": {
+            "endColumn": 69,
+            "endLine": 41,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 41
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Option.{0} CheckedRecordValueIndices.ZeroToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceAb",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Labeled.mk",
+              "erased": [
+                "named"
+              ],
+              "fields": [
+                {
+                  "name": "size",
+                  "projection": "CheckedRecordValueIndices.Labeled.size",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.Ab",
+              "name": "CheckedRecordValueIndices.Ab",
+              "provenance": {
+                "arguments": [
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "String",
+                      "name": "string"
+                    },
+                    "value": "ab"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Labeled"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.Ab",
+          "selected": true,
+          "source": {
+            "endColumn": 52,
+            "endLine": 58,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 58
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.Ab",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceEmptySized",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Sized.mk",
+              "erased": [
+                "sized"
+              ],
+              "fields": [
+                {
+                  "name": "data",
+                  "projection": "CheckedRecordValueIndices.Sized.data",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "element": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "kind": "array"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.EmptySized",
+              "name": "CheckedRecordValueIndices.EmptySized",
+              "provenance": {
+                "arguments": [
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "value": "0"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Sized"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.EmptySized",
+          "selected": true,
+          "source": {
+            "endColumn": 60,
+            "endLine": 61,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 61
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.EmptySized",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceEmptyString",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Token.mk",
+              "erased": [
+                "fixed"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Token.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.EmptyToken",
+              "name": "CheckedRecordValueIndices.EmptyToken",
+              "provenance": {
+                "arguments": [
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "String",
+                    "name": "string"
+                  },
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "String",
+                      "name": "string"
+                    },
+                    "value": ""
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Token"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.EmptyToken",
+          "selected": true,
+          "source": {
+            "endColumn": 77,
+            "endLine": 59,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 59
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → CheckedRecordValueIndices.EmptyToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceFalseBool",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Flagged.mk",
+              "erased": [
+                "set"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Flagged.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.Off",
+              "name": "CheckedRecordValueIndices.Off",
+              "provenance": {
+                "arguments": [
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "uint8_t",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Bool",
+                      "name": "bool"
+                    },
+                    "value": "false"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Flagged"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.Off",
+          "selected": true,
+          "source": {
+            "endColumn": 50,
+            "endLine": 57,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 57
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.Off",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Lean-produced records need no host-side checked constructor. ",
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceTrueBool",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Flagged.mk",
+              "erased": [
+                "set"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Flagged.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.On",
+              "name": "CheckedRecordValueIndices.On",
+              "provenance": {
+                "arguments": [
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "uint8_t",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Bool",
+                      "name": "bool"
+                    },
+                    "value": "true"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Flagged"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.On",
+          "selected": true,
+          "source": {
+            "endColumn": 48,
+            "endLine": 56,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 55
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.On",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceUnicodeString",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Token.mk",
+              "erased": [
+                "fixed"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Token.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.UnicodeToken",
+              "name": "CheckedRecordValueIndices.UnicodeToken",
+              "provenance": {
+                "arguments": [
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": true,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "String",
+                    "name": "string"
+                  },
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": true,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "String",
+                      "name": "string"
+                    },
+                    "value": "λ🌱"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Token"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.UnicodeToken",
+          "selected": true,
+          "source": {
+            "endColumn": 81,
+            "endLine": 60,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 60
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → CheckedRecordValueIndices.UnicodeToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceWideNat",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Token.mk",
+              "erased": [
+                "fixed"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Token.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.WideToken",
+              "name": "CheckedRecordValueIndices.WideToken",
+              "provenance": {
+                "arguments": [
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "value": "340282366920938463463374607431768211457"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Token"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.WideToken",
+          "selected": true,
+          "source": {
+            "endColumn": 72,
+            "endLine": 63,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 63
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → CheckedRecordValueIndices.WideToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.produceZeroNat",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "CheckedRecordValueIndices.Token.mk",
+              "erased": [
+                "fixed"
+              ],
+              "fields": [
+                {
+                  "name": "count",
+                  "projection": "CheckedRecordValueIndices.Token.count",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "CheckedRecordValueIndices.ZeroToken",
+              "name": "CheckedRecordValueIndices.ZeroToken",
+              "provenance": {
+                "arguments": [
+                  {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Nat",
+                    "name": "nat"
+                  },
+                  {
+                    "kind": "value",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Nat",
+                      "name": "nat"
+                    },
+                    "value": "0"
+                  }
+                ],
+                "structure": "CheckedRecordValueIndices.Token"
+              }
+            },
+            "status": "supported"
+          },
+          "resultExpression": "CheckedRecordValueIndices.ZeroToken",
+          "selected": true,
+          "source": {
+            "endColumn": 72,
+            "endLine": 62,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 62
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → CheckedRecordValueIndices.ZeroToken",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.trueBoolIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.On"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Flagged.mk",
+                    "erased": [
+                      "set"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Flagged.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.On",
+                    "name": "CheckedRecordValueIndices.On",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "uint8_t",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Bool",
+                            "name": "bool"
+                          },
+                          "value": "true"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Flagged"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkOn",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 63,
+            "endLine": 46,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 46
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.On → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.unicodeStringIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.UnicodeToken"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Token.mk",
+                    "erased": [
+                      "fixed"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Token.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.UnicodeToken",
+                    "name": "CheckedRecordValueIndices.UnicodeToken",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": true,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "String",
+                          "name": "string"
+                        },
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": true,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "String",
+                            "name": "string"
+                          },
+                          "value": "λ🌱"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Token"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkUnicodeToken",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 78,
+            "endLine": 50,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 50
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.UnicodeToken → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.wideNatIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.WideToken"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Token.mk",
+                    "erased": [
+                      "fixed"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Token.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.WideToken",
+                    "name": "CheckedRecordValueIndices.WideToken",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "value": "340282366920938463463374607431768211457"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Token"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkWideToken",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 69,
+            "endLine": 53,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 53
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.WideToken → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "CheckedRecordValueIndices.zeroNatIndex",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "CheckedRecordValueIndices.ZeroToken"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "CheckedRecordValueIndices.Token.mk",
+                    "erased": [
+                      "fixed"
+                    ],
+                    "fields": [
+                      {
+                        "name": "count",
+                        "projection": "CheckedRecordValueIndices.Token.count",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "CheckedRecordValueIndices.ZeroToken",
+                    "name": "CheckedRecordValueIndices.ZeroToken",
+                    "provenance": {
+                      "arguments": [
+                        {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Nat",
+                          "name": "nat"
+                        },
+                        {
+                          "kind": "value",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "kind": "primitive",
+                            "lean": "Nat",
+                            "name": "nat"
+                          },
+                          "value": "0"
+                        }
+                      ],
+                      "structure": "CheckedRecordValueIndices.Token"
+                    }
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "CheckedRecordValueIndices.mkZeroToken",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 69,
+            "endLine": 52,
+            "path": "CheckedRecordValueIndices.lean",
+            "startColumn": 0,
+            "startLine": 52
+          },
+          "theoremReferences": [],
+          "typeExpression": "CheckedRecordValueIndices.ZeroToken → Nat",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+      "name": "CheckedRecordValueIndices",
+      "sourcePath": "CheckedRecordValueIndices.lean",
+      "sourceSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "c54e260b9e04c67d04b22dd57ffffe866a58b477d5450ee1fe5a519ffdc9efbb",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}
