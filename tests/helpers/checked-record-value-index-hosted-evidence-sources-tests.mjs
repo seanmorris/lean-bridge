@@ -129,6 +129,7 @@ test("value-index native-PHP evidence closes Composer production, consumption an
 		, ["checker", "scripts/check-checked-record-value-index-php-ci.mjs"]
 		, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-php-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-php-controls.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });

@@ -371,7 +371,7 @@ export const checkedRecordValueIndexPhpEvidenceSources = revisions => {
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-checked-record-value-index-php-evidence.mjs"
 				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
-			])
+			]).concat("tests/helpers/checked-record-value-index-php-controls.mjs")
 		}
 	]);
 };
