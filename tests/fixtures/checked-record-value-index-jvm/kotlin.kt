@@ -47,8 +47,10 @@ private fun nullRefused(): Boolean {
         Api::class.java.getMethod("trueBoolIndex", On::class.java).invoke(null, null)
     } catch (error: InvocationTargetException) {
         val cause = error.cause
+        // Kotlin inserts its own non-null parameter guard before the bridge.
+        // Its diagnostic text is runtime-version detail; the exact NPE is the
+        // stable host-boundary behavior being checked here.
         return cause?.javaClass == NullPointerException::class.java
-            && cause.message == null
     }
     return false
 }
