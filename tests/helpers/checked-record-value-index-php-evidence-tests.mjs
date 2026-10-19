@@ -10,6 +10,7 @@ import {
 	checkCheckedRecordValueIndexPhpEvidence
 	, checkedRecordValueIndexPhpEvidence
 } from "./checked-record-value-index-php-evidence.mjs";
+import "./checked-record-value-index-php-archive-source-history-tests.mjs";
 
 test("hosted value-index native-PHP archive authenticates every retained route", {
 	timeout: 120_000

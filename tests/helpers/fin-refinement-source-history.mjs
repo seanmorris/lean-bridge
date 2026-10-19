@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
 import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from "./value-index-native-binding-ir-ordering-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
@@ -1325,7 +1326,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexNativeBindingIrOrderingRepairChangedPaths
+	...checkedRecordValueIndexPhpArchiveChangedPaths
+	, ...valueIndexNativeBindingIrOrderingRepairChangedPaths
 	, ...checkedRecordValueIndexPerlChangedPaths
 	, ...checkedRecordValueIndexPerlHistoricalPaths
 	, ...coreThirdRunResidualRepairChangedPaths
@@ -1735,8 +1737,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeValueIndexNativeBindingIrOrderingRepairSource(
+	let previous = beforeCheckedRecordValueIndexPhpArchiveSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeValueIndexNativeBindingIrOrderingRepairSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPerlSource(path, previous, expected);

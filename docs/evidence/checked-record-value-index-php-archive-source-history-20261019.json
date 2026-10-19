@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-php-archive-source-v1",
+  "predecessorCommit": "f3776db652eff126411c9a52173beb34a0c5bc90",
+  "draftParentCommit": "973a39643b885b4e251da40af7ba2697ccd91c9e",
+  "pathsSha256": "c182f13afeee860e8242042b0ec27773d58550df5d7b481b687a5063918ff11c",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-php-20261019",
+    "indexSha256": "cc707f049a1beb59a8e2fb0d9324baa45e39515f50e5c6ac1d11772673d1642e",
+    "indexedFileCount": 1437,
+    "addedFileCount": 1440
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-php-evidence-tests.mjs",
+      "currentSha256": "9e6355267e004646ae7fde64434cd1c211a8b290742ed0d01ac6b933ce7cb07b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-php-evidence.mjs",
+      "currentSha256": "70eedc07e4f797fe079b4b8a30915ca39000efcc217a799d26d37665de53b6e1"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-php.test.mjs",
+      "previousSha256": "7635d623b33b4274d6d39e653d4bc4a2b973debc558cbfae856bb8a54730200a",
+      "currentSha256": "29bfb4cb6564abe0e93a28d9178f3f21ac2c6db6ee020b3e32e65ff29992be36",
+      "edits": [
+        {
+          "start": 305,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-php-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
