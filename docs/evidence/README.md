@@ -66,6 +66,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Ordinary Lean compilation for PHP-Wasm, 15 September 2026](php-wasm-ordinary-20260915.md)
 - [PHP-Wasm shared runtime composition](php-wasm-shared-runtime-composition.md)
 - [Recursive checked Subtypes in PHP-Wasm, 15 October 2026](recursive-subtype-php-wasm-20261015.md)
+- [Hosted checked-record value indices in npm and browsers, 19 October 2026](checked-record-value-index-browser-promotion-20261019.md)
 - [Nested checked records in npm and browsers, 16 October 2026](nested-checked-record-browser-20261016/index.json)
 - [Nested checked records in C and C++, 16 October 2026](nested-checked-record-native-20261016.md)
 - [Nested checked records in .NET, 16 October 2026](nested-checked-record-dotnet-20261016.md)
