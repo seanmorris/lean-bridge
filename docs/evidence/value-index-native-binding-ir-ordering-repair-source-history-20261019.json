@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "milestone": "value-index-native-binding-ir-ordering-repair-v1",
+  "predecessorCommit": "3115f4e14fba336df21bac033c6494410c82a75f",
+  "pathsSha256": "bdb3e37b896191ef4960a13870bc8867ddc571490689682bb6b885ac6151ffc4",
+  "additions": [
+    {
+      "path": "scripts/update-value-index-native-binding-ir-ordering-repair-source-history.mjs",
+      "currentSha256": "25d6d827c0869192c14976a5a449a213d220a681f639428e3de52b438deaf94f"
+    },
+    {
+      "path": "tests/helpers/value-index-native-binding-ir-ordering-repair-source-history-tests.mjs",
+      "currentSha256": "b0bdfe441b796563b7cd833faeca90bd401e1cf6e2504ef516196fa2c2d24b8c"
+    },
+    {
+      "path": "tests/helpers/value-index-native-binding-ir-ordering-repair-source-history.mjs",
+      "currentSha256": "eb0df89ffc48be20ae41b78cfcdf5836b9572c389e23e97aa66aa22099f0109c"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-native.test.mjs",
+      "previousSha256": "6b863ac10d6352541a72267236473767c9fc98d066023393612764a89c8c5f00",
+      "currentSha256": "a171e50a7a12978f044e0e69c1b491b72da258ea74bb44aa5c717dda5e68f613",
+      "edits": [
+        {
+          "start": 401,
+          "previous": "",
+          "current": "import \"./helpers/value-index-native-binding-ir-ordering-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "569c67b51c9a49a1a8f5e16e3be6003fee1bbcc3e441f25e715785fdfbcf0b65",
+      "currentSha256": "e8d72e60c521f5ced6fcba214f1e380b67e21244cac7f42c8a1ea24d88527094",
+      "edits": [
+        {
+          "start": 500,
+          "previous": "",
+          "current": "import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from \"./value-index-native-binding-ir-ordering-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 99570,
+          "previous": "\t...checkedRecordValueIndexPerlChangedPaths\n",
+          "current": "\t...valueIndexNativeBindingIrOrderingRepairChangedPaths\n\t, ...checkedRecordValueIndexPerlChangedPaths\n"
+        },
+        {
+          "start": 117391,
+          "previous": "\tlet previous = beforeCoreThirdRunResidualRepairSource(\n",
+          "current": "\tlet previous = beforeValueIndexNativeBindingIrOrderingRepairSource(\n"
+        },
+        {
+          "start": 117487,
+          "previous": "",
+          "current": "\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPerlSource(path, previous, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCoreThirdRunResidualRepairSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}

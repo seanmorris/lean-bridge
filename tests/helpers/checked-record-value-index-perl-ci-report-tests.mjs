@@ -10,12 +10,50 @@ import {
 	, checkedRecordValueIndexPerlRecordPaths, parseCheckedRecordValueIndexPerlCiArgs
 } from "./checked-record-value-index-perl-ci-report.mjs";
 import {
+	assertCheckedRecordValueIndexPerlAuthorInput
+	, assertCheckedRecordValueIndexPerlProcess
+} from "./checked-record-value-index-perl-records.mjs";
+import {
 	checkedRecordValueIndexPerlConfigurations
 	, checkedRecordValueIndexPerlInstallModes
 } from "./checked-record-value-index-perl-install.mjs";
 import { checkedRecordValueIndexPerlRoutes } from "./checked-record-value-index-perl-fixture.mjs";
 
 const producer = "a".repeat(40);
+
+test("value-index Perl author-input records retain timing metadata without weakening identity", () => {
+	const input = {
+		path: "CheckedRecordValueIndices.lean", mode: 33188
+		, mtime: 1_726_000_000_000.25, ctime: 1_726_000_000_001.5
+		, sha256: "b".repeat(64)
+	};
+	assert.doesNotThrow(() => assertCheckedRecordValueIndexPerlAuthorInput(
+		input, "author input"
+	));
+	for(const changed of [
+		{ ...input, mtime: -1 }, { ...input, ctime: Infinity }
+		, { ...input, mode: 33152 }, { ...input, path: "../outside" }
+		, { ...input, sha256: "short" }, { ...input, extra: true }
+	]) assert.throws(() => assertCheckedRecordValueIndexPerlAuthorInput(
+		changed, "author input"
+	));
+});
+
+test("value-index Perl process records require the compact successful caller protocol", () => {
+	const expected = { calls: 28, checks: 49, recoveries: 6, rejections: 6, snapshots: 14 };
+	const result = { code: 0, stderr: "", stdout: `${JSON.stringify(expected)}\n` };
+	assert.doesNotThrow(() => assertCheckedRecordValueIndexPerlProcess(
+		result, expected, "process"
+	));
+	for(const changed of [
+		{ ...result, code: 1 }, { ...result, stderr: "unexpected" }
+		, { ...result, stdout: `${JSON.stringify({ ...expected, calls: 0 })}\n` }
+		, { ...result, stdout: `${JSON.stringify(expected, null, 2)}\n` }
+		, { ...result, extra: true }
+	]) assert.throws(() => assertCheckedRecordValueIndexPerlProcess(
+		changed, expected, "process"
+	));
+});
 
 for(const route of checkedRecordValueIndexPerlRoutes) test(
 	`value-index Perl CI only accepts the exact ${route} TAP`, () => {

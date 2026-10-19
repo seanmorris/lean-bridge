@@ -37,15 +37,42 @@ const safePath = path => assert.ok(typeof path === "string"
 	&& /^(?:[A-Za-z0-9_.:-]+\/)*[A-Za-z0-9_.:-]+$/u.test(path)
 	&& path.split("/").every(part => part && part !== "." && part !== ".."));
 
+/**
+ * Check one source-tree snapshot entry without mistaking filesystem timing
+ * metadata for reproducible package bytes.
+ *
+ * @param item - Captured author input metadata.
+ * @param label - Stable failure context.
+ */
+export const assertCheckedRecordValueIndexPerlAuthorInput = (item, label) => {
+	exactKeys(item, ["ctime", "mode", "mtime", "path", "sha256"], label);
+	safePath(item.path);
+	assert.equal(item.mode, 33188, `${label} mode`);
+	for(const field of ["mtime", "ctime"])
+		assert.ok(Number.isFinite(item[field]) && item[field] >= 0, `${label} ${field}`);
+	hash(item.sha256);
+};
+
 const fixtureFiles = Object.freeze([
 	`${checkedRecordValueIndexModule}.lean`, "LICENSE", "lakefile.toml"
 	, "lean-toolchain", "package.json"
 ]);
 
-const assertProcess = (value, expected, label) => {
+/**
+ * Verify the compact JSON protocol emitted by the independent Perl caller.
+ *
+ * @param value - Retained process result.
+ * @param expected - Route-specific counters.
+ * @param label - Stable failure context.
+ */
+export const assertCheckedRecordValueIndexPerlProcess = (
+	value, expected, label
+) => {
 	assert.equal(typeof value, "object", label);
+	exactKeys(value, ["code", "stderr", "stdout"], label);
+	assert.equal(value.code, 0, `${label} code`);
 	assert.equal(value.stderr, "", `${label} stderr`);
-	assert.equal(value.stdout, `${canonicalJson(expected)}\n`, `${label} stdout`);
+	assert.equal(value.stdout, `${JSON.stringify(expected)}\n`, `${label} stdout`);
 };
 
 /**
@@ -118,8 +145,8 @@ export const assertCheckedRecordValueIndexPerlRecords = async ({
 		assert.deepEqual(authorInputs.map(item => item.path).sort(), expectedInputs);
 		for(const item of authorInputs)
 		{
-			exactKeys(item, ["mode", "path", "sha256"], `${prefix} author input`);
-			assert.equal(item.mode, 33188); hash(item.sha256);
+			assertCheckedRecordValueIndexPerlAuthorInput(item
+				, `${prefix} author input`);
 		}
 		for(const path of fixtureFiles)
 		{
@@ -206,9 +233,9 @@ export const assertCheckedRecordValueIndexPerlRecords = async ({
 			, expected);
 		assert.deepEqual(json(await read(`${prefix}/relocated.json`), `${prefix} relocated`)
 			, expected);
-		assertProcess(json(await read(`${prefix}/installed-process.json`)
+		assertCheckedRecordValueIndexPerlProcess(json(await read(`${prefix}/installed-process.json`)
 			, `${prefix} installed process`), expected, `${prefix} installed process`);
-		assertProcess(json(await read(`${prefix}/relocated-process.json`)
+		assertCheckedRecordValueIndexPerlProcess(json(await read(`${prefix}/relocated-process.json`)
 			, `${prefix} relocated process`), expected, `${prefix} relocated process`);
 		const installed = json(await read(`${prefix}/installed-files.json`), `${prefix} files`);
 		assert.equal(item.installedFilesSha256, sha256(canonicalJson(installed)));
