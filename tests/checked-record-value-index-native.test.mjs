@@ -5,3 +5,4 @@
  */
 import "./helpers/checked-record-value-index-native-fixture-tests.mjs";
 import "./helpers/checked-record-value-index-native-installed-tests.mjs";
+import "./helpers/checked-record-value-index-native-report-tests.mjs";

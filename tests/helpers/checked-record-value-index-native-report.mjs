@@ -38,6 +38,25 @@ const original = (commit, path) => execFileSync("git", [
 	"show", `${commit}:${checkedRecordValueIndexFixtureRoot}/${path}`
 ], { maxBuffer: 16 * 1024 * 1024 });
 
+/**
+ * Bind an installed native package to the compiler-derived Binding IR, not to
+ * the independently reviewed contract that it reconciles with.
+ *
+ * @param packageReceipt - Parsed receipt found beside installed headers.
+ * @param report - Route provenance with both compiler build digests.
+ * @param profile - C or C++ target used in the error label.
+ */
+export const assertCheckedRecordValueIndexNativeInstalledBindingIr = (
+	packageReceipt, report, profile
+) => {
+	assert.ok(Array.isArray(report.builds) && report.builds.length === 2);
+	const [first, second] = report.builds;
+	assert.equal(first.bindingIrSha256, second.bindingIrSha256
+		, "Reproducible native Binding IR");
+	assert.equal(packageReceipt.bindingIrSha256, first.bindingIrSha256
+		, `${profile} installed compiler Binding IR`);
+};
+
 // Independently enrich reviewed named types with the positional record shape
 // that the native projection must carry. Reviewed constructor selections name
 // only the checked constructor; result records deliberately select none.
@@ -291,8 +310,9 @@ export const checkCheckedRecordValueIndexNativeReport = async (
 		assert.equal(packageReceipt.profile, "native-library-v1");
 		assert.equal(packageReceipt.name, packages[0].name);
 		assert.equal(packageReceipt.version, packages[0].version);
-		assert.equal(packageReceipt.bindingIrSha256, report.expectedBindingIrSha256
-			, `${profile} installed binding IR`);
+		assertCheckedRecordValueIndexNativeInstalledBindingIr(
+			packageReceipt, report, profile
+		);
 		assert.equal(item.closure.receiptSha256, sha256(packageBytes));
 		assert.equal(item.closure.packageFileSetSha256, sha256(canonicalJson([
 			...Object.keys(packageReceipt.files), "lean-bridge-package.json"
