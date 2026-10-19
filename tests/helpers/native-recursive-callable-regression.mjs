@@ -20,6 +20,36 @@ export const nativeRecursiveCallableCodegenSources = ["src/backends/c/graph-pack
 export const generatedFileIdentities = files => Object.fromEntries(Object.entries(files)
 	.map(([path, source]) => [path, { bytes: Buffer.byteLength(source), sha256: sha256(source) }]));
 
+// The 2026-09 recursive receipt predates fce0df3's `native_status` bit.  It is
+// immutable evidence, so replay its C++ conversion header with precisely that
+// later diagnostic-only transport change removed.  The assertions deliberately
+// fail if either contemporary fragment drifts: a later codegen change needs its
+// own recorded transition, rather than silently rewriting the old receipt.
+const beforeCppNativeStatus = source => {
+	const currentSupport = `class GraphConversionError : public std::runtime_error {
+public:
+  uint32_t status;
+  bool native_status;
+  GraphConversionError(uint32_t code, const char* message, bool native = false)
+    : std::runtime_error(message), status(code), native_status(native) {}
+};
+[[noreturn]] inline void graph_fail(uint32_t status, const char* text, bool native = false) {
+  throw GraphConversionError(status, text, native);
+}`;
+	const previousSupport = `class GraphConversionError : public std::runtime_error {
+public:
+  uint32_t status;
+  GraphConversionError(uint32_t code, const char* message) : std::runtime_error(message), status(code) {}
+};
+[[noreturn]] inline void graph_fail(uint32_t status, const char* text) { throw GraphConversionError(status, text); }`;
+	assert.equal(source.split(currentSupport).length, 2, "one current C++ conversion support block");
+	assert.equal(source.split('graph_fail(status, "Native copied graph call failed", true);').length, 19
+		, "eighteen current native-status call sites");
+	return source.replace(currentSupport, previousSupport)
+		.replaceAll('graph_fail(status, "Native copied graph call failed", true);'
+			, 'graph_fail(status, "Native copied graph call failed");');
+};
+
 /**
  * Compare complete generated files and reverse only the measured header changes.
  *
@@ -44,6 +74,8 @@ export const assertNativeRecursiveCallableCodegen = record => {
 	for(const row of record.packages)
 	{
 		const generated = generateCopiedGraphPackage(ir, row.targets);
+		if(row.targets.includes("cpp")) generated.files["include/detail/recursive-conversions.hpp"]
+			= beforeCppNativeStatus(generated.files["include/detail/recursive-conversions.hpp"]);
 		assert.equal(row.layoutSha256, generated.layoutSha256);
 		assert.deepEqual(row.files, generatedFileIdentities(generated.files));
 		assert.deepEqual(Object.keys(row.previousFiles), Object.keys(row.files));

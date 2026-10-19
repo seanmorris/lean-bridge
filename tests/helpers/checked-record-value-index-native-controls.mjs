@@ -125,7 +125,7 @@ export const checkedRecordValueIndexNativeNegativeControls = async (
 	const packageReceipt = JSON.parse(installedIr.get(packagePath));
 	packageReceipt.bindingIrSha256 = "0".repeat(64);
 	installedIr.set(packagePath, Buffer.from(canonicalJson(packageReceipt)));
-	await assert.rejects(verify(installedIr), /c installed binding IR/u
+	await assert.rejects(verify(installedIr), /c installed compiler Binding IR/u
 		, "installed package Binding IR identity");
 	const execution = new Map(originals);
 	const stdoutPath = "c/installed.stdout";

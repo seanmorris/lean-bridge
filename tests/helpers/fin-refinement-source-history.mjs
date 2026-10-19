@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
+import { beforeCoreSecondRunResidualRepairSource, coreSecondRunResidualRepairChangedPaths } from "./core-second-run-residual-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexJvmNullBoundarySource, checkedRecordValueIndexJvmNullBoundaryChangedPaths } from "./checked-record-value-index-jvm-null-boundary-source-history.mjs";
 import { beforeCheckedRecordValueIndexJvmNativeRepairSource, checkedRecordValueIndexJvmNativeRepairChangedPaths } from "./checked-record-value-index-jvm-native-repair-source-history.mjs";
 import { beforeCoreFirstRunResidualRepairSource, coreFirstRunResidualRepairChangedPaths } from "./core-first-run-residual-repair-source-history.mjs";
@@ -1320,6 +1321,7 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	...checkedRecordValueIndexNativeBindingIrChangedPaths
+	, ...coreSecondRunResidualRepairChangedPaths
 	, ...checkedRecordValueIndexJvmNullBoundaryChangedPaths
 	, ...checkedRecordValueIndexJvmNativeRepairChangedPaths
 	, ...coreFirstRunResidualRepairChangedPaths
@@ -1725,6 +1727,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	const text = source.toString();
 	let previous = beforeCheckedRecordValueIndexNativeBindingIrSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCoreSecondRunResidualRepairSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexJvmNullBoundarySource(

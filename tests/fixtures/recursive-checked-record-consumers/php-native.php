@@ -15,7 +15,8 @@ const RECURSIVE_CHECKED_RECORD_MODULES = [
 const RECURSIVE_CHECKED_RECORD_LEAN_DIAGNOSTIC = '/ (?:is not below its Fin [0-9]+ bound|was rejected by [A-Za-z]+\.[A-Za-z]+)$/D';
 
 /** Preserve exact public values, including BigInteger text, keys, class identity and cycles. */
-function recursive_checked_record_snapshot(mixed $value, array $active = []): array {
+function recursive_checked_record_snapshot(mixed $value, ?SplObjectStorage $active = null): array {
+    $active ??= new SplObjectStorage();
     if ($value instanceof BigInteger) return ['bigint', (string) $value];
     if (is_int($value) || is_bool($value) || is_float($value) || is_string($value) || $value === null) return [gettype($value), $value];
     if (is_array($value)) {
@@ -24,13 +25,19 @@ function recursive_checked_record_snapshot(mixed $value, array $active = []): ar
         return ['array', $items];
     }
     if (is_object($value)) {
-        if (in_array($value, $active, true)) return ['cycle'];
-        $active[] = $value; $items = [];
-        // Reflection also reads readonly properties left uninitialized by a malformed instance.
-        foreach ((new ReflectionObject($value))->getProperties() as $property)
-            $items[] = [$property->getName(), $property->isInitialized($value)
-                ? recursive_checked_record_snapshot($property->getValue($value), $active) : ['uninitialized']];
-        return [get_class($value), $items];
+        // A shared subvalue is not a cycle. Keep an identity-bearing active stack rather than
+        // copying an array through reflection recursion; this stays reliable on PHP 8.3+.
+        if ($active->contains($value)) return ['cycle'];
+        $active->attach($value); $items = [];
+        try {
+            // Reflection also reads readonly properties left uninitialized by a malformed instance.
+            foreach ((new ReflectionObject($value))->getProperties() as $property)
+                $items[] = [$property->getName(), $property->isInitialized($value)
+                    ? recursive_checked_record_snapshot($property->getValue($value), $active) : ['uninitialized']];
+            return [get_class($value), $items];
+        } finally {
+            $active->detach($value);
+        }
     }
     throw new RuntimeException('Unsupported recursive snapshot input: ' . get_debug_type($value));
 }

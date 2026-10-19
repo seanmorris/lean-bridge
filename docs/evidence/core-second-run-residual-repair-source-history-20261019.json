@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "milestone": "core-second-run-residual-repair-v1",
+  "predecessorCommit": "02f3c3c5d0b28f4836a59a40e0f23be8edaf401e",
+  "pathsSha256": "e74c2451bcfe6b7606f7262ccbffd99fa4b928813ee866bc7c09df6e2b2913a8",
+  "pinCount": 9,
+  "pinUpdates": [
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54",
+      "currentSha256": "b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851",
+      "count": 3
+    },
+    {
+      "path": "tests/helpers/native-recursive-callable-regression.mjs",
+      "previousSha256": "cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27",
+      "currentSha256": "4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d",
+      "count": 6
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-core-second-run-residual-repair-source-history.mjs",
+      "currentSha256": "7089bfbe4744bab2c11ddbe2365b4c958909d63e0883946784bb935d2b6c596e"
+    },
+    {
+      "path": "tests/helpers/core-second-run-residual-repair-source-history-tests.mjs",
+      "currentSha256": "db79707e5400515fed7fbe104dab3dd14f12d2a89f22287509b218747fac8ae2"
+    },
+    {
+      "path": "tests/helpers/core-second-run-residual-repair-source-history.mjs",
+      "currentSha256": "308c56d99816f6ba0d56552d1cfc354e208c3f7ff38187917929ec1aa0c25af9"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "10b454fab8b0c77133e706aa359e6e67d3ce263a9e2527118be55f32c54effe7",
+      "currentSha256": "2ced98e0c745add39f42d5186d5e46c3abfd888a9d348e2ea85d8375b9a43a6c",
+      "edits": [
+        {
+          "start": 685240,
+          "previous": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n",
+          "current": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n"
+        },
+        {
+          "start": 1184850,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1212342,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1242098,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1275353,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1311902,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1344663,
+          "previous": "          \"sha256\": \"cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27\"\n",
+          "current": "          \"sha256\": \"4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d\"\n"
+        },
+        {
+          "start": 1440808,
+          "previous": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n",
+          "current": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n"
+        },
+        {
+          "start": 1447342,
+          "previous": "          \"sha256\": \"8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54\"\n",
+          "current": "          \"sha256\": \"b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "8516d2bed80bdad14fc88725534f6574870c1e500e2c6fc568192b80b21d0f54",
+      "currentSha256": "b2ced8c86af857ed28768c5bbff4469c0095ba834a96c5f5bdeb0b47b32e1851",
+      "edits": [
+        {
+          "start": 4461,
+          "previous": "",
+          "current": "import \"./helpers/core-second-run-residual-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/recursive-checked-record-consumers/php-native.php",
+      "previousSha256": "88f43d8b6a260c906e31ca4159ee4f740acd1eebbe411ce470e50894434bfbe9",
+      "currentSha256": "779b16b00098737d5532a46a88caeef8233afdc145662f23f6664f43919f19a9",
+      "edits": [
+        {
+          "start": 1071,
+          "previous": "function recursive_checked_record_snapshot(mixed $value, array $active = []): array {\n",
+          "current": "function recursive_checked_record_snapshot(mixed $value, ?SplObjectStorage $active = null): array {\n    $active ??= new SplObjectStorage();\n"
+        },
+        {
+          "start": 1667,
+          "previous": "        if (in_array($value, $active, true)) return ['cycle'];\n        $active[] = $value; $items = [];\n        // Reflection also reads readonly properties left uninitialized by a malformed instance.\n        foreach ((new ReflectionObject($value))->getProperties() as $property)\n            $items[] = [$property->getName(), $property->isInitialized($value)\n                ? recursive_checked_record_snapshot($property->getValue($value), $active) : ['uninitialized']];\n        return [get_class($value), $items];\n",
+          "current": "        // A shared subvalue is not a cycle. Keep an identity-bearing active stack rather than\n        // copying an array through reflection recursion; this stays reliable on PHP 8.3+.\n        if ($active->contains($value)) return ['cycle'];\n        $active->attach($value); $items = [];\n        try {\n            // Reflection also reads readonly properties left uninitialized by a malformed instance.\n            foreach ((new ReflectionObject($value))->getProperties() as $property)\n                $items[] = [$property->getName(), $property->isInitialized($value)\n                    ? recursive_checked_record_snapshot($property->getValue($value), $active) : ['uninitialized']];\n            return [get_class($value), $items];\n        } finally {\n            $active->detach($value);\n        }\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-controls.mjs",
+      "previousSha256": "267e3c7efbde697587f72abd68feb95f51537da3c19da192a9ab5ee71774a63c",
+      "currentSha256": "60d7f4e88306939253ae4d96e6826dce6b23b578b9990579a0851b57033a241a",
+      "edits": [
+        {
+          "start": 5187,
+          "previous": "\tawait assert.rejects(verify(installedIr), /c installed binding IR/u\n",
+          "current": "\tawait assert.rejects(verify(installedIr), /c installed compiler Binding IR/u\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1825f34e6589cf0629b026bfb1bae0c415932ba5fcf99cbbda81fa8620820d0f",
+      "currentSha256": "272fbd81553c32e10dd662e6e52dee3bb068c0533fa657fb79aa6e210a8a7c18",
+      "edits": [
+        {
+          "start": 538,
+          "previous": "",
+          "current": "import { beforeCoreSecondRunResidualRepairSource, coreSecondRunResidualRepairChangedPaths } from \"./core-second-run-residual-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 98964,
+          "previous": "",
+          "current": "\t, ...coreSecondRunResidualRepairChangedPaths\n"
+        },
+        {
+          "start": 116551,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCoreSecondRunResidualRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/native-recursive-callable-regression.mjs",
+      "previousSha256": "cf23fb77ad87674c4a697aeedcfbf6e0a187883cc9222d16bdc06a2fc1834a27",
+      "currentSha256": "4ac1f1f336d96614403c6181e4b871fe737c4f294d338a0f7a0bfd70d6370f2d",
+      "edits": [
+        {
+          "start": 1119,
+          "previous": "",
+          "current": "// The 2026-09 recursive receipt predates fce0df3's `native_status` bit.  It is\n// immutable evidence, so replay its C++ conversion header with precisely that\n// later diagnostic-only transport change removed.  The assertions deliberately\n// fail if either contemporary fragment drifts: a later codegen change needs its\n// own recorded transition, rather than silently rewriting the old receipt.\nconst beforeCppNativeStatus = source => {\n\tconst currentSupport = `class GraphConversionError : public std::runtime_error {\npublic:\n  uint32_t status;\n  bool native_status;\n  GraphConversionError(uint32_t code, const char* message, bool native = false)\n    : std::runtime_error(message), status(code), native_status(native) {}\n};\n[[noreturn]] inline void graph_fail(uint32_t status, const char* text, bool native = false) {\n  throw GraphConversionError(status, text, native);\n}`;\n\tconst previousSupport = `class GraphConversionError : public std::runtime_error {\npublic:\n  uint32_t status;\n  GraphConversionError(uint32_t code, const char* message) : std::runtime_error(message), status(code) {}\n};\n[[noreturn]] inline void graph_fail(uint32_t status, const char* text) { throw GraphConversionError(status, text); }`;\n\tassert.equal(source.split(currentSupport).length, 2, \"one current C++ conversion support block\");\n\tassert.equal(source.split('graph_fail(status, \"Native copied graph call failed\", true);').length, 19\n\t\t, \"eighteen current native-status call sites\");\n\treturn source.replace(currentSupport, previousSupport)\n\t\t.replaceAll('graph_fail(status, \"Native copied graph call failed\", true);'\n\t\t\t, 'graph_fail(status, \"Native copied graph call failed\");');\n};\n\n"
+        },
+        {
+          "start": 4104,
+          "previous": "",
+          "current": "\t\tif(row.targets.includes(\"cpp\")) generated.files[\"include/detail/recursive-conversions.hpp\"]\n\t\t\t= beforeCppNativeStatus(generated.files[\"include/detail/recursive-conversions.hpp\"]);\n"
+        }
+      ]
+    }
+  ]
+}
