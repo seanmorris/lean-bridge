@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "checkedrecordvalueindices",
+  "license": "MIT",
+  "description": "Compiler-checked exports for checkedrecordvalueindices.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4"
+  },
+  "leanBridge": {
+    "component": "checkedrecordvalueindices@1.0.0",
+    "componentBundleSha256": "f2fc8baa04c1662d45e962728e8d7be5b2f019305f29c94d062afcfdc03fe412",
+    "componentIdentitySha256": "b2f6965007aefbc4fccaea14e0bcfb7864c938ff7784f8b5d3a741439419ee79",
+    "bindingIrSha256": "bf75c1cec8b074f336582b4567d89e48924982edb6217f4cf5a28281438b01db",
+    "sharedRuntime": true
+  }
+}

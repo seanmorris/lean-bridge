@@ -1,0 +1,340 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "authorInputsSha256": "d2a5f8684402e67b20867c5fa0a438658ee886b10f7bcc5f4ff0f7d17d12b8b4",
+      "bindingIrFileSha256": "f66cb56823a634449c1969c1a0031f91104202ceddc1a40b76c720c896d1267f",
+      "bindingIrSha256": "9d1ccb24ddb9c697119890d6cc2fe44d7e98c14853a10f33caec53a84f268492",
+      "componentArchiveSha256": "d3bf88240e3fa04fbebfe4fcc598855bb13932aa07b8f116339439556034f9f8",
+      "receiptSha256": "62e20ec07740f0be3d62922b2147419309f0b818ef88d1c97ac15fe1dad79345",
+      "runtimeArchiveSha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+    },
+    {
+      "authorInputsSha256": "d2a5f8684402e67b20867c5fa0a438658ee886b10f7bcc5f4ff0f7d17d12b8b4",
+      "bindingIrFileSha256": "f66cb56823a634449c1969c1a0031f91104202ceddc1a40b76c720c896d1267f",
+      "bindingIrSha256": "9d1ccb24ddb9c697119890d6cc2fe44d7e98c14853a10f33caec53a84f268492",
+      "componentArchiveSha256": "d3bf88240e3fa04fbebfe4fcc598855bb13932aa07b8f116339439556034f9f8",
+      "receiptSha256": "62e20ec07740f0be3d62922b2147419309f0b818ef88d1c97ac15fe1dad79345",
+      "runtimeArchiveSha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+    }
+  ],
+  "callers": {
+    "check.mjs": "21500ad287b6b5ef3a4ed624871976ad0db2e49327eafb7a8da912444dff1b5f",
+    "index.mjs": "8f1f8262cf8d44b4650909b9593d08352664a2037b2c67fac1808f2a30bd612a",
+    "index.mts": "48ea36b9567f2b5fef6fc684c04f0dd747593034d8c21dde173a48c0e30ef72b"
+  },
+  "compilerFreePath": true,
+  "configuration": {
+    "modules": [
+      "CheckedRecordValueIndices"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "npm": {
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerProfiles": [
+    "node-javascript",
+    "node-typescript"
+  ],
+  "expected": {
+    "calls": 8,
+    "checks": 32,
+    "observed": {},
+    "produced": {
+      "ab": [
+        "object",
+        [
+          [
+            "size",
+            [
+              "bigint",
+              "2"
+            ]
+          ]
+        ]
+      ],
+      "emptySized": [
+        "object",
+        [
+          [
+            "data",
+            [
+              "array",
+              [
+                [
+                  "length",
+                  [
+                    "number",
+                    "0"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "emptyString": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "23"
+            ]
+          ]
+        ]
+      ],
+      "falseBool": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "1"
+            ]
+          ]
+        ]
+      ],
+      "trueBool": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "0"
+            ]
+          ]
+        ]
+      ],
+      "unicodeString": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "24"
+            ]
+          ]
+        ]
+      ],
+      "wideNat": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "1267650600228229401496703205393"
+            ]
+          ]
+        ]
+      ],
+      "zeroNat": [
+        "object",
+        [
+          [
+            "count",
+            [
+              "bigint",
+              "25"
+            ]
+          ]
+        ]
+      ]
+    },
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 8
+  },
+  "expectedBindingIrSha256": "d435ff28d89f0e9d90f853816c1a3fe45e2d9740a5efa6c37e7fe8b757b7b093",
+  "immutableCallerAssertions": true,
+  "independentBuilds": 2,
+  "negativeControls": {
+    "checkedRefusals": 4,
+    "recoveries": 6,
+    "shapeRefusals": 2
+  },
+  "observations": [
+    {
+      "relocated": false,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":32,\"rejections\":0,\"calls\":8,\"snapshots\":8,\"recoveries\":0,\"observed\":{},\"produced\":{\"trueBool\":[\"object\",[[\"count\",[\"bigint\",\"0\"]]]],\"falseBool\":[\"object\",[[\"count\",[\"bigint\",\"1\"]]]],\"ab\":[\"object\",[[\"size\",[\"bigint\",\"2\"]]]],\"emptyString\":[\"object\",[[\"count\",[\"bigint\",\"23\"]]]],\"unicodeString\":[\"object\",[[\"count\",[\"bigint\",\"24\"]]]],\"emptySized\":[\"object\",[[\"data\",[\"array\",[[\"length\",[\"number\",\"0\"]]]]]]],\"zeroNat\":[\"object\",[[\"count\",[\"bigint\",\"25\"]]]],\"wideNat\":[\"object\",[[\"count\",[\"bigint\",\"1267650600228229401496703205393\"]]]]}}\n"
+      },
+      "runtime": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"node\":\"v22.23.3\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    },
+    {
+      "relocated": true,
+      "result": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"checks\":32,\"rejections\":0,\"calls\":8,\"snapshots\":8,\"recoveries\":0,\"observed\":{},\"produced\":{\"trueBool\":[\"object\",[[\"count\",[\"bigint\",\"0\"]]]],\"falseBool\":[\"object\",[[\"count\",[\"bigint\",\"1\"]]]],\"ab\":[\"object\",[[\"size\",[\"bigint\",\"2\"]]]],\"emptyString\":[\"object\",[[\"count\",[\"bigint\",\"23\"]]]],\"unicodeString\":[\"object\",[[\"count\",[\"bigint\",\"24\"]]]],\"emptySized\":[\"object\",[[\"data\",[\"array\",[[\"length\",[\"number\",\"0\"]]]]]]],\"zeroNat\":[\"object\",[[\"count\",[\"bigint\",\"25\"]]]],\"wideNat\":[\"object\",[[\"count\",[\"bigint\",\"1267650600228229401496703205393\"]]]]}}\n"
+      },
+      "runtime": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"node\":\"v22.23.3\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+      },
+      "typescript": {
+        "code": 0,
+        "stderr": "",
+        "stdout": ""
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "positions": [
+    "trueBoolIndex.arg0",
+    "falseBoolIndex.arg0",
+    "abStringIndex.arg0",
+    "emptyStringIndex.arg0",
+    "unicodeStringIndex.arg0",
+    "emptySizedIndex.arg0",
+    "zeroNatIndex.arg0",
+    "wideNatIndex.arg0",
+    "produceTrueBool.result",
+    "produceFalseBool.result",
+    "produceAb.result",
+    "produceEmptyString.result",
+    "produceUnicodeString.result",
+    "produceEmptySized.result",
+    "produceZeroNat.result",
+    "produceWideNat.result"
+  ],
+  "producerCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "receipt": {
+    "bindingIrSha256": "9d1ccb24ddb9c697119890d6cc2fe44d7e98c14853a10f33caec53a84f268492",
+    "component": {
+      "id": "checkedrecordvalueindices@1.0.0",
+      "name": "checkedrecordvalueindices",
+      "version": "1.0.0"
+    },
+    "componentArtifactSha256": "8ebb3c4a1666da128c0ce3451e966361efa420ae7446ac91cd3a0d50d8436807",
+    "componentBundleSha256": "30fbd35ee934044b5b5be907f4abed2878178de438e346e0edb8735f5ed0637b",
+    "componentIdentitySha256": "3ec7f7dcfc30129d88a717e632b19a6f996cf471976163ebd19c27602abccbdc",
+    "kind": "lean-bridge-component-package-receipt",
+    "package": {
+      "archive": "checkedrecordvalueindices-1.0.0.tgz",
+      "package": "checkedrecordvalueindices@1.0.0",
+      "sha256": "d3bf88240e3fa04fbebfe4fcc598855bb13932aa07b8f116339439556034f9f8"
+    },
+    "policies": {
+      "componentCompiledOnce": true,
+      "nativeCallablesOnly": true,
+      "runtimeBinaryInComponent": false,
+      "runtimeShared": true
+    },
+    "provenanceSha256": "576096b60c90d80ae63da15709d76d1879797b122e7f9f215210a21974767578",
+    "runtime": {
+      "archive": "lean-bridge-runtime-0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4.tgz",
+      "package": "@lean-bridge/runtime@0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4",
+      "sha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+    },
+    "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "14b6a101bc1eb098f9d4b7c2181563ae6ec3fd794c690242deb815bd2902ad04"
+    },
+    "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "route": "result-only-reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "node": "v22.23.3",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceCommitClean": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trees": {
+    "@lean-bridge/runtime": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "index.mjs": "6efcbfb1a03a8844ce69fa2694501761375219b965234776f9498f8d5e5a9d4e",
+      "internal/binding-ir/canonical.mjs": "28e22e614fc532a99baeeb34ee9d054f3bc6db82239fa89059a9518cb06d3d20",
+      "internal/binding-ir/contract.mjs": "51f39115f198cadb22edcee1bc09d9205024c1ba622f86588056bca7aac6faf6",
+      "internal/binding-ir/sha256.mjs": "f9bcbce580e88f31c3a63e8aa0d1d834228afa796a74a4c2f708da68e99a15ac",
+      "internal/component-callable-runtime.mjs": "7d4e6ea8065ff239e4538333c6449e4a6dfcaf8d5982da96c38f119b9e591885",
+      "internal/component-callables.mjs": "abb7093a48c6bfaf7cf3f5510d0e26816af5639718659a3d87397f96a5e7bafe",
+      "internal/component-copied-codec.mjs": "06385bc88bc1359fb8bcbfbdb0bf01d79b372a2a6cbfd8f539f6d05c04b5f1a4",
+      "internal/component-copied-runtime.mjs": "2c192e719f34b180ed0cd10c156b8395f873dcaae5a42d347458de53e43bc3c2",
+      "internal/component-copied.mjs": "c06dc4bf621d1a0d255478b62d4d03cd77fed580cd37ff058bbe061c6145d599",
+      "internal/component-owned-wasm.mjs": "d010d30b13af35cc1a5409c65cffe7dd2f3fdbd23e8627e70089b51b6bbac211",
+      "internal/component-records.mjs": "c24c4216667ce99e0a1e5b0e56fa02ab266114128e92760bd2aa1d65a6c99ff2",
+      "internal/component-recursive-abi.mjs": "2c6313445c66f51c504044f948139f7e576db534cffcbaf507f2c300ec57eee4",
+      "internal/component-recursive-codec.mjs": "ee698c1f12c5da59aa51ed907656d72f84a687c1ee0ef80001c4f541833e0b8c",
+      "internal/component-recursive-ownership.mjs": "7c363357647ea821e6d977ad524d5473ecfa2951e6759d03fcb46e5a19012e7a",
+      "internal/component-recursive.mjs": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e",
+      "internal/component-runtime.mjs": "3c525383e5cde9342882f47b143362bfb5a17e7b37c5cb810d14b4b1eb4ab9fd",
+      "internal/component-scalar-codec.mjs": "24c8d8430545ec0ab4b767b7cbe70a411e55ce3b39cd9ecef76975e39b1e3416",
+      "internal/component-scalars.mjs": "ebca23ac97c23624cc6a1879a52dee1a79062ba97a549187970c95b2faec2a57",
+      "internal/component-structured-callable-runtime.mjs": "bdeb55ce78ddfb7fcd76537904fb1b813d78fd12a98899564305dc24cab077f0",
+      "internal/component-structured-callables.mjs": "99d9a29d48cceb14c9744d68595bedb4f46e47918ea2ef5241a5c394c7797c32",
+      "internal/main.mjs": "8b791a4711e58876e29b5e0a7c3fcbab500b02d7550fe6f7c3321020a736be02",
+      "internal/main.wasm": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+      "internal/owned-wasm-bindings.mjs": "cd74f944785fae8d45b64ab1c18e714acdfd4c0a328e64021794d8c816827e1b",
+      "internal/owned-wasm-borrow-registry.mjs": "3d2b6c3b1956ebd66c813359a8bb18a54f162f4316bdb83d26fec226915a05fd",
+      "internal/owned-wasm-callbacks.mjs": "14d28bc1b0d92191bb7567f7fb3a6eca35c57e9fdf824666b39318ef51ddc7ab",
+      "internal/owned-wasm-calls.mjs": "af3671bee249f9a49f50160e4cf3f24e217e6727b1af1849fde39065dd94814c",
+      "internal/owned-wasm-component-runtime.mjs": "c0153f72184053c526168b87236a74a8f12251d05d0b0be28deadb1b2ba08531",
+      "internal/owned-wasm-control.mjs": "9e05a5b7653dd1409220a233d26492adf916789169896b59940b8c60c87fbb6f",
+      "internal/owned-wasm-registry.mjs": "ea549d40212cf3e423c03763e09af19e41614662df74cf604a070b9c0ab34717",
+      "internal/owned-wasm-scalars.mjs": "f187769507e97821b931a1a61321a9fc9bca085a56404481d025d4541e051aab",
+      "internal/owned-wasm-values.mjs": "12e10dbd344900de88beb96af2ab1c72a9be433e296b85fd6974f26a5397aebe",
+      "internal/refinements.mjs": "d5f1e54778bae6a37cfb32b7c20987bf84c217c3422ca96f8b68a8e4fc6b2249",
+      "notices/NOTICE.txt": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117",
+      "notices/emscripten.txt": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe",
+      "notices/lean-bundled.txt": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+      "notices/lean.txt": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114",
+      "notices/libuv.txt": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c",
+      "notices/llvm.txt": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b",
+      "notices/musl.txt": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b",
+      "package.json": "512927059e8291daba8968b48f2c1abe4e35b1d755736fcf9bba4ab76b4e5a62",
+      "runtime-identity.json": "735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4"
+    },
+    "checkedrecordvalueindices": {
+      "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "README.md": "081c0ac61eb36e6ea4c0065905c83ab38fbff7e6f6f1b8f2642253b48a072f83",
+      "binding-manifest.json": "778f7017b02c428caec0e7adb00ea3f73c7e6ae7a279b3ff0802a5704c3426a1",
+      "index.d.ts": "7be3d7259afb81d3cfea078e9c6281b21844d3e86d9e47b0bb62f8531eb59f9e",
+      "index.mjs": "64b766cd8d753a46e7943dc76ee8c8e504db2565101f467aafe34f0417ae1033",
+      "internal/descriptor.mjs": "ccc99fc63cbfc460bdfa11c6ec6ecc55baa00903491023b81eab967e35262e8d",
+      "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+      "internal/validators.mjs": "ee1f6fd63b8384fbce3d17c23b092f531e64f7e0e4c09f7605f02e9fdb70698f",
+      "internal/wasm/checkedrecordvalueindices-767c615eabad08d7.so.wasm": "8ebb3c4a1666da128c0ce3451e966361efa420ae7446ac91cd3a0d50d8436807",
+      "metadata/assurance.json": "293dfbe7e2242a82fa2e171fffa721165490d0adb7280ace58e11f5e41dbf3c7",
+      "metadata/binding-ir.json": "f66cb56823a634449c1969c1a0031f91104202ceddc1a40b76c720c896d1267f",
+      "metadata/component-release-bundle.json": "30fbd35ee934044b5b5be907f4abed2878178de438e346e0edb8735f5ed0637b",
+      "metadata/lean-bridge.exports.json": "ac3851c573b48d7e260ca30c8a7d5592bb4886ffdc95d640d1e307f1cb8aa719",
+      "metadata/provenance.json": "576096b60c90d80ae63da15709d76d1879797b122e7f9f215210a21974767578",
+      "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "metadata/sbom.json": "de661c859e21f89815adf80519be9e1855f8c79c7635caf428f58449460208da",
+      "package.json": "2f6ea1f7c3a72ea5e1511757caceed8fc32325cff40e608db195c847ba9a3fb8"
+    }
+  },
+  "typescript": {
+    "declarationsSha256": "7be3d7259afb81d3cfea078e9c6281b21844d3e86d9e47b0bb62f8531eb59f9e",
+    "skipLibCheck": false,
+    "sourceSha256": "48ea36b9567f2b5fef6fc684c04f0dd747593034d8c21dde173a48c0e30ef72b",
+    "strict": true
+  }
+}

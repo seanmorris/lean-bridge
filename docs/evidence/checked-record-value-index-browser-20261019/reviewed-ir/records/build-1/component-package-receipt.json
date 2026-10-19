@@ -1,0 +1,35 @@
+{
+  "bindingIrSha256": "e22480b71bdca0b86575bc59232807b1af2e718708bd20dfe752eb1eb66024eb",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "componentArtifactSha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001",
+  "componentBundleSha256": "920d6fe7536461c59a75c59bcbb46a7b5a179d15df6fa9359876d3a213bdeecf",
+  "componentIdentitySha256": "ffe2398eacbd5e8ac46ba5324c6b0880f499b29711407baa1af608607eff7102",
+  "kind": "lean-bridge-component-package-receipt",
+  "package": {
+    "archive": "checkedrecordvalueindices-1.0.0.tgz",
+    "package": "checkedrecordvalueindices@1.0.0",
+    "sha256": "884e302a30b16b49421fd6c35dbb8bcd45405ab5468151c201787e6a46c980c2"
+  },
+  "policies": {
+    "componentCompiledOnce": true,
+    "nativeCallablesOnly": true,
+    "runtimeBinaryInComponent": false,
+    "runtimeShared": true
+  },
+  "provenanceSha256": "1c28b09563c101ad6b05b74de0f5d91c40f6f96db21094ce3526b67b40326b6e",
+  "runtime": {
+    "archive": "lean-bridge-runtime-0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4.tgz",
+    "package": "@lean-bridge/runtime@0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4",
+    "sha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+  },
+  "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7cbbcc862ef8413b08deb99cc039475d2f4c14eb9d2139b65a96044746d29751"
+  },
+  "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+}

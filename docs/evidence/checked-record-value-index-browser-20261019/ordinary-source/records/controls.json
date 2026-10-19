@@ -1,0 +1,179 @@
+{
+  "accepted": {
+    "browserExecutions": 12,
+    "browserReportSha256": "583109883dcf56ec2fa815906ebf76cec1cfc2883d4406b66dfd8a8e85fd3bf0",
+    "browserVersions": {
+      "chromium": "151.0.7922.34",
+      "firefox": "153.0",
+      "webkit": "26.5"
+    },
+    "expected": {
+      "calls": 28,
+      "checks": 72,
+      "observed": {
+        "ab": "2",
+        "emptySized": "0",
+        "emptyString": "9",
+        "falseBool": "1",
+        "trueBool": "0",
+        "unicodeString": "10",
+        "wideNat": "1267650600228229401496703205393",
+        "zeroNat": "11"
+      },
+      "produced": {
+        "ab": [
+          "object",
+          [
+            [
+              "size",
+              [
+                "bigint",
+                "2"
+              ]
+            ]
+          ]
+        ],
+        "emptySized": [
+          "object",
+          [
+            [
+              "data",
+              [
+                "array",
+                [
+                  [
+                    "length",
+                    [
+                      "number",
+                      "0"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "emptyString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "23"
+              ]
+            ]
+          ]
+        ],
+        "falseBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1"
+              ]
+            ]
+          ]
+        ],
+        "trueBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "0"
+              ]
+            ]
+          ]
+        ],
+        "unicodeString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "24"
+              ]
+            ]
+          ]
+        ],
+        "wideNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1267650600228229401496703205393"
+              ]
+            ]
+          ]
+        ],
+        "zeroNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "25"
+              ]
+            ]
+          ]
+        ]
+      },
+      "recoveries": 6,
+      "rejections": 6,
+      "snapshots": 28
+    },
+    "lifecycleObservations": 51,
+    "nodeObservations": 2,
+    "npmReportSha256": "ad4a779a140591b4a02e98c70e9a0fe8cd8cec03d1444c95531759a965d58dc0",
+    "receipt": {
+      "bindingIrSha256": "05eea5ff9cd617970d13fe47bcfea014b32ba9b5fc69e28d5e291395399581ef",
+      "component": {
+        "id": "checkedrecordvalueindices@1.0.0",
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      },
+      "componentArtifactSha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001",
+      "componentBundleSha256": "d93de71e46757740af6fc9b2389a2a1a581a735b6cb4bd921f8e06120ad41223",
+      "componentIdentitySha256": "2fa2a7818cc9b7afb969614ecfa2ecacced52943a7bb6b0f2c3cad7f8f117c23",
+      "kind": "lean-bridge-component-package-receipt",
+      "package": {
+        "archive": "checkedrecordvalueindices-1.0.0.tgz",
+        "package": "checkedrecordvalueindices@1.0.0",
+        "sha256": "41f5807c14d1016ad8c9be458edaf9d755d9dd09f4c655e17144f5b0c839820f"
+      },
+      "policies": {
+        "componentCompiledOnce": true,
+        "nativeCallablesOnly": true,
+        "runtimeBinaryInComponent": false,
+        "runtimeShared": true
+      },
+      "provenanceSha256": "a44d50e163f90a59113c8de5724d89ea9b235380bb30c2320865b99383c426c1",
+      "runtime": {
+        "archive": "lean-bridge-runtime-0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4.tgz",
+        "package": "@lean-bridge/runtime@0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4",
+        "sha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+      },
+      "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "schemaVersion": 1,
+      "source": {
+        "treeSha256": "ba2e97c1287b14fac5d4b5df699c55cdb578160ec02566731fbe5169f00d4831"
+      },
+      "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+    },
+    "route": "ordinary-source"
+  },
+  "checkerCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "gitBindingControls": 1,
+  "installedIrControls": 2,
+  "provenanceControls": 5,
+  "reconciliationControls": 1,
+  "schemaVersion": 1
+}
