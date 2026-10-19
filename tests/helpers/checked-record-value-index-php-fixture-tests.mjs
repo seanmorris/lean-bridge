@@ -13,7 +13,8 @@ import { renderCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs
 import {
 	checkedRecordValueIndexPhpCaller, checkedRecordValueIndexPhpCallerArgs
 	, checkedRecordValueIndexPhpExpected, checkedRecordValueIndexPhpNamespace
-	, checkedRecordValueIndexPhpRoutes, checkedRecordValueIndexPhpSelection
+	, checkedRecordValueIndexPhpRoutes, checkedRecordValueIndexPhpRunSelection
+	, checkedRecordValueIndexPhpSelection
 	, checkedRecordValueIndexPhpTarget, parseCheckedRecordValueIndexPhpResult
 } from "./checked-record-value-index-php-fixture.mjs";
 
@@ -48,6 +49,17 @@ test("value-index native PHP selections preserve all four independent routes", (
 		]);
 	}
 	assert.throws(() => checkedRecordValueIndexPhpSelection("ordinary"));
+	assert.deepEqual(checkedRecordValueIndexPhpRunSelection({}), {
+		enabled: false, routes: checkedRecordValueIndexPhpRoutes, maxLoad: 8
+	});
+	assert.deepEqual(checkedRecordValueIndexPhpRunSelection({
+		LEAN_BRIDGE_VALUE_INDEX_PHP_TEST: "1"
+		, LEAN_BRIDGE_VALUE_INDEX_PHP_ROUTES: "reviewed-ir"
+		, LEAN_BRIDGE_VALUE_INDEX_PHP_MAX_LOAD: "12"
+	}), { enabled: true, routes: ["reviewed-ir"], maxLoad: 12 });
+	assert.throws(() => checkedRecordValueIndexPhpRunSelection({
+		LEAN_BRIDGE_VALUE_INDEX_PHP_ROUTES: "reviewed-ir"
+	}));
 });
 
 test("native PHP copied projection retains every erased closed value index", () => {
