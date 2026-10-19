@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "6f43e66ef862024bcff5fcc52193891b7576402661ea1adfd8e0628b283a56d1",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-I1RbYN/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:55: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceEmptyStringNull() = Api.produceEmptyString(null)\n                                                      ^^^^\nNullProbe.kt:3:59: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceUnicodeStringNull() = Api.produceUnicodeString(null)\n                                                          ^^^^\nNullProbe.kt:4:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceZeroNatNull() = Api.produceZeroNat(null)\n                                              ^^^^\nNullProbe.kt:5:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceWideNatNull() = Api.produceWideNat(null)\n                                              ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.kotlin.*\nfun produceEmptyStringNull() = Api.produceEmptyString(null)\nfun produceUnicodeStringNull() = Api.produceUnicodeString(null)\nfun produceZeroNatNull() = Api.produceZeroNat(null)\nfun produceWideNatNull() = Api.produceWideNat(null)\n",
+  "sourceSha256": "a6021f92622a43f527dd7d5a0e24c114aa1db8ce4bf59aaeb218a3e8c409a9f7"
+}

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "db8d23c8664ea4fe284bb6840c316fc6c42b7cd095623a5922b283baa61355bc",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-h9aTB0/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "outputs": {},
+  "profile": "kotlin",
+  "route": "result-only-ordinary-source",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:31: error: [UNRESOLVED_REFERENCE] Unresolved reference 'trueBoolIndex'.\nval probeTrueBoolIndex = Api::trueBoolIndex\n                              ^^^^^^^^^^^^^\nprobe.kt:3:32: error: [UNRESOLVED_REFERENCE] Unresolved reference 'falseBoolIndex'.\nval probeFalseBoolIndex = Api::falseBoolIndex\n                               ^^^^^^^^^^^^^^\nprobe.kt:4:31: error: [UNRESOLVED_REFERENCE] Unresolved reference 'abStringIndex'.\nval probeAbStringIndex = Api::abStringIndex\n                              ^^^^^^^^^^^^^\nprobe.kt:5:34: error: [UNRESOLVED_REFERENCE] Unresolved reference 'emptyStringIndex'.\nval probeEmptyStringIndex = Api::emptyStringIndex\n                                 ^^^^^^^^^^^^^^^^\nprobe.kt:6:36: error: [UNRESOLVED_REFERENCE] Unresolved reference 'unicodeStringIndex'.\nval probeUnicodeStringIndex = Api::unicodeStringIndex\n                                   ^^^^^^^^^^^^^^^^^^\nprobe.kt:7:33: error: [UNRESOLVED_REFERENCE] Unresolved reference 'emptySizedIndex'.\nval probeEmptySizedIndex = Api::emptySizedIndex\n                                ^^^^^^^^^^^^^^^\nprobe.kt:8:30: error: [UNRESOLVED_REFERENCE] Unresolved reference 'zeroNatIndex'.\nval probeZeroNatIndex = Api::zeroNatIndex\n                             ^^^^^^^^^^^^\nprobe.kt:9:30: error: [UNRESOLVED_REFERENCE] Unresolved reference 'wideNatIndex'.\nval probeWideNatIndex = Api::wideNatIndex\n                             ^^^^^^^^^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.kotlin.*\nval probeTrueBoolIndex = Api::trueBoolIndex\nval probeFalseBoolIndex = Api::falseBoolIndex\nval probeAbStringIndex = Api::abStringIndex\nval probeEmptyStringIndex = Api::emptyStringIndex\nval probeUnicodeStringIndex = Api::unicodeStringIndex\nval probeEmptySizedIndex = Api::emptySizedIndex\nval probeZeroNatIndex = Api::zeroNatIndex\nval probeWideNatIndex = Api::wideNatIndex\n",
+  "sourceSha256": "5082866d392c912c10b7352703502bb03113dadc7840eef8d25edcff599dc82f"
+}

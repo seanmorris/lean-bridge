@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "7c2bbb9031d04c11943a3621314b660afd84529dadb8d8c2f9384d03e872cc9b",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-TiidxJ/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 4653,
+      "sha256": "3751a4b23290e3cb7fe9ccd666068274cf6bfcde4d1f48922dae3e1ee3a03074"
+    }
+  },
+  "route": "reviewed-ir",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.kotlin.*\nfun trueBoolIndexNull() = Api.trueBoolIndex(On(java.math.BigInteger.ZERO))\nfun falseBoolIndexNull() = Api.falseBoolIndex(Off(java.math.BigInteger.ONE))\nfun abStringIndexNull() = Api.abStringIndex(Ab(java.math.BigInteger.valueOf(2)))\nfun emptyStringIndexNull() = Api.emptyStringIndex(EmptyToken(java.math.BigInteger.ZERO))\nfun unicodeStringIndexNull() = Api.unicodeStringIndex(UnicodeToken(java.math.BigInteger.ZERO))\nfun emptySizedIndexNull() = Api.emptySizedIndex(EmptySized(emptyArray()))\nfun zeroNatIndexNull() = Api.zeroNatIndex(ZeroToken(java.math.BigInteger.ZERO))\nfun wideNatIndexNull() = Api.wideNatIndex(WideToken(java.math.BigInteger.ZERO))\nfun produceEmptyStringNull() = Api.produceEmptyString(java.math.BigInteger.ZERO)\nfun produceUnicodeStringNull() = Api.produceUnicodeString(java.math.BigInteger.ZERO)\nfun produceZeroNatNull() = Api.produceZeroNat(java.math.BigInteger.ZERO)\nfun produceWideNatNull() = Api.produceWideNat(java.math.BigInteger.ZERO)\n",
+  "sourceSha256": "77021bb4d2d7d048054ee64cdba8939d6865f20be4883b097a3688ab815cac6f"
+}

@@ -1,0 +1,75 @@
+{
+  "archiveSha256": "f4ed78ef108a59a219cf8ba432ca63d8f3e1ccf4b4673e4431a8ad75ed5b4022",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-Wn5nU5/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 37,
+      "sha256": "f6124cd5950d9dc426ecc61468e4fb6dc19bd3124c62578d1bf30be6af612bc4"
+    },
+    "ProbeKt$probeAbStringIndex$1.class": {
+      "bytes": 1659,
+      "sha256": "76e5f88dc2b894ed5f387e4c042a5691c7920b62fc0ecf1b7e2e2efd17977a6e"
+    },
+    "ProbeKt$probeEmptySizedIndex$1.class": {
+      "bytes": 1707,
+      "sha256": "58de554fcfdceb5afb119a54ef1ce754b1b953fc0a0524de3228215904c97ec2"
+    },
+    "ProbeKt$probeEmptyStringIndex$1.class": {
+      "bytes": 1711,
+      "sha256": "faed793033c8e6e97929f1b3e2a0b74fb7707dfd862ed49bc0783b9941f87807"
+    },
+    "ProbeKt$probeFalseBoolIndex$1.class": {
+      "bytes": 1668,
+      "sha256": "813b8703435141983b1b8c3a31903dd6f772db9c8c0a05f1afa041109a4eaf0c"
+    },
+    "ProbeKt$probeTrueBoolIndex$1.class": {
+      "bytes": 1659,
+      "sha256": "ca471bf4e28ec806f5c9f74e2f5e13e594dc0691931f342f8eec10261e5ed948"
+    },
+    "ProbeKt$probeUnicodeStringIndex$1.class": {
+      "bytes": 1729,
+      "sha256": "3feaf9ae4652fe99a53ab6fbc8bb9a12be5cf999c730ae26bb3e5c42ce37ad07"
+    },
+    "ProbeKt$probeWideNatIndex$1.class": {
+      "bytes": 1690,
+      "sha256": "aabe8ee2d38ba4944560f5e9c1a844b5da69c24f827d5d7390abef020447c5ba"
+    },
+    "ProbeKt$probeZeroNatIndex$1.class": {
+      "bytes": 1690,
+      "sha256": "9a9e4173e46a48e8969662a357bd05cb097256dae277003fd259924c6dca87b3"
+    },
+    "ProbeKt.class": {
+      "bytes": 3548,
+      "sha256": "dea7790f1c3e0301d61b49f0b33bf5573ebb6da55c7212ddf54dc8a84eb2efeb"
+    }
+  },
+  "profile": "kotlin",
+  "route": "ordinary-source",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.kotlin.*\nval probeTrueBoolIndex = Api::trueBoolIndex\nval probeFalseBoolIndex = Api::falseBoolIndex\nval probeAbStringIndex = Api::abStringIndex\nval probeEmptyStringIndex = Api::emptyStringIndex\nval probeUnicodeStringIndex = Api::unicodeStringIndex\nval probeEmptySizedIndex = Api::emptySizedIndex\nval probeZeroNatIndex = Api::zeroNatIndex\nval probeWideNatIndex = Api::wideNatIndex\n",
+  "sourceSha256": "5082866d392c912c10b7352703502bb03113dadc7840eef8d25edcff599dc82f"
+}

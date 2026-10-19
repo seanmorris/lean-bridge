@@ -1,0 +1,13 @@
+import org.leanbridge.checkedrecordvalueindices.kotlin.*
+fun trueBoolIndexNull() = Api.trueBoolIndex(On(java.math.BigInteger.ZERO))
+fun falseBoolIndexNull() = Api.falseBoolIndex(Off(java.math.BigInteger.ONE))
+fun abStringIndexNull() = Api.abStringIndex(Ab(java.math.BigInteger.valueOf(2)))
+fun emptyStringIndexNull() = Api.emptyStringIndex(EmptyToken(java.math.BigInteger.ZERO))
+fun unicodeStringIndexNull() = Api.unicodeStringIndex(UnicodeToken(java.math.BigInteger.ZERO))
+fun emptySizedIndexNull() = Api.emptySizedIndex(EmptySized(emptyArray()))
+fun zeroNatIndexNull() = Api.zeroNatIndex(ZeroToken(java.math.BigInteger.ZERO))
+fun wideNatIndexNull() = Api.wideNatIndex(WideToken(java.math.BigInteger.ZERO))
+fun produceEmptyStringNull() = Api.produceEmptyString(java.math.BigInteger.ZERO)
+fun produceUnicodeStringNull() = Api.produceUnicodeString(java.math.BigInteger.ZERO)
+fun produceZeroNatNull() = Api.produceZeroNat(java.math.BigInteger.ZERO)
+fun produceWideNatNull() = Api.produceWideNat(java.math.BigInteger.ZERO)

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "6f43e66ef862024bcff5fcc52193891b7576402661ea1adfd8e0628b283a56d1",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-I1RbYN/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "outputs": {},
+  "profile": "java",
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "probe.java:3:47: compiler.err.cant.resolve.location.args: kindname.method, trueBoolIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:4:48: compiler.err.cant.resolve.location.args: kindname.method, falseBoolIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:5:47: compiler.err.cant.resolve.location.args: kindname.method, abStringIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:6:50: compiler.err.cant.resolve.location.args: kindname.method, emptyStringIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:7:52: compiler.err.cant.resolve.location.args: kindname.method, unicodeStringIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:8:49: compiler.err.cant.resolve.location.args: kindname.method, emptySizedIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:9:46: compiler.err.cant.resolve.location.args: kindname.method, zeroNatIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\nprobe.java:10:46: compiler.err.cant.resolve.location.args: kindname.method, wideNatIndex, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.checkedrecordvalueindices.Api, null)\n8 errors\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.*;\nfinal class Probe {\n    static Object trueBoolIndex() { return Api.trueBoolIndex(null); }\n    static Object falseBoolIndex() { return Api.falseBoolIndex(null); }\n    static Object abStringIndex() { return Api.abStringIndex(null); }\n    static Object emptyStringIndex() { return Api.emptyStringIndex(null); }\n    static Object unicodeStringIndex() { return Api.unicodeStringIndex(null); }\n    static Object emptySizedIndex() { return Api.emptySizedIndex(null); }\n    static Object zeroNatIndex() { return Api.zeroNatIndex(null); }\n    static Object wideNatIndex() { return Api.wideNatIndex(null); }\n}\n",
+  "sourceSha256": "e9895192c9c72e774ce3d5c12e3864e4fca8d2ff323b6ef24fbae3a0119ea216"
+}

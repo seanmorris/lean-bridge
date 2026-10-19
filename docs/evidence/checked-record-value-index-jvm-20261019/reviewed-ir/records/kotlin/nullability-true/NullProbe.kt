@@ -1,0 +1,13 @@
+import org.leanbridge.checkedrecordvalueindices.kotlin.*
+fun trueBoolIndexNull() = Api.trueBoolIndex(null)
+fun falseBoolIndexNull() = Api.falseBoolIndex(null)
+fun abStringIndexNull() = Api.abStringIndex(null)
+fun emptyStringIndexNull() = Api.emptyStringIndex(null)
+fun unicodeStringIndexNull() = Api.unicodeStringIndex(null)
+fun emptySizedIndexNull() = Api.emptySizedIndex(null)
+fun zeroNatIndexNull() = Api.zeroNatIndex(null)
+fun wideNatIndexNull() = Api.wideNatIndex(null)
+fun produceEmptyStringNull() = Api.produceEmptyString(null)
+fun produceUnicodeStringNull() = Api.produceUnicodeString(null)
+fun produceZeroNatNull() = Api.produceZeroNat(null)
+fun produceWideNatNull() = Api.produceWideNat(null)

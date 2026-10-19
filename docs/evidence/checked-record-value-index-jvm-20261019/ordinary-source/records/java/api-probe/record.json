@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "f4ed78ef108a59a219cf8ba432ca63d8f3e1ccf4b4673e4431a8ad75ed5b4022",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-Wn5nU5/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "outputs": {
+    "Probe.class": {
+      "bytes": 1435,
+      "sha256": "ffe14f5fb294b4b78d8b9473a7895c4c4d85692cc39857222de19575c9ac04af"
+    }
+  },
+  "profile": "java",
+  "route": "ordinary-source",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.*;\nfinal class Probe {\n    static Object trueBoolIndex() { return Api.trueBoolIndex(null); }\n    static Object falseBoolIndex() { return Api.falseBoolIndex(null); }\n    static Object abStringIndex() { return Api.abStringIndex(null); }\n    static Object emptyStringIndex() { return Api.emptyStringIndex(null); }\n    static Object unicodeStringIndex() { return Api.unicodeStringIndex(null); }\n    static Object emptySizedIndex() { return Api.emptySizedIndex(null); }\n    static Object zeroNatIndex() { return Api.zeroNatIndex(null); }\n    static Object wideNatIndex() { return Api.wideNatIndex(null); }\n}\n",
+  "sourceSha256": "e9895192c9c72e774ce3d5c12e3864e4fca8d2ff323b6ef24fbae3a0119ea216"
+}

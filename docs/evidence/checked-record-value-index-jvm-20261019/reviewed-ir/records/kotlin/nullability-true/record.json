@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "7c2bbb9031d04c11943a3621314b660afd84529dadb8d8c2f9384d03e872cc9b",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-value-index-jvm-installed-TiidxJ/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "route": "reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:45: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'On'.\nfun trueBoolIndexNull() = Api.trueBoolIndex(null)\n                                            ^^^^\nNullProbe.kt:3:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Off'.\nfun falseBoolIndexNull() = Api.falseBoolIndex(null)\n                                              ^^^^\nNullProbe.kt:4:45: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Ab'.\nfun abStringIndexNull() = Api.abStringIndex(null)\n                                            ^^^^\nNullProbe.kt:5:51: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'EmptyToken'.\nfun emptyStringIndexNull() = Api.emptyStringIndex(null)\n                                                  ^^^^\nNullProbe.kt:6:55: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'UnicodeToken'.\nfun unicodeStringIndexNull() = Api.unicodeStringIndex(null)\n                                                      ^^^^\nNullProbe.kt:7:49: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'EmptySized'.\nfun emptySizedIndexNull() = Api.emptySizedIndex(null)\n                                                ^^^^\nNullProbe.kt:8:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'ZeroToken'.\nfun zeroNatIndexNull() = Api.zeroNatIndex(null)\n                                          ^^^^\nNullProbe.kt:9:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'WideToken'.\nfun wideNatIndexNull() = Api.wideNatIndex(null)\n                                          ^^^^\nNullProbe.kt:10:55: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceEmptyStringNull() = Api.produceEmptyString(null)\n                                                      ^^^^\nNullProbe.kt:11:59: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceUnicodeStringNull() = Api.produceUnicodeString(null)\n                                                          ^^^^\nNullProbe.kt:12:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceZeroNatNull() = Api.produceZeroNat(null)\n                                              ^^^^\nNullProbe.kt:13:47: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun produceWideNatNull() = Api.produceWideNat(null)\n                                              ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.checkedrecordvalueindices.kotlin.*\nfun trueBoolIndexNull() = Api.trueBoolIndex(null)\nfun falseBoolIndexNull() = Api.falseBoolIndex(null)\nfun abStringIndexNull() = Api.abStringIndex(null)\nfun emptyStringIndexNull() = Api.emptyStringIndex(null)\nfun unicodeStringIndexNull() = Api.unicodeStringIndex(null)\nfun emptySizedIndexNull() = Api.emptySizedIndex(null)\nfun zeroNatIndexNull() = Api.zeroNatIndex(null)\nfun wideNatIndexNull() = Api.wideNatIndex(null)\nfun produceEmptyStringNull() = Api.produceEmptyString(null)\nfun produceUnicodeStringNull() = Api.produceUnicodeString(null)\nfun produceZeroNatNull() = Api.produceZeroNat(null)\nfun produceWideNatNull() = Api.produceWideNat(null)\n",
+  "sourceSha256": "6f901e62caeb698f4a5351d970cc606934b7879ea24efd89625648bd1c63ccda"
+}
