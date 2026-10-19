@@ -1,0 +1,156 @@
+/**
+ * Prove that the value-index Perl Core registration and every refreshed live
+ * source pin retain an exact, reversible lineage.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { classifyRepositoryTest } from "../../src/adoption/test-profiles.mjs";
+import {
+	beforeCheckedRecordValueIndexPerlSource
+	, checkedRecordValueIndexPerlAddedPaths
+	, checkedRecordValueIndexPerlChangedPaths
+	, checkedRecordValueIndexPerlDraftParent
+	, checkedRecordValueIndexPerlHistoricalPaths
+	, checkedRecordValueIndexPerlHistoryPath
+	, checkedRecordValueIndexPerlPredecessor
+	, reverseCheckedRecordValueIndexPerlHistoricalUpdate
+	, reverseCheckedRecordValueIndexPerlUpdate
+} from "./checked-record-value-index-perl-source-history.mjs";
+import { finRefinementNormalizationPaths } from "./fin-refinement-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
+
+const git = args => execFileSync("git", args, {
+	encoding: "utf8", maxBuffer: 128 * 1024 * 1024
+});
+
+test("value-index Perl Core registration has an exact reversible lineage"
+	, async () => {
+		const record = JSON.parse(await readFile(
+			checkedRecordValueIndexPerlHistoryPath, "utf8"
+		));
+		assert.equal(record.schemaVersion, 1);
+		assert.equal(record.milestone
+			, "checked-record-value-index-perl-source-v1");
+		assert.equal(record.predecessorCommit
+			, checkedRecordValueIndexPerlPredecessor);
+		assert.equal(record.draftParentCommit
+			, checkedRecordValueIndexPerlDraftParent);
+		assert.deepEqual(record.updates.map(update => update.path)
+			, checkedRecordValueIndexPerlChangedPaths);
+		assert.deepEqual(record.historicalTransitions.map(item => item.path)
+			, checkedRecordValueIndexPerlHistoricalPaths);
+		assert.deepEqual(record.additions.map(item => item.path)
+			, checkedRecordValueIndexPerlAddedPaths);
+		assert.equal(record.pathsSha256, sha256(JSON.stringify(
+			checkedRecordValueIndexPerlChangedPaths
+		)));
+		for(const update of record.updates)
+		{
+			const current = await sourceAtFinHistoryMilestone(
+				update.path, update.currentSha256
+				, beforeCheckedRecordValueIndexPerlSource
+			);
+			const previous = git(["show"
+				, `${checkedRecordValueIndexPerlPredecessor}:${update.path}`]);
+			assert.equal(sha256(current), update.currentSha256, update.path);
+			assert.equal(sha256(previous), update.previousSha256, update.path);
+			assert.equal(reverseCheckedRecordValueIndexPerlUpdate(current, update)
+				, previous, update.path);
+			assert.equal(beforeCheckedRecordValueIndexPerlSource(
+				update.path, current), previous, update.path);
+			assert.equal(beforeCheckedRecordValueIndexPerlSource(
+				update.path, current, update.currentSha256), current, update.path);
+			assert.ok(finRefinementNormalizationPaths.includes(update.path));
+		}
+		for(const transition of record.historicalTransitions)
+		{
+			const current = git(["show"
+				, `${transition.currentCommit}:${transition.path}`]);
+			const previous = git(["show"
+				, `${transition.previousCommit}:${transition.path}`]);
+			assert.equal(sha256(current), transition.currentSha256);
+			assert.equal(sha256(previous), transition.previousSha256);
+			assert.equal(reverseCheckedRecordValueIndexPerlHistoricalUpdate(
+				current, transition), previous);
+			assert.equal(beforeCheckedRecordValueIndexPerlSource(
+				transition.path, current), previous);
+			assert.ok(finRefinementNormalizationPaths.includes(transition.path));
+		}
+	}
+);
+
+test("value-index Perl Core registration closes additions and live pins"
+	, async () => {
+		const record = JSON.parse(await readFile(
+			checkedRecordValueIndexPerlHistoryPath, "utf8"
+		));
+		for(const addition of record.additions)
+		{
+			assert.equal(sha256(await readFile(addition.path))
+				, addition.currentSha256, addition.path);
+			assert.notEqual(spawnSync("git", ["cat-file", "-e"
+				, `${checkedRecordValueIndexPerlPredecessor}:${addition.path}`]
+			, { stdio: "ignore" }).status, 0, addition.path);
+		}
+		assert.equal(classifyRepositoryTest(
+			"tests/checked-record-value-index-perl.test.mjs"
+		), "contract");
+		assert.equal(record.pinCount, 94);
+		const inventoryPath = "docs/type-surface.v1.json";
+		const inventoryUpdate = record.updates.find(item =>
+			item.path === inventoryPath
+		);
+		assert.ok(inventoryUpdate);
+		const previousSource = git(["show"
+			, `${checkedRecordValueIndexPerlPredecessor}:${inventoryPath}`]);
+		const expected = JSON.parse(previousSource);
+		let count = 0;
+		for(const pin of record.pinUpdates)
+		{
+			let found = 0;
+			for(const evidence of expected.evidence) for(const file of evidence.files)
+				if(file.path === pin.path && file.sha256 === pin.previousSha256)
+				{
+					file.sha256 = pin.currentSha256;
+					found++;
+				}
+			assert.equal(found, pin.count, pin.path);
+			count += found;
+		}
+		assert.equal(count, record.pinCount);
+		const current = await sourceAtFinHistoryMilestone(
+			inventoryPath, inventoryUpdate.currentSha256
+			, beforeCheckedRecordValueIndexPerlSource
+		);
+		assert.equal(current, JSON.stringify(expected, null, 2) + "\n");
+	}
+);
+
+test("value-index Perl source-history writer refuses another checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-value-index-perl-history-guard-"
+	));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const environment = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const localGit = args => execFileSync("git", args, {
+		cwd: root, env: environment, stdio: "pipe"
+	});
+	localGit(["init", "--quiet"]);
+	localGit(["-c", "user.name=Test", "-c"
+		, "user.email=test@example.invalid", "-c", "commit.gpgsign=false"
+		, "commit", "--allow-empty", "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-checked-record-value-index-perl-source-history.mjs"
+	)], { cwd: root, env: environment, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /must stay on its exact predecessor/u);
+	assert.deepEqual(await readdir(root), [".git"]);
+});

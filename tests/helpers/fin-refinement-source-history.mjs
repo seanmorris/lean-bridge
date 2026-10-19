@@ -15,6 +15,7 @@ import { beforeCheckedRecordValueIndexJvmNativeRepairSource, checkedRecordValueI
 import { beforeCoreFirstRunResidualRepairSource, coreFirstRunResidualRepairChangedPaths } from "./core-first-run-residual-repair-source-history.mjs";
 import { beforeCoreTerminalReachabilityRepairSource, beforeCoreTerminalReachabilitySource, coreTerminalReachabilityChangedPaths, coreTerminalReachabilityTerminalPaths } from "./core-terminal-reachability-source-history.mjs";
 import { beforeCoreFirstRunRepairSource, coreFirstRunRepairChangedPaths } from "./core-first-run-repair-source-history.mjs";
+import { beforeCheckedRecordValueIndexPerlSource, checkedRecordValueIndexPerlChangedPaths, checkedRecordValueIndexPerlHistoricalPaths } from "./checked-record-value-index-perl-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetArchiveSource, checkedRecordValueIndexDotnetArchiveChangedPaths } from "./checked-record-value-index-dotnet-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexDotnetResultOnlyCoreRepairSource, checkedRecordValueIndexDotnetResultOnlyCoreRepairChangedPaths } from "./checked-record-value-index-dotnet-result-only-core-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexJvmSource, checkedRecordValueIndexJvmChangedPaths } from "./checked-record-value-index-jvm-source-history.mjs";
@@ -988,6 +989,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedRecordValueIndexPerlSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCoreFirstRunRepairSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexDotnetArchiveSource(
@@ -1321,7 +1324,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreThirdRunResidualRepairChangedPaths
+	...checkedRecordValueIndexPerlChangedPaths
+	, ...checkedRecordValueIndexPerlHistoricalPaths
+	, ...coreThirdRunResidualRepairChangedPaths
 	, ...checkedRecordValueIndexNativeBindingIrChangedPaths
 	, ...coreSecondRunResidualRepairChangedPaths
 	, ...checkedRecordValueIndexJvmNullBoundaryChangedPaths
