@@ -142,9 +142,15 @@ export const inspectCheckedRecordValueIndexHostedArtifact = async (
 	};
 };
 
-const safeZipPath = path => {
+/**
+ * Accept one portable, relative ZIP member path and reject traversal or names
+ * outside the byte formats emitted by the hosted archive jobs.
+ *
+ * @param path - Candidate ZIP member path.
+ */
+export const checkedRecordValueIndexHostedSafeZipPath = path => {
 	const value = path.endsWith("/") ? path.slice(0, -1) : path;
-	return value.length > 0 && /^[A-Za-z0-9_@.+/-]+$/u.test(value)
+	return value.length > 0 && /^[A-Za-z0-9_$@.+/-]+$/u.test(value)
 		&& !value.startsWith("/") && value.split("/").every(part =>
 		part.length > 0 && part !== "." && part !== "..");
 };
@@ -159,7 +165,8 @@ export const extractCheckedRecordValueIndexHostedArtifact = async zip => {
 		encoding: "utf8", maxBuffer: 64 * 1024 ** 2
 	}).split("\n").filter(Boolean);
 	assert.ok(entries.length > 0 && new Set(entries).size === entries.length);
-	for(const path of entries) assert.ok(safeZipPath(path), path);
+	for(const path of entries)
+		assert.ok(checkedRecordValueIndexHostedSafeZipPath(path), path);
 	const root = await mkdtemp(join(
 		tmpdir(), "lean-bridge-value-index-hosted-"));
 	try

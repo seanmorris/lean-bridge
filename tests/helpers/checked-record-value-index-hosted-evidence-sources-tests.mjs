@@ -14,7 +14,8 @@ import {
 	, checkedRecordValueIndexNativeEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
-	parseCheckedRecordValueIndexHostedArchiveArgs
+	checkedRecordValueIndexHostedSafeZipPath
+	, parseCheckedRecordValueIndexHostedArchiveArgs
 } from "./checked-record-value-index-hosted-archive.mjs";
 
 const revision = () => execFileSync("git", ["rev-parse", "HEAD"], {
@@ -116,4 +117,13 @@ test("value-index hosted archivers accept only four explicit absolute inputs", (
 		, values.map(value => value === "--run-json" ? "--unknown" : value)
 	]) assert.throws(() => parseCheckedRecordValueIndexHostedArchiveArgs(
 		invalid, "usage"), /usage/u);
+});
+
+test("value-index hosted archivers accept JVM inner classes without allowing ZIP traversal", () => {
+	assert.ok(checkedRecordValueIndexHostedSafeZipPath(
+		"records/kotlin/api-probe/classes/ProbeKt$probeWideNatIndex$1.class"
+	));
+	for(const path of ["/absolute", "records/../outside", "records//empty"
+		, "records\\windows", "records/space name"])
+		assert.equal(checkedRecordValueIndexHostedSafeZipPath(path), false, path);
 });
