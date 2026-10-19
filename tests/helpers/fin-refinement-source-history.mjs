@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { beforeCheckedRecordValueIndexPhpPromotionSource, checkedRecordValueIndexPhpPromotionChangedPaths } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
+import { beforeValueIndexTestProfileGapSource, valueIndexTestProfileGapChangedPaths, valueIndexTestProfileGapHistoricalPaths } from "./value-index-test-profile-gap-source-history.mjs";
 import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from "./value-index-native-binding-ir-ordering-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
@@ -992,6 +993,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeValueIndexTestProfileGapSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexPerlSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCoreFirstRunRepairSource(path, source, expected);
@@ -1684,6 +1687,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...nominalSubtypeDotnetCeilingChangedPaths
 	, ...primitiveSubtypeHistoryRepairChangedPaths
 	, ...nominalPrimitiveSubtypeRustPromotionChangedPaths
+	, ...valueIndexTestProfileGapChangedPaths
+	, ...valueIndexTestProfileGapHistoricalPaths
 	, ...nominalPrimitiveSubtypeDotnetPromotionChangedPaths
 	, ...nominalPrimitiveSubtypePhpPromotionChangedPaths
 	, ...nominalPrimitiveSubtypePhpWasmPromotionChangedPaths
@@ -1739,9 +1744,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexPhpPromotionSource(
+	let previous = beforeValueIndexTestProfileGapSource(
 		path, text, expected
 	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpPromotionSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeValueIndexTestProfileGapSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPhpArchiveSource(
 		path, previous, expected
