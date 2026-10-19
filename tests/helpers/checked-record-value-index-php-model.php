@@ -31,14 +31,18 @@ namespace LeanCheckedrecordvalueindices {
     use Brick\Math\BigInteger;
 
     final class LeanBridgeError extends \RuntimeException {}
-    final class On { public function __construct(public BigInteger $count) {} }
-    final class Off { public function __construct(public BigInteger $count) {} }
-    final class Ab { public function __construct(public BigInteger $size) {} }
-    final class EmptyToken { public function __construct(public BigInteger $count) {} }
-    final class UnicodeToken { public function __construct(public BigInteger $count) {} }
-    final class EmptySized { public function __construct(public array $data) {} }
-    final class ZeroToken { public function __construct(public BigInteger $count) {} }
-    final class WideToken { public function __construct(public BigInteger $count) {} }
+    final class On { public function __construct(public BigInteger $count) { value_index_nat($count); } }
+    final class Off { public function __construct(public BigInteger $count) { value_index_nat($count); } }
+    final class Ab { public function __construct(public BigInteger $size) { value_index_nat($size); } }
+    final class EmptyToken { public function __construct(public BigInteger $count) { value_index_nat($count); } }
+    final class UnicodeToken { public function __construct(public BigInteger $count) { value_index_nat($count); } }
+    final class EmptySized {
+        public function __construct(public array $data) {
+            foreach ($data as $item) value_index_nat($item);
+        }
+    }
+    final class ZeroToken { public function __construct(public BigInteger $count) { value_index_nat($count); } }
+    final class WideToken { public function __construct(public BigInteger $count) { value_index_nat($count); } }
 
     function value_index_fault(): ?string { return $GLOBALS['value_index_fault']; }
     function value_index_prefix(): string { return $GLOBALS['value_index_prefix']; }

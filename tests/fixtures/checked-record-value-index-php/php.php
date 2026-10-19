@@ -55,13 +55,13 @@ function check_value_index_records(bool $resultOnly = false, string $parameterPr
         $check(value_index_snapshot($args) === $before, $label . ' preserves rejected input');
         ++$rejections; ++$snapshots;
     };
-    $hostRefuse = static function (string $name, array $args, string $label) use (&$calls, &$rejections, &$snapshots, $check, $function): void {
-        $before = value_index_snapshot($args); ++$calls;
+    $hostRefuse = static function (string $name, callable $arguments, mixed $input, string $label) use (&$calls, &$rejections, &$snapshots, $check, $function): void {
+        $before = value_index_snapshot($input); ++$calls;
         $refused = false;
-        try { $function($name)(...$args); }
+        try { $function($name)(...$arguments()); }
         catch (TypeError|ValueError) { $check(true, $label . ' host refusal'); $refused = true; }
         if (!$refused) throw new RuntimeException('Accepted malformed value-index input: ' . $label);
-        $check(value_index_snapshot($args) === $before, $label . ' preserves rejected input');
+        $check(value_index_snapshot($input) === $before, $label . ' preserves rejected input');
         ++$rejections; ++$snapshots;
     };
     $huge = $n('340282366920938463463374607431768211457');
@@ -82,9 +82,11 @@ function check_value_index_records(bool $resultOnly = false, string $parameterPr
         $invoke('zero_nat_index', [new ZeroToken($n(99))], $n(99)); ++$recoveries;
         $refuse('false_bool_index', [new Off($n(0))], 'mkOff', 'false Bool index');
         $invoke('zero_nat_index', [new ZeroToken($n(99))], $n(99)); ++$recoveries;
-        $hostRefuse('true_bool_index', [new On($n(-1))], 'negative true Nat');
+        $negativeTrue = $n(-1);
+        $hostRefuse('true_bool_index', static fn(): array => [new On($negativeTrue)], $negativeTrue, 'negative true Nat');
         $invoke('zero_nat_index', [new ZeroToken($n(99))], $n(99)); ++$recoveries;
-        $hostRefuse('zero_nat_index', [new ZeroToken($n(-1))], 'negative token Nat');
+        $negativeToken = $n(-1);
+        $hostRefuse('zero_nat_index', static fn(): array => [new ZeroToken($negativeToken)], $negativeToken, 'negative token Nat');
         $invoke('zero_nat_index', [new ZeroToken($n(99))], $n(99)); ++$recoveries;
     }
     $produced = static function (string $name, array $args, mixed $expected) use (&$calls, $check, $function): void {
