@@ -130,13 +130,17 @@ test("value-index Python caller keeps source routes, recovery and result-only bo
 	]);
 	assert.equal(result.stderr, "");
 	const values = JSON.parse(result.stdout);
-	assert.deepEqual(values, checkedRecordValueIndexPythonRoutes.map(route => {
+	assert.deepEqual(values.results, checkedRecordValueIndexPythonRoutes.map(route => {
 		const expected = { route, ...checkedRecordValueIndexPythonExpected(route) };
 		assert.deepEqual(parseCheckedRecordValueIndexPythonResult(
 			`${JSON.stringify(checkedRecordValueIndexPythonExpected(route))}\n`, route)
 			, checkedRecordValueIndexPythonExpected(route));
 		return expected;
 	}));
+	assert.deepEqual(values.rejectedFaults, {
+		full: ["accept-invalid", "wrong-status", "wrong-message", "mutate-input", "wrong-produced", "missing-producer"]
+		, "result-only": ["wrong-produced", "missing-producer", "inputs-exported"]
+	});
 	assert.throws(() => parseCheckedRecordValueIndexPythonResult("{}\n", "ordinary-source"));
 	assert.throws(() => parseCheckedRecordValueIndexPythonResult(
 		"{}", "ordinary-source"));
