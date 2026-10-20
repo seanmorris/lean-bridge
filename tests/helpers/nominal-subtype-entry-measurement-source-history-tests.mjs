@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeCallbackSubtypeFoundationPointers, beforeCallbackSubtypeFoundationSource } from "./callback-subtype-foundation-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalSubtypeEntryMeasurementSource, nominalSubtypeEntryMeasurementChangedPaths, nominalSubtypeEntryMeasurementHistoryPath, nominalSubtypeEntryMeasurementImplementation, nominalSubtypeEntryMeasurementPredecessor, reverseNominalSubtypeEntryMeasurementUpdate } from "./nominal-subtype-entry-measurement-source-history.mjs";
 
@@ -23,10 +24,13 @@ test("nominal Subtype entry measurement history restores every changed source an
 	for(const update of record.updates)
 	{
 		const current = await readFile(update.path, "utf8");
-		const previous = reverseNominalSubtypeEntryMeasurementUpdate(current, update);
+		const milestone = beforeCallbackSubtypeFoundationSource(
+			update.path, current, update.currentSha256
+		);
+		const previous = reverseNominalSubtypeEntryMeasurementUpdate(milestone, update);
 		assert.equal(previous, original(update.path));
-		assert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, current), previous);
-		assert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, current, update.currentSha256), current);
+		assert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, milestone), previous);
+		assert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, milestone, update.currentSha256), milestone);
 		assert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
@@ -34,9 +38,14 @@ test("nominal Subtype entry measurement history restores every changed source an
 	for(const pin of record.pinUpdates)
 	{
 		const current = await readFile(pin.containerPath, "utf8");
-		assert.equal(sha256(current), pin.containerCurrentSha256);
-		assert.equal(current.split(pin.currentSha256).length - 1, pin.count);
-		const previous = current.replaceAll(pin.currentSha256, pin.previousSha256);
+		const milestone = beforeCallbackSubtypeFoundationPointers(
+			pin.containerPath, current, pin.containerCurrentSha256
+		);
+		assert.equal(sha256(milestone), pin.containerCurrentSha256);
+		assert.equal(milestone.split(pin.currentSha256).length - 1, pin.count);
+		const previous = milestone.replaceAll(
+			pin.currentSha256, pin.previousSha256
+		);
 		assert.equal(sha256(previous), pin.containerPreviousSha256);
 	}
 });

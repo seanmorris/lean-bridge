@@ -1,0 +1,89 @@
+/**
+ * Authenticate the directional callback Subtype foundation and its repaired
+ * current-source pointers.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import {
+	beforeCallbackSubtypeFoundationSource
+	, callbackSubtypeFoundationChangedPaths
+	, callbackSubtypeFoundationHistoryPath
+	, callbackSubtypeFoundationImplementation
+	, callbackSubtypeFoundationPredecessor
+	, reverseCallbackSubtypeFoundationUpdate
+} from "./callback-subtype-foundation-source-history.mjs";
+import { sha256 } from "./source-history-digest.mjs";
+
+const original = path => execFileSync("git", ["show"
+	, `${callbackSubtypeFoundationPredecessor}:${path}`]
+, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+
+test("callback Subtype foundation history restores every source and pointer", async () => {
+	const record = JSON.parse(await readFile(
+		callbackSubtypeFoundationHistoryPath, "utf8"
+	));
+	assert.equal(record.schemaVersion, 1);
+	assert.equal(record.milestone, "callback-subtype-foundation-source-v1");
+	assert.equal(record.predecessorCommit
+		, callbackSubtypeFoundationPredecessor);
+	assert.equal(record.implementationCommit
+		, callbackSubtypeFoundationImplementation);
+	assert.deepEqual(record.updates.map(item => item.path)
+		, callbackSubtypeFoundationChangedPaths);
+	for(const update of record.updates)
+	{
+		const current = await readFile(update.path, "utf8");
+		const previous = reverseCallbackSubtypeFoundationUpdate(current, update);
+		assert.equal(previous, original(update.path));
+		assert.equal(beforeCallbackSubtypeFoundationSource(
+			update.path, current), previous);
+		assert.equal(beforeCallbackSubtypeFoundationSource(
+			update.path, current, update.currentSha256), current);
+		assert.equal(beforeCallbackSubtypeFoundationSource(
+			update.path, current + "unknown"), current + "unknown");
+	}
+	for(const addition of record.additions)
+		assert.equal(sha256(await readFile(addition.path))
+			, addition.currentSha256, addition.path);
+	for(const pin of record.pinContainers)
+	{
+		let current = await readFile(pin.path, "utf8");
+		assert.equal(sha256(current), pin.currentSha256, pin.path);
+		for(const replacement of [...pin.replacements].reverse())
+		{
+			assert.equal(current.split(replacement.current).length - 1
+				, replacement.count, `${pin.path}: ${replacement.sourcePath}`);
+			current = current.replaceAll(
+				replacement.current, replacement.previous
+			);
+		}
+		assert.equal(sha256(current), pin.previousSha256, pin.path);
+	}
+});
+
+test("callback Subtype history writer refuses an unrelated checkout", async t => {
+	const root = await mkdtemp(join(
+		tmpdir(), "lean-bridge-callback-subtype-history-guard-"
+	));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const env = Object.fromEntries(Object.entries(process.env)
+		.filter(([key]) => !key.startsWith("GIT_")));
+	const git = args => execFileSync("git", args
+		, { cwd: root, env, stdio: "pipe" });
+	git(["init", "--quiet"]);
+	git(["-c", "user.name=Test", "-c", "user.email=test@example.invalid"
+		, "-c", "commit.gpgsign=false", "commit", "--allow-empty"
+		, "--quiet", "-m", "unrelated"]);
+	const result = spawnSync(process.execPath, [resolve(
+		"scripts/update-callback-subtype-foundation-source-history.mjs"
+	)], { cwd: root, env, encoding: "utf8" });
+	assert.equal(result.status, 1);
+	assert.match(result.stderr, /implementation commit/u);
+	assert.deepEqual(await readdir(root), [".git"]);
+});

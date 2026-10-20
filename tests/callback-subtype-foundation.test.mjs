@@ -9,6 +9,7 @@ import test from "node:test";
 import { callbackRefinement } from "../src/abi/refinements.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { assertReviewedSubtypeCallback } from "../src/analyze/reviewed-refinements.mjs";
+import "./helpers/callback-subtype-foundation-source-history-tests.mjs";
 
 const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false };
 const nativeNat = { kind: "primitive", name: "nat", lean: "Nat", abi };
