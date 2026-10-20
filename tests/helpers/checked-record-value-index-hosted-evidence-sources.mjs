@@ -15,7 +15,8 @@ const allowedRoots = [
 	, "tests/"
 ];
 const allowedFiles = new Set([
-	"LICENSE", "lean-toolchain", "package-lock.json", "package.json"
+	"LICENSE", "flake.lock", "flake.nix", "lean-toolchain"
+	, "package-lock.json", "package.json"
 ]);
 
 /**
