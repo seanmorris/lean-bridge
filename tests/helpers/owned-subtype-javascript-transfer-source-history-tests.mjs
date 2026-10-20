@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedSubtypeHostRegistrationSource } from "./owned-subtype-host-registration-source-history.mjs";
 import {
 	beforeOwnedSubtypeJavaScriptTransferSource
 	, ownedSubtypeJavaScriptTransferChangedPaths
@@ -45,7 +46,9 @@ test("retained and transferred JavaScript owned Subtype history restores every s
 		, ownedSubtypeJavaScriptTransferChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeOwnedSubtypeHostRegistrationSource(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseOwnedSubtypeJavaScriptTransferUpdate(
 			current, update
@@ -59,8 +62,12 @@ test("retained and transferred JavaScript owned Subtype history restores every s
 			update.path, current, update.previousSha256), previous);
 	}
 	for(const addition of history.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const current = beforeOwnedSubtypeHostRegistrationSource(
+			addition.path, await readFile(addition.path, "utf8"), addition.currentSha256
+		);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 });
 
 test("retained and transferred JavaScript evidence authenticates every installed lane", async () => {

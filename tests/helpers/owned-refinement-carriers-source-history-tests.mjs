@@ -12,6 +12,7 @@ import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptTransferSource } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptSource } from "./owned-subtype-javascript-source-history.mjs";
+import { beforeOwnedSubtypeHostRegistrationSource } from "./owned-subtype-host-registration-source-history.mjs";
 import {
 	beforeOwnedRefinementCarriersSource
 	, ownedRefinementCarriersChangedPaths
@@ -39,8 +40,11 @@ test("owned refinement carrier history restores every source", async () => {
 		, ownedRefinementCarriersChangedPaths);
 	for(const update of history.updates)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			update.path, await readFile(update.path, "utf8")
+		);
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			update.path, registered
 		);
 		const current = beforeOwnedSubtypeJavaScriptSource(
 			update.path, live, update.currentSha256
@@ -57,8 +61,11 @@ test("owned refinement carrier history restores every source", async () => {
 	}
 	for(const addition of history.additions)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			addition.path, await readFile(addition.path, "utf8")
+		);
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			addition.path, registered
 		);
 		const current = beforeOwnedSubtypeJavaScriptSource(
 			addition.path, live, addition.currentSha256

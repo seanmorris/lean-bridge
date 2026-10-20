@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedSubtypeHostRegistrationSource } from "./owned-subtype-host-registration-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptTransferSource } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import {
 	beforeOwnedSubtypeJavaScriptHistoricalSource
@@ -74,8 +75,12 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 	for(const update of history.updates)
 	{
-		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			update.path, await readFile(update.path, "utf8")
+			, update.currentSha256
+		);
+		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+			update.path, registered
 			, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -90,8 +95,12 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	}
 	for(const addition of history.additions)
 	{
-		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			addition.path, await readFile(addition.path, "utf8")
+			, addition.currentSha256
+		);
+		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+			addition.path, registered
 			, addition.currentSha256
 		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);

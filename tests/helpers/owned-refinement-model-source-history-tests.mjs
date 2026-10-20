@@ -13,6 +13,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptTransferSource } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptSource } from "./owned-subtype-javascript-source-history.mjs";
 import { beforeOwnedRefinementCarriersSource } from "./owned-refinement-carriers-source-history.mjs";
+import { beforeOwnedSubtypeHostRegistrationSource } from "./owned-subtype-host-registration-source-history.mjs";
 import {
 	beforeOwnedRefinementModelSource
 	, ownedRefinementModelChangedPaths
@@ -40,8 +41,11 @@ test("owned refinement model history restores every source", async () => {
 		, ownedRefinementModelChangedPaths);
 	for(const update of record.updates)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			update.path, await readFile(update.path, "utf8")
+		);
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			update.path, registered
 		);
 		const installed = beforeOwnedSubtypeJavaScriptSource(
 			update.path, live
@@ -63,8 +67,11 @@ test("owned refinement model history restores every source", async () => {
 	}
 	for(const addition of record.additions)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+		const registered = beforeOwnedSubtypeHostRegistrationSource(
 			addition.path, await readFile(addition.path, "utf8")
+		);
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			addition.path, registered
 		);
 		const installed = beforeOwnedSubtypeJavaScriptSource(
 			addition.path, live

@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "milestone": "owned-subtype-host-registration-source-v1",
+  "predecessorCommit": "a9894a1e50a69bed85a2723d470fe35f08985d03",
+  "draftParentCommit": "a9894a1e50a69bed85a2723d470fe35f08985d03",
+  "registrationEpochs": [
+    [
+      "bcb5ff2e62a02d99df0b27a73e2adf82eac5e240",
+      "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5"
+    ],
+    [
+      "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "18804049b371cfe17eaec867c0365fb4b47b8152"
+    ],
+    [
+      "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "cf5062772b63ee7483d0a30c2f9df3c01d358157"
+    ],
+    [
+      "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "a9894a1e50a69bed85a2723d470fe35f08985d03"
+    ]
+  ],
+  "registrations": [
+    {
+      "path": "package.json",
+      "previousSha256": "9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b",
+      "currentSha256": "a5e5aea7ad54c59b64e2810f9164eaf09dd59bfdf944e97e0a9d075d9e6f97ea",
+      "fromCommit": "bcb5ff2e62a02d99df0b27a73e2adf82eac5e240",
+      "toCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "edits": [
+        {
+          "start": 49025,
+          "previous": "",
+          "current": "    \"test:owned-subtype-native\": \"LEAN_BRIDGE_OWNED_SUBTYPE_NATIVE_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-native-packaging.test.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "a5e5aea7ad54c59b64e2810f9164eaf09dd59bfdf944e97e0a9d075d9e6f97ea",
+      "currentSha256": "f2036e914fa82ce33844a5c785182c6ab086f0ec6e25a9ec615fcc7e625edd4a",
+      "fromCommit": "308fc6a50dfb37e00e2f97f61c2a7d43efdb68c5",
+      "toCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "edits": [
+        {
+          "start": 49180,
+          "previous": "",
+          "current": "    \"test:owned-subtype-perl\": \"LEAN_BRIDGE_OWNED_SUBTYPE_PERL_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-perl-packaging.test.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "f2036e914fa82ce33844a5c785182c6ab086f0ec6e25a9ec615fcc7e625edd4a",
+      "currentSha256": "7f8ba2c9fa69ef492ea451cf811b16c832acc8d222df996a209a443bc4a5f3bb",
+      "fromCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "toCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "edits": [
+        {
+          "start": 49329,
+          "previous": "",
+          "current": "    \"test:owned-subtype-languages\": \"LEAN_BRIDGE_OWNED_SUBTYPE_LANGUAGE_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-language-packaging.test.mjs\",\n"
+        }
+      ]
+    },
+    {
+      "path": "package.json",
+      "previousSha256": "7f8ba2c9fa69ef492ea451cf811b16c832acc8d222df996a209a443bc4a5f3bb",
+      "currentSha256": "73150410c98e1b177ea91af2b3d00084f7067291bbeaf135d9f23e974d900e50",
+      "fromCommit": "cf5062772b63ee7483d0a30c2f9df3c01d358157",
+      "toCommit": "a9894a1e50a69bed85a2723d470fe35f08985d03",
+      "edits": [
+        {
+          "start": 49491,
+          "previous": "",
+          "current": "    \"test:owned-subtype-remaining\": \"LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-remaining-packaging.test.mjs\",\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/owned-refinement-carriers-source-history-tests.mjs",
+      "previousSha256": "6b9ee122f38f776bb5946e802cecfa7683bc5a586dfad0e5dfdd815a14e186b5",
+      "currentSha256": "a41817bc681db4352edb956783fd68affd5b65b49e6f20d2563437ed848bf388",
+      "edits": [
+        {
+          "start": 663,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeHostRegistrationSource } from \"./owned-subtype-host-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1932,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 2052,
+          "previous": "",
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, registered\n\t\t);\n"
+        },
+        {
+          "start": 2785,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 2904,
+          "previous": "",
+          "current": "\t\t);\n\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, registered\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs",
+      "previousSha256": "6d5e68dc028314eb8201db4700b3cbbf9fa3ef032d49da6e915ba79c409d05d8",
+      "currentSha256": "6116aa198100ac55c85076ce70e2487106c3c56f867584d2551574b9b94162a6",
+      "edits": [
+        {
+          "start": 760,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeHostRegistrationSource } from \"./owned-subtype-host-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 1980,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 2100,
+          "previous": "",
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, registered\n\t\t);\n"
+        },
+        {
+          "start": 3020,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 3139,
+          "previous": "",
+          "current": "\t\t);\n\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, registered\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-source-history-tests.mjs",
+      "previousSha256": "0949643b91bb6bdeab2975269969d57c45cb5cefdc64c21ea274aca7a3823583",
+      "currentSha256": "7f3a5a2a1eb5651c5cee31738187c2f957b3d4267ee7874dd5f621a53d3ef166",
+      "edits": [
+        {
+          "start": 445,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeHostRegistrationSource } from \"./owned-subtype-host-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 3625,
+          "previous": "\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 3771,
+          "previous": "",
+          "current": "\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, registered\n\t\t\t, update.currentSha256\n\t\t);\n"
+        },
+        {
+          "start": 4428,
+          "previous": "\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 4547,
+          "previous": "",
+          "current": "\t\t\t, addition.currentSha256\n\t\t);\n\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, registered\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-transfer-source-history-tests.mjs",
+      "previousSha256": "2715659c73b83c102667461100ae1c56efe86056951d631c98896d6301e75729",
+      "currentSha256": "83b393801d7ba742be789a3a31d9abbe126fa8d891b91526965e8f4dd9b13f23",
+      "edits": [
+        {
+          "start": 456,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeHostRegistrationSource } from \"./owned-subtype-host-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 2114,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n\t\t);\n"
+        },
+        {
+          "start": 2818,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "current": "\t{\n\t\tconst current = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\"), addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n"
+        }
+      ]
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-owned-subtype-host-registration-source-history.mjs",
+      "currentSha256": "6e4ba5893129fd12beba481eace4849ead25fb4105e4127cc6887064192f2530"
+    },
+    {
+      "path": "tests/helpers/owned-subtype-host-registration-source-history.mjs",
+      "currentSha256": "31bba600a0a66d1a50bf1a09bd37417f395753ba7726cf78a0853f179cbec8f9"
+    },
+    {
+      "path": "tests/owned-subtype-host-registration-history.test.mjs",
+      "currentSha256": "dfa9ec30fa29f7bd8a94d4f0011e504f611c27d22809d47c2aca090abf8188be"
+    }
+  ]
+}
