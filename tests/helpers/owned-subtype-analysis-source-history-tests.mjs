@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedRefinementCarriersSource } from "./owned-refinement-carriers-source-history.mjs";
 import { beforeOwnedRefinementModelSource } from "./owned-refinement-model-source-history.mjs";
 import {
 	beforeOwnedSubtypeAnalysisSource
@@ -39,8 +40,11 @@ test("owned Subtype analysis history restores every source", async () => {
 	for(const update of record.updates)
 	{
 		const live = await readFile(update.path, "utf8");
+		const carriers = beforeOwnedRefinementCarriersSource(
+			update.path, live
+		);
 		const current = beforeOwnedRefinementModelSource(
-			update.path, live, update.currentSha256
+			update.path, carriers, update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseOwnedSubtypeAnalysisUpdate(current, update);
@@ -57,8 +61,11 @@ test("owned Subtype analysis history restores every source", async () => {
 	for(const addition of record.additions)
 	{
 		const live = await readFile(addition.path, "utf8");
+		const carriers = beforeOwnedRefinementCarriersSource(
+			addition.path, live
+		);
 		const current = beforeOwnedRefinementModelSource(
-			addition.path, live, addition.currentSha256
+			addition.path, carriers, addition.currentSha256
 		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}

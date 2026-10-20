@@ -1,0 +1,378 @@
+{
+  "additions": [
+    {
+      "currentSha256": "dc6b3faded108668c3384ea990dede9718e3367a1314a2f2f3a93bac705aa3a7",
+      "path": "scripts/update-owned-refinement-carriers-source-history.mjs"
+    },
+    {
+      "currentSha256": "7ca0d8025c3fc97207527ee71a50ef205e31f471f153b199d57c0ce4c81b453f",
+      "path": "src/build/owned-refinement-carriers.mjs"
+    },
+    {
+      "currentSha256": "0ecd4a71a73c8ec8865bd42bd411cc01e0476e9bd945efb976a7487c7ed45815",
+      "path": "tests/fixtures/onboarding/owned-subtypes/Owned.lean"
+    },
+    {
+      "currentSha256": "e92cd8818bd9aee83e53f174d8240763a0a640693cfb263c5fcc358416428b53",
+      "path": "tests/helpers/owned-refinement-carriers-source-history.mjs"
+    },
+    {
+      "currentSha256": "4b52ef04165ca95e639b363e346623b195938e4644eed129149608398fc5e52e",
+      "path": "tests/helpers/owned-refinement-carriers-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "bcb5ff2e62a02d99df0b27a73e2adf82eac5e240",
+  "milestone": "owned-refinement-carriers-source-v1",
+  "predecessorCommit": "526e9642f0facd00a4b6dc49dedb585471cf8a38",
+  "reconciledTypeSurfacePointers": 19,
+  "schemaVersion": 1,
+  "scope": "Source history for executable erased mirrors, per-use checked construction, result projection and pre-transfer native validation. Installed npm and browser acceptance remain pending.",
+  "updates": [
+    {
+      "currentSha256": "a717584c3811386f32e77c03a6759f500a82a179d46690998ab4e5195b05ee60",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 56653
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 79211
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 96414
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 112707
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 433353
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1013240
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1139319
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1168717
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1178977
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1193070
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1225614
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1255896
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1288859
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1330411
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1355963
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1378500
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1398192
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1418682
+        },
+        {
+          "current": "          \"sha256\": \"9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b\"\n",
+          "previous": "          \"sha256\": \"1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830\"\n",
+          "start": 1429175
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "8efecc49903127557d331e156aca9d2abca66ea6fba36df4ab42c9461020dd1c"
+    },
+    {
+      "currentSha256": "9c5c4d7c047a99d8dda951ca88e8e0a3affc2598f3d955154cc115bd50a08d4b",
+      "edits": [
+        {
+          "current": "    \"src/build/owned-refinement-carriers.mjs\",\n",
+          "previous": "",
+          "start": 27022
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830"
+    },
+    {
+      "currentSha256": "e684dee7ac09d3a46cc3c096a8e27539214f917562f6b65b838bd7080d31c6b8",
+      "edits": [
+        {
+          "current": "import { generateOwnedAggregateCarriers, generateOwnedBindingCarriers } from \"../../build/owned-aggregate-carriers.mjs\";\n",
+          "previous": "import { generateOwnedAggregateCarriers } from \"../../build/owned-aggregate-carriers.mjs\";\n",
+          "start": 180
+        },
+        {
+          "current": " * @param carriers - Reconciled typed carrier bundle for the same Binding IR.\n",
+          "previous": "",
+          "start": 1098
+        },
+        {
+          "current": "const renderOwnedNativeValueAdapters = (options, carriers) => {\n",
+          "previous": "export const generateOwnedNativeValueAdapters = options => {\n",
+          "start": 1180
+        },
+        {
+          "current": "",
+          "previous": "\tconst carriers = generateOwnedAggregateCarriers(options);\n",
+          "start": 1388
+        },
+        {
+          "current": "\t\tconst refinementValidators = carriers.refinementValidators ?? {};\n",
+          "previous": "",
+          "start": 15582
+        },
+        {
+          "current": "\t\t\t\t, ...(!callback && refinementValidators[`${declaration.id}\\0parameter\\0${i - Number(declaration.receiver === 0)}`] ? [\n\t\t\t\t\t\"    lean_inc(child);\"\n\t\t\t\t\t, `    if (!${refinementValidators[`${declaration.id}\\0parameter\\0${i - Number(declaration.receiver === 0)}`]}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`\n\t\t\t\t] : [])\n",
+          "previous": "",
+          "start": 17979
+        },
+        {
+          "current": "\n/**\n * Generate native walkers from an already reconciled owned Binding IR.\n * Artifact readers use this path only after reconstructing the same compiler evidence.\n *\n * @param options - Validated Binding IR carrier inputs and native capabilities.\n */\nexport const generateOwnedNativeBindingAdapters = options =>\n\trenderOwnedNativeValueAdapters(options, generateOwnedBindingCarriers(options));\n\n/**\n * Generate native walkers directly from fresh compiler metadata.\n *\n * @param options - Fresh metadata, retained source identity and native capabilities.\n */\nexport const generateOwnedNativeValueAdapters = options =>\n\trenderOwnedNativeValueAdapters(options, generateOwnedAggregateCarriers(options));\n",
+          "previous": "",
+          "start": 20220
+        }
+      ],
+      "path": "src/backends/native/owned-value-adapters.mjs",
+      "previousSha256": "5582c63a7a26cdc5c11096c534ebd79e054c8bbf4cf9343aa205a0b5946d3aa9"
+    },
+    {
+      "currentSha256": "1be17bc4f819859e0e5df324f2d8495e58e1a9af70309a5761cc3138d5abff2e",
+      "edits": [
+        {
+          "current": "import { createOwnedRefinementCarriers } from \"./owned-refinement-carriers.mjs\";\n",
+          "previous": "",
+          "start": 644
+        },
+        {
+          "current": "",
+          "previous": "\tif(model.refinementModel !== undefined)\n\t\tthrow Object.assign(new TypeError(\"Owned aggregate carriers require checked Subtype adapters\"), {\n\t\t\tcode: \"owned-refinements-unavailable\"\n\t\t});\n",
+          "start": 3473
+        },
+        {
+          "current": "\tconst unrefinedSourceType = (id, active = new Set()) => {\n",
+          "previous": "\tconst sourceType = (id, active = new Set()) => {\n",
+          "start": 4163
+        },
+        {
+          "current": "\t\t\treturn `(${[...node.callable.parameters, node.callable.result].map(site => unrefinedSourceType(site.type, seen)).join(\" → \")})`;\n",
+          "previous": "\t\t\treturn `(${[...node.callable.parameters, node.callable.result].map(site => sourceType(site.type, seen)).join(\" → \")})`;\n",
+          "start": 4493
+        },
+        {
+          "current": "\t\tconst children = node.arguments.map(id => unrefinedSourceType(id, active));\n",
+          "previous": "\t\tconst children = node.arguments.map(id => sourceType(id, active));\n",
+          "start": 4738
+        },
+        {
+          "current": "\tconst refinements = createOwnedRefinementCarriers(model, definitions);\n\tconst sourceType = refinements?.sourceType ?? unrefinedSourceType;\n",
+          "previous": "",
+          "start": 5028
+        },
+        {
+          "current": "\t\t, ...refinements?.lines ?? []\n",
+          "previous": "",
+          "start": 6564
+        },
+        {
+          "current": "\t\t, \"/* Private typed helpers consume their Array arguments and return an owned Array. */\"\n\t\t, ...refinements?.header ?? []];\n",
+          "previous": "\t\t, \"/* Private typed helpers consume their Array arguments and return an owned Array. */\"];\n",
+          "start": 6681
+        },
+        {
+          "current": "\t\tconst converted = names.map((name, index) => {\n\t\t\tif(!refinements || (declaration.receiver && index === 0)) return name;\n\t\t\tconst parameter = index - Number(Boolean(declaration.receiver));\n\t\t\tconst site = refinements.byPosition.get(refinements.siteKey(declaration.id, \"parameter\", parameter));\n\t\t\treturn site ? `_source${index}` : name;\n\t\t});\n\t\tconst guards = names.flatMap((name, index) => {\n\t\t\tif(!refinements || (declaration.receiver && index === 0)) return [];\n\t\t\tconst parameter = index - Number(Boolean(declaration.receiver));\n\t\t\tconst site = refinements.byPosition.get(refinements.siteKey(declaration.id, \"parameter\", parameter));\n\t\t\treturn site ? [`let _source${index} ← ${refinements.inputConversion(site.tree, name)}`] : [];\n\t\t});\n\t\tconst rawCall = `${source.specialization ? `(${source.specialization.application})` : `_root_.${source.name}`} ${converted.join(\" \")}`;\n\t\tconst resultSite = refinements?.byPosition.get(refinements.siteKey(declaration.id, \"result\"));\n\t\tconst call = resultSite ? refinements.resultConversion(resultSite.tree, \"_sourceResult\") : rawCall;\n\t\tconst body = [...guards];\n\t\tif(resultSite) body.push(`let _sourceResult := ${rawCall}`);\n\t\tbody.push(`pure (${call})`);\n",
+          "previous": "\t\tconst call = `${source.specialization ? `(${source.specialization.application})` : `_root_.${source.name}`} ${names.join(\" \")}`;\n",
+          "start": 12108
+        },
+        {
+          "current": "\t\t\t, checked(names, body), names.length);\n",
+          "previous": "\t\t\t, checked(names, [`pure (${call})`]), names.length);\n",
+          "start": 13428
+        },
+        {
+          "current": "\t\t, ...(refinements ? { refinementValidators: Object.fromEntries(refinements.validators) } : {})\n",
+          "previous": "",
+          "start": 13754
+        }
+      ],
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "previousSha256": "367f77c08db528e4e7c3bf4e3e0e71682858b07aa89364aaf243b905e83b8327"
+    },
+    {
+      "currentSha256": "11ab5d6b45a68700e4e9ac015273f0d3ba28b9b7ccbb8678bf5fe1216b9c7143",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRefinementCarriersSource, ownedRefinementCarriersChangedPaths } from \"./owned-refinement-carriers-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...ownedRefinementCarriersChangedPaths\n\t, ...ownedRefinementModelChangedPaths\n",
+          "previous": "\t...ownedRefinementModelChangedPaths\n",
+          "start": 109056
+        },
+        {
+          "current": "\tconst ownedCarriers = beforeOwnedRefinementCarriersSource(\n",
+          "previous": "\tconst ownedRefinement = beforeOwnedRefinementModelSource(\n",
+          "start": 129570
+        },
+        {
+          "current": "\tif(sha256(ownedCarriers) === expected) return ownedCarriers;\n\tconst ownedRefinement = beforeOwnedRefinementModelSource(\n\t\tpath, ownedCarriers, expected\n\t);\n",
+          "previous": "",
+          "start": 129657
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "789828570ac000980dd2f5cd988dad6f39da7ccf0ac723d38049168ff6a99727"
+    },
+    {
+      "currentSha256": "3a6af0882821d41b90a9e11fe02f925d9f8e810722a8ef8f6481fde26ba724b4",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRefinementCarriersSource } from \"./owned-refinement-carriers-source-history.mjs\";\n",
+          "previous": "",
+          "start": 441
+        },
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeOwnedRefinementCarriersSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1650
+        },
+        {
+          "current": "\t{\n\t\tconst live = await readFile(addition.path, \"utf8\");\n\t\tconst current = beforeOwnedRefinementCarriersSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2441
+        }
+      ],
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs",
+      "previousSha256": "6f31b25c631e5d51c4d844ffe1155f7d49c4bfef9fb49951ec8c48ff658b838d"
+    },
+    {
+      "currentSha256": "d15b9d1ab0a245e496f508e801a9043c32c197efd3913b8562fa3b8091819e7c",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRefinementCarriersSource } from \"./owned-refinement-carriers-source-history.mjs\";\n",
+          "previous": "",
+          "start": 433
+        },
+        {
+          "current": "\t\tconst carriers = beforeOwnedRefinementCarriersSource(\n\t\t\tupdate.path, live\n\t\t);\n",
+          "previous": "",
+          "start": 1790
+        },
+        {
+          "current": "\t\t\tupdate.path, carriers, update.currentSha256\n",
+          "previous": "\t\t\tupdate.path, live, update.currentSha256\n",
+          "start": 1924
+        },
+        {
+          "current": "\t\tconst carriers = beforeOwnedRefinementCarriersSource(\n\t\t\taddition.path, live\n\t\t);\n",
+          "previous": "",
+          "start": 2669
+        },
+        {
+          "current": "\t\t\taddition.path, carriers, addition.currentSha256\n",
+          "previous": "\t\t\taddition.path, live, addition.currentSha256\n",
+          "start": 2805
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs",
+      "previousSha256": "8463cfe0ff32bf216802fb1244479471c49aaf459e2467deaf1497f187f48ccc"
+    },
+    {
+      "currentSha256": "160c79acfbc185495d1abeba1ca452196725a2480bbc677ff9c8f9a2b0b93daa",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, resolve } from \"node:path\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "import { ownedAggregateLeaseSource } from \"../src/backends/native/owned-aggregate-leases.mjs\";\nimport { generateOwnedNativeBindingAdapters } from \"../src/backends/native/owned-value-adapters.mjs\";\nimport { brokerHeader } from \"../src/backends/native/runtime-broker.mjs\";\n",
+          "previous": "",
+          "start": 469
+        },
+        {
+          "current": "import { processBuildRunner } from \"../src/build/process-runner.mjs\";\n",
+          "previous": "",
+          "start": 962
+        },
+        {
+          "current": "import \"./helpers/owned-refinement-carriers-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1138
+        },
+        {
+          "current": "\tconst focused = structuredClone(ir);\n\tfocused.declarations = focused.declarations.filter(item => item.name === \"echoRecord\");\n\tconst carriers = generateOwnedBindingCarriers({\n\t\tdocument: focused\n",
+          "previous": "\tassert.throws(() => generateOwnedBindingCarriers({\n\t\tdocument: ir\n",
+          "start": 5685
+        },
+        {
+          "current": "\t\t, declarations: [{ name: \"Owned.echoRecord\", module: \"Owned\" }]\n",
+          "previous": "\t\t, declarations: []\n",
+          "start": 5904
+        },
+        {
+          "current": "\t});\n\tassert.match(carriers.leanSource, /structure LbOwnedErased\\.Owned\\.Bundle/u);\n\tassert.match(carriers.leanSource, /_root_\\.Owned\\.checkedCount/u);\n\tassert.match(carriers.leanSource, /Subtype\\.val/u);\n\tassert.equal(Object.keys(carriers.refinementValidators).length, 1);\n",
+          "previous": "\t}), { code: \"owned-refinements-unavailable\" });\n",
+          "start": 6005
+        },
+        {
+          "current": "test(\"owned refinement mirrors compile against the proof-carrying Lean source\", {\n\tskip: process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST !== \"1\", timeout: 120000\n}, async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-owned-refinement-carriers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst fixture = resolve(\"tests/fixtures/onboarding/owned-subtypes/Owned.lean\");\n\tawait writeFile(join(directory, \"Owned.lean\"), await readFile(fixture));\n\tconst ir = ownedSubtypeReviewedIr();\n\tir.declarations = ir.declarations.filter(item => item.name === \"echoRecord\");\n\tconst native = generateOwnedNativeBindingAdapters({\n\t\tdocument: ir, sourceIdentity: {}\n\t\t, declarations: [{ name: \"Owned.echoRecord\", module: \"Owned\" }]\n\t\t, metadataSha256: \"a\".repeat(64) });\n\tconst generated = native.carriers;\n\tawait writeFile(join(directory, \"Generated.lean\"), generated.leanSource);\n\tawait writeFile(join(directory, \"carriers.h\"), generated.header);\n\tawait writeFile(join(directory, \"owned-values.h\"), native.typesHeader);\n\tawait writeFile(join(directory, \"owned-leases.h\"), ownedAggregateLeaseSource);\n\tawait writeFile(join(directory, \"lean_bridge_native_runtime.h\"), brokerHeader);\n\tawait writeFile(join(directory, \"owned-values.c\"), native.source);\n\tconst leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\");\n\tconst lean = join(leanPrefix, \"bin/lean\");\n\tconst env = { ...process.env, LEAN_PATH: directory\n\t\t, PATH: `${join(leanPrefix, \"bin\")}:${process.env.PATH}` };\n\tconst capture = async input => {\n\t\ttry\n\t\t{ await processBuildRunner.capture(input); }\n\t\tcatch(error)\n\t\t{ throw new Error(error.details?.stderr || error.details?.stdout || error.message, { cause: error }); }\n\t};\n\tconst compile = args => capture({ command: lean, args, cwd: directory, env });\n\tawait compile([\"-o\", \"Owned.olean\", \"Owned.lean\"]);\n\tawait compile([\"Generated.lean\"]);\n\tawait capture({ command: process.env.CC ?? \"cc\"\n\t\t, args: [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-fsyntax-only\"\n\t\t\t, \"-I\", directory, \"-I\", join(leanPrefix, \"include\"), \"owned-values.c\"]\n\t\t, cwd: directory, env });\n});\n\ntest(\"owned refinement preflight runs before transfer handoff\", () => {\n\tconst ir = ownedSubtypeReviewedIr();\n\tir.declarations = ir.declarations.filter(item => item.name === \"echoRecord\");\n\tir.declarations[0].parameters[0].ownership = \"transfer\";\n\tconst generated = generateOwnedNativeBindingAdapters({\n\t\tdocument: ir, sourceIdentity: {}\n\t\t, declarations: [{ name: \"Owned.echoRecord\", module: \"Owned\" }]\n\t\t, metadataSha256: \"a\".repeat(64), transferredInputs: true });\n\tconst validator = Object.values(generated.carriers.refinementValidators)[0];\n\tconst preflight = generated.source.indexOf(`if (!${validator}(child))`);\n\tconst handoff = generated.source.lastIndexOf(\"status = lb_owned_scope_transfer_many\");\n\tassert.ok(preflight >= 0); assert.ok(handoff > preflight);\n\tassert.match(generated.carriers.header, new RegExp(`uint8_t ${validator}\\\\(lean_object \\\\*\\\\);`, \"u\"));\n});\n\n",
+          "previous": "",
+          "start": 8520
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "cb5f0b08f29450c621f2369b8c1b3c996a9e6397feaddd1ed4098859a0cee230"
+    }
+  ]
+}
