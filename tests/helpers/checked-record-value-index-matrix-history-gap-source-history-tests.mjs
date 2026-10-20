@@ -73,7 +73,11 @@ test("value-index matrix history gaps have one exact reversible lineage"
 			assert.equal(reverseCheckedRecordValueIndexMatrixHistoricalGapUpdate(
 				current, transition), previous);
 		}
-		const hub = await readFile(hubPath, "utf8");
+		const hubUpdate = record.updates.find(update => update.path === hubPath);
+		const hub = await sourceAtFinHistoryMilestone(
+			hubPath, hubUpdate.currentSha256
+				, beforeCheckedRecordValueIndexMatrixHistoryGapSource
+		);
 		assert.equal(beforeCheckedRecordValueIndexMatrixHistoryGapSource(
 			hubPath, hub), git(["show", `d7531e61b1d3ed9ae2eb569d2d3f20ae33eb62df:${hubPath}`]));
 		const typeTest = git(["show"

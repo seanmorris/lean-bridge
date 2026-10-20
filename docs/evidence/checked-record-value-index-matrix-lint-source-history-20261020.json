@@ -1,0 +1,422 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-matrix-lint-source-v1",
+  "predecessorCommit": "ef8a07504d8c78326d58deac2fbf19f7f9290356",
+  "draftParentCommit": "80e297f231b63d8cf1550251d17e7cbfa76dfc0d",
+  "foundation": {
+    "modifiedPaths": [
+      "scripts/promote-checked-record-value-index-matrix.mjs",
+      "scripts/update-checked-record-value-index-matrix-checkout-source-history.mjs",
+      "scripts/update-checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "scripts/update-checked-record-value-index-matrix-promotion-source-history.mjs",
+      "scripts/update-checked-record-value-index-matrix-registration-source-history.mjs",
+      "tests/checked-record-value-index-matrix-inventory.test.mjs",
+      "tests/checked-record-value-index-matrix.test.mjs",
+      "tests/helpers/checked-record-value-index-matrix-checkout-source-history-tests.mjs",
+      "tests/helpers/checked-record-value-index-matrix-checkout-source-history.mjs",
+      "tests/helpers/checked-record-value-index-matrix-history-gap-source-history-tests.mjs",
+      "tests/helpers/checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "tests/helpers/checked-record-value-index-matrix-promotion-source-history-tests.mjs",
+      "tests/helpers/checked-record-value-index-matrix-promotion-source-history.mjs",
+      "tests/helpers/checked-record-value-index-matrix-promotion-tests.mjs",
+      "tests/helpers/checked-record-value-index-matrix-promotion.mjs",
+      "tests/helpers/checked-record-value-index-matrix-registration-source-history-tests.mjs",
+      "tests/helpers/checked-record-value-index-matrix-registration-source-history.mjs",
+      "tests/helpers/checked-record-value-index-php-wasm-report.mjs",
+      "tests/helpers/checked-record-value-index-rust-fixture-tests.mjs"
+    ],
+    "addedPaths": []
+  },
+  "pathsSha256": "f8a3a39a9255ea39d382541e99a745c355b57e16a3c0aaf501b63c836abafb47",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-lint-source-history.mjs",
+      "currentSha256": "810c3fd2dd1c37ccfb41da1efb00967f8767bb862b3eb28100ff4dc1c4b82e06"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-lint-source-history-tests.mjs",
+      "currentSha256": "80e7e8e74f88e6ae056772d3952625be35df17e2fdf0e311859a00088c3840f1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-lint-source-history.mjs",
+      "currentSha256": "4f962b6a9aa09cf5403504aabfa7676adafe4933d797999c94516c97a4571b02"
+    }
+  ],
+  "updates": [
+    {
+      "path": "scripts/promote-checked-record-value-index-matrix.mjs",
+      "previousSha256": "6bc8619f25be0eaae79a71b2c759971d6dc3fd1a63d342034399057191c2c8cf",
+      "currentSha256": "aefd698e3df15ce80e573c5e290a10786947d0727c7c3f5dc96b284337fe35c0",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Materialize the remaining hosted value-index matrix at its exact parent. */\n",
+          "current": "/**\n * Materialize the remaining hosted value-index matrix at its exact parent.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1440,
+          "previous": "\t, \"Never overwrite unrelated type-surface changes\");\n",
+          "current": ", \"Never overwrite unrelated type-surface changes\");\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-checkout-source-history.mjs",
+      "previousSha256": "421d8e975e86e750e699bf15d4133f458f98396376ba87b94c1eae34958bfd0e",
+      "currentSha256": "ef71fb628938af2651e7b142ce29f6250c4351aaf6bba1fb3d9a9c53c16d2030",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Record the exact hosted-checkout correction for the value-index matrix. */\n",
+          "current": "/**\n * Record the exact hosted-checkout correction for the value-index matrix.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 2827,
+          "previous": "\t, \"tests/helpers/fin-refinement-source-history.mjs\"\n]);\n",
+          "current": "\t, \"tests/helpers/fin-refinement-source-history.mjs\"]\n);\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "previousSha256": "8c83151e88bd56a24515d731abf7be7a324d47acc5ce2382eb87ecafcbf77436",
+      "currentSha256": "50e166ab742946cf367d783967730ef71a4bb23346f520ac404229c13eb1f938",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Record omitted matrix/browser history-hub and Rust expectation edges. */\n",
+          "current": "/**\n * Record omitted matrix/browser history-hub and Rust expectation edges.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 463,
+          "previous": "\t, checkedRecordValueIndexMatrixHistoryGapChangedPaths\n",
+          "current": ""
+        },
+        {
+          "start": 3204,
+          "previous": "\t\"tests/checked-record-value-index-matrix.test.mjs\", hubPath\n]);\n",
+          "current": "\t\"tests/checked-record-value-index-matrix.test.mjs\", hubPath]\n);\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-promotion-source-history.mjs",
+      "previousSha256": "65574171058945a1822e9ad3ed681db923b742deaf995c22fee5cd32eabb1ae8",
+      "currentSha256": "7edf55854f081125c6106ba91b3c467ed65ab4d16f4fdf5c9ec24af3be591a42",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Record the exact source transition for the complete value-index matrix. */\n",
+          "current": "/**\n * Record the exact source transition for the complete value-index matrix.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-registration-source-history.mjs",
+      "previousSha256": "da2ac24cc82056f5b05cde93c97a96b40d1ef5bbc6c38f5fffd91a3be58b8cee",
+      "currentSha256": "10502462fed761c9cf44b707265fc40aa08e4a08b459ded647033101d4c83003",
+      "edits": [
+        {
+          "start": 20,
+          "previous": "/** Record the exact contract-profile registration for matrix tests. */\n",
+          "current": "/**\n * Record the exact contract-profile registration for matrix tests.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 3083,
+          "previous": "\t, \"tests/helpers/fin-refinement-source-history.mjs\"\n]);\n",
+          "current": "\t, \"tests/helpers/fin-refinement-source-history.mjs\"]\n);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-matrix-inventory.test.mjs",
+      "previousSha256": "f54ddd5beea38b1592064e2466964c5d915ccd24f6e74c4e1f9609ea643cb76f",
+      "currentSha256": "5cd9903071732d90b04f3046f6a790fc170fc3cd5d766bda17e4f59543aa0182",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Audit the promoted claims in a fresh process after archive replay exits. */\n",
+          "current": "/**\n * Audit the promoted claims in a fresh process after archive replay exits.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-matrix.test.mjs",
+      "previousSha256": "1590e45df7e0074b111d3bc89a7b8cb3418496cfdf698ac3013f7cefca0e9ea0",
+      "currentSha256": "df53ded73879b4ec4d5692077e2e4224cb2832f57147548f2ed235f706cd8b65",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Aggregate immutable hosted value-index matrix promotion checks. */\n",
+          "current": "/**\n * Aggregate immutable hosted value-index matrix promotion checks.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 521,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-matrix-lint-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-checkout-source-history-tests.mjs",
+      "previousSha256": "e03848dd15d5a13a2b3d3687f9bf29fa214e8fd0c99490638432da4bf2613df7",
+      "currentSha256": "83e2bad2e8b66089c16d40106fd23e6405aa00105e7a8abcfd343a6a7619703d",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Verify the exact hosted-checkout repair for the value-index matrix. */\n",
+          "current": "/**\n * Verify the exact hosted-checkout repair for the value-index matrix.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1275,
+          "previous": "",
+          "current": "const receiptCommit = \"d8f87b3743790d99b1238cb0b78a4cfc8d9b8bf1\";\n"
+        },
+        {
+          "start": 4123,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\t\tassert.equal(sha256(git([\"show\", `${receiptCommit}:${addition.path}`]))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-checkout-source-history.mjs",
+      "previousSha256": "7f490b7f0582190678a3e12242dbb85d1466c4b2a5f54b68d02f06839d8863ea",
+      "currentSha256": "34d54489c1a870d8f1b786c61070ed9cc4bd4a9c46b9bf160071bb4defb77e49",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Preserve the exact hosted-checkout correction for the value-index matrix. */\n",
+          "current": "/**\n * Preserve the exact hosted-checkout correction for the value-index matrix.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1550,
+          "previous": "/** Reverse one exact hosted-checkout repair. */\n",
+          "current": "/**\n * Reverse one exact hosted-checkout repair.\n *\n * @param source - Current source text.\n * @param update - Reversible update record.\n */\n"
+        },
+        {
+          "start": 2773,
+          "previous": "/** Remove only the exact hosted-checkout repair layer. */\n",
+          "current": "/**\n * Remove only the exact hosted-checkout repair layer.\n *\n * @param path - Repository-relative source path.\n * @param source - Current source text.\n * @param expected - Expected historical digest.\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-history-gap-source-history-tests.mjs",
+      "previousSha256": "e6a8f5c8b39cb1c59cd38c296df81198010da1aa5f5f209a7dd0c7b8e2a06f60",
+      "currentSha256": "f471b563bafbbb68078f3ca9846e01a0a16394f467f4b6f0ceeb9c2775f827c2",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Verify the omitted history-hub and Rust expectation transitions. */\n",
+          "current": "/**\n * Verify the omitted history-hub and Rust expectation transitions.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1386,
+          "previous": "",
+          "current": "const receiptCommit = \"ef8a07504d8c78326d58deac2fbf19f7f9290356\";\n"
+        },
+        {
+          "start": 3351,
+          "previous": "\t\tconst hub = await readFile(hubPath, \"utf8\");\n",
+          "current": "\t\tconst hubUpdate = record.updates.find(update => update.path === hubPath);\n\t\tconst hub = await sourceAtFinHistoryMilestone(\n\t\t\thubPath, hubUpdate.currentSha256\n\t\t\t\t, beforeCheckedRecordValueIndexMatrixHistoryGapSource\n\t\t);\n"
+        },
+        {
+          "start": 4238,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tassert.equal(sha256(git([\"show\", `${receiptCommit}:${addition.path}`]))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "previousSha256": "1f5db5a101e57a15fd0132a2db204db2faf5366b74ec5d1e748f1c8026704247",
+      "currentSha256": "39af3486af83ad02f4dae2b4c2f726e68a8b94137cae42fe98773c8ff53539df",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Close omitted matrix/browser history-hub and Rust expectation transitions. */\n",
+          "current": "/**\n * Close omitted matrix/browser history-hub and Rust expectation transitions.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 2265,
+          "previous": "",
+          "current": "/**\n * Reverse the live matrix history-hub update.\n *\n * @param source - Current source text.\n * @param update - Reversible update record.\n */\n"
+        },
+        {
+          "start": 2578,
+          "previous": "",
+          "current": "/**\n * Reverse one omitted historical matrix-adjacent update.\n *\n * @param source - Current source text.\n * @param update - Reversible update record.\n */\n"
+        },
+        {
+          "start": 2910,
+          "previous": "/** Reconstruct across the live hub wiring and every omitted historical edge. */\n",
+          "current": "/**\n * Reconstruct across the live hub wiring and every omitted historical edge.\n *\n * @param path - Repository-relative source path.\n * @param source - Current source text.\n * @param expected - Expected historical digest.\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-promotion-source-history-tests.mjs",
+      "previousSha256": "7026332ecf5a03938c6e67e528c35863e0472fb58f3d69ad7111a59f901d88de",
+      "currentSha256": "e873d45dd0c9719ae00b023df8552c68ccdbfe3b37ad2bba78701e02c7aa031b",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Verify the exact source layer that promotes the complete value-index matrix. */\n",
+          "current": "/**\n * Verify the exact source layer that promotes the complete value-index matrix.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-promotion-source-history.mjs",
+      "previousSha256": "b816f5957fd9f6c0c61b3264e32d6ddd355360e600fa24281620021d1929f495",
+      "currentSha256": "5a2c617510ffc2e94c5fae3f603e7c7548f1c3a68803e46a80db17b6370b4d2e",
+      "edits": [
+        {
+          "start": 2646,
+          "previous": "/** Reverse one exact complete value-index matrix promotion transition. */\n",
+          "current": "/**\n * Reverse one exact complete value-index matrix promotion transition.\n *\n * @param source - Current source text.\n * @param update - Reversible update record.\n */\n"
+        },
+        {
+          "start": 3897,
+          "previous": "/** Remove only the exact complete value-index matrix promotion layer. */\n",
+          "current": "/**\n * Remove only the exact complete value-index matrix promotion layer.\n *\n * @param path - Repository-relative source path.\n * @param source - Current source text.\n * @param expected - Expected historical digest.\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-promotion-tests.mjs",
+      "previousSha256": "78fa499bf77755f70b5ae26b2c6b7085994cb029e93efb879b6233cd60e5ff7b",
+      "currentSha256": "a26f193c206b67b8bdd53ab9960eb043b9ec316a04224e368924e9b4c4aab67e",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Authenticate the final native/managed value-index route references. */\n",
+          "current": "/**\n * Authenticate the final native/managed value-index route references.\n *\n * @file\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-promotion.mjs",
+      "previousSha256": "b20857a7840bd922824cbd7df9bf3adf7a93f7eeb23d786f03cbe5fbbe90aa0d",
+      "currentSha256": "6f3357d98ca19f9dc69855481f59b6f152fe76ff58e8513c42fb298562cb0dc9",
+      "edits": [
+        {
+          "start": 10678,
+          "previous": "/** Refuse missing, reordered or forged route/reference metadata. */\n",
+          "current": "/**\n * Refuse missing, reordered or forged route/reference metadata.\n *\n * @param references - Hosted route records to authenticate.\n */\n"
+        },
+        {
+          "start": 15261,
+          "previous": "/** Promote exactly twenty cells from the authenticated native/managed lanes. */\n",
+          "current": "/**\n * Promote exactly twenty cells from the authenticated native/managed lanes.\n *\n * @param original - Current type-surface inventory.\n * @param references - Authenticated hosted route records.\n */\n"
+        },
+        {
+          "start": 15741,
+          "previous": "\t\tsourcesByLane.set(definition.lane, await Promise.all(\n",
+          "current": "\t{\n\t\tconst sources = await Promise.all(\n"
+        },
+        {
+          "start": 15903,
+          "previous": "\t\t\t}))));\n",
+          "current": "\t\t\t}))\n\t\t);\n\t\tsourcesByLane.set(definition.lane, sources);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-registration-source-history-tests.mjs",
+      "previousSha256": "243b9159afc0431b2b8a23fa4fc800c1cb8eed32cd2e4d4c4cf75fbf72f7f38a",
+      "currentSha256": "4e4bf8554b8dc50a6cfbd4caaf0bdbcfbc6a667a4f1d32a5c67dc446ec8c49e2",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Verify the exact contract-profile registration for matrix tests. */\n",
+          "current": "/**\n * Verify the exact contract-profile registration for matrix tests.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1504,
+          "previous": "",
+          "current": "const receiptCommit = \"13eaf45d4b1909b9cecf5278c050bd67b51ebbe7\";\n"
+        },
+        {
+          "start": 4294,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\tassert.equal(sha256(git([\"show\", `${receiptCommit}:${addition.path}`]))\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-registration-source-history.mjs",
+      "previousSha256": "0edaf30ed832bd6c3ba93e06e809e544a983e090971aa075326c6ffc123f07b5",
+      "currentSha256": "b06f13a700e4c38d02f7763cfa5f622f8a1662239cd5899afa0a5cf577457f22",
+      "edits": [
+        {
+          "start": 0,
+          "previous": "/** Preserve the exact contract-profile registration for matrix tests. */\n",
+          "current": "/**\n * Preserve the exact contract-profile registration for matrix tests.\n *\n * @file\n */\n"
+        },
+        {
+          "start": 1513,
+          "previous": "/** Reverse one exact matrix test registration update. */\n",
+          "current": "/**\n * Reverse one exact matrix test registration update.\n *\n * @param source - Current source text.\n * @param update - Reversible update record.\n */\n"
+        },
+        {
+          "start": 2753,
+          "previous": "/** Remove only the exact matrix test registration layer. */\n",
+          "current": "/**\n * Remove only the exact matrix test registration layer.\n *\n * @param path - Repository-relative source path.\n * @param source - Current source text.\n * @param expected - Expected historical digest.\n */\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-php-wasm-report.mjs",
+      "previousSha256": "69bf75304f727230173598db265be2574a17406d94ccd8950c281d49b810f2fc",
+      "currentSha256": "a0ef477af9a16074ae186d25e6f733090717cd976dd02049f58abe43ae6e08bb",
+      "edits": [
+        {
+          "start": 13131,
+          "previous": "\t\t\t, closure);\n",
+          "current": "\t\t, closure);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-fixture-tests.mjs",
+      "previousSha256": "55800751369f8347eb3ff6aa1bfda6b58f39cd36de4f2b06575f445da77062c0",
+      "currentSha256": "5c39ae89864e20dd75988e41c202c2d646a6045646c64045cb1a5c02d544968c",
+      "edits": [
+        {
+          "start": 4615,
+          "previous": "\tassert.match(caller, /#\\[cfg\\(not\\(feature = \"result-only\"\\)\\)\\]\\n    fn call/u);\n",
+          "current": "\tassert.match(caller, /#\\[cfg\\(not\\(feature = \"result-only\"\\)\\)\\]\\n {4}fn call/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2b8860bd25e8550c024649fb3daea0bc76973933fc7e3db396cb7e54eef8be0d",
+      "currentSha256": "171393e02544fb0b4a6fc3aa556da67c5faefbc554bfabbcb7b886445de96e6c",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixLintSource, checkedRecordValueIndexMatrixLintChangedPaths } from \"./checked-record-value-index-matrix-lint-source-history.mjs\";\n"
+        },
+        {
+          "start": 107062,
+          "previous": "\t...checkedRecordValueIndexMatrixHistoryGapChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixLintChangedPaths\n\t, ...checkedRecordValueIndexMatrixHistoryGapChangedPaths\n"
+        },
+        {
+          "start": 126972,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexMatrixRegistrationSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexMatrixLintSource(\n"
+        },
+        {
+          "start": 127058,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixRegistrationSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}

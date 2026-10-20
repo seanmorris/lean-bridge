@@ -8,3 +8,4 @@ import "./helpers/checked-record-value-index-matrix-promotion-source-history-tes
 import "./helpers/checked-record-value-index-matrix-checkout-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-matrix-registration-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-matrix-history-gap-source-history-tests.mjs";
+import "./helpers/checked-record-value-index-matrix-lint-source-history-tests.mjs";
