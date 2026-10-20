@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-count-repair-v1",
+  "previousCommit": "ddcf369747f1ae3ac8770c236cec7e60f0edd488",
+  "currentCommit": "8bc597686328278d4ea78551e08d7862c996eb0c",
+  "registrationParent": "bb14e51b5a9f1fc5c0957f97c7c3d0ad7952326d",
+  "pathsSha256": "03d484b9b1179abc336001c08bda564afcaa4a919ca913fb9cab38d280edd3e7",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-rust-count-repair-source-history.mjs",
+      "currentSha256": "e7ed48828c5a1ac8f393a8fbfd6ce8c06f787a9da800a453adc003d26d765d0b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-count-repair-source-history-tests.mjs",
+      "currentSha256": "91820221a46e17980e3bf1a7fe8ffdb664050c97c5f3851dab729f7021e6d04f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-count-repair-source-history.mjs",
+      "currentSha256": "5d71d03b14940c8f5131d2ee256ea2ba4281d8ffd72f34867fb0e21103645d1d"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "kind": "registration",
+      "previousSha256": "6e699fb172e4fcc6fa87b93fd5c270f653193e2876f26126cfda3a20c8b37421",
+      "currentSha256": "dd0d590a53bc1cf0e7b111a142da8479f90198d8713d0ad09c698a94dbdeb17b",
+      "edits": [
+        {
+          "start": 311,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-rust-count-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "kind": "registration",
+      "previousSha256": "d1c69c69c245d925b7076830459dff402aeabf1f4b37df794bdefff23dbf11f0",
+      "currentSha256": "04b592feaf4d678af73b3c23620bc428493abc700e8dbc52311817917521d071",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustCountRepairSource, checkedRecordValueIndexRustCountRepairChangedPaths } from \"./checked-record-value-index-rust-count-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 103843,
+          "previous": "\t...checkedRecordValueIndexRubyPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustCountRepairChangedPaths\n\t, ...checkedRecordValueIndexRubyPromotionChangedPaths\n"
+        },
+        {
+          "start": 122731,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRubyPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustCountRepairSource(\n"
+        },
+        {
+          "start": 122822,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRubyPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-rust/rust.rs",
+      "kind": "historical",
+      "previousSha256": "3cde03a69b69ddad16ec366c841683d9c65d2bb8d97d8448e8f70defa8410dd7",
+      "currentSha256": "671919d1f7ef11147de73bc04885d27fc6a9fcddba81ac44dc83de29ea2b43f5",
+      "edits": [
+        {
+          "start": 3055,
+          "previous": "    let expected = if cfg!(feature = \"result-only\") { (8, 24, 0, 0, 0) } else { (24, 56, 4, 4, 16) };\n",
+          "current": "    let expected = if cfg!(feature = \"result-only\") { (8, 8, 0, 0, 0) } else { (24, 40, 4, 4, 16) };\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-fixture.mjs",
+      "kind": "historical",
+      "previousSha256": "3a66714dee3fe92642f5c6fb3f797051177c3413dea5231206ebef7b6a36205d",
+      "currentSha256": "0e8f826b98b6f38ea2cbc0bffff82424ccdc90d15cdbf87bba28c7f5d905dca2",
+      "edits": [
+        {
+          "start": 802,
+          "previous": "\tfull: Object.freeze({ calls: 24, checks: 57, recoveries: 4, rejections: 4, snapshots: 16 })\n\t, \"result-only\": Object.freeze({ calls: 8, checks: 25, recoveries: 0, rejections: 0, snapshots: 0 })\n",
+          "current": "\tfull: Object.freeze({ calls: 24, checks: 41, recoveries: 4, rejections: 4, snapshots: 16 })\n\t, \"result-only\": Object.freeze({ calls: 8, checks: 9, recoveries: 0, rejections: 0, snapshots: 0 })\n"
+        }
+      ]
+    }
+  ]
+}
