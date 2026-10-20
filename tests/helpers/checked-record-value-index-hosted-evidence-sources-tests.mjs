@@ -17,6 +17,7 @@ import {
 	, checkedRecordValueIndexPythonEvidenceSources
 	, checkedRecordValueIndexRubyEvidenceSources
 	, checkedRecordValueIndexRustEvidenceSources
+	, checkedRecordValueIndexWitEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -218,6 +219,39 @@ test("value-index Rust archiving replays the retained TAP and records through th
 		, "tap: tap.toString(), read, runtime, toolchain"
 	]) assert.ok(replay.includes(field), field);
 	assert.equal(source.split("await checkedRecordValueIndexRustCiReader(").length, 2);
+});
+
+test("value-index WIT evidence closes component production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexWitEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-wit/wit-wasi.c"]
+		, ["consumer", "tests/helpers/checked-record-value-index-wit-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-wit.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-wit-ci.mjs"]
+		, ["checker", "flake.lock"]
+		, ["archiver", "scripts/archive-checked-record-value-index-wit-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index WIT archiving replays retained TAP through the archive-derived component", () => {
+	const source = readFileSync(
+		"scripts/archive-checked-record-value-index-wit-evidence.mjs", "utf8");
+	const marker = "const checked = await checkCheckedRecordValueIndexWitCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\t\tassert.equal", 1)[0];
+	for(const field of [
+		"route, mode, producer: revision, directory: recordsRoot"
+		, "tap: join(cell, \"run.tap\"), glibc: observed.floor"
+		, "tap: tap.toString(), runtime: observed.runtime"
+		, "tools: observed.tools, archiveSha256: original.archiveSha256"
+	]) assert.ok(replay.includes(field), field);
+	assert.equal(source.split("await inspectCheckedRecordValueIndexWitHandoff(").length, 2);
 });
 
 test("value-index hosted archivers accept only four explicit absolute inputs", () => {

@@ -83,6 +83,9 @@ const rubyCallers = ["ruby.rb"].map(
 const rustCallers = ["rust.rs"].map(
 	path => `tests/fixtures/checked-record-value-index-rust/${path}`
 );
+const witCallers = ["wit-wasi.c", "wit-values.h"].map(
+	path => `tests/fixtures/checked-record-value-index-wit/${path}`
+);
 const commonData = [
 	...fixture, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -539,6 +542,60 @@ export const checkedRecordValueIndexRustEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-checked-record-value-index-rust-evidence.mjs"
+				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted WIT artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const checkedRecordValueIndexWitEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/checked-record-value-index-wit-installed-tests.mjs"
+				])
+				, ...commonData, ...witCallers
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/checked-record-value-index-wit-fixture.mjs"
+				])
+				, ...witCallers
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-checked-record-value-index-wit-ci.mjs"
+					, "tests/checked-record-value-index-wit.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/checked-record-value-index-wit.yml"
+				, "flake.lock", "flake.nix"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-checked-record-value-index-wit-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-checked-record-value-index-wit-evidence.mjs"
 				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
 			])
 		}
