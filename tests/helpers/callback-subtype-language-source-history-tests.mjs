@@ -9,7 +9,6 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { beforeCallbackSubtypeRemainingSource } from "./callback-subtype-remaining-source-history.mjs";
 import {
 	beforeCallbackSubtypeLanguageSource
 	, callbackSubtypeLanguageChangedPaths
@@ -39,7 +38,7 @@ test("callback Subtype language history restores every changed source", async ()
 	for(const update of record.updates)
 	{
 		const latest = await readFile(update.path, "utf8");
-		const current = beforeCallbackSubtypeRemainingSource(
+		const current = beforeFinRefinementSource(
 			update.path, latest, update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCallbackSubtypeLanguageUpdate(current, update);
@@ -56,7 +55,7 @@ test("callback Subtype language history restores every changed source", async ()
 	for(const addition of record.additions)
 	{
 		const latest = await readFile(addition.path, "utf8");
-		const current = beforeCallbackSubtypeRemainingSource(
+		const current = beforeFinRefinementSource(
 			addition.path, latest, addition.currentSha256);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}

@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { beforeCallbackSubtypeRemainingSource, callbackSubtypeRemainingChangedPaths } from "./callback-subtype-remaining-source-history.mjs";
+import { beforeCallbackSubtypeRemainingAcceptanceSource, callbackSubtypeRemainingAcceptanceChangedPaths } from "./callback-subtype-remaining-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeLanguageSource, callbackSubtypeLanguageChangedPaths } from "./callback-subtype-language-source-history.mjs";
 import { beforeCallbackSubtypeNativeSource, callbackSubtypeNativeChangedPaths } from "./callback-subtype-native-source-history.mjs";
 import { beforeCallbackSubtypeNpmAcceptanceSource, callbackSubtypeNpmAcceptanceChangedPaths } from "./callback-subtype-npm-acceptance-source-history.mjs";
@@ -1384,7 +1385,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeRemainingChangedPaths
+	...callbackSubtypeRemainingAcceptanceChangedPaths
+	, ...callbackSubtypeRemainingChangedPaths
 	, ...callbackSubtypeLanguageChangedPaths
 	, ...callbackSubtypeNativeChangedPaths
 	, ...callbackSubtypeNpmAcceptanceChangedPaths
@@ -1841,8 +1843,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const remainingCallbacks = beforeCallbackSubtypeRemainingSource(
+	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
 		path, text, expected
+	);
+	if(sha256(remainingAcceptance) === expected) return remainingAcceptance;
+	const remainingCallbacks = beforeCallbackSubtypeRemainingSource(
+		path, remainingAcceptance, expected
 	);
 	if(sha256(remainingCallbacks) === expected) return remainingCallbacks;
 	const languages = beforeCallbackSubtypeLanguageSource(
