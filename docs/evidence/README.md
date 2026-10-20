@@ -2,6 +2,10 @@
 
 Evidence documents record commands, artifact identities, measured results, and limitations for the proof of concept. Architecture requirements remain in the [architecture index](../architecture/README.md). Consumer claims remain in the [versioned support contract](../consumer-support.v1.json).
 
+The [complete checked-record value-index matrix](checked-record-value-index-matrix-promotion-20261020.md)
+binds closed Bool, String, and Nat parameter/result acceptance to retained
+hosted packages across all 17 consumer profiles and both author routes.
+
 [Rust closed value-index checked records](checked-record-value-index-rust-promotion-20261020.md)
 record four hosted Cargo crate selections for top-level copied checked-record
 parameter/result sites with closed Bool, String, and Nat indices.

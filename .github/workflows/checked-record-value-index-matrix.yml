@@ -1,0 +1,66 @@
+name: Checked-record value-index matrix
+
+on:
+  push:
+    paths:
+      - ".github/workflows/checked-record-value-index-matrix.yml"
+      - "docs/evidence/checked-record-value-index-*/**"
+      - "docs/type-surface.v1.json"
+      - "scripts/promote-checked-record-value-index-matrix.mjs"
+      - "tests/checked-record-value-index-matrix.test.mjs"
+      - "tests/checked-record-value-index-matrix-inventory.test.mjs"
+      - "tests/helpers/checked-record-value-index-*-evidence.mjs"
+      - "tests/helpers/checked-record-value-index-matrix-promotion*.mjs"
+  pull_request:
+    paths:
+      - ".github/workflows/checked-record-value-index-matrix.yml"
+      - "docs/evidence/checked-record-value-index-*/**"
+      - "docs/type-surface.v1.json"
+      - "scripts/promote-checked-record-value-index-matrix.mjs"
+      - "tests/checked-record-value-index-matrix.test.mjs"
+      - "tests/checked-record-value-index-matrix-inventory.test.mjs"
+      - "tests/helpers/checked-record-value-index-*-evidence.mjs"
+      - "tests/helpers/checked-record-value-index-matrix-promotion*.mjs"
+  workflow_dispatch:
+  schedule:
+    - cron: "17 7 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checked-record-value-index-matrix-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Replay immutable matrix evidence
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/checked-record-value-index-matrix
+          node --test tests/checked-record-value-index-matrix.test.mjs \
+            | tee build/checked-record-value-index-matrix/evidence.tap
+      - name: Audit promoted matrix claims
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test tests/checked-record-value-index-matrix-inventory.test.mjs \
+            | tee build/checked-record-value-index-matrix/inventory.tap
+      - name: Preserve matrix audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checked-record-value-index-matrix-${{ github.run_id }}
+          path: build/checked-record-value-index-matrix
+          if-no-files-found: warn
+          retention-days: 14

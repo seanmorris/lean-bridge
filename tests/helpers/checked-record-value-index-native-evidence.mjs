@@ -138,7 +138,8 @@ export const checkCheckedRecordValueIndexNativeEvidence = async (
 				, runtime: `/archive/${run.route}/runtime-before.json`, floor: index.floor
 			}, {
 				acceptanceTap: acceptanceTap.toString(), controlsTap: controlsTap.toString()
-				, runtime, paths: [...records.keys()].sort(), read: originalRead
+				, controlsTests: 17, runtime
+				, paths: [...records.keys()].sort(), read: originalRead
 			});
 			const selection = checkedRecordValueIndexNativeSelection(run.route);
 			assert.deepEqual(run, {

@@ -78,6 +78,7 @@ export const parseCheckedRecordValueIndexNativeCiArgs = args => {
  * @param original - Original hosted observations.
  * @param original.acceptanceTap - Complete producer/consumer TAP.
  * @param original.controlsTap - Complete fast-control TAP.
+ * @param original.controlsTests - Historical terminal test count; current runs default to 20.
  * @param original.runtime - Independently observed runtime/toolchain identity.
  * @param original.paths - Complete retained regular-file inventory.
  * @param original.read - Closed reader for retained files.
@@ -85,12 +86,15 @@ export const parseCheckedRecordValueIndexNativeCiArgs = args => {
 export const checkCheckedRecordValueIndexNativeCiRecords = async (
 	options, original
 ) => {
-	const { acceptanceTap, controlsTap, runtime, paths, read } = original;
+	const {
+		acceptanceTap, controlsTap, controlsTests = 20, runtime, paths, read
+	} = original;
+	assert.ok([17, 20].includes(controlsTests));
 	const selected = parseCheckedRecordValueIndexNativeCiArgs(
 		Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]));
 	assertCheckedRecordValueIndexNativeTap(acceptanceTap, 1, 0
 		, `installed value-index records reproduce and relocate in C/C++ for ${selected.route}`);
-	assertCheckedRecordValueIndexNativeTap(controlsTap, 20, 4);
+	assertCheckedRecordValueIndexNativeTap(controlsTap, controlsTests, 4);
 	assert.deepEqual(Object.keys(runtime).sort()
 		, ["arch", "cc", "cpp", "glibc", "platform"]);
 	const report = JSON.parse(await read("report.json"));

@@ -527,7 +527,11 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 						`recursive-checked-record-${recursiveLane}-ordinary-${fixture}-installed`
 					);
 					const valueIndexLane = {
-						"php-native": "php", "php-wasm": "php-wasm"
+						"node-javascript": "browser", "node-typescript": "browser"
+						, "browser-javascript": "browser", "browser-react": "browser"
+						, "browser-worker": "browser", c: "native", cpp: "native"
+						, dotnet: "dotnet", java: "jvm", kotlin: "jvm"
+						, "php-native": "php", "php-wasm": "php-wasm"
 						, python: "python", ruby: "ruby", rust: "rust"
 						, "wit-wasi": "wit"
 					}[profile];
