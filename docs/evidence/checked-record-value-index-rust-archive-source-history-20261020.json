@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-archive-source-v1",
+  "predecessorCommit": "019b6896f876878c9547305d7f755a54c62a03ff",
+  "draftParentCommit": "456713bcfc24997101a99fefb6e60bd1f9e57ab0",
+  "pathsSha256": "eb7c13732a54ab927609aae7b07861fc47a3bef1a08b87b5748088548e9727e3",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-rust-20261020",
+    "indexSha256": "38312f1cc0d63b51343477f5a0f1681b39eff75308e9c80f710e6524183232ea",
+    "indexedFileCount": 1936,
+    "archiveFileCount": 1937,
+    "addedFileCount": 1939
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-evidence-tests.mjs",
+      "currentSha256": "312beed1a8294b1a6e3d31899f01c6ff7138a716ae9e9ab9e81f025e847d652b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-evidence.mjs",
+      "currentSha256": "98c70c8466f5b4e10dc7f7291ee87cea5fa4dbd3bb32a308ef7f68f44f9719a1"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "previousSha256": "d8f81d8467cf9fbd627be0aba6cb733347ab74910b3ab26da859fcffd18ce4ce",
+      "currentSha256": "ff83107f4f4f27e785acb3d96dbdab2952bbe45795e46cb7b9c963208e249b9f",
+      "edits": [
+        {
+          "start": 311,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-rust-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

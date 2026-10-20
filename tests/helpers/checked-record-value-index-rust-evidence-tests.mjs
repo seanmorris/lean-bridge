@@ -10,6 +10,7 @@ import {
 	checkCheckedRecordValueIndexRustEvidence
 	, checkedRecordValueIndexRustEvidence
 } from "./checked-record-value-index-rust-evidence.mjs";
+import "./checked-record-value-index-rust-archive-source-history-tests.mjs";
 
 test("hosted value-index Rust archive authenticates every retained route", {
 	timeout: 180_000
