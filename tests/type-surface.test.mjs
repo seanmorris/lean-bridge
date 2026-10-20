@@ -526,8 +526,13 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					const recursiveChecked = recursiveFixtures.map(fixture =>
 						`recursive-checked-record-${recursiveLane}-ordinary-${fixture}-installed`
 					);
+					const valueIndexLane = { "php-native": "php", python: "python" }[profile];
+					const valueIndexed = !valueIndexLane || cell.position === "field" ? []
+						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
+							: ["ordinary-source"]).map(route =>
+							`checked-record-value-index-${valueIndexLane}-${route}-hosted-installed`);
 					assert.deepEqual(stage.evidence
-						, [...baseline, ...nested, ...inherited, ...recursiveChecked]);
+						, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed]);
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
