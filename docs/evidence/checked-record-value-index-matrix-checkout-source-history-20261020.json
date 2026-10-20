@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-matrix-checkout-source-v1",
+  "predecessorCommit": "6feb79010a9d96ec7462123f02295782d42693db",
+  "draftParentCommit": "8681daba4d4dc83e527bf2091fa8c4d2cd9361d0",
+  "foundation": {
+    "modifiedPaths": [
+      ".github/workflows/checked-record-value-index-matrix.yml",
+      "tests/helpers/checked-record-value-index-matrix-promotion-source-history-tests.mjs"
+    ],
+    "addedPaths": []
+  },
+  "pathsSha256": "1964c3ca078bb71ead7ccba14a13a333abde9df6c377c194ce73f94e42ad4046",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-checkout-source-history.mjs",
+      "currentSha256": "421d8e975e86e750e699bf15d4133f458f98396376ba87b94c1eae34958bfd0e"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-checkout-source-history-tests.mjs",
+      "currentSha256": "e03848dd15d5a13a2b3d3687f9bf29fa214e8fd0c99490638432da4bf2613df7"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-checkout-source-history.mjs",
+      "currentSha256": "7f490b7f0582190678a3e12242dbb85d1466c4b2a5f54b68d02f06839d8863ea"
+    }
+  ],
+  "updates": [
+    {
+      "path": ".github/workflows/checked-record-value-index-matrix.yml",
+      "previousSha256": "d2662bd6f62fb9701c07f19cf2b7feb49d6fbd30a882ef9a0edb68f1eaa427a0",
+      "currentSha256": "8cd74c79bd4ab8efb4aa988b6f7129335b8d5cf4b209c0f5b838d29f741a3646",
+      "edits": [
+        {
+          "start": 1372,
+          "previous": "",
+          "current": "        with:\n          fetch-depth: 0\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-promotion-source-history-tests.mjs",
+      "previousSha256": "1a89c3a1d024fb490503b9d216dfb7df8b4c7cdf1eeab322a320175dc97ec82b",
+      "currentSha256": "7026332ecf5a03938c6e67e528c35863e0472fb58f3d69ad7111a59f901d88de",
+      "edits": [
+        {
+          "start": 1277,
+          "previous": "",
+          "current": "const receiptCommit = \"6feb79010a9d96ec7462123f02295782d42693db\";\n"
+        },
+        {
+          "start": 5186,
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "current": "\t\t\tassert.equal(sha256(git([\"show\", `${receiptCommit}:${addition.path}`]))\n"
+        }
+      ]
+    }
+  ]
+}
