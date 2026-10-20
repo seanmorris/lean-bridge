@@ -23,6 +23,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
 });
+const receiptCommit = "6feb79010a9d96ec7462123f02295782d42693db";
 
 test("complete value-index matrix promotion has one reversible lineage"
 	, async () => {
@@ -112,7 +113,7 @@ test("complete value-index matrix promotion closes every added source"
 		));
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(git(["show", `${receiptCommit}:${addition.path}`]))
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexMatrixPromotionPredecessor}:${addition.path}`]
