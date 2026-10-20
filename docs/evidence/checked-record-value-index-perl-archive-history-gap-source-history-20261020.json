@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-perl-archive-history-gap-v1",
+  "previousCommit": "3d543b1eb175de2859a2b6485c3d6fa528e83d6a",
+  "currentCommit": "cb2c4d2dc9c6f9f0788a42719babfc8954eb8a6b",
+  "pathsSha256": "834f485bca7075a26e019bb00864402856f066e407053bbc5deba2fcfa8f8a09",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-perl-archive-history-gap-source-history.mjs",
+      "currentSha256": "da3350ff350e7b74de5dd3c46b9183c5bc782f19f84500ee47edcaa3772ee559"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-perl-archive-history-gap-source-history-tests.mjs",
+      "currentSha256": "338ccd594771b3bc0538cba912491cfaf7228408a9c2e91d0f21a6eba5eb2d7a"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-perl-archive-history-gap-source-history.mjs",
+      "currentSha256": "ae5443972afeb6563d2daf5a6b8b5cbfa9498d566a18dc52c04c27b03bcc22af"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d74a9c41ce60dfa4ec31126d6515b463779f68098d005f9ee021f9043003ffcd",
+      "currentSha256": "1e2e5371de9f59a206f4a3ce28319c5d667bbe23a89ea23ad7a7182856bbac9d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexPerlArchiveSource, checkedRecordValueIndexPerlArchiveChangedPaths } from \"./checked-record-value-index-perl-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 102130,
+          "previous": "\t...valueIndexNativeTapContractChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexPerlArchiveChangedPaths\n\t, ...valueIndexNativeTapContractChangedPaths\n"
+        },
+        {
+          "start": 120493,
+          "previous": "\tlet previous = beforeValueIndexNativeTapContractSource(path, text, expected);\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexPerlArchiveSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeValueIndexNativeTapContractSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}

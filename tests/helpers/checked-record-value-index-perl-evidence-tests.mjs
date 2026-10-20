@@ -11,7 +11,9 @@ import {
 	, checkedRecordValueIndexPerlEvidence
 } from "./checked-record-value-index-perl-evidence.mjs";
 import "./checked-record-value-index-perl-archive-source-history-tests.mjs";
+import "./checked-record-value-index-perl-archive-history-gap-source-history-tests.mjs";
 import "./checked-record-value-index-perl-promotion-tests.mjs";
+import "./checked-record-value-index-perl-promotion-source-history-tests.mjs";
 
 test("hosted value-index Perl archive authenticates every retained route", {
 	timeout: 120_000

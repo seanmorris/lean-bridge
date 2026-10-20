@@ -7,6 +7,8 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexPerlPromotionSource, checkedRecordValueIndexPerlPromotionChangedPaths } from "./checked-record-value-index-perl-promotion-source-history.mjs";
+import { beforeCheckedRecordValueIndexPerlArchiveHistoryGapSource, checkedRecordValueIndexPerlArchiveHistoryGapHistoricalPaths } from "./checked-record-value-index-perl-archive-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexPerlArchiveSource, checkedRecordValueIndexPerlArchiveChangedPaths } from "./checked-record-value-index-perl-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpPromotionSource, checkedRecordValueIndexPhpPromotionChangedPaths } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
@@ -1349,7 +1351,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexPerlArchiveChangedPaths
+	...checkedRecordValueIndexPerlPromotionChangedPaths
+	, ...checkedRecordValueIndexPerlArchiveHistoryGapHistoricalPaths
+	, ...checkedRecordValueIndexPerlArchiveChangedPaths
 	, ...valueIndexNativeTapContractChangedPaths
 	, ...checkedRecordValueIndexWitAcceptanceChangedPaths
 	, ...checkedRecordValueIndexWitChangedPaths
@@ -1770,8 +1774,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexPerlArchiveSource(
+	let previous = beforeCheckedRecordValueIndexPerlPromotionSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPerlArchiveHistoryGapSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPerlArchiveSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeValueIndexNativeTapContractSource(path, previous, expected);
