@@ -1,0 +1,95 @@
+{
+  "closure": {
+    "crate": {
+      "packageFileSetSha256": "0e2aa729edcc4e72551f8534f0af470b9c3fd7631f9c3f369750a060d3c90b3f",
+      "receiptSha256": "8a602079242023faf25e50bce0148eed4993dde8aad28b5f9dc09b85f3bf3d8f"
+    },
+    "dependencies": [
+      {
+        "directory": "autocfg-1.5.1",
+        "fileSetSha256": "8211a52a9529b093f9f14ae54a8f607f0f48f74116af2bf702b33f5c42c32b65",
+        "manifestSha256": "5db7ec75093eb5d5217141d6d03fd4cfc6549e34ae8785bf7d25d8fbe60b63b5"
+      },
+      {
+        "directory": "block-buffer-0.10.4",
+        "fileSetSha256": "87e694b7846b263f9131e9445a6a25cf1861573f1ff9aa017d93dbfbc235dc74",
+        "manifestSha256": "7f0f369a2ec2f88a2a4cda9a5daa97c6dfdcc2110d33b52d1e6ac4fcfa2ffa0d"
+      },
+      {
+        "directory": "cfg-if-1.0.4",
+        "fileSetSha256": "0c5b61d2846d1e9f1ea1614f77d1734e28b40086a951d726cce2245dfaa380a3",
+        "manifestSha256": "49dfe36998e233735fc07a4a7cc3df8fcdef7d09a3ae991622666d934c0a0908"
+      },
+      {
+        "directory": "cpufeatures-0.2.17",
+        "fileSetSha256": "608d94a6c41973f141543fce96d01974c0de8852e4a1387f1e1d516086747170",
+        "manifestSha256": "c679b6563298b498deb2b2766a7c52966bf943cd83bb42e5b937fb3d93e2faeb"
+      },
+      {
+        "directory": "crypto-common-0.1.7",
+        "fileSetSha256": "93027057d9fc47a30e6c4bb5a024b7964f36f488aff5602d94cee0b9418a71bd",
+        "manifestSha256": "d2d031e96935ddc30a92c30c276c90d3e27dbab3c51a55a7d56abb07660d25bd"
+      },
+      {
+        "directory": "digest-0.10.7",
+        "fileSetSha256": "a784535bf974a589982b407973c7edf6aa785f594a658a544f4c9faf67112a6f",
+        "manifestSha256": "6031e7ffa87539939ddd24756561c2eec18bde6b560cc1343689b9242c62b2f4"
+      },
+      {
+        "directory": "generic-array-0.14.7",
+        "fileSetSha256": "359a2c430e135c6ff20aea6e716ac723ae3b82b149bb0dc8db2ea995615b728d",
+        "manifestSha256": "87e85df9db7f5334e87c47ba6038bea9670492dbb1a81283663334aa3d2f93d6"
+      },
+      {
+        "directory": "libc-0.2.189",
+        "fileSetSha256": "1718ea5bdf35bfcc485a6a978620d6fa936b2a5759b9227adbb4063f39b1966c",
+        "manifestSha256": "1df2768ea8b10dcfaeabbc65485b890d1b2c045f3bdc4882153ea77f0cfeaad7"
+      },
+      {
+        "directory": "num-bigint-0.4.6",
+        "fileSetSha256": "09f7081aa8fbf585005fda83dfa51e8889509afd9cded9dba009940dbcb3f312",
+        "manifestSha256": "5de58f41d99fee8e7c111e8a336effccaed1b59fc9d451e9cf6150909b1e7174"
+      },
+      {
+        "directory": "num-integer-0.1.47",
+        "fileSetSha256": "af994e3a37294b85884c1f00144d758e24255cab94867c079d3058151574539b",
+        "manifestSha256": "d9dd70b1e3e81e5d1ee89c24fbbb5f18b1c2c4951d9a95d59497ba1cc28c464f"
+      },
+      {
+        "directory": "num-traits-0.2.19",
+        "fileSetSha256": "29e0285ec82042d584399847b47966812f5e26489fd187dd6abd33e8ece9fe5f",
+        "manifestSha256": "f3a71413c6fbec0b5a94a407c1d2ccc80807a6f511d1823b7204ea3627b7f27e"
+      },
+      {
+        "directory": "sha2-0.10.9",
+        "fileSetSha256": "e2ea06eeb360b45ff2854714bd36bf5a9f54fe7f20327dbc29d2ffe2593123ad",
+        "manifestSha256": "81dc0505ebd2db4d9d588fc90442ac4d6ae4aba5a406d4b1fc14fe95643bae5a"
+      },
+      {
+        "directory": "typenum-1.20.1",
+        "fileSetSha256": "7bf883bf2f4127bae1b3e5d1f8137a3a37a97451985ce3b1a1a5b8544c4172ab",
+        "manifestSha256": "81a4e868756286091f8200273c2ed14675b3db2daa40123f16ef51290b891531"
+      },
+      {
+        "directory": "version_check-0.9.5",
+        "fileSetSha256": "71ccdc5898c6b07ecae442101029d98fe3734039bc7ef153e2e35a938d0ac867",
+        "manifestSha256": "2c3e69d49eb86cf8f00c5d7c94ac9611a37c674f3c1fc5658d59be75e9e15911"
+      }
+    ]
+  },
+  "counts": {
+    "calls": 8,
+    "checks": 9,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 0
+  },
+  "cwd": "/tmp/lean-bridge-value-index-rust-A20iN6/consumer-relocated",
+  "normalExitCleanup": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0,\"snapshots\":0}\n"
+  },
+  "stage": "relocated"
+}

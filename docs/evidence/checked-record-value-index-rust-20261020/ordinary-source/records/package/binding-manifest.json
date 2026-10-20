@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/rust-copied",
+    "version": 1
+  },
+  "component": "checkedrecordvalueindices@1.0.0",
+  "bindingIrSha256": "1b6c9e2e9834717bc7d060e0331e49cb71105a1cc156b414169aaf8b291b23d7",
+  "publicModule": "src/lib.rs",
+  "internalModule": "src/__runtime.rs",
+  "exports": [
+    "Error",
+    "BigInt",
+    "BigUint",
+    "Ab",
+    "EmptySized",
+    "EmptyToken",
+    "Off",
+    "On",
+    "UnicodeToken",
+    "WideToken",
+    "ZeroToken",
+    "ab_string_index",
+    "empty_sized_index",
+    "empty_string_index",
+    "false_bool_index",
+    "produce_ab",
+    "produce_empty_sized",
+    "produce_empty_string",
+    "produce_false_bool",
+    "produce_true_bool",
+    "produce_unicode_string",
+    "produce_wide_nat",
+    "produce_zero_nat",
+    "true_bool_index",
+    "unicode_string_index",
+    "wide_nat_index",
+    "zero_nat_index"
+  ],
+  "files": [
+    "src/lib.rs",
+    "src/__runtime.rs",
+    "src/assets.rs",
+    "Cargo.toml",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The native profile requires Rust 1.90+ on Linux x86-64 with glibc."
+    }
+  ]
+}

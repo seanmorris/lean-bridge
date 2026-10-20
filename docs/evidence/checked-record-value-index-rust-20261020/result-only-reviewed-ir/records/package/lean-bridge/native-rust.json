@@ -1,0 +1,70 @@
+{
+  "bindingIrSha256": "bb1773c569dcfb2ec6abecfc645e0b51e12d2f6c75874c70afac15e1e1e93315",
+  "evidence": {
+    "componentId": "checkedrecordvalueindices@1.0.0",
+    "componentReceiptSha256": "96483903d9a69424276a3ffd91dc7200848067e0a924988bb64c0d93751b1af0",
+    "libraries": {
+      "libcheckedrecordvalueindices.so": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697",
+      "libcomponent_767c615eabad08d77709.so": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libcheckedrecordvalueindices.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3314,
+      "sha256": "bed219894cb6362376a39fe2b5913a725d3850f5fd5f5368ead4fb38b745683e"
+    },
+    "Cargo.toml": {
+      "bytes": 346,
+      "sha256": "e2fb4d1a5af25ea7f517b636ed8aa2406280a72d523742a10004e2327e3766ee"
+    },
+    "README.md": {
+      "bytes": 4649,
+      "sha256": "7f65088e8ea92b1d4d561dc98c51cfe2ef492f01b2fe9822e16f8146eec087a1"
+    },
+    "binding-manifest.json": {
+      "bytes": 1228,
+      "sha256": "ea2159bfc580ef5aadee3fc4e07602c46028425dadb15d1f614b1c293a15480b"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcheckedrecordvalueindices.so": {
+      "bytes": 35992,
+      "sha256": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697"
+    },
+    "native/linux-x64/libcomponent_767c615eabad08d77709.so": {
+      "bytes": 34840,
+      "sha256": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/__runtime.rs": {
+      "bytes": 16575,
+      "sha256": "688798d71105af6f4f65e62c3c5c7c3d9abb52e67bd46063f74d85f78a0bc93a"
+    },
+    "src/assets.rs": {
+      "bytes": 8113,
+      "sha256": "43fb5c441fef22a0e9c0df0a6e02b417e190810744b5fdc395bc7ea9c79c972d"
+    },
+    "src/lib.rs": {
+      "bytes": 3691,
+      "sha256": "58d9e9aa2e044818161f28651c3e987963fcc92d44c51f0ece3681d73629e6e0"
+    }
+  },
+  "name": "checkedrecordvalueindices",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "value-index-vendor"
+[source.value-index-vendor]
+directory = "vendor/dependencies"

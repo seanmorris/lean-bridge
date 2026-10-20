@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51349595,
+          "path": "archives/checkedrecordvalueindices-1.0.0.crate",
+          "sha256": "20e196a6dbc41cd2a8e1517522c761d3a387e7642c652a1a5683415014acc09a"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "checkedrecordvalueindices",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "bb1773c569dcfb2ec6abecfc645e0b51e12d2f6c75874c70afac15e1e1e93315",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7903b4146ce9b3f4b85e049673ae49831935a574058006a7412bd5e8bbe9ee81"
+  }
+}
