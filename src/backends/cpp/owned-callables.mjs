@@ -30,6 +30,11 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const p = c.prefix, m = p.toUpperCase(), nodes = new Map(conversions.types.map(node => [node.id, node]));
 	const unit = node => node.kind === "primitive" && node.name === "unit";
+	const copyFor = (node, purpose) => {
+		const copy = [...c.retains, ...c.copies ?? []].find(item => item.id === node.id);
+		if(!copy) throw new TypeError(`Owned C++ ${purpose} requires authenticated copy support for ${node.id}`);
+		return copy;
+	};
 	const resultType = node => unit(node) ? "void" : node.hostName;
 	const wrappedResult = item => wholeOwners && !item.retain && nodes.get(item.result).representation !== "copied";
 	const callResult = item => wrappedResult(item) ? `Value<${nodes.get(item.result).hostName}>` : resultType(nodes.get(item.result));
@@ -39,7 +44,7 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 		const node = nodes.get(callback.id), result = nodes.get(callback.result), i = node.index;
 		const params = callback.parameters.slice(1).map(id => nodes.get(id));
 		const automatic = ownedCallbackRecovery(c.native.model, node, id => id) !== null;
-		const copy = [...c.retains, ...c.copies].find(item => item.id === result.id);
+		const copy = copyFor(result, "callback result");
 		const borrowed = callback.anchor !== undefined;
 		const reply = borrowed ? "owned_callback_reply(reply)" : "reply";
 		const recovery = borrowed ? "owned_callback_reply(input.recovery)" : "input.recovery";
@@ -114,7 +119,7 @@ export const generateOwnedCppCallables = (ir, { transferredInputs = false, ancho
 				? `  moves.add(ValueAccess::lease(a${parameter}, call.state), ${group});`
 				: `  owned_move_leases${sig.params[parameter].index}(a${parameter}, 0, moves, ${group});`)
 			, ...wholeOwners ? [] : moving.flatMap((parameter, group) => {
-				const node = sig.params[parameter], copy = [...c.retains, ...c.copies].find(candidate => candidate.id === node.id);
+				const node = sig.params[parameter], copy = copyFor(node, "input transfer");
 				return [`  ${node.cName} moved${parameter}{};`
 					, `  checked(${copy.cName}(call.state->require(), ${node.leaf ? "" : "&"}view${parameter}.value, &moved${parameter}, moves.owner(${group})));`];
 			})

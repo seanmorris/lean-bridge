@@ -5,7 +5,7 @@
  * @file
  */
 import { sha256 } from "../../capsule/node.mjs";
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { planNativeGraphStorage } from "../c/copied-graph-layout.mjs";
 import { ownedRustRuntime } from "./owned-runtime.mjs";
 import { ownedRustAnchoredValues } from "./owned-borrows.mjs";
@@ -28,12 +28,14 @@ const scalars = {
  */
 export const generateOwnedRustValues = (ir, options = {}) => {
 	const callbackResultAnchors = options.callbackResultAnchors ?? false;
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks: options.hostCallbacks ?? true
-		, valueCopies, callbackResultAnchors
+	const cOptions = { hostCallbacks: options.hostCallbacks ?? true
+		, callbackResultAnchors
 		, transferredInputs: options.transferredInputs ?? false
 		, anchoredResults: options.anchoredResults ?? false
-		, receiverExports: options.receiverExports ?? false });
+		, receiverExports: options.receiverExports ?? false };
+	let c = generateOwnedCValues(ir, cOptions);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...cOptions, valueCopies: true });
 	const anchors = Boolean(c.anchoredResults);
 	const receivers = c.functions.some(item => item.receiver === 0), wholeOwners = anchors || receivers;
 	const nodes = new Map(c.nodes.map(node => [node.id, { ...node

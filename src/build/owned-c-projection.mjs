@@ -42,14 +42,14 @@ export const projectOwnedNativeCFamily = async ({ working, nativeRoot, runtimeRo
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
-	if(targets.includes("cpp") && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError("Owned C++ projection requires authenticated callback/copy support");
-	const valueCopies = targets.some(target => ["cpp", "cargo", "pypi"].includes(target)) && callbackResultAnchors;
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const cpp = targets.includes("cpp") ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
 	const rust = targets.includes("cargo") ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
-	if(rust && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError("Owned Rust projection requires authenticated callback/copy support");
 	const python = targets.includes("pypi") ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
-	if(python && !hostCallbacks && !receiverExports && !callbackResultAnchors) throw new TypeError("Owned Python projection requires authenticated callback/copy, receiver or callback-result support");
+	if(cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError("Owned C++ projection requires authenticated callback/copy support");
+	if(rust && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError("Owned Rust projection requires authenticated callback/copy support");
+	if(python && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) throw new TypeError("Owned Python projection requires authenticated callback/copy, receiver or callback-result support");
+	const valueCopies = [cpp, rust, python].some(adapter => adapter?.c.copies?.length);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const p = generated.values.prefix, root = join(working, "native/owned-c-binding");
 	const adapterFiles = { ...generated.files, ...cpp?.files
 		, ...rust ? { "internal/rust-abi.h": rust.abiHeader } : {}

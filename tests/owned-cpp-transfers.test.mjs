@@ -11,7 +11,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { ownedTransferReviewedIr, ownedTransferConfiguration, ownedTransferSource } from "./helpers/owned-transfer-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -38,6 +38,34 @@ test("C++ input transfers require explicit capability and rvalues without changi
 	t.after(() => rm(directory, { recursive: true, force: true }));
 	await writeHeaders(directory, generated);
 	await saveLakeFile(directory, "consumer.cpp", await readFile(fixture));
+	await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-pthread", "-I", "include", "-fsyntax-only", "consumer.cpp"], directory, { PATH: "/usr/bin:/bin" });
+});
+
+test("C++ snapshots transferred owned Subtype aggregates without callback support", async t => {
+	const ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);
+	const generated = generateOwnedCppPackage(ir, {
+		transferredInputs: true, anchoredResults: true, hostCallbacks: false
+	});
+	assert.deepEqual(ir, before);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.doesNotMatch(generated.header, /_host\b/u);
+	assert.match(generated.header, /transfer_record\(Bundle&& a0\)/u);
+	const validation = generated.header.indexOf("owned_check3(a0");
+	const arm = generated.header.indexOf("moves.arm();", validation);
+	assert.ok(validation >= 0 && arm > validation, "validation precedes transfer arming");
+	const reversed = structuredClone(ir); reversed.types.reverse();
+	assert.deepEqual(generateOwnedCppPackage(reversed, {
+		transferredInputs: true, anchoredResults: true, hostCallbacks: false
+	}).files, generated.files);
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-cpp-subtype-transfer-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	await writeHeaders(directory, generated);
+	await saveLakeFile(directory, "consumer.cpp", `#include "owned_subtypes.hpp"
+#include <utility>
+namespace api = lean_bridge::owned_subtypes;
+void consume(api::Bundle value) { (void)api::transfer_record(std::move(value)); }
+`);
 	await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-pthread", "-I", "include", "-fsyntax-only", "consumer.cpp"], directory, { PATH: "/usr/bin:/bin" });
 });
 

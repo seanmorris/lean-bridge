@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 import { pythonCompoundNames, pythonCompoundPublic } from "./compounds.mjs";
 import { ownedCallbackRecovery } from "../../build/owned-callback-carriers.mjs";
@@ -30,8 +30,10 @@ const primitive = {
  * @param options.hostCallbacks - The compiled adapter provides callbacks and copies.
  */
 export const generateOwnedPythonValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
 	const anchors = Boolean(c.anchoredResults);
 	const callbackAnchors = c.callbacks.some(item => item.anchor !== undefined);
 	const receivers = c.functions.some(fn => fn.receiver === 0), wholeOwners = anchors || receivers;

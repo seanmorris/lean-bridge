@@ -12,7 +12,7 @@ import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
 import { generateOwnedPythonConversions } from "../src/backends/python/owned-conversions.mjs";
 import { ownedPythonRuntime } from "../src/backends/python/owned-runtime.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedRustTransferReviewedIr, ownedRustTransferConfiguration, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
 import { pythonGraphInterpreters } from "./helpers/python-graph-probes.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -37,6 +37,11 @@ test("Python consuming inputs require explicit capability and preserve borrow-on
 	const enabled = generateOwnedPythonConversions(borrowed, { transferredInputs: true });
 	const baseline = generateOwnedPythonConversions(borrowed);
 	for(const key of ["valuesSource", "stub", "source"]) assert.equal(enabled[key], baseline[key]);
+	const refined = generateOwnedPythonConversions(ownedSubtypePackageReviewedIr(), {
+		transferredInputs: true, anchoredResults: true, hostCallbacks: false
+	});
+	assert.ok(refined.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.equal(refined.c.callbacks.length, 0);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`Python leases move at the compiled Lean handoff (${mode})`, {

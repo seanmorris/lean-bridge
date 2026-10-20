@@ -43,17 +43,17 @@ export const packageOwnedNativeC = async ({ working, adapterRoot, nativeRoot, ru
 	const receiverExports = Boolean(model.ownedGraph.receiverExports);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-c-adapter.json"), "utf8"));
-	const valueCopies = Boolean(adapter.cppValues || adapter.rustValues || adapter.pythonValues) && callbackResultAnchors;
-	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
-	const p = generated.values.prefix;
 	const cpp = adapter.cppValues ? generateOwnedCppPackage(model.bindingIr, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
 	const rust = adapter.rustValues ? generateOwnedRustPackage(model.bindingIr, null, {}, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
 	const python = adapter.pythonValues ? generateOwnedPythonPackage(model.bindingIr, null, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks }) : null;
+	const valueCopies = [cpp, rust, python].some(target => target?.c.copies?.length);
+	const generated = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const p = generated.values.prefix;
 	if(canonicalJson(adapter.pythonValues ?? null) !== canonicalJson(python?.contract ?? null))
 		throw new Error("Owned Python adapter differs from compiler-authenticated types or lifetime rules");
 	if(canonicalJson(adapter.rustValues ?? null) !== canonicalJson(rust?.contract ?? null))
 		throw new Error("Owned Rust adapter differs from compiler-authenticated types or lifetime rules");
-	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
+	if((target === "cpp" && !cpp) || (cpp && !hostCallbacks && !receiverExports && !callbackResultAnchors && !transferredInputs) || canonicalJson(adapter.cppValues ?? null) !== canonicalJson(cpp?.contract ?? null))
 		throw new Error("Owned C++ adapter differs from compiler-authenticated types or lifetime rules");
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	if(adapter.schemaVersion !== (callbackResultAnchors ? 7 : receiverExports ? 6 : anchoredResults ? 5 : transferredInputs ? 4 : hostCallbacks ? 3 : 2) || adapter.profile !== "native-library-v1" || adapter.runtimeIdentity !== runtimeIdentity

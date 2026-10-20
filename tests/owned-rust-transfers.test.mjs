@@ -10,7 +10,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
 import { generateOwnedRustCallables } from "../src/backends/rust/owned-callables.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { ownedRustTransferReviewedIr, ownedRustTransferConfiguration, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -29,6 +29,11 @@ test("Rust input consumption requires explicit capability and mutable references
 	const borrowed = ownedAggregateReviewedIr();
 	const enabled = generateOwnedRustCallables(borrowed, { transferredInputs: true }), baseline = generateOwnedRustCallables(borrowed);
 	for(const key of ["apiSource", "valuesSource", "source"]) assert.equal(enabled[key], baseline[key]);
+	const refined = generateOwnedRustCallables(ownedSubtypePackageReviewedIr(), {
+		transferredInputs: true, anchoredResults: true, hostCallbacks: false
+	});
+	assert.ok(refined.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.equal(refined.c.callbacks.length, 0);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`Rust inputs move atomically at the real Lean handoff (${mode})`, {

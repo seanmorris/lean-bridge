@@ -17,6 +17,22 @@ const nominal = name => {
 };
 
 /**
+ * Decide whether a typed host projection needs public value-copy entry points.
+ * Whole-owner APIs can retain identities directly but must copy aggregate
+ * carriers; transfer-only APIs snapshot aggregates into the move transaction.
+ *
+ * @param values - Generated C value model without assumed copy entry points.
+ */
+export const ownedCProjectionRequiresValueCopies = values => {
+	const nodes = new Map(values.nodes.map(node => [node.id, node]));
+	const retains = new Set(values.retains.map(item => item.id));
+	const wholeOwners = [...values.functions, ...values.callbacks].some(item => item.anchor !== undefined)
+		|| values.functions.some(item => item.receiver === 0);
+	if(wholeOwners && values.nodes.some(node => node.representation !== "copied" && !retains.has(node.id))) return true;
+	return !wholeOwners && values.functions.some(fn => fn.transfers?.some(index => !nodes.get(fn.parameters[index])?.identity));
+};
+
+/**
  * Preserve source names and container semantics while keeping recursive layout
  * finite. Input pointers borrow their children. Returned views borrow one opaque
  * result owner, so copying or modifying a view cannot corrupt its cleanup ledger.
