@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeCallbackSubtypeBrowserArtifactSource } from "./callback-subtype-browser-artifact-source-history.mjs";
 import {
 	beforeCallbackSubtypeNpmAcceptanceSource
 	, callbackSubtypeNpmAcceptanceChangedPaths
@@ -17,6 +18,7 @@ import {
 	, callbackSubtypeNpmAcceptancePredecessor
 	, reverseCallbackSubtypeNpmAcceptanceUpdate
 } from "./callback-subtype-npm-acceptance-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const original = path => execFileSync("git", ["show"
@@ -37,7 +39,10 @@ test("callback Subtype npm acceptance history restores every source", async () =
 		, callbackSubtypeNpmAcceptanceChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, await readFile(update.path, "utf8")
+			, update.currentSha256
+		);
 		const previous = reverseCallbackSubtypeNpmAcceptanceUpdate(
 			current, update
 		);
@@ -50,8 +55,14 @@ test("callback Subtype npm acceptance history restores every source", async () =
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const current = beforeCallbackSubtypeBrowserArtifactSource(
+			addition.path, beforeFinRefinementSource(
+				addition.path, await readFile(addition.path, "utf8")
+				, addition.currentSha256
+			), addition.currentSha256);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 });
 
 test("callback Subtype npm acceptance history writer refuses an unrelated checkout", async t => {

@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedSubtypeJavaScriptTransferSource } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptSource } from "./owned-subtype-javascript-source-history.mjs";
 import {
 	beforeOwnedRefinementCarriersSource
@@ -38,7 +39,9 @@ test("owned refinement carrier history restores every source", async () => {
 		, ownedRefinementCarriersChangedPaths);
 	for(const update of history.updates)
 	{
-		const live = await readFile(update.path, "utf8");
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			update.path, await readFile(update.path, "utf8")
+		);
 		const current = beforeOwnedSubtypeJavaScriptSource(
 			update.path, live, update.currentSha256
 		);
@@ -54,7 +57,9 @@ test("owned refinement carrier history restores every source", async () => {
 	}
 	for(const addition of history.additions)
 	{
-		const live = await readFile(addition.path, "utf8");
+		const live = beforeOwnedSubtypeJavaScriptTransferSource(
+			addition.path, await readFile(addition.path, "utf8")
+		);
 		const current = beforeOwnedSubtypeJavaScriptSource(
 			addition.path, live, addition.currentSha256
 		);

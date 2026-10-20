@@ -11,6 +11,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeCallbackSubtypeNpmAcceptanceSource } from "./callback-subtype-npm-acceptance-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeCallbackSubtypeNpmBrowserPointers
 	, beforeCallbackSubtypeNpmBrowserSource
@@ -40,7 +41,10 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 		, callbackSubtypeNpmBrowserChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const latest = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, latest, update.currentSha256
+		);
 		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
 			update.path, current, update.currentSha256
 		);
@@ -53,11 +57,14 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 		assert.equal(beforeCallbackSubtypeNpmBrowserSource(
 			update.path, milestone, update.currentSha256), milestone);
 		assert.equal(beforeCallbackSubtypeNpmBrowserSource(
-			update.path, current + "unknown"), current + "unknown");
+			update.path, latest + "unknown"), latest + "unknown");
 	}
 	for(const addition of record.additions)
 	{
-		const current = await readFile(addition.path, "utf8");
+		const current = beforeFinRefinementSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.currentSha256
+		);
 		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
 			addition.path, current, addition.currentSha256
 		);
@@ -65,7 +72,10 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 	}
 	for(const pin of record.pinContainers)
 	{
-		const current = await readFile(pin.path, "utf8");
+		const current = beforeFinRefinementSource(
+			pin.path, await readFile(pin.path, "utf8")
+			, pin.currentSha256
+		);
 		assert.equal(sha256(current), pin.currentSha256, pin.path);
 		assert.equal(sha256(beforeCallbackSubtypeNpmBrowserPointers(
 			pin.path, current)), pin.previousSha256, pin.path);

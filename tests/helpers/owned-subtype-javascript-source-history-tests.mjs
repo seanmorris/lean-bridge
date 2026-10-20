@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedSubtypeJavaScriptTransferSource } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import {
 	beforeOwnedSubtypeJavaScriptHistoricalSource
 	, beforeOwnedSubtypeJavaScriptSource
@@ -73,7 +74,10 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 	for(const update of history.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+			update.path, await readFile(update.path, "utf8")
+			, update.currentSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseOwnedSubtypeJavaScriptUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -85,8 +89,13 @@ test("installed JavaScript owned Subtype history restores every source", async (
 			update.path, current, update.previousSha256), previous);
 	}
 	for(const addition of history.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const current = beforeOwnedSubtypeJavaScriptTransferSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.currentSha256
+		);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 });
 
 test("installed JavaScript owned Subtype evidence authenticates every browser lane", async () => {

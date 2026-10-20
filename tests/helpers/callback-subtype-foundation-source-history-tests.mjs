@@ -12,6 +12,7 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeCallbackSubtypeNpmAcceptanceSource } from "./callback-subtype-npm-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeNpmBrowserSource } from "./callback-subtype-npm-browser-source-history.mjs";
+import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import {
 	beforeCallbackSubtypeFoundationSource
 	, callbackSubtypeFoundationChangedPaths
@@ -40,7 +41,10 @@ test("callback Subtype foundation history restores every source and pointer", as
 		, callbackSubtypeFoundationChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const latest = await readFile(update.path, "utf8");
+		const current = beforeFinRefinementSource(
+			update.path, latest, update.currentSha256
+		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
 			update.path, current
 		);
@@ -56,11 +60,14 @@ test("callback Subtype foundation history restores every source and pointer", as
 		assert.equal(beforeCallbackSubtypeFoundationSource(
 			update.path, milestone, update.currentSha256), milestone);
 		assert.equal(beforeCallbackSubtypeFoundationSource(
-			update.path, current + "unknown"), current + "unknown");
+			update.path, latest + "unknown"), latest + "unknown");
 	}
 	for(const addition of record.additions)
 	{
-		const current = await readFile(addition.path, "utf8");
+		const current = beforeFinRefinementSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.currentSha256
+		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
 			addition.path, current
 		);
@@ -72,8 +79,11 @@ test("callback Subtype foundation history restores every source and pointer", as
 	for(const pin of record.pinContainers)
 	{
 		const latest = await readFile(pin.path, "utf8");
+		const currentSource = beforeFinRefinementSource(
+			pin.path, latest, pin.currentSha256
+		);
 		const accepted = beforeCallbackSubtypeNpmAcceptanceSource(
-			pin.path, latest
+			pin.path, currentSource
 		);
 		let current = beforeCallbackSubtypeNpmBrowserSource(
 			pin.path, accepted, pin.currentSha256

@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedSubtypeJavaScriptTransferSource, ownedSubtypeJavaScriptTransferChangedPaths } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptHistoricalSource, beforeOwnedSubtypeJavaScriptSource, ownedSubtypeJavaScriptChangedPaths } from "./owned-subtype-javascript-source-history.mjs";
 import { beforeOwnedRefinementCarriersSource, ownedRefinementCarriersChangedPaths } from "./owned-refinement-carriers-source-history.mjs";
 import { beforeOwnedRefinementModelSource, ownedRefinementModelChangedPaths } from "./owned-refinement-model-source-history.mjs";
@@ -1389,7 +1390,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeJavaScriptChangedPaths
+	...ownedSubtypeJavaScriptTransferChangedPaths
+	, ...ownedSubtypeJavaScriptChangedPaths
 	, ...ownedRefinementCarriersChangedPaths
 	, ...ownedRefinementModelChangedPaths
 	, ...ownedSubtypeAnalysisChangedPaths
@@ -1851,8 +1853,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(
+	const ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(
 		path, text, expected
+	);
+	if(sha256(ownedJavaScriptTransfer) === expected)
+		return ownedJavaScriptTransfer;
+	const ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(
+		path, ownedJavaScriptTransfer, expected
 	);
 	if(sha256(ownedJavaScript) === expected) return ownedJavaScript;
 	const ownedCarriers = beforeOwnedRefinementCarriersSource(

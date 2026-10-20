@@ -1,0 +1,608 @@
+{
+  "acceptanceEvidence": {
+    "path": "docs/evidence/owned-subtype-javascript-transfer-acceptance-20261020.json",
+    "sha256": "5ee55b5d5384bf4d8cfe4d02b3f9d7209063a05b1fb7c6c083435849e1d17b09"
+  },
+  "additions": [
+    {
+      "currentSha256": "5ee55b5d5384bf4d8cfe4d02b3f9d7209063a05b1fb7c6c083435849e1d17b09",
+      "path": "docs/evidence/owned-subtype-javascript-transfer-acceptance-20261020.json"
+    },
+    {
+      "currentSha256": "60f1a879e3a0cee7360b042e300cc589b94477ccbc33e82fa7140bd3cacbcc33",
+      "path": "docs/evidence/owned-subtype-javascript-transfer-acceptance-20261020.md"
+    },
+    {
+      "currentSha256": "6befb6c134f9f02fc12da1e50921eeba89c535b4c2dd8d36bd83d65e35793d72",
+      "path": "scripts/update-owned-subtype-javascript-transfer-source-history.mjs"
+    },
+    {
+      "currentSha256": "8464c710213f96c8f8afe0972fd2b53f4b35d17d75ff8d05e63aa83a3680a17c",
+      "path": "tests/helpers/owned-subtype-javascript-transfer-source-history.mjs"
+    },
+    {
+      "currentSha256": "2715659c73b83c102667461100ae1c56efe86056951d631c98896d6301e75729",
+      "path": "tests/helpers/owned-subtype-javascript-transfer-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "c95b9ca0bcfcc5138cc50072a868dc37942291b4",
+  "milestone": "owned-subtype-javascript-transfer-source-v1",
+  "predecessorCommit": "025597da0fdced0d2d1a60e04a78d9d2e502fcc4",
+  "reconciledTypeSurfacePointers": 18,
+  "schemaVersion": 1,
+  "scope": "Ordinary and independently reviewed npm packages, Node, strict TypeScript, and page, React and worker execution in Chromium, Firefox and WebKit for borrowed, explicitly retained and transferred acyclic owned records. Inputs are checked before ownership handoff; failed validation preserves the owner, successful transfer consumes only the selected owner, and the complete installed tree executes after relocation. Owned callbacks, recursive or generic owned mirrors and other hosts remain open.",
+  "updates": [
+    {
+      "currentSha256": "64555cfb1e689cde4c232a0f8374a3e8e0722cdc056fcdd8d3a5f8cc472135e9",
+      "edits": [
+        {
+          "current": "acyclic owned record whose resource fields accompany a copied payload field of\ntype `{ count : Int // 0 ≤ count }`. JavaScript and TypeScript supply `count`\nas a `bigint`; no proof object crosses the boundary. The tested exports borrow,\nexplicitly retain or transfer the record. The exact Lean constructor selected\nfor each export checks the input before dispatch or ownership movement. A\nrejected retain or transfer leaves the owner usable. A successful transfer\nconsumes only the selected owner; retained siblings remain usable. Results\nexpose the existing `bigint` payload without a proof field.\n",
+          "previous": "acyclic owned record whose borrowed resource fields accompany a copied payload\nfield of type `{ count : Int // 0 ≤ count }`. JavaScript and TypeScript supply\n`count` as a `bigint`; no proof object crosses the boundary. The exact Lean\nconstructor selected for each export checks the input before dispatch or any\nownership movement. A rejected value leaves every resource usable, and a later\nvalid call through either constructor still succeeds. Results expose the\nexisting `bigint` payload without a proof field.\n",
+          "start": 21125
+        },
+        {
+          "current": "The [retain, transfer and relocation checks](evidence/owned-subtype-javascript-transfer-acceptance-20261020.md)\nrepeat both author routes from a physically relocated installation and cover\nborrowed aliases, explicit retention, transfer preflight, rejection recovery,\nselective consumption and disposal.\n\nThis acceptance is specific to borrowed, retained and transferred acyclic\nowned records. Owned callbacks, recursive owned mirrors, generic records and\nnon-JavaScript hosts require their own installed evidence.\n",
+          "previous": "This acceptance is specific to borrowed, acyclic owned records. Explicitly\nretained or transferred parameters, owned callbacks, recursive owned mirrors,\ngeneric records and non-JavaScript hosts require their own installed evidence.\n",
+          "start": 22169
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "c902048b963accbf3cd95165be7eed3778d5db16e820bc17de86b5fb09413f6f"
+    },
+    {
+      "currentSha256": "a7881a06c7a94b0bd56e4c1d672ee2ae1f33a04e84c90de98198b9fb79e9f32e",
+      "edits": [
+        {
+          "current": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers, plain fields, finite recursive PHP-Wasm copied graphs, directional callbacks on supported targets and the tested borrowed, retained and transferred JavaScript owned record have installed acceptance. Owned callbacks, recursive or generic owned graphs, other owned hosts and generic-record Subtype fields require further support. |\n",
+          "previous": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers, plain fields, finite recursive PHP-Wasm copied graphs, directional callbacks on supported targets and the tested borrowed JavaScript owned record have installed acceptance. Retained or transferred owned values, owned callbacks, other owned hosts and generic-record Subtype fields require further support. |\n",
+          "start": 4365
+        }
+      ],
+      "path": "docs/lean/diagnostics.md",
+      "previousSha256": "6d12dc6f66569c4fbf60fc8f97476aa49d33549b24dac991eb89858188e51410"
+    },
+    {
+      "currentSha256": "58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567",
+      "edits": [
+        {
+          "current": "| `Subtype` inside a borrowed, retained or transferred acyclic owned record | Node, browser, React and worker installed, both source routes | Rejected | Rejected | Rejected | JavaScript npm installed for the tested proof-erased `Int` field, including pre-transfer rejection and relocated consumption; other hosts pending |\n| `Subtype` inside owned callbacks, recursive owned graphs or generic record fields | Rejected | Rejected | Rejected | Rejected | Pending implementation and acceptance |\n",
+          "previous": "| `Subtype` inside a borrowed acyclic owned record | Node, browser, React and worker installed, both source routes | Rejected | Rejected | Rejected | JavaScript npm installed for the tested proof-erased `Int` field; other hosts pending |\n| `Subtype` inside retained or transferred owned values, owned callbacks, recursive owned graphs or generic record fields | Rejected | Rejected | Rejected | Rejected | Pending implementation and acceptance |\n",
+          "start": 85631
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787"
+    },
+    {
+      "currentSha256": "d79cba76f6b9564cb70d270088587f235f1b91151bb04190d7fc18a527013cd7",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1072635
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1080224
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1086825
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1093933
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1101427
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1108483
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1116084
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1126365
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1138698
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1192157
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1224700
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1254979
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1287946
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1329356
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1355204
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1377884
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1397576
+        },
+        {
+          "current": "          \"sha256\": \"58066da36925904112c02e47b1f8cd4d8c31ca51534e13f0b3895f33b1df4567\"\n",
+          "previous": "          \"sha256\": \"43db45a41166c0ca9d719a40362a9a8729ad54cb61a3f5e4879389f12bc22787\"\n",
+          "start": 1418061
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "ef80264081afb6d336a4ef1d82197adc4371be15bd854b13f4ee7f61e57eb592"
+    },
+    {
+      "currentSha256": "37ecea4228a50269e0e1118eff359e68cc2c209109daeffce2f3b537f5f6aef2",
+      "edits": [
+        {
+          "current": "\tconst validators = new Map(), emittedValidators = new Set();\n",
+          "previous": "\tconst validators = new Map();\n",
+          "start": 10247
+        },
+        {
+          "current": "\t\tif(emittedValidators.has(symbol)) continue;\n\t\temittedValidators.add(symbol);\n",
+          "previous": "",
+          "start": 10553
+        },
+        {
+          "current": "\t\t, header: [...emittedValidators].map(\n\t\t\tsymbol => `uint8_t ${symbol}(lean_object *);`\n\t\t)\n\t};\n",
+          "previous": "\t\t, header: [...validators.values()].map(symbol => `uint8_t ${symbol}(lean_object *);`) };\n",
+          "start": 11048
+        }
+      ],
+      "path": "src/build/owned-refinement-carriers.mjs",
+      "previousSha256": "7ca0d8025c3fc97207527ee71a50ef205e31f471f153b199d57c0ce4c81b453f"
+    },
+    {
+      "currentSha256": "c592d143155ec0ba84a22f046bd9129a0b64a05154457ddeec048c0ea91da1ce",
+      "edits": [
+        {
+          "current": "def transferRecord (value : Bundle) : Bundle := value\n\n",
+          "previous": "",
+          "start": 766
+        }
+      ],
+      "path": "tests/fixtures/onboarding/owned-subtypes/Owned.lean",
+      "previousSha256": "12b964d7878a4258d05ac7a9248e2a5bb406aed8b89130bbdd08951d7362cd03"
+    },
+    {
+      "currentSha256": "4e662a2519aa37978833290cbeb40023bc57671574d6c51ffe02793b09b2689d",
+      "edits": [
+        {
+          "current": "    \"Owned.echoRecordAlternate\",\n    \"Owned.transferRecord\"\n",
+          "previous": "    \"Owned.echoRecordAlternate\"\n",
+          "start": 392
+        },
+        {
+          "current": "    },\n    \"Owned.transferRecord\": {\n      \"parameters\": [\n        {\n          \"ownership\": \"transfer\",\n          \"lifetime\": { \"scope\": \"call\", \"anchor\": null },\n          \"refinement\": {\n            \"kind\": \"record\",\n            \"name\": \"Owned.Bundle\",\n            \"fields\": [\n              { \"name\": \"primary\", \"refinement\": null },\n              { \"name\": \"spare\", \"refinement\": null },\n              { \"name\": \"peers\", \"refinement\": null },\n              { \"name\": \"history\", \"refinement\": null },\n              {\n                \"name\": \"payload\",\n                \"refinement\": {\n                  \"kind\": \"record\",\n                  \"name\": \"Owned.Payload\",\n                  \"fields\": [\n                    {\n                      \"name\": \"count\",\n                      \"refinement\": { \"constructor\": \"Owned.checkedCount\" }\n                    },\n                    { \"name\": \"bytes\", \"refinement\": null }\n                  ]\n                }\n              }\n            ]\n          }\n        }\n      ],\n      \"result\": {\n        \"ownership\": \"lease\",\n        \"lifetime\": { \"scope\": \"explicit\", \"anchor\": null }\n      }\n",
+          "previous": "",
+          "start": 2750
+        }
+      ],
+      "path": "tests/fixtures/onboarding/owned-subtypes/lean-bridge.exports.json",
+      "previousSha256": "a4134939002c6098f0899d5902ba9d6396125e8b99866fbe3713cefd3d7776b4"
+    },
+    {
+      "currentSha256": "17f4c0cd9a48463faa8deecbc012dd1959db416cc35febeb06033614b7f6c116",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 622
+        },
+        {
+          "current": "\t\tconst latest = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, latest, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1844
+        },
+        {
+          "current": "\t\t\tupdate.path, latest + \"unknown\"), latest + \"unknown\");\n",
+          "previous": "\t\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n",
+          "start": 2591
+        },
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(addition.path, \"utf8\");\n",
+          "start": 2696
+        },
+        {
+          "current": "\t\tconst currentSource = beforeFinRefinementSource(\n\t\t\tpin.path, latest, pin.currentSha256\n\t\t);\n",
+          "previous": "",
+          "start": 3208
+        },
+        {
+          "current": "\t\t\tpin.path, currentSource\n",
+          "previous": "\t\t\tpin.path, latest\n",
+          "start": 3364
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-foundation-source-history-tests.mjs",
+      "previousSha256": "528995c390cab948de7cca8d56dcca2c08222405d163eaab58920843ba423ee1"
+    },
+    {
+      "currentSha256": "5e21a776f2f844f460e9d7afcbaeeda246f095b88221fb50abfef9467144b951",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1586
+        },
+        {
+          "current": "\t{\n\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path, \"utf8\"))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2354
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-native-source-history-tests.mjs",
+      "previousSha256": "5cbe96f86a68082f4c21c8009dcfdd003e6f3ae947ce5368d78cbdefd0b12110"
+    },
+    {
+      "currentSha256": "2c0a522fcb829fa19c2c546c5400824994f32175bab38bcfb39864388f6fcd02",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeBrowserArtifactSource } from \"./callback-subtype-browser-artifact-source-history.mjs\";\n",
+          "previous": "",
+          "start": 376
+        },
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1748
+        },
+        {
+          "current": "\t{\n\t\tconst current = beforeCallbackSubtypeBrowserArtifactSource(\n\t\t\taddition.path, beforeFinRefinementSource(\n\t\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t\t, addition.currentSha256\n\t\t\t), addition.currentSha256);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2381
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-npm-acceptance-source-history-tests.mjs",
+      "previousSha256": "44812bed0968332d8e561848976b936481eb6ee9cb652ebbd08fa208cc0f90ec"
+    },
+    {
+      "currentSha256": "1a220682c8e164d7ca5967aa51d3b9241f0b5000cd38b8191b38c63891236a58",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 512
+        },
+        {
+          "current": "\t\tconst latest = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, latest, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1780
+        },
+        {
+          "current": "\t\t\tupdate.path, latest + \"unknown\"), latest + \"unknown\");\n",
+          "previous": "\t\t\tupdate.path, current + \"unknown\"), current + \"unknown\");\n",
+          "start": 2439
+        },
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(addition.path, \"utf8\");\n",
+          "start": 2544
+        },
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tpin.path, await readFile(pin.path, \"utf8\")\n\t\t\t, pin.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(pin.path, \"utf8\");\n",
+          "start": 2915
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-npm-browser-source-history-tests.mjs",
+      "previousSha256": "0b5c402994fff17e85b64d6ce8331f55f6cec3baef6399cae38fe2c6840378c3"
+    },
+    {
+      "currentSha256": "a4e4f5c6d29dce64be030fbe888f084d58a498bdcafa5bf044d2a207d38fd3aa",
+      "edits": [
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1768
+        },
+        {
+          "current": "\t{\n\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2595
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-remaining-acceptance-source-history-tests.mjs",
+      "previousSha256": "14d0004c2cba7a589443728028309d6fed7e21c5f3d0fa6586c574df38044a70"
+    },
+    {
+      "currentSha256": "ad83e10a46a92d3b8a4848c12c22acd802dbc76063a48a6e38470b4cb7b32801",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJavaScriptTransferSource, ownedSubtypeJavaScriptTransferChangedPaths } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...ownedSubtypeJavaScriptTransferChangedPaths\n\t, ...ownedSubtypeJavaScriptChangedPaths\n",
+          "previous": "\t...ownedSubtypeJavaScriptChangedPaths\n",
+          "start": 109399
+        },
+        {
+          "current": "\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "previous": "\tconst ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(\n",
+          "start": 130003
+        },
+        {
+          "current": "\tif(sha256(ownedJavaScriptTransfer) === expected)\n\t\treturn ownedJavaScriptTransfer;\n\tconst ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(\n\t\tpath, ownedJavaScriptTransfer, expected\n\t);\n",
+          "previous": "",
+          "start": 130107
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e69b3ab8ca5e7ab3d32d930b53f63dc84ee49a34312d330cd98aaa16423867d6"
+    },
+    {
+      "currentSha256": "7c9c3fd12665433d171cc6b1a938ba0551f4fd6d663f7594af3e1d02e7b976ad",
+      "edits": [
+        {
+          "current": "import { beforeFinRefinementSource } from \"./fin-refinement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 544
+        },
+        {
+          "current": "\t\tconst latest = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeFinRefinementSource(\n\t\t\tupdate.path, latest, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1818
+        },
+        {
+          "current": "\t\tassert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, latest + \"unknown\"), latest + \"unknown\");\n",
+          "previous": "\t\tassert.equal(beforeNominalSubtypeEntryMeasurementSource(update.path, current + \"unknown\"), current + \"unknown\");\n",
+          "start": 2420
+        },
+        {
+          "current": "\t{\n\t\tconst current = beforeFinRefinementSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "start": 2577
+        },
+        {
+          "current": "\t\tconst current = beforeFinRefinementSource(\n\t\t\tpin.containerPath, await readFile(pin.containerPath, \"utf8\")\n\t\t\t, pin.containerCurrentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(pin.containerPath, \"utf8\");\n",
+          "start": 2829
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-measurement-source-history-tests.mjs",
+      "previousSha256": "5acb268993fbb69926fe1dc21d8371705fda0ab83dd4d6d024002b44588a00c6"
+    },
+    {
+      "currentSha256": "634ecc0369bc301052eb5402c8201c7950dea1bd05c36a63070c04cfce2c45ed",
+      "edits": [
+        {
+          "current": "\tconst transfer = structuredClone(echo);\n\ttransfer.id = \"lean:Owned.transferRecord\";\n\ttransfer.name = \"transferRecord\";\n\ttransfer.overloadKey = \"Owned.transferRecord\";\n\ttransfer.source.declaration = \"Owned.transferRecord\";\n\ttransfer.parameters[0].ownership = \"transfer\";\n\ttransfer.parameters[0].lifetime = { scope: \"call\", anchor: null };\n",
+          "previous": "",
+          "start": 8131
+        },
+        {
+          "current": "\t\t.map(name => ir.declarations.find(item => item.name === name))\n\t\t.concat(alternate, transfer);\n",
+          "previous": "\t\t.map(name => ir.declarations.find(item => item.name === name)).concat(alternate);\n",
+          "start": 8527
+        }
+      ],
+      "path": "tests/helpers/owned-aggregate-fixture.mjs",
+      "previousSha256": "b1556f4b0017a7df899735bc97e8a969fb83d08f35fa96b68ebc6428cf681f05"
+    },
+    {
+      "currentSha256": "6b9ee122f38f776bb5946e802cecfa7683bc5a586dfad0e5dfdd815a14e186b5",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJavaScriptTransferSource } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 446
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 1819
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(addition.path, \"utf8\");\n",
+          "start": 2577
+        }
+      ],
+      "path": "tests/helpers/owned-refinement-carriers-source-history-tests.mjs",
+      "previousSha256": "3496f63f76c96f8a855f4b42f16319a24ce449525a547d5d2a48a7e93fbebeea"
+    },
+    {
+      "currentSha256": "6d5e68dc028314eb8201db4700b3cbbf9fa3ef032d49da6e915ba79c409d05d8",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJavaScriptTransferSource } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 441
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 1867
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(addition.path, \"utf8\");\n",
+          "start": 2812
+        }
+      ],
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs",
+      "previousSha256": "1806b124b801001f5262bc5b326503fdc18729e94aa606332d72664989931fc9"
+    },
+    {
+      "currentSha256": "4557aa632a09ad560af73548f35355fdf17e799c3aa95fd648db0f47bf881586",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJavaScriptTransferSource } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 433
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(update.path, \"utf8\");\n",
+          "start": 1955
+        },
+        {
+          "current": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t);\n",
+          "previous": "\t\tconst live = await readFile(addition.path, \"utf8\");\n",
+          "start": 2983
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs",
+      "previousSha256": "6ec1d6e6947b8fefda7cce1b24d1dc68d7fe2922a9d003bdf9aa8da44de5a2fa"
+    },
+    {
+      "currentSha256": "0949643b91bb6bdeab2975269969d57c45cb5cefdc64c21ea274aca7a3823583",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJavaScriptTransferSource } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 445
+        },
+        {
+          "current": "\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3512
+        },
+        {
+          "current": "\t{\n\t\tconst current = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 4191
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-javascript-source-history-tests.mjs",
+      "previousSha256": "9dbf4569d842603615f7596926c3f97a3c2dc1206597e72ef73935293c0335dd"
+    },
+    {
+      "currentSha256": "71eca4e4683123f33f28418dc3c8cb35fc384a6830b6348d6d22e5913c8c498d",
+      "edits": [
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr, ownedSubtypeReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\nimport \"./helpers/owned-subtype-javascript-transfer-source-history-tests.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 1032
+        },
+        {
+          "current": "test(\"owned refinement carriers emit shared validator symbols once\", () => {\n\tconst document = ownedSubtypePackageReviewedIr();\n\tconst generated = generateOwnedBindingCarriers({ document\n\t\t, sourceIdentity: {}\n\t\t, declarations: document.declarations.map(declaration => ({\n\t\t\tname: declaration.source.declaration, module: \"Owned\"\n\t\t}))\n\t\t, metadataSha256: \"b\".repeat(64) });\n\tconst validators = Object.values(generated.refinementValidators);\n\tassert.equal(validators.length, 3);\n\tassert.equal(new Set(validators).size, 2);\n\tfor(const symbol of new Set(validators))\n\t{\n\t\tassert.equal(generated.leanSource.match(\n\t\t\tnew RegExp(`@\\\\[export ${symbol}\\\\]`, \"gu\")\n\t\t)?.length, 1);\n\t\tassert.equal(generated.header.match(\n\t\t\tnew RegExp(`uint8_t ${symbol}\\\\(`, \"gu\")\n\t\t)?.length, 1);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 8700
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "dcdb8322a91a0952dc94b0cb5e562e3a42744d29fae8fefe0836e5ac481b8981"
+    },
+    {
+      "currentSha256": "ef82b36ac5f5f22a888987086b8348cb195fa75d9011c80cf863be6ee7bd60c6",
+      "edits": [
+        {
+          "current": "import { cp, mkdtemp, readFile, rename, rm } from \"node:fs/promises\";\n",
+          "previous": "import { cp, mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "start": 142
+        },
+        {
+          "current": "  const release = (value, seen = new Set()) => {\n    if(value === null || value === undefined || seen.has(value)) return;\n    if((typeof value === \"object\" || typeof value === \"function\")) seen.add(value);\n    if(value && typeof value.dispose === \"function\") { value.dispose(); return; }\n    if(value && typeof value === \"object\") for(const child of Object.values(value)) release(child, seen);\n  };\n  const bundle = (ticket, count = 7n) => ({primary:ticket,spare:{tag:\"none\"},peers:[ticket],history:[ticket],payload:{count,bytes:new Uint8Array([0,255])}});\n",
+          "previous": "",
+          "start": 2110
+        },
+        {
+          "current": "  const retained = ticket.retain();\n  const value = bundle(ticket);\n  const echoed = api.echoRecord(value); check(echoed.payload.count === 7n);\n  const alternate = api.echoRecordAlternate(value); check(alternate.payload.bytes[1] === 255);\n",
+          "previous": "  const value = {primary:ticket,spare:{tag:\"none\"},peers:[ticket],history:[ticket],payload:{count:7n,bytes:new Uint8Array([0,255])}};\n  check(api.echoRecord(value).payload.count === 7n);\n  check(api.echoRecordAlternate(value).payload.bytes[1] === 255);\n",
+          "start": 2715
+        },
+        {
+          "current": "  release(echoed); release(alternate); ticket.dispose(); check(ticket.disposed);\n  check(api.serial(retained) === 41n);\n  const retainedEcho = api.echoRecord(bundle(retained, 8n));\n  check(retainedEcho.payload.count === 8n);\n  let retainedRejected = false;\n  try { api.echoRecord(bundle(retained, -1n)); } catch { retainedRejected = true; }\n  check(retainedRejected); check(api.serial(retained) === 41n);\n  release(retainedEcho);\n  const moving = api.newTicket(51n, \"moving\"), kept = moving.retain();\n  let transferRejected = false;\n  try { api.transferRecord(bundle(moving, -1n)); } catch { transferRejected = true; }\n  check(transferRejected); check(!moving.disposed); check(api.serial(moving) === 51n);\n  const moved = api.transferRecord(bundle(moving, 9n));\n  check(moving.disposed); check(api.serial(kept) === 51n);\n  check(moved.payload.count === 9n); check(api.serial(moved.primary) === 51n);\n  release(moved); kept.dispose(); retained.dispose();\n  check(kept.disposed && retained.disposed);\n  return {checks,serial:\"41\",first,second,retainedRejected,transferRejected,transferred:true};\n",
+          "previous": "  ticket.dispose(); check(ticket.disposed);\n  return {checks,serial:\"41\",first,second};\n",
+          "start": 3252
+        },
+        {
+          "current": "\tconst transfer = verified.model.bindingIr.declarations.find(\n\t\titem => item.name === \"transferRecord\"\n\t);\n",
+          "previous": "",
+          "start": 5913
+        },
+        {
+          "current": "\tassert.equal(transfer.parameters[0].ownership, \"transfer\");\n\tassert.equal(transfer.source.extensions[\"lean-lang.org/refinements\"]\n\t\t.parameters[0].fields[4].refinement.fields[0]\n\t\t.refinement.constructor, \"Owned.checkedCount\");\n",
+          "previous": "",
+          "start": 6140
+        },
+        {
+          "current": "\tlet consumer = join(scratch, \"consumer\");\n\tconst handoff = join(consumer, \"handoff\");\n",
+          "previous": "\tconst consumer = join(scratch, \"consumer\"), handoff = join(consumer, \"handoff\");\n",
+          "start": 7198
+        },
+        {
+          "current": "\t}).catch(error => {\n\t\tt.diagnostic(JSON.stringify(error.details ?? error.message));\n\t\tthrow error;\n",
+          "previous": "",
+          "start": 7906
+        },
+        {
+          "current": "\tconst relocated = join(scratch, \"relocated-consumer\");\n\tawait rename(consumer, relocated); consumer = relocated;\n",
+          "previous": "",
+          "start": 8477
+        },
+        {
+          "current": "\tassert.deepEqual(observed, { checks: 18, serial: \"41\", first: true\n\t\t, second: true, retainedRejected: true\n\t\t, transferRejected: true, transferred: true });\n",
+          "previous": "\tassert.deepEqual(observed, { checks: 6, serial: \"41\", first: true, second: true });\n",
+          "start": 8673
+        },
+        {
+          "current": "api.transferRecord(value);\n",
+          "previous": "",
+          "start": 9220
+        },
+        {
+          "current": "\t\t, relocatedInstallation: true\n",
+          "previous": "",
+          "start": 10253
+        },
+        {
+          "current": "\t\t, transferredInputCheckedBeforeHandoff: true\n",
+          "previous": "",
+          "start": 10324
+        }
+      ],
+      "path": "tests/owned-subtype-javascript-packaging.test.mjs",
+      "previousSha256": "3707cccd80e3443129931d5a6232a4a3ccb428625ed62a866f3f61eb88f8710b"
+    }
+  ]
+}

@@ -479,13 +479,14 @@ the narrower installed boundary described next.
 ### Subtypes in owned records
 
 Ordinary-source and independently reviewed npm packages accept the tested
-acyclic owned record whose borrowed resource fields accompany a copied payload
-field of type `{ count : Int // 0 ≤ count }`. JavaScript and TypeScript supply
-`count` as a `bigint`; no proof object crosses the boundary. The exact Lean
-constructor selected for each export checks the input before dispatch or any
-ownership movement. A rejected value leaves every resource usable, and a later
-valid call through either constructor still succeeds. Results expose the
-existing `bigint` payload without a proof field.
+acyclic owned record whose resource fields accompany a copied payload field of
+type `{ count : Int // 0 ≤ count }`. JavaScript and TypeScript supply `count`
+as a `bigint`; no proof object crosses the boundary. The tested exports borrow,
+explicitly retain or transfer the record. The exact Lean constructor selected
+for each export checks the input before dispatch or ownership movement. A
+rejected retain or transfer leaves the owner usable. A successful transfer
+consumes only the selected owner; retained siblings remain usable. Results
+expose the existing `bigint` payload without a proof field.
 
 The [installed owned-Subtype checks](evidence/owned-subtype-javascript-acceptance-20261020.md)
 reproduce the runtime and component archives, remove author and build sources,
@@ -494,9 +495,14 @@ Mode and dedicated workers. Chromium, Firefox and WebKit each run every browser
 profile three times while external requests are blocked, then dispose the
 resource and close the component.
 
-This acceptance is specific to borrowed, acyclic owned records. Explicitly
-retained or transferred parameters, owned callbacks, recursive owned mirrors,
-generic records and non-JavaScript hosts require their own installed evidence.
+The [retain, transfer and relocation checks](evidence/owned-subtype-javascript-transfer-acceptance-20261020.md)
+repeat both author routes from a physically relocated installation and cover
+borrowed aliases, explicit retention, transfer preflight, rejection recovery,
+selective consumption and disposal.
+
+This acceptance is specific to borrowed, retained and transferred acyclic
+owned records. Owned callbacks, recursive owned mirrors, generic records and
+non-JavaScript hosts require their own installed evidence.
 
 ### Subtypes in copied records
 

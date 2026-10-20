@@ -18,6 +18,7 @@ import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
 import { sha256Text } from "../src/binding-ir/sha256.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import "./helpers/owned-subtype-javascript-transfer-source-history-tests.mjs";
 import "./helpers/owned-subtype-javascript-source-history-tests.mjs";
 import "./helpers/owned-refinement-carriers-source-history-tests.mjs";
 import "./helpers/owned-refinement-model-source-history-tests.mjs";
