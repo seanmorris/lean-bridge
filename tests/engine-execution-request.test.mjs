@@ -79,7 +79,10 @@ test("the filtered Nix engine imports its real module graph and refuses omitted 
 		await mkdir(dirname(join(scratch, path)), { recursive: true });
 		await cp(path, join(scratch, path), { recursive: true });
 	}
-	const entries = ["src/build/component-engine.mjs", "src/build/lean-component-compiler.mjs", "src/build/engine-execution-request.mjs"];
+	const entries = ["src/build/component-engine.mjs"
+		, "src/build/lean-component-compiler.mjs"
+		, "src/build/engine-execution-request.mjs"
+		, "src/build/javascript-wasm-owned-engine.mjs"];
 	const run = () => spawnSync(process.execPath, ["--input-type=module", "-e"
 		, "for (const path of process.argv.slice(1)) await import(path);"
 		, ...entries.map(path => pathToFileURL(join(scratch, path)).href)]
@@ -87,10 +90,12 @@ test("the filtered Nix engine imports its real module graph and refuses omitted 
 	const complete = run();
 	assert.equal(complete.status, 0, complete.stderr); assert.equal(complete.stdout, ""); assert.equal(complete.stderr, "");
 	const dependencies = ["src/abi/generic-specialization.mjs"
+		, "src/abi/owned-refinement-model.mjs"
 		, "src/build/component-fin-guards.mjs"
 		, "src/build/component-recursive-diagnostics.mjs"
 		, "src/build/component-refinement-mirrors.mjs"
-		, "src/build/refinement-mirrors.mjs"];
+		, "src/build/refinement-mirrors.mjs"
+		, "src/build/owned-refinement-carriers.mjs"];
 	for(const path of dependencies)
 	{
 		const file = join(scratch, path), omitted = file + ".omitted";

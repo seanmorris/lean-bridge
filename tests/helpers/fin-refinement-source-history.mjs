@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedSubtypeJavaScriptHistoricalSource, beforeOwnedSubtypeJavaScriptSource, ownedSubtypeJavaScriptChangedPaths } from "./owned-subtype-javascript-source-history.mjs";
 import { beforeOwnedRefinementCarriersSource, ownedRefinementCarriersChangedPaths } from "./owned-refinement-carriers-source-history.mjs";
 import { beforeOwnedRefinementModelSource, ownedRefinementModelChangedPaths } from "./owned-refinement-model-source-history.mjs";
 import { beforeOwnedSubtypeAnalysisSource, ownedSubtypeAnalysisChangedPaths } from "./owned-subtype-analysis-source-history.mjs";
@@ -1388,7 +1389,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedRefinementCarriersChangedPaths
+	...ownedSubtypeJavaScriptChangedPaths
+	, ...ownedRefinementCarriersChangedPaths
 	, ...ownedRefinementModelChangedPaths
 	, ...ownedSubtypeAnalysisChangedPaths
 	, ...callbackSubtypeRemainingAcceptanceChangedPaths
@@ -1849,8 +1851,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const ownedCarriers = beforeOwnedRefinementCarriersSource(
+	const ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(
 		path, text, expected
+	);
+	if(sha256(ownedJavaScript) === expected) return ownedJavaScript;
+	const ownedCarriers = beforeOwnedRefinementCarriersSource(
+		path, ownedJavaScript, expected
 	);
 	if(sha256(ownedCarriers) === expected) return ownedCarriers;
 	const ownedRefinement = beforeOwnedRefinementModelSource(
@@ -1861,8 +1867,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, ownedRefinement, expected
 	);
 	if(sha256(ownedSubtype) === expected) return ownedSubtype;
-	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
+	const ownedHistory = beforeOwnedSubtypeJavaScriptHistoricalSource(
 		path, ownedSubtype, expected
+	);
+	if(sha256(ownedHistory) === expected) return ownedHistory;
+	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
+		path, ownedHistory, expected
 	);
 	if(sha256(remainingAcceptance) === expected) return remainingAcceptance;
 	const remainingCallbacks = beforeCallbackSubtypeRemainingSource(

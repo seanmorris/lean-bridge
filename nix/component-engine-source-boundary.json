@@ -18,6 +18,7 @@
     "src/abi/refinements.mjs",
     "src/abi/generic-specialization.mjs",
     "src/abi/owned-aggregate-model.mjs",
+    "src/abi/owned-refinement-model.mjs",
     "src/abi/component-callables.mjs",
     "src/abi/component-structured-callables.mjs",
     "src/abi/component-copied.mjs",
@@ -135,6 +136,7 @@
     "src/build/native-model.mjs",
     "src/build/owned-aggregate-carriers.mjs",
     "src/build/owned-callback-carriers.mjs",
-    "src/build/owned-native-model.mjs"
+    "src/build/owned-native-model.mjs",
+    "src/build/owned-refinement-carriers.mjs"
   ]
 }
