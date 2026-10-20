@@ -11,4 +11,5 @@ import "./helpers/checked-record-value-index-wit-fixture-tests.mjs";
 import "./helpers/checked-record-value-index-wit-installed-tests.mjs";
 import "./helpers/checked-record-value-index-wit-acceptance-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-wit-verifier-repair-source-history-tests.mjs";
+import "./helpers/checked-record-value-index-wit-caller-warning-repair-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-wit-source-history-tests.mjs";

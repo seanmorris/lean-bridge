@@ -13,6 +13,7 @@ import { beforeCheckedRecordValueIndexRubyPromotionSource, checkedRecordValueInd
 import { beforeCheckedRecordValueIndexRubyArchiveSource, checkedRecordValueIndexRubyArchiveChangedPaths } from "./checked-record-value-index-ruby-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonPromotionSource, checkedRecordValueIndexPythonPromotionChangedPaths } from "./checked-record-value-index-python-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexWitVerifierRepairSource, checkedRecordValueIndexWitVerifierRepairChangedPaths } from "./checked-record-value-index-wit-verifier-repair-source-history.mjs";
+import { beforeCheckedRecordValueIndexWitCallerWarningRepairSource, checkedRecordValueIndexWitCallerWarningRepairChangedPaths } from "./checked-record-value-index-wit-caller-warning-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource, checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths } from "./checked-record-value-index-python-archive-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonArchiveSource, checkedRecordValueIndexPythonArchiveChangedPaths } from "./checked-record-value-index-python-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPerlPromotionSource, checkedRecordValueIndexPerlPromotionChangedPaths } from "./checked-record-value-index-perl-promotion-source-history.mjs";
@@ -1359,7 +1360,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexPhpWasmChangedPaths
+	...checkedRecordValueIndexWitCallerWarningRepairChangedPaths
+	, ...checkedRecordValueIndexPhpWasmChangedPaths
 	, ...checkedRecordValueIndexRustCountRepairChangedPaths
 	, ...checkedRecordValueIndexRubyPromotionChangedPaths
 	, ...checkedRecordValueIndexRubyArchiveChangedPaths
@@ -1790,8 +1792,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexPhpWasmSource(
+	let previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpWasmSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRustCountRepairSource(

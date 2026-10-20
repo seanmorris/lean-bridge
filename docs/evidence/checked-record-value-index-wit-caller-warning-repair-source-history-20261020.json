@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-wit-caller-warning-repair-v1",
+  "previousCommit": "7f4e95965cfb66e3ca44b276ca0f0b7c823cd2d6",
+  "currentCommit": "ac17ed03d7071151ce3b232fb7dd5cf3b78119ae",
+  "registrationParent": "45d13fb3eea6f041998d659a3b96eb5109363321",
+  "pathsSha256": "590cfe37282b032de642d793dad2dd7c3c56ba93e9022b26697e38877df8254f",
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-caller-warning-repair-source-history-tests.mjs",
+      "currentSha256": "0ce03b5854be1ef37049c61e4e83b2b1db43377b2061fb05b3e90ecebb34a190"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-caller-warning-repair-source-history.mjs",
+      "currentSha256": "822aba08b7bfa717dc4ae9c875991ec708554d8496f6955c4769e227bf8c425a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-wit.test.mjs",
+      "kind": "registration",
+      "previousSha256": "b579a94755a70a4e01e0b72a358be64015ce602abe69efff37ed1d6a79cad94a",
+      "currentSha256": "602da97596a4a4a3977075c96cf832383050fe063dfcc08bd087890a41d5b464",
+      "edits": [
+        {
+          "start": 708,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-wit-caller-warning-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "kind": "registration",
+      "previousSha256": "17a91a18476365dfb9264587d211af28dca5f651c8d4465ea10033e431098a19",
+      "currentSha256": "72c18c6eb28b3651eb82387e7057ca3a055b8e32f540e34d71d107ee8794e966",
+      "edits": [
+        {
+          "start": 1438,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexWitCallerWarningRepairSource, checkedRecordValueIndexWitCallerWarningRepairChangedPaths } from \"./checked-record-value-index-wit-caller-warning-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 104216,
+          "previous": "\t...checkedRecordValueIndexPhpWasmChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexWitCallerWarningRepairChangedPaths\n\t, ...checkedRecordValueIndexPhpWasmChangedPaths\n"
+        },
+        {
+          "start": 123217,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexPhpWasmSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(\n"
+        },
+        {
+          "start": 123315,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPhpWasmSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-wit/wit-wasi.c",
+      "kind": "historical",
+      "previousSha256": "9842cafc7c1d79a5d8ad867dd9b7ed8c5cf79bee0880f85c32d1525d820bdc98",
+      "currentSha256": "5dce175a36eec13c5a662c4bc2d28e4616f5161deb7523b9f776869ecb3aeac0",
+      "edits": [
+        {
+          "start": 2656,
+          "previous": "",
+          "current": "#ifndef VALUE_INDEX_RESULT_ONLY\n"
+        },
+        {
+          "start": 2793,
+          "previous": "",
+          "current": "#endif\n"
+        }
+      ]
+    }
+  ]
+}
