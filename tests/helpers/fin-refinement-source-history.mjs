@@ -10,6 +10,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { beforeCheckedRecordValueIndexPhpPromotionSource, checkedRecordValueIndexPhpPromotionChangedPaths } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
 import { beforeValueIndexTestProfileGapSource, valueIndexTestProfileGapChangedPaths, valueIndexTestProfileGapHistoricalPaths } from "./value-index-test-profile-gap-source-history.mjs";
+import { beforeCheckedRecordValueIndexRubySource, checkedRecordValueIndexRubyChangedPaths } from "./checked-record-value-index-ruby-source-history.mjs";
 import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from "./value-index-native-binding-ir-ordering-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
@@ -993,6 +994,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedRecordValueIndexRubySource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeValueIndexTestProfileGapSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexPerlSource(path, source, expected);
@@ -1330,7 +1333,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexPhpPromotionChangedPaths
+	...checkedRecordValueIndexRubyChangedPaths
+	, ...checkedRecordValueIndexPhpPromotionChangedPaths
 	, ...checkedRecordValueIndexPhpArchiveChangedPaths
 	, ...valueIndexNativeBindingIrOrderingRepairChangedPaths
 	, ...checkedRecordValueIndexPerlChangedPaths
@@ -1744,8 +1748,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeValueIndexTestProfileGapSource(
-		path, text, expected
+	let previous = beforeCheckedRecordValueIndexRubySource(path, text, expected);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeValueIndexTestProfileGapSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPhpPromotionSource(

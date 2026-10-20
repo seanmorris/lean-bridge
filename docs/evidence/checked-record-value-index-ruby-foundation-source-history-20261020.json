@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-ruby-foundation-source-v1",
+  "predecessorCommit": "4d813e8a9da8f81d6801869c09e0e5302496c452",
+  "draftParentCommit": "787934fa5391427195a49fb2c3e3f855dba64a1f",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-ruby-source-history.mjs",
+      "currentSha256": "36bb1d348f2b1fde376d90fc988ecbc6f394871a4ac23836cf2634a84a86cdee"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-source-history-tests.mjs",
+      "currentSha256": "58e51d35a68b21d96b292f8a926115435e75c509b2cf1bd8f3efb166602891a7"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-source-history.mjs",
+      "currentSha256": "94790dfe581900722115690807829b5bebff708a16f8d84d525b678e26b33f73"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "92a8713046479735806b67309fde8cb60e3b1ff76cd5dfa435c52319fe6c81dd",
+      "currentSha256": "4f5aee14a4ecbfabdbacffd0757ff9b71e002f1e4cb7daa00007667efff2ec55",
+      "edits": [
+        {
+          "start": 12749,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-ruby\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e01ef7bf85da72b6e09771fa44d3e9496a0854bd1ff5ca93578eb2ea75ece509",
+      "currentSha256": "cd4f2ee86d994ea6428047747cf43b5cd01c08978830718f336270b26db3c0c7",
+      "edits": [
+        {
+          "start": 885,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRubySource, checkedRecordValueIndexRubyChangedPaths } from \"./checked-record-value-index-ruby-source-history.mjs\";\n"
+        },
+        {
+          "start": 83557,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexRubySource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 100501,
+          "previous": "\t...checkedRecordValueIndexPhpPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRubyChangedPaths\n\t, ...checkedRecordValueIndexPhpPromotionChangedPaths\n"
+        },
+        {
+          "start": 118563,
+          "previous": "\tlet previous = beforeValueIndexTestProfileGapSource(\n\t\tpath, text, expected\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRubySource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeValueIndexTestProfileGapSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}
