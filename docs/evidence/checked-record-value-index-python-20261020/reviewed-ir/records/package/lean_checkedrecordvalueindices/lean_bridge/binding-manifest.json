@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied",
+    "version": 1
+  },
+  "component": "checkedrecordvalueindices@1.0.0",
+  "bindingIrSha256": "46893a37c6555f2fc2976e81e60d25b5be6ae9e4a8b6e0885dbe65114824db2d",
+  "publicModule": "lean_checkedrecordvalueindices/__init__.py",
+  "typeStub": "lean_checkedrecordvalueindices/__init__.pyi",
+  "internalModule": "lean_checkedrecordvalueindices/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Ab",
+    "EmptySized",
+    "EmptyToken",
+    "Off",
+    "On",
+    "UnicodeToken",
+    "WideToken",
+    "ZeroToken",
+    "ab_string_index",
+    "empty_sized_index",
+    "empty_string_index",
+    "false_bool_index",
+    "produce_ab",
+    "produce_empty_sized",
+    "produce_empty_string",
+    "produce_false_bool",
+    "produce_true_bool",
+    "produce_unicode_string",
+    "produce_wide_nat",
+    "produce_zero_nat",
+    "true_bool_index",
+    "unicode_string_index",
+    "wide_nat_index",
+    "zero_nat_index"
+  ],
+  "files": [
+    "lean_checkedrecordvalueindices/__init__.py",
+    "lean_checkedrecordvalueindices/__init__.pyi",
+    "lean_checkedrecordvalueindices/_native.py",
+    "lean_checkedrecordvalueindices/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "additional-identity-and-effects",
+      "reason": "Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}

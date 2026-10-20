@@ -1,0 +1,348 @@
+{
+  "adaptersSha256": "aa1893acd2de87a2b1296b6f13575523a8c146adb61a86d499d01077825bd5c7",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "243dd3ca926c0ce08d8006b6515d8e36d92f1511de758232b58c34d6dded953a",
+  "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "exports": [
+    {
+      "declaration": "CheckedRecordValueIndices.abStringIndex",
+      "symbol": "lb_aa7389f0b324bcc872e58eb7"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.emptySizedIndex",
+      "symbol": "lb_bc7bc77b17e26626a1e79470"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.emptyStringIndex",
+      "symbol": "lb_9317a25424a9625bb91b8651"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.falseBoolIndex",
+      "symbol": "lb_8171c54f4160a22ad89a1929"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceAb",
+      "symbol": "lb_4d7bad0a7665bc1e177e4091"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceEmptySized",
+      "symbol": "lb_2cb2ac73cad1bf0e92f223f2"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceEmptyString",
+      "symbol": "lb_1c301039413f26b466ffc0ac"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceFalseBool",
+      "symbol": "lb_4aa58b13819217d37533c8be"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceTrueBool",
+      "symbol": "lb_fa4a826e4cfc4b858bea336d"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceUnicodeString",
+      "symbol": "lb_c3c99619aef987f5fd710b1d"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceWideNat",
+      "symbol": "lb_ee4a5ad2bcd3cf6bb8065218"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.produceZeroNat",
+      "symbol": "lb_de7d470e18379efff61de31b"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.trueBoolIndex",
+      "symbol": "lb_d1b030ebab8bb6628451db44"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.unicodeStringIndex",
+      "symbol": "lb_35b0d02ac4b5686e440a8198"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.wideNatIndex",
+      "symbol": "lb_629d14b28988602cba2f4f16"
+    },
+    {
+      "declaration": "CheckedRecordValueIndices.zeroNatIndex",
+      "symbol": "lb_2ddd8644625ba5d077273f54"
+    }
+  ],
+  "headerSha256": "931a7d07bc4e4a502b2df4d5ad1dde68362d0a12cd96fc1677fb670df43a7dcc",
+  "initializer": "initialize_LeanBridgeNative767c615eabad08d7",
+  "library": "libcomponent_767c615eabad08d77709.so",
+  "metadataSha256": "abcd144455797137c59a9af2da13e36bc75a696088c60b65befa7489f39e6c6d",
+  "modelSha256": "688cc8d0c2619877899c2bf8e14c2edff5d3d14f82ad9c0f6b444ce2ed3cc4d2",
+  "nativeLibrary": {
+    "bytes": 54160,
+    "sha256": "39941bbf2ec5f61793b17581a6f4e1e79725ec63f2fd2a6d5a5cbfa7274ae1e6"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "f3d8c28afa158bce94f06f4eef7b8c3e7bd692c80844da939316c397d5847e73",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"CheckedRecordValueIndices.abStringIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkAb\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.emptySizedIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkEmptySized\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.emptyStringIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkEmptyToken\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.falseBoolIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkOff\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceAb\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptySized\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptyString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceFalseBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceTrueBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceUnicodeString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceWideNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceZeroNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.trueBoolIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkOn\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.unicodeStringIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkUnicodeToken\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.wideNatIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkWideToken\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.zeroNatIndex\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"CheckedRecordValueIndices.mkZeroToken\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"CheckedRecordValueIndices.trueBoolIndex\",\n    \"CheckedRecordValueIndices.falseBoolIndex\",\n    \"CheckedRecordValueIndices.abStringIndex\",\n    \"CheckedRecordValueIndices.emptyStringIndex\",\n    \"CheckedRecordValueIndices.unicodeStringIndex\",\n    \"CheckedRecordValueIndices.emptySizedIndex\",\n    \"CheckedRecordValueIndices.zeroNatIndex\",\n    \"CheckedRecordValueIndices.wideNatIndex\",\n    \"CheckedRecordValueIndices.produceTrueBool\",\n    \"CheckedRecordValueIndices.produceFalseBool\",\n    \"CheckedRecordValueIndices.produceAb\",\n    \"CheckedRecordValueIndices.produceEmptyString\",\n    \"CheckedRecordValueIndices.produceUnicodeString\",\n    \"CheckedRecordValueIndices.produceEmptySized\",\n    \"CheckedRecordValueIndices.produceZeroNat\",\n    \"CheckedRecordValueIndices.produceWideNat\"\n  ],\n  \"modules\": [\n    \"CheckedRecordValueIndices\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"pypi\": {\n      \"name\": \"checkedrecordvalueindices\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "7ecc15c54b07535647a25615b81bef4afef3a6d9663c7e6c73620264f4ff1ccf",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 164112,
+          "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+          "sha256": "92a72bcb099e7c6508d3a65f03f7a306a32d623d1829bc2f1a6112a0382c637b"
+        },
+        "module": "CheckedRecordValueIndices",
+        "source": {
+          "bytes": 2928,
+          "path": "CheckedRecordValueIndices.lean",
+          "sha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "CheckedRecordValueIndices.abStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkAb"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.emptySizedIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkEmptySized"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.emptyStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkEmptyToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.falseBoolIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkOff"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceAb": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptySized": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptyString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceFalseBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceTrueBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceUnicodeString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceWideNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceZeroNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.trueBoolIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkOn"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.unicodeStringIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkUnicodeToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.wideNatIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkWideToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.zeroNatIndex": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CheckedRecordValueIndices.mkZeroToken"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "CheckedRecordValueIndices"
+      ],
+      "exports": [
+        "CheckedRecordValueIndices.trueBoolIndex",
+        "CheckedRecordValueIndices.falseBoolIndex",
+        "CheckedRecordValueIndices.abStringIndex",
+        "CheckedRecordValueIndices.emptyStringIndex",
+        "CheckedRecordValueIndices.unicodeStringIndex",
+        "CheckedRecordValueIndices.emptySizedIndex",
+        "CheckedRecordValueIndices.zeroNatIndex",
+        "CheckedRecordValueIndices.wideNatIndex",
+        "CheckedRecordValueIndices.produceTrueBool",
+        "CheckedRecordValueIndices.produceFalseBool",
+        "CheckedRecordValueIndices.produceAb",
+        "CheckedRecordValueIndices.produceEmptyString",
+        "CheckedRecordValueIndices.produceUnicodeString",
+        "CheckedRecordValueIndices.produceEmptySized",
+        "CheckedRecordValueIndices.produceZeroNat",
+        "CheckedRecordValueIndices.produceWideNat"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "88a135ca60b39297151405b167c43caa1fc8e88a5d9529d71ab1f3d84cc870d5",
+        "modules": [
+          {
+            "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+            "name": "CheckedRecordValueIndices",
+            "sourcePath": "CheckedRecordValueIndices.lean",
+            "sourceSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecordValueIndices"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "554be92f1bf1f9490f32c13d9418fb0a8323a76b7fee7eb30734800a4ba7ebe1",
+    "sourceTreeSha256": "4bb3e2526504fd9e9c7871c06094f4fe642ca3296ab72280b2dc6f5141b40c9e"
+  }
+}
