@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource, checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths } from "./checked-record-value-index-matrix-evidence-pin-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixPinRepairSource, checkedRecordValueIndexMatrixPinRepairChangedPaths } from "./checked-record-value-index-matrix-pin-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixLintSource, checkedRecordValueIndexMatrixLintChangedPaths } from "./checked-record-value-index-matrix-lint-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixHistoryGapSource, checkedRecordValueIndexMatrixHistoryGapChangedPaths, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths } from "./checked-record-value-index-matrix-history-gap-source-history.mjs";
@@ -1376,7 +1377,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexMatrixPinRepairChangedPaths
+	...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths
+	, ...checkedRecordValueIndexMatrixPinRepairChangedPaths
 	, ...checkedRecordValueIndexMatrixLintChangedPaths
 	, ...checkedRecordValueIndexMatrixHistoryGapChangedPaths
 	, ...checkedRecordValueIndexMatrixHistoryGapHistoricalPaths
@@ -1825,8 +1827,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexMatrixPinRepairSource(
+	let previous = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixPinRepairSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexMatrixLintSource(

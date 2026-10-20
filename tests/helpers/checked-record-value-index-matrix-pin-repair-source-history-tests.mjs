@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import "./checked-record-value-index-matrix-evidence-pin-repair-source-history-tests.mjs";
 import {
 	beforeCheckedRecordValueIndexMatrixPinRepairSource
 	, checkedRecordValueIndexMatrixPinRepairAddedPaths
@@ -101,7 +102,11 @@ test("value-index matrix pin repair closes pins and added sources", async () => 
 	}
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+			, beforeCheckedRecordValueIndexMatrixPinRepairSource
+		);
+		assert.equal(sha256(current)
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedRecordValueIndexMatrixPinRepairPredecessor}:${addition.path}`]
