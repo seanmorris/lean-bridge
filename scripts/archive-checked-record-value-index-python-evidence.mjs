@@ -109,10 +109,13 @@ try
 		const tap = await readFile(join(cell, "run.tap"));
 		const verification = await readFile(join(cell, "verification.json"));
 		const observed = JSON.parse(verification);
-		assert.equal(verification.toString(), canonicalJson(observed), `${route} checker output`);
+		assert.equal(verification.toString(), `${JSON.stringify(observed, null, 2)}\n`
+			, `${route} checker output`);
 		runtime ??= observed.runtime; assert.deepEqual(observed.runtime, runtime, `${route} runtime identity`);
 		const rechecked = await check(route, recordsRoot, join(cell, "run.tap"), observed, paths);
-		assert.equal(verification.toString(), canonicalJson(rechecked), `${route} checker replay`);
+		assert.deepEqual(observed, rechecked, `${route} checker replay`);
+		assert.equal(verification.toString(), `${JSON.stringify(rechecked, null, 2)}\n`
+			, `${route} checker replay bytes`);
 		for(const path of paths) await putFile(`${route}/records/${path}`, join(recordsRoot, path));
 		for(const name of ["run.tap", "verification.json"])
 			await putFile(`${route}/${name}`, join(cell, name));
