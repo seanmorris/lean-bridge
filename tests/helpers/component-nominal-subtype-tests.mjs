@@ -123,8 +123,8 @@ test("closed nominal plan validators reject changed members, input projections a
 	for(const tree of [sub, projected, first(original), event(original)])
 		assert.notEqual(await jsonSchemaErrors("compiler-adapter-plan#/$defs/finRefinement", tree), null);
 	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/finRefinement", { kind: "array", arguments: [{ kind: "fin", bound: "3" }] }), null);
-	assert.notEqual(await jsonSchemaErrors("compiler-adapter-plan#/$defs/callbackRefinements", { parameters: [sub], result: null }), null);
-	assert.notEqual(await jsonSchemaErrors("compiler-adapter-plan#/$defs/callbackRefinements", { parameters: [null], result: projected }), null);
+	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/callbackRefinements", { parameters: [sub], result: projected }), null);
+	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/callbackRefinements", { parameters: [projected], result: sub }), null);
 	assert.notEqual(await jsonSchemaErrors("compiler-adapter-plan#/$defs/nominalRefinement", { kind: "record", fields: [sub] }), null);
 });
 

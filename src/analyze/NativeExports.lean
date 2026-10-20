@@ -442,7 +442,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (depth : Nat := 0) (copied : Bool := false) (checked : Option Json := none)
     (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none)
     (callbackSite : Option Bool := none) (hostReply : Bool := false)
-    (subtypeStructural : Bool := false) (subtypeResult : Bool := false) : ShapeM Json := do
+    (subtypeStructural : Bool := false) (subtypeResult : Bool := false)
+    (callableDecision : Option Json := none) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -529,7 +530,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               -- A closed application of a generic structure becomes a record named by this alias.
               let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
                 (genericStructure? (← getEnv) definition.value.getAppFn.constName!).isSome
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply subtypeStructural subtypeResult
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply subtypeStructural subtypeResult callableDecision
               -- A constructor selection belongs to this export site, never to a cached alias.
               -- Expand its structural transport, just as a direct Subtype alias expands below.
               if (checked.isSome || (subtypeResult && containsKind (← get).types target "subtype")) && ["array", "list", "option", "tuple", "result"].contains
@@ -833,23 +834,46 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     if copied then reject e "callbacks inside copied values require a retention policy"
     let mut result := e
     let mut parameters := #[]
+    let decisions := callableDecision.bind fun value =>
+      (value.getObjValAs? (Array Json) "parameters").toOption
+    let resultDecision := callableDecision.bind fun value =>
+      (value.getObjVal? "result").toOption
+    let host := callbackSite == some false
     repeat
       result ← whnf result
       match result with
       | .forallE _ argument rest binder =>
         if binder != .default || rest.hasLooseBVars then reject e "dependent or implicit callback"
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
-        -- Arguments of a top-level callback are checked before a leased closure runs, or come
-        -- from Lean when the host is called; a callback nested in a callback stays unchecked.
-        parameters := parameters.push (← shapeTree request argument seen (depth + 1) false none containerFin callbackSite.isSome)
+        -- Arguments of a host callback come from Lean and therefore project their proof;
+        -- arguments of a returned closure come from the host and require the selected
+        -- checked constructor. A callback nested in a callback stays unsupported.
+        let decision := decisions.bind fun values => values[parameters.size]?
+        let selection := decision.bind fun site => do
+          let refinement ← (site.getObjVal? "refinement").toOption
+          if refinement == str "reject" then none else some refinement
+        if host && selection.isSome then
+          reject argument "Lean-produced callback arguments take no checked constructor"
+        parameters := parameters.push (← shapeTree request argument seen (depth + 1)
+          (checked := if host then none else selection) (containerFin := containerFin)
+          (structural := callbackSite.isSome) (subtypeStructural := callbackSite.isSome)
+          (subtypeResult := host))
         result := rest
       | _ => break
+    let resultSelection := resultDecision.bind fun site => do
+      let refinement ← (site.getObjVal? "refinement").toOption
+      if refinement == str "reject" then none else some refinement
+    let producedResult := callbackSite == some true
+    if producedResult && resultSelection.isSome then
+      reject result "Lean-produced closure results take no checked constructor"
     -- A leased closure's result comes from Lean; a host callback's result is a host reply.
     return obj [("kind", str "callback"), ("parameters", toJson parameters),
-      ("result", ← shapeTree request result seen (depth + 1) false none containerFin callbackSite.isSome
-        (hostReply := callbackSite == some false)), ("abi", ← abi e)]
+      ("result", ← shapeTree request result seen (depth + 1)
+        (checked := if producedResult then none else resultSelection) (containerFin := containerFin)
+        (structural := callbackSite.isSome) (hostReply := host)
+        (subtypeStructural := callbackSite.isSome) (subtypeResult := producedResult)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult) (callableDecision := callableDecision)
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has
@@ -1053,27 +1077,40 @@ partial def finiteCopiedGraph (types : Array Json) (value : Json)
     ("abi", ← ofExcept <| value.getObjVal? "abi")]
 
 def shape (request : Request) (e : Expr) (checked : Option Json := none)
-    (callbackSite : Option Bool := none) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM Json := do
+    (callbackSite : Option Bool := none) (parentAliases : Option (IO.Ref ParentAliasCache) := none)
+    (callableDecision : Option Json := none) : MetaM Json := do
   if let some policy := request.ownedAggregates then
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
   let subtypeResult := callbackSite == some true && request.ownedAggregates.isNone
   let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)
-    (subtypeStructural := true) (subtypeResult := subtypeResult)).run { parentAliases }
+    (subtypeStructural := true) (subtypeResult := subtypeResult)
+    (callableDecision := callableDecision)).run { parentAliases }
   return ← finiteCopiedGraph state.types value request.ownedAggregates
 
 partial def signature (request : Request) (e : Expr) (limit : Nat)
-    (checkedParameters : Array (Option Json) := #[]) (checkedResult : Option Json := none)
+    (parameterSites : Array (Option Json) := #[]) (resultSite : Option Json := none)
     (index : Nat := 0) (parentAliases : Option (IO.Ref ParentAliasCache) := none) : MetaM (Array Json × Json) := do
   let reduced ← whnf e
   if index < limit then
     if let .forallE _ argument result binder := reduced then
       if binder != .default || result.hasLooseBVars then reject e "dependent or implicit parameter"
-      let parameter ← shape request argument (checkedParameters[index]?.join) (callbackSite := some false) parentAliases
-      let (rest, result) ← signature request result limit checkedParameters checkedResult (index + 1) parentAliases
+      let site := parameterSites[index]?.join
+      let checked := site.bind fun value => do
+        let refinement ← (value.getObjVal? "refinement").toOption
+        if refinement == str "reject" then none else some refinement
+      let callable := site.bind fun value => (value.getObjVal? "callable").toOption
+      let parameter ← shape request argument checked (callbackSite := some false)
+        (parentAliases := parentAliases) (callableDecision := callable)
+      let (rest, result) ← signature request result limit parameterSites resultSite (index + 1) parentAliases
       return (#[obj [("name", str s!"arg{index}"), ("type", parameter)]] ++ rest, result)
-  return (#[], ← shape request e checkedResult (callbackSite := some true) parentAliases)
+  let checked := resultSite.bind fun value => do
+    let refinement ← (value.getObjVal? "refinement").toOption
+    if refinement == str "reject" then none else some refinement
+  let callable := resultSite.bind fun value => (value.getObjVal? "callable").toOption
+  return (#[], ← shape request e checked (callbackSite := some true)
+    (parentAliases := parentAliases) (callableDecision := callable))
 
 def expression (e : Expr) : MetaM String := do
   withOptions (fun opts => opts.setBool `pp.fullNames true |>.setBool `pp.universes true) do
@@ -1449,15 +1486,17 @@ def describeSignature (request : Request) (name : String) (type : Expr) (parentA
     return (parameters, resultText, scalarProjection)
   let arity := selectedArity.getD (if native then 1024 else 32)
   let contract := request.contracts.bind fun contracts => (contracts.getObjVal? name).toOption
-  let checkedParameters := contract.bind (fun value => (value.getObjValAs? (Array Json) "parameters").toOption)
-    |>.getD #[] |>.map checkedSelection
-  let checkedResult := contract.bind (fun value => (value.getObjVal? "result").toOption) |>.bind checkedSelection
+  let parameterSites := contract.bind (fun value => (value.getObjValAs? (Array Json) "parameters").toOption)
+    |>.getD #[] |>.map some
+  let resultSite := contract.bind fun value => (value.getObjVal? "result").toOption
+  let checkedParameters := parameterSites.map fun site => site.bind checkedSelection
+  let checkedResult := resultSite.bind checkedSelection
   try
     for choice in checkedParameters.push checkedResult do
       if let some value := choice then
         if value == Json.null then throwError "invalid checked refinement selection"
         if let some problem := (checkedSelectionProblem value).run' 0 then throwError "{problem}"
-    let (nativeParameters, result) ← signature request type arity checkedParameters checkedResult (parentAliases := parentAliases)
+    let (nativeParameters, result) ← signature request type arity parameterSites resultSite (parentAliases := parentAliases)
     if !native && nativeParameters.size > 32 then throwError "components support at most 32 arguments"
     let nativeParameters ← if native then pure nativeParameters else nativeParameters.mapM fun (parameter : Json) => do
       pure <| obj [("name", ← ofExcept <| parameter.getObjVal? "name"),

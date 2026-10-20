@@ -54,7 +54,7 @@ test("Fin callback keys retain bounds and authenticate compiler and public metad
 	for(const mutate of [
 		value => { value.privateAbi.callbacks[0].refinements.parameters = []; }
 		, value => { value.privateAbi.callbacks[0].refinements.parameters[0].bound = "03"; }
-		, value => { value.privateAbi.callbacks[0].refinements.result = { kind: "subtype", constructor: "Structured.checked" }; }
+		, value => { value.privateAbi.callbacks[0].refinements.result = { kind: "checked-record", constructor: "Structured.checked" }; }
 		, value => { value.privateAbi.callbacks[0].refinements = { parameters: [null], result: null }; }
 		, value => { value.privateAbi.callbacks[0].refinements.extra = true; }
 		, value => { value.privateAbi.nominalRefinements = []; }
@@ -66,7 +66,7 @@ test("Fin callback keys retain bounds and authenticate compiler and public metad
 	schemaSubtype.privateAbi.callbacks[0].refinements.result = {
 		kind: "subtype", constructor: "Structured.checked"
 	};
-	await assert.rejects(() => assertJsonSchema(
+	await assert.doesNotReject(() => assertJsonSchema(
 		"compiler-adapter-plan", schemaSubtype));
 	const mismatched = structuredClone(abi); mismatched.callbacks[0].refinements.result.bound = "5";
 	assert.throws(() => assertComponentStructuredCallableBindings(mismatched, ir), /refinement mismatch/);
@@ -141,7 +141,7 @@ test("source-level nominal Fin trees share the structured callback ABI", () => {
 	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_0`, "u"));
 });
 
-test("structured callbacks still reject constructor-selected nominal trees", () => {
+test("structured callbacks authenticate one constructor direction and reject mixed nominal trees", () => {
 	const ir = structuredCallableReviewedIr({ recursive: true });
 	const payload = ir.types.find(type => type.id === "lean:Structured.Payload");
 	const callback = ir.types.find(type => type.kind === "callback" && type.callable.parameters.length === 1
@@ -151,7 +151,7 @@ test("structured callbacks still reject constructor-selected nominal trees", () 
 			, refinement: field.name === "count"
 				? { kind: "subtype", constructor: "Structured.checkedCount" } : null })) });
 	callback.source.extensions["lean-lang.org/refinements"] = { parameters: [selected()], result: selected() };
-	assert.throws(() => plan(ir), /only Fin constraints/u);
+	assert.throws(() => plan(ir), /direction/u);
 	for(const site of ["parameter", "result"])
 	{
 		const bare = finCallback();
@@ -164,10 +164,9 @@ test("structured callbacks still reject constructor-selected nominal trees", () 
 			parameters: definition.callable.parameters.map(parameter => parameter.type)
 			, result: definition.callable.result.type
 		};
-		assert.throws(() => callbackRefinement(signature, refinements, bare.types)
-			, /only Fin constraints/u);
-		assert.throws(() => plan(bare), /only Fin constraints/u);
-		assert.throws(() => generateJavaScriptPackage(bare), /only Fin constraints/u);
+		assert.deepEqual(callbackRefinement(signature, refinements, bare.types), refinements);
+		if(site === "parameter") assert.throws(() => plan(bare), /direction differs from its export site/u);
+		else assert.throws(() => plan(bare), /Refinement does not match its transport type/u);
 	}
 });
 

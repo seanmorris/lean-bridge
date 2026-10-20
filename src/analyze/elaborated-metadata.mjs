@@ -320,8 +320,10 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind !== "callback") return copied(type, 0, undefined, true, true, site === "result");
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
-					for(const parameter of type.parameters) copied(parameter, 0, undefined, "fin-only");
-					copied(type.result, 0, undefined, "fin-only");
+					if(containsKind(type, ["checked-record"])) fail("Checked records inside callbacks require a separate recovery contract");
+					const host = site === "parameter";
+					for(const parameter of type.parameters) copied(parameter, 0, undefined, true, true, host);
+					copied(type.result, 0, undefined, true, true, !host);
 				};
 				const nativeType = (type, site) => {
 					if(request.ownedAggregates === undefined) validateNativeType(type, 0, false, site);

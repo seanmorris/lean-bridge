@@ -7,7 +7,7 @@
 import { snapshotComponentCopiedGraph } from "./component-recursive.mjs";
 import { componentRecordDefinitions } from "./component-records.mjs";
 import { componentCallableCapacity } from "./component-callables.mjs";
-import { callbackRefinement, callbackDefinitionRefinement, nominalRefinement, nominalRefinementEntries } from "./refinements.mjs";
+import { callbackRefinement, callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinement, nominalRefinementEntries } from "./refinements.mjs";
 
 export const componentStructuredCallableAbi = 9;
 export const componentStructuredCallableDispatch = "copied-callable-frame-v1";
@@ -132,6 +132,7 @@ export const assertComponentStructuredCallableAbi = abi => {
 export const assertComponentStructuredCallableBindings = (abi, ir) => {
 	assertComponentStructuredCallableAbi(abi);
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
+	const publicCallbacks = new Map(ir.types.filter(type => type.kind === "callback").map(type => [type.id, type]));
 	const copied = graph({ kind: "primitive", name: "unit" }, abi.types);
 	if(ir.types.length !== callbacks.size + copied.types.length || new Set(ir.types.map(type => type.id)).size !== ir.types.length) fail("binding type table mismatch");
 	const definitions = componentRecordDefinitions({ types: ir.types.filter(type => type.kind !== "callback") }, true);
@@ -145,6 +146,13 @@ export const assertComponentStructuredCallableBindings = (abi, ir) => {
 		if(!matches || value.ownership !== (identity ? result ? "lease" : "borrow" : "copy")) fail("binding ownership or type mismatch");
 		if(identity)
 		{
+			const definition = publicCallbacks.get(expected.id), refinement = definition?.source.extensions["lean-lang.org/refinements"];
+			if(refinement !== undefined)
+			{
+				const direction = callbackSubtypeDirection({ parameters: definition.callable.parameters.map(parameter => parameter.type)
+					, result: definition.callable.result.type }, refinement, ir.types);
+				if(direction !== null && direction !== (result ? "closure" : "host")) fail("callback Subtype direction differs from its export site");
+			}
 			closed(value.lifetime, ["scope", "anchor"]);
 			if(value.lifetime.scope !== (result ? "explicit" : "call") || value.lifetime.anchor !== null) fail("binding lifetime mismatch");
 		}

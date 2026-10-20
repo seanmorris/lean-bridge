@@ -143,7 +143,9 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	} else if(type.kind === "refinement")
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
-		if(!structural) fail("Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
+		if(!structural) fail(type.predicate?.kind === "subtype"
+			? "Subtype refinements require a top-level or directional callback site"
+			: "Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
 		if(type.predicate?.kind === "checked-record")
 		{
 			// Only a structural input path may invoke the selected constructor. Produced records cross
@@ -160,8 +162,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			// Copied plain records and variants retain a constructor at each use, not on the shared type.
 			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks and generic records");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
-			if(!(subtypeResult && type.predicate.constructor === null)
-				&& (typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor))) fail("invalid Subtype refinement");
+			if(subtypeResult ? type.predicate.constructor !== null
+				: typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid Subtype refinement");
 			recurse(type.base, true);
 			if(type.base.kind !== "primitive") fail("Subtype refinements require a primitive base");
 		}
@@ -267,9 +269,23 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(copied) fail("callbacks inside copied values require a retention policy");
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
-		// A host callback's result is produced by the host while Lean runs; the native model admits
-		// its bounds only when its failure value holds no Fin.
-		type.parameters.forEach(parameter => recurse(parameter, copied, site !== undefined, false, false)); recurse(type.result, copied, site !== undefined, false, false);
+		if(site !== undefined && containsKind(type, ["checked-record"], references))
+			fail("checked records inside callbacks require a separate recovery contract");
+		// A top-level parameter is a host callback: Lean produces its arguments and the host
+		// produces its reply. A top-level result is a leased Lean closure with the opposite
+		// direction. Nested callbacks retain the established no-refinement boundary.
+		if(site === undefined)
+		{
+			type.parameters.forEach(parameter => recurse(parameter, copied, false, false, false));
+			recurse(type.result, copied, false, false, false);
+		}
+		else
+		{
+			const host = site === "parameter";
+			for(const parameter of type.parameters)
+				validate(parameter, depth + 1, copied, references, policy, owned, true, undefined, true, host, erasedTransport);
+			validate(type.result, depth + 1, copied, references, policy, owned, true, undefined, true, !host, erasedTransport);
+		}
 	} else fail(`unsupported type kind ${type.kind}`);
 	return type;
 };

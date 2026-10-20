@@ -22,6 +22,7 @@ const fixture = () => {
 	return document;
 };
 const scaler = document => document.types.find(type => type.id === document.declarations.find(item => item.id === "lean:Sample.scaler").result.type.id);
+const callbackParameter = (document, name) => document.types.find(type => type.id === document.declarations.find(item => item.id === `lean:Sample.${name}`).parameters[0].type.id);
 const rehash = (document, definition) => {
 	const previous = definition.id;
 	const signature = { ...callbackSemanticSignature(definition.callable)
@@ -68,8 +69,20 @@ test("unrefined reviewed callback identities keep their original signature bytes
 	}
 });
 
+test("reviewed callback Subtype directions must agree with their export sites", () => {
+	const selected = { kind: "subtype", constructor: "Sample.checked" }, projected = { kind: "subtype", constructor: null };
+	const accepted = fixture(), host = callbackParameter(accepted, "visit");
+	host.source.extensions[key] = { parameters: [projected], result: selected };
+	rehash(accepted, host);
+	assert.deepEqual(validateReviewedSource(callableReviewInput(accepted)), accepted);
+	const refused = fixture(), closure = scaler(refused);
+	closure.source.extensions[key] = { parameters: [projected], result: selected };
+	rehash(refused, closure);
+	assert.throws(() => validateReviewedSource(callableReviewInput(refused)), { code: "reviewed-ir-build-unsupported" });
+});
+
 for(const [label, mutate] of Object.entries({
-	"Subtype": value => { value.parameters[0] = { kind: "subtype", constructor: "Sample.checked" }; }
+	"mixed Subtype direction": value => { value.parameters[0] = { kind: "subtype", constructor: "Sample.checked" }; value.result = { kind: "subtype", constructor: "Sample.checked" }; }
 	, "empty decision": value => { value.parameters[0] = null; }
 	, "wrong arity": value => { value.parameters.push(null); }
 	, "unknown member": value => { value.extra = true; }

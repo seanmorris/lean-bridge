@@ -15,6 +15,7 @@ import { assertReviewedRefinements, assertReviewedFinCallback, assertReviewedFin
 import { reviewedSubtypeContracts } from "./reviewed-subtypes.mjs";
 import { callbackSemanticSignature } from "./callback-signature.mjs";
 import { assertReviewedInstantiation, instantiationKey } from "./reviewed-instantiation.mjs";
+import { callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 const same = (left, right) => canonicalJson(left) === canonicalJson(right);
 const fail = (code, message, details = {}) => { throw Object.assign(new Error(message), { code, details }); };
@@ -128,6 +129,18 @@ const checkReview = document => {
 		const identity = isCallback(value.type);
 		reject(value.ownership !== (identity ? result ? "lease" : "borrow" : "copy")
 			|| !same(value.lifetime, identity ? { scope: result ? "explicit" : "call", anchor: null } : null), path);
+		if(identity)
+		{
+			const definition = callbacks.get(value.type.id), refinement = definition.source.extensions["lean-lang.org/refinements"];
+			if(refinement !== undefined)
+			{
+				const direction = callbackSubtypeDirection({
+					parameters: definition.callable.parameters.map(parameter => parameter.type)
+					, result: definition.callable.result.type
+				}, refinement, document.types);
+				reject(direction !== null && direction !== (result ? "closure" : "host"), `${path}.type`);
+			}
+		}
 		type(value.type, `${path}.type`, false);
 	};
 	const parameter = (value, path) => {

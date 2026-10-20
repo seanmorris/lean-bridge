@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { assertRefinement, callbackDefinitionRefinement, nominalRefinement } from "../abi/refinements.mjs";
+import { assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinement } from "../abi/refinements.mjs";
 
 // Run only after the shared validator has checked tree shape and depth.
 const finOnly = refinement => {
@@ -16,19 +16,25 @@ const finOnly = refinement => {
 };
 
 /**
- * Validate a callback's nonempty Fin trees against its erased signature.
- * Checked constructors are not available inside a callback contract.
+ * Validate a callback's nonempty Fin and directional Subtype trees against its
+ * erased signature. The compiler comparison still owns every predicate and exact
+ * constructor; a review may only state the matching host/closure direction.
  *
  * @param definition - Reviewed callback with an authored refinement extension.
  * @param types - Reviewed definitions for copied nominal Fin trees.
  */
-export const assertReviewedFinCallback = (definition, types = []) => {
+export const assertReviewedSubtypeCallback = (definition, types = []) => {
 	if(definition.kind !== "callback") throw new TypeError("Expected a reviewed callback");
 	const refinement = callbackDefinitionRefinement(definition, types);
 	if(refinement === null) throw new TypeError("Expected a reviewed callback refinement");
-	refinement.parameters.forEach(finOnly);
-	finOnly(refinement.result);
+	return callbackSubtypeDirection({
+		parameters: definition.callable.parameters.map(parameter => parameter.type)
+		, result: definition.callable.result.type
+	}, refinement, types);
 };
+
+// Preserve the reviewed Fin entry point while existing evidence and callers migrate.
+export const assertReviewedFinCallback = assertReviewedSubtypeCallback;
 
 /**
  * Match Fin and per-use Subtype decisions to a declaration's erased signature,

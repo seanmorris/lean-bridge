@@ -174,70 +174,131 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
 }).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
 /**
- * Keep callback contracts Fin-only after the shared structural validator has
- * authenticated their transport shape. Copied records and variants may carry
- * nested Fin bounds, but callback contracts cannot select checked constructors.
+ * Require one callback site to agree with the direction in which its value crosses.
+ * A produced Subtype is already proved by Lean and therefore carries no constructor;
+ * a consumed Subtype must name the exact checked constructor. Checked records remain
+ * outside the callback surface until their separate ownership and recovery work lands.
  *
  * @param refinement - A validated callback refinement tree.
+ * @param produced - Whether Lean, rather than the host, produces this site.
+ * @returns {boolean} Whether the tree contains a Subtype leaf.
  */
-export const assertCallbackFinRefinement = refinement => {
-	if(refinement === null || refinement.kind === "fin") return;
+export const assertCallbackRefinementDirection = (refinement, produced) => {
+	if(refinement === null || refinement.kind === "fin") return false;
+	if(refinement.kind === "subtype")
+	{
+		if(produced ? refinement.constructor !== null : typeof refinement.constructor !== "string")
+			throw new TypeError("Callback refinement direction does not match its checked Subtype constructor");
+		return true;
+	}
+	if(refinement.kind === "checked-record")
+		throw new TypeError("Callback refinements do not support checked records");
 	if(refinement.kind === "record")
-	{
-		refinement.fields.forEach(field =>
-			assertCallbackFinRefinement(field.refinement));
-		return;
-	}
+		return refinement.fields.reduce((found, field) => assertCallbackRefinementDirection(field.refinement, produced) || found, false);
 	if(refinement.kind === "variant")
-	{
-		refinement.cases.forEach(branch => branch.fields.forEach(field =>
-			assertCallbackFinRefinement(field.refinement)));
-		return;
-	}
+		return refinement.cases.reduce((found, branch) => branch.fields.reduce((nested, field) =>
+			assertCallbackRefinementDirection(field.refinement, produced) || nested, found), false);
 	if(["array", "list", "option", "tuple", "result"].includes(refinement.kind))
-	{
-		refinement.arguments.forEach(assertCallbackFinRefinement);
-		return;
-	}
-	throw new TypeError("Callback refinements support only Fin constraints");
+		return refinement.arguments.reduce((found, child) => assertCallbackRefinementDirection(child, produced) || found, false);
+	throw new TypeError("Invalid callback refinement metadata");
 };
 
 /**
  * Validate callback constraints against an erased callable signature. Copied
- * nominal Fin trees require the enclosing document's type definitions.
+ * nominal trees require the enclosing document's type definitions. Host callbacks
+ * receive Lean-produced parameters and return host-produced results; returned Lean
+ * closures have the opposite direction.
  *
  * @param signature - Erased parameter and result type references.
  * @param value - Optional compiler-owned parameter/result refinement trees.
- * @param types - Definitions used to authenticate copied nominal Fin trees.
+ * @param types - Definitions used to authenticate copied nominal trees.
+ * @param direction - Known callback role, or undefined to infer and authenticate it.
  */
-export const callbackRefinement = (signature, value, types = []) => {
+export const callbackRefinement = (signature, value, types = [], direction = undefined) => {
 	if(value === undefined) return null;
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
 		|| !Array.isArray(value.parameters) || value.parameters.length !== signature.parameters.length)
 		throw new TypeError("Invalid callback refinement metadata");
-	const structural = types.length > 0;
+	if(direction !== undefined && !["host", "closure"].includes(direction))
+		throw new TypeError("Invalid callback refinement direction");
+	const structural = true;
 	const definitions = types.map(definition => definition.source ? definition : {
 		...definition
 		, representation: "copied"
 		, source: { declaration: definition.id?.startsWith("lean:") ? definition.id.slice(5) : null, extensions: {} }
 	});
-	for(const [index, refinement] of value.parameters.entries())
-	{
-		assertRefinement(refinement, signature.parameters[index], 1, structural, definitions);
-		assertCallbackFinRefinement(refinement);
-	}
-	assertRefinement(value.result, signature.result, 1, structural, definitions);
-	assertCallbackFinRefinement(value.result);
 	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
+	const containsSubtype = [...value.parameters, value.result].some(refinement => {
+		const visit = child => child !== null && (child.kind === "subtype"
+			|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
+			|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
+			|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
+		return visit(refinement);
+	});
+	const validate = role => {
+		const producedParameters = role === "host", producedResult = role === "closure";
+		for(const [index, refinement] of value.parameters.entries())
+		{
+			assertCallbackRefinementDirection(refinement, producedParameters);
+			assertRefinement(refinement, signature.parameters[index], 1, structural, definitions, producedParameters);
+		}
+		assertCallbackRefinementDirection(value.result, producedResult);
+		assertRefinement(value.result, signature.result, 1, structural, definitions, producedResult);
+	};
+	if(direction !== undefined) validate(direction);
+	else if(!containsSubtype) validate("host");
+	else
+	{
+		const accepted = [];
+		for(const role of ["host", "closure"])
+		{
+			try
+			{ validate(role); accepted.push(role); }
+			catch(error)
+			{ void error; }
+		}
+		if(accepted.length !== 1) throw new TypeError("Callback refinement direction is inconsistent");
+	}
 	return value;
+};
+
+/**
+ * Recover the unique Subtype direction of a callback tree. Fin-only trees carry
+ * no directional information and return null after ordinary validation.
+ *
+ * @param signature - Erased parameter and result type references.
+ * @param value - Compiler-owned callback refinement trees.
+ * @param types - Definitions used to authenticate copied nominal trees.
+ */
+export const callbackSubtypeDirection = (signature, value, types = []) => {
+	callbackRefinement(signature, value, types);
+	if(value === undefined || value === null) return null;
+	for(const role of ["host", "closure"])
+	{
+		try
+		{
+			callbackRefinement(signature, value, types, role);
+			const leaves = [...value.parameters, value.result];
+			if(leaves.some(refinement => {
+				const visit = child => child !== null && (child.kind === "subtype"
+					|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
+					|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
+					|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
+				return visit(refinement);
+			})) return role;
+		}
+		catch(error)
+		{ void error; }
+	}
+	return null;
 };
 
 /**
  * Read optional constraints from a public callback definition.
  *
  * @param definition - Public Binding IR callback definition.
- * @param types - Definitions used to authenticate copied nominal Fin trees.
+ * @param types - Definitions used to authenticate copied nominal trees.
  */
 export const callbackDefinitionRefinement = (definition, types = []) => callbackRefinement({
 	parameters: definition.callable.parameters.map(parameter => parameter.type)

@@ -85,11 +85,11 @@ test("independent reviews admit callback bounds in every safe direction without 
 	assert.deepEqual(ir.types.find(type => type.id === "lean:ReviewedCallbacks.Tile").source.extensions[nominalKey], { kind: "record", fields: [{ kind: "fin", bound: "5" }, null] });
 });
 
-test("forged identities, Subtype, empty or misshapen trees and misplaced bounds are refused before compilation", () => {
+test("forged identities, mixed Subtype directions, empty or misshapen trees and misplaced bounds are refused before compilation", () => {
 	const cases = [
 		["bounds hashed out of the identity", ir => { const definition = callbackOf(ir, "digits"); const refinements = definition.source.extensions[key]; delete definition.source.extensions[key]; rehash(ir, definition); definition.source.extensions[key] = refinements; }, () => "bridge:"]
 		, ["an identity hashed with dropped bounds", ir => { delete callbackOf(ir, "digits").source.extensions[key]; }, () => "bridge:"]
-		, ["a Subtype inside a callback", ir => { const definition = callbackOf(ir, "scaler"); definition.source.extensions[key] = { parameters: [{ kind: "subtype", constructor: "ReviewedCallbacks.checked" }], result: null }; rehash(ir, definition); }, () => "bridge:"]
+		, ["mixed Subtype directions", ir => { const definition = callbackOf(ir, "scaler"); definition.source.extensions[key] = { parameters: [{ kind: "subtype", constructor: "ReviewedCallbacks.checked" }], result: { kind: "subtype", constructor: "ReviewedCallbacks.checked" } }; rehash(ir, definition); }, () => "bridge:"]
 		, ["an all-null tree", ir => { const definition = callbackOf(ir, "scaler"); definition.source.extensions[key] = { parameters: [null], result: null }; rehash(ir, definition); }, () => "bridge:"]
 		, ["a tree of the wrong length", ir => { const definition = callbackOf(ir, "scaler"); definition.source.extensions[key] = { parameters: [{ kind: "fin", bound: "10" }, null], result: null }; rehash(ir, definition); }, () => "bridge:"]
 		, ["a tree that does not match its transport", ir => { const definition = callbackOf(ir, "digits"); definition.source.extensions[key] = { parameters: [{ kind: "fin", bound: "3" }], result: null }; rehash(ir, definition); }, () => "bridge:"]

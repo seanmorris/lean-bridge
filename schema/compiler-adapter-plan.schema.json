@@ -140,6 +140,7 @@
         { "type": "null" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"], "properties": { "kind": { "enum": ["array", "list", "option", "tuple", "result"] }, "arguments": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/$defs/callbackFinRefinement" } } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "bound"], "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"], "properties": { "kind": { "const": "subtype" }, "constructor": { "type": ["string", "null"], "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "fields"], "properties": { "kind": { "const": "record" }, "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }, "fields": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/callbackFinRefinementField" } } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "cases"], "properties": { "kind": { "const": "variant" }, "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }, "cases": { "type": "array", "minItems": 1, "maxItems": 1024, "items": { "$ref": "#/$defs/callbackFinRefinementCase" } } } }
       ]
