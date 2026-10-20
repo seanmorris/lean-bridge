@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-ruby-archive-source-v1",
+  "predecessorCommit": "97ada316244c877560c42b5821216a0d19f0dab4",
+  "draftParentCommit": "0e432a58da0a121fc17ca06b17cb9293da10e8ad",
+  "pathsSha256": "5ca77a582b2940945a76bbd7d1123767291ee8389f16792e64d724356e8b68d2",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-ruby-20261020",
+    "indexSha256": "f1caf88b4d1eb543d0b954a7776b773772ed763933fa123942bf459d0d7cbd12",
+    "indexedFileCount": 1792,
+    "archiveFileCount": 1793,
+    "addedFileCount": 1795
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-evidence-tests.mjs",
+      "currentSha256": "817804bf72f04a7587b21efea355f037a0894a86891095cf7cebaf37f8519e7f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-evidence.mjs",
+      "currentSha256": "ab3fa728d13e31e1b6a4e5dcf98613d0e42b2f0717b6ae62362c1e4229eb659f"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-ruby.test.mjs",
+      "previousSha256": "27d43e7ac3543cf0a67804520872685546170a793928e5b2e976f1b7206f71a2",
+      "currentSha256": "98a6a794fafa86fa4889f520ea665c0f64c20b61ea4d0c70aba45f0b294c9efa",
+      "edits": [
+        {
+          "start": 239,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-ruby-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
