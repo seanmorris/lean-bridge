@@ -65,6 +65,7 @@ jobs:
           set -euo pipefail
           sudo apt-get update
           packages=(build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd)
+          if [[ '${{ matrix.lane }}' == jvm ]]; then packages+=(maven); fi
           if [[ '${{ matrix.lane }}' == php-native ]]; then
             packages+=(composer php-cli php-common php-dev php-mbstring php-zip)
           fi
@@ -104,7 +105,7 @@ jobs:
             jvm)
               bash scripts/run-callback-subtype-remaining-ci.sh jvm \
                 "$JAVA_HOME/bin/java" "$JAVA_HOME/bin/javac" \
-                "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+                "$PWD/build/kotlin-tools/kotlinc/bin/kotlinc" "$(command -v mvn)"
               ;;
             php-native)
               bash scripts/run-callback-subtype-remaining-ci.sh php-native \

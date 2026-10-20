@@ -13,9 +13,11 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
-import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { callbackSubtypeJvmInstaller } from "./helpers/callback-subtype-jvm-install.mjs";
+import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_PROFILES?.split(",").sort() ?? [];
 const supported = ["dotnet", "java", "kotlin", "php-native", "wit-wasi"];
@@ -62,6 +64,16 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		let installJvm;
+		if(profiles.some(profile => ["java", "kotlin"].includes(profile)))
+		{
+			const pkg = receipt.packages.find(item => item.target === "maven" && item.role === "component");
+			const dependencies = await prepareJvmCorpusDependencies({
+				directory: author, handoff, pkg
+				, environment, clean: copiedCleanEnvironment
+			});
+			installJvm = callbackSubtypeJvmInstaller({ handoff, pkg, dependencies });
+		}
 		await rm(author, { recursive: true, force: true });
 		for(const profile of profiles)
 		{
@@ -73,6 +85,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 					source: () => readFile(`tests/fixtures/callback-subtype-consumers/${profile}.${extension[profile]}`, "utf8")
 					, success: "callback-subtype-remaining-ok"
 					, expectedChecks: profile === "wit-wasi" ? 26 : 14
+					, ...["java", "kotlin"].includes(profile) ? { installJvm } : {}
 					, ...(profile === "wit-wasi" ? { wit: [
 						/resource function/u
 						, /call-host/u
@@ -81,6 +94,11 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 				}
 			});
 			delete observation.command;
+			if(observation.jvmEnvironment)
+			{
+				Object.assign(observation, observation.jvmEnvironment);
+				delete observation.jvmEnvironment;
+			}
 			reports.push({ ...observation, route, profile
 				, bindingIrSha256: built.bindingIrSha256
 				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))

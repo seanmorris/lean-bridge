@@ -15,9 +15,9 @@ case "$lane" in
     export LEAN_BRIDGE_DOTNET=$1
     ;;
   jvm)
-    [[ $# == 3 ]] || exit 2
+    [[ $# == 4 ]] || exit 2
     profiles=java,kotlin
-    export LEAN_BRIDGE_JAVA=$1 LEAN_BRIDGE_JAVAC=$2 LEAN_BRIDGE_KOTLINC=$3
+    export LEAN_BRIDGE_JAVA=$1 LEAN_BRIDGE_JAVAC=$2 LEAN_BRIDGE_KOTLINC=$3 LEAN_BRIDGE_MAVEN=$4
     ;;
   php-native)
     [[ $# == 2 ]] || exit 2

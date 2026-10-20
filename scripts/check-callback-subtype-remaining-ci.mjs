@@ -37,11 +37,18 @@ const exact = ["bindingIrSha256", "checks", "compilerFreePath", "consumerSha256"
 const cells = new Set();
 for(const item of report.reports)
 {
-	assert.deepEqual(Object.keys(item).sort(), exact.sort());
+	const jvmKeys = ["componentSha256", "dependencyClosureSha256", "offlineMaven", "repeatExecution", "runtimeOnly"];
+	assert.deepEqual(Object.keys(item).sort(), [...exact, ...["java", "kotlin"].includes(item.profile) ? jvmKeys : []].sort());
 	assert.ok(profiles.includes(item.profile)); assert.ok(["ordinary", "reviewed"].includes(item.route));
 	assert.equal(item.checks, item.profile === "wit-wasi" ? 26 : 14);
 	for(const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation"])
 		assert.equal(item[flag], true);
+	if(["java", "kotlin"].includes(item.profile))
+	{
+		for(const flag of ["offlineMaven", "repeatExecution", "runtimeOnly"]) assert.equal(item[flag], true);
+		for(const field of ["componentSha256", "dependencyClosureSha256"])
+			assert.match(item[field], /^[a-f0-9]{64}$/u);
+	}
 	for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])
 		assert.match(item[field], /^[a-f0-9]{64}$/u);
 	const cell = `${item.route}/${item.profile}`; assert.equal(cells.has(cell), false); cells.add(cell);
