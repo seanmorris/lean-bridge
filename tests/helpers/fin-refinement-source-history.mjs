@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexMatrixPinRepairSource, checkedRecordValueIndexMatrixPinRepairChangedPaths } from "./checked-record-value-index-matrix-pin-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixLintSource, checkedRecordValueIndexMatrixLintChangedPaths } from "./checked-record-value-index-matrix-lint-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixHistoryGapSource, checkedRecordValueIndexMatrixHistoryGapChangedPaths, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths } from "./checked-record-value-index-matrix-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixRegistrationSource, checkedRecordValueIndexMatrixRegistrationChangedPaths } from "./checked-record-value-index-matrix-registration-source-history.mjs";
@@ -1375,7 +1376,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexMatrixLintChangedPaths
+	...checkedRecordValueIndexMatrixPinRepairChangedPaths
+	, ...checkedRecordValueIndexMatrixLintChangedPaths
 	, ...checkedRecordValueIndexMatrixHistoryGapChangedPaths
 	, ...checkedRecordValueIndexMatrixHistoryGapHistoricalPaths
 	, ...checkedRecordValueIndexMatrixRegistrationChangedPaths
@@ -1823,8 +1825,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexMatrixLintSource(
+	let previous = beforeCheckedRecordValueIndexMatrixPinRepairSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixLintSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexMatrixRegistrationSource(

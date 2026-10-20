@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-matrix-pin-repair-source-v1",
+  "predecessorCommit": "e4bdd7311e41be2d42a4520ebe0cdad98660722c",
+  "draftParentCommit": "335f5a80e2affbac154293df9092960e4f2ad530",
+  "foundation": {
+    "modifiedPaths": [
+      "docs/type-surface.v1.json"
+    ],
+    "addedPaths": []
+  },
+  "pathsSha256": "45bb623d6964809595f9eb4cda3d6c0c15d7be5fd329e39541b4f53fca24f2a4",
+  "pinCount": 94,
+  "pinUpdates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "7258c77a190aa742b65a5bfc5b157976b2d152f84714f1b404666ad5efdc3887",
+      "currentSha256": "51cf77fb11f603407943bf2c56a763e0d3cc627a47c48868ef6604525f8040f1",
+      "count": 94
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-pin-repair-source-history.mjs",
+      "currentSha256": "e3f88b34b3df92c8314da0c75e0b74c9c90390d26ea9957850e7a099e4048a9a"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-pin-repair-source-history-tests.mjs",
+      "currentSha256": "fac4cc1b226ca962d819f14a66520a8a13ae88227a48b8d83b9ee7e6d499089e"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-pin-repair-source-history.mjs",
+      "currentSha256": "1e4fa0ef8147a2f5aa1de8df041c02792b7d99ac60a423a8f5802d434da6ed90"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "1c7bbce9a31327524f271a5489f8faf2e855d13b5a247993cf4d2ef50e3aef01",
+      "currentSha256": "84fe0d61f8a6e9d54e6707b077d1c8d6580df8e466dddede75164f85551c7226",
+      "replacements": [
+        {
+          "previous": "7258c77a190aa742b65a5bfc5b157976b2d152f84714f1b404666ad5efdc3887",
+          "current": "51cf77fb11f603407943bf2c56a763e0d3cc627a47c48868ef6604525f8040f1",
+          "count": 94
+        }
+      ]
+    },
+    {
+      "path": "tests/checked-record-value-index-matrix.test.mjs",
+      "previousSha256": "df53ded73879b4ec4d5692077e2e4224cb2832f57147548f2ed235f706cd8b65",
+      "currentSha256": "d85dc20ccd2e87b186c140aa9bb9d17f12bd7d898678789d2f97dfacf6af991e",
+      "edits": [
+        {
+          "start": 605,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-matrix-pin-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "171393e02544fb0b4a6fc3aa556da67c5faefbc554bfabbcb7b886445de96e6c",
+      "currentSha256": "47455f182425f13a0cc9d3f910577d4e468cf68b0eeed31b575925d2b3786f85",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixPinRepairSource, checkedRecordValueIndexMatrixPinRepairChangedPaths } from \"./checked-record-value-index-matrix-pin-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 107250,
+          "previous": "\t...checkedRecordValueIndexMatrixLintChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixPinRepairChangedPaths\n\t, ...checkedRecordValueIndexMatrixLintChangedPaths\n"
+        },
+        {
+          "start": 127217,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexMatrixLintSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexMatrixPinRepairSource(\n"
+        },
+        {
+          "start": 127308,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixLintSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}
