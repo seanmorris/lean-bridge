@@ -6,9 +6,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { compileOwnedAggregateModel } from "../src/abi/owned-aggregate-model.mjs";
+import { declarationRefinements } from "../src/abi/refinements.mjs";
+import { generateOwnedBindingCarriers } from "../src/build/owned-aggregate-carriers.mjs";
 import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
 import { sha256Text } from "../src/binding-ir/sha256.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 
 test("owned models preserve complete contracts and exact copied-versus-retained field decisions", () => {
 	const ir = ownedAggregateReviewedIr(), before = structuredClone(ir);
@@ -42,6 +44,38 @@ test("recursive types and repeated resources share type references without copyi
 	const pair = types.get("lean:Owned.Choice").cases.find(branch => branch.name === "pair");
 	assert.deepEqual(pair.fields.map(field => field.type), ["lean:Owned.Ticket", "lean:Owned.Ticket"]);
 	assert.deepEqual(pair.fields.map(field => field.retention), ["lease", "lease"]);
+});
+
+test("owned models authenticate and retain per-use Subtype decisions without opening copied contracts", () => {
+	const ir = ownedSubtypeReviewedIr(), before = structuredClone(ir);
+	const declaration = ir.declarations.find(item => item.name === "echoRecord");
+	assert.throws(() => declarationRefinements(declaration
+		, declaration.source.extensions["lean-lang.org/refinements"], ir.types));
+	const model = compileOwnedAggregateModel(ir);
+	assert.deepEqual(ir, before);
+	assert.deepEqual(model.declarations.find(item => item.name === "echoRecord").refinements
+		, declaration.source.extensions["lean-lang.org/refinements"]);
+	assert.equal(Object.isFrozen(model.declarations.find(item => item.name === "echoRecord").refinements), true);
+	assert.throws(() => generateOwnedBindingCarriers({
+		document: ir
+		, sourceIdentity: {}
+		, declarations: []
+		, metadataSha256: "a".repeat(64)
+	}), { code: "owned-refinements-unavailable" });
+	const wrongInput = ownedSubtypeReviewedIr();
+	wrongInput.declarations.find(item => item.name === "echoRecord")
+		.source.extensions["lean-lang.org/refinements"].parameters[0]
+		.fields[4].refinement.fields[0].refinement.constructor = null;
+	assert.throws(() => compileOwnedAggregateModel(wrongInput), /Invalid declaration refinement|Refinement does not match/u);
+	const wrongResult = ownedSubtypeReviewedIr();
+	wrongResult.declarations.find(item => item.name === "echoRecord")
+		.source.extensions["lean-lang.org/refinements"].result
+		.fields[4].refinement.fields[0].refinement.constructor = "Owned.checkedCount";
+	assert.throws(() => compileOwnedAggregateModel(wrongResult), /Invalid declaration refinement|Refinement does not match/u);
+	const wrongField = ownedSubtypeReviewedIr();
+	wrongField.declarations.find(item => item.name === "echoRecord")
+		.source.extensions["lean-lang.org/refinements"].parameters[0].fields[4].name = "other";
+	assert.throws(() => compileOwnedAggregateModel(wrongField), /Invalid declaration refinement|Refinement does not match/u);
 });
 
 test("callback arguments, returned closures and borrowed anchors retain ownership sites", () => {

@@ -89,10 +89,12 @@ export const validateNativeRepresentation = type =>
  *
  * @param type - Compiler-owned native type.
  * @param policy - Explicit aggregate author decision.
+ * @param site - Known top-level direction for checked owned leaves.
  */
-export const validateOwnedNativeType = (type, policy) => {
+export const validateOwnedNativeType = (type, policy, site = undefined) => {
 	validateOwnedAggregatePolicy(policy);
-	return validate(type, 0, false, undefined, policy);
+	if(site !== undefined && !["parameter", "result"].includes(site)) fail("invalid owned refinement site");
+	return validate(type, 0, false, undefined, policy, false, true, site, site !== undefined, site === "result");
 };
 
 // `structural` stays true while only arrays, lists, options, products, results and aliases separate a
@@ -103,7 +105,8 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(type.kind === "owned-graph")
 	{
 		if(!policy || references || copied) fail("owned aggregates require a separately authorized graph boundary");
-		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true, false));
+		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true
+			, true, site, subtypeStructural, subtypeResult));
 	}
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
 		, graph: ["kind", "root", "types", "abi"]

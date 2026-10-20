@@ -7,6 +7,7 @@
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
+import { declarationRefinements } from "./refinements.mjs";
 
 const freeze = value => {
 	if(value && typeof value === "object" && !Object.isFrozen(value))
@@ -63,14 +64,20 @@ export const compileOwnedAggregateModel = input => {
 		, type: enqueue(field.type)
 		, retention: representation(field.type) === "copied" ? "copy" : "lease"
 		, mutability: field.mutability }));
-	const declarations = ir.declarations.map(declaration => ({ id: declaration.id
+	const declarations = ir.declarations.map(declaration => {
+		const selected = declaration.source.extensions["lean-lang.org/refinements"];
+		const refinements = selected === undefined ? undefined
+			: declarationRefinements(declaration, selected, ir.types, { ownedStructural: true });
+		return { id: declaration.id
 		, name: declaration.name
 		, kind: declaration.kind, owner: declaration.owner
 		, receiver: declaration.receiver && site(declaration.receiver)
 		, parameters: declaration.parameters.map(site)
 		, result: site(declaration.result)
 		, effects: declaration.effects, failure: declaration.failure
-		, resultMode: declaration.resultMode }));
+		, resultMode: declaration.resultMode
+		, ...(refinements === undefined ? {} : { refinements }) };
+	});
 	for(let cursor = 0; cursor < pending.length; ++cursor)
 	{
 		const id = pending[cursor], ref = references.get(id);

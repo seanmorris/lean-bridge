@@ -10,8 +10,10 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { canonicalizeJsonValue, BindingIrCanonicalError } from "../binding-ir/canonical.mjs";
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
+import { declarationRefinements } from "../abi/refinements.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { callbackSemanticSignature } from "./callback-signature.mjs";
+import { checkedRefinementSelection } from "./checked-refinement-selection.mjs";
 import { createMetadataRequest } from "./elaborated-metadata.mjs";
 import { assertReviewedSourceConfiguration, validateReviewedSourceIdentity, reviewedContractDifference, readReviewedSource } from "./reviewed-source.mjs";
 
@@ -37,7 +39,6 @@ const checkReview = document => {
 	const reject = (condition, path) => {
 		if(condition) unsupported(`Reviewed owned builds do not support this decision: ${path}`, { path });
 	};
-	compileOwnedAggregateModel(document);
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const isCallback = type => type.kind === "named" && definitions.get(type.id).kind === "callback";
 	const copied = type => type.kind === "primitive" || (type.kind === "named"
@@ -49,11 +50,19 @@ const checkReview = document => {
 		, category: "boundary", payload: null
 	}] : []), "errors");
 	for(const producer of document.producers) reject(Object.keys(producer.extensions).length, `producers.${producer.id}.extensions`);
-	const source = (item, callbackName) => {
+	const source = (item, callbackName, declaration = false) => {
 		reject(callbackName ? item.id !== `bridge:${callbackName}` || item.source.declaration !== callbackName || item.name !== callbackName
 			: !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$(?![\s\S])/u.test(item.source.declaration)
 				|| item.id !== `lean:${item.source.declaration}`, `${item.id}.source.declaration`);
-		reject(Object.keys(item.source.extensions).length, `${item.id}.source.extensions`);
+		const refinementKey = "lean-lang.org/refinements";
+		reject(Object.keys(item.source.extensions).some(key => !declaration || key !== refinementKey), `${item.id}.source.extensions`);
+		if(declaration && Object.hasOwn(item.source.extensions, refinementKey))
+		{
+			try
+			{ declarationRefinements(item, item.source.extensions[refinementKey], document.types, { ownedStructural: true }); }
+			catch
+			{ unsupported("Reviewed owned refinement decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
+		}
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
 	const reference = (type, path, nested = false) => {
@@ -106,7 +115,7 @@ const checkReview = document => {
 	}
 	for(const declaration of document.declarations)
 	{
-		source(declaration);
+		source(declaration, undefined, true);
 		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
 		const hasCallback = declaration.parameters.some(value => isCallback(value.type));
 		const effects = [...(hasCallback ? ["fails", "host-call"] : [])
@@ -125,6 +134,7 @@ const checkReview = document => {
 		declaration.parameters.forEach((value, index) => parameter(value, `${declaration.id}.parameters[${index}]`, true));
 		site(declaration.result, `${declaration.id}.result`, true, false, true);
 	}
+	compileOwnedAggregateModel(document);
 	return document;
 };
 
@@ -150,10 +160,14 @@ export const reviewedOwnedSourceSelection = review => {
 	const callbacks = new Set(document.types.filter(type => type.kind === "callback").map(type => type.id));
 	const types = new Map(document.types.map(type => [type.id, type]));
 	const selected = new Map(), active = new Set();
-	const decision = (value, inputs, callable) => ({ ownership: value.ownership
-		, lifetime: value.lifetime?.scope === "parameter" ? { scope: "parameter"
-			, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)
-		, ...callable ? { callable } : {} });
+	const decision = (value, inputs, callable, refinement) => {
+		const selected = refinement === undefined ? null : checkedRefinementSelection(refinement);
+		return { ownership: value.ownership
+			, lifetime: value.lifetime?.scope === "parameter" ? { scope: "parameter"
+				, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)
+			, ...callable ? { callable } : {}
+			, ...(selected === null ? {} : { refinement: selected }) };
+	};
 	const callableDecision = type => {
 		if(type.kind !== "named" || !callbacks.has(type.id)) return undefined;
 		if(selected.has(type.id)) return selected.get(type.id);
@@ -171,13 +185,15 @@ export const reviewedOwnedSourceSelection = review => {
 	const contracts = Object.fromEntries(document.declarations
 		.map(item => {
 			const inputs = [...item.receiver ? [item.receiver] : [], ...item.parameters];
+			const refinements = item.source.extensions["lean-lang.org/refinements"];
 			const parameters = inputs.map(value => callableDecision(value.type));
 			const result = callableDecision(item.result.type);
 			return [item.source.declaration, {
 				...item.receiver ? { receiver: item.kind } : {}
-				, ...parameters.some(Boolean) || inputs.some(value => value.ownership === "transfer")
-					? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index])) } : {}
-				, ...item.result.ownership === "borrow" || result ? { result: decision(item.result, inputs, result) } : {}
+				, ...parameters.some(Boolean) || inputs.some(value => value.ownership === "transfer") || refinements?.parameters.some(value => value !== null)
+					? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index], refinements?.parameters[index])) } : {}
+				, ...item.result.ownership === "borrow" || result
+					? { result: decision(item.result, inputs, result, refinements?.result) } : {}
 			}];
 		})
 		.filter(([, contract]) => Object.keys(contract).length)

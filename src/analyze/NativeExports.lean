@@ -471,8 +471,9 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       ("predicate", obj [("kind", str "fin"), ("bound", str (toString bound))]),
       ("abi", ← abi e)]
   if e.isAppOfArity ``Subtype 2 then
-    -- Input constructors and Lean-produced results have separate capabilities. Neither
-    -- follows callback, generic-record or owned-value edges.
+    -- Input constructors and Lean-produced results have separate capabilities. The
+    -- ownership-aware graph keeps the same site-local decision while resource leaves
+    -- retain their identity; callbacks and unresolved generic records stay separate.
     if !subtypeStructural && !subtypeResult then
       reject e "Subtype refinements require a top-level or structural-container parameter or result"
     let constructor := selectedConstructor checked
@@ -1083,7 +1084,7 @@ def shape (request : Request) (e : Expr) (checked : Option Json := none)
     unless policy.ownership == "lease" && policy.disposal == "required" &&
         ["none", "queued-finalizer"].contains policy.fallback && policy.cycles == "reject" do
       reject e "invalid resource aggregate ownership policy"
-  let subtypeResult := callbackSite == some true && request.ownedAggregates.isNone
+  let subtypeResult := callbackSite == some true
   let (value, state) ← (shapeTree request e (checked := checked) (callbackSite := callbackSite)
     (subtypeStructural := true) (subtypeResult := subtypeResult)
     (callableDecision := callableDecision)).run { parentAliases }
@@ -1242,7 +1243,7 @@ def describeScalarSignature (request : Request) (type : Expr) : MetaM (Array Jso
 partial def containsRefinement (type : Json) : Bool :=
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
   if kind == "refinement" then true
-  else if kind == "graph" then
+  else if ["graph", "owned-graph"].contains kind then
     containsRefinement ((type.getObjVal? "root").toOption.getD Json.null) ||
       ((type.getObjValAs? (Array Json) "types").toOption.getD #[]).any containsRefinement
   else if kind == "alias" then
@@ -1284,7 +1285,7 @@ partial def projectionCheckedRecordDefinition (type : Json) (types : Array Json)
 partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := #[])
     (seen : List String := []) (depth : Nat := 0) : Json := Id.run do
   let kind := (type.getObjValAs? String "kind").toOption.getD ""
-  if kind == "graph" then
+  if ["graph", "owned-graph"].contains kind then
     let table := (type.getObjValAs? (Array Json) "types").toOption.getD #[]
     return projectionCheckedSelectionWith ((type.getObjVal? "root").toOption.getD Json.null) table [] depth
   if kind == "reference" then

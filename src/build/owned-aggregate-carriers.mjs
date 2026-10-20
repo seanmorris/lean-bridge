@@ -56,6 +56,10 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256, hostCallbacks = false }) => {
 	const component = document.component;
 	const model = compileOwnedAggregateModel(document);
+	if(model.declarations.some(declaration => declaration.refinements !== undefined))
+		throw Object.assign(new TypeError("Owned aggregate carriers require checked Subtype adapters"), {
+			code: "owned-refinements-unavailable"
+		});
 	const nodes = new Map(model.types.map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const declarations = new Map(document.declarations.map(item => [item.id, item]));

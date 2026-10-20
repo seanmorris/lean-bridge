@@ -14,8 +14,11 @@
  * @param subtypeStructural - Whether this export site permits selected Subtype constructors.
  * @param types - Definitions used to authenticate selected record and variant members.
  * @param subtypeResult - Whether this is a copied export result produced by Lean.
+ * @param ownedStructural - Whether an explicitly ownership-aware boundary may
+ * traverse an owned nominal record or variant while authenticating its copied
+ * refined leaves.
  */
-export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = [], subtypeResult = false) => {
+export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = [], subtypeResult = false, ownedStructural = false) => {
 	const fail = () => { throw new TypeError("Refinement does not match its transport type"); };
 	const definitions = new Map(types.map(definition => [definition.id, definition]));
 	if(definitions.size !== types.length) fail();
@@ -37,7 +40,8 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		const definition = transport?.kind === "named" ? definitions.get(transport.id) : undefined;
 		if(definition?.kind === "alias")
 		{
-			if(seen.has(transport.id) || definition.representation !== "copied") fail();
+			if(seen.has(transport.id) || (definition.representation !== "copied"
+				&& !(ownedStructural && definition.representation === "owned"))) fail();
 			return visit(value, definition.target, level + 1, new Set([...seen, transport.id]));
 		}
 		if(value.kind === "fin")
@@ -88,7 +92,8 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		{
 			const variant = value.kind === "variant";
 			closed(value, ["kind", "name", variant ? "cases" : "fields"]);
-			if(!subtypeStructural || !definition || definition.kind !== value.kind || definition.representation !== "copied"
+			if(!subtypeStructural || !definition || definition.kind !== value.kind
+				|| (definition.representation !== "copied" && !(ownedStructural && definition.representation === "owned"))
 				|| definition.source?.declaration !== value.name || seen.has(transport.id)
 				|| definition.source?.extensions?.["lean-lang.org/instantiation"] !== undefined
 				|| definition.source?.extensions?.["lean-lang.org/erased-proofs"] !== undefined) fail();
@@ -132,6 +137,47 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		return true;
 	};
 	visit(refinement, type, depth, new Set());
+};
+
+/**
+ * Authenticate one declaration's complete per-use refinement decision.
+ * Ownership-aware callers must opt in explicitly; ordinary copied contracts
+ * therefore retain their previous closed surface.
+ *
+ * @param declaration - Binding IR declaration with erased transport sites.
+ * @param value - Complete parameter/result refinement trees.
+ * @param types - Definitions referenced by nominal refinement trees.
+ * @param options - Explicit transport capabilities.
+ * @param options.ownedStructural - Admit owned nominal roots at this boundary.
+ */
+export const declarationRefinements = (declaration, value, types = [], { ownedStructural = false } = {}) => {
+	const fail = () => { throw new TypeError("Invalid declaration refinement metadata"); };
+	const direction = (tree, produced) => {
+		if(tree === null || tree.kind === "fin") return;
+		if(["subtype", "checked-record"].includes(tree.kind))
+		{
+			if(produced ? tree.constructor !== null : typeof tree.constructor !== "string") fail();
+			if(tree.kind === "checked-record") tree.fields?.forEach(field => direction(field.refinement, produced));
+			return;
+		}
+		if(tree.kind === "record") return tree.fields.forEach(field => direction(field.refinement, produced));
+		if(tree.kind === "variant") return tree.cases.forEach(branch => branch.fields.forEach(field => direction(field.refinement, produced)));
+		if(["array", "list", "option", "tuple", "result"].includes(tree.kind))
+			return tree.arguments.forEach(child => direction(child, produced));
+		fail();
+	};
+	if(!value || typeof value !== "object" || Array.isArray(value)
+		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
+		|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();
+	for(const [index, refinement] of value.parameters.entries())
+	{
+		assertRefinement(refinement, declaration.parameters[index].type, 0, true, types, false, ownedStructural);
+		direction(refinement, false);
+	}
+	assertRefinement(value.result, declaration.result.type, 0, true, types, true, ownedStructural);
+	direction(value.result, true);
+	if(value.result === null && value.parameters.every(refinement => refinement === null)) fail();
+	return structuredClone(value);
 };
 
 /**

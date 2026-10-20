@@ -111,3 +111,29 @@ export const ownedAggregateReviewedIr = () => {
 	ir.errors = [{ id: "error:native-callback", name: "NativeCallbackFailure", category: "boundary", payload: null, documentation }];
 	return ir;
 };
+
+/** Add one per-use checked Subtype decision inside an owned aggregate. */
+export const ownedSubtypeReviewedIr = () => {
+	const ir = ownedAggregateReviewedIr();
+	const declaration = ir.declarations.find(item => item.name === "echoRecord");
+	const payload = constructor => ({
+		kind: "record", name: "Owned.Payload"
+		, fields: [
+			{ name: "count", refinement: { kind: "subtype", constructor } }
+			, { name: "bytes", refinement: null }]
+	});
+	const bundle = constructor => ({
+		kind: "record", name: "Owned.Bundle"
+		, fields: [
+			{ name: "primary", refinement: null }
+			, { name: "spare", refinement: null }
+			, { name: "peers", refinement: null }
+			, { name: "history", refinement: null }
+			, { name: "payload", refinement: payload(constructor) }]
+	});
+	declaration.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [bundle("Owned.checkedCount")]
+		, result: bundle(null)
+	};
+	return ir;
+};

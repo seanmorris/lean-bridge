@@ -73,6 +73,10 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 		{
 			keys(value, ["kind", "element"]); edge(value.element, references, depth + 1); return;
 		}
+		if(kind === "refinement")
+		{
+			keys(value, ["kind", "base", "predicate"]); edge(value.base, references, depth + 1); return;
+		}
 		if(!["tuple", "result"].includes(kind)) fail("edges require values or resources; inline definitions, nested graphs and retained callbacks are unsupported");
 		keys(value, ["kind", "arguments"]); dense(value.arguments, 2);
 		if(value.arguments.length !== 2) fail("products and results require two arguments");

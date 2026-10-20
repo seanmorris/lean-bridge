@@ -11,12 +11,13 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { canonicalizeJsonValue, parseBindingIr } from "../src/binding-ir/canonical.mjs";
+import { checkedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
 import { validateReviewedSource, assertReviewedSourceConfiguration } from "../src/analyze/reviewed-source.mjs";
 import { validateReviewedOwnedSource, reviewedOwnedSourceSelection, readReviewedOwnedSource
 	, verifyReviewedOwnedSourceInputs, reconcileReviewedOwnedSource } from "../src/analyze/reviewed-owned-source.mjs";
 import { generateOwnedAggregateCarriers } from "../src/build/owned-aggregate-carriers.mjs";
 import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
-import { ownedAggregateReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
@@ -72,6 +73,22 @@ test("owned review owns resource selection and policy without admitting v4 to v3
 	assert.throws(() => validateReviewedSource(review), { code: "consumer-upgrade-required" });
 	assert.throws(() => parseBindingIr(review.source), { code: "consumer-upgrade-required" });
 	assert.throws(() => assertReviewedSourceConfiguration({ schemaVersion: 1, ownedAggregates: document.aggregatePolicy }), { code: "export-configuration-reviewed-ir" });
+});
+
+test("owned review exports exact Subtype decisions for compiler reconciliation", () => {
+	const document = ownedSubtypeReviewedIr(), review = capture(document);
+	assert.deepEqual(validateReviewedOwnedSource(review), document);
+	const selection = reviewedOwnedSourceSelection(review);
+	const declaration = document.declarations.find(item => item.name === "echoRecord");
+	assert.deepEqual(selection.contracts["Owned.echoRecord"].parameters[0].refinement
+		, checkedRefinementSelection(declaration.source.extensions["lean-lang.org/refinements"].parameters[0]));
+	assert.equal(Object.hasOwn(selection.contracts["Owned.echoRecord"], "result"), false);
+	assert.equal(selection.contracts["Owned.echoRecord"].parameters[0].ownership, "borrow");
+	const resultConstructor = structuredClone(document);
+	resultConstructor.declarations.find(item => item.name === "echoRecord")
+		.source.extensions["lean-lang.org/refinements"].result
+		.fields[4].refinement.fields[0].refinement.constructor = "Owned.checkedCount";
+	assert.throws(() => validateReviewedOwnedSource(capture(resultConstructor)), { code: "reviewed-ir-build-unsupported" });
 });
 
 test("owned reconciliation preserves nested annotations and compiled provenance", () => {

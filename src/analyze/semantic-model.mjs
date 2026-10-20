@@ -182,7 +182,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		return { kind: "named", id };
 	};
 	const hasSubtype = (type, references = new Map(), seen = new Set()) => {
-		if(type.kind === "graph") return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());
+		if(["graph", "owned-graph"].includes(type.kind)) return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());
 		if(type.kind === "reference")
 		{
 			if(seen.has(type.name)) return false;
@@ -218,7 +218,7 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		throw new TypeError("Checked record alias chain exceeds its bound");
 	};
 	const refinement = (type, nominal = false, shared = false, references = new Map(), seen = new Set(), depth = 0, produced = false) => {
-		if(type.kind === "graph") return refinement(type.root, nominal, shared,
+		if(["graph", "owned-graph"].includes(type.kind)) return refinement(type.root, nominal, shared,
 			new Map(type.types.map(definition => [definition.name, definition])), new Set(), depth, produced);
 		if(type.kind === "reference")
 		{

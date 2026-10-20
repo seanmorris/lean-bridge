@@ -332,7 +332,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 	if(contract.result) sites.push({ site: contract.result, type: projection.result, result: true, label: "result" });
 	for(const { site, type, result, label } of sites)
 	{
-		const refined = type => type.kind === "refinement" || (type.kind === "graph" ? refined(type.root) || type.types.some(refined)
+		const refined = type => type.kind === "refinement" || (["graph", "owned-graph"].includes(type.kind) ? refined(type.root) || type.types.some(refined)
 			: type.kind === "callback" ? type.parameters.some(refined) || refined(type.result)
 				: type.kind === "alias" ? refined(type.target)
 					: type.kind === "record" ? type.fields.some(field => refined(field.type))

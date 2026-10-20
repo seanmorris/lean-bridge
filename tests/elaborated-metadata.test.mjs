@@ -163,16 +163,20 @@ end Shop
 	assert.deepEqual(await lakeInputState(context.workspace), before);
 });
 
-test("callback Subtype constraints are rejected rather than erased", () => {
-	const fin = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
+test("callback Subtype constraints survive metadata validation for semantic direction checks", () => {
+	const subtype = constructor => ({
+		kind: "refinement"
+		, base: { kind: "primitive", name: "nat" }
+		, predicate: { kind: "subtype", constructor } });
 	for(const type of [
-		{ kind: "callback", parameters: [fin], result: { kind: "primitive", name: "nat" } }
-		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: fin } }
-		, { kind: "callback", parameters: [{ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: fin }] }], result: { kind: "primitive", name: "nat" } }
+		{ kind: "callback", parameters: [subtype("Sample.checked")], result: { kind: "primitive", name: "nat" } }
+		, { kind: "callback", parameters: [{ kind: "primitive", name: "nat" }], result: { kind: "array", element: subtype("Sample.checked") } }
+		, { kind: "callback", parameters: [{ kind: "record", name: "Sample.Record", fields: [{ name: "value", type: subtype("Sample.checked") }] }], result: { kind: "primitive", name: "nat" } }
+		, { kind: "callback", parameters: [subtype(null)], result: { kind: "primitive", name: "nat" } }
 	]) {
 		const { request, report } = sample();
 		report.modules[0].declarations[0].projection.parameters[0].type = type;
-		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/);
+		assert.equal(validateElaboratedMetadata(report, request), true);
 	}
 });
 

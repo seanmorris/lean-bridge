@@ -327,7 +327,7 @@ export const validateElaboratedMetadata = (report, request) => {
 				};
 				const nativeType = (type, site) => {
 					if(request.ownedAggregates === undefined) validateNativeType(type, 0, false, site);
-					else validateOwnedNativeType(type, request.ownedAggregates);
+					else validateOwnedNativeType(type, request.ownedAggregates, site);
 					const check = value => {
 						if(["graph", "owned-graph"].includes(value.kind))
 						{ value.types.forEach(check); check(value.root); }

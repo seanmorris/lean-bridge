@@ -33,6 +33,19 @@ const record = () => structuredClone({ kind: "record", name: "Owned.Box"
 	, fields: [{ name: "ticket", projection: "Owned.Box.ticket", type: ticket }
 		, { name: "children", projection: "Owned.Box.children", type: array(reference("Owned.Box")) }] });
 const nominalGraph = () => ({ ...graph(), root: reference("Owned.Box"), types: [record()] });
+const refinedNominalGraph = result => {
+	const value = nominalGraph();
+	value.types[0].fields.push({
+		name: "count", projection: "Owned.Box.count"
+		, type: {
+			kind: "refinement"
+			, base: { kind: "primitive", name: "nat", lean: "Nat", abi: heap }
+			, predicate: { kind: "subtype", constructor: result ? null : "Owned.checkedCount" }
+			, abi: heap
+		}
+	});
+	return value;
+};
 const fixture = resolve("tests/fixtures/onboarding/owned-aggregates");
 
 test("aggregate author policy is explicit, closed, source-bound and unavailable to unowned adapters", async () => {
@@ -110,6 +123,16 @@ test("owned graph validation rejects malformed topology, hidden callbacks and po
 	const accessor = graph();
 	Object.defineProperty(accessor, "kind", { get: () => { throw Error("getter ran"); } });
 	assert.throws(() => validateOwnedNativeType(accessor, policy), /must be a data field/);
+});
+
+test("owned graph validation admits directional Subtype leaves only at explicit sites", () => {
+	const input = refinedNominalGraph(false), result = refinedNominalGraph(true);
+	assert.equal(validateOwnedNativeType(input, policy, "parameter"), input);
+	assert.equal(validateOwnedNativeType(result, policy, "result"), result);
+	assert.throws(() => validateOwnedNativeType(input, policy), /top-level or structural-container/u);
+	assert.throws(() => validateOwnedNativeType(input, policy, "result"), /invalid Subtype refinement/u);
+	assert.throws(() => validateOwnedNativeType(result, policy, "parameter"), /invalid Subtype refinement/u);
+	assert.throws(() => validateOwnedNativeType(input, policy, "callback"), /invalid owned refinement site/u);
 });
 
 test("owned compiler graphs enforce finite schema budgets without expanding recursive aliases", () => {

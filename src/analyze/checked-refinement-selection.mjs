@@ -200,7 +200,7 @@ export const projectionCheckedSelection = type => {
 	};
 	const visit = (value, depth, definitions = new Map(), seen = new Set()) => {
 		if(++nodes > 4096 || depth > 32) fail();
-		if(value.kind === "graph")
+		if(["graph", "owned-graph"].includes(value.kind))
 		{
 			if(!Array.isArray(value.types) || !value.types.length || value.types.length > 1024) fail();
 			const table = new Map();
