@@ -1,0 +1,2006 @@
+{
+  "bindingIrSha256": "e22480b71bdca0b86575bc59232807b1af2e718708bd20dfe752eb1eb66024eb",
+  "browser": {
+    "deployments": [
+      {
+        "files": [
+          {
+            "bytes": 285,
+            "path": "assets/__vite-browser-external-D513FCGW.js",
+            "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+          },
+          {
+            "bytes": 21003,
+            "path": "assets/checkedrecordvalueindices-767c615eabad08d7.so-mon2t325.wasm",
+            "sha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001"
+          },
+          {
+            "bytes": 3596852,
+            "path": "assets/checkedrecordvalueindices-BFtC7_ht.js",
+            "sha256": "6b20e8eb3839d2b11deb318fa7b6f242b200a0f14becca87ff8893655291652d"
+          },
+          {
+            "bytes": 9787,
+            "path": "assets/index-B1rYXdE_.js",
+            "sha256": "0961025c4d733c457b36e32a289984661ac3e804c544024655993f0e42de9fb7"
+          },
+          {
+            "bytes": 6488025,
+            "path": "assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+          },
+          {
+            "bytes": 2199,
+            "path": "assets/preload-helper-CZj_vqJa.js",
+            "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+          },
+          {
+            "bytes": 1180,
+            "path": "assets/rolldown-runtime-BPOCksWG.js",
+            "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+          },
+          {
+            "bytes": 396,
+            "path": "index.html",
+            "sha256": "016a1fa99cea4269e8e5037f2c7a0dae673b94f1811d8ac2cc9dd5f26a89892a"
+          }
+        ],
+        "modulePaths": [
+          "node_modules/@lean-bridge/runtime/index.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+          "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+          "node_modules/@lean-bridge/runtime/internal/main.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+          "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+          "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+          "node_modules/checkedrecordvalueindices/index.mjs",
+          "node_modules/checkedrecordvalueindices/internal/descriptor.mjs",
+          "node_modules/checkedrecordvalueindices/internal/runtime.mjs",
+          "node_modules/checkedrecordvalueindices/internal/validators.mjs"
+        ],
+        "sha256": "41476302c20f550f7ed83d26ed45128198429e3be486f9efc192afea3c4ecd1f",
+        "variant": "production",
+        "viteVersion": "8.2.1"
+      }
+    ],
+    "executions": [
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 21003,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/checkedrecordvalueindices-767c615eabad08d7.so-mon2t325.wasm",
+            "sha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001",
+            "status": 200
+          }
+        ],
+        "engine": "chromium",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "151.0.7922.34",
+          "module": "checkedrecordvalueindices",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 28,
+            "checks": 72,
+            "module": "checkedrecordvalueindices",
+            "observed": {
+              "ab": "2",
+              "emptySized": "0",
+              "emptyString": "9",
+              "falseBool": "1",
+              "trueBool": "0",
+              "unicodeString": "10",
+              "wideNat": "1267650600228229401496703205393",
+              "zeroNat": "11"
+            },
+            "produced": {
+              "ab": [
+                "object",
+                [
+                  [
+                    "size",
+                    [
+                      "bigint",
+                      "2"
+                    ]
+                  ]
+                ]
+              ],
+              "emptySized": [
+                "object",
+                [
+                  [
+                    "data",
+                    [
+                      "array",
+                      [
+                        [
+                          "length",
+                          [
+                            "number",
+                            "0"
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "emptyString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "23"
+                    ]
+                  ]
+                ]
+              ],
+              "falseBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1"
+                    ]
+                  ]
+                ]
+              ],
+              "trueBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "0"
+                    ]
+                  ]
+                ]
+              ],
+              "unicodeString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "24"
+                    ]
+                  ]
+                ]
+              ],
+              "wideNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1267650600228229401496703205393"
+                    ]
+                  ]
+                ]
+              ],
+              "zeroNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "25"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "recoveries": 6,
+            "rejections": 6,
+            "resultOnly": false,
+            "route": "reviewed-ir",
+            "snapshots": 28
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 21003,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/checkedrecordvalueindices-767c615eabad08d7.so-mon2t325.wasm",
+            "sha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001",
+            "status": 200
+          }
+        ],
+        "engine": "firefox",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "153.0",
+          "module": "checkedrecordvalueindices",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 28,
+            "checks": 72,
+            "module": "checkedrecordvalueindices",
+            "observed": {
+              "ab": "2",
+              "emptySized": "0",
+              "emptyString": "9",
+              "falseBool": "1",
+              "trueBool": "0",
+              "unicodeString": "10",
+              "wideNat": "1267650600228229401496703205393",
+              "zeroNat": "11"
+            },
+            "produced": {
+              "ab": [
+                "object",
+                [
+                  [
+                    "size",
+                    [
+                      "bigint",
+                      "2"
+                    ]
+                  ]
+                ]
+              ],
+              "emptySized": [
+                "object",
+                [
+                  [
+                    "data",
+                    [
+                      "array",
+                      [
+                        [
+                          "length",
+                          [
+                            "number",
+                            "0"
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "emptyString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "23"
+                    ]
+                  ]
+                ]
+              ],
+              "falseBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1"
+                    ]
+                  ]
+                ]
+              ],
+              "trueBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "0"
+                    ]
+                  ]
+                ]
+              ],
+              "unicodeString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "24"
+                    ]
+                  ]
+                ]
+              ],
+              "wideNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1267650600228229401496703205393"
+                    ]
+                  ]
+                ]
+              ],
+              "zeroNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "25"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "recoveries": 6,
+            "rejections": 6,
+            "resultOnly": false,
+            "route": "reviewed-ir",
+            "snapshots": 28
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      },
+      {
+        "assets": [
+          {
+            "bytes": 6488025,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+            "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+            "status": 200
+          },
+          {
+            "bytes": 21003,
+            "mime": "application/wasm",
+            "path": "/corpus/nested/assets/checkedrecordvalueindices-767c615eabad08d7.so-mon2t325.wasm",
+            "sha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001",
+            "status": 200
+          }
+        ],
+        "engine": "webkit",
+        "failedAssetRecovery": true,
+        "lifecycle": {
+          "rerun": true
+        },
+        "observation": {
+          "hostVersion": "26.5",
+          "module": "checkedrecordvalueindices",
+          "profile": "browser-javascript",
+          "realm": "window",
+          "results": {
+            "calls": 28,
+            "checks": 72,
+            "module": "checkedrecordvalueindices",
+            "observed": {
+              "ab": "2",
+              "emptySized": "0",
+              "emptyString": "9",
+              "falseBool": "1",
+              "trueBool": "0",
+              "unicodeString": "10",
+              "wideNat": "1267650600228229401496703205393",
+              "zeroNat": "11"
+            },
+            "produced": {
+              "ab": [
+                "object",
+                [
+                  [
+                    "size",
+                    [
+                      "bigint",
+                      "2"
+                    ]
+                  ]
+                ]
+              ],
+              "emptySized": [
+                "object",
+                [
+                  [
+                    "data",
+                    [
+                      "array",
+                      [
+                        [
+                          "length",
+                          [
+                            "number",
+                            "0"
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ],
+              "emptyString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "23"
+                    ]
+                  ]
+                ]
+              ],
+              "falseBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1"
+                    ]
+                  ]
+                ]
+              ],
+              "trueBool": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "0"
+                    ]
+                  ]
+                ]
+              ],
+              "unicodeString": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "24"
+                    ]
+                  ]
+                ]
+              ],
+              "wideNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "1267650600228229401496703205393"
+                    ]
+                  ]
+                ]
+              ],
+              "zeroNat": [
+                "object",
+                [
+                  [
+                    "count",
+                    [
+                      "bigint",
+                      "25"
+                    ]
+                  ]
+                ]
+              ]
+            },
+            "recoveries": 6,
+            "rejections": 6,
+            "resultOnly": false,
+            "route": "reviewed-ir",
+            "snapshots": 28
+          },
+          "schemaVersion": 1
+        },
+        "variant": "production"
+      }
+    ],
+    "externalNetworkBlocked": true,
+    "framework": [],
+    "installedAssets": [
+      {
+        "bytes": 21003,
+        "path": "node_modules/checkedrecordvalueindices/internal/wasm/checkedrecordvalueindices-767c615eabad08d7.so.wasm",
+        "sha256": "a7c05eedeeacb73be0e72463b9675a79025f0bb782f9d939be68abf77b8b8001"
+      },
+      {
+        "bytes": 6488025,
+        "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+      }
+    ],
+    "installedSourcesRemoved": true,
+    "requestedEngines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ]
+  },
+  "compilerFreePath": true,
+  "consumerCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "corpusSha256": "21500ad287b6b5ef3a4ed624871976ad0db2e49327eafb7a8da912444dff1b5f",
+  "inputs": {
+    "check.mjs": {
+      "bytes": 6187,
+      "sha256": "21500ad287b6b5ef3a4ed624871976ad0db2e49327eafb7a8da912444dff1b5f"
+    },
+    "index.html": {
+      "bytes": 259,
+      "sha256": "41b59ece64724a031e286e6080e8cb1d43b45ec4f6c131f7881adb061950ef37"
+    },
+    "javascript.mjs": {
+      "bytes": 1175,
+      "sha256": "44a7914507bf9e682c8e7ee3a6272e586c12d17d49d04fe8ff9644af3ba70eb2"
+    },
+    "package-lock.json": {
+      "bytes": 1354,
+      "sha256": "b07e11c13f4295cb391b94a3ed1bca940050242fce5a71cd66312f5063e36121"
+    },
+    "package.json": {
+      "bytes": 301,
+      "sha256": "903622cb86f3dd3c18b681e5ab50a4da71161d1c670ef19e32614aeefa7b62c6"
+    },
+    "package.mjs": {
+      "bytes": 124,
+      "sha256": "755f67dcf0943d3df921cc2c774cde964e00a99cccf860285c31c7f94aef58e4"
+    },
+    "plain.mjs": {
+      "bytes": 761,
+      "sha256": "f986b2be494f621c126e4579b1006641324f36fdeaf0a57ee6ca54540ece24f8"
+    },
+    "request.json": {
+      "bytes": 128,
+      "sha256": "2cdaf67d2c2c4d092a24b947a9bbdb78032a35ff35e2e898e17de5651c2b9557"
+    }
+  },
+  "observation": {
+    "hostVersion": "151.0.7922.34",
+    "module": "checkedrecordvalueindices",
+    "profile": "browser-javascript",
+    "realm": "window",
+    "results": {
+      "calls": 28,
+      "checks": 72,
+      "module": "checkedrecordvalueindices",
+      "observed": {
+        "ab": "2",
+        "emptySized": "0",
+        "emptyString": "9",
+        "falseBool": "1",
+        "trueBool": "0",
+        "unicodeString": "10",
+        "wideNat": "1267650600228229401496703205393",
+        "zeroNat": "11"
+      },
+      "produced": {
+        "ab": [
+          "object",
+          [
+            [
+              "size",
+              [
+                "bigint",
+                "2"
+              ]
+            ]
+          ]
+        ],
+        "emptySized": [
+          "object",
+          [
+            [
+              "data",
+              [
+                "array",
+                [
+                  [
+                    "length",
+                    [
+                      "number",
+                      "0"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "emptyString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "23"
+              ]
+            ]
+          ]
+        ],
+        "falseBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1"
+              ]
+            ]
+          ]
+        ],
+        "trueBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "0"
+              ]
+            ]
+          ]
+        ],
+        "unicodeString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "24"
+              ]
+            ]
+          ]
+        ],
+        "wideNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1267650600228229401496703205393"
+              ]
+            ]
+          ]
+        ],
+        "zeroNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "25"
+              ]
+            ]
+          ]
+        ]
+      },
+      "recoveries": 6,
+      "rejections": 6,
+      "resultOnly": false,
+      "route": "reviewed-ir",
+      "snapshots": 28
+    },
+    "schemaVersion": 1
+  },
+  "observations": [
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "chromium",
+      "observation": {
+        "hostVersion": "151.0.7922.34",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "firefox",
+      "observation": {
+        "hostVersion": "153.0",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "first",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "rerun",
+      "variant": "production"
+    },
+    {
+      "engine": "webkit",
+      "observation": {
+        "hostVersion": "26.5",
+        "module": "checkedrecordvalueindices",
+        "profile": "browser-javascript",
+        "realm": "window",
+        "results": {
+          "calls": 28,
+          "checks": 72,
+          "module": "checkedrecordvalueindices",
+          "observed": {
+            "ab": "2",
+            "emptySized": "0",
+            "emptyString": "9",
+            "falseBool": "1",
+            "trueBool": "0",
+            "unicodeString": "10",
+            "wideNat": "1267650600228229401496703205393",
+            "zeroNat": "11"
+          },
+          "produced": {
+            "ab": [
+              "object",
+              [
+                [
+                  "size",
+                  [
+                    "bigint",
+                    "2"
+                  ]
+                ]
+              ]
+            ],
+            "emptySized": [
+              "object",
+              [
+                [
+                  "data",
+                  [
+                    "array",
+                    [
+                      [
+                        "length",
+                        [
+                          "number",
+                          "0"
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ],
+            "emptyString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "23"
+                  ]
+                ]
+              ]
+            ],
+            "falseBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1"
+                  ]
+                ]
+              ]
+            ],
+            "trueBool": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "0"
+                  ]
+                ]
+              ]
+            ],
+            "unicodeString": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "24"
+                  ]
+                ]
+              ]
+            ],
+            "wideNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "1267650600228229401496703205393"
+                  ]
+                ]
+              ]
+            ],
+            "zeroNat": [
+              "object",
+              [
+                [
+                  "count",
+                  [
+                    "bigint",
+                    "25"
+                  ]
+                ]
+              ]
+            ]
+          },
+          "recoveries": 6,
+          "rejections": 6,
+          "resultOnly": false,
+          "route": "reviewed-ir",
+          "snapshots": 28
+        },
+        "schemaVersion": 1
+      },
+      "phase": "failure-recovery",
+      "variant": "production"
+    }
+  ],
+  "offlineInstall": true,
+  "packageSourceSha256": "755f67dcf0943d3df921cc2c774cde964e00a99cccf860285c31c7f94aef58e4",
+  "producerCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "profile": "browser-javascript",
+  "receiptSha256": "99dbe904c6e8fd6607318954d8386b4e45cbf28f379008e4c74d7b5be548994c",
+  "route": "reviewed-ir",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-browser-archive-source-v1",
+  "predecessorCommit": "42f841b82394cb71043bcfaf063be57542b5d0c9",
+  "draftParentCommit": "29c05805e774cf4d6850083a85788398a128d581",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-browser-20261019",
+    "indexSha256": "c776acf181b38744191bddbfbe515f14e515d59eaa94e4a942acddc8c76b34e0",
+    "indexedFileCount": 2227,
+    "addedFileCount": 2228
+  },
+  "pathsSha256": "9c6bd7dc0752dd5288380df006699b5a8d76d11cf0307ae9bd9cda47fa83bc02",
+  "pinCount": 0,
+  "pinUpdates": [],
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-evidence-tests.mjs",
+      "currentSha256": "25a6559104093397f06028ce9eb927ff286e3084c7b5ae55f5c38290739a393d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-evidence.mjs",
+      "currentSha256": "8d6e20b89bde40f63780e08c8889d8226ece1fe5e08eed217719770fdcdf0824"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-browser-archive-source-history.mjs",
+      "currentSha256": "56052d9db462f1015479d8b22c46fbe21aea47d6f5c2c06245ad48234ecef666"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-archive-source-history-tests.mjs",
+      "currentSha256": "b16e8bb7a6685afac23a577caf5ed9eba7921a5a8e7006f57d2a205b2cc7687d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-browser-archive-source-history.mjs",
+      "currentSha256": "7590e325a94140291f429af6cb18a1c8ea841c19dce9e045c01d2c40bf48af3c"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-browser.test.mjs",
+      "previousSha256": "9827fba11f11c710046dbbb966fc2204382057bd37bc413eb63db8db0c97ac32",
+      "currentSha256": "badd861cd6a7a3322788b2592db458858a0848d84afa21ac54070930d6eba222",
+      "edits": [
+        {
+          "start": 234,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-browser-evidence-tests.mjs\";\nimport \"./helpers/checked-record-value-index-browser-archive-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

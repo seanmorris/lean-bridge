@@ -1,0 +1,89 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:CheckedRecordValueIndices.abStringIndex",
+      "lean:CheckedRecordValueIndices.emptySizedIndex",
+      "lean:CheckedRecordValueIndices.emptyStringIndex",
+      "lean:CheckedRecordValueIndices.falseBoolIndex",
+      "lean:CheckedRecordValueIndices.produceAb",
+      "lean:CheckedRecordValueIndices.produceEmptySized",
+      "lean:CheckedRecordValueIndices.produceEmptyString",
+      "lean:CheckedRecordValueIndices.produceFalseBool",
+      "lean:CheckedRecordValueIndices.produceTrueBool",
+      "lean:CheckedRecordValueIndices.produceUnicodeString",
+      "lean:CheckedRecordValueIndices.produceWideNat",
+      "lean:CheckedRecordValueIndices.produceZeroNat",
+      "lean:CheckedRecordValueIndices.trueBoolIndex",
+      "lean:CheckedRecordValueIndices.unicodeStringIndex",
+      "lean:CheckedRecordValueIndices.wideNatIndex",
+      "lean:CheckedRecordValueIndices.zeroNatIndex"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "e22480b71bdca0b86575bc59232807b1af2e718708bd20dfe752eb1eb66024eb"
+  },
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 34222,
+        "path": "api.binding-ir.json",
+        "sha256": "0616b30c1aeeabce4f0b4486deff4fea6b6608dde6daf0116be831730bef16a8"
+      },
+      {
+        "bytes": 2928,
+        "path": "CheckedRecordValueIndices.lean",
+        "sha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+      },
+      {
+        "bytes": 101,
+        "path": "lakefile.toml",
+        "sha256": "fc5569e5f99ebf56ff129e6806b460b732c8e81b0f65a37bda95a35092478dc3"
+      },
+      {
+        "bytes": 184,
+        "path": "lean-bridge.exports.json",
+        "sha256": "ac3851c573b48d7e260ca30c8a7d5592bb4886ffdc95d640d1e307f1cb8aa719"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 71,
+        "path": "package.json",
+        "sha256": "df502f01b57caab549d2078509d71cce1eeae0e2e647422da76f01729e1b8695"
+      }
+    ],
+    "lakeSnapshotSha256": "f5c87e63dced2acebd43877ee26c62e07fb5875d5e5219feb2a27fc4cd737e27",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "7cbbcc862ef8413b08deb99cc039475d2f4c14eb9d2139b65a96044746d29751"
+  },
+  "targets": [
+    "npm"
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "accepted": {
+    "browserExecutions": 12,
+    "browserReportSha256": "1018978cb34a39c08364a0050c7fb1958a72bab6191a87c86104b27a46b21f8b",
+    "browserVersions": {
+      "chromium": "151.0.7922.34",
+      "firefox": "153.0",
+      "webkit": "26.5"
+    },
+    "expected": {
+      "calls": 8,
+      "checks": 32,
+      "observed": {},
+      "produced": {
+        "ab": [
+          "object",
+          [
+            [
+              "size",
+              [
+                "bigint",
+                "2"
+              ]
+            ]
+          ]
+        ],
+        "emptySized": [
+          "object",
+          [
+            [
+              "data",
+              [
+                "array",
+                [
+                  [
+                    "length",
+                    [
+                      "number",
+                      "0"
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ],
+        "emptyString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "23"
+              ]
+            ]
+          ]
+        ],
+        "falseBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1"
+              ]
+            ]
+          ]
+        ],
+        "trueBool": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "0"
+              ]
+            ]
+          ]
+        ],
+        "unicodeString": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "24"
+              ]
+            ]
+          ]
+        ],
+        "wideNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "1267650600228229401496703205393"
+              ]
+            ]
+          ]
+        ],
+        "zeroNat": [
+          "object",
+          [
+            [
+              "count",
+              [
+                "bigint",
+                "25"
+              ]
+            ]
+          ]
+        ]
+      },
+      "recoveries": 0,
+      "rejections": 0,
+      "snapshots": 8
+    },
+    "lifecycleObservations": 51,
+    "nodeObservations": 2,
+    "npmReportSha256": "241f11644d36e9a574998391b125ce8a0ceb1ca9945256e1e11b001f97d38a56",
+    "receipt": {
+      "bindingIrSha256": "bf75c1cec8b074f336582b4567d89e48924982edb6217f4cf5a28281438b01db",
+      "component": {
+        "id": "checkedrecordvalueindices@1.0.0",
+        "name": "checkedrecordvalueindices",
+        "version": "1.0.0"
+      },
+      "componentArtifactSha256": "8ebb3c4a1666da128c0ce3451e966361efa420ae7446ac91cd3a0d50d8436807",
+      "componentBundleSha256": "f2fc8baa04c1662d45e962728e8d7be5b2f019305f29c94d062afcfdc03fe412",
+      "componentIdentitySha256": "b2f6965007aefbc4fccaea14e0bcfb7864c938ff7784f8b5d3a741439419ee79",
+      "kind": "lean-bridge-component-package-receipt",
+      "package": {
+        "archive": "checkedrecordvalueindices-1.0.0.tgz",
+        "package": "checkedrecordvalueindices@1.0.0",
+        "sha256": "bd600cde0a077d4ba89aa856f4a6f042ad66b0ea176f3ef7cbef0b28ba69cf2e"
+      },
+      "policies": {
+        "componentCompiledOnce": true,
+        "nativeCallablesOnly": true,
+        "runtimeBinaryInComponent": false,
+        "runtimeShared": true
+      },
+      "provenanceSha256": "a1b4569675eade73456977e69b9a73005a439fad1ea95e74053eed0d7669b6cc",
+      "runtime": {
+        "archive": "lean-bridge-runtime-0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4.tgz",
+        "package": "@lean-bridge/runtime@0.0.0-abi2.735217baf9524d92031a2059efc140543036fa59c071341ab1fdfbd9df0f5ca4",
+        "sha256": "2364b041adf5a899cb25298e1c7204b5e1e1759775f3d4afe050e8f755380f78"
+      },
+      "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+      "schemaVersion": 1,
+      "source": {
+        "treeSha256": "5ceffb790e125026d1e82544565c2b35f8a774d02db867627dab0cebaa0b68df"
+      },
+      "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+    },
+    "route": "result-only-ordinary-source"
+  },
+  "checkerCommit": "79359306d2e50a5893affe04cafed95d54166b88",
+  "gitBindingControls": 1,
+  "installedIrControls": 2,
+  "provenanceControls": 5,
+  "reconciliationControls": 1,
+  "schemaVersion": 1
+}

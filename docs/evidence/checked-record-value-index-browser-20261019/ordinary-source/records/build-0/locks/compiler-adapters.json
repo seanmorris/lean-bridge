@@ -1,0 +1,682 @@
+{
+  "component": "checkedrecordvalueindices@1.0.0",
+  "componentPlanSha256": "151e31878a37a23746d1b26f621c99a353553d1f0a338676f8f698f9552392ac",
+  "exports": [
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.abStringIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.Ab",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkAb",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.abStringIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_951fdc25b5317426c228d8d6",
+      "wrapper": "export_e00f5477721ea3c00655"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.emptySizedIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.EmptySized",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkEmptySized",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.emptySizedIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_3ea4383f2519f4b9c0cb6cb9",
+      "wrapper": "export_53259fa4bc115e4b09ef"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.emptyStringIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.EmptyToken",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkEmptyToken",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.emptyStringIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_dd93cd4bff70be791bbe046f",
+      "wrapper": "export_e7517a78a86aa959ef9b"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.falseBoolIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.Off",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkOff",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.falseBoolIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_740dca0b892c677d4f528a4d",
+      "wrapper": "export_6d1cf41d7cbee48fcadb"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceAb",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.Ab",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceAb",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_64a7b5e81d6039623f1b4d5e",
+      "wrapper": "export_b27dd62dc585cb156324"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceEmptySized",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.EmptySized",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceEmptySized",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_61afa9369229ef9219269a57",
+      "wrapper": "export_e534f627d5b0fd403332"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceEmptyString",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.EmptyToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceEmptyString",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_3f1e0cf1f808a286ea23931d",
+      "wrapper": "export_884321a53e139b56c11b"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceFalseBool",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.Off",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceFalseBool",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_7dcdba61b7690be80b59a28a",
+      "wrapper": "export_4799f0a6037b1e53a882"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceTrueBool",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.On",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceTrueBool",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_f7ed5f586a928d1c15e57e79",
+      "wrapper": "export_5d1fb1ed2eea530aee58"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceUnicodeString",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.UnicodeToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceUnicodeString",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_f99a7360e6c6b24db319386f",
+      "wrapper": "export_ac4e7e52204a88a82fd2"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceWideNat",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.WideToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceWideNat",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_48aa0b2bdc0b110a5e025963",
+      "wrapper": "export_bff930d09bb7c760cb82"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceZeroNat",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.ZeroToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "arg0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceZeroNat",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_1ea7e51a37d5b14b62054af4",
+      "wrapper": "export_7f607593f9cf31bea991"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.trueBoolIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.On",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkOn",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.trueBoolIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_f6651722c239a8d743c71557",
+      "wrapper": "export_0ff3601d0c182ea98fc0"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.unicodeStringIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.UnicodeToken",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkUnicodeToken",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.unicodeStringIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_ce6ebce79df6543b9a911759",
+      "wrapper": "export_1646e8901706408eae88"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.wideNatIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.WideToken",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkWideToken",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.wideNatIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_ca8d25c57ef513dacfb6799b",
+      "wrapper": "export_d8ae3510ea1221f1979f"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.zeroNatIndex",
+      "leanEffect": null,
+      "leanResultType": "_root_.Nat",
+      "parameters": [
+        {
+          "leanType": "CheckedRecordValueIndices.ZeroToken",
+          "name": "arg0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          {
+            "constructor": "CheckedRecordValueIndices.mkZeroToken",
+            "kind": "checked-record"
+          }
+        ],
+        "result": null
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.zeroNatIndex",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_bb0b215df4b043854d3ab4d2",
+      "wrapper": "export_68ce068d49dddb95824d"
+    }
+  ],
+  "imports": [
+    "CheckedRecordValueIndices"
+  ],
+  "leanSourceSha256": "55b929714d640402372be0fb66bcacc3123cf79303613a4d25324d97a9d13156",
+  "module": "LeanBridgeGenerated767c615eabad08d7",
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.abStringIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.Ab",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_951fdc25b5317426c228d8d6"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.emptySizedIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.EmptySized",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_3ea4383f2519f4b9c0cb6cb9"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.emptyStringIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.EmptyToken",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_dd93cd4bff70be791bbe046f"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.falseBoolIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.Off",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_740dca0b892c677d4f528a4d"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceAb",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.Ab",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_64a7b5e81d6039623f1b4d5e"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceEmptySized",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.EmptySized",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_61afa9369229ef9219269a57"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceEmptyString",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.EmptyToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_3f1e0cf1f808a286ea23931d"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceFalseBool",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.Off",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_7dcdba61b7690be80b59a28a"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceTrueBool",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.On",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f7ed5f586a928d1c15e57e79"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceUnicodeString",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.UnicodeToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f99a7360e6c6b24db319386f"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceWideNat",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.WideToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_48aa0b2bdc0b110a5e025963"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceZeroNat",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.ZeroToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1ea7e51a37d5b14b62054af4"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.trueBoolIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.On",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f6651722c239a8d743c71557"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.unicodeStringIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.UnicodeToken",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_ce6ebce79df6543b9a911759"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.wideNatIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.WideToken",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_ca8d25c57ef513dacfb6799b"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.zeroNatIndex",
+        "parameters": [
+          {
+            "id": "lean:CheckedRecordValueIndices.ZeroToken",
+            "kind": "named"
+          }
+        ],
+        "result": {
+          "kind": "primitive",
+          "name": "nat"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_bb0b215df4b043854d3ab4d2"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "named"
+        ],
+        "fields": [
+          {
+            "name": "size",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.Ab",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.EmptySized",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.EmptyToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "set"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.Off",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "set"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.On",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.UnicodeToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.WideToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.ZeroToken",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

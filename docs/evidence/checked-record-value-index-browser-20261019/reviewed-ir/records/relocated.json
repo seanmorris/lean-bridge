@@ -1,0 +1,18 @@
+{
+  "relocated": true,
+  "result": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":72,\"rejections\":6,\"calls\":28,\"snapshots\":28,\"recoveries\":6,\"observed\":{\"trueBool\":\"0\",\"falseBool\":\"1\",\"ab\":\"2\",\"emptyString\":\"9\",\"unicodeString\":\"10\",\"emptySized\":\"0\",\"zeroNat\":\"11\",\"wideNat\":\"1267650600228229401496703205393\"},\"produced\":{\"trueBool\":[\"object\",[[\"count\",[\"bigint\",\"0\"]]]],\"falseBool\":[\"object\",[[\"count\",[\"bigint\",\"1\"]]]],\"ab\":[\"object\",[[\"size\",[\"bigint\",\"2\"]]]],\"emptyString\":[\"object\",[[\"count\",[\"bigint\",\"23\"]]]],\"unicodeString\":[\"object\",[[\"count\",[\"bigint\",\"24\"]]]],\"emptySized\":[\"object\",[[\"data\",[\"array\",[[\"length\",[\"number\",\"0\"]]]]]]],\"zeroNat\":[\"object\",[[\"count\",[\"bigint\",\"25\"]]]],\"wideNat\":[\"object\",[[\"count\",[\"bigint\",\"1267650600228229401496703205393\"]]]]}}\n"
+  },
+  "runtime": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"node\":\"v22.23.3\",\"platform\":\"linux\",\"arch\":\"x64\"}\n"
+  },
+  "typescript": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  }
+}

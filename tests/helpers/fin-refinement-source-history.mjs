@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexBrowserArchiveSource, checkedRecordValueIndexBrowserArchiveChangedPaths } from "./checked-record-value-index-browser-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from "./checked-record-value-index-php-wasm-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmArchiveSource, checkedRecordValueIndexPhpWasmArchiveChangedPaths } from "./checked-record-value-index-php-wasm-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmPromotionSource, checkedRecordValueIndexPhpWasmPromotionChangedPaths } from "./checked-record-value-index-php-wasm-promotion-source-history.mjs";
@@ -1404,6 +1405,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...coreSecondRunResidualRepairChangedPaths
 	, ...checkedRecordValueIndexJvmNullBoundaryChangedPaths
 	, ...checkedRecordValueIndexJvmNativeRepairChangedPaths
+	, ...checkedRecordValueIndexBrowserArchiveChangedPaths
 	, ...coreFirstRunResidualRepairChangedPaths
 	, ...coreTerminalReachabilityChangedPaths
 	, ...coreTerminalReachabilityTerminalPaths
@@ -1947,6 +1949,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexJvmNativeRepairSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexBrowserArchiveSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;

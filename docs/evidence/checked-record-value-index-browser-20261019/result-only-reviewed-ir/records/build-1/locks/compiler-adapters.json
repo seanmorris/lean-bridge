@@ -1,0 +1,362 @@
+{
+  "component": "checkedrecordvalueindices@1.0.0",
+  "componentPlanSha256": "7b9a3121c0bd42d4b1a2fa8bd29319496f02e97becdd3f80427be930c43d2038",
+  "exports": [
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceAb",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.Ab",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceAb",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_64a7b5e81d6039623f1b4d5e",
+      "wrapper": "export_b27dd62dc585cb156324"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceEmptySized",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.EmptySized",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceEmptySized",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_61afa9369229ef9219269a57",
+      "wrapper": "export_e534f627d5b0fd403332"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceEmptyString",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.EmptyToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceEmptyString",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_3f1e0cf1f808a286ea23931d",
+      "wrapper": "export_884321a53e139b56c11b"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceFalseBool",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.Off",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceFalseBool",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_7dcdba61b7690be80b59a28a",
+      "wrapper": "export_4799f0a6037b1e53a882"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceTrueBool",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.On",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceTrueBool",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_f7ed5f586a928d1c15e57e79",
+      "wrapper": "export_5d1fb1ed2eea530aee58"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceUnicodeString",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.UnicodeToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceUnicodeString",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_f99a7360e6c6b24db319386f",
+      "wrapper": "export_ac4e7e52204a88a82fd2"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceWideNat",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.WideToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceWideNat",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_48aa0b2bdc0b110a5e025963",
+      "wrapper": "export_bff930d09bb7c760cb82"
+    },
+    {
+      "bindingId": "lean:CheckedRecordValueIndices.produceZeroNat",
+      "leanEffect": null,
+      "leanResultType": "CheckedRecordValueIndices.ZeroToken",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "resultMode": "value",
+      "sourceDeclaration": "CheckedRecordValueIndices.produceZeroNat",
+      "sourceModule": "CheckedRecordValueIndices",
+      "symbol": "lean_bridge_1ea7e51a37d5b14b62054af4",
+      "wrapper": "export_7f607593f9cf31bea991"
+    }
+  ],
+  "imports": [
+    "CheckedRecordValueIndices"
+  ],
+  "leanSourceSha256": "0ba33b5edb3ab3c52c2a422a1db9434dae60424a81df6dce1ac95309249d43d3",
+  "module": "LeanBridgeGenerated767c615eabad08d7",
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceAb",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.Ab",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_64a7b5e81d6039623f1b4d5e"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceEmptySized",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.EmptySized",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_61afa9369229ef9219269a57"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceEmptyString",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.EmptyToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_3f1e0cf1f808a286ea23931d"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceFalseBool",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.Off",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_7dcdba61b7690be80b59a28a"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceTrueBool",
+        "parameters": [],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.On",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f7ed5f586a928d1c15e57e79"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceUnicodeString",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.UnicodeToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_f99a7360e6c6b24db319386f"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceWideNat",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.WideToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_48aa0b2bdc0b110a5e025963"
+      },
+      {
+        "bindingId": "lean:CheckedRecordValueIndices.produceZeroNat",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "id": "lean:CheckedRecordValueIndices.ZeroToken",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_1ea7e51a37d5b14b62054af4"
+      }
+    ],
+    "types": [
+      {
+        "erased": [
+          "named"
+        ],
+        "fields": [
+          {
+            "name": "size",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.Ab",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "sized"
+        ],
+        "fields": [
+          {
+            "name": "data",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.EmptySized",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.EmptyToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "set"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.Off",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "set"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.On",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.UnicodeToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.WideToken",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fixed"
+        ],
+        "fields": [
+          {
+            "name": "count",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "id": "lean:CheckedRecordValueIndices.ZeroToken",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}
