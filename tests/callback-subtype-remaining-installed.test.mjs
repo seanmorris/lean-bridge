@@ -18,15 +18,16 @@ import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_PROFILES?.split(",").sort() ?? [];
-const supported = ["dotnet", "java", "kotlin", "php-native"];
+const supported = ["dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 assert.ok(profiles.length === new Set(profiles).size && profiles.every(profile => supported.includes(profile)));
 const targets = {
 	dotnet: ["nuget", { name: "LeanBridge.Callbacksubtypes", version: "1.0.0" }]
 	, java: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
 	, kotlin: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
 	, "php-native": ["composer", { name: "lean-bridge/callbacksubtypes", version: "1.0.0" }]
+	, "wit-wasi": ["wit-wasi", { name: "callback-subtypes", version: "1.0.0" }]
 };
-const extension = { dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php" };
+const extension = { dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
 
 test("ordinary and reviewed remaining managed callback Subtypes install offline", {
 	skip: !profiles.length, timeout: 3_600_000
@@ -70,7 +71,13 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 				, environment
 				, fixture: {
 					source: () => readFile(`tests/fixtures/callback-subtype-consumers/${profile}.${extension[profile]}`, "utf8")
-					, success: "callback-subtype-remaining-ok", expectedChecks: 14
+					, success: "callback-subtype-remaining-ok"
+					, expectedChecks: profile === "wit-wasi" ? 26 : 14
+					, ...(profile === "wit-wasi" ? { wit: [
+						/resource function/u
+						, /call-host/u
+						, /make-closure/u
+					] } : {})
 				}
 			});
 			delete observation.command;

@@ -222,7 +222,7 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	]) assert.ok(languageShell.includes(value), value);
 	for(const value of [
 		"group: callback-subtype-remaining-${{ github.ref }}"
-		, "lane: [dotnet, jvm, php-native]"
+		, "lane: [dotnet, jvm, php-native, wit-wasi]"
 		, "runs-on: ubuntu-24.04"
 		, "bash scripts/run-callback-subtype-remaining-ci.sh"
 		, "build/callback-subtype-remaining-ci-${{ matrix.lane }}/"
@@ -234,6 +234,7 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 		, "profiles=dotnet"
 		, "profiles=java,kotlin"
 		, "profiles=php-native"
+		, "profiles=wit-wasi"
 		, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38"
 		, "--test-concurrency=1"
 		, "check-callback-subtype-remaining-ci.mjs"

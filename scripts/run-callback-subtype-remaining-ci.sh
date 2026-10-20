@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if (( $# < 2 )); then
-  printf '%s\n' 'Usage: run-callback-subtype-remaining-ci.sh <dotnet|jvm|php-native> <absolute tools...>' >&2
+  printf '%s\n' 'Usage: run-callback-subtype-remaining-ci.sh <dotnet|jvm|php-native|wit-wasi> <absolute tools...>' >&2
   exit 2
 fi
 lane=$1
@@ -23,6 +23,11 @@ case "$lane" in
     [[ $# == 2 ]] || exit 2
     profiles=php-native
     export LEAN_BRIDGE_PHP=$1 LEAN_BRIDGE_COMPOSER=$2
+    ;;
+  wit-wasi)
+    [[ $# == 3 ]] || exit 2
+    profiles=wit-wasi
+    export CC=$1 LEAN_BRIDGE_WASM_TOOLS=$2 LEAN_BRIDGE_WASMTIME_C_API=$3
     ;;
   *) printf '%s\n' "Unknown callback Subtype lane: $lane" >&2; exit 2 ;;
 esac

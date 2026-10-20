@@ -20,7 +20,7 @@ for(let index = 2; index < process.argv.length; index += 2)
 	selected[key] = value;
 }
 assert.match(selected.producer, /^[a-f0-9]{40}$/u);
-const profiles = selected.profiles.split(",").sort(), allowed = ["dotnet", "java", "kotlin", "php-native"];
+const profiles = selected.profiles.split(",").sort(), allowed = ["dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 assert.ok(profiles.length > 0 && profiles.length === new Set(profiles).size
 	&& profiles.every(profile => allowed.includes(profile)), usage);
 const testName = "ordinary and reviewed remaining managed callback Subtypes install offline";
@@ -39,7 +39,7 @@ for(const item of report.reports)
 {
 	assert.deepEqual(Object.keys(item).sort(), exact.sort());
 	assert.ok(profiles.includes(item.profile)); assert.ok(["ordinary", "reviewed"].includes(item.route));
-	assert.equal(item.checks, 14);
+	assert.equal(item.checks, item.profile === "wit-wasi" ? 26 : 14);
 	for(const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation"])
 		assert.equal(item[flag], true);
 	for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])
