@@ -1,0 +1,361 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1a56c76ff56cfe61559ccad3ab076ea5733d6be2afae56adf90e2d0db53d2ad4",
+      "path": "scripts/update-owned-subtype-analysis-source-history.mjs"
+    },
+    {
+      "currentSha256": "5aa30fd12a519be2585985253c6653d7fd264249b4fd0b98e5365e1c3b2e62de",
+      "path": "tests/helpers/owned-subtype-analysis-source-history.mjs"
+    },
+    {
+      "currentSha256": "d9b7beae6aba695c81100d49e8dbd152667eeba289987ed4c68526a8f58c0f13",
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "bbefa9ea6fc15b86c1ea533ecedebc87f13a5eec",
+  "milestone": "owned-subtype-analysis-source-v1",
+  "predecessorCommit": "52681bcfbd20c65871a9d0fa34c4e9e68797b4b8",
+  "reconciledTypeSurfacePointers": 403,
+  "schemaVersion": 1,
+  "scope": "Source and contract history for ordinary and reviewed owned Subtype analysis, checked direction metadata and fail-closed carrier generation. Installed host acceptance remains pending.",
+  "updates": [
+    {
+      "currentSha256": "70977709c4c1324b9ba9fe7ffd4538e08e682244e776e76fde46cb6dce84d883",
+      "edits": [
+        {
+          "current": "import { declarationRefinements } from \"./refinements.mjs\";\n",
+          "previous": "",
+          "start": 376
+        },
+        {
+          "current": "\tconst declarations = ir.declarations.map(declaration => {\n\t\tconst selected = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\tconst refinements = selected === undefined ? undefined\n\t\t\t: declarationRefinements(declaration, selected, ir.types, { ownedStructural: true });\n\t\treturn { id: declaration.id\n",
+          "previous": "\tconst declarations = ir.declarations.map(declaration => ({ id: declaration.id\n",
+          "start": 3069
+        },
+        {
+          "current": "\t\t, resultMode: declaration.resultMode\n\t\t, ...(refinements === undefined ? {} : { refinements }) };\n\t});\n",
+          "previous": "\t\t, resultMode: declaration.resultMode }));\n",
+          "start": 3677
+        }
+      ],
+      "path": "src/abi/owned-aggregate-model.mjs",
+      "previousSha256": "f6c049ce1261af434c99aa8ac0a58acb86307430adf5b79dc0ea9e2396971a95"
+    },
+    {
+      "currentSha256": "28177dcb925140ef5488e4b7a3e7b5f82051614d7d3c190ac1a6ec039e8b4013",
+      "edits": [
+        {
+          "current": " * @param ownedStructural - Whether an explicitly ownership-aware boundary may\n * traverse an owned nominal record or variant while authenticating its copied\n * refined leaves.\n",
+          "previous": "",
+          "start": 740
+        },
+        {
+          "current": "export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = [], subtypeResult = false, ownedStructural = false) => {\n",
+          "previous": "export const assertRefinement = (refinement, type, depth = 0, subtypeStructural = depth === 0, types = [], subtypeResult = false) => {\n",
+          "start": 921
+        },
+        {
+          "current": "\t\t\tif(seen.has(transport.id) || (definition.representation !== \"copied\"\n\t\t\t\t&& !(ownedStructural && definition.representation === \"owned\"))) fail();\n",
+          "previous": "\t\t\tif(seen.has(transport.id) || definition.representation !== \"copied\") fail();\n",
+          "start": 2220
+        },
+        {
+          "current": "\t\t\tif(!subtypeStructural || !definition || definition.kind !== value.kind\n\t\t\t\t|| (definition.representation !== \"copied\" && !(ownedStructural && definition.representation === \"owned\"))\n",
+          "previous": "\t\t\tif(!subtypeStructural || !definition || definition.kind !== value.kind || definition.representation !== \"copied\"\n",
+          "start": 4807
+        },
+        {
+          "current": "/**\n * Authenticate one declaration's complete per-use refinement decision.\n * Ownership-aware callers must opt in explicitly; ordinary copied contracts\n * therefore retain their previous closed surface.\n *\n * @param declaration - Binding IR declaration with erased transport sites.\n * @param value - Complete parameter/result refinement trees.\n * @param types - Definitions referenced by nominal refinement trees.\n * @param options - Explicit transport capabilities.\n * @param options.ownedStructural - Admit owned nominal roots at this boundary.\n */\nexport const declarationRefinements = (declaration, value, types = [], { ownedStructural = false } = {}) => {\n\tconst fail = () => { throw new TypeError(\"Invalid declaration refinement metadata\"); };\n\tconst direction = (tree, produced) => {\n\t\tif(tree === null || tree.kind === \"fin\") return;\n\t\tif([\"subtype\", \"checked-record\"].includes(tree.kind))\n\t\t{\n\t\t\tif(produced ? tree.constructor !== null : typeof tree.constructor !== \"string\") fail();\n\t\t\tif(tree.kind === \"checked-record\") tree.fields?.forEach(field => direction(field.refinement, produced));\n\t\t\treturn;\n\t\t}\n\t\tif(tree.kind === \"record\") return tree.fields.forEach(field => direction(field.refinement, produced));\n\t\tif(tree.kind === \"variant\") return tree.cases.forEach(branch => branch.fields.forEach(field => direction(field.refinement, produced)));\n\t\tif([\"array\", \"list\", \"option\", \"tuple\", \"result\"].includes(tree.kind))\n\t\t\treturn tree.arguments.forEach(child => direction(child, produced));\n\t\tfail();\n\t};\n\tif(!value || typeof value !== \"object\" || Array.isArray(value)\n\t\t|| Object.keys(value).length !== 2 || !Object.hasOwn(value, \"parameters\") || !Object.hasOwn(value, \"result\")\n\t\t|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length) fail();\n\tfor(const [index, refinement] of value.parameters.entries())\n\t{\n\t\tassertRefinement(refinement, declaration.parameters[index].type, 0, true, types, false, ownedStructural);\n\t\tdirection(refinement, false);\n\t}\n\tassertRefinement(value.result, declaration.result.type, 0, true, types, true, ownedStructural);\n\tdirection(value.result, true);\n\tif(value.result === null && value.parameters.every(refinement => refinement === null)) fail();\n\treturn structuredClone(value);\n};\n\n",
+          "previous": "",
+          "start": 6885
+        }
+      ],
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "0ea4319fe23b8c5f817b8444f9f314eeddcbfabe312ce9e5bb61e9740d4349c0"
+    },
+    {
+      "currentSha256": "11207f3090a770880fd3f1e56b31ab4779e2a2c828aa5858d64d1c03d3e9a25a",
+      "edits": [
+        {
+          "current": "    -- Input constructors and Lean-produced results have separate capabilities. The\n    -- ownership-aware graph keeps the same site-local decision while resource leaves\n    -- retain their identity; callbacks and unresolved generic records stay separate.\n",
+          "previous": "    -- Input constructors and Lean-produced results have separate capabilities. Neither\n    -- follows callback, generic-record or owned-value edges.\n",
+          "start": 27274
+        },
+        {
+          "current": "  let subtypeResult := callbackSite == some true\n",
+          "previous": "  let subtypeResult := callbackSite == some true && request.ownedAggregates.isNone\n",
+          "start": 69785
+        },
+        {
+          "current": "  else if [\"graph\", \"owned-graph\"].contains kind then\n",
+          "previous": "  else if kind == \"graph\" then\n",
+          "start": 79187
+        },
+        {
+          "current": "  if [\"graph\", \"owned-graph\"].contains kind then\n",
+          "previous": "  if kind == \"graph\" then\n",
+          "start": 81672
+        }
+      ],
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "49a305c6739f7d4a85c6798c654bf25b91a55460ca2158de9f53d15cd2468040"
+    },
+    {
+      "currentSha256": "375c7c1483661ca1df58fe016ba31587a77bf3fa74bf94074d8bca9544e19743",
+      "edits": [
+        {
+          "current": "\t\tif([\"graph\", \"owned-graph\"].includes(value.kind))\n",
+          "previous": "\t\tif(value.kind === \"graph\")\n",
+          "start": 8796
+        }
+      ],
+      "path": "src/analyze/checked-refinement-selection.mjs",
+      "previousSha256": "1d9bcb9b6cf8f7ccde17a1696955b5776e49a73f1865500eff190792502815ff"
+    },
+    {
+      "currentSha256": "b9686bda40ff4e7e3b89b0cd6d05fbc10974f6f4e0ea26c638e41307935b4b05",
+      "edits": [
+        {
+          "current": "\t\t\t\t\telse validateOwnedNativeType(type, request.ownedAggregates, site);\n",
+          "previous": "\t\t\t\t\telse validateOwnedNativeType(type, request.ownedAggregates);\n",
+          "start": 20711
+        }
+      ],
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "26279e694b2e76351fb6d4454611adcfb5b3204cc939be36a52d92923491934b"
+    },
+    {
+      "currentSha256": "fb03e3758a1fe60ee00d6f7e6f6a62631e4e4640e839aa7c56f98cf3d40b7871",
+      "edits": [
+        {
+          "current": "\t\tconst refined = type => type.kind === \"refinement\" || ([\"graph\", \"owned-graph\"].includes(type.kind) ? refined(type.root) || type.types.some(refined)\n",
+          "previous": "\t\tconst refined = type => type.kind === \"refinement\" || (type.kind === \"graph\" ? refined(type.root) || type.types.some(refined)\n",
+          "start": 17174
+        }
+      ],
+      "path": "src/analyze/export-configuration.mjs",
+      "previousSha256": "91a3c1a9be0ff57e837edd7a10b9b1886d7eefc4e89e0b67ef61eb8487c02e8e"
+    },
+    {
+      "currentSha256": "40ca415117f5a633e077f0c21a3a802874f4de919f8ebebf487dfffe26df8e95",
+      "edits": [
+        {
+          "current": " * @param site - Known top-level direction for checked owned leaves.\n",
+          "previous": "",
+          "start": 4694
+        },
+        {
+          "current": "export const validateOwnedNativeType = (type, policy, site = undefined) => {\n",
+          "previous": "export const validateOwnedNativeType = (type, policy) => {\n",
+          "start": 4767
+        },
+        {
+          "current": "\tif(site !== undefined && ![\"parameter\", \"result\"].includes(site)) fail(\"invalid owned refinement site\");\n\treturn validate(type, 0, false, undefined, policy, false, true, site, site !== undefined, site === \"result\");\n",
+          "previous": "\treturn validate(type, 0, false, undefined, policy);\n",
+          "start": 4883
+        },
+        {
+          "current": "\t\treturn validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true\n\t\t\t, true, site, subtypeStructural, subtypeResult));\n",
+          "previous": "\t\treturn validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true, false));\n",
+          "start": 5777
+        }
+      ],
+      "path": "src/analyze/native-types.mjs",
+      "previousSha256": "f66b7cdb498242df751cd8e1b70ca5e65984c6d5d6e6f3aff6061c00b051b922"
+    },
+    {
+      "currentSha256": "cb816bbac181df5080038a96c7a3ba7564f42179c527e5f0383be866ee3dfff6",
+      "edits": [
+        {
+          "current": "\t\tif(kind === \"refinement\")\n\t\t{\n\t\t\tkeys(value, [\"kind\", \"base\", \"predicate\"]); edge(value.base, references, depth + 1); return;\n\t\t}\n",
+          "previous": "",
+          "start": 3711
+        }
+      ],
+      "path": "src/analyze/owned-metadata-graph.mjs",
+      "previousSha256": "61db690927b14a98904f5d38430be04095ad1ffe572608a587ce35b7a34fc959"
+    },
+    {
+      "currentSha256": "ec3230c12ddafd091c609ef46660a8779a776f216aca7eeab8f65a42303c6c31",
+      "edits": [
+        {
+          "current": "import { declarationRefinements } from \"../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 566
+        },
+        {
+          "current": "import { checkedRefinementSelection } from \"./checked-refinement-selection.mjs\";\n",
+          "previous": "",
+          "start": 775
+        },
+        {
+          "current": "",
+          "previous": "\tcompileOwnedAggregateModel(document);\n",
+          "start": 2172
+        },
+        {
+          "current": "\tconst source = (item, callbackName, declaration = false) => {\n",
+          "previous": "\tconst source = (item, callbackName) => {\n",
+          "start": 3061
+        },
+        {
+          "current": "\t\tconst refinementKey = \"lean-lang.org/refinements\";\n\t\treject(Object.keys(item.source.extensions).some(key => !declaration || key !== refinementKey), `${item.id}.source.extensions`);\n\t\tif(declaration && Object.hasOwn(item.source.extensions, refinementKey))\n\t\t{\n\t\t\ttry\n\t\t\t{ declarationRefinements(item, item.source.extensions[refinementKey], document.types, { ownedStructural: true }); }\n\t\t\tcatch\n\t\t\t{ unsupported(\"Reviewed owned refinement decisions must match their transport signature\", { path: `${item.id}.source.extensions.${refinementKey}` }); }\n\t\t}\n",
+          "previous": "\t\treject(Object.keys(item.source.extensions).length, `${item.id}.source.extensions`);\n",
+          "start": 3448
+        },
+        {
+          "current": "\t\tsource(declaration, undefined, true);\n",
+          "previous": "\t\tsource(declaration);\n",
+          "start": 7075
+        },
+        {
+          "current": "\tcompileOwnedAggregateModel(document);\n",
+          "previous": "",
+          "start": 8367
+        },
+        {
+          "current": "\tconst decision = (value, inputs, callable, refinement) => {\n\t\tconst selected = refinement === undefined ? null : checkedRefinementSelection(refinement);\n\t\treturn { ownership: value.ownership\n\t\t\t, lifetime: value.lifetime?.scope === \"parameter\" ? { scope: \"parameter\"\n\t\t\t\t, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)\n\t\t\t, ...callable ? { callable } : {}\n\t\t\t, ...(selected === null ? {} : { refinement: selected }) };\n\t};\n",
+          "previous": "\tconst decision = (value, inputs, callable) => ({ ownership: value.ownership\n\t\t, lifetime: value.lifetime?.scope === \"parameter\" ? { scope: \"parameter\"\n\t\t\t, anchor: `arg${inputs.findIndex(input => input.name === value.lifetime.anchor)}` } : structuredClone(value.lifetime)\n\t\t, ...callable ? { callable } : {} });\n",
+          "start": 9362
+        },
+        {
+          "current": "\t\t\tconst refinements = item.source.extensions[\"lean-lang.org/refinements\"];\n",
+          "previous": "",
+          "start": 10993
+        },
+        {
+          "current": "\t\t\t\t, ...parameters.some(Boolean) || inputs.some(value => value.ownership === \"transfer\") || refinements?.parameters.some(value => value !== null)\n\t\t\t\t\t? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index], refinements?.parameters[index])) } : {}\n\t\t\t\t, ...item.result.ownership === \"borrow\" || result\n\t\t\t\t\t? { result: decision(item.result, inputs, result, refinements?.result) } : {}\n",
+          "previous": "\t\t\t\t, ...parameters.some(Boolean) || inputs.some(value => value.ownership === \"transfer\")\n\t\t\t\t\t? { parameters: inputs.map((value, index) => decision(value, inputs, parameters[index])) } : {}\n\t\t\t\t, ...item.result.ownership === \"borrow\" || result ? { result: decision(item.result, inputs, result) } : {}\n",
+          "start": 11286
+        }
+      ],
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "previousSha256": "cb25d914ebcc8d30707789c1f39941dc6965fe2b4d5a728f76b7e94f8586c528"
+    },
+    {
+      "currentSha256": "5a569a66d4ddf50d6ac12a98c8bedc7ef81246e73fb15593ae10bba11c8b469a",
+      "edits": [
+        {
+          "current": "\t\tif([\"graph\", \"owned-graph\"].includes(type.kind)) return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());\n",
+          "previous": "\t\tif(type.kind === \"graph\") return hasSubtype(type.root, new Map(type.types.map(definition => [definition.name, definition])), new Set());\n",
+          "start": 12216
+        },
+        {
+          "current": "\t\tif([\"graph\", \"owned-graph\"].includes(type.kind)) return refinement(type.root, nominal, shared,\n",
+          "previous": "\t\tif(type.kind === \"graph\") return refinement(type.root, nominal, shared,\n",
+          "start": 14301
+        }
+      ],
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "65e5b7d3c6d0f01f04c4019f14b39b107cf56853bb003680f1b77bda296bc1c1"
+    },
+    {
+      "currentSha256": "ca886a3fcf671128e7c7331474c2d08b1182003c593b8db321d23c83690e3f84",
+      "edits": [
+        {
+          "current": "\tif(model.declarations.some(declaration => declaration.refinements !== undefined))\n\t\tthrow Object.assign(new TypeError(\"Owned aggregate carriers require checked Subtype adapters\"), {\n\t\t\tcode: \"owned-refinements-unavailable\"\n\t\t});\n",
+          "previous": "",
+          "start": 3392
+        }
+      ],
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "previousSha256": "3b240658392b8614acc73d8f7b217fd4c3a2685fdbc3904fc9afaff5aa17e7b7"
+    },
+    {
+      "currentSha256": "23e56e15e22e44be61211966314bb033fb33c569c8a2c370f516ed704d37cbf9",
+      "edits": [
+        {
+          "current": "test(\"callback Subtype constraints survive metadata validation for semantic direction checks\", () => {\n\tconst subtype = constructor => ({\n\t\tkind: \"refinement\"\n\t\t, base: { kind: \"primitive\", name: \"nat\" }\n\t\t, predicate: { kind: \"subtype\", constructor } });\n",
+          "previous": "test(\"callback Subtype constraints are rejected rather than erased\", () => {\n\tconst fin = { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"subtype\", constructor: \"Sample.checked\" } };\n",
+          "start": 10272
+        },
+        {
+          "current": "\t\t{ kind: \"callback\", parameters: [subtype(\"Sample.checked\")], result: { kind: \"primitive\", name: \"nat\" } }\n\t\t, { kind: \"callback\", parameters: [{ kind: \"primitive\", name: \"nat\" }], result: { kind: \"array\", element: subtype(\"Sample.checked\") } }\n\t\t, { kind: \"callback\", parameters: [{ kind: \"record\", name: \"Sample.Record\", fields: [{ name: \"value\", type: subtype(\"Sample.checked\") }] }], result: { kind: \"primitive\", name: \"nat\" } }\n\t\t, { kind: \"callback\", parameters: [subtype(null)], result: { kind: \"primitive\", name: \"nat\" } }\n",
+          "previous": "\t\t{ kind: \"callback\", parameters: [fin], result: { kind: \"primitive\", name: \"nat\" } }\n\t\t, { kind: \"callback\", parameters: [{ kind: \"primitive\", name: \"nat\" }], result: { kind: \"array\", element: fin } }\n\t\t, { kind: \"callback\", parameters: [{ kind: \"record\", name: \"Sample.Record\", fields: [{ name: \"value\", type: fin }] }], result: { kind: \"primitive\", name: \"nat\" } }\n",
+          "start": 10549
+        },
+        {
+          "current": "\t\tassert.equal(validateElaboratedMetadata(report, request), true);\n",
+          "previous": "\t\tassert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/);\n",
+          "start": 11201
+        }
+      ],
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "a52be48b74ed1563442cecc61c5e0e5feb8a19407e67a34ed84afb0ece27585f"
+    },
+    {
+      "currentSha256": "73484c0ff94ec14917bfea2b8a795cada9b89abd03fe35c14bf24da65448911b",
+      "edits": [
+        {
+          "current": "\n/** Add one per-use checked Subtype decision inside an owned aggregate. */\nexport const ownedSubtypeReviewedIr = () => {\n\tconst ir = ownedAggregateReviewedIr();\n\tconst declaration = ir.declarations.find(item => item.name === \"echoRecord\");\n\tconst payload = constructor => ({\n\t\tkind: \"record\", name: \"Owned.Payload\"\n\t\t, fields: [\n\t\t\t{ name: \"count\", refinement: { kind: \"subtype\", constructor } }\n\t\t\t, { name: \"bytes\", refinement: null }]\n\t});\n\tconst bundle = constructor => ({\n\t\tkind: \"record\", name: \"Owned.Bundle\"\n\t\t, fields: [\n\t\t\t{ name: \"primary\", refinement: null }\n\t\t\t, { name: \"spare\", refinement: null }\n\t\t\t, { name: \"peers\", refinement: null }\n\t\t\t, { name: \"history\", refinement: null }\n\t\t\t, { name: \"payload\", refinement: payload(constructor) }]\n\t});\n\tdeclaration.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [bundle(\"Owned.checkedCount\")]\n\t\t, result: bundle(null)\n\t};\n\treturn ir;\n};\n",
+          "previous": "",
+          "start": 6466
+        }
+      ],
+      "path": "tests/helpers/owned-aggregate-fixture.mjs",
+      "previousSha256": "7096e0d2a0498a891fecff0fba38315063eddee08997f3256faca766daee4089"
+    },
+    {
+      "currentSha256": "cdaa24ade9a35ffd1bd8b58a79f5913ae3fa6df0d7265ff7f9981ceadba477b5",
+      "edits": [
+        {
+          "current": "const refinedNominalGraph = result => {\n\tconst value = nominalGraph();\n\tvalue.types[0].fields.push({\n\t\tname: \"count\", projection: \"Owned.Box.count\"\n\t\t, type: {\n\t\t\tkind: \"refinement\"\n\t\t\t, base: { kind: \"primitive\", name: \"nat\", lean: \"Nat\", abi: heap }\n\t\t\t, predicate: { kind: \"subtype\", constructor: result ? null : \"Owned.checkedCount\" }\n\t\t\t, abi: heap\n\t\t}\n\t});\n\treturn value;\n};\n",
+          "previous": "",
+          "start": 2437
+        },
+        {
+          "current": "test(\"owned graph validation admits directional Subtype leaves only at explicit sites\", () => {\n\tconst input = refinedNominalGraph(false), result = refinedNominalGraph(true);\n\tassert.equal(validateOwnedNativeType(input, policy, \"parameter\"), input);\n\tassert.equal(validateOwnedNativeType(result, policy, \"result\"), result);\n\tassert.throws(() => validateOwnedNativeType(input, policy), /top-level or structural-container/u);\n\tassert.throws(() => validateOwnedNativeType(input, policy, \"result\"), /invalid Subtype refinement/u);\n\tassert.throws(() => validateOwnedNativeType(result, policy, \"parameter\"), /invalid Subtype refinement/u);\n\tassert.throws(() => validateOwnedNativeType(input, policy, \"callback\"), /invalid owned refinement site/u);\n});\n\n",
+          "previous": "",
+          "start": 7861
+        }
+      ],
+      "path": "tests/owned-aggregate-metadata.test.mjs",
+      "previousSha256": "c4f72fbd389ff07cff580ce873f0fa9db15ea6f609dddc0edf0476471e21754a"
+    },
+    {
+      "currentSha256": "b3bdeeeb177da1bdbe9ddba3ffcbdd4cbe4e37dbcdd389b641cfa5f3d0f20ce3",
+      "edits": [
+        {
+          "current": "import { declarationRefinements } from \"../src/abi/refinements.mjs\";\nimport { generateOwnedBindingCarriers } from \"../src/build/owned-aggregate-carriers.mjs\";\n",
+          "previous": "",
+          "start": 254
+        },
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\nimport \"./helpers/owned-subtype-analysis-source-history-tests.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 545
+        },
+        {
+          "current": "test(\"owned models authenticate and retain per-use Subtype decisions without opening copied contracts\", () => {\n\tconst ir = ownedSubtypeReviewedIr(), before = structuredClone(ir);\n\tconst declaration = ir.declarations.find(item => item.name === \"echoRecord\");\n\tassert.throws(() => declarationRefinements(declaration\n\t\t, declaration.source.extensions[\"lean-lang.org/refinements\"], ir.types));\n\tconst model = compileOwnedAggregateModel(ir);\n\tassert.deepEqual(ir, before);\n\tassert.deepEqual(model.declarations.find(item => item.name === \"echoRecord\").refinements\n\t\t, declaration.source.extensions[\"lean-lang.org/refinements\"]);\n\tassert.equal(Object.isFrozen(model.declarations.find(item => item.name === \"echoRecord\").refinements), true);\n\tassert.throws(() => generateOwnedBindingCarriers({\n\t\tdocument: ir\n\t\t, sourceIdentity: {}\n\t\t, declarations: []\n\t\t, metadataSha256: \"a\".repeat(64)\n\t}), { code: \"owned-refinements-unavailable\" });\n\tconst wrongInput = ownedSubtypeReviewedIr();\n\twrongInput.declarations.find(item => item.name === \"echoRecord\")\n\t\t.source.extensions[\"lean-lang.org/refinements\"].parameters[0]\n\t\t.fields[4].refinement.fields[0].refinement.constructor = null;\n\tassert.throws(() => compileOwnedAggregateModel(wrongInput), /Invalid declaration refinement|Refinement does not match/u);\n\tconst wrongResult = ownedSubtypeReviewedIr();\n\twrongResult.declarations.find(item => item.name === \"echoRecord\")\n\t\t.source.extensions[\"lean-lang.org/refinements\"].result\n\t\t.fields[4].refinement.fields[0].refinement.constructor = \"Owned.checkedCount\";\n\tassert.throws(() => compileOwnedAggregateModel(wrongResult), /Invalid declaration refinement|Refinement does not match/u);\n\tconst wrongField = ownedSubtypeReviewedIr();\n\twrongField.declarations.find(item => item.name === \"echoRecord\")\n\t\t.source.extensions[\"lean-lang.org/refinements\"].parameters[0].fields[4].name = \"other\";\n\tassert.throws(() => compileOwnedAggregateModel(wrongField), /Invalid declaration refinement|Refinement does not match/u);\n});\n\n",
+          "previous": "",
+          "start": 3147
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "98fcfb9368cad29a975e4d19a1ca0968c85a974cb5d8e0c76d315fe7b49b2725"
+    },
+    {
+      "currentSha256": "dde9fc46a8382e40013fbe7045ea3f6f282154e444d2381b61f3179b4c521e6d",
+      "edits": [
+        {
+          "current": "import { checkedRefinementSelection } from \"../src/analyze/checked-refinement-selection.mjs\";\n",
+          "previous": "",
+          "start": 549
+        },
+        {
+          "current": "import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "previous": "import { ownedAggregateReviewedIr } from \"./helpers/owned-aggregate-fixture.mjs\";\n",
+          "start": 1132
+        },
+        {
+          "current": "test(\"owned review exports exact Subtype decisions for compiler reconciliation\", () => {\n\tconst document = ownedSubtypeReviewedIr(), review = capture(document);\n\tassert.deepEqual(validateReviewedOwnedSource(review), document);\n\tconst selection = reviewedOwnedSourceSelection(review);\n\tconst declaration = document.declarations.find(item => item.name === \"echoRecord\");\n\tassert.deepEqual(selection.contracts[\"Owned.echoRecord\"].parameters[0].refinement\n\t\t, checkedRefinementSelection(declaration.source.extensions[\"lean-lang.org/refinements\"].parameters[0]));\n\tassert.equal(Object.hasOwn(selection.contracts[\"Owned.echoRecord\"], \"result\"), false);\n\tassert.equal(selection.contracts[\"Owned.echoRecord\"].parameters[0].ownership, \"borrow\");\n\tconst resultConstructor = structuredClone(document);\n\tresultConstructor.declarations.find(item => item.name === \"echoRecord\")\n\t\t.source.extensions[\"lean-lang.org/refinements\"].result\n\t\t.fields[4].refinement.fields[0].refinement.constructor = \"Owned.checkedCount\";\n\tassert.throws(() => validateReviewedOwnedSource(capture(resultConstructor)), { code: \"reviewed-ir-build-unsupported\" });\n});\n\n",
+          "previous": "",
+          "start": 4636
+        }
+      ],
+      "path": "tests/reviewed-owned-source.test.mjs",
+      "previousSha256": "da590b007fbfdfba5a57d4047b9d1bbfee6db1f8e5b19e40fd50b6de4109e3a5"
+    }
+  ]
+}

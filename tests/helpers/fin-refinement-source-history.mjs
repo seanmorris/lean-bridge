@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedSubtypeAnalysisSource, ownedSubtypeAnalysisChangedPaths } from "./owned-subtype-analysis-source-history.mjs";
 import { beforeCallbackSubtypeRemainingSource, callbackSubtypeRemainingChangedPaths } from "./callback-subtype-remaining-source-history.mjs";
 import { beforeCallbackSubtypeRemainingAcceptanceSource, callbackSubtypeRemainingAcceptanceChangedPaths } from "./callback-subtype-remaining-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeLanguageSource, callbackSubtypeLanguageChangedPaths } from "./callback-subtype-language-source-history.mjs";
@@ -1385,7 +1386,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeRemainingAcceptanceChangedPaths
+	...ownedSubtypeAnalysisChangedPaths
+	, ...callbackSubtypeRemainingAcceptanceChangedPaths
 	, ...callbackSubtypeRemainingChangedPaths
 	, ...callbackSubtypeLanguageChangedPaths
 	, ...callbackSubtypeNativeChangedPaths
@@ -1843,8 +1845,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
+	const ownedSubtype = beforeOwnedSubtypeAnalysisSource(
 		path, text, expected
+	);
+	if(sha256(ownedSubtype) === expected) return ownedSubtype;
+	const remainingAcceptance = beforeCallbackSubtypeRemainingAcceptanceSource(
+		path, ownedSubtype, expected
 	);
 	if(sha256(remainingAcceptance) === expected) return remainingAcceptance;
 	const remainingCallbacks = beforeCallbackSubtypeRemainingSource(
