@@ -11,3 +11,4 @@ import "./helpers/checked-record-value-index-php-wasm-installed-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-ci-shell-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-ci-workflow-tests.mjs";
+import "./helpers/checked-record-value-index-php-wasm-evidence-tests.mjs";
