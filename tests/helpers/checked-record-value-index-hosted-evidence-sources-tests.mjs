@@ -16,6 +16,7 @@ import {
 	, checkedRecordValueIndexPerlEvidenceSources, checkedRecordValueIndexPhpEvidenceSources
 	, checkedRecordValueIndexPythonEvidenceSources
 	, checkedRecordValueIndexRubyEvidenceSources
+	, checkedRecordValueIndexRustEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -184,6 +185,39 @@ test("value-index Ruby evidence closes gem production, consumption and checking 
 		, ["archiver", "scripts/archive-checked-record-value-index-ruby-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
+});
+
+test("value-index Rust evidence closes crate production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexRustEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-rust/rust.rs"]
+		, ["consumer", "tests/helpers/checked-record-value-index-rust-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-rust.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-rust-ci.mjs"]
+		, ["checker", "scripts/bootstrap-rust-ci.sh"]
+		, ["archiver", "scripts/archive-checked-record-value-index-rust-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index Rust archiving replays the retained TAP and records through the dependency-aware reader", () => {
+	const source = readFileSync(
+		"scripts/archive-checked-record-value-index-rust-evidence.mjs", "utf8");
+	const marker = "const checked = await checkCheckedRecordValueIndexRustCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\t\tassert.equal", 1)[0];
+	for(const field of [
+		"route, producer: revision, directory: recordsRoot"
+		, "tap: join(cell, \"run.tap\"), glibc: observed.floor"
+		, "rustc: toolchain.rustc.command, cargo: toolchain.cargo.command"
+		, "tap: tap.toString(), read, runtime, toolchain"
+	]) assert.ok(replay.includes(field), field);
+	assert.equal(source.split("await checkedRecordValueIndexRustCiReader(").length, 2);
 });
 
 test("value-index hosted archivers accept only four explicit absolute inputs", () => {
