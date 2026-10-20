@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexBrowserPromotionSource, checkedRecordValueIndexBrowserPromotionChangedPaths } from "./checked-record-value-index-browser-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexBrowserArchiveSource, checkedRecordValueIndexBrowserArchiveChangedPaths } from "./checked-record-value-index-browser-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from "./checked-record-value-index-php-wasm-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmArchiveSource, checkedRecordValueIndexPhpWasmArchiveChangedPaths } from "./checked-record-value-index-php-wasm-archive-source-history.mjs";
@@ -1369,7 +1370,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexRustPromotionChangedPaths
+	...checkedRecordValueIndexBrowserPromotionChangedPaths
+	, ...checkedRecordValueIndexRustPromotionChangedPaths
 	, ...checkedRecordValueIndexRustArchiveChangedPaths
 	, ...checkedRecordValueIndexRustResultOnlyRepairChangedPaths
 	, ...checkedRecordValueIndexWitPromotionChangedPaths
@@ -1810,8 +1812,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexRustPromotionSource(
+	let previous = beforeCheckedRecordValueIndexBrowserPromotionSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexRustPromotionSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRustArchiveSource(
