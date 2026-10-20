@@ -29,13 +29,13 @@ export const generateOwnedPerlPackage = ({ model, receipt, metadata, moduleName,
 	const hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const wholeOwners = anchoredResults || receiverExports || callbackResultAnchors;
+	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	const c = generateOwnedCPackage({ metadata
 		, sourceIdentity: model.sourceIdentity, component: model.component
 		, hostCallbacks, transferredInputs, anchoredResults, receiverExports
-		, callbackResultAnchors, valueCopies: callbackResultAnchors });
+		, callbackResultAnchors, valueCopies: Boolean(generated.c.copies?.length) });
 	if(canonicalJson(c.layout.model.bindingIr) !== canonicalJson(model.bindingIr))
 		throw new TypeError("Perl ownership types differ from the compiled component");
-	const generated = generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks });
 	if(generated.c.prefix !== c.values.prefix) throw new TypeError("Perl and C ownership prefixes differ");
 	const prefix = c.values.prefix, relative = moduleName.replaceAll("::", "/"), stem = moduleName.split("::").at(-1);
 	const gmpLibrary = "libgmp-lean-bridge.so.10", q = perlStringLiteral;

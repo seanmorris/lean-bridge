@@ -31,7 +31,7 @@ export const ownedPerlNamespace = (component, settings = {}) => {
 export const projectOwnedPerl = async options => {
 	const { working, runtimeRoot, nativeRoot, settings = {}, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	const { model } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
 	if(!model.ownedGraph) throw new TypeError("Owned Perl requires an authenticated ownership model");
 	const moduleName = ownedPerlNamespace(model.component, settings);
 	generateOwnedPerlXs(model.bindingIr, moduleName, { transferredInputs: Boolean(model.ownedGraph.inputTransfers), anchoredResults: Boolean(model.ownedGraph.resultAnchors), receiverExports: Boolean(model.ownedGraph.receiverExports), callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors), hostCallbacks: Boolean(model.ownedGraph.hostCallbacks) });

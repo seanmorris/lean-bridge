@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { projectPerlNames, perlStringLiteral } from "./naming.mjs";
 import { ownedPerlBorrowClasses } from "./owned-borrows.mjs";
 import { ownedPerlReceiverClasses } from "./owned-receivers.mjs";
@@ -53,8 +53,10 @@ ${fields.map(field => `# ${field.publicName}: ${field.contractType}\nsub ${field
  * @param options.hostCallbacks - Enable callback/copy transport independently.
  */
 export const generateOwnedPerlValues = (ir, moduleName, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
 	const receivers = c.functions.some(fn => fn.receiver === 0);
 	const anchored = c.anchoredResults === true || receivers;
 	const definitions = new Map(ir.types.map(type => [type.id, type]));

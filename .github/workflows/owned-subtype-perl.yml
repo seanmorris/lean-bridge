@@ -1,0 +1,80 @@
+name: Installed owned Subtypes in Perl
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-subtype-perl-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-subtype-perl:
+    name: Ordinary and reviewed owned Subtypes across four Perl ABIs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 210
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Restore the checksummed Perl toolchain matrix
+        uses: actions/cache@v4
+        with:
+          path: .toolchains/perl
+          key: perl-checked-record-abi-v1-${{ runner.os }}-${{ hashFiles('scripts/build-perl-toolchains.mjs') }}
+      - name: Install dependencies, Lean and four Perl ABIs
+        timeout-minutes: 60
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build/owned-subtype-perl-ci
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-subtype-perl-ci/toolchain.log
+          node scripts/build-perl-toolchains.mjs 5.36.3 threaded
+          node scripts/build-perl-toolchains.mjs 5.36.3 unthreaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 threaded
+          node scripts/build-perl-toolchains.mjs 5.38.2 unthreaded
+      - name: Execute source-free CPAN acceptance
+        id: acceptance
+        timeout-minutes: 125
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-subtype-perl 2>&1 | tee build/owned-subtype-perl-ci/acceptance.log
+          rg '^# fail 0$' build/owned-subtype-perl-ci/acceptance.log
+          rg '^# skipped 0$' build/owned-subtype-perl-ci/acceptance.log
+          test -s build/owned-subtype-perl-packaging/report.json
+      - name: Preserve Perl acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-subtype-perl-${{ github.sha }}
+          path: |
+            build/owned-subtype-perl-ci/
+            build/owned-subtype-perl-packaging/report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed Perl acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
