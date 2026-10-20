@@ -528,7 +528,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					);
 					const valueIndexLane = {
 						"php-native": "php", "php-wasm": "php-wasm"
-						, python: "python", ruby: "ruby", "wit-wasi": "wit"
+						, python: "python", ruby: "ruby", rust: "rust"
+						, "wit-wasi": "wit"
 					}[profile];
 					const valueIndexed = !valueIndexLane || cell.position === "field" ? []
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
