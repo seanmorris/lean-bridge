@@ -8,6 +8,15 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "callback-subtype-browser-ci"
+		, "callback-subtype-extractor"
+		, "callback-subtype-foundation"
+		, "callback-subtype-language-installed"
+		, "callback-subtype-native-ci"
+		, "callback-subtype-native-installed"
+		, "callback-subtype-npm-browser"
+		, "callback-subtype-perl-installed"
+		, "callback-subtype-remaining-installed"
 		, "nominal-primitive-subtype-supplement-ci"
 		, "nominal-primitive-subtype-supplement-evidence"
 		, "structural-subtype-entry-evidence"

@@ -142,6 +142,9 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	const languageWorkflow = await readFile(
 		".github/workflows/callback-subtype-languages.yml", "utf8"
 	);
+	const remainingWorkflow = await readFile(
+		".github/workflows/callback-subtype-remaining.yml", "utf8"
+	);
 	const workflows = [
 		[nativeWorkflow, [
 			"group: callback-subtype-native-${{ github.ref }}"
@@ -193,6 +196,9 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	const languageShell = await readFile(
 		"scripts/run-callback-subtype-languages-ci.sh", "utf8"
 	);
+	const remainingShell = await readFile(
+		"scripts/run-callback-subtype-remaining-ci.sh", "utf8"
+	);
 	for(const value of [
 		"set -euo pipefail"
 		, "LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp"
@@ -214,4 +220,22 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 		, "--test-concurrency=1"
 		, "check-callback-subtype-languages-ci.mjs"
 	]) assert.ok(languageShell.includes(value), value);
+	for(const value of [
+		"group: callback-subtype-remaining-${{ github.ref }}"
+		, "lane: [dotnet, jvm, php-native]"
+		, "runs-on: ubuntu-24.04"
+		, "bash scripts/run-callback-subtype-remaining-ci.sh"
+		, "build/callback-subtype-remaining-ci-${{ matrix.lane }}/"
+		, "if: always()"
+		, "steps.acceptance.outcome != 'success'"
+	]) assert.ok(remainingWorkflow.includes(value), value);
+	for(const value of [
+		"set -euo pipefail"
+		, "profiles=dotnet"
+		, "profiles=java,kotlin"
+		, "profiles=php-native"
+		, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38"
+		, "--test-concurrency=1"
+		, "check-callback-subtype-remaining-ci.mjs"
+	]) assert.ok(remainingShell.includes(value), value);
 });
