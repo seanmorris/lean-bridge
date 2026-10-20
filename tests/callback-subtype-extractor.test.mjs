@@ -19,31 +19,13 @@ import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { generateComponentStructuredCallableAdapters } from "../src/build/component-structured-callable-adapters.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { createComponentCallableRuntime } from "../src/release/component-callable-runtime.mjs";
+import { checkCallbackSubtypes } from "./fixtures/callback-subtype-consumers/javascript.mjs";
+import { callbackSubtypeContracts as contracts } from "./helpers/callback-subtype-fixture.mjs";
 import "./helpers/callback-subtype-npm-browser-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_EXTRACTOR_TEST === "1";
 const wasm = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_WASM_TEST === "1";
-const copy = refinement => ({ ownership: "copy", lifetime: null, ...refinement ? { refinement } : {} });
 const constructor = { constructor: "CallbackSubtypes.checkedPositive" };
-const tree = (kind, ...arguments_) => ({ kind, arguments: arguments_ });
-const host = { ownership: "borrow", lifetime: { scope: "call", anchor: null }
-	, callable: { parameters: [copy()], result: copy(constructor) } };
-const closure = {
-	ownership: "lease"
-	, lifetime: { scope: "explicit", anchor: null }
-	, callable: { parameters: [copy(constructor)], result: copy() }
-};
-const contracts = {
-	"CallbackSubtypes.callHost": { parameters: [host] }
-	, "CallbackSubtypes.makeClosure": { parameters: [copy()], result: closure }
-	, "CallbackSubtypes.callHostContainer": { parameters: [{ ...host
-		, callable: { parameters: [copy()], result: copy(tree("result", tree("option", constructor), null)) } }] }
-	, "CallbackSubtypes.makeContainerClosure": {
-		parameters: [copy()]
-		, result: { ...closure
-			, callable: { parameters: [copy(tree("array", tree("option", constructor)))], result: copy() } }
-	}
-};
 
 test("fresh Lean extracts opposite callback Subtype directions", { skip: !enabled, timeout: 180_000 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-callback-subtype-"));
@@ -77,7 +59,11 @@ test("fresh Lean extracts opposite callback Subtype directions", { skip: !enable
 		, exportModules: [module.name]
 		, exports: Object.keys(contracts)
 		, resources: []
-		, arities: [["CallbackSubtypes.makeClosure", 1], ["CallbackSubtypes.makeContainerClosure", 1]]
+		, arities: [
+			["CallbackSubtypes.makeClosure", 1]
+			, ["CallbackSubtypes.makeMixedClosure", 1]
+			, ["CallbackSubtypes.makeContainerClosure", 1]
+		]
 		, contracts
 	};
 	const request = createMetadataRequest(selection, context), requestPath = join(directory, "request.json");
@@ -103,11 +89,12 @@ test("fresh Lean extracts opposite callback Subtype directions", { skip: !enable
 		, component: { id: "callback-subtypes@1.0.0", name: "callback-subtypes", version: "1.0.0" }
 		, elaborationSha256: sha256(output.stdout) });
 	const callbacks = semantic.document.types.filter(type => type.kind === "callback");
-	assert.equal(callbacks.length, 4);
+	assert.equal(callbacks.length, 6);
 	assert.deepEqual(callbacks.map(type => callbackSubtypeDirection({
 		parameters: type.callable.parameters.map(parameter => parameter.type)
 		, result: type.callable.result.type
-	}, type.source.extensions["lean-lang.org/refinements"], semantic.document.types)).sort(), ["closure", "closure", "host", "host"]);
+	}, type.source.extensions["lean-lang.org/refinements"], semantic.document.types)).sort()
+		, ["closure", "closure", "closure", "host", "host", "host"]);
 	assert.equal(new Set(callbacks.map(type => type.id)).size, callbacks.length);
 	for(const mutate of [
 		value => { value.parameters[0].predicate.constructor = constructor.constructor; }
@@ -200,31 +187,11 @@ test("fresh Lean extracts opposite callback Subtype directions", { skip: !enable
 		const api = runtime.bind(generated.plan.privateAbi, new Map(generated.plan.privateAbi.exports.map(item => [item.bindingId
 			, frame => text(item.symbol, pointer => module._bridge_scalar_call(pointer, frame))])));
 		const call = (name, ...args) => api.call(`lean:CallbackSubtypes.${name}`, args);
-		let calls = 0;
-		assert.equal(call("callHost", api.withRecovery(value => { calls++; return value + 1n; }, 1n)), 2n);
-		assert.equal(calls, 1);
-		calls = 0;
-		assert.throws(() => call("callHost", value => { calls++; return value; }), /requires withRecovery/u);
-		assert.equal(calls, 0);
-		assert.throws(() => call("callHost", api.withRecovery(value => { calls++; return value; }, 0n)), /failed \(5\)/u);
-		assert.equal(calls, 0);
-		calls = 0;
-		assert.throws(() => call("callHost", api.withRecovery(() => { calls++; return 0n; }, 1n)), /failed \(5\)/u);
-		assert.equal(calls, 1);
-		const original = new Error("host callback failed");
-		assert.throws(() => call("callHost", api.withRecovery(() => { throw original; }, 1n)), error => error === original);
-		assert.equal(call("callHost", api.withRecovery(value => value, 1n)), 1n);
-		const closure = call("makeClosure", 9n);
-		assert.equal(closure(2n), 2n);
-		assert.throws(() => closure(0n), /failed \(5\)/u);
-		assert.equal(closure(3n), 3n);
-		assert.equal(closure.dispose(), true);
-		assert.equal(call("callHostContainer", api.withRecovery(() => ({ ok: { tag: "some", value: 2n } }), { ok: { tag: "some", value: 1n } })).ok.value, 2n);
-		const container = call("makeContainerClosure", 0n);
-		assert.deepEqual(container([{ tag: "none" }]), { tag: "none" });
-		assert.throws(() => container([{ tag: "some", value: 0n }]), /failed \(5\)/u);
-		assert.deepEqual(container([]), { tag: "none" });
-		container.dispose();
+		const publicApi = { withRecovery: api.withRecovery };
+		for(const name of Object.keys(contracts))
+			publicApi[name.split(".").at(-1)] = (...args) => call(name.split(".").at(-1), ...args);
+		assert.deepEqual(checkCallbackSubtypes(publicApi)
+			, { checks: 18, rejections: 7, callbackCalls: 3 });
 		runtime.assertOpen();
 	}
 });

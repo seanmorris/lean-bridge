@@ -11,6 +11,12 @@ def callHost (callback : Positive → Positive) : Positive :=
 def makeClosure (_seed : Nat) : Positive → Positive :=
   fun value => value
 
+def callHostMixed (callback : Nat → Positive → Positive) : Positive :=
+  callback 7 ⟨1, by decide⟩
+
+def makeMixedClosure (_seed : Nat) : Nat → Positive → Positive :=
+  fun _marker value => value
+
 def callHostContainer
     (callback : Option Positive → Except String (Option Positive)) :
     Except String (Option Positive) :=
