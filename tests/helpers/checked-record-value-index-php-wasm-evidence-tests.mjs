@@ -12,6 +12,7 @@ import {
 } from "./checked-record-value-index-php-wasm-evidence.mjs";
 import "./checked-record-value-index-php-wasm-archive-source-history-tests.mjs";
 import "./checked-record-value-index-php-wasm-promotion-tests.mjs";
+import "./checked-record-value-index-php-wasm-promotion-source-history-tests.mjs";
 
 test("hosted value-index PHP-Wasm archive authenticates every retained route", {
 	timeout: 900_000
