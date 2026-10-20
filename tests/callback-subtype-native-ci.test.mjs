@@ -199,6 +199,12 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	const remainingShell = await readFile(
 		"scripts/run-callback-subtype-remaining-ci.sh", "utf8"
 	);
+	const remainingChecker = await readFile(
+		"scripts/check-callback-subtype-remaining-ci.mjs", "utf8"
+	);
+	const witClosure = await readFile(
+		"tests/helpers/callback-subtype-wit-install.mjs", "utf8"
+	);
 	for(const value of [
 		"set -euo pipefail"
 		, "LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp"
@@ -239,4 +245,17 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 		, "--test-concurrency=1"
 		, "check-callback-subtype-remaining-ci.mjs"
 	]) assert.ok(remainingShell.includes(value), value);
+	for(const value of [
+		"handoffRemovedBeforeReplay"
+		, "libraryClosureSha256"
+		, "relocatedReplay"
+		, "runtimeOnly"
+		, "sourceFreeExecution"
+	]) assert.ok(remainingChecker.includes(value), value);
+	for(const value of [
+		"await rm(handoff, { recursive: true, force: true })"
+		, "await rename(root, relocated)"
+		, "for(let attempt = 0; attempt < 2; attempt++)"
+		, "verifyNativeFiles(join(relocated, packageName), receipt.files)"
+	]) assert.ok(witClosure.includes(value), value);
 });

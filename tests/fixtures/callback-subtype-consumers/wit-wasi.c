@@ -1,6 +1,8 @@
+#define _GNU_SOURCE
 /* Installed WIT/WASI acceptance for directional callback Subtypes. */
 #include "callbacksubtypes_wasmtime.h"
 #include <assert.h>
+#include <link.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -36,6 +38,13 @@ static nat_t natural(const uint32_t *data) {
 static bool equal(const nat_t *value, uint32_t expected) {
   return value->length == (expected ? 1u : 0u)
     && (!expected || value->data[0] == expected);
+}
+static int loaded(struct dl_phdr_info *info, size_t size, void *raw) {
+  (void)size;
+  bool *comma = raw;
+  if (!info->dlpi_name[0]) return 0;
+  printf("%s\"%s\"", *comma ? "," : "", info->dlpi_name);
+  *comma = true; return 0;
 }
 
 typedef enum { INCREMENT, ZERO, FAIL } behavior_t;
@@ -114,6 +123,7 @@ int main(void) {
   check(mixed == 0, "mixed closure closes");
 
   callbacksubtypes_wasmtime_close(session);
-  printf("callback-subtype-remaining-ok:%u\n", checks);
+  printf("{\"checks\":%u,\"loadedLibraries\":[", checks);
+  bool comma = false; dl_iterate_phdr(loaded, &comma); puts("]}");
   return 0;
 }

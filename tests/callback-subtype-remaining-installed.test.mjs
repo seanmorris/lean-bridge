@@ -14,6 +14,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
 import { callbackSubtypeJvmInstaller } from "./helpers/callback-subtype-jvm-install.mjs";
+import { closeCallbackSubtypeWit } from "./helpers/callback-subtype-wit-install.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { checkInstalledDotnetValues } from "./helpers/dotnet-copied-install.mjs";
 import { installFinContainerEdgePhp, runFinContainerEdgePhp
@@ -95,10 +96,12 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 						/resource function/u
 						, /call-host/u
 						, /make-closure/u
-					] } : {})
+					]
+					, parseResult: JSON.parse } : {})
 				}
 			});
 			delete observation.command;
+			delete observation.result;
 			if(profile === "dotnet")
 			{
 				const runtimeHandoff = join(routeRoot, "dotnet-runtime-handoff");
@@ -138,6 +141,13 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 					, packageFileSetSha256: verified.packageFileSetSha256
 					, vendorFilesSha256: verified.vendorFilesSha256 });
 				delete observation.phpEnvironment;
+			}
+			if(profile === "wit-wasi")
+			{
+				assert.equal(profile, profiles.at(-1), "WIT must close the route handoff last");
+				Object.assign(observation, await closeCallbackSubtypeWit({ consumer, handoff
+					, pkg: receipt.packages.find(item => item.target === target && item.role === "component")
+					, relocated: join(routeRoot, "wit-relocated") }));
 			}
 			reports.push({ ...observation, route, profile
 				, bindingIrSha256: built.bindingIrSha256

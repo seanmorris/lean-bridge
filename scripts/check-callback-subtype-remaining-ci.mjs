@@ -40,11 +40,15 @@ for(const item of report.reports)
 	const jvmKeys = ["componentSha256", "dependencyClosureSha256", "offlineMaven", "repeatExecution", "runtimeOnly"];
 	const dotnetKeys = ["installedAssemblySha256", "repeatExecution", "runtimeVersion", "sdkFreeRuntime", "sourceFreeExecution"];
 	const phpKeys = ["closedComposerInstall", "packageFileSetSha256", "relocatedReplay", "repeatExecution", "vendorFilesSha256"];
+	const witKeys = ["handoffRemovedBeforeReplay"
+		, "libraryClosureSha256", "packageFileSetSha256", "relocatedReplay"
+		, "repeatExecution", "runtimeOnly", "sourceFreeExecution"];
 	assert.deepEqual(Object.keys(item).sort(), [
 		...exact
 		, ...["java", "kotlin"].includes(item.profile) ? jvmKeys : []
 		, ...item.profile === "dotnet" ? dotnetKeys : []
 		, ...item.profile === "php-native" ? phpKeys : []
+		, ...item.profile === "wit-wasi" ? witKeys : []
 	].sort());
 	assert.ok(profiles.includes(item.profile)); assert.ok(["ordinary", "reviewed"].includes(item.route));
 	assert.equal(item.checks, item.profile === "wit-wasi" ? 26 : 14);
@@ -68,6 +72,13 @@ for(const item of report.reports)
 		for(const flag of ["closedComposerInstall", "relocatedReplay", "repeatExecution"])
 			assert.equal(item[flag], true);
 		for(const field of ["packageFileSetSha256", "vendorFilesSha256"])
+			assert.match(item[field], /^[a-f0-9]{64}$/u);
+	}
+	if(item.profile === "wit-wasi")
+	{
+		for(const flag of ["handoffRemovedBeforeReplay", "relocatedReplay", "repeatExecution", "runtimeOnly", "sourceFreeExecution"])
+			assert.equal(item[flag], true);
+		for(const field of ["libraryClosureSha256", "packageFileSetSha256"])
 			assert.match(item[field], /^[a-f0-9]{64}$/u);
 	}
 	for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])

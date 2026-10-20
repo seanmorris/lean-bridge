@@ -100,8 +100,10 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 			for(const pattern of fixture.wit) assert.match(wit, pattern);
 		}
 		const flags = (await runCopied("/usr/bin/pkg-config", ["--cflags", "--libs", profile === "wit-wasi" ? `${pkg.name}-wit` : receipt.pkgConfig], root, compile)).stdout.trim().split(/\s+/);
+		const linkFlags = profile === "wit-wasi" ? flags.map(flag => flag.startsWith("-Wl,-rpath,")
+			? `-Wl,-rpath,$ORIGIN/${pkg.name}-${pkg.version}-${profile}/lib` : flag) : flags;
 		command = join(root, "consumer");
-		await runCopied(profile === "cpp" ? "/usr/bin/c++" : "/usr/bin/cc", [`-std=${profile === "cpp" ? "c++20" : "c11"}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", `consumer.${extension}`, ...flags, "-o", command], root, compile);
+		await runCopied(profile === "cpp" ? "/usr/bin/c++" : "/usr/bin/cc", [`-std=${profile === "cpp" ? "c++20" : "c11"}`, "-Wall", "-Wextra", "-Werror", "-UNDEBUG", `consumer.${extension}`, ...linkFlags, "-o", command], root, compile);
 		args = [];
 	}
 	else if(profile === "ruby")
