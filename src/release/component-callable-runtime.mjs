@@ -14,7 +14,20 @@ import { createComponentStructuredCallableProtocol } from "./component-structure
 const encoder = new TextEncoder();
 const required = ["_bridge_callable_abi", "_bridge_callable_invoke", "_bridge_callable_release", "_bridge_scalar_frame_validate", "_bridge_scalar_frame_clear", "_malloc", "_free"];
 const runtimes = new WeakSet();
+const recoveries = new WeakMap();
 const tokenValid = token => Number.isInteger(token) && token > 0 && token <= 0xffffffff;
+
+const withRecovery = (operation, recovery) => {
+	if(typeof operation !== "function") throw new TypeError("Expected a synchronous callback");
+	const callback = (...args) => Reflect.apply(operation, undefined, args);
+	recoveries.set(callback, recovery);
+	return Object.freeze(callback);
+};
+
+const prepareCallback = (source, wrapped) => {
+	if(recoveries.has(source)) recoveries.set(wrapped, recoveries.get(source));
+	return wrapped;
+};
 
 /**
  * Own callbacks and closure leases for a shared heap, without exposing raw tokens.
@@ -158,7 +171,9 @@ export const createComponentCallableRuntime = module => {
 		if(typeof value !== "function") throw new TypeError("Expected a synchronous callback");
 		if(callbacks.size >= componentCallableCapacity || nextToken === 0xffffffff) throw new RangeError("Host callback registry is full or exhausted");
 		const token = ++nextToken;
-		callbacks.set(token, { value, signature, scope, protocol }); scope.callbacks.push(token);
+		callbacks.set(token, { value, signature, scope, protocol
+			, hasRecovery: recoveries.has(value)
+			, recovery: recoveries.get(value) }); scope.callbacks.push(token);
 		return token;
 	};
 	const call = (operation, signature, args, types) => {
@@ -285,11 +300,15 @@ export const createComponentCallableRuntime = module => {
 				if(typeof operation !== "function") throw new TypeError("Missing compiled callable operation");
 				return [signature.bindingId, args => protocol ? protocol.call(operation, signature, args) : call(operation, signature, args, types)];
 			}));
-			return Object.freeze({ call: (id, args) => {
-				const operation = exports.get(id);
-				if(!operation) throw new TypeError(`Unknown Lean declaration ${id}`);
-				return operation(args);
-			} });
+			return Object.freeze({
+				withRecovery
+				, prepareCallback
+				, call: (id, args) => {
+					const operation = exports.get(id);
+					if(!operation) throw new TypeError(`Unknown Lean declaration ${id}`);
+					return operation(args);
+				}
+			});
 		}
 	});
 };

@@ -10,6 +10,7 @@ import { assertComponentStructuredCallableAbi } from "../abi/component-structure
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
+import { callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -140,12 +141,23 @@ export const componentStructuredCallablePrefix = (abi, signature) => `${abi.expo
 export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	assertComponentStructuredCallableAbi(abi);
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
-	const carrier = type => `(_root_.Array ${componentStructuredLeanType(type, callbacks)})`;
 	const nominalRefinements = abi.nominalRefinements ?? [];
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
 	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
-	for(const value of callbackRefinements.values()) if(value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
+	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
+		, callbackSubtypeDirection(type, type.refinements, abi.types)]));
+	for(const [id, value] of callbackRefinements) if(callbackDirections.get(id) === null
+		&& value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
 		throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
+	const wireCallbackType = signature => {
+		const direction = callbackDirections.get(signature.id);
+		if(direction === "host") return "_root_.USize";
+		if(direction === "closure") return `(${[...signature.parameters.map(type => componentStructuredLeanType(type))
+			, `(_root_.Option ${componentStructuredLeanType(signature.result)})`].join(" → ")})`;
+		return componentStructuredLeanType({ kind: "named", id: signature.id }, callbacks);
+	};
+	const carrier = type => `(_root_.Array ${type.kind === "named" && callbacks.has(type.id)
+		? wireCallbackType(callbacks.get(type.id)) : componentStructuredLeanType(type, callbacks)})`;
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
 	const lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType, nominalRefinements), ...defaults.declarations];
@@ -153,10 +165,34 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	for(const signature of abi.callbacks)
 	{
 		const key = signature.key, prefix = componentStructuredCallablePrefix(abi, signature);
+		const direction = callbackDirections.get(signature.id);
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const closure = carrier({ kind: "named", id: signature.id });
 		const refinements = callbackRefinements.get(signature.id);
+		if(direction === "host")
+		{
+			lines.push(`@[extern "${prefix}_invoke"]`
+				, `opaque invoke_${key} (token : _root_.USize) ${parameters} : ${carrier(signature.result)} := #[]`, ""
+				, `@[extern "${prefix}_recovery"]`
+				, `opaque recovery_${key} (token : _root_.USize) : ${carrier(signature.result)} := #[]`, ""
+				, `@[extern "${prefix}_reject"]`
+				, `opaque reject_${key} (token : _root_.USize) (recovery : ${carrier(signature.result)}) : ${carrier(signature.result)} := recovery`, ""
+				, `@[export ${prefix}_wrap]`
+				, `def wrap_${key} (token : _root_.USize) : ${closure} := #[token]`, "");
+			continue;
+		}
+		if(direction === "closure")
+		{
+			const application = ["carrierResult (do"
+				, ...["closure", ...names].map(name => `  let ${name} ← carrierValue ${name}`)
+				, `  let result ← closure ${names.join(" ")}`
+				, "  pure result", ")"];
+			lines.push(`@[export ${prefix}_apply]`
+				, `def apply_${key} (closure : ${closure}) ${parameters} : ${carrier(signature.result)} :=`
+				, ...application.map(line => `  ${line}`), "");
+			continue;
+		}
 		const fallback = defaults.expression(signature.result, refinements?.result);
 		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
 			symbol
@@ -209,11 +245,40 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		seen.add(item.bindingId);
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
-		const refined = componentRefinedCall(item, names, true);
-		const body = componentRefinementGuards(refined.guards, `pure (${refined.call})`, ".none");
+		const preflight = [], sourceArguments = [...names];
+		for(const [index, type] of signature.parameters.entries())
+		{
+			if(type.kind !== "named" || callbackDirections.get(type.id) !== "host") continue;
+			const callback = callbacks.get(type.id), refinements = callbackRefinements.get(type.id), key = callback.key;
+			const raw = `_bridgeRecoveryRaw${index}`, recovery = `_bridgeRecovery${index}`;
+			preflight.push(`  let ${raw} ← carrierValue (recovery_${key} ${names[index]})`
+				, `  let ${recovery} ← ${componentRefinementConversion(refinements.result, raw)}`);
+			const arguments_ = callback.parameters.map((_, position) => `_bridgeCallback${index}_${position}`);
+			const wire = arguments_.map((name, position) => `#[${refinements.parameters[position]
+				? componentRefinementConversion(refinements.parameters[position], name, false) : name}]`).join(" ");
+			const rawResult = `_bridgeCallbackResult${index}`;
+			const checkedResult = componentRefinementConversion(refinements.result, rawResult);
+			const rejected = `(match (do let value ← carrierValue (reject_${key} ${names[index]} #[${raw}]); ${componentRefinementConversion(refinements.result, "value")}) with | .some value => value | .none => ${recovery})`;
+			sourceArguments[index] = `(fun ${arguments_.join(" ")} => match (do let ${rawResult} ← carrierValue (invoke_${key} ${names[index]} ${wire}); ${checkedResult}) with | .some value => value | .none => ${rejected})`;
+		}
+		const refined = componentRefinedCall(item, sourceArguments, true);
+		const resultCallback = signature.result.kind === "named" ? callbacks.get(signature.result.id) : null;
+		let success = `pure (${refined.call})`;
+		if(resultCallback && callbackDirections.get(resultCallback.id) === "closure")
+		{
+			const refinements = callbackRefinements.get(resultCallback.id);
+			const arguments_ = resultCallback.parameters.map((type, index) => `(_bridgeCallbackResult_${index} : ${componentStructuredLeanType(type)})`);
+			const conversions = resultCallback.parameters.flatMap((_, index) => refinements.parameters[index]
+				? [`let _bridgeCallbackChecked_${index} ← ${componentRefinementConversion(refinements.parameters[index], `_bridgeCallbackResult_${index}`)}`] : []);
+			const applied = resultCallback.parameters.map((_, index) => refinements.parameters[index]
+				? `_bridgeCallbackChecked_${index}` : `_bridgeCallbackResult_${index}`).join(" ");
+			const projected = componentRefinementConversion(refinements.result, `_bridgeClosure ${applied}`, false);
+			success = `do let _bridgeClosure := ${refined.call}; pure (fun ${arguments_.join(" ")} => do ${[...conversions, `pure (${projected})`].join("; ")})`;
+		}
+		const body = componentRefinementGuards(refined.guards, success, ".none");
 		lines.push(`@[export ${item.symbol}_lean]`
 			, `def ${item.wrapper} ${parameters || "(_bridgeUnit : _root_.Unit)"} : ${carrier(signature.result)} :=`
-			, ...["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), ...body.split("\n").map(line => `  ${line}`), ")"].map(line => `  ${line}`), "");
+			, ...["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), ...preflight, ...body.split("\n").map(line => `  ${line}`), ")"].map(line => `  ${line}`), "");
 	}
 	return lines;
 };

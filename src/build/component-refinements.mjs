@@ -179,7 +179,7 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	if(refinement.kind === "subtype")
 	{
 		if(checked && typeof refinement.constructor !== "string") throw new TypeError("A Subtype input requires its site's constructor");
-		return checked ? `_root_.${refinement.constructor} ${value}` : `${input}.val`;
+		return checked ? `_root_.${refinement.constructor} ${value}` : `(_root_.Subtype.val ${input})`;
 	}
 	// A checked record crosses as its payload mirror: only the site's constructor builds the source
 	// value, and a Lean-produced one is projected back without any check.

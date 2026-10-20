@@ -6,7 +6,7 @@
  * @file
  */
 import { componentCallableDepth } from "../abi/component-callables.mjs";
-import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
+import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus } from "../abi/component-structured-callables.mjs";
 import { componentRecursiveAbi } from "../abi/component-recursive-abi.mjs";
 import { createComponentRecursiveBudget } from "../abi/component-recursive.mjs";
 import { scalarCopyLimit, scalarFrameHeaderBytes, scalarSlotBytes } from "../abi/component-scalars.mjs";
@@ -145,6 +145,15 @@ export const createComponentStructuredCallableProtocol = (module, controls, abi)
 		const { signature } = callback, payloads = codecs.get(signature);
 		const size = protectedNative(() => header(frame, signature.parameters.length));
 		const status = view().getUint32(frame + 8, true);
+		if(status === componentStructuredCallableRecoveryStatus)
+		{
+			if(!emptyResult(frame))
+			{ controls.poison(); throw new TypeError("Invalid callback recovery frame"); }
+			if(!callback.hasRecovery) throw new TypeError("A checked callback result requires withRecovery(callback, value)");
+			payloads.at(-1).write(module, frame + 16, callback.recovery, current.allocate, current.budget);
+			view().setUint32(frame + 8, 0, true);
+			return 0;
+		}
 		if(status)
 		{
 			// Encoding and reply-validation failures report a status without a

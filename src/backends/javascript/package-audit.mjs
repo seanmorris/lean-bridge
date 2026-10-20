@@ -7,6 +7,7 @@
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { auditOwnedJavaScriptPackage } from "./owned-package.mjs";
+import { callbackDefinitionRefinement, callbackSubtypeDirection } from "../../abi/refinements.mjs";
 
 /**
  * Reports JavaScript package audit failures with stable machine-readable codes and structured diagnostic context.
@@ -56,6 +57,16 @@ const expectedValueExports = ir => [
 		, ...ir.declarations
       .filter(declaration => declaration.kind === "function")
       .map(declaration => declaration.name)
+		, ...ir.types.some(type => {
+			if(type.kind !== "callback") return false;
+			const refinement = callbackDefinitionRefinement(type, ir.types);
+			return refinement !== null && callbackSubtypeDirection({
+				parameters: type.callable.parameters.map(parameter => parameter.type)
+				, result: type.callable.result.type
+			}, refinement, ir.types) === "host"
+				&& ir.declarations.some(declaration => declaration.parameters.some(parameter => parameter.type.kind === "named" && parameter.type.id === type.id));
+		})
+			? ["withRecovery"] : []
 	])
 ];
 

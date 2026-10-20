@@ -11,6 +11,7 @@ import { callbackRefinement, callbackDefinitionRefinement, callbackSubtypeDirect
 
 export const componentStructuredCallableAbi = 9;
 export const componentStructuredCallableDispatch = "copied-callable-frame-v1";
+export const componentStructuredCallableRecoveryStatus = 10;
 const fail = message => {
 	throw Object.assign(new TypeError(`Invalid component structured callable ABI: ${message}`), { code: "invalid-component-structured-callable-abi" });
 };

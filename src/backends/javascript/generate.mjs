@@ -11,7 +11,7 @@ import {
 import { validateBindingIr } from "../../binding-ir/contract.mjs";
 import { compileOverloadV1 } from "../../abi/overload.mjs";
 import { compileGenericSpecializationV1 } from "../../abi/generic-specialization.mjs";
-import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement } from "../../abi/refinements.mjs";
+import { assertRefinement, nominalRefinementEntries, callbackDefinitionRefinement, callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { JavaScriptProjectionError } from "./projection.mjs";
 import { auditJavaScriptPackage } from "./package-audit.mjs";
 import { analyzeJavaScriptCoverage } from "./coverage.mjs";
@@ -42,6 +42,25 @@ const declarationRefinements = (declaration, types) => {
 	{ fail("invalid-refinement", `${declaration.id}: ${error.message}`); }
 	return value;
 };
+
+/**
+ * Callback identities whose host-produced result needs a caller-supplied lawful fallback.
+ *
+ * @param ir - Validated public Binding IR.
+ * @param typeMap - Public definitions indexed by identity.
+ */
+const hostSubtypeCallbacks = (ir, typeMap = new Map(ir.types.map(type => [type.id, type]))) => new Set(ir.types
+	.filter(type => {
+		if(type.kind !== "callback") return false;
+		const refinement = callbackDefinitionRefinement(type, ir.types);
+		return refinement !== null && callbackSubtypeDirection({
+			parameters: type.callable.parameters.map(parameter => parameter.type)
+			, result: type.callable.result.type
+		}, refinement, ir.types) === "host";
+	})
+	.map(type => type.id)
+	.filter(id => ir.declarations.some(declaration => declaration.parameters.some(parameter => parameter.type.kind === "named"
+		&& parameter.type.id === id && typeMap.has(id)))));
 
 const emitFinCheck = (output, refinement, expression, path, indent) => {
 	if(refinement?.kind === "fin") output.push(`${indent}validate.assertFin(${expression}, ${quote(refinement.bound)}, ${quote(path)});`);
@@ -275,6 +294,7 @@ const ensureUniqueSurface = ir => {
 		if(declarations.length > 1) compileOverloadV1(ir, name);
 		addExport(name, declarations.map(declaration => declaration.id).join(","));
 	}
+	if(hostSubtypeCallbacks(ir).size) addExport("withRecovery", "generated checked-callback recovery helper");
 };
 
 const emitDeclarations = (ir, typeMap) => {
@@ -287,6 +307,7 @@ const emitDeclarations = (ir, typeMap) => {
 	const exports = [];
 	const consumed = new Set();
 	const errors = projectedErrors(ir);
+	const recoveryCallbacks = hostSubtypeCallbacks(ir, typeMap);
 
 	if(errors.length > 0)
 	{
@@ -566,8 +587,9 @@ const emitDeclarations = (ir, typeMap) => {
 		const operation = declaration.resultMode === "iterator" ? "iterate" : declaration.resultMode === "async-iterator" ? "iterateAsync" : "call";
 		const callbackWrapper = (type, value, path) => {
 			const definition = typeMap.get(type.id);
-			return definition?.kind === "callback" && (nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition, ir.types))
-				? `validate.wrap${definition.name}(${value}, ${quote(path)})` : value;
+			if(definition?.kind !== "callback" || !(nominalRefinementEntries(ir.types).length || callbackDefinitionRefinement(definition, ir.types))) return value;
+			const wrapped = `validate.wrap${definition.name}(${value}, ${quote(path)})`;
+			return recoveryCallbacks.has(type.id) ? `runtime.prepareCallback(${value}, ${wrapped})` : wrapped;
 		};
 		const awaitPrefix = declaration.resultMode === "promise" ? "await " : "";
 		const mappedErrors = declarationErrors(ir, declaration);
@@ -596,6 +618,11 @@ const emitDeclarations = (ir, typeMap) => {
 		exports.push(declaration.name);
 	}
 
+	if(recoveryCallbacks.size)
+	{
+		output.push("export function withRecovery(operation, recovery) { return runtime.withRecovery(operation, recovery); }", "");
+		exports.push("withRecovery");
+	}
 	output.push(`export default Object.freeze({ ${exports.join(", ")} });`, "");
 	return { source: output.join("\n"), exports };
 };
@@ -707,6 +734,7 @@ const emitTypeScript = (ir, typeMap) => {
 	}
 	const exports = [];
 	const consumed = new Set();
+	const recoveryCallbacks = hostSubtypeCallbacks(ir, typeMap);
 	for(const error of projectedErrors(ir))
 	{
 		lines.push(docComment(error.documentation), `export declare class ${error.name} extends Error {`);
@@ -781,6 +809,11 @@ const emitTypeScript = (ir, typeMap) => {
 			);
 		}
 		exports.push(declaration.name);
+	}
+	if(recoveryCallbacks.size)
+	{
+		lines.push("export declare function withRecovery<Args extends readonly unknown[], Result>(operation: (...args: Args) => Result, recovery: Result): (...args: Args) => Result;", "");
+		exports.push("withRecovery");
 	}
 	const uniqueExports = [...new Set(exports)];
 	lines.push("declare const bindings: Readonly<{", ...uniqueExports.map(name => `  readonly ${name}: typeof ${name};`), "}>;", "export default bindings;", "");

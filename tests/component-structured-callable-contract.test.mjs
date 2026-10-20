@@ -141,7 +141,7 @@ test("source-level nominal Fin trees share the structured callback ABI", () => {
 	assert.doesNotMatch(c, new RegExp(`${symbol}_refinement_0`, "u"));
 });
 
-test("structured callbacks authenticate one constructor direction and reject mixed nominal trees", () => {
+test("structured callbacks authenticate one constructor direction and install host-result recovery", () => {
 	const ir = structuredCallableReviewedIr({ recursive: true });
 	const payload = ir.types.find(type => type.id === "lean:Structured.Payload");
 	const callback = ir.types.find(type => type.kind === "callback" && type.callable.parameters.length === 1
@@ -166,7 +166,14 @@ test("structured callbacks authenticate one constructor direction and reject mix
 		};
 		assert.deepEqual(callbackRefinement(signature, refinements, bare.types), refinements);
 		if(site === "parameter") assert.throws(() => plan(bare), /direction differs from its export site/u);
-		else assert.throws(() => plan(bare), /Refinement does not match its transport type/u);
+		else
+		{
+			const generated = plan(bare), lean = generated.files["LeanBridgeGenerated.lean"];
+			assert.match(lean, /checkedCount _bridgeRecoveryRaw/u);
+			assert.match(lean, /opaque recovery_/u);
+			assert.match(generateJavaScriptPackage(bare)["index.mjs"], /export function withRecovery/u);
+			assert.doesNotMatch(lean, /axiom|unsafeCast|sorry|panic!/u);
+		}
 	}
 });
 
