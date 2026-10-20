@@ -161,11 +161,13 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 		if(tree.kind === "result") return `(match ${input} with | _root_.Except.ok ${name} => .ok ${child(0, name)} | _root_.Except.error ${name} => .error ${child(1, name)})`;
 		fail(`unsupported result refinement ${tree.kind}`);
 	};
-	const validators = new Map();
+	const validators = new Map(), emittedValidators = new Set();
 	for(const site of sites.filter(item => item.direction === "input"))
 	{
 		const symbol = `lean_bridge_owned_refine_${sha256(site.adapterKey).slice(0, 20)}`;
 		validators.set(siteKey(site.declaration, "parameter", site.position.index), symbol);
+		if(emittedValidators.has(symbol)) continue;
+		emittedValidators.add(symbol);
 		lines.push(`@[export ${symbol}]`
 			, `def ${symbol} (carrier : _root_.Array ${sourceType(site.type)}) : _root_.UInt8 :=`
 			, "  match carrierValue carrier with", "  | .none => 0", "  | .some value =>"
@@ -173,5 +175,8 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 	}
 	return { lines, sourceType, inputConversion, resultConversion
 		, byPosition, validators, siteKey
-		, header: [...validators.values()].map(symbol => `uint8_t ${symbol}(lean_object *);`) };
+		, header: [...emittedValidators].map(
+			symbol => `uint8_t ${symbol}(lean_object *);`
+		)
+	};
 };

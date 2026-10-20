@@ -150,8 +150,16 @@ export const ownedSubtypePackageReviewedIr = () => {
 	alternate.source.declaration = "Owned.echoRecordAlternate";
 	alternate.source.extensions["lean-lang.org/refinements"].parameters[0]
 		.fields[4].refinement.fields[0].refinement.constructor = "Owned.checkedCountAlternate";
+	const transfer = structuredClone(echo);
+	transfer.id = "lean:Owned.transferRecord";
+	transfer.name = "transferRecord";
+	transfer.overloadKey = "Owned.transferRecord";
+	transfer.source.declaration = "Owned.transferRecord";
+	transfer.parameters[0].ownership = "transfer";
+	transfer.parameters[0].lifetime = { scope: "call", anchor: null };
 	ir.declarations = ["newTicket", "serial", "echoRecord"]
-		.map(name => ir.declarations.find(item => item.name === name)).concat(alternate);
+		.map(name => ir.declarations.find(item => item.name === name))
+		.concat(alternate, transfer);
 	ir.types = ir.types.filter(item => ["Ticket", "Payload", "Bundle"].includes(item.name));
 	ir.errors = [];
 	return ir;

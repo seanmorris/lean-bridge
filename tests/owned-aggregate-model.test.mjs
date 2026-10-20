@@ -17,7 +17,7 @@ import { generateOwnedBindingCarriers } from "../src/build/owned-aggregate-carri
 import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
 import { sha256Text } from "../src/binding-ir/sha256.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
-import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedAggregateReviewedIr, ownedSubtypePackageReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import "./helpers/owned-subtype-javascript-source-history-tests.mjs";
 import "./helpers/owned-refinement-carriers-source-history-tests.mjs";
 import "./helpers/owned-refinement-model-source-history-tests.mjs";
@@ -138,6 +138,28 @@ test("owned refinement carriers share erased shape without sharing constructors"
 	assert.notEqual(inputs[0].adapterKey, inputs[1].adapterKey);
 	assert.equal(results[0].carrierKey, results[1].carrierKey);
 	assert.equal(results[0].adapterKey, results[1].adapterKey);
+});
+
+test("owned refinement carriers emit shared validator symbols once", () => {
+	const document = ownedSubtypePackageReviewedIr();
+	const generated = generateOwnedBindingCarriers({ document
+		, sourceIdentity: {}
+		, declarations: document.declarations.map(declaration => ({
+			name: declaration.source.declaration, module: "Owned"
+		}))
+		, metadataSha256: "b".repeat(64) });
+	const validators = Object.values(generated.refinementValidators);
+	assert.equal(validators.length, 3);
+	assert.equal(new Set(validators).size, 2);
+	for(const symbol of new Set(validators))
+	{
+		assert.equal(generated.leanSource.match(
+			new RegExp(`@\\[export ${symbol}\\]`, "gu")
+		)?.length, 1);
+		assert.equal(generated.header.match(
+			new RegExp(`uint8_t ${symbol}\\(`, "gu")
+		)?.length, 1);
+	}
 });
 
 test("owned refinement mirrors compile against the proof-carrying Lean source", {

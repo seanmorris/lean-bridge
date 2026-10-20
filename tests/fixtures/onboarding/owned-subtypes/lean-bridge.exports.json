@@ -15,7 +15,8 @@
     "Owned.newTicket",
     "Owned.serial",
     "Owned.echoRecord",
-    "Owned.echoRecordAlternate"
+    "Owned.echoRecordAlternate",
+    "Owned.transferRecord"
   ],
   "arities": {},
   "contracts": {
@@ -77,6 +78,42 @@
                     {
                       "name": "count",
                       "refinement": { "constructor": "Owned.checkedCountAlternate" }
+                    },
+                    { "name": "bytes", "refinement": null }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      }
+    },
+    "Owned.transferRecord": {
+      "parameters": [
+        {
+          "ownership": "transfer",
+          "lifetime": { "scope": "call", "anchor": null },
+          "refinement": {
+            "kind": "record",
+            "name": "Owned.Bundle",
+            "fields": [
+              { "name": "primary", "refinement": null },
+              { "name": "spare", "refinement": null },
+              { "name": "peers", "refinement": null },
+              { "name": "history", "refinement": null },
+              {
+                "name": "payload",
+                "refinement": {
+                  "kind": "record",
+                  "name": "Owned.Payload",
+                  "fields": [
+                    {
+                      "name": "count",
+                      "refinement": { "constructor": "Owned.checkedCount" }
                     },
                     { "name": "bytes", "refinement": null }
                   ]

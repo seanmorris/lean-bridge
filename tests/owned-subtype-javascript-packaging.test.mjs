@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
@@ -39,17 +39,41 @@ export const close = () => api.close();
 export function run() {
   let checks = 0;
   const check = value => { checks++; if(!value) throw new Error("Owned Subtype check " + checks); };
+  const release = (value, seen = new Set()) => {
+    if(value === null || value === undefined || seen.has(value)) return;
+    if((typeof value === "object" || typeof value === "function")) seen.add(value);
+    if(value && typeof value.dispose === "function") { value.dispose(); return; }
+    if(value && typeof value === "object") for(const child of Object.values(value)) release(child, seen);
+  };
+  const bundle = (ticket, count = 7n) => ({primary:ticket,spare:{tag:"none"},peers:[ticket],history:[ticket],payload:{count,bytes:new Uint8Array([0,255])}});
   const ticket = api.newTicket(41n, "checked");
-  const value = {primary:ticket,spare:{tag:"none"},peers:[ticket],history:[ticket],payload:{count:7n,bytes:new Uint8Array([0,255])}};
-  check(api.echoRecord(value).payload.count === 7n);
-  check(api.echoRecordAlternate(value).payload.bytes[1] === 255);
+  const retained = ticket.retain();
+  const value = bundle(ticket);
+  const echoed = api.echoRecord(value); check(echoed.payload.count === 7n);
+  const alternate = api.echoRecordAlternate(value); check(alternate.payload.bytes[1] === 255);
   const invalid = {...value,payload:{...value.payload,count:-1n}};
   let first = false, second = false;
   try { api.echoRecord(invalid); } catch { first = true; }
   try { api.echoRecordAlternate(invalid); } catch { second = true; }
   check(first); check(second); check(api.serial(ticket) === 41n);
-  ticket.dispose(); check(ticket.disposed);
-  return {checks,serial:"41",first,second};
+  release(echoed); release(alternate); ticket.dispose(); check(ticket.disposed);
+  check(api.serial(retained) === 41n);
+  const retainedEcho = api.echoRecord(bundle(retained, 8n));
+  check(retainedEcho.payload.count === 8n);
+  let retainedRejected = false;
+  try { api.echoRecord(bundle(retained, -1n)); } catch { retainedRejected = true; }
+  check(retainedRejected); check(api.serial(retained) === 41n);
+  release(retainedEcho);
+  const moving = api.newTicket(51n, "moving"), kept = moving.retain();
+  let transferRejected = false;
+  try { api.transferRecord(bundle(moving, -1n)); } catch { transferRejected = true; }
+  check(transferRejected); check(!moving.disposed); check(api.serial(moving) === 51n);
+  const moved = api.transferRecord(bundle(moving, 9n));
+  check(moving.disposed); check(api.serial(kept) === 51n);
+  check(moved.payload.count === 9n); check(api.serial(moved.primary) === 51n);
+  release(moved); kept.dispose(); retained.dispose();
+  check(kept.disposed && retained.disposed);
+  return {checks,serial:"41",first,second,retainedRejected,transferRejected,transferred:true};
 }
 `;
 
@@ -80,8 +104,15 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	const verified = await readVerifiedOwnedJavaScriptWasmComponent(componentRoot);
 	assert.deepEqual(verified.model, built.model);
 	const echo = verified.model.bindingIr.declarations.find(item => item.name === "echoRecord");
+	const transfer = verified.model.bindingIr.declarations.find(
+		item => item.name === "transferRecord"
+	);
 	assert.ok(echo.source.extensions["lean-lang.org/refinements"]);
 	assert.equal(echo.parameters[0].ownership, "borrow");
+	assert.equal(transfer.parameters[0].ownership, "transfer");
+	assert.equal(transfer.source.extensions["lean-lang.org/refinements"]
+		.parameters[0].fields[4].refinement.fields[0]
+		.refinement.constructor, "Owned.checkedCount");
 	const first = await buildOwnedJavaScriptNpmPackages({
 		componentRoot, runtimeRoot: prepared, outputRoot: join(scratch, "packages")
 	});
@@ -98,7 +129,8 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	assert.deepEqual(receipt.result.profiles, ["javascript-wasm-owned-v1"]);
 	const archives = { runtime: sha256(await readFile(first.runtimeArchive))
 		, component: sha256(await readFile(first.componentArchive)) };
-	const consumer = join(scratch, "consumer"), handoff = join(consumer, "handoff");
+	let consumer = join(scratch, "consumer");
+	const handoff = join(consumer, "handoff");
 	await saveLakeFile(consumer, "package.json", canonicalJson({
 		name: "owned-subtype-consumer"
 		, version: "1.0.0"
@@ -111,6 +143,9 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	await rm(first.output, { recursive: true }); await rm(repeated.output, { recursive: true });
 	const run = (command, args) => processBuildRunner.capture({
 		command, args, cwd: consumer, timeoutMs: 180000
+	}).catch(error => {
+		t.diagnostic(JSON.stringify(error.details ?? error.message));
+		throw error;
 	});
 	await run("npm", ["install"
 		, "--offline"
@@ -125,13 +160,18 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 console.log(JSON.stringify(run()));
 if(!close() || close()) throw new Error("Component close failed");
 `);
+	const relocated = join(scratch, "relocated-consumer");
+	await rename(consumer, relocated); consumer = relocated;
 	const observed = JSON.parse((await run(process.execPath, ["call.mjs"])).stdout);
-	assert.deepEqual(observed, { checks: 6, serial: "41", first: true, second: true });
+	assert.deepEqual(observed, { checks: 18, serial: "41", first: true
+		, second: true, retainedRejected: true
+		, transferRejected: true, transferred: true });
 	await saveLakeFile(consumer, "consumer.mts", `import api, {type Bundle} from ${JSON.stringify(first.coordinate.name)};
 const ticket = api.newTicket(41n, "typed");
 const value: Bundle = {primary:ticket,spare:{tag:"none"},peers:[ticket],history:[ticket],payload:{count:7n,bytes:new Uint8Array()}};
 const count: bigint = api.echoRecord(value).payload.count;
 api.echoRecordAlternate(value);
+api.transferRecord(value);
 // @ts-expect-error proof-erased Int fields remain bigint, never number.
 api.echoRecord({...value,payload:{...value.payload,count:7}});
 ticket.dispose(); api.close(); void count;
@@ -159,7 +199,9 @@ ticket.dispose(); api.close(); void count;
 		, installedNode: true
 		, installedTypeScript: true
 		, sourceRemovedBeforeInstall: true
+		, relocatedInstallation: true
 		, archiveReproduction: true, browser
+		, transferredInputCheckedBeforeHandoff: true
 		, wasm: { bytes: verified.receipt.wasmLibrary.bytes
 			, sha256: verified.receipt.wasmLibrary.sha256 } });
 	t.diagnostic(JSON.stringify({ reviewed

@@ -30,4 +30,6 @@ def echoRecord (value : Bundle) : Bundle := value
 
 def echoRecordAlternate (value : Bundle) : Bundle := value
 
+def transferRecord (value : Bundle) : Bundle := value
+
 end Owned
