@@ -1,0 +1,162 @@
+{
+  "additions": [
+    {
+      "currentSha256": "467d7a2e621944ac11110cdf12f3722a36571bf964c5abba03fb311ab9a29a30",
+      "path": "scripts/update-owned-refinement-model-source-history.mjs"
+    },
+    {
+      "currentSha256": "37cb99c344cb8ffe5d70dba740f2581cbd241edfce5b40221987e27c58d8b015",
+      "path": "src/abi/owned-refinement-model.mjs"
+    },
+    {
+      "currentSha256": "5d82853a4bd0dd781f772d4e54e88db0b2319b4794674c46455b22b58ff74c11",
+      "path": "tests/helpers/owned-refinement-model-source-history.mjs"
+    },
+    {
+      "currentSha256": "6f31b25c631e5d51c4d844ffe1155f7d49c4bfef9fb49951ec8c48ff658b838d",
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4d4c810ab4b8cc64a60286a3ed4d3292d76fda02",
+  "milestone": "owned-refinement-model-source-v1",
+  "predecessorCommit": "f34d7fe555c63889f7344b6a88ebfc17140c8a32",
+  "reconciledTypeSurfacePointers": 19,
+  "schemaVersion": 1,
+  "scope": "Source and contract history for direction-safe owned refinement carrier and adapter identities. Executable host adapters and installed acceptance remain pending.",
+  "updates": [
+    {
+      "currentSha256": "1c73b135bdc1e7e4f802e56f4f8f180ce475dec7f7dab6b3bea4df8d2a541830",
+      "edits": [
+        {
+          "current": "    \"src/abi/owned-refinement-model.mjs\",\n",
+          "previous": "",
+          "start": 6518
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "a05525cf96682980a989ff89e8d18c98b757704c41827350d790a7133da55ac5"
+    },
+    {
+      "currentSha256": "342b15d4bec8d5537ecc9195347e5b333ae5e00d360a8a69126a02737123cc69",
+      "edits": [
+        {
+          "current": "| [`owned-refinement-model.mjs`](owned-refinement-model.mjs) | Separates shared erased carrier shapes from per-site checked constructors and result projections inside owned values. |\n",
+          "previous": "",
+          "start": 1237
+        }
+      ],
+      "path": "src/abi/README.md",
+      "previousSha256": "4558f06f8f9acb411e7d27eed4b887d726f05a908f85733b9564f48fccb7a623"
+    },
+    {
+      "currentSha256": "6a232afdf962024a1b93c0d6e40c3a53c07982b0e531f2de91ab9e0da13b6dff",
+      "edits": [
+        {
+          "current": "import { compileOwnedRefinementModel } from \"./owned-refinement-model.mjs\";\n",
+          "previous": "",
+          "start": 436
+        },
+        {
+          "current": "\tconst refinementModel = compileOwnedRefinementModel({ declarations\n\t\t, types: [...nodes.values()] });\n",
+          "previous": "",
+          "start": 5295
+        },
+        {
+          "current": "\t\t, ...(refinementModel === null ? {} : { refinementModel })\n",
+          "previous": "",
+          "start": 5692
+        }
+      ],
+      "path": "src/abi/owned-aggregate-model.mjs",
+      "previousSha256": "70977709c4c1324b9ba9fe7ffd4538e08e682244e776e76fde46cb6dce84d883"
+    },
+    {
+      "currentSha256": "367f77c08db528e4e7c3bf4e3e0e71682858b07aa89364aaf243b905e83b8327",
+      "edits": [
+        {
+          "current": "\tif(model.refinementModel !== undefined)\n",
+          "previous": "\tif(model.declarations.some(declaration => declaration.refinements !== undefined))\n",
+          "start": 3392
+        }
+      ],
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "previousSha256": "ca886a3fcf671128e7c7331474c2d08b1182003c593b8db321d23c83690e3f84"
+    },
+    {
+      "currentSha256": "789828570ac000980dd2f5cd988dad6f39da7ccf0ac723d38049168ff6a99727",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRefinementModelSource, ownedRefinementModelChangedPaths } from \"./owned-refinement-model-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...ownedRefinementModelChangedPaths\n\t, ...ownedSubtypeAnalysisChangedPaths\n",
+          "previous": "\t...ownedSubtypeAnalysisChangedPaths\n",
+          "start": 108917
+        },
+        {
+          "current": "\tconst ownedRefinement = beforeOwnedRefinementModelSource(\n",
+          "previous": "\tconst ownedSubtype = beforeOwnedSubtypeAnalysisSource(\n",
+          "start": 129389
+        },
+        {
+          "current": "\tif(sha256(ownedRefinement) === expected) return ownedRefinement;\n\tconst ownedSubtype = beforeOwnedSubtypeAnalysisSource(\n\t\tpath, ownedRefinement, expected\n\t);\n",
+          "previous": "",
+          "start": 129475
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "62c31e7e845d454eb41c54c18dc429b157efa8684f4ce359500e9d4b3c0082a0"
+    },
+    {
+      "currentSha256": "8463cfe0ff32bf216802fb1244479471c49aaf459e2467deaf1497f187f48ccc",
+      "edits": [
+        {
+          "current": "import { beforeOwnedRefinementModelSource } from \"./owned-refinement-model-source-history.mjs\";\n",
+          "previous": "",
+          "start": 433
+        },
+        {
+          "current": "\t\tconst live = await readFile(update.path, \"utf8\");\n\t\tconst current = beforeOwnedRefinementModelSource(\n\t\t\tupdate.path, live, update.currentSha256\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1636
+        },
+        {
+          "current": "\t{\n\t\tconst live = await readFile(addition.path, \"utf8\");\n\t\tconst current = beforeOwnedRefinementModelSource(\n\t\t\taddition.path, live, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2424
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs",
+      "previousSha256": "d9b7beae6aba695c81100d49e8dbd152667eeba289987ed4c68526a8f58c0f13"
+    },
+    {
+      "currentSha256": "cb5f0b08f29450c621f2369b8c1b3c996a9e6397feaddd1ed4098859a0cee230",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-refinement-model-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 651
+        },
+        {
+          "current": "\tassert.equal(model.refinementModel, undefined);\n",
+          "previous": "",
+          "start": 1158
+        },
+        {
+          "current": "\tassert.deepEqual(model.refinementModel.sites.map(site => [site.direction\n\t\t, site.position.kind, site.type]), [\n\t\t[\"input\", \"parameter\", \"lean:Owned.Bundle\"]\n\t\t, [\"result\", \"result\", \"lean:Owned.Bundle\"]]\n\t);\n\tassert.equal(model.refinementModel.sites[0].carrierKey\n\t\t, model.refinementModel.sites[1].carrierKey);\n\tassert.notEqual(model.refinementModel.sites[0].adapterKey\n\t\t, model.refinementModel.sites[1].adapterKey);\n\tconst inputCount = model.refinementModel.sites[0].tree.fields[4]\n\t\t.refinement.fields[0].refinement;\n\tconst resultCount = model.refinementModel.sites[1].tree.fields[4]\n\t\t.refinement.fields[0].refinement;\n\tassert.deepEqual(inputCount, { kind: \"subtype\", type: \"primitive:int\"\n\t\t, path: [{ kind: \"field\", name: \"payload\" }\n\t\t\t, { kind: \"field\", name: \"count\" }]\n\t\t, operation: \"construct\", constructor: \"Owned.checkedCount\" });\n\tassert.deepEqual(resultCount, { kind: \"subtype\", type: \"primitive:int\"\n\t\t, path: [{ kind: \"field\", name: \"payload\" }\n\t\t\t, { kind: \"field\", name: \"count\" }]\n\t\t, operation: \"project\", constructor: null });\n\tassert.equal(Object.isFrozen(model.refinementModel.sites[0].tree), true);\n",
+          "previous": "",
+          "start": 3999
+        },
+        {
+          "current": "test(\"owned refinement carriers share erased shape without sharing constructors\", () => {\n\tconst ir = ownedSubtypeReviewedIr();\n\tconst original = ir.declarations.find(item => item.name === \"echoRecord\");\n\tconst alternate = structuredClone(original);\n\talternate.id = \"lean:Owned.echoRecordAlternate\";\n\talternate.name = \"echoRecordAlternate\";\n\talternate.overloadKey = \"Owned.echoRecordAlternate\";\n\talternate.source.declaration = \"Owned.echoRecordAlternate\";\n\talternate.source.extensions[\"lean-lang.org/refinements\"].parameters[0]\n\t\t.fields[4].refinement.fields[0].refinement.constructor\n\t\t= \"Owned.checkedCountAlternate\";\n\tir.declarations.push(alternate);\n\tconst sites = compileOwnedAggregateModel(ir).refinementModel.sites;\n\tconst inputs = sites.filter(site => site.direction === \"input\");\n\tconst results = sites.filter(site => site.direction === \"result\");\n\tassert.equal(inputs.length, 2); assert.equal(results.length, 2);\n\tassert.equal(inputs[0].carrierKey, inputs[1].carrierKey);\n\tassert.notEqual(inputs[0].adapterKey, inputs[1].adapterKey);\n\tassert.equal(results[0].carrierKey, results[1].carrierKey);\n\tassert.equal(results[0].adapterKey, results[1].adapterKey);\n});\n\n",
+          "previous": "",
+          "start": 6392
+        }
+      ],
+      "path": "tests/owned-aggregate-model.test.mjs",
+      "previousSha256": "b3bdeeeb177da1bdbe9ddba3ffcbdd4cbe4e37dbcdd389b641cfa5f3d0f20ce3"
+    }
+  ]
+}

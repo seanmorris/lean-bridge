@@ -11,6 +11,7 @@ import { generateOwnedBindingCarriers } from "../src/build/owned-aggregate-carri
 import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
 import { sha256Text } from "../src/binding-ir/sha256.mjs";
 import { ownedAggregateReviewedIr, ownedSubtypeReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import "./helpers/owned-refinement-model-source-history-tests.mjs";
 import "./helpers/owned-subtype-analysis-source-history-tests.mjs";
 
 test("owned models preserve complete contracts and exact copied-versus-retained field decisions", () => {

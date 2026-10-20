@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
+import { beforeOwnedRefinementModelSource } from "./owned-refinement-model-source-history.mjs";
 import {
 	beforeOwnedSubtypeAnalysisSource
 	, ownedSubtypeAnalysisChangedPaths
@@ -37,7 +38,10 @@ test("owned Subtype analysis history restores every source", async () => {
 		, ownedSubtypeAnalysisChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const live = await readFile(update.path, "utf8");
+		const current = beforeOwnedRefinementModelSource(
+			update.path, live, update.currentSha256
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseOwnedSubtypeAnalysisUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -51,8 +55,13 @@ test("owned Subtype analysis history restores every source", async () => {
 			update.path, `${current}unknown`), `${current}unknown`);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const live = await readFile(addition.path, "utf8");
+		const current = beforeOwnedRefinementModelSource(
+			addition.path, live, addition.currentSha256
+		);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 });
 
 test("owned Subtype history rejects altered transitions", async () => {
