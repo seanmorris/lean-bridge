@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from "./checked-record-value-index-php-wasm-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustCountRepairSource, checkedRecordValueIndexRustCountRepairChangedPaths } from "./checked-record-value-index-rust-count-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexRubyPromotionSource, checkedRecordValueIndexRubyPromotionChangedPaths } from "./checked-record-value-index-ruby-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexRubyArchiveSource, checkedRecordValueIndexRubyArchiveChangedPaths } from "./checked-record-value-index-ruby-archive-source-history.mjs";
@@ -1358,7 +1359,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexRustCountRepairChangedPaths
+	...checkedRecordValueIndexPhpWasmChangedPaths
+	, ...checkedRecordValueIndexRustCountRepairChangedPaths
 	, ...checkedRecordValueIndexRubyPromotionChangedPaths
 	, ...checkedRecordValueIndexRubyArchiveChangedPaths
 	, ...checkedRecordValueIndexPythonPromotionChangedPaths
@@ -1788,8 +1790,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexRustCountRepairSource(
+	let previous = beforeCheckedRecordValueIndexPhpWasmSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexRustCountRepairSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRubyPromotionSource(
@@ -1797,6 +1803,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRubyArchiveSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpWasmSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
@@ -1844,6 +1854,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpWasmSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPhpPromotionSource(
 		path, previous, expected
 	);
@@ -1851,6 +1865,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeValueIndexTestProfileGapSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPhpArchiveSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpWasmSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;

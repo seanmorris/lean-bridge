@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-php-wasm-source-v1",
+  "registrationParent": "2f978936d0e503b7750057a1299cf495834787ee",
+  "registrationPaths": [
+    "tests/checked-record-value-index-php-wasm.test.mjs",
+    "tests/helpers/fin-refinement-source-history.mjs"
+  ],
+  "pathsSha256": "36f6514f2500834e131a82b2bed7a57fdb62dabd56de6e5b608cb78c315ff832",
+  "transitions": [
+    {
+      "name": "source-contract",
+      "previousCommit": "b981260bb6fe3335492e2c902c144824e2ae10b9",
+      "currentCommit": "2acbc600ea919724dc30712c64b0983941f31cd8",
+      "modifiedPaths": [
+        "tests/checked-record-php-wasm-foundation.test.mjs"
+      ],
+      "addedPaths": [
+        "tests/helpers/checked-record-value-index-php-wasm-fixture-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-fixture.mjs"
+      ]
+    },
+    {
+      "name": "compiler-controls",
+      "previousCommit": "7b5fa5f4eb095fa9636bb5f4a8b2287bef47bbd3",
+      "currentCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "modifiedPaths": [
+        "src/adoption/test-profiles.mjs",
+        "tests/checked-record-php-wasm-foundation.test.mjs",
+        "tests/helpers/core-quality-budget-tests.mjs"
+      ],
+      "addedPaths": [
+        "tests/checked-record-value-index-php-wasm.test.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-lean-tests.mjs"
+      ]
+    },
+    {
+      "name": "installed-acceptance",
+      "previousCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "currentCommit": "2ad8485f3ada7e419cad47c5f426a8a30537b2da",
+      "modifiedPaths": [
+        "tests/checked-record-value-index-php-wasm.test.mjs",
+        "tests/helpers/core-quality-budget-tests.mjs"
+      ],
+      "addedPaths": [
+        ".github/workflows/checked-record-value-index-php-wasm.yml",
+        "scripts/check-checked-record-value-index-php-wasm-ci.mjs",
+        "scripts/check-checked-record-value-index-php-wasm-compiler-ci.mjs",
+        "scripts/run-checked-record-value-index-php-wasm-ci.sh",
+        "tests/helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-ci-report.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-ci-shell-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-ci-workflow-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-ci-workflow.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-installed-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-report.mjs"
+      ]
+    },
+    {
+      "name": "package-closure",
+      "previousCommit": "4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b",
+      "currentCommit": "aba3628faa93b71ff30f91157f47fd6a05534555",
+      "modifiedPaths": [
+        "tests/helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-installed-tests.mjs",
+        "tests/helpers/checked-record-value-index-php-wasm-report.mjs"
+      ],
+      "addedPaths": []
+    }
+  ],
+  "historicalAdditions": [
+    {
+      "transition": "source-contract",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-fixture-tests.mjs",
+      "currentSha256": "12d91897d21c53fc2fefff5018ed3f1dbad20c6261742f0460a4024915c83690"
+    },
+    {
+      "transition": "source-contract",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-fixture.mjs",
+      "currentSha256": "a220a0b1f11982fe80708a940dac4f0c76ca1b6aed2b12eac6b331ba03b578eb"
+    },
+    {
+      "transition": "compiler-controls",
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "currentSha256": "702ef973953080db45cca410e20ab0bfda3220d5f3e79193d6c5a04672aa1e84"
+    },
+    {
+      "transition": "compiler-controls",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-lean-tests.mjs",
+      "currentSha256": "196c2207f1cc9bbbb4a79a91ef52772b8d184c3c88813d297bee19e39da20ad7"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": ".github/workflows/checked-record-value-index-php-wasm.yml",
+      "currentSha256": "b241cdd68772e84f1f57c0c8df7d6b0de3b1c21e88aa41e7a42863d69f6af371"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "scripts/check-checked-record-value-index-php-wasm-ci.mjs",
+      "currentSha256": "9293e220e59ec0a91110442d2dd92317ce132129ebe5834bf54f8f607b9c82e8"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "scripts/check-checked-record-value-index-php-wasm-compiler-ci.mjs",
+      "currentSha256": "34ebb99875068f275e589a0fd2d87a518889c66205cac39dcd11fc4ec2c84300"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "scripts/run-checked-record-value-index-php-wasm-ci.sh",
+      "currentSha256": "842c549abcdf7441382950e4c15679a26dfa0ecdf85bf02b12b9a269c7c2d3b3"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs",
+      "currentSha256": "8ad359869fd81600e5b08f30ac5504068c1c3fa6893a9d691bba03d4d42afe86"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-report.mjs",
+      "currentSha256": "af0711ab1af8eebeccba5ea8440abb4af398ad872e45c1a790cc99243110ef8f"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-shell-tests.mjs",
+      "currentSha256": "25bc435bef4a2a0e0ccea0daa98f83b7e55dfc034a323d94e6a4f87ae02e7478"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-workflow-tests.mjs",
+      "currentSha256": "85164c85c9309cb0489dff2f7fda7f54d94fcd592d162fc4520ab324b845fd36"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-workflow.mjs",
+      "currentSha256": "734a13d1146e5cda5343f68b52c343bd0a19fd03618e62132d67e6b2cf9e9e0e"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-installed-tests.mjs",
+      "currentSha256": "d63eccdae2046286a8b782ea2bde0063c2c5fe39953979fe10b43a72408d0d5d"
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-report.mjs",
+      "currentSha256": "bdd203ed017af34ac63f554f934969d2449a565c6827086a859f478929110c90"
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-php-wasm-source-history.mjs",
+      "currentSha256": "bf68340c20918c77c4ab1370cd4f5b216ffa58bffa4e8e7393438913a0500f2b"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-php-wasm-source-history-tests.mjs",
+      "currentSha256": "83cfffdd349e95f7e28cc4fa4bc4be71f20617bb556ba07848c2ecccade271be"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-php-wasm-source-history.mjs",
+      "currentSha256": "5d435a6491d5ecdfebdc495cb545c7e4fafbe1b2440d0e1080364130bffc77f6"
+    }
+  ],
+  "updates": [
+    {
+      "transition": "history-registration",
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "2f978936d0e503b7750057a1299cf495834787ee",
+      "currentCommit": null,
+      "previousSha256": "04b592feaf4d678af73b3c23620bc428493abc700e8dbc52311817917521d071",
+      "currentSha256": "17a91a18476365dfb9264587d211af28dca5f651c8d4465ea10033e431098a19",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from \"./checked-record-value-index-php-wasm-source-history.mjs\";\n"
+        },
+        {
+          "start": 104006,
+          "previous": "\t...checkedRecordValueIndexRustCountRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexPhpWasmChangedPaths\n\t, ...checkedRecordValueIndexRustCountRepairChangedPaths\n"
+        },
+        {
+          "start": 122943,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustCountRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexPhpWasmSource(\n"
+        },
+        {
+          "start": 123082,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexRustCountRepairSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 123517,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexPhpWasmSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 125630,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexPhpWasmSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 126100,
+          "previous": "",
+          "current": "\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPhpWasmSource(\n"
+        }
+      ]
+    },
+    {
+      "transition": "history-registration",
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "previousCommit": "2f978936d0e503b7750057a1299cf495834787ee",
+      "currentCommit": null,
+      "previousSha256": "8e76f557f9e8ff15c75e9c64d33fa65bf26cba67b81ca7a1d8de22d5e4b99015",
+      "currentSha256": "457387b70111fbd25ad6c9c8ab5f622da8822212e1e0c61dab2bb2751ae618ab",
+      "edits": [
+        {
+          "start": 161,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-php-wasm-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "transition": "source-contract",
+      "path": "tests/checked-record-php-wasm-foundation.test.mjs",
+      "previousCommit": "b981260bb6fe3335492e2c902c144824e2ae10b9",
+      "currentCommit": "2acbc600ea919724dc30712c64b0983941f31cd8",
+      "previousSha256": "0651573d5a6a28660c58e4bef534b20a3016b2b622f9f47546fc4d07c036f2fe",
+      "currentSha256": "60d675b3daefdb14174ac72d4c92f5ff0c0b7d75d762820bf549b71497e84ea9",
+      "edits": [
+        {
+          "start": 396,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-php-wasm-fixture-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "transition": "compiler-controls",
+      "path": "src/adoption/test-profiles.mjs",
+      "previousCommit": "7b5fa5f4eb095fa9636bb5f4a8b2287bef47bbd3",
+      "currentCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "previousSha256": "27ef2abeb252e0493ef2da3d5029a988e11c84d1107bbd8ffc4d83c5519d1e00",
+      "currentSha256": "92a8713046479735806b67309fde8cb60e3b1ff76cd5dfa435c52319fe6c81dd",
+      "edits": [
+        {
+          "start": 12667,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-php-wasm\"\n"
+        }
+      ]
+    },
+    {
+      "transition": "compiler-controls",
+      "path": "tests/checked-record-php-wasm-foundation.test.mjs",
+      "previousCommit": "7b5fa5f4eb095fa9636bb5f4a8b2287bef47bbd3",
+      "currentCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "previousSha256": "60d675b3daefdb14174ac72d4c92f5ff0c0b7d75d762820bf549b71497e84ea9",
+      "currentSha256": "0651573d5a6a28660c58e4bef534b20a3016b2b622f9f47546fc4d07c036f2fe",
+      "edits": [
+        {
+          "start": 396,
+          "previous": "import \"./helpers/checked-record-value-index-php-wasm-fixture-tests.mjs\";\n",
+          "current": ""
+        }
+      ]
+    },
+    {
+      "transition": "compiler-controls",
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousCommit": "7b5fa5f4eb095fa9636bb5f4a8b2287bef47bbd3",
+      "currentCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "previousSha256": "3f102d430c9c54993800bbaa7780d9b347e1f953fd9b1696d4c2715d10c4df31",
+      "currentSha256": "2b0d93df2e81c6a7f523e5d3c0805790e46bb5ff4cd646576e1372ca6c2cb757",
+      "edits": [
+        {
+          "start": 8038,
+          "previous": "",
+          "current": "\t, \"tests/checked-record-value-index-php-wasm.test.mjs\": [\n\t\t\"checked-record-value-index-php-wasm-fixture-tests.mjs\"\n\t\t, \"checked-record-value-index-php-wasm-lean-tests.mjs\"\n\t]\n"
+        },
+        {
+          "start": 14401,
+          "previous": "\tassert.equal(observed.length, 45);\n",
+          "current": "\tassert.equal(observed.length, 47);\n"
+        }
+      ]
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "previousCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "currentCommit": "2ad8485f3ada7e419cad47c5f426a8a30537b2da",
+      "previousSha256": "702ef973953080db45cca410e20ab0bfda3220d5f3e79193d6c5a04672aa1e84",
+      "currentSha256": "8e76f557f9e8ff15c75e9c64d33fa65bf26cba67b81ca7a1d8de22d5e4b99015",
+      "edits": [
+        {
+          "start": 306,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-php-wasm-installed-tests.mjs\";\nimport \"./helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs\";\nimport \"./helpers/checked-record-value-index-php-wasm-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-value-index-php-wasm-ci-workflow-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "transition": "installed-acceptance",
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousCommit": "e63c29988da07a5ab2925b45dc4465a140aeee49",
+      "currentCommit": "2ad8485f3ada7e419cad47c5f426a8a30537b2da",
+      "previousSha256": "2b0d93df2e81c6a7f523e5d3c0805790e46bb5ff4cd646576e1372ca6c2cb757",
+      "currentSha256": "20366e76c9bd867a28d606815e0411db23ad26cae500792951c9de0b7d4fb0f7",
+      "edits": [
+        {
+          "start": 8212,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-php-wasm-installed-tests.mjs\"\n\t\t, \"checked-record-value-index-php-wasm-ci-report-tests.mjs\"\n\t\t, \"checked-record-value-index-php-wasm-ci-shell-tests.mjs\"\n\t\t, \"checked-record-value-index-php-wasm-ci-workflow-tests.mjs\"\n"
+        },
+        {
+          "start": 14650,
+          "previous": "\tassert.equal(observed.length, 47);\n",
+          "current": "\tassert.equal(observed.length, 51);\n"
+        }
+      ]
+    },
+    {
+      "transition": "package-closure",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-ci-report-tests.mjs",
+      "previousCommit": "4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b",
+      "currentCommit": "aba3628faa93b71ff30f91157f47fd6a05534555",
+      "previousSha256": "8ad359869fd81600e5b08f30ac5504068c1c3fa6893a9d691bba03d4d42afe86",
+      "currentSha256": "8232a48168d01ea561567135a66437d6dd76acf74f9b76d58cd2a791874b4b9f",
+      "edits": [
+        {
+          "start": 630,
+          "previous": "",
+          "current": "import { checkedRecordValueIndexPhpWasmRecords } from \"./checked-record-value-index-php-wasm-report.mjs\";\nimport { createPackageSetHandoff } from \"./package-set.mjs\";\n"
+        },
+        {
+          "start": 3718,
+          "previous": "",
+          "current": "});\n\ntest(\"value-index PHP-Wasm record closure retains the receipt sidecar and every prepared archive\", async t => {\n\tconst { receipt } = await createPackageSetHandoff(t);\n\tfor(const selectedRoute of checkedRecordValueIndexBrowserRoutes)\n\t{\n\t\tconst fixed = checkedRecordValueIndexPhpWasmRecords(selectedRoute);\n\t\tconst complete = checkedRecordValueIndexPhpWasmRecords(selectedRoute, receipt);\n\t\tassert.ok(fixed.includes(\"handoff/package-set-receipt.json\"));\n\t\tassert.ok(fixed.includes(\"handoff/package-set-receipt.json.sha256\"));\n\t\tassert.equal(fixed.includes(\"build-0/api.binding-ir.json\")\n\t\t\t, selectedRoute.endsWith(\"reviewed-ir\"));\n\t\tassert.deepEqual(complete.slice(fixed.length), receipt.packages.flatMap(pkg =>\n\t\t\tpkg.artifacts.map(artifact => \"handoff/\" + artifact.path)));\n\t\tassert.equal(new Set(complete).size, complete.length);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "transition": "package-closure",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-installed-tests.mjs",
+      "previousCommit": "4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b",
+      "currentCommit": "aba3628faa93b71ff30f91157f47fd6a05534555",
+      "previousSha256": "d63eccdae2046286a8b782ea2bde0063c2c5fe39953979fe10b43a72408d0d5d",
+      "currentSha256": "06aa3a58b0254cc8cc75351fe9c2901bd81e0b42d2bf40ef199812e34664c32e",
+      "edits": [
+        {
+          "start": 6643,
+          "previous": "\t\t\tif(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "current": "\t\t\tif(attempt === 0)\n\t\t\t{\n\t\t\t\tawait copyPackageSetHandoff(outputRoot, handoff);\n\t\t\t\tawait copyPackageSetHandoff(handoff, join(output, \"handoff\"));\n\t\t\t}\n"
+        },
+        {
+          "start": 8638,
+          "previous": "",
+          "current": "\t\tawait verifyPackageSetReceipt({\n\t\t\treceiptPath: join(output, \"handoff/package-set-receipt.json\")\n\t\t});\n"
+        }
+      ]
+    },
+    {
+      "transition": "package-closure",
+      "path": "tests/helpers/checked-record-value-index-php-wasm-report.mjs",
+      "previousCommit": "4060e1c6eaea9d7ebcef15d57cdf98b7f5a7b81b",
+      "currentCommit": "aba3628faa93b71ff30f91157f47fd6a05534555",
+      "previousSha256": "bdd203ed017af34ac63f554f934969d2449a565c6827086a859f478929110c90",
+      "currentSha256": "69bf75304f727230173598db265be2574a17406d94ccd8950c281d49b810f2fc",
+      "edits": [
+        {
+          "start": 1600,
+          "previous": "",
+          "current": "import { readClosedPackageZip } from \"./closed-package-zip.mjs\";\nimport { readOwnedPerlCallbackVariantTar } from \"./owned-perl-callback-result-variant-archives.mjs\";\n"
+        },
+        {
+          "start": 2515,
+          "previous": " * Return the route-relative closure independently of a producer's claimed inventory.\n",
+          "current": " * Return the fixed route records and, after receipt validation, its complete archive closure.\n"
+        },
+        {
+          "start": 2690,
+          "previous": "",
+          "current": " * @param receipt - Optional validated package-set receipt.\n"
+        },
+        {
+          "start": 2754,
+          "previous": "export const checkedRecordValueIndexPhpWasmRecords = route => {\n",
+          "current": "export const checkedRecordValueIndexPhpWasmRecords = (route, receipt = undefined) => {\n"
+        },
+        {
+          "start": 2907,
+          "previous": "",
+          "current": "\tif(receipt !== undefined) validatePackageSetReceipt(receipt);\n"
+        },
+        {
+          "start": 3150,
+          "previous": "",
+          "current": "\t\t, \"handoff/package-set-receipt.json\"\n\t\t, \"handoff/package-set-receipt.json.sha256\"\n"
+        },
+        {
+          "start": 3609,
+          "previous": "\t\t, ...Array.from({ length: 12 }, (_, index) => `executions/${index}.json`)];\n",
+          "current": "\t\t, ...Array.from({ length: 12 }, (_, index) => `executions/${index}.json`)\n\t\t, ...(receipt === undefined ? [] : receipt.packages.flatMap(pkg => pkg.artifacts\n\t\t\t.map(artifact => \"handoff/\" + artifact.path)))\n\t];\n"
+        },
+        {
+          "start": 4458,
+          "previous": "",
+          "current": "\tconst bytes = async path => {\n\t\tassert.match(path, /^(?:[A-Za-z0-9_@.+-]+\\/)*[A-Za-z0-9_@.+-]+$/u);\n\t\tassert.ok(path.split(\"/\").every(part => part !== \".\" && part !== \"..\"));\n\t\tif(!files.has(path))\n\t\t{\n\t\t\tconst value = await read(path); assert.ok(Buffer.isBuffer(value), path); files.set(path, value);\n\t\t}\n\t\treturn files.get(path);\n\t};\n"
+        },
+        {
+          "start": 4863,
+          "previous": "\t\tconst bytes = await read(path); assert.ok(Buffer.isBuffer(bytes), path); files.set(path, bytes);\n",
+          "current": "\t\tawait bytes(path);\n"
+        },
+        {
+          "start": 11344,
+          "previous": "",
+          "current": "\tconst receiptBytes = await bytes(\"handoff/package-set-receipt.json\");\n\tassert.equal(receiptBytes.toString(), canonicalJson(report.receipt));\n\tassert.equal(text(\"handoff/package-set-receipt.json.sha256\")\n\t\t, sha256(receiptBytes) + \"  package-set-receipt.json\\n\");\n\tassert.deepEqual(report.receipt.packages.map(pkg => pkg.role).sort()\n\t\t, [\"api\", \"component\", \"runtime\"]);\n\tfor(const path of checkedRecordValueIndexPhpWasmRecords(route, report.receipt))\n\t\tawait bytes(path);\n"
+        },
+        {
+          "start": 11857,
+          "previous": "",
+          "current": "\tconst unpacked = new Map();\n"
+        },
+        {
+          "start": 12511,
+          "previous": "\t\tassert.deepEqual(subset(deployment, `${pkg.ecosystem === \"composer\" ? \"vendor\" : \"node_modules\"}/${pkg.name}/`)\n\t\t\t, subset(set.files, packed.directory + \"/\"));\n",
+          "current": "\t\tconst archived = await bytes(\"handoff/\" + artifact.path);\n\t\tassert.deepEqual(identity(archived), { bytes: artifact.bytes, sha256: artifact.sha256 });\n\t\tconst members = pkg.ecosystem === \"composer\" ? readClosedPackageZip(archived)\n\t\t\t: readOwnedPerlCallbackVariantTar(archived, \"package\", set.packing.collationLocale);\n\t\tconst closure = Object.fromEntries([...members]\n\t\t\t.map(([path, contents]) => [path, identity(contents)]));\n\t\tassert.deepEqual(closure, subset(set.files, packed.directory + \"/\"));\n\t\tassert.deepEqual(subset(deployment\n\t\t\t, `${pkg.ecosystem === \"composer\" ? \"vendor\" : \"node_modules\"}/${pkg.name}/`)\n\t\t\t, closure);\n\t\tunpacked.set(pkg.role, members);\n"
+        },
+        {
+          "start": 13184,
+          "previous": "",
+          "current": "\tassert.deepEqual(unpacked.get(\"component\").get(\"compiled/model.json\")\n\t\t, files.get(\"build-0/model.json\"));\n\tassert.equal(unpacked.get(\"component\").get(\"compiled/php-wasm-component.json\").toString()\n\t\t, canonicalJson(component));\n\tassert.equal(unpacked.get(\"runtime\").get(\"compiled/runtime.json\").toString()\n\t\t, canonicalJson(runtime));\n"
+        },
+        {
+          "start": 15824,
+          "previous": "",
+          "current": "\tassert.equal(unpacked.get(\"component\").get(\"compiled/src/Api.php\").toString(), generated);\n\tassert.equal(unpacked.get(\"api\").get(\"src/Api.php\").toString(), generated);\n"
+        },
+        {
+          "start": 17125,
+          "previous": "",
+          "current": "\tassert.deepEqual([...files.keys()].sort()\n\t\t, checkedRecordValueIndexPhpWasmRecords(route, report.receipt).sort());\n"
+        },
+        {
+          "start": 17346,
+          "previous": "",
+          "current": "\t\t, packageFiles: Object.fromEntries([...unpacked]\n\t\t\t.map(([role, members]) => [role, members.size]))\n"
+        }
+      ]
+    }
+  ]
+}

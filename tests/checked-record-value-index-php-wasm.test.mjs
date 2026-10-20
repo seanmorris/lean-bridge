@@ -4,6 +4,7 @@
  *
  * @file
  */
+import "./helpers/checked-record-value-index-php-wasm-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-fixture-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-lean-tests.mjs";
 import "./helpers/checked-record-value-index-php-wasm-installed-tests.mjs";
