@@ -40,7 +40,12 @@ const record = () => history ??= JSON.parse(readFileSync(
 	checkedRecordValueIndexWitCallerWarningRepairHistoryPath, "utf8"
 ));
 
-/** Reverse one authenticated warning-repair transition. */
+/**
+ * Reverse one authenticated warning-repair transition.
+ *
+ * @param source - Complete current source text.
+ * @param update - Exact transition for the same path.
+ */
 export const reverseCheckedRecordValueIndexWitCallerWarningRepairUpdate = (
 	source, update
 ) => {
@@ -65,7 +70,13 @@ export const reverseCheckedRecordValueIndexWitCallerWarningRepairUpdate = (
 	return previous;
 };
 
-/** Remove only the exact result-only caller warning repair layer. */
+/**
+ * Remove only the exact result-only caller warning repair layer.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source text.
+ * @param expected - Optional digest at which normalization stops.
+ */
 export const beforeCheckedRecordValueIndexWitCallerWarningRepairSource = (
 	path, source, expected
 ) => {

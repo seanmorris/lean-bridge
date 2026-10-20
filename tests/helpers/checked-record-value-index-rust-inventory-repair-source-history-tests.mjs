@@ -1,4 +1,8 @@
-/** Prove the Rust source-inventory verifier repair is exact and reversible. */
+/**
+ * Prove the Rust source-inventory verifier repair is exact and reversible.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";

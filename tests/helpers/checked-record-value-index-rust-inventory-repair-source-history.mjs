@@ -40,7 +40,12 @@ const record = () => history ??= JSON.parse(readFileSync(
 	checkedRecordValueIndexRustInventoryRepairHistoryPath, "utf8"
 ));
 
-/** Reverse one authenticated Rust inventory-verifier transition. */
+/**
+ * Reverse one authenticated Rust inventory-verifier transition.
+ *
+ * @param source - Complete current source text.
+ * @param update - Exact transition for the same path.
+ */
 export const reverseCheckedRecordValueIndexRustInventoryRepairUpdate = (
 	source, update
 ) => {
@@ -65,7 +70,13 @@ export const reverseCheckedRecordValueIndexRustInventoryRepairUpdate = (
 	return previous;
 };
 
-/** Remove only the exact Rust source-inventory verifier repair. */
+/**
+ * Remove only the exact Rust source-inventory verifier repair.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source text.
+ * @param expected - Optional digest at which normalization stops.
+ */
 export const beforeCheckedRecordValueIndexRustInventoryRepairSource = (
 	path, source, expected
 ) => {
