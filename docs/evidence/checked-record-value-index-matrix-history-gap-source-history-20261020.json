@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-matrix-history-gap-source-v1",
+  "predecessorCommit": "13eaf45d4b1909b9cecf5278c050bd67b51ebbe7",
+  "draftParentCommit": "13eaf45d4b1909b9cecf5278c050bd67b51ebbe7",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "currentSha256": "8c83151e88bd56a24515d731abf7be7a324d47acc5ce2382eb87ecafcbf77436"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-history-gap-source-history-tests.mjs",
+      "currentSha256": "e6a8f5c8b39cb1c59cd38c296df81198010da1aa5f5f209a7dd0c7b8e2a06f60"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-history-gap-source-history.mjs",
+      "currentSha256": "1f5db5a101e57a15fd0132a2db204db2faf5366b74ec5d1e748f1c8026704247"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5592b470c966d3fbf8d245fef5d08709733b51971376a4d0334941cd4b0e43d8",
+      "currentSha256": "2b8860bd25e8550c024649fb3daea0bc76973933fc7e3db396cb7e54eef8be0d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixHistoryGapSource, checkedRecordValueIndexMatrixHistoryGapChangedPaths, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths } from \"./checked-record-value-index-matrix-history-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 106890,
+          "previous": "\t...checkedRecordValueIndexMatrixRegistrationChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixHistoryGapChangedPaths\n\t, ...checkedRecordValueIndexMatrixHistoryGapHistoricalPaths\n\t, ...checkedRecordValueIndexMatrixRegistrationChangedPaths\n"
+        },
+        {
+          "start": 127191,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexMatrixHistoryGapSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 127632,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexMatrixHistoryGapSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 128219,
+          "previous": "",
+          "current": "\tprevious = beforeCheckedRecordValueIndexMatrixHistoryGapSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        },
+        {
+          "start": 128879,
+          "previous": "",
+          "current": "\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixHistoryGapSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustInventoryRepairSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(\n"
+        }
+      ]
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "c4f81e11ae8816b2b5239a01cd2695ffd641485b",
+      "currentCommit": "13eaf45d4b1909b9cecf5278c050bd67b51ebbe7",
+      "previousSha256": "0af0259992d80416a07583eb1fe7ef94ad59668a528090c6a8e88287389d2c07",
+      "currentSha256": "5592b470c966d3fbf8d245fef5d08709733b51971376a4d0334941cd4b0e43d8",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixRegistrationSource, checkedRecordValueIndexMatrixRegistrationChangedPaths } from \"./checked-record-value-index-matrix-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 106643,
+          "previous": "\t...checkedRecordValueIndexMatrixCheckoutChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixRegistrationChangedPaths\n\t, ...checkedRecordValueIndexMatrixCheckoutChangedPaths\n"
+        },
+        {
+          "start": 126382,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexMatrixCheckoutSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexMatrixRegistrationSource(\n"
+        },
+        {
+          "start": 126476,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixCheckoutSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "8681daba4d4dc83e527bf2091fa8c4d2cd9361d0",
+      "currentCommit": "d8f87b3743790d99b1238cb0b78a4cfc8d9b8bf1",
+      "previousSha256": "df98ff39c6d61f74d6283f817d0258d413be3a7b36d5630ee79f6b4270f168c3",
+      "currentSha256": "0af0259992d80416a07583eb1fe7ef94ad59668a528090c6a8e88287389d2c07",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixCheckoutSource, checkedRecordValueIndexMatrixCheckoutChangedPaths } from \"./checked-record-value-index-matrix-checkout-source-history.mjs\";\n"
+        },
+        {
+          "start": 106447,
+          "previous": "\t...checkedRecordValueIndexMatrixPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixCheckoutChangedPaths\n\t, ...checkedRecordValueIndexMatrixPromotionChangedPaths\n"
+        },
+        {
+          "start": 126126,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexMatrixPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexMatrixCheckoutSource(\n"
+        },
+        {
+          "start": 126216,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "19a3e5455228526f5bb4e7089239d59f03f5e8f2",
+      "currentCommit": "6feb79010a9d96ec7462123f02295782d42693db",
+      "previousSha256": "2834257ca5d43dfbbac6886250f215575faeea4dff30745f1a6a7017551c7585",
+      "currentSha256": "df98ff39c6d61f74d6283f817d0258d413be3a7b36d5630ee79f6b4270f168c3",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexMatrixPromotionSource, checkedRecordValueIndexMatrixPromotionChangedPaths } from \"./checked-record-value-index-matrix-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 106263,
+          "previous": "\t...checkedRecordValueIndexBrowserPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexMatrixPromotionChangedPaths\n\t, ...checkedRecordValueIndexBrowserPromotionChangedPaths\n"
+        },
+        {
+          "start": 125886,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexBrowserPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexMatrixPromotionSource(\n"
+        },
+        {
+          "start": 125977,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexBrowserPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "b684ba1382046bf970fbc8987c7f6709e6e5096a",
+      "currentCommit": "fc1a0c8bae218192482acf0a82c88b6e5b86a974",
+      "previousSha256": "e56c20021ab2643302bf6acd18182dceab889a289b0d4bc2c9eaa906aa7e2c11",
+      "currentSha256": "2834257ca5d43dfbbac6886250f215575faeea4dff30745f1a6a7017551c7585",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexBrowserPromotionSource, checkedRecordValueIndexBrowserPromotionChangedPaths } from \"./checked-record-value-index-browser-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 106076,
+          "previous": "\t...checkedRecordValueIndexRustPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexBrowserPromotionChangedPaths\n\t, ...checkedRecordValueIndexRustPromotionChangedPaths\n"
+        },
+        {
+          "start": 125642,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexBrowserPromotionSource(\n"
+        },
+        {
+          "start": 125734,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "d7531e61b1d3ed9ae2eb569d2d3f20ae33eb62df",
+      "currentCommit": "0da7d1d6054a87de82082b4d2afad7bf5e30048e",
+      "previousSha256": "6e9df770abcfd1342b9b6827ec73ef7d0672afd08b0fb495e0930a781f6adab5",
+      "currentSha256": "e56c20021ab2643302bf6acd18182dceab889a289b0d4bc2c9eaa906aa7e2c11",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexBrowserArchiveSource, checkedRecordValueIndexBrowserArchiveChangedPaths } from \"./checked-record-value-index-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 107841,
+          "previous": "",
+          "current": "\t, ...checkedRecordValueIndexBrowserArchiveChangedPaths\n"
+        },
+        {
+          "start": 131001,
+          "previous": "",
+          "current": "\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexBrowserArchiveSource(\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "456713bcfc24997101a99fefb6e60bd1f9e57ab0",
+      "currentCommit": "2bcf998d058a38f44fb3ec104a339966b1e329f1",
+      "previousSha256": "6e7fd84aaff776bb35735b2a2456f825e1c01bb789ef0c18efabd2d039fe0d21",
+      "currentSha256": "ef1d0d5cd48182bceaf6d8bb850ac722243da4889f51eea63327fd2d6582ae6b",
+      "edits": [
+        {
+          "start": 1481,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustArchiveSource, checkedRecordValueIndexRustArchiveChangedPaths } from \"./checked-record-value-index-rust-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 105521,
+          "previous": "\t...checkedRecordValueIndexRustResultOnlyRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustArchiveChangedPaths\n\t, ...checkedRecordValueIndexRustResultOnlyRepairChangedPaths\n"
+        },
+        {
+          "start": 124918,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustResultOnlyRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustArchiveSource(\n"
+        },
+        {
+          "start": 125005,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustResultOnlyRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0af79d1441b0e8fb8b1e483a6c08811eaf0a2c21",
+      "currentCommit": "102da2b7ec1382625bc2a7f35a66c8d8515e17a6",
+      "previousSha256": "f6ccd6680296eff7ce9ce2a5b0084bc2817b800646c963bc5ed88d0b85b45770",
+      "currentSha256": "bbf27a85c3a656fc0739582c90d2f449d9b5a998ecf6dd557584be52296cae37",
+      "edits": [
+        {
+          "start": 2224,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexWitArchiveSource, checkedRecordValueIndexWitArchiveChangedPaths } from \"./checked-record-value-index-wit-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 104964,
+          "previous": "\t...checkedRecordValueIndexPhpWasmPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexWitArchiveChangedPaths\n\t, ...checkedRecordValueIndexPhpWasmPromotionChangedPaths\n"
+        },
+        {
+          "start": 124192,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustInventoryRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexWitArchiveSource(\n"
+        },
+        {
+          "start": 124278,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustInventoryRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "3bf9c4dc8437f48e86105e5d6f948197afe07e11",
+      "currentCommit": "12646a8ad32b98d6825310677c809f1a7b50f84a",
+      "previousSha256": "a44ebc0cacb0620d31cdfbe06083be1ee4641936dc3757f5ea389aaf39f9f945",
+      "currentSha256": "758b2fefc512aac974a5d4d1eca45a3749b458300755d33eb854a268412799ca",
+      "edits": [
+        {
+          "start": 513,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexPhpWasmArchiveSource, checkedRecordValueIndexPhpWasmArchiveChangedPaths } from \"./checked-record-value-index-php-wasm-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 104601,
+          "previous": "\t...checkedRecordValueIndexRustInventoryRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexPhpWasmArchiveChangedPaths\n\t, ...checkedRecordValueIndexRustInventoryRepairChangedPaths\n"
+        },
+        {
+          "start": 123941,
+          "previous": "",
+          "current": "\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPhpWasmArchiveSource(\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/type-surface.test.mjs",
+      "previousCommit": "42c40d8d54895be99bfcd2ee6856357919f55113",
+      "currentCommit": "d7531e61b1d3ed9ae2eb569d2d3f20ae33eb62df",
+      "previousSha256": "d9fa9e05a1f1a453e7908de35a55656360d465b815d95f9d2be52835e30e2b37",
+      "currentSha256": "803976b0342cdfb33d7e9c64a67246dd2269ce231ae378b5f774910030d1e00a",
+      "edits": [
+        {
+          "start": 37161,
+          "previous": "\t\t\t\t\t\t, python: \"python\", ruby: \"ruby\", \"wit-wasi\": \"wit\"\n",
+          "current": "\t\t\t\t\t\t, python: \"python\", ruby: \"ruby\", rust: \"rust\"\n\t\t\t\t\t\t, \"wit-wasi\": \"wit\"\n"
+        }
+      ]
+    }
+  ]
+}

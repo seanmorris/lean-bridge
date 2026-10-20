@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexMatrixHistoryGapSource, checkedRecordValueIndexMatrixHistoryGapChangedPaths, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths } from "./checked-record-value-index-matrix-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixRegistrationSource, checkedRecordValueIndexMatrixRegistrationChangedPaths } from "./checked-record-value-index-matrix-registration-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixCheckoutSource, checkedRecordValueIndexMatrixCheckoutChangedPaths } from "./checked-record-value-index-matrix-checkout-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixPromotionSource, checkedRecordValueIndexMatrixPromotionChangedPaths } from "./checked-record-value-index-matrix-promotion-source-history.mjs";
@@ -1373,7 +1374,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexMatrixRegistrationChangedPaths
+	...checkedRecordValueIndexMatrixHistoryGapChangedPaths
+	, ...checkedRecordValueIndexMatrixHistoryGapHistoricalPaths
+	, ...checkedRecordValueIndexMatrixRegistrationChangedPaths
 	, ...checkedRecordValueIndexMatrixCheckoutChangedPaths
 	, ...checkedRecordValueIndexMatrixPromotionChangedPaths
 	, ...checkedRecordValueIndexBrowserPromotionChangedPaths
@@ -1830,11 +1833,19 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixHistoryGapSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexBrowserPromotionSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRustPromotionSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixHistoryGapSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
@@ -1847,6 +1858,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexWitPromotionSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixHistoryGapSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
@@ -1863,6 +1878,18 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPhpWasmPromotionSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixHistoryGapSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexRustInventoryRepairSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
