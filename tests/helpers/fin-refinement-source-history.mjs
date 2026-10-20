@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeNpmBrowserSource, callbackSubtypeNpmBrowserChangedPaths } from "./callback-subtype-npm-browser-source-history.mjs";
 import { beforeCallbackSubtypeFoundationSource, callbackSubtypeFoundationChangedPaths } from "./callback-subtype-foundation-source-history.mjs";
 import { beforeNominalSubtypeEntryMeasurementSource, nominalSubtypeEntryMeasurementChangedPaths } from "./nominal-subtype-entry-measurement-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource, checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths } from "./checked-record-value-index-matrix-evidence-pin-repair-source-history.mjs";
@@ -1379,7 +1380,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeFoundationChangedPaths
+	...callbackSubtypeNpmBrowserChangedPaths
+	, ...callbackSubtypeFoundationChangedPaths
 	, ...nominalSubtypeEntryMeasurementChangedPaths
 	, ...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths
 	, ...checkedRecordValueIndexMatrixPinRepairChangedPaths
@@ -1831,8 +1833,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const foundation = beforeCallbackSubtypeFoundationSource(
+	const npmBrowser = beforeCallbackSubtypeNpmBrowserSource(
 		path, text, expected
+	);
+	if(sha256(npmBrowser) === expected) return npmBrowser;
+	const foundation = beforeCallbackSubtypeFoundationSource(
+		path, npmBrowser, expected
 	);
 	if(sha256(foundation) === expected) return foundation;
 	let previous = beforeNominalSubtypeEntryMeasurementSource(

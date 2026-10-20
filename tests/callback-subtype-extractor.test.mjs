@@ -19,6 +19,7 @@ import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
 import { generateComponentStructuredCallableAdapters } from "../src/build/component-structured-callable-adapters.mjs";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { createComponentCallableRuntime } from "../src/release/component-callable-runtime.mjs";
+import "./helpers/callback-subtype-npm-browser-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_EXTRACTOR_TEST === "1";
 const wasm = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_WASM_TEST === "1";

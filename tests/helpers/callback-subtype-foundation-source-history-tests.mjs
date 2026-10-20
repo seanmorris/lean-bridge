@@ -10,6 +10,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeCallbackSubtypeNpmBrowserSource } from "./callback-subtype-npm-browser-source-history.mjs";
 import {
 	beforeCallbackSubtypeFoundationSource
 	, callbackSubtypeFoundationChangedPaths
@@ -39,21 +40,34 @@ test("callback Subtype foundation history restores every source and pointer", as
 	for(const update of record.updates)
 	{
 		const current = await readFile(update.path, "utf8");
-		const previous = reverseCallbackSubtypeFoundationUpdate(current, update);
+		const milestone = beforeCallbackSubtypeNpmBrowserSource(
+			update.path, current, update.currentSha256
+		);
+		const previous = reverseCallbackSubtypeFoundationUpdate(
+			milestone, update
+		);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCallbackSubtypeFoundationSource(
-			update.path, current), previous);
+			update.path, milestone), previous);
 		assert.equal(beforeCallbackSubtypeFoundationSource(
-			update.path, current, update.currentSha256), current);
+			update.path, milestone, update.currentSha256), milestone);
 		assert.equal(beforeCallbackSubtypeFoundationSource(
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const current = await readFile(addition.path, "utf8");
+		const milestone = beforeCallbackSubtypeNpmBrowserSource(
+			addition.path, current, addition.currentSha256
+		);
+		assert.equal(sha256(milestone), addition.currentSha256, addition.path);
+	}
 	for(const pin of record.pinContainers)
 	{
-		let current = await readFile(pin.path, "utf8");
+		const latest = await readFile(pin.path, "utf8");
+		let current = beforeCallbackSubtypeNpmBrowserSource(
+			pin.path, latest, pin.currentSha256
+		);
 		assert.equal(sha256(current), pin.currentSha256, pin.path);
 		for(const replacement of [...pin.replacements].reverse())
 		{
