@@ -11,10 +11,12 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { sha256 } from "../src/capsule/node.mjs";
 import {
 	assertCallbackSubtypeBrowserTap
 	, callbackSubtypeBrowserTestName
 	, checkCallbackSubtypeBrowserCi
+	, checkCallbackSubtypeBrowserRecords
 	, parseCallbackSubtypeBrowserCiArgs
 } from "./helpers/callback-subtype-browser-ci.mjs";
 import "./helpers/callback-subtype-browser-ci-source-history-tests.mjs";
@@ -41,7 +43,8 @@ ok 1 - ${callbackSubtypeBrowserTestName}
 `;
 
 test("callback Subtype browser report requires one terminal three-engine acceptance", () => {
-	const options = { producer: commit, tap: "run.tap", runtime: "runtime.json" };
+	const options = { producer: commit, tap: "run.tap", runtime: "runtime.json"
+		, records: "records" };
 	assert.deepEqual(parseCallbackSubtypeBrowserCiArgs(Object.entries(options)
 		.flatMap(([key, value]) => ["--" + key, value])), options);
 	assertCallbackSubtypeBrowserTap(tap);
@@ -60,11 +63,81 @@ test("callback Subtype browser report requires one terminal three-engine accepta
 		, tap.replace("ok 1 -", "ok 1 - # SKIP ")
 		, tap.replace("1..1", "1..2")
 	]) assert.throws(() => assertCallbackSubtypeBrowserTap(changed));
-	for(const args of [[], ["--producer", commit], ["--unknown", "x", "--tap", "x", "--runtime", "x"], ["--producer", "short", "--tap", "x", "--runtime", "x"], ["--producer", commit, "--producer", commit, "--runtime", "x"]])
+	for(const args of [[], ["--producer", commit]
+		, ["--unknown", "x", "--tap", "x", "--runtime", "x", "--records", "x"]
+		, ["--producer", "short", "--tap", "x", "--runtime", "x", "--records", "x"]
+		, ["--producer", commit, "--producer", commit, "--runtime", "x", "--records", "x"]])
 		assert.throws(() => parseCallbackSubtypeBrowserCiArgs(args));
 	assert.throws(() => checkCallbackSubtypeBrowserCi(options, {
 		tap, runtime: { ...runtime, extra: true }
 	}));
+});
+
+test("callback Subtype browser records authenticate both archive handoffs and six reports", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-callback-browser-records-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const expected = { checks: 18, rejections: 7, callbackCalls: 3 };
+	const profiles = ["browser-javascript", "browser-react", "browser-worker"];
+	const engines = ["chromium", "firefox", "webkit"];
+	const routes = {}, builds = [
+		{ route: "ordinary", attempt: 0, bindingIrSha256: "1".repeat(64)
+			, receiptSha256: "2".repeat(64), componentArchiveSha256: "3".repeat(64)
+			, runtimeArchiveSha256: "4".repeat(64) }
+		, { route: "ordinary", attempt: 1, bindingIrSha256: "1".repeat(64)
+			, receiptSha256: "2".repeat(64), componentArchiveSha256: "3".repeat(64)
+			, runtimeArchiveSha256: "4".repeat(64) }
+		, { route: "reviewed", attempt: 0, bindingIrSha256: "5".repeat(64)
+			, receiptSha256: "6".repeat(64), componentArchiveSha256: "7".repeat(64)
+			, runtimeArchiveSha256: "4".repeat(64) }
+	];
+	await writeFile(join(root, "start.json"), JSON.stringify({ schemaVersion: 1
+		, producerCommit: commit, routes: ["ordinary", "reviewed"]
+		, profiles, engines }));
+	for(const route of ["ordinary", "reviewed"])
+	{
+		const handoff = join(root, route, "handoff"); await mkdir(handoff, { recursive: true });
+		const receipt = { package: { archive: "component.tgz" }
+			, runtime: { archive: "runtime.tgz" } };
+		const contents = { "component.tgz": `component-${route}`
+			, "runtime.tgz": "runtime"
+			, "component-package-receipt.json": JSON.stringify(receipt)
+			, "verify-component-package-receipt.mjs": "export default true;\n" };
+		const files = {};
+		for(const [name, source] of Object.entries(contents))
+		{
+			await writeFile(join(handoff, name), source);
+			const bytes = Buffer.from(source);
+			files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
+		}
+		const browsers = [];
+		for(const profile of profiles)
+		{
+			const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
+			const observation = { profile, results: { route, ...expected } };
+			const executions = engines.flatMap(engine => variants.map(variant => ({
+				engine, variant, failedAssetRecovery: true
+				, ...profile === "browser-react" ? { pendingUnmount: true } : {}
+				, observation
+			})));
+			const browser = { requestedEngines: engines, installedSourcesRemoved: true
+				, externalNetworkBlocked: true
+				, executions };
+			const item = { schemaVersion: 1, producerCommit: commit, route
+				, profile, observation, browser };
+			browsers.push(item);
+			await writeFile(join(root, route, profile + ".json"), JSON.stringify(item));
+		}
+		routes[route] = { receipt, files, node: { ...expected, relocations: 2 }
+			, typescript: true, browsers };
+	}
+	await writeFile(join(root, "report.json"), JSON.stringify({ schemaVersion: 1
+		, producerCommit: commit, expected, builds, routes }));
+	assert.deepEqual(await checkCallbackSubtypeBrowserRecords(root, commit), {
+		reportSha256: sha256(await readFile(join(root, "report.json")))
+		, archiveCount: 4, browserReportCount: 6
+	});
+	await writeFile(join(root, "ordinary/handoff/component.tgz"), "changed");
+	await assert.rejects(checkCallbackSubtypeBrowserRecords(root, commit));
 });
 
 test("callback Subtype browser workflow cannot narrow engines, routes or retained failures", async t => {
@@ -145,6 +218,7 @@ assert.equal(process.env.MAKEFLAGS, '-j1');
 assert.equal(process.env.LEAN_BRIDGE_LAKE_RUNTIME_ROOT, '/explicit/runtime');
 assert.equal(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST, '1');
 assert.equal(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST, '1');
+assert.equal(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT, process.cwd() + '/build/callback-subtype-browser-ci/records');
 assert.equal(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS, 'chromium,firefox,webkit');
 let phase;
 if (args[0] === '-p') phase = fs.existsSync('build/callback-subtype-browser-ci/acceptance.tap') ? 'runtime-after' : 'runtime-before';
@@ -156,7 +230,7 @@ else if (phase === 'acceptance') {
   assert.deepEqual(args, ['--test','--test-concurrency=1','--test-reporter=tap','--test-name-pattern=^${callbackSubtypeBrowserTestName}$','tests/callback-subtype-npm-browser.test.mjs']);
   process.stdout.write(${JSON.stringify(tap)});
 } else {
-  assert.deepEqual(args, ['scripts/check-callback-subtype-browser-ci.mjs','--producer','${commit}','--tap','build/callback-subtype-browser-ci/acceptance.tap','--runtime','build/callback-subtype-browser-ci/runtime-before.json']);
+  assert.deepEqual(args, ['scripts/check-callback-subtype-browser-ci.mjs','--producer','${commit}','--tap','build/callback-subtype-browser-ci/acceptance.tap','--runtime','build/callback-subtype-browser-ci/runtime-before.json','--records','build/callback-subtype-browser-ci/records']);
   process.stdout.write('{"accepted":true}\\n');
 }
 if (process.env.FAKE_FAIL === phase) process.exit(17);
@@ -191,7 +265,7 @@ if (process.env.FAKE_FAIL === phase) process.exit(17);
 		const result = spawnSync("/bin/bash", [script, ...args], { cwd: directory, env, encoding: "utf8" });
 		assert.equal(result.status, 2); assert.deepEqual(await readdir(directory), []);
 	}
-	for(const variable of ["LEAN_BRIDGE_LAKE_RUNTIME_ROOT", "LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST", "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST", "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS"])
+	for(const variable of ["LEAN_BRIDGE_LAKE_RUNTIME_ROOT", "LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST", "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST", "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT", "LEAN_BRIDGE_TYPE_CORPUS_BROWSERS"])
 	{
 		const directory = join(root, "preset-" + variable); await mkdir(directory);
 		const result = spawnSync("/bin/bash", [script, "/explicit/runtime"], {

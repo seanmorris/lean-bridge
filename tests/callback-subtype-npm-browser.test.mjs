@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, realpath, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
@@ -25,6 +26,7 @@ import "./helpers/callback-subtype-npm-acceptance-source-history-tests.mjs";
 
 const npmFlag = "LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST";
 const browserFlag = "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST";
+const outputFlag = "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT";
 for(const flag of [npmFlag, browserFlag])
 	if(process.env[flag] !== undefined)
 		assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
@@ -35,6 +37,8 @@ if(browserEnabled)
 	assert.equal(enabled, true, "Browser acceptance requires npm acceptance");
 	assert.deepEqual(process.env.LEAN_BRIDGE_TYPE_CORPUS_BROWSERS?.split(",")
 		, ["chromium", "firefox", "webkit"]);
+	assert.ok(process.env[outputFlag]?.startsWith("/"),
+		"Browser acceptance requires an absolute retained-output path");
 }
 
 const expected = Object.freeze({ checks: 18, rejections: 7, callbackCalls: 3 });
@@ -86,6 +90,19 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-callback-subtype-npm-"));
+	const records = process.env[outputFlag];
+	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"])
+		.toString().trim();
+	if(records)
+	{
+		await mkdir(records);
+		await saveLakeFile(records, "start.json", canonicalJson({
+			schemaVersion: 1, producerCommit, routes: ["ordinary", "reviewed"]
+			, profiles: ["browser-javascript", "browser-react", "browser-worker"]
+			, engines: browserEnabled
+				? ["chromium", "firefox", "webkit"] : []
+		}));
+	}
 	let complete = false;
 	t.after(async () => {
 		if(complete) await rm(directory, { recursive: true });
@@ -155,7 +172,7 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 		, builds[0].componentArchiveSha256);
 	assert.notEqual(builds[2].receiptSha256, builds[0].receiptSha256);
 
-	const artifacts = {};
+	const artifacts = {}, routeReports = {};
 	for(const [route, index] of [["ordinary", 0], ["reviewed", 2]])
 	{
 		const release = releases[index], receipt = release.report;
@@ -187,6 +204,23 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 			await rm(extracted, { recursive: true });
 		}
 		artifacts[route] = { handoff, receipt, trees, manifests };
+		const retainedHandoff = records && join(records, route, "handoff");
+		const files = {};
+		if(retainedHandoff)
+		{
+			await mkdir(retainedHandoff, { recursive: true });
+			const retainedNames = [receipt.package.archive, receipt.runtime.archive
+				, "component-package-receipt.json"
+				, "verify-component-package-receipt.mjs"];
+			for(const name of retainedNames)
+			{
+				const bytes = await readFile(join(handoff, name));
+				await saveLakeFile(retainedHandoff, name, bytes);
+				files[name] = { bytes: bytes.length, sha256: sha256(bytes) };
+			}
+		}
+		routeReports[route] = { receipt, files, node: null, typescript: false
+			, browsers: [] };
 	}
 	assert.equal(artifacts.ordinary.manifests.component.name
 		, artifacts.reviewed.manifests.component.name);
@@ -232,6 +266,8 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 			], root, clean(root));
 			assert.equal(typed.stdout, ""); assert.equal(typed.stderr, "");
 		}
+		routeReports[route].node = { ...expected, relocations: 2 };
+		routeReports[route].typescript = true;
 	}
 
 	if(browserEnabled)
@@ -252,7 +288,7 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 					module: callbackSubtypeName, profile, route
 				}));
 				await saveLakeFile(root, "javascript.mjs", javascript);
-				await installedBrowserCorpus({ library: { npmModule: callbackSubtypeName }
+				const result = await installedBrowserCorpus({ library: { npmModule: callbackSubtypeName }
 					, profile, root, framework, environment: clean(root)
 					, consumer: {
 						packageSource: `import request from "./request.json";\nexport {request};\nexport const loadApi = () => import(${JSON.stringify(callbackSubtypeName)});\n`
@@ -261,7 +297,16 @@ test("callback Subtypes install from reproducible ordinary and reviewed npm buil
 						)
 					}
 				});
+				const report = { schemaVersion: 1, producerCommit, route, profile
+					, ...result };
+				routeReports[route].browsers.push(report);
+				if(records) await saveLakeFile(records
+					, `${route}/${profile}.json`, canonicalJson(report));
 			}
 	}
+	if(records) await saveLakeFile(records, "report.json", canonicalJson({
+		schemaVersion: 1, producerCommit, expected, builds
+		, routes: routeReports
+	}));
 	complete = true;
 });
