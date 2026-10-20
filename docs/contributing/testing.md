@@ -3825,3 +3825,46 @@ and reproducible archives. The exact receiver documentation runs from a combined
 C/PHP-Wasm release through an installed CLI. The independent receiver CI job
 requires seventeen passes without skips and retains thirteen JSON reports in
 `build/owned-php-wasm-receivers/` plus `build/owned-php-wasm-receivers.log`.
+
+## Directional callback Subtypes in C, C++ and Perl
+
+Run the installed C-family matrix with the pinned Lean compiler and native build
+dependencies:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp \
+  node --test --test-concurrency=1 tests/callback-subtype-native-installed.test.mjs
+```
+
+The test builds ordinary-source and independently reviewed packages, verifies
+the package-set receipt, deletes each author root, installs from the copied
+handoff and runs independent C11/GMP and C++20 consumers. It checks exact typed
+host-result recovery, invalid recovery before callback entry, constructor
+rejection after callback entry, mixed arguments, returned-closure input
+rejection, unchanged outputs, disposal and reuse after failure. The default
+record is `build/callback-subtypes/native.json`.
+
+Run the complete CPAN matrix only after preparing all four pinned interpreters:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_TEST=1 \
+  node --test --test-concurrency=1 tests/callback-subtype-perl-installed.test.mjs
+```
+
+This runs ordinary and reviewed packages on threaded and unthreaded Perl 5.36.3
+and 5.38.2, through both prebuilt-only and local XS installation. All sixteen
+cells delete author inputs, install offline, relocate the installed tree, remove
+the handoff, execute twice and verify every installed-file hash. The consumer
+adds nested `Except (Option Subtype)` host results and `Array (Option Subtype)`
+closure inputs, exception identity and idempotent close. The default record is
+`build/callback-subtypes/perl.json`.
+
+The recurring hosted entry points are
+`scripts/run-callback-subtype-native-ci.sh` and
+`scripts/run-callback-subtype-perl-ci.sh`. They refuse environment variables
+that could narrow the matrix, force one build thread and the glibc 2.38 package
+floor, retain terminal TAP and the original report, and run an independent
+checker bound to the exact producer commit. Their workflows upload complete or
+partial output on every exit and then fail the job if acceptance did not pass.

@@ -146,3 +146,29 @@ export const structuredCallableReviewedIr = (options = {}) => {
 		, errors: [{ id: "error:native-callback", name: "NativeCallbackFailure", category: "boundary", payload: null, documentation: documentation() }]
 		, capabilities: [], assurance: [], documentation: documentation() };
 };
+
+/**
+ * Add one host-result and one returned-closure argument Subtype to the copied
+ * callback corpus. The surrounding exports intentionally remain independent;
+ * this fixture exercises transport direction rather than source elaboration.
+ */
+export const structuredCallableDirectionalSubtypeIr = () => {
+	const ir = structuredCallableReviewedIr();
+	const callbacks = ir.types.filter(type => type.kind === "callback");
+	const host = callbacks.find(type => ir.declarations.some(item => item.parameters.some(parameter => parameter.type.id === type.id)));
+	const closure = callbacks.find(type => ir.declarations.some(item => item.result.type.id === type.id));
+	const nat = { kind: "primitive", name: "nat" };
+	host.callable.parameters[0].type = nat;
+	host.callable.result.type = nat;
+	host.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [{ kind: "subtype", constructor: null }]
+		, result: { kind: "subtype", constructor: "Structured.checkedHostResult" }
+	};
+	closure.callable.parameters[1].type = nat;
+	closure.callable.result.type = nat;
+	closure.source.extensions["lean-lang.org/refinements"] = {
+		parameters: [null, { kind: "subtype", constructor: "Structured.checkedClosureArgument" }]
+		, result: { kind: "subtype", constructor: null }
+	};
+	return { ir, host, closure };
+};

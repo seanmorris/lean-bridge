@@ -6,6 +6,7 @@
  */
 import { sha256 } from "../../capsule/node.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "../../build/native-callable-graph.mjs";
 import { componentStructuredCallablePrefix } from "../../build/component-structured-callable-lean.mjs";
 import { generateNativeCallableGraphBorrows } from "./native-callable-graph-borrows.mjs";
@@ -29,6 +30,7 @@ export const generateNativeCallableGraphCalls = (ir, descriptor, { initializer, 
 	const p = generated.layout.prefix, copy = generated.payloads.copy;
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 	const callback = ref => callbacks.get(ref.id);
+	const direction = signature => callbackSubtypeDirection(signature, signature.refinements, abi.types);
 	const storesClosures = [...abi.exports, ...abi.callbacks].some(item => callback(item.result));
 	const callbackName = signature => `${p}_callback_${signature.key}`;
 	const walker = ref => `ng_${sha256(copy(ref).id).slice(0, 20)}`;
@@ -131,6 +133,8 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 `];
 	const render = (name, parameters, resultRef, symbol, lease = null) => {
 		const resultCallback = callback(resultRef), result = resultCallback ? null : copy(resultRef);
+		const rejectsInput = lease && direction(lease) === "closure"
+			|| parameters.some(ref => callback(ref) && direction(callback(ref)) === "host");
 		const resultName = resultCallback ? "uint64_t" : result.name;
 		const args = parameters.map((ref, index) => `const ${callback(ref) ? callbackName(callback(ref)) : copy(ref).name} *a${index}`);
 		const signature = `uint32_t ${name}(${[...lease ? ["uint64_t self"] : [], ...args, `${resultName} *out`].join(", ")})`;
@@ -151,7 +155,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 			, "  ng_borrow_fail(frame, ng_charge(&frame->budget, 1, sizeof(result)));"
 			, "  if (frame->status) goto cleanup;");
 		parameters.forEach((ref, index) => {
-			if(callback(ref)) lines.push(`  if (!ng_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(callback(ref))})) || !a${index}->call) { ng_borrow_fail(frame, NG_INVALID); goto cleanup; }`);
+			if(callback(ref)) lines.push(`  if (!ng_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(callback(ref))})) || !a${index}->call${direction(callback(ref)) === "host" ? ` || !a${index}->recovery` : ""}) { ng_borrow_fail(frame, NG_INVALID); goto cleanup; }`);
 			else lines.push(`  ng_borrow_fail(frame, ${walker(ref)}_check(a${index}, 0, 1, &frame->budget));`
 				, "  if (frame->status) goto cleanup;");
 		});
@@ -160,7 +164,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 		parameters.forEach((ref, index) => {
 			const signature = callback(ref);
 			if(!signature) return;
-			lines.push(`  host${index} = (ng_borrow_${signature.key}){*a${index}, frame};`
+			lines.push(`  host${index} = (ng_borrow_${signature.key}){${direction(signature) === "host" ? `{ng_recovery_${signature.key}, ng_reject_${signature.key}}, ` : ""}*a${index}, frame};`
 				, `  token${index} = lb_native_callback_register((void (*)(void))ng_invoke_${signature.key}, &host${index});`
 				, `  if (!token${index}) { ng_borrow_fail(frame, NG_ALLOC); goto cleanup; }`
 				, `  call->tokens[call->count++] = token${index};`);
@@ -172,6 +176,9 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 			, ...lease ? ["  closure = NULL; /* The typed Lean apply consumed this call's reference. */"] : []
 			, "  ng_call_observe(frame);"
 			, "  if (frame->status) goto cleanup;");
+		if(rejectsInput) lines.push("  if (!lean_is_scalar(value) && lean_is_array(value) && lean_array_size(value) == 0) {"
+			, "    lean_dec(value); value = NULL; ng_borrow_fail(frame, NG_INVALID); goto cleanup;"
+			, "  }");
 		if(resultCallback) lines.push("  if (lean_is_scalar(value) || !lean_is_array(value) || lean_array_size(value) != 1) { ng_borrow_fail(frame, NG_RESULT); goto cleanup; }"
 			, `  result = ng_closure_store(value, ${kind(resultCallback)});`
 			, "  if (!result) { ng_borrow_fail(frame, NG_ALLOC); goto cleanup; }"
@@ -193,7 +200,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 	const calls = abi.exports.map(item => ({ bindingId: item.bindingId
 		, name: render(`${item.symbol}_graph`, item.parameters, item.result, `${item.symbol}_lean`)
 		, parameters: item.parameters, result: item.result }));
-	const closures = abi.callbacks.map(signature => {
+	const closures = abi.callbacks.filter(signature => direction(signature) !== "host").map(signature => {
 		const prefix = `${callbackName(signature)}_lease`;
 		const call = render(`${prefix}_call`, signature.parameters, signature.result
 			, `${componentStructuredCallablePrefix(abi, signature)}_apply`, signature);

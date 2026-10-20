@@ -56,3 +56,24 @@ export const callbackSubtypeConfiguration = route => {
 		, contracts: callbackSubtypeContracts
 	};
 };
+
+/**
+ * Replace extractor provenance with an independent reviewed-contract producer.
+ *
+ * @param ir - Ordinary source Binding IR used only to establish the review.
+ */
+export const callbackSubtypeReviewedIr = ir => {
+	const result = structuredClone(ir);
+	result.producers = [{ id: "review"
+		, adapter: "independent-callback-subtype-review"
+		, adapterVersion: 1
+		, tool: "Callback Subtype contract review"
+		, toolVersion: "1", extensions: {} }];
+	for(const item of [...result.declarations, ...result.types]) item.source.producer = "review";
+	for(const declaration of result.declarations)
+	{
+		const refinements = declaration.source.extensions["lean-lang.org/refinements"];
+		declaration.source.extensions = refinements ? { "lean-lang.org/refinements": refinements } : {};
+	}
+	return result;
+};

@@ -21,6 +21,7 @@ import { compileCallableRustGraphPackageModel } from "../backends/rust/callable-
 import { compileCallableRubyGraphPackageModel } from "../backends/ruby/callable-graph-model.mjs";
 import { compileCallablePerlGraphPackageModel } from "../backends/perl/callable-graph-model.mjs";
 import { compileCallableWitGraphPackageModel } from "../backends/wit/callable-graph-package.mjs";
+import { callbackDefinitionRefinement, callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
@@ -36,6 +37,13 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 			throw Object.assign(new TypeError("Recursive callable packages currently require C, C++, PyPI, Cargo, RubyGems, CPAN, NuGet, Maven, native PHP or WIT/WASI projections"), { code: "native-graph-projection-unavailable" });
 		if(targets.includes("cpan") && moduleName === undefined)
 			throw Object.assign(new TypeError("CPAN callable graph projection requires its checked module namespace"), { code: "native-graph-projection-unavailable" });
+		const callbackSubtypes = ir.types.filter(type => type.kind === "callback").some(type => {
+			const signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };
+			const refinements = callbackDefinitionRefinement(type, ir.types);
+			return refinements !== null && callbackSubtypeDirection(signature, refinements, ir.types) !== null;
+		});
+		if(callbackSubtypes && targets.some(target => !["c", "cpp", "cpan"].includes(target)))
+			throw Object.assign(new TypeError("Callback Subtypes currently require C, C++ or CPAN projections"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
 		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
 		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;

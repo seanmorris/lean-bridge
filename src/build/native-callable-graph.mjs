@@ -11,6 +11,9 @@ import { componentRecordDefinitions } from "../abi/component-records.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch,
 	componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallablePrefix } from "./component-structured-callable-lean.mjs";
+import { callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinementEntries } from "../abi/refinements.mjs";
+
+const controlsName = abi => `${abi.exports[0].symbol}_structured_callback_controls`;
 
 /**
  * Bind native callable signatures to every finite copied nominal definition.
@@ -20,16 +23,22 @@ import { componentStructuredCallablePrefix } from "./component-structured-callab
 export const createNativeCallableGraphDescriptor = ir => {
 	validateBindingIr(ir);
 	const types = componentRecordDefinitions({ types: ir.types.filter(type => type.kind !== "callback") }, true);
+	const nominalRefinements = nominalRefinementEntries(ir.types);
 	const callbacks = ir.types.filter(type => type.kind === "callback").map(type => {
-		const signature = { parameters: type.callable.parameters.map(site => site.type), result: type.callable.result.type };
-		return { id: type.id, key: sha256(componentStructuredCallableSignatureText(signature, types)).slice(0, 40), ...signature };
+		const refinements = callbackDefinitionRefinement(type, ir.types);
+		const parameters = type.callable.parameters.map(site => site.type);
+		const signature = { parameters
+			, result: type.callable.result.type
+			, ...(refinements ? { refinements } : {}) };
+		return { id: type.id, key: sha256(componentStructuredCallableSignatureText(signature, types, nominalRefinements)).slice(0, 40), ...signature };
 	});
 	const exports = ir.declarations.map(item => ({ bindingId: item.id
 		, symbol: `lean_bridge_${sha256(`${ir.component.id}\0${item.id}`).slice(0, 24)}`
 		, parameters: item.parameters.map(site => site.type)
 		, result: item.result.type
 		, resultMode: item.resultMode }));
-	const descriptor = { schemaVersion: 1, types, callbacks, exports };
+	const descriptor = { schemaVersion: 1, types, callbacks, exports
+		, ...(nominalRefinements.length ? { nominalRefinements } : {}) };
 	assertComponentStructuredCallableBindings(carrier(descriptor), ir);
 	return descriptor;
 };
@@ -37,6 +46,7 @@ export const createNativeCallableGraphDescriptor = ir => {
 const carrier = descriptor => ({ version: componentStructuredCallableAbi
 	, dispatch: componentStructuredCallableDispatch
 	, types: descriptor.types
+	, ...(descriptor.nominalRefinements === undefined ? {} : { nominalRefinements: descriptor.nominalRefinements })
 	, callbacks: descriptor.callbacks
 	, exports: descriptor.exports });
 
@@ -60,13 +70,26 @@ export const nativeCallableGraphCarrierAbi = (descriptor, ir) => {
  */
 export const nativeCallableGraphHeader = abi => {
 	const lines = [];
+	if(abi.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, abi.types) === "host"))
+	{
+		const guard = `${controlsName(abi).toUpperCase()}_DEFINED`;
+		lines.push(`#ifndef ${guard}`, `#define ${guard}`
+			, `typedef struct ${controlsName(abi)} {`
+			, "  lean_object *(*recovery)(void *);"
+			, "  lean_object *(*reject)(void *, lean_object *);"
+			, `} ${controlsName(abi)};`, "#endif");
+	}
 	for(const signature of abi.callbacks)
 	{
 		const symbol = componentStructuredCallablePrefix(abi, signature);
 		const parameters = signature.parameters.map(() => "lean_object *").join(", ");
-		lines.push(`lean_object *${symbol}_wrap(size_t);`
-			, `lean_object *${symbol}_apply(lean_object *, ${parameters});`
+		const direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);
+		if(direction !== "closure") lines.push(`lean_object *${symbol}_wrap(size_t);`
 			, `lean_object *${symbol}_invoke(size_t, ${parameters});`);
+		if(direction !== "host") lines.push(`lean_object *${symbol}_apply(lean_object *, ${parameters});`);
+		if(direction === "host")
+			lines.push(`lean_object *${symbol}_recovery(size_t);`
+				, `lean_object *${symbol}_reject(size_t, lean_object *);`);
 	}
 	for(const item of abi.exports)
 		lines.push(`lean_object *${item.symbol}_lean(${Array(Math.max(1, item.parameters.length)).fill("lean_object *").join(", ")});`);
@@ -84,15 +107,29 @@ export const generateNativeCallableGraphTrampolines = abi => {
 	for(const signature of abi.callbacks)
 	{
 		const symbol = componentStructuredCallablePrefix(abi, signature);
+		const direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);
 		const names = signature.parameters.map((_, index) => `value${index}`);
 		const parameters = names.map(name => `lean_object *${name}`).join(", ");
 		const types = names.map(() => "lean_object *").join(", ");
-		lines.push(`lean_object *${symbol}_invoke(size_t token, ${parameters}) {`
+		if(direction !== "closure") lines.push(`lean_object *${symbol}_invoke(size_t token, ${parameters}) {`
 			, "  lb_native_callback callback = lb_native_callback_lookup(token);"
 			, "  if (!callback.invoke) {"
 			, ...names.map(name => `    lean_dec(${name});`)
 			, "    return lean_alloc_array(0, 0);", "  }"
 			, `  return ((lean_object *(*)(void *, ${types}))callback.invoke)(callback.context, ${names.join(", ")});`
+			, "}");
+		if(direction === "host") lines.push(`lean_object *${symbol}_recovery(size_t token) {`
+			, "  lb_native_callback callback = lb_native_callback_lookup(token);"
+			, "  if (!callback.invoke) return lean_alloc_array(0, 0);"
+			, `  ${controlsName(abi)} *controls = callback.context;`
+			, "  return controls && controls->recovery ? controls->recovery(callback.context) : lean_alloc_array(0, 0);"
+			, "}"
+			, `lean_object *${symbol}_reject(size_t token, lean_object *recovery) {`
+			, "  lb_native_callback callback = lb_native_callback_lookup(token);"
+			, "  if (!callback.invoke) { lean_dec(recovery); return lean_alloc_array(0, 0); }"
+			, `  ${controlsName(abi)} *controls = callback.context;`
+			, "  if (!controls || !controls->reject) { lean_dec(recovery); return lean_alloc_array(0, 0); }"
+			, "  return controls->reject(callback.context, recovery);"
 			, "}");
 	}
 	return lines.join("\n") + "\n";

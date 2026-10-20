@@ -6,11 +6,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "../src/build/native-graph-model.mjs";
+import { containsCallbackSubtype, createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "../src/build/native-graph-model.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } from "../src/build/native-callable-graph.mjs";
 import { generateCompiledCallbacks } from "../src/build/native-component.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
-import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
+import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { descriptor } from "./helpers/npm-structured-callable-fixture.mjs";
 import { compileNativeCallableGraphPayloads } from "../src/backends/c/native-callable-graph-payloads.mjs";
 import { generateNativeCopiedGraphAdapters } from "../src/backends/c/native-graph-adapters.mjs";
@@ -76,6 +76,69 @@ test("native callable descriptors match an independent nine-shape public review"
 		const invalid = structuredClone(native); invalid.extra = true;
 		assert.throws(() => nativeCallableGraphCarrierAbi(invalid, ir), /differs/);
 	}
+});
+
+test("native callable descriptors retain directional callback Subtypes in their authenticated keys", () => {
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
+	const descriptor = createNativeCallableGraphDescriptor(ir);
+	assert.deepEqual(descriptor.callbacks.find(type => type.id === host.id).refinements,
+		host.source.extensions["lean-lang.org/refinements"]);
+	assert.deepEqual(descriptor.callbacks.find(type => type.id === closure.id).refinements,
+		closure.source.extensions["lean-lang.org/refinements"]);
+	assert.deepEqual(nativeCallableGraphCarrierAbi(descriptor, ir).callbacks, descriptor.callbacks);
+	for(const type of [host, closure])
+	{
+		const changed = structuredClone(descriptor);
+		delete changed.callbacks.find(value => value.id === type.id).refinements;
+		assert.throws(() => nativeCallableGraphCarrierAbi(changed, ir), /differs/);
+	}
+});
+
+test("acyclic callback Subtypes select the callable-graph carrier", () => {
+	const subtype = { kind: "refinement", base: { kind: "primitive", name: "nat" }
+		, predicate: { kind: "subtype", constructor: "Example.checked" } };
+	assert.equal(containsCallbackSubtype(subtype), false);
+	assert.equal(containsCallbackSubtype({ kind: "callback"
+		, parameters: [{ kind: "primitive", name: "nat" }]
+		, result: subtype }), true);
+	assert.equal(containsCallbackSubtype({ kind: "callback"
+		, parameters: [{ ...subtype, predicate: { kind: "fin", bound: "3" } }]
+		, result: { kind: "primitive", name: "nat" } }), false);
+});
+
+test("native callback Subtype trampolines require typed recovery and report constructor rejection", () => {
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
+	const descriptor = createNativeCallableGraphDescriptor(ir);
+	const generated = generateNativeCallableGraphCalls(ir, descriptor,
+		{ initializer: "initialize_LeanBridgeNative0123456789abcdef" });
+	const hostSignature = descriptor.callbacks.find(type => type.id === host.id);
+	const closureSignature = descriptor.callbacks.find(type => type.id === closure.id);
+	assert.match(generated.borrowsHeader, new RegExp(`${hostSignature.key}[^}]+recovery`, "su"));
+	assert.match(generated.source, new RegExp(`ng_recovery_${hostSignature.key}`, "u"));
+	assert.match(generated.source, new RegExp(`ng_reject_${hostSignature.key}`, "u"));
+	assert.match(generated.source, /ng_borrow_fail\(host->frame, NG_INVALID\)/u);
+	assert.match(generated.source, new RegExp(`ng_borrow_${hostSignature.key}[^;]+ng_recovery_${hostSignature.key}[^;]+ng_reject_${hostSignature.key}`, "su"));
+	assert.doesNotMatch(generated.source, new RegExp(`ng_recovery_${closureSignature.key}`, "u"));
+	assert.equal(generated.closures.some(item => item.id === host.id), false);
+	assert.equal(generated.closures.some(item => item.id === closure.id), true);
+	assert.doesNotMatch(generated.source, new RegExp(`${hostSignature.key}_apply`, "u"));
+	assert.doesNotMatch(generated.source, new RegExp(`${hostSignature.key}_lease_call`, "u"));
+	assert.match(generated.source, new RegExp(`${closureSignature.key}_apply`, "u"));
+	assert.match(generated.source, new RegExp(`${closureSignature.key}_lease_call`, "u"));
+	assert.match(generated.source, /lean_array_size\(value\) == 0[^}]+ng_borrow_fail\(frame, NG_INVALID\)/su);
+	assert.equal((generated.source.match(/lean_array_size\(value\) == 0/g) ?? []).length, 3);
+	const abi = nativeCallableGraphCarrierAbi(descriptor, ir);
+	const model = { copiedGraph: descriptor
+		, bindingIr: ir
+		, profile: "native-library-v1"
+		, pointerBits: 64
+		, byteOrder: "little"
+		, schemaVersion: 4 };
+	const callbacks = generateCompiledCallbacks(model);
+	const symbol = abi.exports[0].symbol;
+	assert.match(callbacks, new RegExp(`${symbol}_structured_callback_controls`, "u"));
+	assert.match(callbacks, /controls->recovery\(callback\.context\)/u);
+	assert.match(callbacks, /controls->reject\(callback\.context, recovery\)/u);
 });
 
 test("native callable graph admission retains identity ownership and lifetime checks", () => {

@@ -4,6 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import { compileCallablePerlGraphPackageModel } from "../src/backends/perl/callable-graph-model.mjs";
@@ -12,6 +15,9 @@ import { generateCallablePerlGraphPackage } from "../src/backends/perl/callable-
 import { compileCallableGraphPackageModel } from "../src/backends/c/callable-graph-model.mjs";
 import { compileNativeGraphProjection } from "../src/build/native-graph-projection.mjs";
 import { nativeRecursiveCallableReviewedIr } from "./helpers/native-recursive-callable-fixture.mjs";
+import { structuredCallableDirectionalSubtypeIr } from "./helpers/structured-callable-fixture.mjs";
+import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const moduleName = "LeanBridge::Recursive";
 
@@ -72,6 +78,48 @@ test("Perl recursive packages hide native handles and retain callback replies in
 	assert.match(projection.source, /lease->process == getpid\(\)/);
 	assert.equal((projection.xs.match(/lpg_scope \*scope = invocation->callback->frame->scope;/g) ?? []).length, 18);
 	assert.equal((projection.xs.match(/FREETMPS; LEAVE;\n {4}invocation->returned = 1;/g) ?? []).length, 18);
+});
+
+test("Perl callback Subtypes require and copy a typed Runtime::Callback recovery", async t => {
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
+	const projection = generateCallablePerlGraphXs(ir, moduleName);
+	const hostType = projection.callbacks.get(host.id), closureType = projection.callbacks.get(closure.id);
+	assert.equal(hostType.direction, "host");
+	assert.equal(closureType.direction, "closure");
+	assert.match(projection.valuesSource, /package LeanBridge::Recursive::Runtime::Callback;/u);
+	assert.match(projection.valuesSource, /expects code and recovery/u);
+	assert.match(projection.xs, /callback\d+_fields\[\] = \{"code", "recovery"\}/u);
+	assert.match(projection.xs, new RegExp(`lpg_read${hostType.result.index}\\([^;]+recovery\\d+`, "u"));
+	assert.match(projection.xs, new RegExp(`input\\d+ = \\{lpc_callback_${hostType.index}, lpc_callback_new\\([^}]+recovery\\d+\\}`, "u"));
+	assert.doesNotMatch(projection.xs, new RegExp(`PACKAGE = ${hostType.publicType}`, "u"));
+	assert.doesNotMatch(projection.valuesSource, new RegExp(`package ${hostType.publicType};`, "u"));
+	assert.doesNotMatch(projection.source, new RegExp(hostType.call, "u"));
+	assert.match(projection.source, new RegExp(closureType.call, "u"));
+	const closureStart = projection.xs.indexOf(`PACKAGE = ${closureType.publicType}`);
+	assert.notEqual(closureStart, -1);
+	assert.match(projection.valuesSource, new RegExp(`package ${closureType.publicType};`, "u"));
+	const closureSection = projection.xs.slice(closureStart, projection.xs.indexOf("\nMODULE =", closureStart + 1));
+	assert.doesNotMatch(closureSection, /_fields\[\]|Runtime::Callback|recovery/u);
+	const model = { bindingIr: ir, component: ir.component, moduleName
+		, copiedGraph: projection.descriptor
+		, sourceIdentity: { modules: [{ module: "Structured", source: { sha256: "a".repeat(64) } }] } };
+	const receipt = { initializer: "initialize_LeanBridgeNative0123456789abcdef"
+		, library: "libcomponent_0123456789abcdef0123.so"
+		, nativeLibrary: { sha256: "b".repeat(64) }
+		, runtimeIdentity: "c".repeat(64) };
+	const files = generateCallablePerlGraphPackage(model, receipt);
+	assert.match(files["Component.xs"], /structured_callback_[a-f0-9]+ input\d+ = \{lpc_callback_/u);
+	assert.match(files["lib/LeanBridge/Recursive.pm"], /Runtime::Callback-E<gt>new/u);
+	const directory = await mkdtemp(join(tmpdir(), "lean-perl-callback-subtype-xs-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	await saveLakeFile(directory, "Component.xs", files["Component.xs"]);
+	await runCopied("/usr/bin/perl", ["-MExtUtils::ParseXS", "-e"
+		, 'ExtUtils::ParseXS::process_file(filename => "Component.xs", output => "Component.c", prototypes => 0)']
+		, directory, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
+	for(const targets of [["c"], ["cpp"], ["cpan"], ["c", "cpp", "cpan"]])
+		assert.ok(compileNativeGraphProjection(ir, targets, moduleName).layoutSha256);
+	for(const target of ["pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
+		assert.throws(() => compileNativeGraphProjection(ir, [target], moduleName), { code: "native-graph-projection-unavailable" });
 });
 
 test("Perl recursive callables reject hidden identity fields and asynchronous signatures", () => {

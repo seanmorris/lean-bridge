@@ -35,6 +35,24 @@ const leanType = type => {
 const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
 
+/**
+ * Select the callable-graph carrier when an erased Subtype sits inside a
+ * callback signature, even if every erased payload is otherwise acyclic.
+ * The primitive native model predates directional callback constructors and
+ * cannot represent their recovery protocol.
+ *
+ * @param value - One compiler-projected declaration or nested type node.
+ */
+export const containsCallbackSubtype = value => {
+	const visit = (node, callback) => {
+		if(node === null || typeof node !== "object") return false;
+		const inside = callback || node.kind === "callback";
+		if(inside && node.kind === "refinement" && node.predicate?.kind === "subtype") return true;
+		return Object.values(node).some(child => visit(child, inside));
+	};
+	return visit(value, false);
+};
+
 const descriptor = ir => ir.types.some(type => type.kind === "callback")
 	? createNativeCallableGraphDescriptor(ir) : ({ schemaVersion: 1
 		, types: componentRecordDefinitions(ir, true)
@@ -91,7 +109,8 @@ export const createCompiledNativeModel = (options, { ownedGraphs = false, ownedH
 		return createOwnedCompiledNativeModel({ ...options, hostCallbacks: ownedHostCallbacks, transferredInputs: ownedInputTransfers, anchoredResults: ownedAnchoredResults, receiverExports: ownedReceiverExports, callbackResultAnchors: ownedCallbackResultAnchors });
 	if(typeof nativeRefinements !== "boolean" || typeof nativeCallbackRefinements !== "boolean") throw new TypeError("Native refinement capability must be explicit");
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: nativeRefinements });
-	if(!elaborated.declarations.some(containsGraph)) return createNativeModel(options, { refinements: nativeRefinements, callbackRefinements: nativeCallbackRefinements });
+	if(!elaborated.declarations.some(containsGraph) && !elaborated.declarations.some(containsCallbackSubtype))
+		return createNativeModel(options, { refinements: nativeRefinements, callbackRefinements: nativeCallbackRefinements });
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });

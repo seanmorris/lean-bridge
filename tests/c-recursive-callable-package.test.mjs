@@ -20,6 +20,7 @@ import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { nativeRecursiveCallableArities, nativeRecursiveCallableExports, nativeRecursiveCallableReviewedIr, nativeRecursiveCallableSource } from "./helpers/native-recursive-callable-fixture.mjs";
 import { parseRecursiveCallableCResult, recursiveCallableCConsumer, recursiveCallableCFaultConsumer } from "./helpers/c-recursive-callable-fixture.mjs";
 import { checkRecursiveCallableCFaults } from "./helpers/c-recursive-callable-faults.mjs";
+import { structuredCallableDirectionalSubtypeIr } from "./helpers/structured-callable-fixture.mjs";
 
 const checkRuntimeOnly = async ({ consumer, handoff, packages, observed }) => {
 	const root = join(consumer, "c"), pkg = packages.find(item => item.role === "component");
@@ -82,6 +83,40 @@ test("C/GMP recursive callback headers and implementation compile without Lean h
 		, "-Iinclude", "-Iinclude/detail", "-Igmp/include", "-Igmp/internal"
 		, "-Igmp/include/detail", "-c", "gmp/src/structured_gmp.c"
 		, "-o", "gmp.o"], directory
+		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
+});
+
+test("C/GMP callback Subtypes expose and transport typed recovery", { timeout: 180_000 }, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-c-callback-subtype-headers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
+	const generated = generateCallableCGraphPackage(ir);
+	const native = generateNativeCallableGraphCalls(ir, createNativeCallableGraphDescriptor(ir),
+		{ initializer: "initialize_LeanBridgeNative0123456789abcdef" });
+	const hostType = generated.callbacks.get(host.id), closureType = generated.callbacks.get(closure.id);
+	const header = generated.files["gmp/include/detail/structured-gmp-api.h"];
+	assert.match(header, new RegExp(`#define ${hostType.publicName.toUpperCase()}_REQUIRES_RECOVERY 1`, "u"));
+	assert.match(header, new RegExp(`${hostType.gmpName}[^}]+recovery`, "su"));
+	assert.match(header, new RegExp(`#define ${closureType.publicName.toUpperCase()}_REQUIRES_RECOVERY 0`, "u"));
+	assert.doesNotMatch(header, new RegExp(`${closureType.gmpName}[^}]+recovery`, "su"));
+	assert.doesNotMatch(header, new RegExp(hostType.gmpOwnedName, "u"));
+	assert.match(header, new RegExp(`${closureType.gmpOwnedName}_call`, "u"));
+	assert.doesNotMatch(generated.files["gmp/src/structured_gmp.c"], new RegExp(hostType.call, "u"));
+	assert.match(generated.files["gmp/src/structured_gmp.c"], new RegExp(closureType.call, "u"));
+	assert.match(generated.files["gmp/src/structured_gmp.c"], /->recovery/u);
+	const files = { ...generated.files
+		, "include/detail/structured-graph-types.h": native.typesHeader
+		, "include/detail/structured-callable-borrows.h": native.borrowsHeader
+		, "include/detail/structured-graph.h": native.header + "\nint structured_graph_ready(void); void structured_graph_retire(void); uint32_t structured_graph_initialize(void);\n"
+		, "include/lean_bridge_native_runtime.h": brokerHeader };
+	for(const [path, text] of Object.entries(files)) await saveLakeFile(directory, path, text);
+	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+		, "-Iinclude", "-Iinclude/detail", "-Igmp/include", "-Igmp/internal"
+		, "-Igmp/include/detail"
+		, "-c"
+		, "gmp/src/structured_gmp.c"
+		, "-o"
+		, "gmp.o"], directory
 		, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
 });
 

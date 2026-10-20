@@ -23,6 +23,7 @@ export const generateCallableCppGraphPackage = ir => {
 	const resultType = node => unit(node) ? "void" : type(node);
 	const signature = callback => `${resultType(copy(callback.result))}(${callback.parameters.map(ref => type(copy(ref))).join(", ")})`;
 	const publicResult = node => node.kind === "callback" ? `LeanClosure<${signature(node)}>` : resultType(node);
+	const callbackRecovery = [...model.callbacks.values()].some(callback => callback.direction === "host");
 	const files = { ...generateCopiedGraphPackage(model.payloads.ir, ["cpp"]).files };
 	const support = `
 class Error final : public std::runtime_error {
@@ -66,6 +67,14 @@ struct GraphCallbackState {
     if (!${p}_graph_ready()) callable_fail(5);
   }
 };
+template<class F, class R> struct GraphRecoveredCallback { F function; R recovery; };
+template<class F> constexpr bool graph_has_recovery = false;
+template<class F, class R> constexpr bool graph_has_recovery<GraphRecoveredCallback<F, R>> = true;
+template<class F, class Expected> constexpr bool graph_recovery_matches = false;
+template<class F, class R, class Expected> constexpr bool graph_recovery_matches<GraphRecoveredCallback<F, R>, Expected> = std::same_as<R, Expected>;
+template<class F> inline F& graph_function(F& function) { return function; }
+template<class F, class R> inline F& graph_function(GraphRecoveredCallback<F, R>& function) { return function.function; }
+template<class F, class R> inline const R& graph_recovery(const GraphRecoveredCallback<F, R>& function) { return function.recovery; }
 struct GraphClosureFactory;
 }
 template<class Signature> class LeanClosure;
@@ -102,13 +111,14 @@ struct GraphClosureFactory {
 		const types = params.map(node => `const ${node.host.name}&`);
 		const inputs = params.map((node, index) => `const ${node.name} *a${index}`);
 		const values = params.map((node, index) => `graph_from${node.index}(graph_read(a${index}), 0, true, true, self.state.budget)`);
-		const invokeTypes = ["Function&", ...types].join(", ");
-		const invokeValues = ["self.function", ...values].join(", ");
-		helpers.push(`template<class Function> concept GraphAccepts${k} = std::invocable<${invokeTypes}>
-  && std::same_as<std::invoke_result_t<${invokeTypes}>, ${resultType(result)}>;
+		const invokeValues = ["graph_function(self.function)", ...values].join(", ");
+		helpers.push(`template<class Function> concept GraphAccepts${k} = ${callback.direction === "host" ? `graph_recovery_matches<std::remove_cvref_t<Function>, ${result.host.name}> && ` : ""}requires(Function& function${types.map((type, index) => `, ${type} a${index}`).join("")}) {
+	  { std::invoke(graph_function(function)${types.map((_, index) => `, a${index}`).join("")}) } -> std::same_as<${resultType(result)}>;
+};
 template<class Function> struct GraphCallback${k} {
   Function& function; GraphCallbackState& state;
-  GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared) {}
+  ${callback.direction === "host" ? `std::unique_ptr<GraphView${result.index}> recovery;
+  GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared), recovery(std::make_unique<GraphView${result.index}>(graph_recovery(input))) {}` : `GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared) {}`}
 ${result.aggregate ? `  struct Reply {
     ${result.host.name} data; GraphView${result.index} view;
     explicit Reply(${result.host.name} input) : data(std::move(input)), view(data) {}
@@ -118,7 +128,7 @@ ${result.aggregate ? `  struct Reply {
     auto& self = *static_cast<GraphCallback${k}*>(context);
     if (self.state.failure) return 6;
     try {
-      ${unit(result) ? `std::invoke(${invokeValues}); *out = 0;`
+	  ${unit(result) ? `std::invoke(${invokeValues}); *out = 0;`
 			: `${result.host.name} returned = std::invoke(${invokeValues});
       graph_check${result.index}(returned, 0, true, self.state.budget);
       ${result.aggregate ? `auto owner = std::make_unique<Reply>(std::move(returned));
@@ -137,8 +147,10 @@ ${result.aggregate ? `  struct Reply {
 		const resultCallback = result.kind === "callback";
 		if(resultCallback) body.push(`    auto owned = std::make_shared<detail::GraphLease>(detail::${result.dispose});`);
 		params.forEach((node, index) => {
-			if(node.kind === "callback") body.push(`    detail::GraphCallback${node.index}<std::remove_reference_t<Function${index}>> callback${index}(a${index}, state);`
-				, `    detail::${node.name} view${index}{decltype(callback${index})::invoke, &callback${index}};`);
+			if(node.kind === "callback") body.push(...node.direction === "host" ? [
+				`    detail::graph_check${copy(node.result).index}(detail::graph_recovery(a${index}), 0, true, state.budget);`
+			] : [], `    detail::GraphCallback${node.index}<std::remove_reference_t<Function${index}>> callback${index}(a${index}, state);`
+				, `    detail::${node.name} view${index}{decltype(callback${index})::invoke, &callback${index}${node.direction === "host" ? `, &callback${index}.recovery->value` : ""}};`);
 			else
 			{
 				const n = nodes.get(node.id);
@@ -162,7 +174,7 @@ ${result.aggregate ? `  struct Reply {
 		return body;
 	};
 	const invokers = [];
-	for(const callback of model.callbacks.values())
+	for(const callback of [...model.callbacks.values()].filter(item => item.direction !== "host"))
 	{
 		const params = callback.parameters.map(copy), result = copy(callback.result);
 		const inputs = ["GraphLease& lease", ...params.map((node, index) => `const ${node.host.name}& a${index}`)].join(", ");
@@ -186,6 +198,11 @@ ${result.aggregate ? `  struct Reply {
 		, `#include "detail/${p}-conversions.hpp"`
 		, "#include <concepts>", "#include <exception>", "#include <functional>"
 		, "#include <unistd.h>", `namespace lean_bridge::${p} {`, support
-		, ...helpers, ...invokers, "}", ...functions, "}", ""].join("\n");
+		, ...helpers, ...invokers, "}"
+		, ...callbackRecovery ? ["// Recovery is a typed failure-path value and is never published as a successful callback result."
+			, "template<class F, class R> inline auto with_recovery(F&& function, R&& recovery) {"
+			, "  return detail::GraphRecoveredCallback<std::decay_t<F>, std::decay_t<R>>{std::forward<F>(function), std::forward<R>(recovery)};"
+			, "}"] : []
+		, ...functions, "}", ""].join("\n");
 	return { ...model, files };
 };

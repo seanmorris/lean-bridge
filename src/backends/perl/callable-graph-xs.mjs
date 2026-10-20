@@ -6,6 +6,18 @@
 import { compileCallablePerlGraphPackageModel } from "./callable-graph-model.mjs";
 import { perlCallableGraphRuntime } from "./callable-graph-runtime.mjs";
 
+const callbackClass = name => `package ${name};
+sub new {
+  CORE::die "${name}->new expects code and recovery\\n"
+    unless @_ == 5 && CORE::defined($_[0]) && !CORE::ref($_[0]) && $_[0] eq '${name}';
+  CORE::shift; my %fields = @_;
+  CORE::die "expected code and recovery fields\\n"
+    unless CORE::keys(%fields) == 2 && CORE::exists($fields{code}) && CORE::exists($fields{recovery});
+  CORE::die "expected a Perl code reference\\n" unless CORE::ref($fields{code}) eq 'CODE';
+  return CORE::bless \\%fields, '${name}';
+}
+`;
+
 /**
  * Emit Perl converters that preserve replies until native copying completes.
  *
@@ -15,6 +27,7 @@ import { perlCallableGraphRuntime } from "./callable-graph-runtime.mjs";
 export const generateCallablePerlGraphXs = (ir, moduleName) => {
 	const model = compileCallablePerlGraphPackageModel(ir, moduleName);
 	const callbacks = [...model.callbacks.values()];
+	const hostClass = `${moduleName}::Runtime::Callback`;
 	const declarations = [`#include "${model.layout.prefix}-graph.h"`, model.source
 		, "static void lpg_retire(void);", "static int lpg_ready(void);"
 		, perlCallableGraphRuntime];
@@ -24,7 +37,7 @@ export const generateCallablePerlGraphXs = (ir, moduleName) => {
 		declarations.push(`static uint32_t lpc_callback_${callback.index}(void *context, ${callback.parameters.map((node, index) => `const ${node.name} *a${index}`).join(", ")}, ${callback.result.name} *out) {
   lpc_callback *callback = context;
   if (callback->frame->error) return 6;
-  if (callback->lease) return ${callback.call}(callback->lease->token, ${callback.parameters.map((_, index) => `a${index}`).join(", ")}, out);
+  ${callback.direction === "host" ? "" : `if (callback->lease) return ${callback.call}(callback->lease->token, ${callback.parameters.map((_, index) => `a${index}`).join(", ")}, out);`}
   const void *arguments[] = { ${callback.parameters.map((_, index) => `a${index}`).join(", ")} };
   return lpc_invoke(context, arguments, out);
 }`);
@@ -58,6 +71,16 @@ _callback_${callback.key}(...)
 	const render = (name, parameters, result, native, lease = null) => {
 		const offset = lease ? 1 : 0, count = parameters.length + offset;
 		const callback = result.callback, node = result.node;
+		const callbackInput = (parameter, index) => {
+			if(parameter.callback.direction !== "host")
+				return `${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, argument${index + offset}, ${parameter.callback.index}, "${moduleName}::_callback_${parameter.callback.key}")};`;
+			const callbackResult = parameter.callback.result;
+			return `static const char *const callback${index}_fields[] = {"code", "recovery"};
+    SV **callback${index}_slots = lpg_fields(aTHX_ scope, argument${index + offset}, "${hostClass}", callback${index}_fields, 2);
+    ${callbackResult.name} *recovery${index} = lpg_allocate(aTHX_ scope, 1, sizeof(*recovery${index}));
+    lpg_read${callbackResult.index}(aTHX_ scope, callback${index}_slots[1], recovery${index}, 0, 1);
+    ${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, callback${index}_slots[0], ${parameter.callback.index}, "${moduleName}::_callback_${parameter.callback.key}"), recovery${index}};`;
+		};
 		return `void
 ${name}(...)
   PPCODE:
@@ -69,7 +92,7 @@ ${name}(...)
     ${Array.from({ length: count }, (_, index) => `SV *argument${index} = lpg_pin(aTHX_ ST(${index}));`).join("\n    ")}
     ${lease ? `lpc_lease *self = lpc_lease_enter(aTHX_ scope, argument0, ${lease.index});` : ""}
     ${parameters.map((parameter, index) => parameter.callback
-		? `${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, argument${index + offset}, ${parameter.callback.index}, "${moduleName}::_callback_${parameter.callback.key}")};`
+		? callbackInput(parameter, index)
 		: `${parameter.node.name} *input${index} = lpg_allocate(aTHX_ scope, 1, sizeof(*input${index}));
     lpg_read${parameter.node.index}(aTHX_ scope, argument${index + offset}, input${index}, 0, 1);`).join("\n    ")}
     ${callback ? `lpc_lease *created;
@@ -89,7 +112,7 @@ ${name}(...)
 `;
 	};
 	for(const fn of model.functions) xs.push(render(fn.publicName, fn.parameters, fn.result, fn.native));
-	for(const callback of callbacks) xs.push(`MODULE = ${moduleName} PACKAGE = ${callback.publicType}`
+	for(const callback of callbacks.filter(item => item.direction !== "host")) xs.push(`MODULE = ${moduleName} PACKAGE = ${callback.publicType}`
 		, render("call", callback.parameters.map(node => ({ node })), { node: callback.result }, callback.call, callback));
 	xs.push(`MODULE = ${moduleName} PACKAGE = ${moduleName}::LeanClosure
 
@@ -108,12 +131,13 @@ closed(value)
     XPUSHs(boolSV(lpc_get_lease(aTHX_ value)->closed));
 `);
 	const valuesSource = `${model.valuesSource}
+${callbacks.some(callback => callback.direction === "host") ? callbackClass(hostClass) : ""}
 package ${moduleName}::LeanClosure;
 sub new { CORE::die "Use a generated Lean closure factory\\n" }
 sub CLONE_SKIP { 1 }
 sub STORABLE_freeze { CORE::die "Lean closures cannot be serialized\\n" }
 sub STORABLE_thaw { CORE::die "Lean closures cannot be deserialized\\n" }
-${callbacks.map(callback => `package ${callback.publicType};
+${callbacks.filter(callback => callback.direction !== "host").map(callback => `package ${callback.publicType};
 our @ISA = ('${moduleName}::LeanClosure');
 sub CLONE_SKIP { 1 }
 `).join("\n")}

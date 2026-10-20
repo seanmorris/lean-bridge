@@ -111,13 +111,14 @@ static inline ${p}_status lb_gc_finish(lb_gc_state *state, ${p}_error *error) {
 	{
 		const params = callback.parameters.map(copy), result = copy(callback.result), k = callback.index;
 		const n = callbackName(callback), owned = ownedName(callback);
-		declarations.push(`typedef ${p}_status (*${n}_fn)(${["void *context", ...params.map((node, index) => input(node, `a${index}`)), ...unit(result) ? [] : [output(result, "out")], `${p}_error *error`].join(", ")});`
-			, `typedef struct ${n} { ${n}_fn call; void *context; } ${n};`
-			, `typedef struct ${owned} ${owned};`);
+		declarations.push(`#define ${callback.publicName.toUpperCase()}_REQUIRES_RECOVERY ${callback.direction === "host" ? 1 : 0}`
+			, `typedef ${p}_status (*${n}_fn)(${["void *context", ...params.map((node, index) => input(node, `a${index}`)), ...unit(result) ? [] : [output(result, "out")], `${p}_error *error`].join(", ")});`
+			, `typedef struct ${n} { ${n}_fn call; void *context;${callback.direction === "host" ? ` ${result.host.integer ? "mpz_srcptr" : `${result.host.name} const *`} recovery;` : ""} } ${n};`
+			, ...callback.direction === "host" ? [] : [`typedef struct ${owned} ${owned};`]);
 		aliases.push(`typedef ${n} ${n.replace(`${p}_gmp_`, `${p}_`)};`
 			, `typedef ${n}_fn ${n.replace(`${p}_gmp_`, `${p}_`)}_fn;`
-			, `typedef ${owned} ${owned.replace(`${p}_gmp_`, `${p}_`)};`);
-		helpers.push(`struct ${owned} { uint64_t token; pid_t process; };`
+			, ...callback.direction === "host" ? [] : [`typedef ${owned} ${owned.replace(`${p}_gmp_`, `${p}_`)};`]);
+		helpers.push(...callback.direction === "host" ? [] : [`struct ${owned} { uint64_t token; pid_t process; };`]
 			, `typedef struct { const ${n} *callback; lb_gc_state *state; } lb_gc_callback${k};`);
 		if(result.aggregate) helpers.push(`typedef struct { ${result.host.name} value; lb_gg_allocation *views; } lb_gc_reply${k};`
 			, `static void lb_gc_release${k}(void *raw) {`
@@ -174,16 +175,30 @@ static inline ${p}_status lb_gc_finish(lb_gc_state *state, ${p}_error *error) {
 					, "  lb_gg_arena owned = { .budget = &state.budget, .root = &returned, .root_size = sizeof(returned) };"
 					, `  ${result.name} returned_native = {0};`]];
 		params.forEach((node, index) => {
-			if(node.kind === "callback") lines.push(`  lb_gc_callback${node.index} callback${index} = {a${index}, &state};`
-				, `  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}};`);
+			if(node.kind === "callback")
+			{
+				const recovery = copy(node.result);
+				lines.push(`  lb_gc_callback${node.index} callback${index} = {a${index}, &state};`
+					, ...node.direction === "host" ? [`  ${recovery.name} recovery${index} = {0};`
+						, `  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}, &recovery${index}};`] : [`  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}};`]);
+			}
 			else lines.push(`  ${node.name} view${index} = {0};`);
 		});
 		params.forEach((node, index) => {
-			if(node.kind === "callback") lines.push(`  if (!lb_gg_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(node)})) || !a${index}->call) { lb_gc_fail(&state, 1); goto done; }`);
+			if(node.kind === "callback") lines.push(`  if (!lb_gg_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(node)})) || !a${index}->call${node.direction === "host" ? ` || !a${index}->recovery` : ""}) { lb_gc_fail(&state, 1); goto done; }`
+				, ...node.direction === "host" ? (() => {
+					const recovery = copy(node.result);
+					return [`  if (lb_gc_fail(&state, ${walker(recovery)}_check(a${index}->recovery, 0, 1, &state.budget))) goto done;`];
+				})() : []);
 			else lines.push(`  if (lb_gc_fail(&state, ${walker(node)}_check(${node.aggregate ? "" : "&"}a${index}, 0, 1, &state.budget))) goto done;`);
 		});
 		params.forEach((node, index) => {
 			if(node.kind !== "callback") lines.push(`  if (lb_gc_fail(&state, ${walker(node)}_to(${node.aggregate ? "" : "&"}a${index}, &view${index}, &views))) goto done;`);
+			else if(node.direction === "host")
+			{
+				const recovery = copy(node.result);
+				lines.push(`  if (lb_gc_fail(&state, ${walker(recovery)}_to(a${index}->recovery, &recovery${index}, &views))) goto done;`);
+			}
 		});
 		if(isCallback) lines.push("  if (lb_gc_fail(&state, lb_gg_charge(&state.budget.storage_bytes, 1, sizeof(*returned)))) goto done;"
 			, "  returned = LB_GMP_GRAPH_MALLOC(sizeof(*returned)); if (!returned) { lb_gc_fail(&state, 3); goto done; }"
@@ -204,7 +219,7 @@ static inline ${p}_status lb_gc_finish(lb_gc_state *state, ${p}_error *error) {
 		expose(name, publicParams, args, lines);
 	};
 	expose(`${p}_gmp_initialize`, [`${p}_error *error`], ["error"], [`  return ${p}_graph_finish(${p}_graph_initialize(), error);`]);
-	for(const callback of model.callbacks.values())
+	for(const callback of [...model.callbacks.values()].filter(item => item.direction !== "host"))
 	{
 		const owned = ownedName(callback);
 		wrap(`${owned}_call`, callback.parameters.map(copy), copy(callback.result), callback.call, callback);

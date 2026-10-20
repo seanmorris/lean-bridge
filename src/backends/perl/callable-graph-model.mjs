@@ -4,6 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { generateCopiedPerlGraphConversions } from "./copied-graph-conversions.mjs";
@@ -26,13 +27,16 @@ export const compileCallablePerlGraphPackageModel = (ir, moduleName) => {
 	const copy = ref => nodes.get(payloads.copy(ref).id);
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const callback = { ...signature, index
+			, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)
 			, parameters: signature.parameters.map(copy), result: copy(signature.result)
 			, publicType: `${moduleName}::Closure${signature.key}`
 			, call: `${values.layout.prefix}_callback_${signature.key}_lease_call`
 			, dispose: `${values.layout.prefix}_callback_${signature.key}_lease_dispose` };
 		return [signature.id, callback];
 	}));
-	const occupied = new Set([`${moduleName}::LeanClosure`, ...[...callbacks.values()].map(cb => cb.publicType)]);
+	const occupied = new Set([`${moduleName}::LeanClosure`
+		, ...[...callbacks.values()].some(cb => cb.direction === "host") ? [`${moduleName}::Runtime::Callback`] : []
+		, ...[...callbacks.values()].map(cb => cb.publicType)]);
 	for(const type of payloads.ir.types)
 	{
 		const publicType = `${moduleName}::${type.name}`;

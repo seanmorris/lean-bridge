@@ -6,6 +6,7 @@
  * @file
  */
 import { sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { compileNativeCallableGraphPayloads } from "./native-callable-graph-payloads.mjs";
 import { generateNativeCopiedGraphAdapters } from "./native-graph-adapters.mjs";
 
@@ -23,6 +24,7 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 	const payloads = compileNativeCallableGraphPayloads(ir, descriptor, { wordBits });
 	const generated = generateNativeCopiedGraphAdapters(payloads.ir, payloads.abi, { wordBits, initializer, exportCalls: false });
 	const p = generated.layout.prefix, header = ["#pragma once", `#include "${p}-graph-types.h"`];
+	const controls = `${descriptor.exports[0].symbol}_structured_callback_controls`;
 	const lines = [generated.source
 		, "enum { NG_CALLBACK = 6 };"
 		, "typedef struct ng_borrow_frame { ng_budget budget; uint32_t status; void (*observe)(struct ng_borrow_frame *); } ng_borrow_frame;"
@@ -33,13 +35,16 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 	for(const signature of descriptor.callbacks)
 	{
 		const key = signature.key, name = `${p}_callback_${key}`;
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
 		const parameters = signature.parameters.map(payloads.copy), result = payloads.copy(signature.result);
 		const walker = node => `ng_${sha256(node.id).slice(0, 20)}`;
 		const types = parameters.map((node, index) => `const ${node.name} *arg${index}`);
 		header.push(`typedef struct ${name} {`
 			, `  uint32_t (*call)(void *, ${[...types, `${result.name} *out`].join(", ")});`
-			, "  void *context;", `} ${name};`);
-		lines.push(`typedef struct { ${name} callback; ng_borrow_frame *frame; } ng_borrow_${key};`
+			, "  void *context;"
+			, ...direction === "host" ? [`  const ${result.name} *recovery;`] : []
+			, `} ${name};`);
+		lines.push(`typedef struct { ${direction === "host" ? `${controls} controls; ` : ""}${name} callback; ng_borrow_frame *frame; } ng_borrow_${key};`
 			, `static inline lean_object *ng_invoke_${key}(void *context, ${parameters.map((_, index) => `lean_object *value${index}`).join(", ")}) {`
 			, `  ng_borrow_${key} *host = context; ng_borrow_frame *frame = host->frame;`
 			, "  ng_arena arena = { .head = NULL, .budget = &frame->budget };"
@@ -67,6 +72,18 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 			, "  ng_borrow_observe(frame);"
 			, "  if (frame->status && returned) { lean_dec(returned); returned = NULL; }"
 			, "  return returned ? returned : lean_alloc_array(0, 0);", "}");
+		if(direction === "host") lines.push(`static inline lean_object *ng_recovery_${key}(void *context) {`
+			, `  ng_borrow_${key} *host = context; ng_borrow_frame *frame = host->frame;`
+			, "  ng_borrow_observe(frame);"
+			, "  if (!frame->status && !host->callback.recovery) ng_borrow_fail(frame, NG_INVALID);"
+			, `  if (!frame->status) ng_borrow_fail(frame, ${walker(result)}_check(host->callback.recovery, 0, 1, &frame->budget));`
+			, `  return frame->status ? lean_alloc_array(0, 0) : ${walker(result)}_in(host->callback.recovery);`
+			, "}"
+			, `static inline lean_object *ng_reject_${key}(void *context, lean_object *recovery) {`
+			, `  ng_borrow_${key} *host = context;`
+			, "  ng_borrow_fail(host->frame, NG_INVALID);"
+			, "  return recovery;"
+			, "}");
 	}
 	return { ...generated, payloads, header: header.join("\n") + "\n"
 		, source: `#include "${p}-callable-borrows.h"\n` + lines.join("\n") + "\n" };

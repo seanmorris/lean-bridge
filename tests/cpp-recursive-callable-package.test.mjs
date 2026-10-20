@@ -23,6 +23,7 @@ import { checkStructuredCppInstallation } from "./helpers/cpp-structured-callabl
 import { recursiveCallableCppConsumer, parseRecursiveCallableCppResult } from "./helpers/cpp-recursive-callable-fixture.mjs";
 import { recursiveCallableCConsumer, parseRecursiveCallableCResult } from "./helpers/c-recursive-callable-fixture.mjs";
 import { prepareRecursiveCFamilyInstallation } from "./helpers/c-family-recursive-callable-install.mjs";
+import { structuredCallableDirectionalSubtypeIr } from "./helpers/structured-callable-fixture.mjs";
 
 test("C++ recursive callback headers instantiate all nine shapes without Lean headers", { timeout: 180_000 }, async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-cpp-recursive-callable-headers-"));
@@ -43,6 +44,38 @@ test("C++ callable graph admission rejects empty callback signatures", () => {
 	const ir = nativeRecursiveCallableReviewedIr();
 	ir.types.find(type => type.kind === "callback").callable.parameters = [];
 	assert.throws(() => generateCallableCppGraphPackage(ir), /callback arity must be 1 through 16/);
+});
+
+test("C++ callback Subtypes require an exact typed recovery wrapper", { timeout: 180_000 }, async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-cpp-callback-subtype-headers-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
+	const generated = generateCallableCppGraphPackage(ir);
+	const native = generateNativeCallableGraphCalls(ir, createNativeCallableGraphDescriptor(ir),
+		{ initializer: "initialize_LeanBridgeNative0123456789abcdef" });
+	const hostType = generated.callbacks.get(host.id), closureType = generated.callbacks.get(closure.id);
+	const header = generated.files["include/structured.hpp"];
+	assert.match(header, /inline auto with_recovery\(/u);
+	assert.match(header, new RegExp(`GraphAccepts${hostType.index} = graph_recovery_matches`, "u"));
+	assert.doesNotMatch(header, new RegExp(`GraphAccepts${closureType.index} = graph_recovery_matches`, "u"));
+	assert.doesNotMatch(header, new RegExp(`graph_invoke${hostType.index}\\(`, "u"));
+	assert.match(header, new RegExp(`graph_invoke${closureType.index}\\(`, "u"));
+	const files = { ...generated.files, ...boostSources()
+		, "include/detail/structured-graph-types.h": native.typesHeader
+		, "include/detail/structured-callable-borrows.h": native.borrowsHeader
+		, "include/detail/structured-graph.h": native.header + '\nextern "C" { int structured_graph_ready(void); void structured_graph_retire(void); }\n'
+		, "consumer.cpp": `#include "structured.hpp"
+namespace api = lean_bridge::structured;
+auto plain = [](const api::Nat& value) { return value; };
+using Plain = decltype(plain);
+using Recovered = decltype(api::with_recovery(plain, api::Nat{1}));
+using Wrong = decltype(api::with_recovery(plain, bool{true}));
+static_assert(!api::detail::GraphAccepts${hostType.index}<Plain>);
+static_assert(api::detail::GraphAccepts${hostType.index}<Recovered>);
+static_assert(!api::detail::GraphAccepts${hostType.index}<Wrong>);
+` };
+	for(const [path, text] of Object.entries(files)) await saveLakeFile(directory, path, text);
+	await runCopied("/usr/bin/c++", ["-std=c++20", "-Wall", "-Wextra", "-Werror", "-fsyntax-only", "-Iinclude", "consumer.cpp"], directory);
 });
 
 test("recursive C and C++ public headers coexist in either include order", { timeout: 180_000 }, async t => {

@@ -18,6 +18,7 @@ import { generateCallablePerlGraphXs } from "./callable-graph-xs.mjs";
 export const generateCallablePerlGraphPackage = (model, receipt) => {
 	const ir = model.bindingIr, moduleName = model.moduleName;
 	const generated = generateCallablePerlGraphXs(ir, moduleName);
+	const checkedHostCallbacks = [...generated.callbacks.values()].some(callback => callback.direction === "host");
 	const native = generateNativeCallableGraphCalls(ir, model.copiedGraph, { initializer: receipt.initializer });
 	if(canonicalJson(generated.layout) !== canonicalJson(native.layout)) throw new TypeError("Perl and native callable layouts differ");
 	const prefix = native.layout.prefix, publicModule = `lib/${moduleName.replaceAll("::", "/")}.pm`;
@@ -59,7 +60,12 @@ returned captures and ordinary results own independent copied storage.
 =head1 CALLBACKS AND OWNERSHIP
 
 Pass a CODE reference or a matching generated Lean closure as a synchronous
-callback. Returned Lean closures provide call, close and closed. Close each
+callback.${checkedHostCallbacks ? ` A host callback whose result contains a checked Lean Subtype must use
+C<${moduleName}::Runtime::Callback-E<gt>new(code =E<gt> $callback, recovery =E<gt> $value)>.
+The recovery has the callback's declared erased result shape and is validated
+before Lean or the callback runs. Constructor rejection or a callback exception
+fails the enclosing call; the recovery is used only to finish Lean's failure
+path and is never returned as a successful result.` : ""} Returned Lean closures provide call, close and closed. Close each
 closure when finished. Close is idempotent and an active call retains its
 borrow until native cleanup finishes. Automatic finalization also releases
 the native lease. Closures cannot be serialized or used by another interpreter
