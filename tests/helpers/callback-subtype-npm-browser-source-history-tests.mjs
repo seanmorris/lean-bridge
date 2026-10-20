@@ -10,6 +10,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeCallbackSubtypeNpmAcceptanceSource } from "./callback-subtype-npm-acceptance-source-history.mjs";
 import {
 	beforeCallbackSubtypeNpmBrowserPointers
 	, beforeCallbackSubtypeNpmBrowserSource
@@ -40,18 +41,28 @@ test("callback Subtype npm/browser history restores every source and pointer", a
 	for(const update of record.updates)
 	{
 		const current = await readFile(update.path, "utf8");
-		const previous = reverseCallbackSubtypeNpmBrowserUpdate(current, update);
+		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
+			update.path, current, update.currentSha256
+		);
+		const previous = reverseCallbackSubtypeNpmBrowserUpdate(
+			milestone, update
+		);
 		assert.equal(previous, original(update.path));
 		assert.equal(beforeCallbackSubtypeNpmBrowserSource(
-			update.path, current), previous);
+			update.path, milestone), previous);
 		assert.equal(beforeCallbackSubtypeNpmBrowserSource(
-			update.path, current, update.currentSha256), current);
+			update.path, milestone, update.currentSha256), milestone);
 		assert.equal(beforeCallbackSubtypeNpmBrowserSource(
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+	{
+		const current = await readFile(addition.path, "utf8");
+		const milestone = beforeCallbackSubtypeNpmAcceptanceSource(
+			addition.path, current, addition.currentSha256
+		);
+		assert.equal(sha256(milestone), addition.currentSha256, addition.path);
+	}
 	for(const pin of record.pinContainers)
 	{
 		const current = await readFile(pin.path, "utf8");

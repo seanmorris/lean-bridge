@@ -21,6 +21,7 @@ import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeNa
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
+import "./helpers/callback-subtype-npm-acceptance-source-history-tests.mjs";
 
 const npmFlag = "LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST";
 const browserFlag = "LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST";

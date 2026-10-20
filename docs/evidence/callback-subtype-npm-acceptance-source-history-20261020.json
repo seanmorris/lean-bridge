@@ -1,0 +1,265 @@
+{
+  "additions": [
+    {
+      "currentSha256": "135d1a28bb897cb8999a60392e7a597d629a800f03808c893766509a2f055f94",
+      "path": "scripts/update-callback-subtype-npm-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "b011c474a8e0b42f2cb540efcb70054be5cffdbb0aa9f7f50972b806abc037ba",
+      "path": "tests/callback-subtype-npm-browser.test.mjs"
+    },
+    {
+      "currentSha256": "648780ecba3a45cb2138afa3cb6cb58bc577dae4b84c73607bf127e2ba482f34",
+      "path": "tests/fixtures/callback-subtype-consumers/javascript.mjs"
+    },
+    {
+      "currentSha256": "43a1e0ac7d4395409a98db98b257911bb035ba6aa13e82db5cdac6114d7a4d21",
+      "path": "tests/fixtures/callback-subtype-consumers/types.mts"
+    },
+    {
+      "currentSha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+      "path": "tests/fixtures/onboarding/callback-subtypes/LICENSE"
+    },
+    {
+      "currentSha256": "01dcb994e647cefcb33b8dda43b2f6888ba720334c9ab97518f3058417a2ca4e",
+      "path": "tests/fixtures/onboarding/callback-subtypes/lakefile.toml"
+    },
+    {
+      "currentSha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273",
+      "path": "tests/fixtures/onboarding/callback-subtypes/lean-toolchain"
+    },
+    {
+      "currentSha256": "626454d19c597b2bd3f5e9916e4925431c4bfde6c5094c60a0604bd5309c8e0f",
+      "path": "tests/fixtures/onboarding/callback-subtypes/package.json"
+    },
+    {
+      "currentSha256": "84a6078b47f13cdb0c23afbeb09b633d71b80a25063f4070bf5ef50c8211001f",
+      "path": "tests/helpers/callback-subtype-fixture.mjs"
+    },
+    {
+      "currentSha256": "dffea40b89fa92165d5ee746509b70685f53df6dc4f056fed55274b2e5c113bd",
+      "path": "tests/helpers/callback-subtype-npm-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "44812bed0968332d8e561848976b936481eb6ee9cb652ebbd08fa208cc0f90ec",
+      "path": "tests/helpers/callback-subtype-npm-acceptance-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "123e30ff24790d211e1df5b81d879568990552ea",
+  "milestone": "callback-subtype-npm-acceptance-source-v1",
+  "predecessorCommit": "32cfafd3634cf78f41cf91296ba33b5776ab3e87",
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "e427264c104784006231b196586082c186becac222bac6ff125dbe104767ab61",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"31849a9d73ab1dfae36ee7f3802493ba8cf1ada2894a544aa810d6e27e951dc8\"\n",
+          "previous": "          \"sha256\": \"8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f\"\n",
+          "start": 1713547
+        },
+        {
+          "current": "          \"sha256\": \"31849a9d73ab1dfae36ee7f3802493ba8cf1ada2894a544aa810d6e27e951dc8\"\n",
+          "previous": "          \"sha256\": \"8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f\"\n",
+          "start": 1719326
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "bf4d3a03f0c820eb57abd7fb2cd44cc99b6060f2b5099a4f2c0d167ffc0ca64e"
+    },
+    {
+      "currentSha256": "31849a9d73ab1dfae36ee7f3802493ba8cf1ada2894a544aa810d6e27e951dc8",
+      "edits": [
+        {
+          "current": "import { assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirection } from \"../abi/refinements.mjs\";\n",
+          "previous": "import { assertRefinement } from \"../abi/refinements.mjs\";\n",
+          "start": 161
+        },
+        {
+          "current": "const callbackContractSite = (site, types) => {\n\tif(site.type.kind !== \"named\") return null;\n\tconst definition = types.find(type => type.id === site.type.id);\n\tif(definition?.kind !== \"callback\") return null;\n\tconst refinements = callbackDefinitionRefinement(definition, types);\n\tif(refinements === null) return null;\n\tconst direction = callbackSubtypeDirection({\n\t\tparameters: definition.callable.parameters.map(parameter => parameter.type)\n\t\t, result: definition.callable.result.type\n\t}, refinements, types);\n\tif(direction === null) return null;\n\treturn {\n\t\townership: site.ownership\n\t\t, lifetime: structuredClone(site.lifetime)\n\t\t, callable: {\n\t\t\tparameters: definition.callable.parameters.map((parameter, index) =>\n\t\t\t\tcontractSite(parameter, refinements.parameters[index], types\n\t\t\t\t\t, direction === \"host\"))\n\t\t\t, result: contractSite(\n\t\t\t\tdefinition.callable.result, refinements.result, types\n\t\t\t\t, direction === \"closure\"\n\t\t\t)\n\t\t}\n\t};\n};\n\n",
+          "previous": "",
+          "start": 1219
+        },
+        {
+          "current": "\t\tif(value !== undefined && (!value || typeof value !== \"object\"\n\t\t\t|| Array.isArray(value) || Object.keys(value).length !== 2\n\t\t\t|| !Object.hasOwn(value, \"parameters\")\n\t\t\t|| !Object.hasOwn(value, \"result\")\n\t\t\t|| !Array.isArray(value.parameters)\n\t\t\t|| value.parameters.length !== declaration.parameters.length\n\t\t\t|| (value.result === null\n\t\t\t\t&& value.parameters.every(item => item === null)))) fail();\n\t\tconst callbackParameters = declaration.parameters.map(site =>\n\t\t\tcallbackContractSite(site, document.types));\n\t\tconst callbackResult = callbackContractSite(\n\t\t\tdeclaration.result, document.types\n\t\t);\n\t\tif(value === undefined && !callbackParameters.some(Boolean)\n\t\t\t&& callbackResult === null) continue;\n\t\tconst parameters = declaration.parameters.map(\n\t\t\t(site, index) => callbackParameters[index] ?? contractSite(\n\t\t\t\tsite, value?.parameters?.[index] ?? null, document.types\n\t\t\t)\n\t\t);\n\t\tconst result = callbackResult ?? contractSite(\n\t\t\tdeclaration.result, value?.result ?? null, document.types, true\n\t\t);\n\t\tif(!callbackParameters.some(Boolean) && callbackResult === null\n\t\t\t&& !parameters.some(site => site.refinement)\n\t\t\t&& !result.refinement) continue;\n",
+          "previous": "\t\tif(value === undefined) continue;\n\t\tif(!value || typeof value !== \"object\" || Array.isArray(value)\n\t\t\t|| Object.keys(value).length !== 2 || !Object.hasOwn(value, \"parameters\") || !Object.hasOwn(value, \"result\")\n\t\t\t|| !Array.isArray(value.parameters) || value.parameters.length !== declaration.parameters.length\n\t\t\t|| (value.result === null && value.parameters.every(item => item === null))) fail();\n\t\tconst parameters = declaration.parameters.map((site, index) => contractSite(site, value.parameters[index], document.types));\n\t\tconst result = contractSite(declaration.result, value.result, document.types, true);\n\t\tif(!parameters.some(site => site.refinement) && !result.refinement) continue;\n",
+          "start": 3027
+        }
+      ],
+      "path": "src/analyze/reviewed-subtypes.mjs",
+      "previousSha256": "8f0b4abd0d39f44a20ccb7b5b4a0960fb8670bc440e7e636e684e3eea2ba329f"
+    },
+    {
+      "currentSha256": "562d13fbbd4011de4fc4fc98b076a49266ab9068be2c1400416c33cafbe63ec8",
+      "edits": [
+        {
+          "current": "import { checkCallbackSubtypes } from \"./fixtures/callback-subtype-consumers/javascript.mjs\";\nimport { callbackSubtypeContracts as contracts } from \"./helpers/callback-subtype-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1185
+        },
+        {
+          "current": "",
+          "previous": "const copy = refinement => ({ ownership: \"copy\", lifetime: null, ...refinement ? { refinement } : {} });\n",
+          "start": 1604
+        },
+        {
+          "current": "",
+          "previous": "const tree = (kind, ...arguments_) => ({ kind, arguments: arguments_ });\nconst host = { ownership: \"borrow\", lifetime: { scope: \"call\", anchor: null }\n\t, callable: { parameters: [copy()], result: copy(constructor) } };\nconst closure = {\n\townership: \"lease\"\n\t, lifetime: { scope: \"explicit\", anchor: null }\n\t, callable: { parameters: [copy(constructor)], result: copy() }\n};\nconst contracts = {\n\t\"CallbackSubtypes.callHost\": { parameters: [host] }\n\t, \"CallbackSubtypes.makeClosure\": { parameters: [copy()], result: closure }\n\t, \"CallbackSubtypes.callHostContainer\": { parameters: [{ ...host\n\t\t, callable: { parameters: [copy()], result: copy(tree(\"result\", tree(\"option\", constructor), null)) } }] }\n\t, \"CallbackSubtypes.makeContainerClosure\": {\n\t\tparameters: [copy()]\n\t\t, result: { ...closure\n\t\t\t, callable: { parameters: [copy(tree(\"array\", tree(\"option\", constructor)))], result: copy() } }\n\t}\n};\n",
+          "start": 1677
+        },
+        {
+          "current": "\t\t, arities: [\n\t\t\t[\"CallbackSubtypes.makeClosure\", 1]\n\t\t\t, [\"CallbackSubtypes.makeMixedClosure\", 1]\n\t\t\t, [\"CallbackSubtypes.makeContainerClosure\", 1]\n\t\t]\n",
+          "previous": "\t\t, arities: [[\"CallbackSubtypes.makeClosure\", 1], [\"CallbackSubtypes.makeContainerClosure\", 1]]\n",
+          "start": 3409
+        },
+        {
+          "current": "\tassert.equal(callbacks.length, 6);\n",
+          "previous": "\tassert.equal(callbacks.length, 4);\n",
+          "start": 5505
+        },
+        {
+          "current": "\t}, type.source.extensions[\"lean-lang.org/refinements\"], semantic.document.types)).sort()\n\t\t, [\"closure\", \"closure\", \"closure\", \"host\", \"host\", \"host\"]);\n",
+          "previous": "\t}, type.source.extensions[\"lean-lang.org/refinements\"], semantic.document.types)).sort(), [\"closure\", \"closure\", \"host\", \"host\"]);\n",
+          "start": 5718
+        },
+        {
+          "current": "\t\tconst publicApi = { withRecovery: api.withRecovery };\n\t\tfor(const name of Object.keys(contracts))\n\t\t\tpublicApi[name.split(\".\").at(-1)] = (...args) => call(name.split(\".\").at(-1), ...args);\n\t\tassert.deepEqual(checkCallbackSubtypes(publicApi)\n\t\t\t, { checks: 18, rejections: 7, callbackCalls: 3 });\n",
+          "previous": "\t\tlet calls = 0;\n\t\tassert.equal(call(\"callHost\", api.withRecovery(value => { calls++; return value + 1n; }, 1n)), 2n);\n\t\tassert.equal(calls, 1);\n\t\tcalls = 0;\n\t\tassert.throws(() => call(\"callHost\", value => { calls++; return value; }), /requires withRecovery/u);\n\t\tassert.equal(calls, 0);\n\t\tassert.throws(() => call(\"callHost\", api.withRecovery(value => { calls++; return value; }, 0n)), /failed \\(5\\)/u);\n\t\tassert.equal(calls, 0);\n\t\tcalls = 0;\n\t\tassert.throws(() => call(\"callHost\", api.withRecovery(() => { calls++; return 0n; }, 1n)), /failed \\(5\\)/u);\n\t\tassert.equal(calls, 1);\n\t\tconst original = new Error(\"host callback failed\");\n\t\tassert.throws(() => call(\"callHost\", api.withRecovery(() => { throw original; }, 1n)), error => error === original);\n\t\tassert.equal(call(\"callHost\", api.withRecovery(value => value, 1n)), 1n);\n\t\tconst closure = call(\"makeClosure\", 9n);\n\t\tassert.equal(closure(2n), 2n);\n\t\tassert.throws(() => closure(0n), /failed \\(5\\)/u);\n\t\tassert.equal(closure(3n), 3n);\n\t\tassert.equal(closure.dispose(), true);\n\t\tassert.equal(call(\"callHostContainer\", api.withRecovery(() => ({ ok: { tag: \"some\", value: 2n } }), { ok: { tag: \"some\", value: 1n } })).ok.value, 2n);\n\t\tconst container = call(\"makeContainerClosure\", 0n);\n\t\tassert.deepEqual(container([{ tag: \"none\" }]), { tag: \"none\" });\n\t\tassert.throws(() => container([{ tag: \"some\", value: 0n }]), /failed \\(5\\)/u);\n\t\tassert.deepEqual(container([]), { tag: \"none\" });\n\t\tcontainer.dispose();\n",
+          "start": 11029
+        }
+      ],
+      "path": "tests/callback-subtype-extractor.test.mjs",
+      "previousSha256": "2b02e3922c428845b8ca85d76862fba34f02a0b72018370975447a8153bca20b"
+    },
+    {
+      "currentSha256": "267e21985433e1bf4e9fc671895984737e1e8a89388a60343fb8c9c00cab2d8b",
+      "edits": [
+        {
+          "current": "import { reviewedSubtypeContracts } from \"../src/analyze/reviewed-subtypes.mjs\";\n",
+          "previous": "",
+          "start": 475
+        },
+        {
+          "current": "\ntest(\"reviewed callback Subtypes become exact compiler callback contracts\", () => {\n\tconst primitive = { kind: \"primitive\", name: \"nat\" };\n\tconst copied = { type: primitive, ownership: \"copy\", lifetime: null };\n\tconst callback = (id, refinements) => ({\n\t\tid, kind: \"callback\"\n\t\t, callable: { parameters: [copied], result: copied }\n\t\t, source: { declaration: id.slice(7)\n\t\t\t, extensions: { \"lean-lang.org/refinements\": refinements } }\n\t});\n\tconst hostDefinition = callback(\"bridge:Host\", {\n\t\tparameters: [projected], result: selected(\"Callbacks.checkedReply\")\n\t});\n\tconst closureDefinition = callback(\"bridge:Closure\", {\n\t\tparameters: [selected(\"Callbacks.checkedArgument\")], result: projected\n\t});\n\tconst named = id => ({ kind: \"named\", id });\n\tconst declarations = [\n\t\t{\n\t\t\tsource: { declaration: \"Callbacks.call\", extensions: {} }\n\t\t\t, parameters: [{ type: named(hostDefinition.id), ownership: \"borrow\"\n\t\t\t\t, lifetime: { scope: \"call\", anchor: null } }]\n\t\t\t, result: copied\n\t\t}\n\t\t, {\n\t\t\tsource: { declaration: \"Callbacks.make\", extensions: {} }\n\t\t\t, parameters: [copied]\n\t\t\t, result: { type: named(closureDefinition.id), ownership: \"lease\"\n\t\t\t\t, lifetime: { scope: \"explicit\", anchor: null } }\n\t\t}\n\t];\n\tconst contracts = reviewedSubtypeContracts({ declarations\n\t\t, types: [hostDefinition, closureDefinition] });\n\tassert.deepEqual(contracts, {\n\t\t\"Callbacks.call\": {\n\t\t\tparameters: [{ ownership: \"borrow\"\n\t\t\t\t, lifetime: { scope: \"call\", anchor: null }\n\t\t\t\t, callable: { parameters: [{ ownership: \"copy\", lifetime: null }]\n\t\t\t\t\t, result: { ownership: \"copy\", lifetime: null\n\t\t\t\t\t\t, refinement: { constructor: \"Callbacks.checkedReply\" } } } }]\n\t\t\t, result: { ownership: \"copy\", lifetime: null }\n\t\t}\n\t\t, \"Callbacks.make\": {\n\t\t\tparameters: [{ ownership: \"copy\", lifetime: null }]\n\t\t\t, result: { ownership: \"lease\"\n\t\t\t\t, lifetime: { scope: \"explicit\", anchor: null }\n\t\t\t\t, callable: { parameters: [{ ownership: \"copy\", lifetime: null\n\t\t\t\t\t, refinement: { constructor: \"Callbacks.checkedArgument\" } }]\n\t\t\t\t\t, result: { ownership: \"copy\", lifetime: null } } }\n\t\t}\n\t});\n});\n",
+          "previous": "",
+          "start": 3884
+        }
+      ],
+      "path": "tests/callback-subtype-foundation.test.mjs",
+      "previousSha256": "13d0a4a3cd7a21144e8c4416a964d61906c412b6c059e769956a3938b2de88eb"
+    },
+    {
+      "currentSha256": "4eef12901f9b50dbecd449a8f03c112a5e9977618093637cb9e2a22fee7359f6",
+      "edits": [
+        {
+          "current": "def callHostMixed (callback : Nat → Positive → Positive) : Positive :=\n  callback 7 ⟨1, by decide⟩\n\ndef makeMixedClosure (_seed : Nat) : Nat → Positive → Positive :=\n  fun _marker value => value\n\n",
+          "previous": "",
+          "start": 355
+        }
+      ],
+      "path": "tests/fixtures/onboarding/callback-subtypes/CallbackSubtypes.lean",
+      "previousSha256": "92845c54740d8830ee98bdbda6972d206def586ae3708784d3bd14c583c78e7c"
+    },
+    {
+      "currentSha256": "528995c390cab948de7cca8d56dcca2c08222405d163eaab58920843ba423ee1",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeNpmAcceptanceSource } from \"./callback-subtype-npm-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 402
+        },
+        {
+          "current": "\t\tconst accepted = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\t\tupdate.path, current\n\t\t);\n",
+          "previous": "",
+          "start": 1818
+        },
+        {
+          "current": "\t\t\tupdate.path, accepted, update.currentSha256\n",
+          "previous": "\t\t\tupdate.path, current, update.currentSha256\n",
+          "start": 1967
+        },
+        {
+          "current": "\t\tconst accepted = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\t\taddition.path, current\n\t\t);\n",
+          "previous": "",
+          "start": 2580
+        },
+        {
+          "current": "\t\t\taddition.path, accepted, addition.currentSha256\n",
+          "previous": "\t\t\taddition.path, current, addition.currentSha256\n",
+          "start": 2731
+        },
+        {
+          "current": "\t\tconst accepted = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\t\tpin.path, latest\n\t\t);\n",
+          "previous": "",
+          "start": 2958
+        },
+        {
+          "current": "\t\t\tpin.path, accepted, pin.currentSha256\n",
+          "previous": "\t\t\tpin.path, latest, pin.currentSha256\n",
+          "start": 3099
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-foundation-source-history-tests.mjs",
+      "previousSha256": "5b22aa0db263179aa8f1f4fe92a715cb2809f0bcd5a643d177cc6f34024e903d"
+    },
+    {
+      "currentSha256": "0b5c402994fff17e85b64d6ce8331f55f6cec3baef6399cae38fe2c6840378c3",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeNpmAcceptanceSource } from \"./callback-subtype-npm-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 399
+        },
+        {
+          "current": "\t\tconst milestone = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\t\tupdate.path, current, update.currentSha256\n\t\t);\n\t\tconst previous = reverseCallbackSubtypeNpmBrowserUpdate(\n\t\t\tmilestone, update\n\t\t);\n",
+          "previous": "\t\tconst previous = reverseCallbackSubtypeNpmBrowserUpdate(current, update);\n",
+          "start": 1754
+        },
+        {
+          "current": "\t\t\tupdate.path, milestone), previous);\n",
+          "previous": "\t\t\tupdate.path, current), previous);\n",
+          "start": 2055
+        },
+        {
+          "current": "\t\t\tupdate.path, milestone, update.currentSha256), milestone);\n",
+          "previous": "\t\t\tupdate.path, current, update.currentSha256), current);\n",
+          "start": 2148
+        },
+        {
+          "current": "\t{\n\t\tconst current = await readFile(addition.path, \"utf8\");\n\t\tconst milestone = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\t\taddition.path, current, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(milestone), addition.currentSha256, addition.path);\n\t}\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2368
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-npm-browser-source-history-tests.mjs",
+      "previousSha256": "e6551548b6412cbcb9cebcf8a32d25277f43c1a014e77811ceb711088a6e3d45"
+    },
+    {
+      "currentSha256": "054b7f64ae8f0df21d5964be9acfe6a2707efc6ea54955407bb6571c6656f3b8",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeNpmAcceptanceSource, callbackSubtypeNpmAcceptanceChangedPaths } from \"./callback-subtype-npm-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeNpmAcceptanceChangedPaths\n\t, ...callbackSubtypeNpmBrowserChangedPaths\n",
+          "previous": "\t...callbackSubtypeNpmBrowserChangedPaths\n",
+          "start": 108070
+        },
+        {
+          "current": "\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n",
+          "previous": "\tconst npmBrowser = beforeCallbackSubtypeNpmBrowserSource(\n",
+          "start": 128286
+        },
+        {
+          "current": "\tif(sha256(npmAcceptance) === expected) return npmAcceptance;\n\tconst npmBrowser = beforeCallbackSubtypeNpmBrowserSource(\n\t\tpath, npmAcceptance, expected\n\t);\n",
+          "previous": "",
+          "start": 128378
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "10e4c43a4b5b9bdd00cb386a236a1e5ae5e8528ee8ca71a07eda2c15dac41158"
+    }
+  ]
+}
