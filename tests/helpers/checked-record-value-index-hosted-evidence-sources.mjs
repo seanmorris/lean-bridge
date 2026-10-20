@@ -77,6 +77,9 @@ const phpCallers = ["php.php"].map(
 const pythonCallers = ["python.py"].map(
 	path => `tests/fixtures/checked-record-value-index-python/${path}`
 );
+const rubyCallers = ["ruby.rb"].map(
+	path => `tests/fixtures/checked-record-value-index-ruby/${path}`
+);
 const commonData = [
 	...fixture, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -426,6 +429,59 @@ export const checkedRecordValueIndexPythonEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-checked-record-value-index-python-evidence.mjs"
+				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted Ruby gem artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const checkedRecordValueIndexRubyEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/checked-record-value-index-ruby-installed-tests.mjs"
+				])
+				, ...commonData, ...rubyCallers
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/checked-record-value-index-ruby-fixture.mjs"
+				])
+				, ...rubyCallers
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-checked-record-value-index-ruby-ci.mjs"
+					, "tests/checked-record-value-index-ruby.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/checked-record-value-index-ruby.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-checked-record-value-index-ruby-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-checked-record-value-index-ruby-evidence.mjs"
 				, "tests/helpers/checked-record-value-index-hosted-evidence-sources-tests.mjs"
 			])
 		}

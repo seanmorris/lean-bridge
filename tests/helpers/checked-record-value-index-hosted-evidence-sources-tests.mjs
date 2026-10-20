@@ -15,6 +15,7 @@ import {
 	, checkedRecordValueIndexNativeEvidenceSources
 	, checkedRecordValueIndexPerlEvidenceSources, checkedRecordValueIndexPhpEvidenceSources
 	, checkedRecordValueIndexPythonEvidenceSources
+	, checkedRecordValueIndexRubyEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -164,6 +165,23 @@ test("value-index Python evidence closes wheel production, consumption and check
 		, ["checker", ".github/workflows/checked-record-value-index-python.yml"]
 		, ["checker", "scripts/check-checked-record-value-index-python-ci.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-python-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index Ruby evidence closes gem production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexRubyEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-ruby/ruby.rb"]
+		, ["consumer", "tests/helpers/checked-record-value-index-ruby-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-ruby.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-ruby-ci.mjs"]
+		, ["archiver", "scripts/archive-checked-record-value-index-ruby-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });
