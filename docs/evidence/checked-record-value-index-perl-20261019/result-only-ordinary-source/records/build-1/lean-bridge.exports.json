@@ -1,0 +1,100 @@
+{
+  "contracts": {
+    "CheckedRecordValueIndices.produceAb": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceEmptySized": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceEmptyString": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceFalseBool": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceTrueBool": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceUnicodeString": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceWideNat": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CheckedRecordValueIndices.produceZeroNat": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "CheckedRecordValueIndices.produceTrueBool",
+    "CheckedRecordValueIndices.produceFalseBool",
+    "CheckedRecordValueIndices.produceAb",
+    "CheckedRecordValueIndices.produceEmptyString",
+    "CheckedRecordValueIndices.produceUnicodeString",
+    "CheckedRecordValueIndices.produceEmptySized",
+    "CheckedRecordValueIndices.produceZeroNat",
+    "CheckedRecordValueIndices.produceWideNat"
+  ],
+  "modules": [
+    "CheckedRecordValueIndices"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "cpan": {
+      "module": "LeanBridge::CheckedRecordValueIndices",
+      "version": "1.000"
+    }
+  }
+}

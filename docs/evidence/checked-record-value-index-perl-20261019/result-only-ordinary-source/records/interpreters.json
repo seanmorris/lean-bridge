@@ -1,0 +1,66 @@
+[
+  {
+    "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-threaded/bin/perl",
+    "configuration": "5.36.3-threaded",
+    "executable": {
+      "bytes": 3981264,
+      "sha256": "acfdcae55702c361e1022655c19244d35b5b6f6a67f4b10f8762f6efa0db0dfe"
+    },
+    "identity": {
+      "archname": "x86_64-linux-thread-multi",
+      "ivsize": "8",
+      "ptrsize": "8",
+      "useithreads": "define",
+      "usemultiplicity": "define",
+      "version": "5.36.3"
+    }
+  },
+  {
+    "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.36.3-unthreaded/bin/perl",
+    "configuration": "5.36.3-unthreaded",
+    "executable": {
+      "bytes": 3853384,
+      "sha256": "f8b4020c96ac4c55cb2b07fd60d43ece91f79f94ce2a5ee3fc232a2fe8dfab07"
+    },
+    "identity": {
+      "archname": "x86_64-linux",
+      "ivsize": "8",
+      "ptrsize": "8",
+      "useithreads": null,
+      "usemultiplicity": null,
+      "version": "5.36.3"
+    }
+  },
+  {
+    "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-threaded/bin/perl",
+    "configuration": "5.38.2-threaded",
+    "executable": {
+      "bytes": 4067760,
+      "sha256": "c2ac13b8d18279263aabf637c341e54e46eb9bfb2a9977cb62beec81cd0812f9"
+    },
+    "identity": {
+      "archname": "x86_64-linux-thread-multi",
+      "ivsize": "8",
+      "ptrsize": "8",
+      "useithreads": "define",
+      "usemultiplicity": "define",
+      "version": "5.38.2"
+    }
+  },
+  {
+    "command": "/home/runner/work/lean-bridge/lean-bridge/.toolchains/perl/5.38.2-unthreaded/bin/perl",
+    "configuration": "5.38.2-unthreaded",
+    "executable": {
+      "bytes": 3931296,
+      "sha256": "57acb9ffc143d8610219ebd716fed5a5405d4903f550ce1cc14c624c3cf68e47"
+    },
+    "identity": {
+      "archname": "x86_64-linux",
+      "ivsize": "8",
+      "ptrsize": "8",
+      "useithreads": null,
+      "usemultiplicity": null,
+      "version": "5.38.2"
+    }
+  }
+]
