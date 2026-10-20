@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, mkdtemp, readFile, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import test from "node:test";
@@ -16,6 +16,8 @@ import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeRe
 import { callbackSubtypeJvmInstaller } from "./helpers/callback-subtype-jvm-install.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { checkInstalledDotnetValues } from "./helpers/dotnet-copied-install.mjs";
+import { installFinContainerEdgePhp, runFinContainerEdgePhp
+	, verifyFinContainerEdgePhpEnvironment } from "./helpers/fin-container-edge-php-closure.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";
@@ -88,6 +90,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 					, success: "callback-subtype-remaining-ok"
 					, expectedChecks: profile === "wit-wasi" ? 26 : 14
 					, ...["java", "kotlin"].includes(profile) ? { installJvm } : {}
+					, ...profile === "php-native" ? { installPhp: installFinContainerEdgePhp } : {}
 					, ...(profile === "wit-wasi" ? { wit: [
 						/resource function/u
 						, /call-host/u
@@ -117,6 +120,24 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 			{
 				Object.assign(observation, observation.jvmEnvironment);
 				delete observation.jvmEnvironment;
+			}
+			if(observation.phpEnvironment)
+			{
+				const relocated = join(consumer, "php-relocated");
+				await rename(observation.phpEnvironment.root, relocated);
+				const context = { ...observation.phpEnvironment, root: relocated };
+				for(const mode of ["weak", "strict"])
+				{
+					const replay = await runFinContainerEdgePhp(context, mode);
+					assert.equal(replay.stderr, "");
+					assert.equal(replay.stdout, "callback-subtype-remaining-ok:14\n");
+				}
+				const verified = await verifyFinContainerEdgePhpEnvironment(context);
+				Object.assign(observation, { closedComposerInstall: true
+					, relocatedReplay: true, repeatExecution: true
+					, packageFileSetSha256: verified.packageFileSetSha256
+					, vendorFilesSha256: verified.vendorFilesSha256 });
+				delete observation.phpEnvironment;
 			}
 			reports.push({ ...observation, route, profile
 				, bindingIrSha256: built.bindingIrSha256
