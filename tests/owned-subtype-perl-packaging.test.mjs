@@ -176,6 +176,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 			assert.equal(actual.borrowed_rejection_preserved, true);
 			assert.equal(actual.transfer_rejection_preserved, true);
 			assert.equal(actual.successful_transfer_consumed, true);
+			assert.equal(actual.implicit_destruction_released, true);
 			if(observed) assert.deepEqual(actual, observed); observed = actual;
 		}
 		const assets = await inspectOwnedPerlInstalledAssets({ consumer, prefix: relocated, perl, owned });
@@ -192,6 +193,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, compilerSelectedConstructors: true
 		, transferredInputCheckedBeforeHandoff: true
 		, callbackCoexistence: true
+		, lifecycle: { fallback: "perl-destruction", observation: "native-identity-baseline-restored" }
 		, packageSetReceipt: receipt, observations
 		, consumerSha256: sha256(consumerSource), owned
 		, componentReceipt: JSON.parse(prepared.files.get("native-component.json"))

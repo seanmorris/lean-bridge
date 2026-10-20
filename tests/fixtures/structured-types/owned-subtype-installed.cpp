@@ -57,6 +57,17 @@ int main(void) {
     auto moved = api::transfer_record(std::move(moving));
     CHECK(moving.primary.is_closed() && api::serial(kept) == 41);
     CHECK(moved.payload.count == 9 && api::serial(moved.primary) == 41);
+
+    auto raiiSurvivor = [] {
+      auto abandoned = api::new_ticket(61, "raii");
+      auto independent = abandoned.retain();
+      CHECK(api::serial(abandoned) == 61);
+      return independent;
+    }();
+    CHECK(api::serial(raiiSurvivor) == 61);
+    raiiSurvivor.close(); CHECK(raiiSurvivor.is_closed());
+    CHECK(api::serial(retained) == 41);
+
     rejectionLease.close(); kept.close(); moved.primary.close(); retained.close();
     CHECK(rejectionLease.is_closed() && kept.is_closed() && retained.is_closed());
   }

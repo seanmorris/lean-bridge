@@ -201,6 +201,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, relocatedInstallation: true, deterministicReassembly: true
 		, transferredInputCheckedBeforeHandoff: true
 		, callbackCoexistence: true
+		, lifecycle: { c: "manual-owner-release", cpp: "raii-plus-sanitizers" }
 		, componentReceipt, adapter, packageSetReceipt: receipt
 		, observed, relocated });
 	t.diagnostic(JSON.stringify({

@@ -104,6 +104,19 @@ serial_is($kept, 51, 'successful transfer preserves an independent retain');
 check($moved->payload->count->bcmp(9) == 0, 'successful transfer preserves the checked field');
 serial_is($moved->primary, 51, 'successful transfer returns a usable resource');
 
+my $before_abandon = LeanBridge::Runtime::_snapshot()->{live_identities};
+my $abandoned = invoke('new_ticket', Math::BigInt->new(61), 'abandoned');
+my $destruction_survivor = $abandoned->retain;
+check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,
+  'abandoned owner creates one native identity');
+undef $abandoned;
+serial_is($destruction_survivor, 61,
+  'implicit destruction preserves an independent retain');
+$destruction_survivor->close;
+check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon,
+  'implicit destruction and final close restore the identity baseline');
+serial_is($ticket, 41, 'runtime remains usable after implicit destruction');
+
 release($valid); release($invalid); release($moved);
 $ticket->close; $retained->close; $moving->close; $kept->close;
 check($ticket->closed && $retained->closed && $moving->closed && $kept->closed,
@@ -116,5 +129,6 @@ print JSON::PP->new->canonical->encode({
   borrowed_rejection_preserved => JSON::PP::true,
   transfer_rejection_preserved => JSON::PP::true,
   successful_transfer_consumed => JSON::PP::true,
+  implicit_destruction_released => JSON::PP::true,
   live_identities => $baseline,
 }), "\n";
