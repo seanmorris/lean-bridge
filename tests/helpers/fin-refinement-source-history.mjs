@@ -7,6 +7,8 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexWitVerifierRepairSource, checkedRecordValueIndexWitVerifierRepairChangedPaths } from "./checked-record-value-index-wit-verifier-repair-source-history.mjs";
+import { beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource, checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths } from "./checked-record-value-index-python-archive-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonArchiveSource, checkedRecordValueIndexPythonArchiveChangedPaths } from "./checked-record-value-index-python-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPerlPromotionSource, checkedRecordValueIndexPerlPromotionChangedPaths } from "./checked-record-value-index-perl-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPerlArchiveHistoryGapSource, checkedRecordValueIndexPerlArchiveHistoryGapHistoricalPaths } from "./checked-record-value-index-perl-archive-history-gap-source-history.mjs";
@@ -1352,7 +1354,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexPythonArchiveChangedPaths
+	...checkedRecordValueIndexWitVerifierRepairChangedPaths
+	, ...checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths
+	, ...checkedRecordValueIndexPythonArchiveChangedPaths
 	, ...checkedRecordValueIndexPerlPromotionChangedPaths
 	, ...checkedRecordValueIndexPerlArchiveHistoryGapHistoricalPaths
 	, ...checkedRecordValueIndexPerlArchiveChangedPaths
@@ -1776,8 +1780,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexPythonArchiveSource(
+	let previous = beforeCheckedRecordValueIndexWitVerifierRepairSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPythonArchiveSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexPerlPromotionSource(

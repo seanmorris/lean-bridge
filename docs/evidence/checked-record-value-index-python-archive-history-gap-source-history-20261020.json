@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-python-archive-history-gap-v1",
+  "previousCommit": "6f90d9e54c38d5e06cad98dfb1d2afbb58b0cdb1",
+  "currentCommit": "96f80a2acbe1214a6888a4b700d04bb97cf480eb",
+  "pathsSha256": "834f485bca7075a26e019bb00864402856f066e407053bbc5deba2fcfa8f8a09",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-python-archive-history-gap-source-history.mjs",
+      "currentSha256": "695fb672f3600707b1024174ad381b14fa3360977b73b53092641bda3939a7a1"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-python-archive-history-gap-source-history-tests.mjs",
+      "currentSha256": "02a14bfd8fe2fe8cd337885acb046b8a9850cb8b33d91745ce30af884339f636"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-python-archive-history-gap-source-history.mjs",
+      "currentSha256": "188760cae83a48679852a47c46d518fa62350653e65539a642b943ebc2be6681"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4bba7762ceefea539475f8a2e6301c01b2fb5cbba603a2f8b4d0b5b327522259",
+      "currentSha256": "7464259ed4025ab45c867ff4f7a2dc162b3bf6b54e5937c2a8e15e0523f55180",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexPythonArchiveSource, checkedRecordValueIndexPythonArchiveChangedPaths } from \"./checked-record-value-index-python-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 102702,
+          "previous": "\t...checkedRecordValueIndexPerlPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexPythonArchiveChangedPaths\n\t, ...checkedRecordValueIndexPerlPromotionChangedPaths\n"
+        },
+        {
+          "start": 121241,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexPerlPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexPythonArchiveSource(\n"
+        },
+        {
+          "start": 121330,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPerlPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}

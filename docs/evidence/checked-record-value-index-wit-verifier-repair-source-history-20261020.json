@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-wit-verifier-repair-v1",
+  "predecessorCommit": "96f80a2acbe1214a6888a4b700d04bb97cf480eb",
+  "draftParentCommit": "187622cc603bbcb6bc48322e934d64c26e59478c",
+  "pathsSha256": "05850516f1e2d5ef07d9d5bc1e545965a766b2c87830268ecaf0658ecf52f20b",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-wit-verifier-repair-source-history.mjs",
+      "currentSha256": "184e16e5eca1e3c35f07ee1bd6c7741e95ae204584f429de8e74af656cf36e28"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-verifier-repair-source-history-tests.mjs",
+      "currentSha256": "995520c8e919d50e15dde728f368163549358b4c77790874bfefedeca12df4a4"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-verifier-repair-source-history.mjs",
+      "currentSha256": "267e0ab89051f75e2ab1e2277b420f08c288d01e5a612fcb4ea11f63065d44b3"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-wit.test.mjs",
+      "previousSha256": "56c56151c6f0ecabac25377dda306649661e9245e2edea5f68316fb119d5f546",
+      "currentSha256": "b579a94755a70a4e01e0b72a358be64015ce602abe69efff37ed1d6a79cad94a",
+      "edits": [
+        {
+          "start": 616,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-wit-verifier-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-acceptance-source-history-tests.mjs",
+      "previousSha256": "80014b86f939b3992c52bb7b635732a607b10ec8bc9fed20a00db07e0619d59a",
+      "currentSha256": "52c420d3e6c7ed0f50d2eb7e0687b29e06a08df0a7da50f69e38f470246d13f1",
+      "edits": [
+        {
+          "start": 2424,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "current": "\t{\n\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(current), addition.currentSha256, addition.path);\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-model-records.mjs",
+      "previousSha256": "238fe2091155d1c545ad9ecbf0b55d4f56c2465b0acaa0033d54cba3c81d8d0d",
+      "currentSha256": "611f5e13c6e3cd266964925840258645b308a8824416feb2d3257b6bab2e7826",
+      "edits": [
+        {
+          "start": 4668,
+          "previous": "\t\tlet selection = configuration;\n",
+          "current": "\t\tlet request = configuration;\n"
+        },
+        {
+          "start": 5056,
+          "previous": "\t\t\tselection = reviewedSourceSelection(identity.reviewedBindingIr);\n",
+          "current": "\t\t\trequest = reviewedSourceSelection(identity.reviewedBindingIr);\n"
+        },
+        {
+          "start": 5186,
+          "previous": "\t\tfor(const key of [\"contracts\", \"exports\", \"specializations\"]) assert.deepEqual(identity.request[key], selection[key]);\n",
+          "current": "\t\tfor(const key of [\"contracts\", \"exports\", \"specializations\"]) assert.deepEqual(identity.request[key], request[key]);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7464259ed4025ab45c867ff4f7a2dc162b3bf6b54e5937c2a8e15e0523f55180",
+      "currentSha256": "6ae248121fb5ed1e1f810983a2aa9d17783b465a4a3bc129584af3649c8d82dd",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexWitVerifierRepairSource, checkedRecordValueIndexWitVerifierRepairChangedPaths } from \"./checked-record-value-index-wit-verifier-repair-source-history.mjs\";\nimport { beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource, checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths } from \"./checked-record-value-index-python-archive-history-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 103112,
+          "previous": "\t...checkedRecordValueIndexPythonArchiveChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexWitVerifierRepairChangedPaths\n\t, ...checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths\n\t, ...checkedRecordValueIndexPythonArchiveChangedPaths\n"
+        },
+        {
+          "start": 121778,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexPythonArchiveSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexWitVerifierRepairSource(\n"
+        },
+        {
+          "start": 121871,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexPythonArchiveSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    }
+  ]
+}

@@ -45,6 +45,11 @@ test("installed value-index WIT acceptance has one exact reversible source layer
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of ledger.additions)
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);
+	{
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 	assert.equal(beforeCheckedRecordValueIndexWitAcceptanceSource("missing", "text"), "text");
 });
