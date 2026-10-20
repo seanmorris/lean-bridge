@@ -98,7 +98,8 @@ try
 		, "checked-record-value-index-python-engine.log"
 	]);
 	const hostedRoot = join(extracted.root, "checked-record-value-index-python-ci");
-	assert.deepEqual((await readdir(hostedRoot)).sort(), checkedRecordValueIndexPythonRoutes);
+	assert.deepEqual((await readdir(hostedRoot)).sort()
+		, [...checkedRecordValueIndexPythonRoutes].sort());
 	const runs = []; let runtime;
 	for(const route of checkedRecordValueIndexPythonRoutes)
 	{
