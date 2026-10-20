@@ -14,6 +14,7 @@ import {
 	, checkedRecordValueIndexJvmEvidenceSources
 	, checkedRecordValueIndexNativeEvidenceSources
 	, checkedRecordValueIndexPerlEvidenceSources, checkedRecordValueIndexPhpEvidenceSources
+	, checkedRecordValueIndexPhpWasmEvidenceSources
 	, checkedRecordValueIndexPythonEvidenceSources
 	, checkedRecordValueIndexRubyEvidenceSources
 	, checkedRecordValueIndexRustEvidenceSources
@@ -252,6 +253,38 @@ test("value-index WIT archiving replays retained TAP through the archive-derived
 		, "tools: observed.tools, archiveSha256: original.archiveSha256"
 	]) assert.ok(replay.includes(field), field);
 	assert.equal(source.split("await inspectCheckedRecordValueIndexWitHandoff(").length, 2);
+});
+
+test("value-index PHP-Wasm evidence closes package production, callers and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexPhpWasmEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/helpers/checked-record-value-index-php-wasm-installed-tests.mjs"]
+		, ["consumer", "tests/fixtures/checked-record-value-index-php/php.php"]
+		, ["checker", ".github/workflows/checked-record-value-index-php-wasm.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-php-wasm-ci.mjs"]
+		, ["checker", "scripts/bootstrap-php-wasm-ci.sh"]
+		, ["archiver", "scripts/archive-checked-record-value-index-php-wasm-evidence.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index PHP-Wasm archiving replays the complete retained package closure", () => {
+	const source = readFileSync(
+		"scripts/archive-checked-record-value-index-php-wasm-evidence.mjs", "utf8");
+	const marker = "const checked = await checkCheckedRecordValueIndexPhpWasmCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\t\tassert.equal", 1)[0];
+	for(const field of [
+		"route, producer: revision, directory: recordsRoot"
+		, "tap: join(cell, \"run.tap\")"
+		, "tap: tap.toString(), read"
+	]) assert.ok(replay.includes(field), field);
+	assert.ok(source.includes("assertCheckedRecordValueIndexPhpWasmCompilerTap"));
 });
 
 test("value-index hosted archivers accept only four explicit absolute inputs", () => {
