@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexMatrixPromotionSource, checkedRecordValueIndexMatrixPromotionChangedPaths } from "./checked-record-value-index-matrix-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexBrowserPromotionSource, checkedRecordValueIndexBrowserPromotionChangedPaths } from "./checked-record-value-index-browser-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexBrowserArchiveSource, checkedRecordValueIndexBrowserArchiveChangedPaths } from "./checked-record-value-index-browser-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from "./checked-record-value-index-php-wasm-source-history.mjs";
@@ -1370,7 +1371,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexBrowserPromotionChangedPaths
+	...checkedRecordValueIndexMatrixPromotionChangedPaths
+	, ...checkedRecordValueIndexBrowserPromotionChangedPaths
 	, ...checkedRecordValueIndexRustPromotionChangedPaths
 	, ...checkedRecordValueIndexRustArchiveChangedPaths
 	, ...checkedRecordValueIndexRustResultOnlyRepairChangedPaths
@@ -1812,8 +1814,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexBrowserPromotionSource(
+	let previous = beforeCheckedRecordValueIndexMatrixPromotionSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexBrowserPromotionSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRustPromotionSource(
