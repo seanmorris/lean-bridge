@@ -115,10 +115,9 @@ try
 		interpreters ??= routeInterpreters;
 		assert.deepEqual(routeInterpreters, interpreters, `${route} interpreter identity`);
 		const checked = await checkCheckedRecordValueIndexPerlCiRecords({
-			route, producer: revision, directory: recordsRoot, tap: join(cell, "run.tap")
+			route, producer: revision, directory: recordsRoot
 			, glibc: observed.floor, maxLoad: observed.maxLoad
-		}, {
-			tap: tap.toString(), read: path => readFile(join(recordsRoot, path))
+			, tap: tap.toString(), read: path => readFile(join(recordsRoot, path))
 			, paths, runtime, interpreters
 		});
 		assert.equal(verification.toString(), canonicalJson(checked)

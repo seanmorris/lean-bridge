@@ -6,6 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
 	checkedRecordValueIndexBrowserEvidenceSources
@@ -113,6 +114,21 @@ test("value-index Perl evidence closes CPAN production, consumption and checking
 		, ["archiver", "scripts/archive-checked-record-value-index-perl-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
+});
+
+test("value-index Perl archiving replays the retained TAP and records in one closed checker input", () => {
+	const source = readFileSync(
+		"scripts/archive-checked-record-value-index-perl-evidence.mjs", "utf8");
+	const marker = "const checked = await checkCheckedRecordValueIndexPerlCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\t});", 1)[0];
+	for(const field of [
+		"route, producer: revision, directory: recordsRoot"
+		, "tap: tap.toString()"
+		, "read: path => readFile(join(recordsRoot, path))"
+		, "paths, runtime, interpreters"
+	]) assert.ok(replay.includes(field), field);
+	assert.doesNotMatch(replay, /\}\s*,\s*\{/u);
 });
 
 test("value-index native-PHP evidence closes Composer production, consumption and checking sources", {
