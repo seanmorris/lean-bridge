@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-result-only-repair-v1",
+  "previousCommit": "f9839b7f13facf1d0ec4135202cb91ef5e0ccfe0",
+  "currentCommit": "dacfbb77a33f801723d4bf0cbb75c9d1e422b7fb",
+  "registrationParent": "dacfbb77a33f801723d4bf0cbb75c9d1e422b7fb",
+  "pathsSha256": "af5ae541f883f6c5e69cf3b9f5f6a53c0038cd7e0893a72c93c53eea47833d48",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-rust-result-only-repair-source-history.mjs",
+      "currentSha256": "043aadaa5d84f7d9233155267bef82a84cdeab065f674e57633719e89f81ae49"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-result-only-repair-source-history-tests.mjs",
+      "currentSha256": "6a955dfc0abd73d90def4805ce8e5f9900c56ca2658a4a117470ac41a2ab0068"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-result-only-repair-source-history.mjs",
+      "currentSha256": "c062a39c8ea0aad5e50dccd23a7214b250811144ebdcc22554dedb77b5dcea8f"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "kind": "registration",
+      "previousSha256": "83e7f7587cb82b2b80e919040456a2a8bf2cc60ac92927967c50a10f1e4de6fa",
+      "currentSha256": "d8f81d8467cf9fbd627be0aba6cb733347ab74910b3ab26da859fcffd18ce4ce",
+      "edits": [
+        {
+          "start": 495,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-rust-result-only-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "kind": "registration",
+      "previousSha256": "54b451e4fddb0a135a7562730e96063fab0127ae0be4dd431693285f5135e255",
+      "currentSha256": "6e7fd84aaff776bb35735b2a2456f825e1c01bb789ef0c18efabd2d039fe0d21",
+      "edits": [
+        {
+          "start": 1277,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustResultOnlyRepairSource, checkedRecordValueIndexRustResultOnlyRepairChangedPaths } from \"./checked-record-value-index-rust-result-only-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 105346,
+          "previous": "\t...checkedRecordValueIndexWitPromotionChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustResultOnlyRepairChangedPaths\n\t, ...checkedRecordValueIndexWitPromotionChangedPaths\n"
+        },
+        {
+          "start": 124690,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexWitPromotionSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustResultOnlyRepairSource(\n"
+        },
+        {
+          "start": 124786,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexWitPromotionSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-rust/rust.rs",
+      "kind": "historical",
+      "previousSha256": "671919d1f7ef11147de73bc04885d27fc6a9fcddba81ac44dc83de29ea2b43f5",
+      "currentSha256": "71fa890476e541aa942fd70dba22bb06bc94604777347645cb2c489997cd7086",
+      "edits": [
+        {
+          "start": 177,
+          "previous": "use api::{Ab, BigUint, EmptySized, EmptyToken, Error, Off, On, UnicodeToken, WideToken, ZeroToken};\n",
+          "current": "use api::{Ab, BigUint, EmptySized, EmptyToken, Off, On, UnicodeToken, WideToken, ZeroToken};\n#[cfg(not(feature = \"result-only\"))]\nuse api::Error;\n"
+        },
+        {
+          "start": 639,
+          "previous": "",
+          "current": "    #[cfg(not(feature = \"result-only\"))]\n"
+        },
+        {
+          "start": 2082,
+          "previous": "",
+          "current": "#[cfg(not(feature = \"result-only\"))]\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-fixture-tests.mjs",
+      "kind": "historical",
+      "previousSha256": "bf0a5d70a85b71166bd8c40591ea4713c95d33410a9b249aa3e310e3b9a86342",
+      "currentSha256": "55800751369f8347eb3ff6aa1bfda6b58f39cd36de4f2b06575f445da77062c0",
+      "edits": [
+        {
+          "start": 4528,
+          "previous": "",
+          "current": "\tassert.match(caller, /#\\[cfg\\(not\\(feature = \"result-only\"\\)\\)\\]\\nuse api::Error;/u);\n\tassert.match(caller, /#\\[cfg\\(not\\(feature = \"result-only\"\\)\\)\\]\\n    fn call/u);\n\tassert.match(caller, /#\\[cfg\\(not\\(feature = \"result-only\"\\)\\)\\]\\nfn wide/u);\n"
+        }
+      ]
+    }
+  ]
+}
