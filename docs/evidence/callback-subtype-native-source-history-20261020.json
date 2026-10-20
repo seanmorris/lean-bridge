@@ -1,0 +1,1748 @@
+{
+  "additions": [
+    {
+      "currentSha256": "62809c8a6405d5aaaf96882e94644ba6df45e2439956fd44e1f8ea66ccd25788",
+      "path": ".github/workflows/callback-subtype-native.yml"
+    },
+    {
+      "currentSha256": "8c763eb0e42ae5d6644ba18af296d3bd9a93ab06e14888a408f12c09d7cabc82",
+      "path": ".github/workflows/callback-subtype-perl.yml"
+    },
+    {
+      "currentSha256": "31d541c019fd1589c82c2e198144b017b124b4ca9a58c9568fb5500a4921d18f",
+      "path": "docs/evidence/callback-subtype-native-20261020/native.json"
+    },
+    {
+      "currentSha256": "8c41f0f48e36f0293e1e85e40b98d246879c7e02214f1449471d49bb5bd0ed4a",
+      "path": "docs/evidence/callback-subtype-native-20261020/perl.json"
+    },
+    {
+      "currentSha256": "323a52785c1dc9c284bbfe968ad3a47a4c65b38c35a77a6abddc7e997abc757c",
+      "path": "docs/evidence/callback-subtype-native-20261020/receipt.json"
+    },
+    {
+      "currentSha256": "cb71950102ef6fde03e594b0abc2d322e7579dfc3576f5d9903abc8b480554ce",
+      "path": "docs/evidence/callback-subtype-native-acceptance-20261020.md"
+    },
+    {
+      "currentSha256": "2311ad0a6068f9ae1d71114c26819ad22b5edb66fe0745e5cfc7f1c0b8d33e00",
+      "path": "scripts/archive-callback-subtype-native-local.mjs"
+    },
+    {
+      "currentSha256": "fe9d973512448d703e4c72929e7fa94b241969828bb2931f633c9fbe9419cc2e",
+      "path": "scripts/check-callback-subtype-native-ci.mjs"
+    },
+    {
+      "currentSha256": "11ea8f641e8efbaea9dcdbcae61e7b23b9f6f74fce7fd46bb3a4821f04b4049f",
+      "path": "scripts/check-callback-subtype-perl-ci.mjs"
+    },
+    {
+      "currentSha256": "a8aed1a19190b63ebd08c2ff8e22d4e4e101c3e436ad39be3eb1e6472a8dade0",
+      "path": "scripts/run-callback-subtype-native-ci.sh"
+    },
+    {
+      "currentSha256": "28701e7985d5c442ce1a77e7a4ec7f45e1ce6992444f8ab45348cc8c5b3fa09f",
+      "path": "scripts/run-callback-subtype-perl-ci.sh"
+    },
+    {
+      "currentSha256": "ef13301ca62775ea073327ba6df8dd8f8e51c52d3117a05a47e5ecf2a7ec554e",
+      "path": "scripts/update-callback-subtype-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "3ae497dda666073aa9fe0b702e34148e59d4455ce8b68d8b85913e39ca836985",
+      "path": "tests/callback-subtype-native-ci.test.mjs"
+    },
+    {
+      "currentSha256": "04ad84ba8ea6ecefb1b0e787d5f6dc86ce23200d17ba0912758f743d4dfe813b",
+      "path": "tests/callback-subtype-native-installed.test.mjs"
+    },
+    {
+      "currentSha256": "df14a06ecab5f0064b11b1e67055edf03e27668fe544a76954f15e17ebdbc10e",
+      "path": "tests/callback-subtype-perl-installed.test.mjs"
+    },
+    {
+      "currentSha256": "27a42d32a5206b3578a027821ce7cd6186dd5e405979aac06a3dcd20688f301d",
+      "path": "tests/fixtures/callback-subtype-consumers/c.c"
+    },
+    {
+      "currentSha256": "763ba0782799449f168cb4372eb92e1e3691895aab7b7a487362599427cfe2ec",
+      "path": "tests/fixtures/callback-subtype-consumers/cpp.cpp"
+    },
+    {
+      "currentSha256": "18d643cd60377d27374dfb9ce1c7ca0c6996891f83ea1bc18cd239f31d9cea0f",
+      "path": "tests/fixtures/callback-subtype-consumers/perl.pl"
+    },
+    {
+      "currentSha256": "65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256",
+      "path": "tests/helpers/callback-subtype-native-ci.mjs"
+    },
+    {
+      "currentSha256": "ecd089cdc0a99231679b6cca5f4d8ecaf3ed77c657bdaf2733641c94bc676a06",
+      "path": "tests/helpers/callback-subtype-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "5cbe96f86a68082f4c21c8009dcfdd003e6f3ae947ce5368d78cbdefd0b12110",
+      "path": "tests/helpers/callback-subtype-native-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "a031522d08d2130cb0d54ae33c39d0525bf1ee0c",
+  "milestone": "callback-subtype-native-source-v1",
+  "predecessorCommit": "79da70e5dd123914f8243fce441cceca84e52ff7",
+  "repairedTypeSurfacePointers": 191,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "4b48101b5b4b06339c1c5c43d7e5436109c0d2f6a7c0cfec5c421836513acc56",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 50871
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 67249
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 67416
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 69205
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 88157
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 88324
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 89955
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 104007
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 104174
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 105640
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 119608
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 119775
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 120910
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 130088
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 130407
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 133022
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 165573
+        },
+        {
+          "current": "          \"sha256\": \"9c658e0d2ec13ac02843d2e06af4fa13734eeba9e3d5007c9b82ce80ff0a3375\"\n",
+          "previous": "          \"sha256\": \"8f0197f01c654f7a199aa02c77477911a30030889d67c97a81038c96d6af6005\"\n",
+          "start": 256783
+        },
+        {
+          "current": "          \"sha256\": \"1cc3c1ac6e313c35f9641fc7a1e77d5cd143e1d6668f3fe2267f5c73b2eb0975\"\n",
+          "previous": "          \"sha256\": \"a44d6fe9629cd546921ccc55d08f074bbb04db6a6d9380bd282eb79b82269ee7\"\n",
+          "start": 256932
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 260002
+        },
+        {
+          "current": "          \"sha256\": \"7ea1937fef4947cd73c2d7d1a729d3ea268b8e2895eccc75e7c7cae90e0446f7\"\n",
+          "previous": "          \"sha256\": \"38bce0026731e6c848337454287c3793856ebd65f7e24c262cdb646b66012f55\"\n",
+          "start": 266657
+        },
+        {
+          "current": "          \"sha256\": \"510ac5839ba9e73fd595f39f8933fd20b4ca9e17dae2c41ece15b52d9656ad32\"\n",
+          "previous": "          \"sha256\": \"07285ebbce98cabf66d80f36f92f2d7c24ef7b33394944d051708084f580c38d\"\n",
+          "start": 267153
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 369035
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 377595
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 455109
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 571377
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 660006
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 707695
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 721726
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 733101
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 747321
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 755649
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 758775
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 767845
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 770846
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 782134
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 790717
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 797175
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 803735
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 805561
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 813538
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 836468
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 953734
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 963573
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1048341
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1048508
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1055061
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1072635
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1074720
+        },
+        {
+          "current": "          \"sha256\": \"c787b8571308406ff901fdc53b208f910152498316d9af87775b7368629fbb99\"\n",
+          "previous": "          \"sha256\": \"ab5d77ff4856cad1466a4137c5b0a56cc3fa2c9d8c9032c1776fd4044e165d4e\"\n",
+          "start": 1077230
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1078061
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1080224
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1081972
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1084759
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1086825
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1091762
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1093933
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1099268
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1101427
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1106222
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1108483
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1113856
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1116084
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1123094
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1126365
+        },
+        {
+          "current": "          \"sha256\": \"510ac5839ba9e73fd595f39f8933fd20b4ca9e17dae2c41ece15b52d9656ad32\"\n",
+          "previous": "          \"sha256\": \"07285ebbce98cabf66d80f36f92f2d7c24ef7b33394944d051708084f580c38d\"\n",
+          "start": 1126674
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1132221
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1138698
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1147156
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1155203
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1164175
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1167543
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1173566
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1177657
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1179466
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1179637
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1179977
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1180153
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1180675
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1181003
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1181325
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1181492
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1181817
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1182167
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1182507
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1186102
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1186589
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1189593
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1192157
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1194370
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1194541
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1195536
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1195712
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1196725
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1202421
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1202897
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1203064
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1204530
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1205518
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1206033
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1216965
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1219701
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1222154
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1224700
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1226914
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1227085
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1228080
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1228256
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1229269
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1234098
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1234574
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1234741
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1236040
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1236871
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1237211
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1247050
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1249945
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1252433
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1254979
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1257196
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1257367
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1258362
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1258538
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1259551
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1266425
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1266901
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1267068
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1268699
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1269848
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1270188
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1279982
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1282881
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1285584
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1287946
+        },
+        {
+          "current": "          \"sha256\": \"510ac5839ba9e73fd595f39f8933fd20b4ca9e17dae2c41ece15b52d9656ad32\"\n",
+          "previous": "          \"sha256\": \"07285ebbce98cabf66d80f36f92f2d7c24ef7b33394944d051708084f580c38d\"\n",
+          "start": 1288402
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1290317
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1290488
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1291483
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1291659
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1292672
+        },
+        {
+          "current": "          \"sha256\": \"3d4c77e56fe2ab7bfa167f00fe86254c408dba7cc83348b8f89d581ad626c260\"\n",
+          "previous": "          \"sha256\": \"06f47c2a91f42f76683db460456f87b22298f3205fd854ea74ded46bd702c71d\"\n",
+          "start": 1295146
+        },
+        {
+          "current": "          \"sha256\": \"51224595ab43f0d83dc5689c2edfcbe869ce59f4298f6d415ec6ac918e2636eb\"\n",
+          "previous": "          \"sha256\": \"e12454dba97eb2c3c1fcf69985f81ab01a16dec2a685661bdfa47e6bf8cc77e0\"\n",
+          "start": 1295320
+        },
+        {
+          "current": "          \"sha256\": \"6e5000d885e18f43f27d429bec879416154e302947ce50d1a624f0ca3a8d8fc7\"\n",
+          "previous": "          \"sha256\": \"9d8e0cf5cc582886e78d6a7791e5d6505e2e86a1ebba76d519b5818a9d14582a\"\n",
+          "start": 1295663
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1301205
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1301681
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1301848
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1303637
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1304786
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1305288
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1318954
+        },
+        {
+          "current": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "previous": "          \"sha256\": \"4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775\"\n",
+          "start": 1320135
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1322184
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1325687
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1329356
+        },
+        {
+          "current": "          \"sha256\": \"be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259\"\n",
+          "previous": "          \"sha256\": \"98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8\"\n",
+          "start": 1330900
+        },
+        {
+          "current": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "previous": "          \"sha256\": \"df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f\"\n",
+          "start": 1331071
+        },
+        {
+          "current": "          \"sha256\": \"c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173\"\n",
+          "previous": "          \"sha256\": \"f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7\"\n",
+          "start": 1331411
+        },
+        {
+          "current": "          \"sha256\": \"b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d\"\n",
+          "previous": "          \"sha256\": \"752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e\"\n",
+          "start": 1331587
+        },
+        {
+          "current": "          \"sha256\": \"dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443\"\n",
+          "previous": "          \"sha256\": \"63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801\"\n",
+          "start": 1332109
+        },
+        {
+          "current": "          \"sha256\": \"21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f\"\n",
+          "previous": "          \"sha256\": \"579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8\"\n",
+          "start": 1333811
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1334468
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1334635
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1335118
+        },
+        {
+          "current": "          \"sha256\": \"c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5\"\n",
+          "previous": "          \"sha256\": \"77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22\"\n",
+          "start": 1335626
+        },
+        {
+          "current": "          \"sha256\": \"14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25\"\n",
+          "previous": "          \"sha256\": \"27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5\"\n",
+          "start": 1335966
+        },
+        {
+          "current": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "previous": "          \"sha256\": \"5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d\"\n",
+          "start": 1347352
+        },
+        {
+          "current": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "previous": "          \"sha256\": \"4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775\"\n",
+          "start": 1347697
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1348725
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1352107
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1355204
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1358618
+        },
+        {
+          "current": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "previous": "          \"sha256\": \"4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775\"\n",
+          "start": 1370432
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1371105
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1374787
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1377884
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1380488
+        },
+        {
+          "current": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "previous": "          \"sha256\": \"4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775\"\n",
+          "start": 1388455
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1390997
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1394454
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1397576
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1412450
+        },
+        {
+          "current": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "previous": "          \"sha256\": \"8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e\"\n",
+          "start": 1417542
+        },
+        {
+          "current": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "previous": "          \"sha256\": \"169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505\"\n",
+          "start": 1418061
+        },
+        {
+          "current": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "previous": "          \"sha256\": \"3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b\"\n",
+          "start": 1420689
+        },
+        {
+          "current": "          \"sha256\": \"bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba\"\n",
+          "previous": "          \"sha256\": \"4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775\"\n",
+          "start": 1424793
+        },
+        {
+          "current": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "previous": "          \"sha256\": \"77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f\"\n",
+          "start": 1425469
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1495370
+        },
+        {
+          "current": "          \"sha256\": \"c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5\"\n",
+          "previous": "          \"sha256\": \"5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a\"\n",
+          "start": 1496012
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1931142
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1936920
+        },
+        {
+          "current": "          \"sha256\": \"48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf\"\n",
+          "previous": "          \"sha256\": \"8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45\"\n",
+          "start": 1943257
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-native-local-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"a031522d08d2130cb0d54ae33c39d0525bf1ee0c\",\n      \"command\": \"LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp node --test tests/callback-subtype-native-installed.test.mjs\",\n      \"scope\": \"Ordinary-source and reviewed-IR packages install offline after author-source removal. Unchanged C11/GMP and C++20 callers run from the installed compiler-free path. Four reports cover both source routes and both profiles: C completes 16 checks per route and C++ completes 13. Host callback Subtype results use exact typed recovery, returned Lean closures check Subtype inputs before their bodies run, rejection preserves caller values, and later calls recover. This is local Linux x64/glibc 2.36 acceptance; package bytes and terminal TAP were not retained, so hosted release-floor acceptance remains separate.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/callback-subtype-native-acceptance-20261020.md\",\n          \"sha256\": \"cb71950102ef6fde03e594b0abc2d322e7579dfc3576f5d9903abc8b480554ce\"\n        },\n        {\n          \"path\": \"docs/evidence/callback-subtype-native-20261020/receipt.json\",\n          \"sha256\": \"323a52785c1dc9c284bbfe968ad3a47a4c65b38c35a77a6abddc7e997abc757c\"\n        },\n        {\n          \"path\": \"tests/callback-subtype-native-installed.test.mjs\",\n          \"sha256\": \"04ad84ba8ea6ecefb1b0e787d5f6dc86ce23200d17ba0912758f743d4dfe813b\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-native-ci.mjs\",\n          \"sha256\": \"65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256\"\n        },\n        {\n          \"path\": \".github/workflows/callback-subtype-native.yml\",\n          \"sha256\": \"62809c8a6405d5aaaf96882e94644ba6df45e2439956fd44e1f8ea66ccd25788\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"callback-subtype-native-local/native.json\",\n          \"sha256\": \"31d541c019fd1589c82c2e198144b017b124b4ca9a58c9568fb5500a4921d18f\"\n        }\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-perl-local-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"a031522d08d2130cb0d54ae33c39d0525bf1ee0c\",\n      \"command\": \"LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_TEST=1 node --test tests/callback-subtype-perl-installed.test.mjs\",\n      \"scope\": \"Ordinary-source and reviewed-IR component/runtime CPAN archives install after author-source removal and replay after relocation on threaded and unthreaded Perl 5.36.3 and 5.38.2 in prebuilt-only and build-XS modes. All 16 cells complete 34 checks, five successful calls and six expected rejections. Host callback Subtype results require Runtime::Callback with an exact checked recovery; returned Lean closures check inputs before their bodies run and remain usable after rejection. This is local Linux x64/glibc 2.36 acceptance. Original machine-readable reports and exact archive identities are retained, but package bytes and terminal TAP were not; hosted release-floor acceptance remains separate.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/callback-subtype-native-acceptance-20261020.md\",\n          \"sha256\": \"cb71950102ef6fde03e594b0abc2d322e7579dfc3576f5d9903abc8b480554ce\"\n        },\n        {\n          \"path\": \"docs/evidence/callback-subtype-native-20261020/receipt.json\",\n          \"sha256\": \"323a52785c1dc9c284bbfe968ad3a47a4c65b38c35a77a6abddc7e997abc757c\"\n        },\n        {\n          \"path\": \"tests/callback-subtype-perl-installed.test.mjs\",\n          \"sha256\": \"df14a06ecab5f0064b11b1e67055edf03e27668fe544a76954f15e17ebdbc10e\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-native-ci.mjs\",\n          \"sha256\": \"65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256\"\n        },\n        {\n          \"path\": \".github/workflows/callback-subtype-perl.yml\",\n          \"sha256\": \"8c763eb0e42ae5d6644ba18af296d3bd9a93ab06e14888a408f12c09d7cabc82\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"callback-subtype-perl-local/perl.json\",\n          \"sha256\": \"8c41f0f48e36f0293e1e85e40b98d246879c7e02214f1449471d49bb5bd0ed4a\"\n        },\n        {\n          \"path\": \"callback-subtype-perl-local/ordinary/LeanBridge-CallbackSubtypes-1.000.tar.gz\",\n          \"sha256\": \"58cd40016c5314e4bd891bcf8253b97875572e918965c0f55a924136a79feeb0\"\n        },\n        {\n          \"path\": \"callback-subtype-perl-local/reviewed/LeanBridge-CallbackSubtypes-1.000.tar.gz\",\n          \"sha256\": \"83ed034d59cfc0259d5c87051ef17b394f2edc643c277cd1de59dc1333f6b576\"\n        },\n        {\n          \"path\": \"callback-subtype-perl-local/LeanBridge-Runtime.tar.gz\",\n          \"sha256\": \"3bb112e3e6904d1ad757f78b5aa3957f1c8068db472dc508c418663ec1439e76\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 53277465
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-native-ordinary\",\n      \"profiles\": [\n        \"c\",\n        \"cpp\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by host callbacks. Host-only callbacks do not acquire a public closure API. C descriptors and C++ wrappers carry an exact typed recovery for host-produced checked results.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Host callback results require the generated typed recovery descriptor in C or with_recovery in C++; the recovery is checked before invocation and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected ordinary-source constructors for both callback directions in C/C++.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Generated C/C++ callback descriptors expose exact checked inputs, results and typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Compiled Lean constructs each present callback Subtype value before source execution and projects proof-backed values.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"The ordinary-source package installs after author-source removal and executes through its installed consumer API.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Installed C/C++ callers check acceptance, exact rejection, caller-value preservation and recovery on the ordinary-source route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's Nat Subtypes in synchronous host callbacks and returned Lean closures on Linux x64/glibc 2.36. Asynchronous or retained host callbacks, arbitrary predicates, recursive or generic refined callback payloads, other native systems, dispatch cost and memory bounds remain separate work.\",\n        \"The local reports are retained, but package bytes and local terminal TAP are not. Dedicated workflows retain original TAP and reports for hosted runs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-perl-ordinary\",\n      \"profiles\": [\n        \"perl\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by host callbacks on all four prepared Perl ABIs and both delivery modes. Host-only callbacks do not acquire a public closure type.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit Runtime::Callback recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Use Runtime::Callback->new(code => $callback, recovery => $value) for a host callback with a checked result. Lean checks the recovery before the callback can run and checks every returned value; the recovery is never successful output. Returned Lean closures validate checked inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected ordinary-source constructors for both callback directions in Perl.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Generated Perl callback descriptors expose exact checked inputs, results and typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Compiled Lean constructs each present callback Subtype value before source execution and projects proof-backed values.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"The ordinary-source package installs after author-source removal and executes through its installed consumer API.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Installed Perl callers check acceptance, exact rejection, caller-value preservation and recovery on the ordinary-source route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's Nat Subtypes in synchronous host callbacks and returned Lean closures on Linux x64/glibc 2.36. Asynchronous or retained host callbacks, arbitrary predicates, recursive or generic refined callback payloads, other native systems, dispatch cost and memory bounds remain separate work.\",\n        \"The local reports are retained, but package bytes and local terminal TAP are not. Dedicated workflows retain original TAP and reports for hosted runs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-native-reviewed\",\n      \"profiles\": [\n        \"c\",\n        \"cpp\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by host callbacks. Host-only callbacks do not acquire a public closure API. C descriptors and C++ wrappers carry an exact typed recovery for host-produced checked results.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Host callback results require the generated typed recovery descriptor in C or with_recovery in C++; the recovery is checked before invocation and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected reviewed-ir constructors for both callback directions in C/C++.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Generated C/C++ callback descriptors expose exact checked inputs, results and typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Compiled Lean constructs each present callback Subtype value before source execution and projects proof-backed values.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"The reviewed-ir package installs after author-source removal and executes through its installed consumer API.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-native-local-installed\"\n          ],\n          \"note\": \"Installed C/C++ callers check acceptance, exact rejection, caller-value preservation and recovery on the reviewed-ir route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's Nat Subtypes in synchronous host callbacks and returned Lean closures on Linux x64/glibc 2.36. Asynchronous or retained host callbacks, arbitrary predicates, recursive or generic refined callback payloads, other native systems, dispatch cost and memory bounds remain separate work.\",\n        \"The local reports are retained, but package bytes and local terminal TAP are not. Dedicated workflows retain original TAP and reports for hosted runs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-perl-reviewed\",\n      \"profiles\": [\n        \"perl\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by host callbacks on all four prepared Perl ABIs and both delivery modes. Host-only callbacks do not acquire a public closure type.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit Runtime::Callback recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Use Runtime::Callback->new(code => $callback, recovery => $value) for a host callback with a checked result. Lean checks the recovery before the callback can run and checks every returned value; the recovery is never successful output. Returned Lean closures validate checked inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected reviewed-ir constructors for both callback directions in Perl.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Generated Perl callback descriptors expose exact checked inputs, results and typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Compiled Lean constructs each present callback Subtype value before source execution and projects proof-backed values.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"The reviewed-ir package installs after author-source removal and executes through its installed consumer API.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-perl-local-installed\"\n          ],\n          \"note\": \"Installed Perl callers check acceptance, exact rejection, caller-value preservation and recovery on the reviewed-ir route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's Nat Subtypes in synchronous host callbacks and returned Lean closures on Linux x64/glibc 2.36. Asynchronous or retained host callbacks, arbitrary predicates, recursive or generic refined callback payloads, other native systems, dispatch cost and memory bounds remain separate work.\",\n        \"The local reports are retained, but package bytes and local terminal TAP are not. Dedicated workflows retain original TAP and reports for hosted runs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n",
+          "previous": "",
+          "start": 63691916
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e427264c104784006231b196586082c186becac222bac6ff125dbe104767ab61"
+    },
+    {
+      "currentSha256": "9c658e0d2ec13ac02843d2e06af4fa13734eeba9e3d5007c9b82ce80ff0a3375",
+      "edits": [
+        {
+          "current": "A value at or above the bound, or a negative value, returns `INVALID_ARGUMENT` with an error message naming the bound. No argument is converted and Lean is not called, so outputs and caller-owned values stay unchanged and the next call works normally. `Fin 0` parameters reject every value. Bounds wider than 64 bits are compared exactly. Results are always below their bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies and reply shapes whose selected failure constructor requires a Fin remain rejected. Callback `Subtype` uses the explicit typed-recovery API below. Checked records in callback positions, generic or recursive refined replies and other native hosts remain separate work.\n",
+          "previous": "A value at or above the bound, or a negative value, returns `INVALID_ARGUMENT` with an error message naming the bound. No argument is converted and Lean is not called, so outputs and caller-owned values stay unchanged and the next call works normally. `Fin 0` parameters reject every value. Bounds wider than 64 bits are compared exactly. Results are always below their bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. The earlier ordinary-source C closure-argument probes measured source dispatch; C++ and the installed host-reply run did not.\n",
+          "start": 28927
+        },
+        {
+          "current": "When a host callback returns a checked `Subtype`, the generated C descriptor has\na typed `recovery` pointer and a signature-specific\n`PREFIX_CALLBACK_REQUIRES_RECOVERY` macro. Initialize the recovery value before\ncalling Lean and keep it alive for the whole call. The wrapper validates and\ncopies it before Lean or the callback runs. An invalid recovery returns\n`INVALID_ARGUMENT` without invoking the callback. Lean independently applies\nthe selected constructor to the callback's actual result. Rejection preserves\nthe existing output, suppresses later callbacks in that call and leaves the\nruntime usable. Recovery is an internal failure-path value, never successful\noutput. In C++, pass the callback through `with_recovery(callback, value)`.\n\nThe opposite direction needs no recovery: a returned Lean closure whose input\ncontains a selected `Subtype` checks that input before its closure body runs.\nRejected scalar, mixed or supported nested-container inputs preserve the output\nand the same closure remains callable. Ordinary and independently reviewed\npackages use the same exact constructor selections.\n\n",
+          "previous": "",
+          "start": 36589
+        },
+        {
+          "current": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated C structs or C++ records and variants across nineteen tested bases; no proof field` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit typed recovery` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In C/C++, checked fields retain the declared primitive's public host type across all nineteen tested bases. C structs use fixed-width scalars, GMP integers and length-aware string/byte spans with explicit ownership; C++ values use fixed-width scalars, boost::multiprecision::cpp_int, std::string and std::vector<uint8_t>. Unit, Bool, Char, floats and native words keep their ordinary generated representations. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. C also preserves existing output payloads, tags and ownership on rejection. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Host callback results require the generated typed recovery descriptor in C or with_recovery in C++; the recovery is checked before invocation and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "previous": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated C structs or C++ records and variants across nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In C/C++, checked fields retain the declared primitive's public host type across all nineteen tested bases. C structs use fixed-width scalars, GMP integers and length-aware string/byte spans with explicit ownership; C++ values use fixed-width scalars, boost::multiprecision::cpp_int, std::string and std::vector<uint8_t>. Unit, Bool, Char, floats and native words keep their ordinary generated representations. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. C also preserves existing output payloads, tags and ownership on rejection. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "start": 65382
+        }
+      ],
+      "path": "docs/consume/c.md",
+      "previousSha256": "8f0197f01c654f7a199aa02c77477911a30030889d67c97a81038c96d6af6005"
+    },
+    {
+      "currentSha256": "1cc3c1ac6e313c35f9641fc7a1e77d5cd143e1d6668f3fe2267f5c73b2eb0975",
+      "edits": [
+        {
+          "current": "A Lean `Fin n` parameter or result uses the same `cpp_int` as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(3)` returns `6`. `mirror(10)` and `mirror(-1)` throw `Error` with `status == LIBRARY_STATUS_INVALID_ARGUMENT`. The check runs before Lean is called, so a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The header does not repeat the bound; read it from the Lean signature or the packaged `binding-ir.json`. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies and reply shapes whose selected failure constructor requires a Fin remain rejected. Callback `Subtype` uses the explicit `with_recovery` API below. Checked records in callback positions, generic or recursive refined replies and other native hosts remain separate work.\n",
+          "previous": "A Lean `Fin n` parameter or result uses the same `cpp_int` as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(3)` returns `6`. `mirror(10)` and `mirror(-1)` throw `Error` with `status == LIBRARY_STATUS_INVALID_ARGUMENT`. The check runs before Lean is called, so a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The header does not repeat the bound; read it from the Lean signature or the packaged `binding-ir.json`. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. Both ordinary-source and reviewed packages also check `Prod` and active `Except` branches, including arrays of products. Closed nonrecursive record and active variant fields retain their bounds through these containers. The [product reports](../evidence/native-fin-products-20261007/receipt.json), [Array reports](../evidence/native-fin-product-array-dispatch-20261007/receipt.json) and [field reports](../evidence/native-fin-records-20261007/receipt.json) record the installed C/C++ checks. Fin arguments to returned Lean closures, Lean-produced closure results and Lean-produced arguments to host callbacks also retain their bounds. The [ordinary callback report](../evidence/native-fin-callbacks-20261008/receipt.json) and [reviewed callback reports](../evidence/reviewed-callback-fin-20261008/receipt.json) cover these directions. Ordinary C/C++ host callbacks also accept Fin replies when the reply type has a Fin-free failure value, for example `Option (Fin 5)` or `Array (Fin 5)`. The [host-reply report](../evidence/native-fin-replies-20261008/receipt.json) records 81 C and 74 C++ installed checks, with the separate wrapper-only sanitizer results identified in the same receipt. The C wrapper checks every active bounded leaf, and Lean independently reconstructs each Fin from a decidable proof. On rejection, the call preserves its first error, suppresses later host callbacks and leaves your output unchanged. Lean can continue internally with a typed Fin-free placeholder; previous effects are not rolled back. Bare Fin replies, reply shapes whose selected failure constructor requires a Fin, callback Subtype and checked records remain rejected. Reviewed host replies require separate installed acceptance. Generic and recursive native fields remain separate work. The earlier ordinary-source C closure-argument probes measured source dispatch; C++ and the installed host-reply run did not.\n",
+          "start": 8494
+        },
+        {
+          "current": "For a host callback whose result contains a selected `Subtype`, use\n`with_recovery(callback, value)`. The value has the callback's exact erased\nresult type. It is validated before Lean or the callback runs; an invalid\nrecovery throws `Error` without invoking the callback. Lean independently runs\nthe selected constructor on the actual result. Rejection preserves the first\nerror, suppresses later callbacks in that call and leaves the caller's output\nunchanged. The recovery completes Lean's failure path and is never returned as\nsuccess. A returned Lean closure validates selected `Subtype` arguments before\nits body runs and remains usable after a rejected call.\n\n",
+          "previous": "",
+          "start": 12221
+        },
+        {
+          "current": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated C structs or C++ records and variants across nineteen tested bases; no proof field` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit typed recovery` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In C/C++, checked fields retain the declared primitive's public host type across all nineteen tested bases. C structs use fixed-width scalars, GMP integers and length-aware string/byte spans with explicit ownership; C++ values use fixed-width scalars, boost::multiprecision::cpp_int, std::string and std::vector<uint8_t>. Unit, Bool, Char, floats and native words keep their ordinary generated representations. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. C also preserves existing output payloads, tags and ownership on rejection. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Host callback results require the generated typed recovery descriptor in C or with_recovery in C++; the recovery is checked before invocation and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "previous": "| `Subtype / {x // p x}` | `GMP mpz_t, const char and uint8_t spans or cpp_int, std::string and std::vector<uint8_t>, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated C structs or C++ records and variants across nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In C/C++, checked fields retain the declared primitive's public host type across all nineteen tested bases. C structs use fixed-width scalars, GMP integers and length-aware string/byte spans with explicit ownership; C++ values use fixed-width scalars, boost::multiprecision::cpp_int, std::string and std::vector<uint8_t>. Unit, Bool, Char, floats and native words keep their ordinary generated representations. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. C also preserves existing output payloads, tags and ownership on rejection. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "start": 56106
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "a44d6fe9629cd546921ccc55d08f074bbb04db6a6d9380bd282eb79b82269ee7"
+    },
+    {
+      "currentSha256": "7ea1937fef4947cd73c2d7d1a729d3ea268b8e2895eccc75e7c7cae90e0446f7",
+      "edits": [
+        {
+          "current": "Directional callback Subtypes use the explicit recovery and returned-closure\nrules below. Owned Subtypes remain unsupported. These local runs do not measure\ndispatch counters or memory, or establish hosted release-floor acceptance.\n",
+          "previous": "Refined callback signatures and owned Subtypes remain unsupported. These local\nruns do not measure dispatch counters or memory, or establish hosted\nrelease-floor acceptance.\n",
+          "start": 38902
+        },
+        {
+          "current": "| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated blessed record and variant wrappers across nineteen tested bases; no proof field` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit Runtime::Callback recovery` (callback result) | Ordinary source: Installed checks passed. Reviewed IR: Installed checks passed | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Perl, checked fields retain the declared primitive's host representation across all nineteen tested bases: undef for Unit, the generated native boolean for Bool, IV or UV scalars for fixed-width integers and native machine words, Math::BigInt for Nat and Int, NV scalars for Float32 and Float, and strings for String, Char and ByteArray. Generated blessed wrappers carry the record and variant fields. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Use Runtime::Callback->new(code => $callback, recovery => $value) for a host callback with a checked result. Lean checks the recovery before the callback can run and checks every returned value; the recovery is never successful output. Returned Lean closures validate checked inputs before invoking their body. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "previous": "| `Subtype / {x // p x}` | `Primitive base value checked by the named Lean constructor; also in generated structural containers; also in tested acyclic records and variants` (input); `Constructed subtype projected to its primitive base value; also in generated structural containers; also in tested acyclic records and variants` (result); `declared primitive's host value in generated blessed record and variant wrappers across nineteen tested bases; no proof field` (field) | Ordinary source: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In Perl, checked fields retain the declared primitive's host representation across all nineteen tested bases: undef for Unit, the generated native boolean for Bool, IV or UV scalars for fixed-width integers and native machine words, Math::BigInt for Nat and Int, NV scalars for Float32 and Float, and strings for String, Char and ByteArray. Generated blessed wrappers carry the record and variant fields. Each input site keeps its selected checked constructor and accepted normalization; only the active variant branch is checked. Rejection preserves caller values and later valid calls succeed. Copied results project existing Lean payloads without proof fields or input constructor selections, including standalone result-only packages. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "start": 59087
+        },
+        {
+          "current": "When a host callback result contains a selected checked `Subtype`, pass a\n`LeanBridge::YourModule::Runtime::Callback` instead of a bare CODE reference:\n\n```perl\nmy $callback = LeanBridge::YourModule::Runtime::Callback->new(\n    code => sub { $_[0]->copy->badd(1) },\n    recovery => Math::BigInt->new(1),\n);\nmy $result = LeanBridge::YourModule::call_host($callback);\n```\n\nThe recovery has the callback's exact erased result shape. The adapter validates\nand copies it before Lean or the callback runs, then Lean applies the selected\nconstructor to the callback's actual result. An invalid recovery prevents the\nCODE reference from running. An invalid result or Perl exception preserves the\nfirst failure, suppresses later callbacks in that call and leaves the runtime\nusable. The recovery only completes Lean's failure path; it is not returned as\nsuccess. A returned Lean closure with checked `Subtype` arguments needs no\nrecovery. Its `call` validates those arguments first, preserves rejected caller\nvalues and remains usable until `close`.\n\n",
+          "previous": "",
+          "start": 75299
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "38bce0026731e6c848337454287c3793856ebd65f7e24c262cdb646b66012f55"
+    },
+    {
+      "currentSha256": "59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a",
+      "edits": [
+        {
+          "current": "\n## Directional callback Subtypes in C, C++ and Perl\n\nRun the installed C-family matrix with the pinned Lean compiler and native build\ndependencies:\n\n```sh\nsource scripts/env.sh\nLEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp \\\n  node --test --test-concurrency=1 tests/callback-subtype-native-installed.test.mjs\n```\n\nThe test builds ordinary-source and independently reviewed packages, verifies\nthe package-set receipt, deletes each author root, installs from the copied\nhandoff and runs independent C11/GMP and C++20 consumers. It checks exact typed\nhost-result recovery, invalid recovery before callback entry, constructor\nrejection after callback entry, mixed arguments, returned-closure input\nrejection, unchanged outputs, disposal and reuse after failure. The default\nrecord is `build/callback-subtypes/native.json`.\n\nRun the complete CPAN matrix only after preparing all four pinned interpreters:\n\n```sh\nsource scripts/env.sh\nLEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_TEST=1 \\\n  node --test --test-concurrency=1 tests/callback-subtype-perl-installed.test.mjs\n```\n\nThis runs ordinary and reviewed packages on threaded and unthreaded Perl 5.36.3\nand 5.38.2, through both prebuilt-only and local XS installation. All sixteen\ncells delete author inputs, install offline, relocate the installed tree, remove\nthe handoff, execute twice and verify every installed-file hash. The consumer\nadds nested `Except (Option Subtype)` host results and `Array (Option Subtype)`\nclosure inputs, exception identity and idempotent close. The default record is\n`build/callback-subtypes/perl.json`.\n\nThe recurring hosted entry points are\n`scripts/run-callback-subtype-native-ci.sh` and\n`scripts/run-callback-subtype-perl-ci.sh`. They refuse environment variables\nthat could narrow the matrix, force one build thread and the glibc 2.38 package\nfloor, retain terminal TAP and the original report, and run an independent\nchecker bound to the exact producer commit. Their workflows upload complete or\npartial output on every exit and then fail the job if acceptance did not pass.\n",
+          "previous": "",
+          "start": 235888
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "8be5041680b802663d110cacfa7d6240d75498f0a1cfb54ce3ce75218428624e"
+    },
+    {
+      "currentSha256": "7d91d6dc9962c756e65fe262762335a3e6fe94b606c8d4e2d70edcec0970ab69",
+      "edits": [
+        {
+          "current": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers, plain fields, finite recursive PHP-Wasm copied graphs and directional callbacks on supported targets have installed acceptance. Other callback targets, owned values and generic-record Subtype fields require further support. |\n",
+          "previous": "| `unsupported-subtype-refinement` | A checked `Subtype` constructor reached a component ABI that cannot validate it before dispatch. | Check the [refinement support table](existing-package.md#refinement-support-by-target). Structural containers, plain fields and finite recursive PHP-Wasm copied graphs have installed acceptance. Refined callbacks, owned values and generic-record Subtype fields require further support. |\n",
+          "start": 4365
+        }
+      ],
+      "path": "docs/lean/diagnostics.md",
+      "previousSha256": "67826bf38cbdde5fe097820ca578b0b234226e11d42c983d412b320d7289a368"
+    },
+    {
+      "currentSha256": "5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859",
+      "edits": [
+        {
+          "current": "Ordinary-source npm callback packages have installed checks in Node and in Chromium, Firefox and WebKit pages, React effects and dedicated workers. Directional `Subtype` constraints inside callback signatures require the target-specific recovery and constructor support described [below](#refinement-support-by-target). C, C++ and CPAN packages support the checked host-reply and returned-closure directions; other native hosts need their own adapters.\n",
+          "previous": "Ordinary-source npm callback packages have installed checks in Node and in Chromium, Firefox and WebKit pages, React effects and dedicated workers. `Subtype` constraints inside callback signatures remain unsupported. C/C++ packages support the checked `Fin` callback directions described [below](#refinement-support-by-target); other native hosts need their own adapters.\n",
+          "start": 35758
+        },
+        {
+          "current": "Ordinary-source npm packages accept top-level parameters and results over primitive bases, including heap-backed `Nat`, `Int`, `String`, and `ByteArray`. These exports can share a package with arrays, records, recursive values, callbacks, and returned closures. For example, an export may take a checked nonempty string alongside a callback; an empty string rejects before that callback runs. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Rejected inputs release decoded arguments and leave the runtime available for subsequent calls. Nominal-field Subtypes have the Node and browser installed checks below; directional callback Subtypes have separate target support and recovery rules in the table below. [Installed structural checks](../evidence/structural-subtype-promotion-20261011.md) cover both source routes across all seventeen profiles: `Array`, `List`, `Option`, products, `Except`, transparent aliases, mixed `Fin` and one closed `List` specialization. See the [nested constructor-selection syntax](export-decisions.md#select-constructors-inside-containers).\n",
+          "previous": "Ordinary-source npm packages accept top-level parameters and results over primitive bases, including heap-backed `Nat`, `Int`, `String`, and `ByteArray`. These exports can share a package with arrays, records, recursive values, callbacks, and returned closures. For example, an export may take a checked nonempty string alongside a callback; an empty string rejects before that callback runs. JavaScript and TypeScript use the base type's normal representation. Compiled Lean calls the constructor before the exported function; `none` rejects the host call, while `some` supplies the proof-carrying value. A result is already a Lean subtype and is projected through `.val` at the generated boundary. Rejected inputs release decoded arguments and leave the runtime available for subsequent calls. Nominal-field Subtypes have the Node and browser installed checks below; Subtype refinements inside callback signatures remain unsupported. [Installed structural checks](../evidence/structural-subtype-promotion-20261011.md) cover both source routes across all seventeen profiles: `Array`, `List`, `Option`, products, `Except`, transparent aliases, mixed `Fin` and one closed `List` specialization. See the [nested constructor-selection syntax](export-decisions.md#select-constructors-inside-containers).\n",
+          "start": 64634
+        },
+        {
+          "current": "| Directional `Subtype` inside callback signatures | npm implementation; hosted acceptance tracked separately | C/C++ installed locally; other native hosts pending | Installed locally on both source routes, four ABIs and both install modes | Rejected | Ordinary/reviewed C, C++ and CPAN installed locally; other native hosts pending |\n| `Subtype` inside owned values, recursive graphs or generic record fields | Rejected | Rejected | Rejected | Rejected | Pending implementation and acceptance |\n",
+          "previous": "| `Subtype` inside callback signatures, owned values, recursive graphs or generic record fields | Rejected | Rejected | Rejected | Rejected | Pending implementation and acceptance |\n",
+          "start": 85296
+        },
+        {
+          "current": "A reviewed callback puts its parameter/result refinements on the callback definition's `lean-lang.org/refinements` extension. Those refinements participate in its `Callback...` identity, just as they do in compiler output. Record and variant payloads retain their nominal field bounds. The review checks tree shape, direction and exact constructor or bound without adding them to the compiler's export selection; reconciliation compares the fresh compiler contract. Empty decisions and unknown keys are rejected. A `Subtype` result from a host callback is a host-direction refinement; a `Subtype` argument to a returned Lean closure is a closure-direction refinement. Moving either selection to the opposite side fails reconciliation. Unrefined callback identities remain unchanged. [Fresh-Lean and installed reviewed Fin checks](../evidence/reviewed-callback-fin-20261008/receipt.json) cover C/C++ and Node JavaScript with strict TypeScript declarations. The directional Subtype acceptance adds ordinary and independently reviewed C, C++ and CPAN packages with exact selected constructors.\n",
+          "previous": "A reviewed callback puts its parameter/result bounds on the callback definition's `lean-lang.org/refinements` extension. Those bounds participate in its `Callback...` identity, just as they do in compiler output. Record and variant payloads retain their nominal field bounds. The review checks tree shape and exact bounds without adding them to the compiler's export selection; reconciliation compares the fresh compiler contract. Empty decisions, unknown keys and callback `Subtype` decisions are rejected. Unrefined callback identities remain unchanged. [Fresh-Lean and installed reviewed checks](../evidence/reviewed-callback-fin-20261008/receipt.json) cover C/C++ and Node JavaScript with strict TypeScript declarations. C/C++ execute closure inputs, Lean-produced results and arguments sent to host callbacks. The Node R2 fixture additionally checks a host-produced `Fin 3` reply. Reviewed browser execution, native host-produced replies, `Fin 0` and wider bounds need separate reviewed acceptance.\n",
+          "start": 87400
+        },
+        {
+          "current": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. The [reviewed browser archive](../evidence/reviewed-subtype-browser-promotion-20261010.md) adds twelve engine/build configurations and 51 lifecycle observations, including React remounts, pending unmounts, worker restart and missing-asset recovery. These earlier reports cover top-level primitive-base parameters and results. The [structural Subtype archive](../evidence/structural-subtype-promotion-20261011.md) adds the container combinations listed above. [Nominal npm acceptance](../evidence/nominal-subtype-npm-acceptance-20261011.md) adds the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-20261011.md) adds the same Nat forms and result-only packages on Linux x64/glibc 2.36. [Nominal Perl acceptance](../evidence/nominal-subtype-perl-acceptance-20261012.md) adds the tested Nat fields, aliases and constructor-free results on all four pinned Perl ABIs, via prebuilt-only and build-xs installations on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers. They retain both reproduced npm archives and check asset recovery, remounts, pending unmounts, worker restart and disposal. [Nominal PHP-Wasm acceptance](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. All twelve contexts per selection pass after offline installation and relocation; the archive retains all three reproduced packages. Native and shared component source checks also pass. Directional callback Subtypes have separate acceptance and do not follow from scalar or container checks.\n",
+          "previous": "Installed reviewed scalar and container reports cover [C/C++](../evidence/reviewed-fin-20261007/receipt.json), [Python and Rust scalar](../evidence/reviewed-scalar-hosts-20261007/receipt.json), [managed/PHP/Ruby/WIT scalar](../evidence/reviewed-scalar-rollout-20261007/receipt.json), [the other native container hosts](../evidence/reviewed-fin-hosts-20261007/receipt.json), and CPAN [scalar](../evidence/reviewed-perl-scalar-20261007/receipt.json) and [containers](../evidence/reviewed-perl-containers-20261007/receipt.json). They record two-root reproduction, source-free consumers and each local runtime floor. The structural and nominal-field receipts above add Python, Ruby, Rust, .NET and WIT/WASI coverage at their named sites. [Reviewed Subtype acceptance](../evidence/reviewed-subtype-20261008/receipt.json) covers C/C++ and Node. The [PHP-Wasm Subtype archive](../evidence/php-wasm-subtype-installed-20261010/index.json) adds both source routes in Node and Chromium. The [reviewed native Subtype checks](../evidence/reviewed-subtype-native-promotion-20261010.md) add Python, Rust, .NET, Java, Kotlin, Ruby, native PHP, WIT/WASI and Perl. They retain both Python runtime floors and all four Perl ABIs, with two-root reproduction, author removal, offline installation and installed-tree relocation. The [reviewed browser archive](../evidence/reviewed-subtype-browser-promotion-20261010.md) adds twelve engine/build configurations and 51 lifecycle observations, including React remounts, pending unmounts, worker restart and missing-asset recovery. These earlier reports cover top-level primitive-base parameters and results. The [structural Subtype archive](../evidence/structural-subtype-promotion-20261011.md) adds the container combinations listed above. [Nominal npm acceptance](../evidence/nominal-subtype-npm-acceptance-20261011.md) adds the tested Nat record/variant fields, aliases and constructor-free results on Node 22.23.2 with strict TypeScript. [Nominal C/C++ acceptance](../evidence/nominal-subtype-native-acceptance-20261011.md) adds the same Nat forms and result-only packages on Linux x64/glibc 2.36. [Nominal Perl acceptance](../evidence/nominal-subtype-perl-acceptance-20261012.md) adds the tested Nat fields, aliases and constructor-free results on all four pinned Perl ABIs, via prebuilt-only and build-xs installations on Linux x64/glibc 2.36. [Nominal Python checks](../evidence/nominal-subtype-python-acceptance-20261012.md) add those Nat forms on CPython 3.11 and 3.12 using the same reproduced wheel, offline installation and relocated replay. [Nominal Ruby checks](../evidence/nominal-subtype-ruby-acceptance-20261012.md) add those Nat forms on MRI Ruby 3.3.12 through reproduced gems, offline installation and relocated replay on Linux x64/glibc 2.36. [Nominal Rust checks](../evidence/nominal-subtype-rust-acceptance-20261012.md) add those Nat forms with Rust and Cargo 1.90.0, offline crate installation, relocated replay and execution after deleting all consumer sources on Linux x64/glibc 2.36. [Nominal C# checks](../evidence/nominal-subtype-dotnet-20261012.md) add those Nat forms with .NET SDK 8.0.424 and shared framework 8.0.30, offline NuGet installation, relocated replay and source-free deployment on Linux x64/glibc 2.36. [Nominal Java/Kotlin checks](../evidence/nominal-subtype-jvm-20261013.md) add those Nat forms with JDK 22.0.2 and Kotlin 2.2.0, offline installation, relocated replay and source-free deployment of both consumers on Linux x64/glibc 2.36. [Nominal native PHP checks](../evidence/nominal-subtype-php-20261013.md) add those Nat forms with PHP 8.2.33 and Composer 2.5.5, offline installation and weak/strict replay before and after relocation on Linux x64/glibc 2.36. Author/build roots are removed before installation; consumer PHP source remains required at runtime. [Nominal WIT/WASI checks](../evidence/nominal-subtype-wit-promotion-20261013.md) add the tested Nat records, variants, aliases and constructor-free results through the actual Component Model adapter and its required packaged native Lean host. Both source routes reproduce packages from two roots, install offline and replay after relocation on Linux x64/glibc 2.36 with Wasmtime 42.0.1. [Nominal browser checks](../evidence/nominal-subtype-browser-promotion-20261014.md) add the tested Nat fields and constructor-free outputs on both source routes in Chromium 151.0.7922.34, Firefox 153.0 and WebKit 26.5 pages, React and workers. They retain both reproduced npm archives and check asset recovery, remounts, pending unmounts, worker restart and disposal. [Nominal PHP-Wasm acceptance](../evidence/nominal-subtype-php-wasm-promotion-20261014.md) adds both source routes and API modes on wasm32 PHP 8.4.1 in Node 22.23.2 and Chromium 151.0.7922.34. All twelve contexts per selection pass after offline installation and relocation; the archive retains all three reproduced packages. Native and shared component source checks also pass. Refined callback Subtypes remain unsupported. Callback checks have their own receipts and do not follow from scalar or container checks.\n",
+          "start": 88492
+        },
+        {
+          "current": "C and C++ packages check `Fin` and selected `Subtype` arguments of a returned Lean closure before invoking it, including supported copied containers and mixed refined/unrefined arguments. They also preserve refined values that Lean produces as closure results or host-callback arguments. A returned closure rejects an invalid argument with `INVALID_ARGUMENT`; C++ throws `Error`. For a host callback result containing a selected `Subtype`, the host supplies one typed recovery value before the call: the C callback descriptor's `recovery` pointer or C++ `with_recovery(callback, value)`. The public wrapper validates and copies that value before Lean or the callback runs. Lean independently runs the selected checked constructor on every host-produced refined leaf. A rejected recovery prevents the callback from running; a rejected callback result records the first error, suppresses later callbacks and leaves the caller's output unchanged. The recovery exists only so Lean can finish its failure path and is never returned as success. Ordinary and independently reviewed packages exercise the same direction and exact constructor choices. Nested callbacks, retained or asynchronous callbacks, checked-record callback positions, owned callback Subtypes and other native targets remain separate work.\n",
+          "previous": "C and C++ packages check `Fin` arguments of a returned Lean closure before invoking it, including bounds inside structural containers, plain records and variants. They also preserve bounded values that Lean produces as closure results or host-callback arguments. A returned closure rejects an argument at or above its bound with `INVALID_ARGUMENT`; C++ throws `Error`. The Lean adapter independently constructs each `Fin` from a decidable proof and returns `none` on rejection. It never substitutes a default Fin. `Fin 0` rejects every value. Ordinary C/C++ host callbacks can return Fin inside a shape with a Fin-free failure value, such as `Option (Fin 5)` or `Array (Fin 5)`. The C wrapper checks bounds before conversion; Lean independently reconstructs bounded values from decidable proofs. A rejected reply preserves the first error, suppresses later host callbacks and leaves the caller's output unchanged. Lean may continue internally with a typed Fin-free placeholder, so this is not a rollback guarantee. Bare Fin replies, replies whose selected failure constructor requires a Fin, callback Subtype, checked records, nested callbacks and refined ordinary arguments beside callbacks remain rejected. Reviewed host replies need separate installed acceptance. Other native targets require their own adapters.\n",
+          "start": 94117
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "169df8caadb92fb79a9cf832587a375f749edd37befcfbe2e3d35989ab9ac505"
+    },
+    {
+      "currentSha256": "510ac5839ba9e73fd595f39f8933fd20b4ca9e17dae2c41ece15b52d9656ad32",
+      "edits": [
+        {
+          "current": "The contract requires a copied argument and a returned closure lease. An export taking a resource or callback instead uses `\"ownership\": \"borrow\"` with `\"lifetime\": { \"scope\": \"call\", \"anchor\": null }`. Callback arguments also require `[\"host-call\", \"fails\"]` when `effects` is declared; returning a Lean closure alone does not. Lean and package staging check these requirements against the implemented adapter. A checked `Subtype` in a host callback result uses the selected constructor and generates a typed `Runtime::Callback` recovery wrapper; a checked `Subtype` in a returned closure argument is validated before the closure body runs. Retained host callbacks remain unsupported. [Input transfers](#transfer-input-ownership) and [borrowed results](#borrow-a-result-from-an-input) use the contracts below. Ordinary-source packages also accept [checked top-level Subtype constructors](../lean/existing-package.md#export-a-checked-subtype), with [installed acceptance on all four pinned Perl ABIs](../evidence/perl-refinements-20261009.md). See the [complete contract rules](../lean/existing-package.md#declare-export-contracts).\n",
+          "previous": "The contract requires a copied argument and a returned closure lease. An export taking a resource or callback instead uses `\"ownership\": \"borrow\"` with `\"lifetime\": { \"scope\": \"call\", \"anchor\": null }`. Callback arguments also require `[\"host-call\", \"fails\"]` when `effects` is declared; returning a Lean closure alone does not. Lean and package staging check these requirements against the implemented adapter. Retained host callbacks remain unsupported. [Input transfers](#transfer-input-ownership) and [borrowed results](#borrow-a-result-from-an-input) use the contracts below. Ordinary-source packages also accept [checked top-level Subtype constructors](../lean/existing-package.md#export-a-checked-subtype), with [installed acceptance on all four pinned Perl ABIs](../evidence/perl-refinements-20261009.md). See the [complete contract rules](../lean/existing-package.md#declare-export-contracts).\n",
+          "start": 4980
+        }
+      ],
+      "path": "docs/publish/cpan.md",
+      "previousSha256": "07285ebbce98cabf66d80f36f92f2d7c24ef7b33394944d051708084f580c38d"
+    },
+    {
+      "currentSha256": "be7d4820cc751b85a3365d54225aef92a285d47be3e7f8df2ebf7d497d81f259",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 232
+        },
+        {
+          "current": "\t\tconst recovery = descriptor.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, descriptor.types) === \"host\");\n\t\tfor(const name of [\"Box\", \"Ok\", \"Err\", \"Result\", \"Nat\", \"Int\", \"detail\", \"std\", \"boost\", \"LeanClosure\", \"Error\", ...recovery ? [\"with_recovery\"] : []]) occupied.add(name);\n",
+          "previous": "\t\tfor(const name of [\"Box\", \"Ok\", \"Err\", \"Result\", \"Nat\", \"Int\", \"detail\", \"std\", \"boost\", \"LeanClosure\", \"Error\"]) occupied.add(name);\n",
+          "start": 1776
+        },
+        {
+          "current": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "previous": "",
+          "start": 2740
+        }
+      ],
+      "path": "src/backends/c/callable-graph-model.mjs",
+      "previousSha256": "98ed5eadddfa6cc2cf336928110b8da069531a8918ca9eb14f0341d5819900a8"
+    },
+    {
+      "currentSha256": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "edits": [
+        {
+          "current": "\t\tdeclarations.push(`#define ${callback.publicName.toUpperCase()}_REQUIRES_RECOVERY ${callback.direction === \"host\" ? 1 : 0}`\n\t\t\t, `typedef ${p}_status (*${n}_fn)(${[\"void *context\", ...params.map((node, index) => input(node, `a${index}`)), ...unit(result) ? [] : [output(result, \"out\")], `${p}_error *error`].join(\", \")});`\n\t\t\t, `typedef struct ${n} { ${n}_fn call; void *context;${callback.direction === \"host\" ? ` ${result.host.integer ? \"mpz_srcptr\" : `${result.host.name} const *`} recovery;` : \"\"} } ${n};`\n\t\t\t, ...callback.direction === \"host\" ? [] : [`typedef struct ${owned} ${owned};`]);\n",
+          "previous": "\t\tdeclarations.push(`typedef ${p}_status (*${n}_fn)(${[\"void *context\", ...params.map((node, index) => input(node, `a${index}`)), ...unit(result) ? [] : [output(result, \"out\")], `${p}_error *error`].join(\", \")});`\n\t\t\t, `typedef struct ${n} { ${n}_fn call; void *context; } ${n};`\n\t\t\t, `typedef struct ${owned} ${owned};`);\n",
+          "start": 6235
+        },
+        {
+          "current": "\t\t\t, ...callback.direction === \"host\" ? [] : [`typedef ${owned} ${owned.replace(`${p}_gmp_`, `${p}_`)};`]);\n\t\thelpers.push(...callback.direction === \"host\" ? [] : [`struct ${owned} { uint64_t token; pid_t process; };`]\n",
+          "previous": "\t\t\t, `typedef ${owned} ${owned.replace(`${p}_gmp_`, `${p}_`)};`);\n\t\thelpers.push(`struct ${owned} { uint64_t token; pid_t process; };`\n",
+          "start": 6961
+        },
+        {
+          "current": "\t\t\tif(node.kind === \"callback\")\n\t\t\t{\n\t\t\t\tconst recovery = copy(node.result);\n\t\t\t\tlines.push(`  lb_gc_callback${node.index} callback${index} = {a${index}, &state};`\n\t\t\t\t\t, ...node.direction === \"host\" ? [`  ${recovery.name} recovery${index} = {0};`\n\t\t\t\t\t\t, `  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}, &recovery${index}};`] : [`  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}};`]);\n\t\t\t}\n",
+          "previous": "\t\t\tif(node.kind === \"callback\") lines.push(`  lb_gc_callback${node.index} callback${index} = {a${index}, &state};`\n\t\t\t\t, `  ${node.name} view${index} = {lb_gc_invoke${node.index}, &callback${index}};`);\n",
+          "start": 12041
+        },
+        {
+          "current": "\t\t\tif(node.kind === \"callback\") lines.push(`  if (!lb_gg_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(node)})) || !a${index}->call${node.direction === \"host\" ? ` || !a${index}->recovery` : \"\"}) { lb_gc_fail(&state, 1); goto done; }`\n\t\t\t\t, ...node.direction === \"host\" ? (() => {\n\t\t\t\t\tconst recovery = copy(node.result);\n\t\t\t\t\treturn [`  if (lb_gc_fail(&state, ${walker(recovery)}_check(a${index}->recovery, 0, 1, &state.budget))) goto done;`];\n\t\t\t\t})() : []);\n",
+          "previous": "\t\t\tif(node.kind === \"callback\") lines.push(`  if (!lb_gg_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(node)})) || !a${index}->call) { lb_gc_fail(&state, 1); goto done; }`);\n",
+          "start": 12588
+        },
+        {
+          "current": "\t\t\telse if(node.direction === \"host\")\n\t\t\t{\n\t\t\t\tconst recovery = copy(node.result);\n\t\t\t\tlines.push(`  if (lb_gc_fail(&state, ${walker(recovery)}_to(a${index}->recovery, &recovery${index}, &views))) goto done;`);\n\t\t\t}\n",
+          "previous": "",
+          "start": 13416
+        },
+        {
+          "current": "\tfor(const callback of [...model.callbacks.values()].filter(item => item.direction !== \"host\"))\n",
+          "previous": "\tfor(const callback of model.callbacks.values())\n",
+          "start": 15428
+        }
+      ],
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previousSha256": "df2974caff9612d7a9c8e0b4b10f0a4ddc6deff1c0a2e6f0e14bc44f105e419f"
+    },
+    {
+      "currentSha256": "c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 287
+        },
+        {
+          "current": "\tconst controls = `${descriptor.exports[0].symbol}_structured_callback_controls`;\n",
+          "previous": "",
+          "start": 1438
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n",
+          "previous": "",
+          "start": 2137
+        },
+        {
+          "current": "\t\t\t, \"  void *context;\"\n\t\t\t, ...direction === \"host\" ? [`  const ${result.name} *recovery;`] : []\n\t\t\t, `} ${name};`);\n\t\tlines.push(`typedef struct { ${direction === \"host\" ? `${controls} controls; ` : \"\"}${name} callback; ng_borrow_frame *frame; } ng_borrow_${key};`\n",
+          "previous": "\t\t\t, \"  void *context;\", `} ${name};`);\n\t\tlines.push(`typedef struct { ${name} callback; ng_borrow_frame *frame; } ng_borrow_${key};`\n",
+          "start": 2611
+        },
+        {
+          "current": "\t\tif(direction === \"host\") lines.push(`static inline lean_object *ng_recovery_${key}(void *context) {`\n\t\t\t, `  ng_borrow_${key} *host = context; ng_borrow_frame *frame = host->frame;`\n\t\t\t, \"  ng_borrow_observe(frame);\"\n\t\t\t, \"  if (!frame->status && !host->callback.recovery) ng_borrow_fail(frame, NG_INVALID);\"\n\t\t\t, `  if (!frame->status) ng_borrow_fail(frame, ${walker(result)}_check(host->callback.recovery, 0, 1, &frame->budget));`\n\t\t\t, `  return frame->status ? lean_alloc_array(0, 0) : ${walker(result)}_in(host->callback.recovery);`\n\t\t\t, \"}\"\n\t\t\t, `static inline lean_object *ng_reject_${key}(void *context, lean_object *recovery) {`\n\t\t\t, `  ng_borrow_${key} *host = context;`\n\t\t\t, \"  ng_borrow_fail(host->frame, NG_INVALID);\"\n\t\t\t, \"  return recovery;\"\n\t\t\t, \"}\");\n",
+          "previous": "",
+          "start": 4623
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-borrows.mjs",
+      "previousSha256": "f391330bf46a4ef89cde083249159e80e6f93ae9524757ac1a89662cda02b5b7"
+    },
+    {
+      "currentSha256": "b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 298
+        },
+        {
+          "current": "\tconst direction = signature => callbackSubtypeDirection(signature, signature.refinements, abi.types);\n",
+          "previous": "",
+          "start": 1894
+        },
+        {
+          "current": "\t\tconst rejectsInput = lease && direction(lease) === \"closure\"\n\t\t\t|| parameters.some(ref => callback(ref) && direction(callback(ref)) === \"host\");\n",
+          "previous": "",
+          "start": 6287
+        },
+        {
+          "current": "\t\t\tif(callback(ref)) lines.push(`  if (!ng_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(callback(ref))})) || !a${index}->call${direction(callback(ref)) === \"host\" ? ` || !a${index}->recovery` : \"\"}) { ng_borrow_fail(frame, NG_INVALID); goto cleanup; }`);\n",
+          "previous": "\t\t\tif(callback(ref)) lines.push(`  if (!ng_pointer(a${index}, sizeof(*a${index}), _Alignof(${callbackName(callback(ref))})) || !a${index}->call) { ng_borrow_fail(frame, NG_INVALID); goto cleanup; }`);\n",
+          "start": 7844
+        },
+        {
+          "current": "\t\t\tlines.push(`  host${index} = (ng_borrow_${signature.key}){${direction(signature) === \"host\" ? `{ng_recovery_${signature.key}, ng_reject_${signature.key}}, ` : \"\"}*a${index}, frame};`\n",
+          "previous": "\t\t\tlines.push(`  host${index} = (ng_borrow_${signature.key}){*a${index}, frame};`\n",
+          "start": 8526
+        },
+        {
+          "current": "\t\tif(rejectsInput) lines.push(\"  if (!lean_is_scalar(value) && lean_is_array(value) && lean_array_size(value) == 0) {\"\n\t\t\t, \"    lean_dec(value); value = NULL; ng_borrow_fail(frame, NG_INVALID); goto cleanup;\"\n\t\t\t, \"  }\");\n",
+          "previous": "",
+          "start": 9450
+        },
+        {
+          "current": "\tconst closures = abi.callbacks.filter(signature => direction(signature) !== \"host\").map(signature => {\n",
+          "previous": "\tconst closures = abi.callbacks.map(signature => {\n",
+          "start": 11059
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-calls.mjs",
+      "previousSha256": "752ac5531be705aa5287b8a55e07124cf1e41f413ef6ef2a5dea15fd43410e6e"
+    },
+    {
+      "currentSha256": "dc12b1e793f00002995e9b77156d646f6e50a47cfe9df7ce7c957afc8f8d0443",
+      "edits": [
+        {
+          "current": "\tconst callbackRecovery = [...model.callbacks.values()].some(callback => callback.direction === \"host\");\n",
+          "previous": "",
+          "start": 1390
+        },
+        {
+          "current": "template<class F, class R> struct GraphRecoveredCallback { F function; R recovery; };\ntemplate<class F> constexpr bool graph_has_recovery = false;\ntemplate<class F, class R> constexpr bool graph_has_recovery<GraphRecoveredCallback<F, R>> = true;\ntemplate<class F, class Expected> constexpr bool graph_recovery_matches = false;\ntemplate<class F, class R, class Expected> constexpr bool graph_recovery_matches<GraphRecoveredCallback<F, R>, Expected> = std::same_as<R, Expected>;\ntemplate<class F> inline F& graph_function(F& function) { return function; }\ntemplate<class F, class R> inline F& graph_function(GraphRecoveredCallback<F, R>& function) { return function.function; }\ntemplate<class F, class R> inline const R& graph_recovery(const GraphRecoveredCallback<F, R>& function) { return function.recovery; }\n",
+          "previous": "",
+          "start": 3318
+        },
+        {
+          "current": "\t\tconst invokeValues = [\"graph_function(self.function)\", ...values].join(\", \");\n\t\thelpers.push(`template<class Function> concept GraphAccepts${k} = ${callback.direction === \"host\" ? `graph_recovery_matches<std::remove_cvref_t<Function>, ${result.host.name}> && ` : \"\"}requires(Function& function${types.map((type, index) => `, ${type} a${index}`).join(\"\")}) {\n\t  { std::invoke(graph_function(function)${types.map((_, index) => `, a${index}`).join(\"\")}) } -> std::same_as<${resultType(result)}>;\n};\n",
+          "previous": "\t\tconst invokeTypes = [\"Function&\", ...types].join(\", \");\n\t\tconst invokeValues = [\"self.function\", ...values].join(\", \");\n\t\thelpers.push(`template<class Function> concept GraphAccepts${k} = std::invocable<${invokeTypes}>\n  && std::same_as<std::invoke_result_t<${invokeTypes}>, ${resultType(result)}>;\n",
+          "start": 5895
+        },
+        {
+          "current": "  ${callback.direction === \"host\" ? `std::unique_ptr<GraphView${result.index}> recovery;\n  GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared), recovery(std::make_unique<GraphView${result.index}>(graph_recovery(input))) {}` : `GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared) {}`}\n",
+          "previous": "  GraphCallback${k}(Function& input, GraphCallbackState& shared) : function(input), state(shared) {}\n",
+          "start": 6494
+        },
+        {
+          "current": "\t  ${unit(result) ? `std::invoke(${invokeValues}); *out = 0;`\n",
+          "previous": "      ${unit(result) ? `std::invoke(${invokeValues}); *out = 0;`\n",
+          "start": 7358
+        },
+        {
+          "current": "\t\t\tif(node.kind === \"callback\") body.push(...node.direction === \"host\" ? [\n\t\t\t\t`    detail::graph_check${copy(node.result).index}(detail::graph_recovery(a${index}), 0, true, state.budget);`\n\t\t\t] : [], `    detail::GraphCallback${node.index}<std::remove_reference_t<Function${index}>> callback${index}(a${index}, state);`\n\t\t\t\t, `    detail::${node.name} view${index}{decltype(callback${index})::invoke, &callback${index}${node.direction === \"host\" ? `, &callback${index}.recovery->value` : \"\"}};`);\n",
+          "previous": "\t\t\tif(node.kind === \"callback\") body.push(`    detail::GraphCallback${node.index}<std::remove_reference_t<Function${index}>> callback${index}(a${index}, state);`\n\t\t\t\t, `    detail::${node.name} view${index}{decltype(callback${index})::invoke, &callback${index}};`);\n",
+          "start": 8483
+        },
+        {
+          "current": "\tfor(const callback of [...model.callbacks.values()].filter(item => item.direction !== \"host\"))\n",
+          "previous": "\tfor(const callback of model.callbacks.values())\n",
+          "start": 10199
+        },
+        {
+          "current": "\t\t, ...helpers, ...invokers, \"}\"\n\t\t, ...callbackRecovery ? [\"// Recovery is a typed failure-path value and is never published as a successful callback result.\"\n\t\t\t, \"template<class F, class R> inline auto with_recovery(F&& function, R&& recovery) {\"\n\t\t\t, \"  return detail::GraphRecoveredCallback<std::decay_t<F>, std::decay_t<R>>{std::forward<F>(function), std::forward<R>(recovery)};\"\n\t\t\t, \"}\"] : []\n\t\t, ...functions, \"}\", \"\"].join(\"\\n\");\n",
+          "previous": "\t\t, ...helpers, ...invokers, \"}\", ...functions, \"}\", \"\"].join(\"\\n\");\n",
+          "start": 11865
+        }
+      ],
+      "path": "src/backends/cpp/callable-graph-package.mjs",
+      "previousSha256": "63987f848d9118ad09d6a3b2688766256786562a408c9e06d8785f3730529801"
+    },
+    {
+      "currentSha256": "3d4c77e56fe2ab7bfa167f00fe86254c408dba7cc83348b8f89d581ad626c260",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 144
+        },
+        {
+          "current": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "previous": "",
+          "start": 1503
+        },
+        {
+          "current": "\tconst occupied = new Set([`${moduleName}::LeanClosure`\n\t\t, ...[...callbacks.values()].some(cb => cb.direction === \"host\") ? [`${moduleName}::Runtime::Callback`] : []\n\t\t, ...[...callbacks.values()].map(cb => cb.publicType)]);\n",
+          "previous": "\tconst occupied = new Set([`${moduleName}::LeanClosure`, ...[...callbacks.values()].map(cb => cb.publicType)]);\n",
+          "start": 1932
+        }
+      ],
+      "path": "src/backends/perl/callable-graph-model.mjs",
+      "previousSha256": "06f47c2a91f42f76683db460456f87b22298f3205fd854ea74ded46bd702c71d"
+    },
+    {
+      "currentSha256": "51224595ab43f0d83dc5689c2edfcbe869ce59f4298f6d415ec6ac918e2636eb",
+      "edits": [
+        {
+          "current": "\tconst checkedHostCallbacks = [...generated.callbacks.values()].some(callback => callback.direction === \"host\");\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "callback.${checkedHostCallbacks ? ` A host callback whose result contains a checked Lean Subtype must use\nC<${moduleName}::Runtime::Callback-E<gt>new(code =E<gt> $callback, recovery =E<gt> $value)>.\nThe recovery has the callback's declared erased result shape and is validated\nbefore Lean or the callback runs. Constructor rejection or a callback exception\nfails the enclosing call; the recovery is used only to finish Lean's failure\npath and is never returned as a successful result.` : \"\"} Returned Lean closures provide call, close and closed. Close each\n",
+          "previous": "callback. Returned Lean closures provide call, close and closed. Close each\n",
+          "start": 3115
+        }
+      ],
+      "path": "src/backends/perl/callable-graph-package.mjs",
+      "previousSha256": "e12454dba97eb2c3c1fcf69985f81ab01a16dec2a685661bdfa47e6bf8cc77e0"
+    },
+    {
+      "currentSha256": "6e5000d885e18f43f27d429bec879416154e302947ce50d1a624f0ca3a8d8fc7",
+      "edits": [
+        {
+          "current": "const callbackClass = name => `package ${name};\nsub new {\n  CORE::die \"${name}->new expects code and recovery\\\\n\"\n    unless @_ == 5 && CORE::defined($_[0]) && !CORE::ref($_[0]) && $_[0] eq '${name}';\n  CORE::shift; my %fields = @_;\n  CORE::die \"expected code and recovery fields\\\\n\"\n    unless CORE::keys(%fields) == 2 && CORE::exists($fields{code}) && CORE::exists($fields{recovery});\n  CORE::die \"expected a Perl code reference\\\\n\" unless CORE::ref($fields{code}) eq 'CODE';\n  return CORE::bless \\\\%fields, '${name}';\n}\n`;\n\n",
+          "previous": "",
+          "start": 257
+        },
+        {
+          "current": "\tconst hostClass = `${moduleName}::Runtime::Callback`;\n",
+          "previous": "",
+          "start": 1186
+        },
+        {
+          "current": "  ${callback.direction === \"host\" ? \"\" : `if (callback->lease) return ${callback.call}(callback->lease->token, ${callback.parameters.map((_, index) => `a${index}`).join(\", \")}, out);`}\n",
+          "previous": "  if (callback->lease) return ${callback.call}(callback->lease->token, ${callback.parameters.map((_, index) => `a${index}`).join(\", \")}, out);\n",
+          "start": 1828
+        },
+        {
+          "current": "\t\tconst callbackInput = (parameter, index) => {\n\t\t\tif(parameter.callback.direction !== \"host\")\n\t\t\t\treturn `${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, argument${index + offset}, ${parameter.callback.index}, \"${moduleName}::_callback_${parameter.callback.key}\")};`;\n\t\t\tconst callbackResult = parameter.callback.result;\n\t\t\treturn `static const char *const callback${index}_fields[] = {\"code\", \"recovery\"};\n    SV **callback${index}_slots = lpg_fields(aTHX_ scope, argument${index + offset}, \"${hostClass}\", callback${index}_fields, 2);\n    ${callbackResult.name} *recovery${index} = lpg_allocate(aTHX_ scope, 1, sizeof(*recovery${index}));\n    lpg_read${callbackResult.index}(aTHX_ scope, callback${index}_slots[1], recovery${index}, 0, 1);\n    ${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, callback${index}_slots[0], ${parameter.callback.index}, \"${moduleName}::_callback_${parameter.callback.key}\"), recovery${index}};`;\n\t\t};\n",
+          "previous": "",
+          "start": 3891
+        },
+        {
+          "current": "\t\t? callbackInput(parameter, index)\n",
+          "previous": "\t\t? `${model.layout.prefix}_callback_${parameter.callback.key} input${index} = {lpc_callback_${parameter.callback.index}, lpc_callback_new(aTHX_ frame, argument${index + offset}, ${parameter.callback.index}, \"${moduleName}::_callback_${parameter.callback.key}\")};`\n",
+          "start": 5554
+        },
+        {
+          "current": "\tfor(const callback of callbacks.filter(item => item.direction !== \"host\")) xs.push(`MODULE = ${moduleName} PACKAGE = ${callback.publicType}`\n",
+          "previous": "\tfor(const callback of callbacks) xs.push(`MODULE = ${moduleName} PACKAGE = ${callback.publicType}`\n",
+          "start": 6959
+        },
+        {
+          "current": "${callbacks.some(callback => callback.direction === \"host\") ? callbackClass(hostClass) : \"\"}\n",
+          "previous": "",
+          "start": 7598
+        },
+        {
+          "current": "${callbacks.filter(callback => callback.direction !== \"host\").map(callback => `package ${callback.publicType};\n",
+          "previous": "${callbacks.map(callback => `package ${callback.publicType};\n",
+          "start": 7960
+        }
+      ],
+      "path": "src/backends/perl/callable-graph-xs.mjs",
+      "previousSha256": "9d8e0cf5cc582886e78d6a7791e5d6505e2e86a1ebba76d519b5818a9d14582a"
+    },
+    {
+      "currentSha256": "21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f",
+      "edits": [
+        {
+          "current": "import { callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinementEntries } from \"../abi/refinements.mjs\";\n\nconst controlsName = abi => `${abi.exports[0].symbol}_structured_callback_controls`;\n",
+          "previous": "",
+          "start": 722
+        },
+        {
+          "current": "\tconst nominalRefinements = nominalRefinementEntries(ir.types);\n",
+          "previous": "",
+          "start": 1272
+        },
+        {
+          "current": "\t\tconst refinements = callbackDefinitionRefinement(type, ir.types);\n\t\tconst parameters = type.callable.parameters.map(site => site.type);\n\t\tconst signature = { parameters\n\t\t\t, result: type.callable.result.type\n\t\t\t, ...(refinements ? { refinements } : {}) };\n\t\treturn { id: type.id, key: sha256(componentStructuredCallableSignatureText(signature, types, nominalRefinements)).slice(0, 40), ...signature };\n",
+          "previous": "\t\tconst signature = { parameters: type.callable.parameters.map(site => site.type), result: type.callable.result.type };\n\t\treturn { id: type.id, key: sha256(componentStructuredCallableSignatureText(signature, types)).slice(0, 40), ...signature };\n",
+          "start": 1419
+        },
+        {
+          "current": "\tconst descriptor = { schemaVersion: 1, types, callbacks, exports\n\t\t, ...(nominalRefinements.length ? { nominalRefinements } : {}) };\n",
+          "previous": "\tconst descriptor = { schemaVersion: 1, types, callbacks, exports };\n",
+          "start": 2099
+        },
+        {
+          "current": "\t, ...(descriptor.nominalRefinements === undefined ? {} : { nominalRefinements: descriptor.nominalRefinements })\n",
+          "previous": "",
+          "start": 2475
+        },
+        {
+          "current": "\tif(abi.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, abi.types) === \"host\"))\n\t{\n\t\tconst guard = `${controlsName(abi).toUpperCase()}_DEFINED`;\n\t\tlines.push(`#ifndef ${guard}`, `#define ${guard}`\n\t\t\t, `typedef struct ${controlsName(abi)} {`\n\t\t\t, \"  lean_object *(*recovery)(void *);\"\n\t\t\t, \"  lean_object *(*reject)(void *, lean_object *);\"\n\t\t\t, `} ${controlsName(abi)};`, \"#endif\");\n\t}\n",
+          "previous": "",
+          "start": 3457
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);\n\t\tif(direction !== \"closure\") lines.push(`lean_object *${symbol}_wrap(size_t);`\n",
+          "previous": "\t\tlines.push(`lean_object *${symbol}_wrap(size_t);`\n\t\t\t, `lean_object *${symbol}_apply(lean_object *, ${parameters});`\n",
+          "start": 4074
+        },
+        {
+          "current": "\t\tif(direction !== \"host\") lines.push(`lean_object *${symbol}_apply(lean_object *, ${parameters});`);\n\t\tif(direction === \"host\")\n\t\t\tlines.push(`lean_object *${symbol}_recovery(size_t);`\n\t\t\t\t, `lean_object *${symbol}_reject(size_t, lean_object *);`);\n",
+          "previous": "",
+          "start": 4308
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);\n",
+          "previous": "",
+          "start": 5246
+        },
+        {
+          "current": "\t\tif(direction !== \"closure\") lines.push(`lean_object *${symbol}_invoke(size_t token, ${parameters}) {`\n",
+          "previous": "\t\tlines.push(`lean_object *${symbol}_invoke(size_t token, ${parameters}) {`\n",
+          "start": 5546
+        },
+        {
+          "current": "\t\tif(direction === \"host\") lines.push(`lean_object *${symbol}_recovery(size_t token) {`\n\t\t\t, \"  lb_native_callback callback = lb_native_callback_lookup(token);\"\n\t\t\t, \"  if (!callback.invoke) return lean_alloc_array(0, 0);\"\n\t\t\t, `  ${controlsName(abi)} *controls = callback.context;`\n\t\t\t, \"  return controls && controls->recovery ? controls->recovery(callback.context) : lean_alloc_array(0, 0);\"\n\t\t\t, \"}\"\n\t\t\t, `lean_object *${symbol}_reject(size_t token, lean_object *recovery) {`\n\t\t\t, \"  lb_native_callback callback = lb_native_callback_lookup(token);\"\n\t\t\t, \"  if (!callback.invoke) { lean_dec(recovery); return lean_alloc_array(0, 0); }\"\n\t\t\t, `  ${controlsName(abi)} *controls = callback.context;`\n\t\t\t, \"  if (!controls || !controls->reject) { lean_dec(recovery); return lean_alloc_array(0, 0); }\"\n\t\t\t, \"  return controls->reject(callback.context, recovery);\"\n\t\t\t, \"}\");\n",
+          "previous": "",
+          "start": 5978
+        }
+      ],
+      "path": "src/build/native-callable-graph.mjs",
+      "previousSha256": "579ae663754e27b166500b6701bfefab2ad0ba16c69fb7e4cb24d34b904624e8"
+    },
+    {
+      "currentSha256": "48cfaff15e122836164ccb40d67f5168d2d3118450bfb017fe509d8806a25acf",
+      "edits": [
+        {
+          "current": "/**\n * Select the callable-graph carrier when an erased Subtype sits inside a\n * callback signature, even if every erased payload is otherwise acyclic.\n * The primitive native model predates directional callback constructors and\n * cannot represent their recovery protocol.\n *\n * @param value - One compiler-projected declaration or nested type node.\n */\nexport const containsCallbackSubtype = value => {\n\tconst visit = (node, callback) => {\n\t\tif(node === null || typeof node !== \"object\") return false;\n\t\tconst inside = callback || node.kind === \"callback\";\n\t\tif(inside && node.kind === \"refinement\" && node.predicate?.kind === \"subtype\") return true;\n\t\treturn Object.values(node).some(child => visit(child, inside));\n\t};\n\treturn visit(value, false);\n};\n\n",
+          "previous": "",
+          "start": 2280
+        },
+        {
+          "current": "\tif(!elaborated.declarations.some(containsGraph) && !elaborated.declarations.some(containsCallbackSubtype))\n\t\treturn createNativeModel(options, { refinements: nativeRefinements, callbackRefinements: nativeCallbackRefinements });\n",
+          "previous": "\tif(!elaborated.declarations.some(containsGraph)) return createNativeModel(options, { refinements: nativeRefinements, callbackRefinements: nativeCallbackRefinements });\n",
+          "start": 7349
+        }
+      ],
+      "path": "src/build/native-graph-model.mjs",
+      "previousSha256": "8bad57025863bb4c004b8e1f9c215a5e1de4d6166118b812b5067d7970752d45"
+    },
+    {
+      "currentSha256": "00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7",
+      "edits": [
+        {
+          "current": "import { callbackDefinitionRefinement, callbackSubtypeDirection } from \"../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 1830
+        },
+        {
+          "current": "\t\tconst callbackSubtypes = ir.types.filter(type => type.kind === \"callback\").some(type => {\n\t\t\tconst signature = { parameters: type.callable.parameters.map(parameter => parameter.type), result: type.callable.result.type };\n\t\t\tconst refinements = callbackDefinitionRefinement(type, ir.types);\n\t\t\treturn refinements !== null && callbackSubtypeDirection(signature, refinements, ir.types) !== null;\n\t\t});\n\t\tif(callbackSubtypes && targets.some(target => ![\"c\", \"cpp\", \"cpan\"].includes(target)))\n\t\t\tthrow Object.assign(new TypeError(\"Callback Subtypes currently require C, C++ or CPAN projections\"), { code: \"native-graph-projection-unavailable\" });\n",
+          "previous": "",
+          "start": 2997
+        }
+      ],
+      "path": "src/build/native-graph-projection.mjs",
+      "previousSha256": "3ae14d2743f83b3102384697b6733b17ed117f3325354a94008ea8ff13c0fe2b"
+    },
+    {
+      "currentSha256": "c067dd5f5c3f97c69f17f3bff153739e9eebcc5f669acadc158e1fac34553dd5",
+      "edits": [
+        {
+          "current": "const graphCallbackSubtypeGuide = (graph, target) => {\n\tif(!graph?.callableGraph || ![...graph.callbacks.values()].some(callback => callback.direction === \"host\")) return \"\";\n\treturn target === \"cpp\"\n\t\t? \"\\n\\nA host callback whose result contains a checked Lean Subtype must be passed through with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. Lean applies the selected checked constructor to every host-produced Subtype leaf. Constructor rejection, a thrown exception or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never returned as a successful result. Subtype arguments to returned LeanClosure values are checked before the closure body runs.\"\n\t\t: \"\\n\\nEach callback declaration exposes a PREFIX_CALLBACK_REQUIRES_RECOVERY macro. When it is 1, initialize the descriptor's typed recovery pointer before calling Lean and keep that value alive for the call. The adapter validates and copies it before Lean or the callback runs. Lean applies the selected checked constructor to every host-produced Subtype leaf. Constructor rejection, a non-OK callback status or another callback failure fails the enclosing call, suppresses later callbacks and leaves its output unchanged; the recovery is used only inside Lean's failure path and is never written as successful output. Subtype arguments to returned Lean closures are checked before the closure body runs.\";\n};\n\n",
+          "previous": "",
+          "start": 3311
+        },
+        {
+          "current": "\tconst copiedGuide = graph ? graphGuide(target) + graphCallableGuide + graphCallbackSubtypeGuide(graph, target) : (surface.copies.some(copy => copy.record || copy.element)\n",
+          "previous": "\tconst copiedGuide = graph ? graphGuide(target) + graphCallableGuide : (surface.copies.some(copy => copy.record || copy.element)\n",
+          "start": 17918
+        }
+      ],
+      "path": "src/release/native-c-family.mjs",
+      "previousSha256": "5cf7bd9e3f4ff817bb75de384cbf5b6db8865ecc7cddebbe2653a09039a7611a"
+    },
+    {
+      "currentSha256": "c1b1a57ded6932559a10d31e89c56f5e9e1e5bc9cf51de168d9b32d04678c2a5",
+      "edits": [
+        {
+          "current": "import { structuredCallableDirectionalSubtypeIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1527
+        },
+        {
+          "current": "test(\"C/GMP callback Subtypes expose and transport typed recovery\", { timeout: 180_000 }, async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-c-callback-subtype-headers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst generated = generateCallableCGraphPackage(ir);\n\tconst native = generateNativeCallableGraphCalls(ir, createNativeCallableGraphDescriptor(ir),\n\t\t{ initializer: \"initialize_LeanBridgeNative0123456789abcdef\" });\n\tconst hostType = generated.callbacks.get(host.id), closureType = generated.callbacks.get(closure.id);\n\tconst header = generated.files[\"gmp/include/detail/structured-gmp-api.h\"];\n\tassert.match(header, new RegExp(`#define ${hostType.publicName.toUpperCase()}_REQUIRES_RECOVERY 1`, \"u\"));\n\tassert.match(header, new RegExp(`${hostType.gmpName}[^}]+recovery`, \"su\"));\n\tassert.match(header, new RegExp(`#define ${closureType.publicName.toUpperCase()}_REQUIRES_RECOVERY 0`, \"u\"));\n\tassert.doesNotMatch(header, new RegExp(`${closureType.gmpName}[^}]+recovery`, \"su\"));\n\tassert.doesNotMatch(header, new RegExp(hostType.gmpOwnedName, \"u\"));\n\tassert.match(header, new RegExp(`${closureType.gmpOwnedName}_call`, \"u\"));\n\tassert.doesNotMatch(generated.files[\"gmp/src/structured_gmp.c\"], new RegExp(hostType.call, \"u\"));\n\tassert.match(generated.files[\"gmp/src/structured_gmp.c\"], new RegExp(closureType.call, \"u\"));\n\tassert.match(generated.files[\"gmp/src/structured_gmp.c\"], /->recovery/u);\n\tconst files = { ...generated.files\n\t\t, \"include/detail/structured-graph-types.h\": native.typesHeader\n\t\t, \"include/detail/structured-callable-borrows.h\": native.borrowsHeader\n\t\t, \"include/detail/structured-graph.h\": native.header + \"\\nint structured_graph_ready(void); void structured_graph_retire(void); uint32_t structured_graph_initialize(void);\\n\"\n\t\t, \"include/lean_bridge_native_runtime.h\": brokerHeader };\n\tfor(const [path, text] of Object.entries(files)) await saveLakeFile(directory, path, text);\n\tawait runCopied(\"/usr/bin/cc\", [\"-std=c11\", \"-Wall\", \"-Wextra\", \"-Werror\"\n\t\t, \"-Iinclude\", \"-Iinclude/detail\", \"-Igmp/include\", \"-Igmp/internal\"\n\t\t, \"-Igmp/include/detail\"\n\t\t, \"-c\"\n\t\t, \"gmp/src/structured_gmp.c\"\n\t\t, \"-o\"\n\t\t, \"gmp.o\"], directory\n\t\t, { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" });\n});\n\n",
+          "previous": "",
+          "start": 6085
+        }
+      ],
+      "path": "tests/c-recursive-callable-package.test.mjs",
+      "previousSha256": "77e1a13ef265df7db606d9126ce261f0450f4b0f4961087ce6921be793c45c22"
+    },
+    {
+      "currentSha256": "14d5fb187bef90882f8c60c9c541709dc4ae6235d84fad8e305bcbbd97ccaa25",
+      "edits": [
+        {
+          "current": "import { structuredCallableDirectionalSubtypeIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1788
+        },
+        {
+          "current": "test(\"C++ callback Subtypes require an exact typed recovery wrapper\", { timeout: 180_000 }, async t => {\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-cpp-callback-subtype-headers-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst generated = generateCallableCppGraphPackage(ir);\n\tconst native = generateNativeCallableGraphCalls(ir, createNativeCallableGraphDescriptor(ir),\n\t\t{ initializer: \"initialize_LeanBridgeNative0123456789abcdef\" });\n\tconst hostType = generated.callbacks.get(host.id), closureType = generated.callbacks.get(closure.id);\n\tconst header = generated.files[\"include/structured.hpp\"];\n\tassert.match(header, /inline auto with_recovery\\(/u);\n\tassert.match(header, new RegExp(`GraphAccepts${hostType.index} = graph_recovery_matches`, \"u\"));\n\tassert.doesNotMatch(header, new RegExp(`GraphAccepts${closureType.index} = graph_recovery_matches`, \"u\"));\n\tassert.doesNotMatch(header, new RegExp(`graph_invoke${hostType.index}\\\\(`, \"u\"));\n\tassert.match(header, new RegExp(`graph_invoke${closureType.index}\\\\(`, \"u\"));\n\tconst files = { ...generated.files, ...boostSources()\n\t\t, \"include/detail/structured-graph-types.h\": native.typesHeader\n\t\t, \"include/detail/structured-callable-borrows.h\": native.borrowsHeader\n\t\t, \"include/detail/structured-graph.h\": native.header + '\\nextern \"C\" { int structured_graph_ready(void); void structured_graph_retire(void); }\\n'\n\t\t, \"consumer.cpp\": `#include \"structured.hpp\"\nnamespace api = lean_bridge::structured;\nauto plain = [](const api::Nat& value) { return value; };\nusing Plain = decltype(plain);\nusing Recovered = decltype(api::with_recovery(plain, api::Nat{1}));\nusing Wrong = decltype(api::with_recovery(plain, bool{true}));\nstatic_assert(!api::detail::GraphAccepts${hostType.index}<Plain>);\nstatic_assert(api::detail::GraphAccepts${hostType.index}<Recovered>);\nstatic_assert(!api::detail::GraphAccepts${hostType.index}<Wrong>);\n` };\n\tfor(const [path, text] of Object.entries(files)) await saveLakeFile(directory, path, text);\n\tawait runCopied(\"/usr/bin/c++\", [\"-std=c++20\", \"-Wall\", \"-Wextra\", \"-Werror\", \"-fsyntax-only\", \"-Iinclude\", \"consumer.cpp\"], directory);\n});\n\n",
+          "previous": "",
+          "start": 3404
+        }
+      ],
+      "path": "tests/cpp-recursive-callable-package.test.mjs",
+      "previousSha256": "27db03b07fc11fae5a1b5869b6612ddafcfd30c599261d76f2adf7e48d1fa6a5"
+    },
+    {
+      "currentSha256": "d779631c9c668f88870e0e172e2eba6ecbd0cb5f67b2e215244797f20e62c420",
+      "edits": [
+        {
+          "current": "\n/**\n * Replace extractor provenance with an independent reviewed-contract producer.\n *\n * @param ir - Ordinary source Binding IR used only to establish the review.\n */\nexport const callbackSubtypeReviewedIr = ir => {\n\tconst result = structuredClone(ir);\n\tresult.producers = [{ id: \"review\"\n\t\t, adapter: \"independent-callback-subtype-review\"\n\t\t, adapterVersion: 1\n\t\t, tool: \"Callback Subtype contract review\"\n\t\t, toolVersion: \"1\", extensions: {} }];\n\tfor(const item of [...result.declarations, ...result.types]) item.source.producer = \"review\";\n\tfor(const declaration of result.declarations)\n\t{\n\t\tconst refinements = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\tdeclaration.source.extensions = refinements ? { \"lean-lang.org/refinements\": refinements } : {};\n\t}\n\treturn result;\n};\n",
+          "previous": "",
+          "start": 2462
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-fixture.mjs",
+      "previousSha256": "84a6078b47f13cdb0c23afbeb09b633d71b80a25063f4070bf5ef50c8211001f"
+    },
+    {
+      "currentSha256": "c787b8571308406ff901fdc53b208f910152498316d9af87775b7368629fbb99",
+      "edits": [
+        {
+          "current": "\n/**\n * Add one host-result and one returned-closure argument Subtype to the copied\n * callback corpus. The surrounding exports intentionally remain independent;\n * this fixture exercises transport direction rather than source elaboration.\n */\nexport const structuredCallableDirectionalSubtypeIr = () => {\n\tconst ir = structuredCallableReviewedIr();\n\tconst callbacks = ir.types.filter(type => type.kind === \"callback\");\n\tconst host = callbacks.find(type => ir.declarations.some(item => item.parameters.some(parameter => parameter.type.id === type.id)));\n\tconst closure = callbacks.find(type => ir.declarations.some(item => item.result.type.id === type.id));\n\tconst nat = { kind: \"primitive\", name: \"nat\" };\n\thost.callable.parameters[0].type = nat;\n\thost.callable.result.type = nat;\n\thost.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [{ kind: \"subtype\", constructor: null }]\n\t\t, result: { kind: \"subtype\", constructor: \"Structured.checkedHostResult\" }\n\t};\n\tclosure.callable.parameters[1].type = nat;\n\tclosure.callable.result.type = nat;\n\tclosure.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\tparameters: [null, { kind: \"subtype\", constructor: \"Structured.checkedClosureArgument\" }]\n\t\t, result: { kind: \"subtype\", constructor: null }\n\t};\n\treturn { ir, host, closure };\n};\n",
+          "previous": "",
+          "start": 6950
+        }
+      ],
+      "path": "tests/helpers/structured-callable-fixture.mjs",
+      "previousSha256": "ab5d77ff4856cad1466a4137c5b0a56cc3fa2c9d8c9032c1776fd4044e165d4e"
+    },
+    {
+      "currentSha256": "ba5144883c9356529efc72c883072b64bec754ff9044ee8ce36984652275ad83",
+      "edits": [
+        {
+          "current": "/**\n * TypeScript-only callback Subtype consumer contract.\n *\n * @file\n */\n",
+          "previous": "",
+          "start": 0
+        }
+      ],
+      "path": "tests/fixtures/callback-subtype-consumers/types.mts",
+      "previousSha256": "43a1e0ac7d4395409a98db98b257911bb035ba6aa13e82db5cdac6114d7a4d21"
+    },
+    {
+      "currentSha256": "0ac9bd401f84deb354e8bf5c26558925e9921089a3c4050785d7c62911102bbf",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeNativeSource, callbackSubtypeNativeChangedPaths } from \"./callback-subtype-native-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeNativeChangedPaths\n\t, ...callbackSubtypeNpmAcceptanceChangedPaths\n",
+          "previous": "\t...callbackSubtypeNpmAcceptanceChangedPaths\n",
+          "start": 108203
+        },
+        {
+          "current": "\tconst nativeCallbacks = beforeCallbackSubtypeNativeSource(\n",
+          "previous": "\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n",
+          "start": 128459
+        },
+        {
+          "current": "\tif(sha256(nativeCallbacks) === expected) return nativeCallbacks;\n\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\tpath, nativeCallbacks, expected\n\t);\n",
+          "previous": "",
+          "start": 128546
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "054b7f64ae8f0df21d5964be9acfe6a2707efc6ea54955407bb6571c6656f3b8"
+    },
+    {
+      "currentSha256": "a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa",
+      "edits": [
+        {
+          "current": "import { containsCallbackSubtype, createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from \"../src/build/native-graph-model.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from \"../src/build/native-graph-model.mjs\";\n",
+          "start": 227
+        },
+        {
+          "current": "import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "previous": "import { structuredCallableReviewedIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "start": 667
+        },
+        {
+          "current": "test(\"native callable descriptors retain directional callback Subtypes in their authenticated keys\", () => {\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst descriptor = createNativeCallableGraphDescriptor(ir);\n\tassert.deepEqual(descriptor.callbacks.find(type => type.id === host.id).refinements,\n\t\thost.source.extensions[\"lean-lang.org/refinements\"]);\n\tassert.deepEqual(descriptor.callbacks.find(type => type.id === closure.id).refinements,\n\t\tclosure.source.extensions[\"lean-lang.org/refinements\"]);\n\tassert.deepEqual(nativeCallableGraphCarrierAbi(descriptor, ir).callbacks, descriptor.callbacks);\n\tfor(const type of [host, closure])\n\t{\n\t\tconst changed = structuredClone(descriptor);\n\t\tdelete changed.callbacks.find(value => value.id === type.id).refinements;\n\t\tassert.throws(() => nativeCallableGraphCarrierAbi(changed, ir), /differs/);\n\t}\n});\n\ntest(\"acyclic callback Subtypes select the callable-graph carrier\", () => {\n\tconst subtype = { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }\n\t\t, predicate: { kind: \"subtype\", constructor: \"Example.checked\" } };\n\tassert.equal(containsCallbackSubtype(subtype), false);\n\tassert.equal(containsCallbackSubtype({ kind: \"callback\"\n\t\t, parameters: [{ kind: \"primitive\", name: \"nat\" }]\n\t\t, result: subtype }), true);\n\tassert.equal(containsCallbackSubtype({ kind: \"callback\"\n\t\t, parameters: [{ ...subtype, predicate: { kind: \"fin\", bound: \"3\" } }]\n\t\t, result: { kind: \"primitive\", name: \"nat\" } }), false);\n});\n\ntest(\"native callback Subtype trampolines require typed recovery and report constructor rejection\", () => {\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst descriptor = createNativeCallableGraphDescriptor(ir);\n\tconst generated = generateNativeCallableGraphCalls(ir, descriptor,\n\t\t{ initializer: \"initialize_LeanBridgeNative0123456789abcdef\" });\n\tconst hostSignature = descriptor.callbacks.find(type => type.id === host.id);\n\tconst closureSignature = descriptor.callbacks.find(type => type.id === closure.id);\n\tassert.match(generated.borrowsHeader, new RegExp(`${hostSignature.key}[^}]+recovery`, \"su\"));\n\tassert.match(generated.source, new RegExp(`ng_recovery_${hostSignature.key}`, \"u\"));\n\tassert.match(generated.source, new RegExp(`ng_reject_${hostSignature.key}`, \"u\"));\n\tassert.match(generated.source, /ng_borrow_fail\\(host->frame, NG_INVALID\\)/u);\n\tassert.match(generated.source, new RegExp(`ng_borrow_${hostSignature.key}[^;]+ng_recovery_${hostSignature.key}[^;]+ng_reject_${hostSignature.key}`, \"su\"));\n\tassert.doesNotMatch(generated.source, new RegExp(`ng_recovery_${closureSignature.key}`, \"u\"));\n\tassert.equal(generated.closures.some(item => item.id === host.id), false);\n\tassert.equal(generated.closures.some(item => item.id === closure.id), true);\n\tassert.doesNotMatch(generated.source, new RegExp(`${hostSignature.key}_apply`, \"u\"));\n\tassert.doesNotMatch(generated.source, new RegExp(`${hostSignature.key}_lease_call`, \"u\"));\n\tassert.match(generated.source, new RegExp(`${closureSignature.key}_apply`, \"u\"));\n\tassert.match(generated.source, new RegExp(`${closureSignature.key}_lease_call`, \"u\"));\n\tassert.match(generated.source, /lean_array_size\\(value\\) == 0[^}]+ng_borrow_fail\\(frame, NG_INVALID\\)/su);\n\tassert.equal((generated.source.match(/lean_array_size\\(value\\) == 0/g) ?? []).length, 3);\n\tconst abi = nativeCallableGraphCarrierAbi(descriptor, ir);\n\tconst model = { copiedGraph: descriptor\n\t\t, bindingIr: ir\n\t\t, profile: \"native-library-v1\"\n\t\t, pointerBits: 64\n\t\t, byteOrder: \"little\"\n\t\t, schemaVersion: 4 };\n\tconst callbacks = generateCompiledCallbacks(model);\n\tconst symbol = abi.exports[0].symbol;\n\tassert.match(callbacks, new RegExp(`${symbol}_structured_callback_controls`, \"u\"));\n\tassert.match(callbacks, /controls->recovery\\(callback\\.context\\)/u);\n\tassert.match(callbacks, /controls->reject\\(callback\\.context, recovery\\)/u);\n});\n\n",
+          "previous": "",
+          "start": 4658
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "5fa9e7c105072a63ebddc67085fc3c63c55d24d69bc2d619bac0d18f3979449d"
+    },
+    {
+      "currentSha256": "bcfe4a217e19bf48a4505ef8be96f4838e7ae28f70591f1d096c8450a7d85eba",
+      "edits": [
+        {
+          "current": "import { mkdtemp, rm } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "",
+          "start": 142
+        },
+        {
+          "current": "import { structuredCallableDirectionalSubtypeIr } from \"./helpers/structured-callable-fixture.mjs\";\nimport { copiedCleanEnvironment, runCopied } from \"./helpers/copied-fixture-install.mjs\";\nimport { saveLakeFile } from \"./helpers/lake-workspace.mjs\";\n",
+          "previous": "",
+          "start": 922
+        },
+        {
+          "current": "test(\"Perl callback Subtypes require and copy a typed Runtime::Callback recovery\", async t => {\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst projection = generateCallablePerlGraphXs(ir, moduleName);\n\tconst hostType = projection.callbacks.get(host.id), closureType = projection.callbacks.get(closure.id);\n\tassert.equal(hostType.direction, \"host\");\n\tassert.equal(closureType.direction, \"closure\");\n\tassert.match(projection.valuesSource, /package LeanBridge::Recursive::Runtime::Callback;/u);\n\tassert.match(projection.valuesSource, /expects code and recovery/u);\n\tassert.match(projection.xs, /callback\\d+_fields\\[\\] = \\{\"code\", \"recovery\"\\}/u);\n\tassert.match(projection.xs, new RegExp(`lpg_read${hostType.result.index}\\\\([^;]+recovery\\\\d+`, \"u\"));\n\tassert.match(projection.xs, new RegExp(`input\\\\d+ = \\\\{lpc_callback_${hostType.index}, lpc_callback_new\\\\([^}]+recovery\\\\d+\\\\}`, \"u\"));\n\tassert.doesNotMatch(projection.xs, new RegExp(`PACKAGE = ${hostType.publicType}`, \"u\"));\n\tassert.doesNotMatch(projection.valuesSource, new RegExp(`package ${hostType.publicType};`, \"u\"));\n\tassert.doesNotMatch(projection.source, new RegExp(hostType.call, \"u\"));\n\tassert.match(projection.source, new RegExp(closureType.call, \"u\"));\n\tconst closureStart = projection.xs.indexOf(`PACKAGE = ${closureType.publicType}`);\n\tassert.notEqual(closureStart, -1);\n\tassert.match(projection.valuesSource, new RegExp(`package ${closureType.publicType};`, \"u\"));\n\tconst closureSection = projection.xs.slice(closureStart, projection.xs.indexOf(\"\\nMODULE =\", closureStart + 1));\n\tassert.doesNotMatch(closureSection, /_fields\\[\\]|Runtime::Callback|recovery/u);\n\tconst model = { bindingIr: ir, component: ir.component, moduleName\n\t\t, copiedGraph: projection.descriptor\n\t\t, sourceIdentity: { modules: [{ module: \"Structured\", source: { sha256: \"a\".repeat(64) } }] } };\n\tconst receipt = { initializer: \"initialize_LeanBridgeNative0123456789abcdef\"\n\t\t, library: \"libcomponent_0123456789abcdef0123.so\"\n\t\t, nativeLibrary: { sha256: \"b\".repeat(64) }\n\t\t, runtimeIdentity: \"c\".repeat(64) };\n\tconst files = generateCallablePerlGraphPackage(model, receipt);\n\tassert.match(files[\"Component.xs\"], /structured_callback_[a-f0-9]+ input\\d+ = \\{lpc_callback_/u);\n\tassert.match(files[\"lib/LeanBridge/Recursive.pm\"], /Runtime::Callback-E<gt>new/u);\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-perl-callback-subtype-xs-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tawait saveLakeFile(directory, \"Component.xs\", files[\"Component.xs\"]);\n\tawait runCopied(\"/usr/bin/perl\", [\"-MExtUtils::ParseXS\", \"-e\"\n\t\t, 'ExtUtils::ParseXS::process_file(filename => \"Component.xs\", output => \"Component.c\", prototypes => 0)']\n\t\t, directory, { ...copiedCleanEnvironment, PATH: \"/usr/bin:/bin\" });\n\tfor(const targets of [[\"c\"], [\"cpp\"], [\"cpan\"], [\"c\", \"cpp\", \"cpan\"]])\n\t\tassert.ok(compileNativeGraphProjection(ir, targets, moduleName).layoutSha256);\n\tfor(const target of [\"pypi\", \"cargo\", \"rubygems\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"])\n\t\tassert.throws(() => compileNativeGraphProjection(ir, [target], moduleName), { code: \"native-graph-projection-unavailable\" });\n});\n\n",
+          "previous": "",
+          "start": 5269
+        }
+      ],
+      "path": "tests/perl-recursive-callable-contract.test.mjs",
+      "previousSha256": "4e6f4addd449c3370f62310f2f2b8d04edc858c0cd29ab0c9eac949268818775"
+    },
+    {
+      "currentSha256": "0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c",
+      "edits": [
+        {
+          "current": "test(\"checked Subtype evidence preserves copied values and scopes native callback refinements\", async () => {\n",
+          "previous": "test(\"checked Subtype evidence preserves structural inputs and results and limits nominal fields to all seventeen installed profiles\", async () => {\n",
+          "start": 45257
+        },
+        {
+          "current": "\tconst callbacks = allInstalled.filter(cell => [\"callback-parameter\", \"callback-result\"].includes(cell.position));\n\tassert.equal(allInstalled.length, installed.length + fields.length + callbacks.length);\n\tassert.deepEqual(callbacks.map(cell => cell.id).sort()\n\t\t, [\"c\", \"cpp\", \"perl\"].flatMap(profile => [\"ordinary-source\", \"reviewed-ir\"]\n\t\t\t.flatMap(path => [\"callback-parameter\", \"callback-result\"]\n\t\t\t\t.map(position => `${profile}/subtype/${path}/${position}`))).sort());\n\tfor(const cell of callbacks)\n\t{\n\t\tconst evidence = cell.profile === \"perl\"\n\t\t\t? \"callback-subtype-perl-local-installed\"\n\t\t\t: \"callback-subtype-native-local-installed\";\n\t\tfor(const stage of Object.values(cell.stages))\n\t\t{\n\t\t\tassert.equal(stage.state, \"passed\");\n\t\t\tassert.deepEqual(stage.evidence, [evidence]);\n\t\t}\n\t\tassert.match(cell.hostType, cell.position === \"callback-parameter\"\n\t\t\t? /checked by the selected constructor/u\n\t\t\t: /checked by Lean with an explicit/u);\n\t\tassert.ok(cell.limitations.some(note => /synchronous host callbacks/u.test(note)));\n\t}\n",
+          "previous": "\tassert.equal(allInstalled.length, installed.length + 34);\n",
+          "start": 49893
+        },
+        {
+          "current": "\t\t// every earlier primitive-receipt assertion below. Other callback profiles\n\t\t// remain open until they receive their own installed evidence.\n",
+          "previous": "\t\t// every earlier primitive-receipt assertion below. Callback cells stay open.\n",
+          "start": 54010
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "77bf8c0ebbb1edfc103941f38a8e7f4e35225e57ca66d234a301b59aff00035f"
+    }
+  ]
+}

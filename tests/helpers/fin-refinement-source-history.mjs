@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeNativeSource, callbackSubtypeNativeChangedPaths } from "./callback-subtype-native-source-history.mjs";
 import { beforeCallbackSubtypeNpmAcceptanceSource, callbackSubtypeNpmAcceptanceChangedPaths } from "./callback-subtype-npm-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeNpmBrowserSource, callbackSubtypeNpmBrowserChangedPaths } from "./callback-subtype-npm-browser-source-history.mjs";
 import { beforeCallbackSubtypeFoundationSource, callbackSubtypeFoundationChangedPaths } from "./callback-subtype-foundation-source-history.mjs";
@@ -1381,7 +1382,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeNpmAcceptanceChangedPaths
+	...callbackSubtypeNativeChangedPaths
+	, ...callbackSubtypeNpmAcceptanceChangedPaths
 	, ...callbackSubtypeNpmBrowserChangedPaths
 	, ...callbackSubtypeFoundationChangedPaths
 	, ...nominalSubtypeEntryMeasurementChangedPaths
@@ -1835,8 +1837,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(
+	const nativeCallbacks = beforeCallbackSubtypeNativeSource(
 		path, text, expected
+	);
+	if(sha256(nativeCallbacks) === expected) return nativeCallbacks;
+	const npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(
+		path, nativeCallbacks, expected
 	);
 	if(sha256(npmAcceptance) === expected) return npmAcceptance;
 	const npmBrowser = beforeCallbackSubtypeNpmBrowserSource(

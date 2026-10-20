@@ -1,0 +1,52 @@
+{
+  "commands": {
+    "native": "LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp node --test tests/callback-subtype-native-installed.test.mjs",
+    "perl": "LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_TEST=1 node --test tests/callback-subtype-perl-installed.test.mjs"
+  },
+  "environment": {
+    "glibcFloor": "2.36",
+    "perl": [
+      "5.36.3-threaded",
+      "5.36.3-unthreaded",
+      "5.38.2-threaded",
+      "5.38.2-unthreaded"
+    ],
+    "platform": "linux-x64"
+  },
+  "execution": "local",
+  "planNodes": [
+    1682
+  ],
+  "producerCommit": "a031522d08d2130cb0d54ae33c39d0525bf1ee0c",
+  "reports": {
+    "native": {
+      "path": "docs/evidence/callback-subtype-native-20261020/native.json",
+      "profiles": [
+        "c",
+        "cpp"
+      ],
+      "reports": 4,
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "sha256": "31d541c019fd1589c82c2e198144b017b124b4ca9a58c9568fb5500a4921d18f"
+    },
+    "perl": {
+      "interpreterCount": 4,
+      "modes": [
+        "prebuilt-only",
+        "build-xs"
+      ],
+      "path": "docs/evidence/callback-subtype-native-20261020/perl.json",
+      "reports": 16,
+      "routes": [
+        "ordinary",
+        "reviewed"
+      ],
+      "sha256": "8c41f0f48e36f0293e1e85e40b98d246879c7e02214f1449471d49bb5bd0ed4a"
+    }
+  },
+  "retention": "The original machine-readable reports are retained. The local terminal TAP and package bytes were not retained. The Perl report retains package archive identities; recurring hosted workflows retain their original TAP and reports.",
+  "schemaVersion": 1
+}

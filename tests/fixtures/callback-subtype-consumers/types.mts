@@ -1,3 +1,8 @@
+/**
+ * TypeScript-only callback Subtype consumer contract.
+ *
+ * @file
+ */
 import * as api from "callbacksubtypes";
 
 const positive = api.withRecovery((value: bigint): bigint => value + 1n, 1n);

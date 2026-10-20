@@ -637,7 +637,7 @@ test("refinements, host null and erased proofs retain their individual value pos
 	}
 });
 
-test("checked Subtype evidence preserves structural inputs and results and limits nominal fields to all seventeen installed profiles", async () => {
+test("checked Subtype evidence preserves copied values and scopes native callback refinements", async () => {
 	const cells = typeSurfaceCells(document, contracts).filter(cell => cell.shape === "subtype");
 	const allInstalled = cells.filter(cell => cell.stages.installedExecution.state === "passed");
 	const fields = allInstalled.filter(cell => cell.position === "field");
@@ -674,7 +674,27 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 				, ...(cell.profile === "php-wasm" ? [`recursive-subtype-php-wasm-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-installed`] : [])]);
 	}
 	const installed = allInstalled.filter(cell => ["parameter", "result"].includes(cell.position));
-	assert.equal(allInstalled.length, installed.length + 34);
+	const callbacks = allInstalled.filter(cell => ["callback-parameter", "callback-result"].includes(cell.position));
+	assert.equal(allInstalled.length, installed.length + fields.length + callbacks.length);
+	assert.deepEqual(callbacks.map(cell => cell.id).sort()
+		, ["c", "cpp", "perl"].flatMap(profile => ["ordinary-source", "reviewed-ir"]
+			.flatMap(path => ["callback-parameter", "callback-result"]
+				.map(position => `${profile}/subtype/${path}/${position}`))).sort());
+	for(const cell of callbacks)
+	{
+		const evidence = cell.profile === "perl"
+			? "callback-subtype-perl-local-installed"
+			: "callback-subtype-native-local-installed";
+		for(const stage of Object.values(cell.stages))
+		{
+			assert.equal(stage.state, "passed");
+			assert.deepEqual(stage.evidence, [evidence]);
+		}
+		assert.match(cell.hostType, cell.position === "callback-parameter"
+			? /checked by the selected constructor/u
+			: /checked by Lean with an explicit/u);
+		assert.ok(cell.limitations.some(note => /synchronous host callbacks/u.test(note)));
+	}
 	const primitive = installed.map(cell => {
 		const nominal = nominalProfiles.includes(cell.profile)
 			? ["full", "result-only"].map(mode => `nominal-subtype-${nominalLane(cell.profile)}-${cell.path === "ordinary-source" ? "ordinary" : "reviewed"}-${mode}-installed`) : [];
@@ -707,7 +727,8 @@ test("checked Subtype evidence preserves structural inputs and results and limit
 			return [name, { ...stage, evidence: stage.evidence.filter(id => !expected.includes(id) && !nominal.includes(id) && !primitiveNominal(cell).includes(id) && !recursivePhpWasm.includes(id)) }];
 		}));
 		// Require the exact nominal, primitive-base and structural supplements, then retain
-		// every earlier primitive-receipt assertion below. Callback cells stay open.
+		// every earlier primitive-receipt assertion below. Other callback profiles
+		// remain open until they receive their own installed evidence.
 		return {
 			...cell
 			, stages
