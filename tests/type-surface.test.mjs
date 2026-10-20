@@ -526,7 +526,9 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 					const recursiveChecked = recursiveFixtures.map(fixture =>
 						`recursive-checked-record-${recursiveLane}-ordinary-${fixture}-installed`
 					);
-					const valueIndexLane = { "php-native": "php", python: "python" }[profile];
+					const valueIndexLane = {
+						"php-native": "php", python: "python", ruby: "ruby"
+					}[profile];
 					const valueIndexed = !valueIndexLane || cell.position === "field" ? []
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
 							: ["ordinary-source"]).map(route =>
