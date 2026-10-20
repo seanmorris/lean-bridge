@@ -9,6 +9,7 @@ import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
+import { beforeCallbackSubtypeRemainingSource } from "./callback-subtype-remaining-source-history.mjs";
 import {
 	beforeCallbackSubtypeLanguageSource
 	, callbackSubtypeLanguageChangedPaths
@@ -37,7 +38,9 @@ test("callback Subtype language history restores every changed source", async ()
 	assert.ok(record.repairedTypeSurfacePointers > 0);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const latest = await readFile(update.path, "utf8");
+		const current = beforeCallbackSubtypeRemainingSource(
+			update.path, latest, update.currentSha256);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCallbackSubtypeLanguageUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -51,8 +54,12 @@ test("callback Subtype language history restores every changed source", async ()
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path, "utf8"))
-			, addition.currentSha256, addition.path);
+	{
+		const latest = await readFile(addition.path, "utf8");
+		const current = beforeCallbackSubtypeRemainingSource(
+			addition.path, latest, addition.currentSha256);
+		assert.equal(sha256(current), addition.currentSha256, addition.path);
+	}
 });
 
 test("callback Subtype language history writer refuses an unrelated checkout", async t => {

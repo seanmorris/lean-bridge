@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
+import "./helpers/callback-subtype-remaining-source-history-tests.mjs";
 import "./helpers/callback-subtype-language-source-history-tests.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
 import { readTypeSurface, typeSurfaceCells, typeSurfaceGapReport, validateTypeSurface } from "../src/adoption/type-surface.mjs";
@@ -589,7 +590,7 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 	}
 	for(const cell of cells.filter(cell => cell.profile === profile
 		&& cell.path === "ordinary-source" && !observed.includes(cell)
-		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "php-wasm-owned-callback-results-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed", "callback-subtype-languages-generation"].includes(id))))
+		&& !cell.stages.installedExecution.evidence.some(id => ["python-callables-installed", "python-structured-callables-installed", "python-recursive-callables-installed", "ruby-callables-installed", "ruby-structured-callables-installed", "ruby-recursive-callables-installed", "rust-callables-installed", "rust-structured-callables-installed", "rust-recursive-callables-installed", "cpp-callables-installed", "dotnet-callables-installed", "dotnet-structured-callables-installed", "dotnet-recursive-callables-installed", "jvm-callables-installed", "jvm-structured-callables-installed", "jvm-recursive-callables-installed", "php-native-callables-installed", "php-native-structured-callables-installed", "php-native-recursive-callables-installed", "php-wasm-callables-installed", "php-wasm-structured-callables-installed", "php-wasm-recursive-callables-installed", "php-wasm-owned-callback-results-installed", "wit-wasi-callables-installed", "wit-wasi-structured-callables-installed", "wit-wasi-recursive-callables-installed", "callback-subtype-languages-generation", "callback-subtype-remaining-generation"].includes(id))))
 		assert.equal(cell.stages.installedExecution.state, "unreviewed", cell.id);
 });
 
@@ -687,6 +688,18 @@ test("checked Subtype evidence preserves copied values and scopes native callbac
 			assert.equal(cell.stages[name].state, "inspected");
 		for(const stage of Object.values(cell.stages))
 			assert.deepEqual(stage.evidence, ["callback-subtype-languages-generation"]);
+	}
+	const remainingCallbacks = cells.filter(cell => ["dotnet", "java", "kotlin", "php-native", "wit-wasi"].includes(cell.profile)
+		&& ["callback-parameter", "callback-result"].includes(cell.position));
+	assert.equal(remainingCallbacks.length, 20);
+	for(const cell of remainingCallbacks)
+	{
+		assert.equal(cell.stages.analysis.state, "passed");
+		assert.equal(cell.stages.generation.state, "passed");
+		for(const name of ["compilation", "packaging", "installedExecution"])
+			assert.equal(cell.stages[name].state, "inspected");
+		for(const stage of Object.values(cell.stages))
+			assert.deepEqual(stage.evidence, ["callback-subtype-remaining-generation"]);
 	}
 	assert.equal(allInstalled.length, installed.length + fields.length + callbacks.length);
 	assert.deepEqual(callbacks.map(cell => cell.id).sort()
