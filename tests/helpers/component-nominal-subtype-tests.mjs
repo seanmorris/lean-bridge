@@ -30,6 +30,8 @@ import "./nominal-subtype-npm-installed-tests.mjs";
 import "./nominal-subtype-npm-evidence-tests.mjs";
 import "./nominal-subtype-npm-promotion-tests.mjs";
 import "./nominal-subtype-npm-promotion-history-tests.mjs";
+import "./nominal-subtype-entry-browser-ci-tests.mjs";
+import "./nominal-subtype-entry-native-ci-tests.mjs";
 
 const key = "lean-lang.org/refinements";
 const named = (document, name) => document.declarations.find(item => item.name === name);

@@ -21,6 +21,24 @@ import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeName } from 
 import { accountNominalSubtypeEntry, instrumentNominalSubtypeLean, nominalSubtypeEntryConsumer, nominalSubtypeEntryExpected, nominalSubtypeEntryInstrumentation } from "./nominal-subtype-entry.mjs";
 
 /**
+ * Exact records emitted by the separately identified Node entry probe and, when selected, its browser replay.
+ *
+ * @param options - Optional browser replay selection.
+ * @param options.browser - Include the static page, deployment and three browser console traces.
+ */
+export const nominalSubtypeEntryRecordPaths = ({ browser = false } = {}) => [
+	"entry/fixture.probe.lean", "entry/entry.mjs"
+	, "entry/stderr.txt", "entry/stdout.json"
+	, "entry/component-package-receipt.json", "entry/entry.json"
+	, ...browser ? ["entry/browser/entry-page.mjs"
+		, "entry/browser/index.html", "entry/browser/deployment.json"
+		, "entry/browser/chromium.console.txt"
+		, "entry/browser/firefox.console.txt"
+		, "entry/browser/webkit.console.txt"
+		, "entry/browser/browser.json"] : []
+];
+
+/**
  * Classify the side module's exports: the compiler-emitted carrier validators are exported but no
  * package JavaScript names them, so they are reported as unreferenced rather than silently absent.
  *
