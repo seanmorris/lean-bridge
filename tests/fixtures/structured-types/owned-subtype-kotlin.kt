@@ -36,6 +36,21 @@ private fun release(value: Bundle) {
 private fun serialIs(ticket: Ticket, expected: Long, message: String) =
     check(Api.serial(ticket) == BigInteger.valueOf(expected), message)
 
+private data class Abandoned(val weak: java.lang.ref.WeakReference<Ticket>, val retained: Ticket)
+
+private fun abandon(): Abandoned {
+    val abandoned = Api.newTicket(BigInteger.valueOf(61), "finalized")
+    return Abandoned(java.lang.ref.WeakReference(abandoned), abandoned.retain())
+}
+
+private fun collect(weak: java.lang.ref.WeakReference<*>) {
+    repeat(100) {
+        if (weak.get() == null) return
+        System.gc(); System.runFinalization(); Thread.sleep(5)
+    }
+    check(false, "garbage collection reaches the abandoned owner")
+}
+
 fun main() {
     val ticket = Api.newTicket(BigInteger.valueOf(41), "kotlin\u0000checked")
     val retained = ticket.retain()
@@ -73,6 +88,23 @@ fun main() {
     serialIs(kept, 51, "successful transfer preserves an independent retain")
     check(moved.payload.count == BigInteger.valueOf(9), "successful transfer preserves the checked field")
     serialIs(moved.primary, 51, "successful transfer returns a usable resource")
+
+    var foreignFailure: Throwable? = null
+    val foreign = Thread {
+        try { Api.serial(ticket) }
+        catch (error: Throwable) { foreignFailure = error }
+    }
+    foreign.start(); foreign.join(10_000)
+    check(!foreign.isAlive, "worker completed")
+    check(foreignFailure is LeanBridgeException && (foreignFailure as LeanBridgeException).status() == 5,
+        "foreign-thread use rejects without closing the owner")
+    serialIs(ticket, 41, "owner remains usable after foreign-thread rejection")
+
+    val abandoned = abandon()
+    collect(abandoned.weak)
+    serialIs(abandoned.retained, 61, "Cleaner cleanup preserves an independent retain")
+    abandoned.retained.close()
+    serialIs(ticket, 41, "runtime remains usable after Cleaner cleanup")
 
     release(moved)
     ticket.close(); retained.close(); moving.close(); kept.close()

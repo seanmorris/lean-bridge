@@ -36,6 +36,28 @@ public final class Consumer {
         check(Api.serial(ticket).equals(BigInteger.valueOf(expected)), message);
     }
 
+    private record Abandoned(java.lang.ref.WeakReference<Ticket> weak, Ticket retained) { }
+
+    private static Abandoned abandon() {
+        var abandoned = Api.newTicket(BigInteger.valueOf(61), "finalized");
+        return new Abandoned(new java.lang.ref.WeakReference<>(abandoned), abandoned.retain());
+    }
+
+    private static void join(Thread thread) {
+        try { thread.join(10000); }
+        catch (InterruptedException error) { throw new AssertionError(error); }
+        check(!thread.isAlive(), "worker completed");
+    }
+
+    private static void collect(java.lang.ref.WeakReference<?> weak) {
+        for (var index = 0; index < 100 && weak.get() != null; index++) {
+            System.gc(); System.runFinalization();
+            try { Thread.sleep(5); }
+            catch (InterruptedException error) { throw new AssertionError(error); }
+        }
+        check(weak.get() == null, "garbage collection reaches the abandoned owner");
+    }
+
     public static void main(String[] arguments) {
         var ticket = Api.newTicket(BigInteger.valueOf(41), "java\0checked");
         var retained = ticket.retain();
@@ -73,6 +95,23 @@ public final class Consumer {
         serialIs(kept, 51, "successful transfer preserves an independent retain");
         check(moved.payload().count().equals(BigInteger.valueOf(9)), "successful transfer preserves the checked field");
         serialIs(moved.primary(), 51, "successful transfer returns a usable resource");
+
+        var foreignFailure = new java.util.concurrent.atomic.AtomicReference<Throwable>();
+        var foreign = new Thread(() -> {
+            try { Api.serial(ticket); }
+            catch (Throwable error) { foreignFailure.set(error); }
+        });
+        foreign.start(); join(foreign);
+        check(foreignFailure.get() instanceof LeanBridgeException error && error.status() == 5,
+            "foreign-thread use rejects without closing the owner");
+        serialIs(ticket, 41, "owner remains usable after foreign-thread rejection");
+
+        var abandoned = abandon();
+        collect(abandoned.weak());
+        serialIs(abandoned.retained(), 61,
+            "Cleaner cleanup preserves an independent retain");
+        abandoned.retained().close();
+        serialIs(ticket, 41, "runtime remains usable after Cleaner cleanup");
 
         release(moved);
         ticket.close(); retained.close(); moving.close(); kept.close();

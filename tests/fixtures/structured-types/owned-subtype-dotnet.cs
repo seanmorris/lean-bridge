@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using LeanBridge.OwnedSubtypes;
 
 internal static class Program
@@ -44,6 +46,22 @@ internal static class Program
     private static void SerialIs(Ticket ticket, int expected, string message) =>
         Check(Api.Serial(ticket) == expected, message);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static (WeakReference Weak, Ticket Retained) Abandon()
+    {
+        var abandoned = Api.NewTicket(61, "finalized");
+        return (new WeakReference(abandoned), abandoned.Retain());
+    }
+
+    private static void Collect()
+    {
+        for (var index = 0; index < 3; index++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+    }
+
     private static void Main()
     {
         var ticket = Api.NewTicket(41, "dotnet\0checked");
@@ -83,6 +101,25 @@ internal static class Program
         SerialIs(kept, 51, "successful transfer preserves an independent retain");
         Check(moved.Payload.Count == 9, "successful transfer preserves the checked field");
         SerialIs(moved.Primary, 51, "successful transfer returns a usable resource");
+
+        Exception? foreignFailure = null;
+        var foreign = new Thread(() =>
+        {
+            try { Api.Serial(ticket); }
+            catch (Exception error) { foreignFailure = error; }
+        });
+        foreign.Start(); foreign.Join();
+        Check(foreignFailure is LeanBridgeException { Status: 5 },
+            "foreign-thread use rejects without closing the owner");
+        SerialIs(ticket, 41, "owner remains usable after foreign-thread rejection");
+
+        var abandoned = Abandon();
+        Collect();
+        Check(!abandoned.Weak.IsAlive, "garbage collection reaches the abandoned owner");
+        SerialIs(abandoned.Retained, 61,
+            "finalizer cleanup preserves an independent retain");
+        abandoned.Retained.Dispose();
+        SerialIs(ticket, 41, "runtime remains usable after finalizer cleanup");
 
         Release(moved);
         ticket.Dispose();

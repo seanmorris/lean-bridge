@@ -76,6 +76,16 @@ serial_is($kept, 51, 'successful transfer preserves an independent retain');
 check($moved->payload->count->isEqualTo(Big::of(9)), 'successful transfer preserves the checked field');
 serial_is($moved->primary, 51, 'successful transfer returns a usable resource');
 
+$finalized = new_ticket(Big::of(61), 'finalized');
+$finalizerSurvivor = $finalized->retain();
+$weak = WeakReference::create($finalized);
+unset($finalized);
+gc_collect_cycles();
+check($weak->get() === null, 'garbage collection reaches the abandoned owner');
+serial_is($finalizerSurvivor, 61, 'destructor cleanup preserves an independent retain');
+$finalizerSurvivor->close();
+serial_is($ticket, 41, 'runtime remains usable after destructor cleanup');
+
 release_bundle($moved);
 $ticket->close(); $retained->close(); $moving->close(); $kept->close();
 rejected(fn() => serial($ticket), 4);

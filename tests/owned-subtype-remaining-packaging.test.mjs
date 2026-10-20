@@ -11,6 +11,7 @@ import test from "node:test";
 import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
 import { generateOwnedPhpPackage } from "../src/backends/php/owned-package.mjs";
+import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
 import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { ownedDotnetEvidence } from "../src/build/owned-dotnet-artifacts.mjs";
 import { ownedJvmEvidence } from "../src/build/owned-jvm-artifacts.mjs";
@@ -67,6 +68,13 @@ const markers = {
 	, "php-native": "owned-subtype-php"
 	, "wit-wasi": "owned-subtype-wit"
 };
+const lifecycle = {
+	dotnet: { fallback: "gc-finalizer", affinity: "foreign-thread-status-5" }
+	, java: { fallback: "cleaner", affinity: "foreign-thread-status-5" }
+	, kotlin: { fallback: "cleaner", affinity: "foreign-thread-status-5" }
+	, "php-native": { fallback: "destructor", observation: "weak-reference-cleared" }
+	, "wit-wasi": { fallback: "explicit-release", observation: "independent-owner-survives" }
+};
 const reports = [];
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 
@@ -99,12 +107,36 @@ test("remaining hosts generate callback-free checked transfer copies", () => {
 	}
 });
 
+test("callback-free WIT consumer matches the checked native header", async t => {
+	const directory = await mkdtemp(join(tmpdir(), "lean-owned-subtype-wit-header-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const generated = generateOwnedCppPackage(ownedSubtypePackageReviewedIr(), {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.equal(generated.c.callbacks.length, 0);
+	await saveLakeFile(directory, `include/${generated.c.prefix}.h`, generated.c.header);
+	const consumer = `#define LEAN_BRIDGE_OWNED_SUBTYPE_NO_CALLBACK 1\n${await readFile("tests/fixtures/structured-types/owned-subtype-installed.c", "utf8")}`;
+	await saveLakeFile(directory, "consumer.c", consumer);
+	await runCopied("/usr/bin/cc", ["-std=c11", "-Wall", "-Wextra", "-Werror"
+		, "-I", "include", "-fsyntax-only", "consumer.c"], directory
+	, { PATH: "/usr/bin:/bin" });
+});
+
 test("remaining owned Subtype fixtures and required matrix stay registered", async () => {
 	for(const [profile, extension] of Object.entries(extensions))
 	{
 		const path = profile === "wit-wasi" ? "tests/fixtures/structured-types/owned-subtype-installed.c"
 			: `tests/fixtures/structured-types/owned-subtype-${sourceProfiles[profile]}.${extension}`;
-		assert.ok((await readFile(path, "utf8")).includes(profile === "wit-wasi" ? "owned-subtype-c" : markers[profile]), path);
+		const source = await readFile(path, "utf8");
+		assert.ok(source.includes(profile === "wit-wasi" ? "owned-subtype-c" : markers[profile]), path);
+		const lifecycleMarker = {
+			dotnet: "GC.WaitForPendingFinalizers()"
+			, java: "System.runFinalization()"
+			, kotlin: "System.runFinalization()"
+			, "php-native": "WeakReference::create"
+			, "wit-wasi": "retained_after_release"
+		}[profile];
+		assert.ok(source.includes(lifecycleMarker), `${profile} lifecycle`);
 	}
 	const source = await readFile(".github/workflows/owned-subtype-remaining.yml", "utf8");
 	for(const required of [
@@ -176,7 +208,7 @@ const reassemble = async ({ lane, root, output, environment, settings, projectio
 const fixtureFor = async profile => {
 	if(profile === "wit-wasi")
 	{
-		const source = (await readFile("tests/fixtures/structured-types/owned-subtype-installed.c", "utf8"))
+		const source = `#define LEAN_BRIDGE_OWNED_SUBTYPE_NO_CALLBACK 1\n${await readFile("tests/fixtures/structured-types/owned-subtype-installed.c", "utf8")}`
 			.replace("owned-subtype-c:", "owned-subtype-wit:");
 		return { source: () => source, success: markers[profile]
 			, wit: [/resource ticket/u, /echo-record-alternate: func/u, /transfer-record: func/u]
@@ -308,6 +340,7 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} checked ow
 		, relocatedInstallation: true, handoffRemovedBeforeRelocatedExecution: true
 		, deterministicReassembly: true, compilerSelectedConstructors: true
 		, transferredInputCheckedBeforeHandoff: true, immutableInstalledInputs: true
+		, lifecycle: Object.fromEntries(specification.profiles.map(profile => [profile, lifecycle[profile]]))
 		, reassembled
 		, packageSetReceiptSha256: sha256(canonicalJson(receipt))
 		, repeated, observations: reported
