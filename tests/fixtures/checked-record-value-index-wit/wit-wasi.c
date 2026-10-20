@@ -52,9 +52,11 @@ static void refused(const char *label, value input, const char *cause, bool host
 static void host_refused(const char *label, value input) {
   refused(label, input, HOST_REFUSAL, true);
 }
+#ifndef VALUE_INDEX_RESULT_ONLY
 static void recover(void) {
   expect("zero-nat-index", counted("count", 99), small(99)); ++recoveries;
 }
+#endif
 
 static void results(void) {
   expect_zero("produce-true-bool", counted("count", 0));
