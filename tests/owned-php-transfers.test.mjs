@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedPhpCalls } from "../src/backends/php/owned-calls.mjs";
+import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedRustTransferConfiguration, ownedRustTransferReviewedIr, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
 import { ownedDotnetCallbacksReviewedIr } from "./helpers/owned-dotnet-callback-fixture.mjs";
 import { compileOwnedPhpFixture } from "./helpers/owned-php-native.mjs";
@@ -27,6 +28,17 @@ test("PHP transfers require explicit capability and preserve borrowed APIs", () 
 	assert.deepEqual(enabled.files, original.files);
 	assert.equal(enabled.nativeSource, original.nativeSource);
 	assert.equal(enabled.definitions, original.definitions);
+});
+
+test("PHP snapshots checked aggregate transfers without enabling callbacks", () => {
+	const ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);
+	const generated = generateOwnedPhpCalls(ir, {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.deepEqual(ir, before);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.match(Object.values(generated.files).join("\n"), /owned_subtypes_bundle_t_copy/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`PHP aliases follow native Lean input transfers (${mode})`, {

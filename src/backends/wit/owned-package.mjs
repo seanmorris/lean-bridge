@@ -5,7 +5,7 @@
  * @file
  */
 import { generateOwnedCPackage } from "../c/owned-package.mjs";
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { generateOwnedAggregateCarriers } from "../../build/owned-aggregate-carriers.mjs";
 import { compileOwnedNativeValueLayout } from "../native/owned-value-layout.mjs";
 import { compileOwnedWitGraphModel } from "./owned-graph-model.mjs";
@@ -27,7 +27,9 @@ export const generateOwnedWitPackage = (options, componentBytes, settings = {}) 
 	const callbackAnchors = options.callbackResultAnchors === true
 		&& compileOwnedNativeValueLayout(generateOwnedAggregateCarriers(options).model.bindingIr, options)
 			.callbacks.some(callback => callback.anchor !== undefined);
-	const generated = generateOwnedCPackage({ ...options, ...callbackAnchors ? { valueCopies: true } : {} }, {
+	const values = generateOwnedCValues(generateOwnedAggregateCarriers(options).model.bindingIr, options);
+	const valueCopies = callbackAnchors || ownedCProjectionRequiresValueCopies(values);
+	const generated = generateOwnedCPackage({ ...options, ...valueCopies ? { valueCopies: true } : {} }, {
 		publicPrefix: ownedWitPublicPrefix
 		, transferredInputs: options.transferredInputs === true
 		, anchoredResults: options.anchoredResults === true

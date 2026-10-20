@@ -29,7 +29,7 @@ export const ownedPhpAdapterSources = (c, php) => ({ ...c.files
 export const ownedPhpEvidence = async options => {
 	const { nativeRoot, runtimeRoot, adapterRoot, environment = process.env, signal } = options;
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
 	if(!model.ownedGraph) throw new TypeError("Owned PHP requires an authenticated ownership graph");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
@@ -37,8 +37,14 @@ export const ownedPhpEvidence = async options => {
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities, valueCopies: callbackResultAnchors, identityEquality: receiverExports });
-	const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
+	const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);
+	const cOptions = { metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, ...capabilities
+		, valueCopies: Boolean(php.c.copies?.length)
+		, identityEquality: receiverExports };
+	const c = generateOwnedCPackage(cOptions);
+	const prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-php-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedPhpAdapterSources(c, php), gmpLibrary = "libgmp-lean-bridge.so.10";

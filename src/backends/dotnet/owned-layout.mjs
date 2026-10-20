@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 
 const primitives = {
 	unit: ["byte", 1], bool: ["byte", 1], char: ["uint", 4]
@@ -28,8 +28,11 @@ const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
  * @param options.hostCallbacks - Admit synchronous host callback descriptors.
  */
 export const compileOwnedDotnetLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const options = { hostCallbacks, transferredInputs, anchoredResults
+		, receiverExports, callbackResultAnchors };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, raw: node.identity || node.integer ? "nint" : node.scalar ? primitives[node.name][0] : `OwnedRaw${node.index}`

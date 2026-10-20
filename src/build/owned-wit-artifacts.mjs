@@ -23,7 +23,7 @@ import { wasmtimeCapiIdentity } from "./native-wit-artifacts.mjs";
  */
 export const ownedWitEvidence = async ({ nativeRoot, runtimeRoot, settings = {} }) => {
 	const { manifest: runtime, identity: runtimeIdentity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, runtimeIdentity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
 	if(!model.ownedGraph) throw new TypeError("Owned WIT requires an ownership-aware native component");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const inputs = { metadata, sourceIdentity: model.sourceIdentity

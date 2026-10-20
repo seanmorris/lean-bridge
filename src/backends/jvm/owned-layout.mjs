@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 
 const primitives = {
 	unit: ["BYTE", "byte", 1], bool: ["BYTE", "byte", 1], char: ["INT", "int", 4]
@@ -31,8 +31,11 @@ const memory = "java.lang.foreign.MemoryLayout", value = "java.lang.foreign.Valu
  * @param options.hostCallbacks - Enable host callback transport independently.
  */
 export const compileOwnedJvmLayout = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const options = { hostCallbacks, transferredInputs, anchoredResults
+		, receiverExports, callbackResultAnchors };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
 	const types = c.nodes.map(node => ({ ...node
 		, aggregate: !node.scalar && !node.integer && !node.identity
 		, layoutName: `O${node.index}`

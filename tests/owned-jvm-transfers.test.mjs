@@ -10,6 +10,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedJvmCalls } from "../src/backends/jvm/owned-calls.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
+import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { ownedRustTransferConfiguration, ownedRustTransferReviewedIr, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
@@ -31,6 +32,17 @@ test("JVM consuming inputs require capability and preserve borrow-only APIs", ()
 	assert.deepEqual(generateOwnedJvmCalls(reversed, { transferredInputs: true }).files, generated.files);
 	for(const fixture of [ownedCppCompositionReviewedIr, ownedPythonScalarsReviewedIr])
 		assert.deepEqual(generateOwnedJvmCalls(fixture(), { transferredInputs: true }).files, generateOwnedJvmCalls(fixture()).files);
+});
+
+test("JVM snapshots checked aggregate transfers without enabling callbacks", () => {
+	const ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);
+	const generated = generateOwnedJvmCalls(ir, {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.deepEqual(ir, before);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.match(Object.values(generated.files).join("\n"), /moves\.arm\(\)/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`Java/Kotlin leases follow the compiled Lean handoff (${mode})`, {

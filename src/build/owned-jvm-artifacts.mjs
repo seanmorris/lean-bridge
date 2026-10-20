@@ -31,16 +31,20 @@ export const ownedJvmAdapterSources = (c, jvm) => ({ ...c.files
  */
 export const ownedJvmEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned JVM requires authenticated callback/copy, receiver or callback-result support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned JVM requires authenticated callback/copy, transfer, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });
-	const projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
+	const projection = generateOwnedJvmPackage(model.bindingIr, null, capabilities);
+	const cOptions = { metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };
+	const c = generateOwnedCPackage(cOptions);
+	const prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-jvm-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedJvmAdapterSources(c, projection), gmpLibrary = "libgmp-lean-bridge.so.10";

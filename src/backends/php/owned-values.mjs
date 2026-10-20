@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { phpClassName, phpFieldName, reservedPhpNames } from "./copied-names.mjs";
 import { copiedPhpValues } from "./copied-support.mjs";
 import { phpValueMethods } from "./copied-equality.mjs";
@@ -37,8 +37,12 @@ const bigint = "\\Brick\\Math\\BigInteger";
 export const generateOwnedPhpValues = (ir, { integerBits = 64, wordBits = integerBits, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
 	if(![32, 64].includes(integerBits) || ![32, 64].includes(wordBits)) throw new TypeError("PHP and Lean integer widths must be 32 or 64");
 	const identityEquality = receiverExports && ir.declarations.some(item => item.receiver);
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, identityEquality }), namespace = `Lean${pascal(c.prefix)}`;
+	const options = { hostCallbacks, transferredInputs, anchoredResults
+		, receiverExports, callbackResultAnchors, identityEquality };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
+	const namespace = `Lean${pascal(c.prefix)}`;
 	callbackResultAnchors = c.callbacks.some(callback => callback.anchor !== undefined);
 	anchoredResults = c.anchoredResults;
 	receiverExports = c.functions.some(fn => fn.receiver === 0);

@@ -10,6 +10,7 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedDotnetCalls } from "../src/backends/dotnet/owned-calls.mjs";
 import { compileOwnedDotnetFixture } from "./helpers/owned-dotnet-native.mjs";
+import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { ownedRustTransferConfiguration, ownedRustTransferReviewedIr, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
@@ -28,6 +29,17 @@ test("C# consuming inputs require capability and preserve borrow-only APIs", () 
 	assert.deepEqual(generateOwnedDotnetCalls(reversed, { transferredInputs: true }).files, generated.files);
 	for(const fixture of [ownedCppCompositionReviewedIr, ownedPythonScalarsReviewedIr])
 		assert.deepEqual(generateOwnedDotnetCalls(fixture(), { transferredInputs: true }).files, generateOwnedDotnetCalls(fixture()).files);
+});
+
+test("C# snapshots checked aggregate transfers without enabling callbacks", () => {
+	const ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);
+	const generated = generateOwnedDotnetCalls(ir, {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.deepEqual(ir, before);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.match(generated.files["Calls.cs"], /moves\.Arm\(\)/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`C# leases follow the compiled Lean handoff (${mode})`, {

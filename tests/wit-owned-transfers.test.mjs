@@ -39,6 +39,22 @@ test("WIT input transfers require explicit capability and retain exact own/borro
 	for(const key of ["layout", "manifest", "wit", "wat"]) assert.deepEqual(enabled[key], borrowed[key]);
 });
 
+test("WIT snapshots aggregate transfers without enabling callbacks", async () => {
+	const record = JSON.parse(await readFile("docs/evidence/wit-owned-transfers-20260930.json", "utf8"));
+	for(const item of record.packages)
+	{
+		const generated = generateOwnedWitPackage({ ...item.inputs
+			, hostCallbacks: false, transferredInputs: true }, new Uint8Array());
+		assert.equal(generated.values.functions.filter(fn => fn.transfers?.length).length, 20);
+		assert.ok(generated.values.copies?.length > 20);
+		const nodes = new Map(generated.values.nodes.map(node => [node.id, node]));
+		for(const fn of generated.values.functions.filter(fn => fn.transfers?.length))
+			for(const index of fn.transfers)
+				assert.ok(nodes.get(fn.parameters[index]).identity
+					|| generated.values.copies.some(copy => copy.id === fn.parameters[index]));
+	}
+});
+
 for(const mode of ["ordinary", "reviewed"]) test(`WIT consuming owners invalidate before real Lean callback reentry (${mode})`, {
 	skip: process.env.LEAN_BRIDGE_WIT_OWNED_TRANSFER_TEST !== "1", timeout: 1200000
 }, async t => {

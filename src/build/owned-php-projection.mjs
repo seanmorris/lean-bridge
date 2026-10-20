@@ -22,7 +22,7 @@ import { packageOwnedPhp } from "../release/owned-composer.mjs";
 export const projectOwnedPhp = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
 	if(!model.ownedGraph) throw new TypeError("Owned PHP requires an authenticated ownership graph");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
@@ -30,8 +30,14 @@ export const projectOwnedPhp = async options => {
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...capabilities, valueCopies: callbackResultAnchors, identityEquality: receiverExports });
-	const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
+	const php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);
+	const cOptions = { metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, ...capabilities
+		, valueCopies: Boolean(php.c.copies?.length)
+		, identityEquality: receiverExports };
+	const c = generateOwnedCPackage(cOptions);
+	const prefix = c.values.prefix;
 	const root = join(working, "native/owned-php-binding"), gmpRoot = join(root, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid PHP native glibc floor");

@@ -22,16 +22,20 @@ import { packageOwnedNuget } from "../release/owned-nuget.mjs";
 export const projectOwnedDotnet = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned C# requires authenticated callback/copy, receiver or callback-result support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned C# requires authenticated callback/copy, transfer, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
 	const capabilities = { transferredInputs, anchoredResults, receiverExports, callbackResultAnchors, hostCallbacks };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, valueCopies: callbackResultAnchors, ...capabilities });
-	const projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities), prefix = c.values.prefix;
+	const projection = generateOwnedDotnetPackage(model.bindingIr, null, capabilities);
+	const cOptions = { metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, valueCopies: Boolean(projection.c.copies?.length), ...capabilities };
+	const c = generateOwnedCPackage(cOptions);
+	const prefix = c.values.prefix;
 	const adapterRoot = join(working, "native/owned-dotnet-binding"), gmpRoot = join(adapterRoot, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid C# native glibc floor");
