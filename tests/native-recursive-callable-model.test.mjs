@@ -237,6 +237,21 @@ test("native language projections retain callback Subtype direction and typed re
 	assert.doesNotMatch(witHost, new RegExp(hostCallback.call, "u"));
 });
 
+test("JVM callback Subtypes disambiguate equal erased host and closure signatures", () => {
+	const { ir, closure } = structuredCallableDirectionalSubtypeIr();
+	closure.callable.parameters = [structuredClone(closure.callable.parameters[1])];
+	closure.source.extensions["lean-lang.org/refinements"].parameters = [{
+		kind: "subtype", constructor: "Structured.checkedClosureArgument"
+	}];
+	const generated = generateCallableJvmGraphPackage(ir);
+	const names = Object.keys(generated);
+	assert.ok(names.some(path => path.endsWith("/FnNatToNatHost.java")));
+	assert.ok(names.some(path => path.endsWith("/FnNatToNatClosure.java")));
+	const api = generated[names.find(path => path.endsWith("/Api.java"))];
+	assert.match(api, /WithRecovery<FnNatToNatHost, java\.math\.BigInteger>/u);
+	assert.match(api, /FnNatToNatClosure\.LeanClosure/u);
+});
+
 test("native callable graph admission retains identity ownership and lifetime checks", () => {
 	const original = structuredCallableReviewedIr({ recursive: true });
 	for(const mutate of [

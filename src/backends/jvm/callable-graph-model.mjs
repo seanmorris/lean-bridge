@@ -33,12 +33,26 @@ export const compileCallableJvmGraphPackageModel = ir => {
 		occupied.add(name); return name;
 	};
 	const definitions = new Map(ir.types.map(type => [type.id, type]));
+	const callbackNames = descriptor.callbacks.map(signature => {
+		const structured = [...signature.parameters, signature.result].some(ref => ref.kind !== 'primitive');
+		const base = structured ? 'Fn' + pascal(cIdentifier(definitions.get(signature.id).name))
+			: 'Fn' + signature.parameters.map(ref => primitiveName(ref.name)).join('') + 'To' + primitiveName(signature.result.name);
+		return { base, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types) };
+	});
+	const duplicateBases = new Set(callbackNames.filter((value, index, values) =>
+		values.some((other, otherIndex) => otherIndex !== index && other.base === value.base)).map(value => value.base));
+	const differentiated = new Map();
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
 		const structured = [...signature.parameters, signature.result].some(ref => ref.kind !== 'primitive');
-		const publicName = claim(structured ? 'Fn' + pascal(cIdentifier(definitions.get(signature.id).name)) : 'Fn' + signature.parameters.map(ref => primitiveName(ref.name)).join('') + 'To' + primitiveName(signature.result.name));
+		const candidate = callbackNames[index];
+		const differentiatedBase = duplicateBases.has(candidate.base)
+			? candidate.base + pascal(candidate.direction ?? 'callback') : candidate.base;
+		const ordinal = (differentiated.get(differentiatedBase) ?? 0) + 1;
+		differentiated.set(differentiatedBase, ordinal);
+		const publicName = claim(differentiatedBase + (ordinal === 1 ? '' : String(ordinal)));
 		const kotlinJavaName = structured ? claim('Kotlin' + publicName) : publicName;
-		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const direction = candidate.direction;
 		return [signature.id
 			, {
 			...signature
