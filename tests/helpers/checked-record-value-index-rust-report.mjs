@@ -108,8 +108,8 @@ const checkModels = async options => {
 		} else assert.equal(identity.reviewedBindingIr, undefined);
 		const snapshot = await json(prefix + "author-inputs.json");
 		const moduleInput = snapshot.find(item => item.path === `${checkedRecordValueIndexModule}.lean`);
-		assert.deepEqual({ bytes: moduleInput.bytes, sha256: moduleInput.sha256 }
-			, { bytes: source.length, sha256: sha256(source) });
+		assert.equal(moduleInput.sha256, sha256(source));
+		assert.equal(moduleInput.mode & 0o170000, 0o100000);
 		assert.equal(receipt.source.treeSha256, identity.sourceTreeSha256);
 		assert.deepEqual(receipt.component, model.component);
 		assert.deepEqual(model.component, { id: "checkedrecordvalueindices@1.0.0"
