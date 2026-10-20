@@ -12,6 +12,7 @@ import {
 } from "./checked-record-value-index-ruby-evidence.mjs";
 import "./checked-record-value-index-ruby-archive-source-history-tests.mjs";
 import "./checked-record-value-index-ruby-promotion-tests.mjs";
+import "./checked-record-value-index-ruby-promotion-source-history-tests.mjs";
 
 test("hosted value-index Ruby archive authenticates every retained route", {
 	timeout: 120_000
