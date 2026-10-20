@@ -1,0 +1,255 @@
+{
+  "bindingIrSha256": "c8d9cb6a63b379d1f1c83b1864db7d7fc5057d0f29aee768b3e849f330a61cc1",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "ecosystem": "rubygems",
+  "files": {
+    "README.md": {
+      "bytes": 4579,
+      "sha256": "74a4d8634d95f4f1e845a04bf561a78e2445e6bd75c15b4b025f0eb9f2966051"
+    },
+    "binding-manifest.json": {
+      "bytes": 1180,
+      "sha256": "9789b6d0168ae5303fa74580e07fcf2cfcc4aa59a2e566bfe8a77f5a8bb5becd"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "dfbc29cbd50c566ce93ab71c8656dbe69bb16b3690e6c9186d75415d6709a42f"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 26130,
+      "sha256": "212a69e07f5abac2e4707bcb56af458b3639759c4e0554e55be5a3ffecf05033"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 1781,
+      "sha256": "c492d3bf06a6de01a3f6c4ca0c2b151afbba6052166f8c6982673360649b3ee5"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 8091,
+      "sha256": "ae21fdcea0756a53730efe47cbd11b40719873f74cae7f59ba8b033f37803d93"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 48400,
+      "sha256": "06e7ea574a11d4781ccacc3e024dbe1f683974c13663da8dae0b010e5ba20e75"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 68597,
+      "sha256": "a631d8db7a7b0ebe0f0d3e839df9ab38ef78db5b4c39bcce87bf30a9272d5e7d"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 8884,
+      "sha256": "b17e6959f87c2a8d72439c638a6bdf0aa834cec651ddd4af5d47b7b680b7f71c"
+    },
+    "lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/licenses/source-notices.json": {
+      "bytes": 4252,
+      "sha256": "97202185f54a678dafd647fd9a0213d2ca473587aa51ee09d0dfac82bfa1c174"
+    },
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "3b78bfc6608f374fcc259f41e687ae13e468b2b2a23ec882511d01ffd382e9a1"
+    },
+    "lean-bridge/platform.json": {
+      "bytes": 117,
+      "sha256": "8c4425d8d6a11ed7a8561d8a7bca6a4e38c779e24b0da42f211e5cb0eb4f49cb"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices.rb": {
+      "bytes": 5689,
+      "sha256": "98fa363c51cfd4d51a549ce23ad1757ccd1b7357a2842808e7c3b65c6b266f9a"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices/native.rb": {
+      "bytes": 20396,
+      "sha256": "65bc6cce75d56b4f56e8643319dbe774f4c3968bb130915fe280d77d65af8a67"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices/native/linux-x64/libcheckedrecordvalueindices.so": {
+      "bytes": 35992,
+      "sha256": "11cceec996bc5c83306caed4797c9aa0f69c56f6a59c728c5420c9ed5ca37697"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices/native/linux-x64/libcomponent_767c615eabad08d77709.so": {
+      "bytes": 34840,
+      "sha256": "f3efbbb1e1f126adb0a67a6627c0c67723dba3dde61f8ce458693ad0cefeb625"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lib/lean_bridge/checkedrecordvalueindices/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lib/lean_bridge/native_copied_runtime_v1.rb": {
+      "bytes": 483,
+      "sha256": "7575ac13e27ba18a8d67228f16bf66fb0c7218763025ee1772bce5ee00c0ceac"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-rubygems-package",
+  "name": "checkedrecordvalueindices",
+  "namespace": "LeanBridge::Checkedrecordvalueindices",
+  "requirePath": "lean_bridge/checkedrecordvalueindices",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "a37307745d7619c466f1c95212bb247ab7b4688ed166fbabac2d582cf4718a86",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"CheckedRecordValueIndices.produceAb\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptySized\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceEmptyString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceFalseBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceTrueBool\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceUnicodeString\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceWideNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"CheckedRecordValueIndices.produceZeroNat\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"CheckedRecordValueIndices.produceTrueBool\",\n    \"CheckedRecordValueIndices.produceFalseBool\",\n    \"CheckedRecordValueIndices.produceAb\",\n    \"CheckedRecordValueIndices.produceEmptyString\",\n    \"CheckedRecordValueIndices.produceUnicodeString\",\n    \"CheckedRecordValueIndices.produceEmptySized\",\n    \"CheckedRecordValueIndices.produceZeroNat\",\n    \"CheckedRecordValueIndices.produceWideNat\"\n  ],\n  \"modules\": [\n    \"CheckedRecordValueIndices\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"checkedrecordvalueindices\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "7ecc15c54b07535647a25615b81bef4afef3a6d9663c7e6c73620264f4ff1ccf",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 164112,
+          "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+          "sha256": "92a72bcb099e7c6508d3a65f03f7a306a32d623d1829bc2f1a6112a0382c637b"
+        },
+        "module": "CheckedRecordValueIndices",
+        "source": {
+          "bytes": 2928,
+          "path": "CheckedRecordValueIndices.lean",
+          "sha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "CheckedRecordValueIndices.produceAb": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptySized": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceEmptyString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceFalseBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceTrueBool": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceUnicodeString": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceWideNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "CheckedRecordValueIndices.produceZeroNat": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "CheckedRecordValueIndices"
+      ],
+      "exports": [
+        "CheckedRecordValueIndices.produceTrueBool",
+        "CheckedRecordValueIndices.produceFalseBool",
+        "CheckedRecordValueIndices.produceAb",
+        "CheckedRecordValueIndices.produceEmptyString",
+        "CheckedRecordValueIndices.produceUnicodeString",
+        "CheckedRecordValueIndices.produceEmptySized",
+        "CheckedRecordValueIndices.produceZeroNat",
+        "CheckedRecordValueIndices.produceWideNat"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "d142a1fb70cad47db7ec4bad1a854bad3dbd07fb8c29543b3254ac12d4795d74",
+        "modules": [
+          {
+            "interfaceSha256": "1e38311230be98fae0d38f80d0c6b5267ce5ecb96510f2950bb102ecb4ae9aa4",
+            "name": "CheckedRecordValueIndices",
+            "sourcePath": "CheckedRecordValueIndices.lean",
+            "sourceSha256": "ccc330676f03ae5e101315010ed6fad4f4902b8f4d3c10228d5223006273a054"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "CheckedRecordValueIndices"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "97202185f54a678dafd647fd9a0213d2ca473587aa51ee09d0dfac82bfa1c174",
+    "sourceTreeSha256": "39bfb7b53e47e9dc1a88190e803a79b977ae19e4833a4ed63ce410cb3a066cdb"
+  },
+  "version": "1.0.0"
+}

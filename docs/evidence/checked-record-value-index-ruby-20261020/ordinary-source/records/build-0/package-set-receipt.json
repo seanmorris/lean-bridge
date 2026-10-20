@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50105856,
+          "path": "archives/checkedrecordvalueindices-1.0.0-x86_64-linux.gem",
+          "sha256": "e51d97b2786b64aff2955940076f14cb23a932b0620f777bc88a102bf7e8550f"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "checkedrecordvalueindices",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f2bd33d854b84cfa28067fa849cb4c6b994b5db9eeec18ede07b45fe1891b7a6",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "7317816434787b0d1b87dc77e05d23806dc7769f65b8217e4455395d928c4f18"
+  }
+}

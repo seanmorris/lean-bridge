@@ -5,4 +5,5 @@
  */
 import "./helpers/checked-record-value-index-ruby-fixture-tests.mjs";
 import "./helpers/checked-record-value-index-ruby-installed-tests.mjs";
+import "./helpers/checked-record-value-index-ruby-evidence-tests.mjs";
 import "./helpers/checked-record-value-index-ruby-source-history-tests.mjs";

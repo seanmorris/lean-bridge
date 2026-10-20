@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "checkedrecordvalueindices@1.0.0",
+  "bindingIrSha256": "c8d9cb6a63b379d1f1c83b1864db7d7fc5057d0f29aee768b3e849f330a61cc1",
+  "namespace": "LeanBridge::Checkedrecordvalueindices",
+  "files": [
+    "lib/lean_bridge/checkedrecordvalueindices.rb",
+    "lib/lean_bridge/checkedrecordvalueindices/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/checkedrecordvalueindices.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/checkedrecordvalueindices/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ]
+}
