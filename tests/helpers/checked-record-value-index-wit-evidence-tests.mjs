@@ -11,6 +11,7 @@ import {
 	, checkedRecordValueIndexWitEvidence
 } from "./checked-record-value-index-wit-evidence.mjs";
 import "./checked-record-value-index-wit-archive-source-history-tests.mjs";
+import "./checked-record-value-index-wit-promotion-tests.mjs";
 
 test("hosted value-index WIT archive authenticates every retained route", {
 	timeout: 180_000
