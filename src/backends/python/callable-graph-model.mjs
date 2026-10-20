@@ -5,12 +5,13 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedPythonGraphPackageModel } from "./copied-graph-package.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 
-const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object dict set frozenset len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token".split(" "));
+const reserved = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object dict set frozenset len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure WithRecovery with_recovery Some Option Ok Err Result invoke dispatch handle token".split(" "));
 
 /**
  * Bind public Python names and each callback's copied argument/result types.
@@ -38,11 +39,14 @@ export const compileCallablePythonGraphPackageModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const name = claim(ir.types.find(type => type.id === signature.id).name);
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const callable = `[${signature.parameters.map(ref => copiedType(ref)).join(", ")}], ${copiedType(signature.result, true)}`;
 		return [signature.id, { ...signature, index, publicName: name
+			, direction
 			, raw: `_Callback${index}`, function: `_CallbackFn${index}`
 			, parameters: signature.parameters.map(copied)
 			, result: copied(signature.result)
-			, callableType: `_Callable[[${signature.parameters.map(ref => copiedType(ref)).join(", ")}], ${copiedType(signature.result, true)}]`
+			, callableType: direction === "host" ? `WithRecovery[${callable}]` : `_Callable[${callable}]`
 			, closureType: `LeanClosure[[${signature.parameters.map(ref => copiedType(ref, true)).join(", ")}], ${copiedType(signature.result)}]`
 			, call: `${values.prefix}_callback_${signature.key}_lease_call`
 			, dispose: `${values.prefix}_callback_${signature.key}_lease_dispose` }];
@@ -68,7 +72,9 @@ export const compileCallablePythonGraphPackageModel = ir => {
 	return { ...values, ir, descriptor, payloads, callbacks, functions
 		, callableGraph: true
 		, layoutSha256: sha256(canonicalJson({ layout: values.layout, descriptor }))
-		, exports: ["LeanBridgeError", "LeanClosure", ...values.exports
+		, exports: ["LeanBridgeError", "LeanClosure"
+			, ...[...callbacks.values()].some(callback => callback.direction === "host") ? ["WithRecovery", "with_recovery"] : []
+			, ...values.exports
 			, ...[...callbacks.values()].map(callback => callback.publicName)
 			, ...functions.map(fn => fn.publicName)] };
 };

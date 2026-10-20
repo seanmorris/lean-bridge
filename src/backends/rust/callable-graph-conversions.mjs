@@ -78,15 +78,16 @@ fn copied<T>(result: Result<T, GraphError>, runtime: &GraphNative) -> Result<T, 
 }
 fn callable_status(status: u32, runtime: &GraphNative) -> Result<(), Error> {
     if status == 6 { return Err(Error::Native { code: 6, message: "Host callback failed or its borrow expired".into() }); }
+    if status == 10 { return Err(Error::Native { code: 1, message: "Host callback result failed its Lean constructor".into() }); }
     copied(graph_status(status), runtime)
 }
 `;
 
 const trampoline = callback => {
-	const { index, parameters, result } = callback;
+	const { index, parameters, result } = callback, host = callback.direction === "host";
 	const signature = `unsafe extern "C" fn(*mut std::ffi::c_void, ${[...parameters.map(node => `*const ${node.raw}`), `*mut ${result.raw}`].join(", ")}) -> u32`;
 	return `#[repr(C)]
-struct Callback${index} { call: ${signature}, context: *mut std::ffi::c_void }
+	struct Callback${index} { call: ${signature}, context: *mut std::ffi::c_void${host ? `, recovery: *const ${result.raw}` : ""} }
 struct Context${index}<'a> {
     function: std::cell::RefCell<&'a mut (dyn FnMut(${parameters.map(node=>node.publicType).join(', ')}) -> Result<${result.publicType}, Error> + 'a)>,
     state: &'a CallbackState,
@@ -121,15 +122,29 @@ const call = (name, parameters, result, symbol, { lease = false } = {}) => {
 	const callable = value => Boolean(value.signature), callbacks = parameters.some(callable);
 	const scope = callbacks ? "&mut state.scope.borrow_mut()" : "&mut scope";
 	const argument = (node, i) => node.aggregate ? `arg${i}` : `&arg${i}`;
+	const preflight = (node, i) => !callable(node)
+		? `    graph_check${node.index}(${argument(node, i)}, 0, true, &mut budget).map_err(graph_error)?;`
+		: node.direction === "host"
+			? `    graph_check${node.result.index}(&arg${i}.recovery, 0, true, &mut budget).map_err(graph_error)?;`
+			: "";
+	const callbackInput = (node, i) => {
+		const callableValue = node.direction === "host" ? `arg${i}.function` : `arg${i}`;
+		const recovery = node.direction === "host" ? `
+    let recovery${i} = {
+        let mut scope = state.scope.borrow_mut();
+        graph_to${node.result.index}(&arg${i}.recovery, &mut scope).map_err(graph_error)?
+    };` : "";
+		return `    let context${i} = Context${node.index} { function: std::cell::RefCell::new(&mut ${callableValue}), state: &state };${recovery}
+    let input${i} = Callback${node.index} { call: callback${node.index}, context: (&context${i} as *const Context${node.index}<'_>).cast_mut().cast()${node.direction === "host" ? `, recovery: &recovery${i}` : ""} };`;
+	};
 	return `pub(super) fn ${name}(${[...lease ? ["lease: &Lease"] : [], ...parameters.map((node, i) => `${callable(node) ? "mut " : ""}arg${i}: ${node.inputType}`)].join(", ")}) -> Result<${result.publicType}, Error> {
     ${lease?'let _guard = lease.enter()?;':''}
-    let ${parameters.some(node=>!callable(node))?'mut ':''}budget = GraphBudget::new();
-${parameters.map((node,i)=>callable(node)?'':`    graph_check${node.index}(${argument(node,i)}, 0, true, &mut budget).map_err(graph_error)?;`).join('\n')}
+	    let ${parameters.some(node => !callable(node) || node.direction === "host") ? 'mut ' : ''}budget = GraphBudget::new();
+${parameters.map(preflight).filter(Boolean).join('\n')}
     let runtime = graph_runtime()?;
     callable_status(unsafe { (runtime.lifecycle.initialize)() }, runtime)?;
     ${callbacks?'let state = CallbackState { scope: std::cell::RefCell::new(GraphScope::new(budget)), failure: std::cell::RefCell::new(None), runtime };':'let mut scope = GraphScope::new(budget);'}
-${parameters.map((node,i)=>callable(node)?`    let context${i} = Context${node.index} { function: std::cell::RefCell::new(&mut arg${i}), state: &state };
-    let input${i} = Callback${node.index} { call: callback${node.index}, context: (&context${i} as *const Context${node.index}<'_>).cast_mut().cast() };`:`    let input${i} = graph_to${node.index}(${argument(node,i)}, ${scope}).map_err(graph_error)?;`).join('\n')}
+${parameters.map((node,i)=>callable(node) ? callbackInput(node, i) : `    let input${i} = graph_to${node.index}(${argument(node,i)}, ${scope}).map_err(graph_error)?;`).join('\n')}
     ${callable(result)?`let mut output = Lease::new(runtime.owned${result.index} as *const (), runtime.dispose${result.index});`:`let mut output = GraphOutput { value: ${result.raw}::default(), clear: graph_clear${result.index} };`}
     ${lease?`let invoke: ${symbol} = unsafe { std::mem::transmute(lease.invoke) };`:''}
     let status = unsafe { ${lease?'invoke':`(runtime.${symbol})`}(${[...lease?['lease.token.get()']:[],...parameters.map((_,i)=>`&input${i}`),callable(result)?'output.token.get_mut()':'&mut output.value'].join(', ')}) };

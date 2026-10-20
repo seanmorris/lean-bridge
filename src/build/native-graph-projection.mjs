@@ -42,8 +42,8 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 			const refinements = callbackDefinitionRefinement(type, ir.types);
 			return refinements !== null && callbackSubtypeDirection(signature, refinements, ir.types) !== null;
 		});
-		if(callbackSubtypes && targets.some(target => !["c", "cpp", "cpan"].includes(target)))
-			throw Object.assign(new TypeError("Callback Subtypes currently require C, C++ or CPAN projections"), { code: "native-graph-projection-unavailable" });
+		if(callbackSubtypes && targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan"].includes(target)))
+			throw Object.assign(new TypeError("Callback Subtypes currently require C, C++, PyPI, Cargo, RubyGems or CPAN projections"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
 		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
 		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;

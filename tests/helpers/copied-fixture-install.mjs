@@ -28,6 +28,8 @@ export const nativeFixtureEnvironment = profiles => ({ ...process.env
 	, LEAN_BRIDGE_JAVAC: resolve(process.env.LEAN_BRIDGE_JAVAC ?? ".toolchains/jdk22/bin/javac")
 	, LEAN_BRIDGE_MAVEN: resolve(process.env.LEAN_BRIDGE_MAVEN ?? ".toolchains/apache-maven-3.9.11/bin/mvn")
 	, LEAN_BRIDGE_KOTLINC: resolve(process.env.LEAN_BRIDGE_KOTLINC ?? ".toolchains/kotlin-2.2.0/kotlinc/bin/kotlinc")
+	, LEAN_BRIDGE_RUBY: resolve(process.env.LEAN_BRIDGE_RUBY ?? ".toolchains/ruby33/bin/ruby")
+	, LEAN_BRIDGE_GEM: resolve(process.env.LEAN_BRIDGE_GEM ?? ".toolchains/ruby33/bin/gem")
 	, LEAN_BRIDGE_CARGO: resolve(process.env.LEAN_BRIDGE_CARGO ?? ".toolchains/rust-1.90.0/bin/cargo")
 	, LEAN_BRIDGE_RUSTC: resolve(process.env.LEAN_BRIDGE_RUSTC ?? ".toolchains/rust-1.90.0/bin/rustc")
 	, LEAN_BRIDGE_WASMTIME_C_API: resolve(process.env.LEAN_BRIDGE_WASMTIME_C_API ?? ".toolchains/wasmtime42") });

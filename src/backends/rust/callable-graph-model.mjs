@@ -5,13 +5,14 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedRustGraphPackageModel } from "./copied-graph-package.mjs";
 import { generateCopiedRustGraphConversions } from "./copied-graph-conversions.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 
-const reserved = new Set("dispatch invoke handle token __runtime std num_bigint sha2 as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union Error Result Ok Err Vec String BigUint BigInt Sign Option Some None Drop Copy Clone Send Sync Default assets LeanClosure Lease CallGuard CallbackState CallbackFailure Box FnMut GraphNative graph_runtime graph_error graph_symbol GRAPH_NATIVE GRAPH_PID copied callable_status bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char".split(" "));
+const reserved = new Set("dispatch invoke handle token __runtime std num_bigint sha2 as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union Error Result Ok Err Vec String BigUint BigInt Sign Option Some None Drop Copy Clone Send Sync Default assets LeanClosure WithRecovery with_recovery Lease CallGuard CallbackState CallbackFailure Box FnMut GraphNative graph_runtime graph_error graph_symbol GRAPH_NATIVE GRAPH_PID copied callable_status bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char".split(" "));
 
 /**
  * Bind public names, borrowed input types and canonical closure signatures.
@@ -52,12 +53,17 @@ export const compileCallableRustGraphPackageModel = ir => {
 	const callbacks = new Map(descriptor.callbacks.map((callback, index) => {
 		const parameters = callback.parameters.map(copy), result = copy(callback.result);
 		const signature = `fn(${parameters.map(node => node.inputType).join(", ")}) -> ${result.publicType}`;
-		const value = { ...callback, index, parameters, result, signature
+		const direction = callbackSubtypeDirection(callback, callback.refinements, descriptor.types);
+		const functionType = `impl FnMut(${callback.parameters.map(ref => annotated(ref).publicType).join(", ")}) -> Result<${annotated(callback.result).publicType}, Error>`;
+		const value = { ...callback, index, parameters, result, signature, direction
 			, publicType: `LeanClosure<${signature}>`
-			, inputType: `impl FnMut(${callback.parameters.map(ref => annotated(ref).publicType).join(", ")}) -> Result<${annotated(callback.result).publicType}, Error>`
+			, inputType: direction === "host" ? `WithRecovery<${functionType}, ${annotated(callback.result).publicType}>` : functionType
 			, native: `unsafe extern "C" fn(u64, ${[...parameters.map(node => `*const ${node.raw}`), `*mut ${result.raw}`].join(", ")}) -> u32` };
-		if(!signatures.has(signature)) signatures.set(signature, value);
-		value.hostIndex = signatures.get(signature).index;
+		if(direction !== "host")
+		{
+			if(!signatures.has(signature)) signatures.set(signature, value);
+			value.hostIndex = signatures.get(signature).index;
+		}
 		return [callback.id, value];
 	}));
 	const site = ref => callbacks.get(ref.id) ?? annotated(ref);
@@ -71,7 +77,11 @@ export const compileCallableRustGraphPackageModel = ir => {
 	});
 	return { ...values, ir, descriptor, payloads, generated, nodes
 		, callbacks, functions, callableGraph: true
-		, exports: ["Error", "LeanClosure", ...values.bigint ? ["BigInt", "BigUint"] : [], ...payloads.ir.types.map(type => type.name), ...functions.map(fn => fn.name)]
+		, exports: ["Error", "LeanClosure"
+			, ...[...callbacks.values()].some(callback => callback.direction === "host") ? ["WithRecovery", "with_recovery"] : []
+			, ...values.bigint ? ["BigInt", "BigUint"] : []
+			, ...payloads.ir.types.map(type => type.name)
+			, ...functions.map(fn => fn.name)]
 		, closureSignatures: [...signatures.values()], surface: { callbacks }
 		, layoutSha256: sha256(canonicalJson({ layout: values.layout, descriptor })) };
 };

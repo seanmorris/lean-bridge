@@ -10,6 +10,8 @@ export const callbackSubtypeNativeTestName
 	= "ordinary and reviewed C-family callback Subtypes install from source-free archives";
 export const callbackSubtypePerlTestName
 	= "ordinary and reviewed callback Subtypes run on every prepared Perl ABI";
+export const callbackSubtypeLanguageTestName
+	= "ordinary and reviewed Python, Ruby and Rust callback Subtypes install offline";
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const exactKeys = (value, keys) => {
@@ -23,7 +25,7 @@ const exactKeys = (value, keys) => {
  * @param args - Arguments after the checker script name.
  */
 export const parseCallbackSubtypeNativeCiArgs = args => {
-	const usage = "Usage: check-callback-subtype-<native|perl>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>";
+	const usage = "Usage: check-callback-subtype-<native|perl|languages>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>";
 	const allowed = ["producer", "tap", "report"], selected = {};
 	assert.ok(Array.isArray(args) && args.length === allowed.length * 2, usage);
 	for(let index = 0; index < args.length; index += 2)
@@ -130,6 +132,37 @@ export const checkCallbackSubtypePerlReport = report => {
 };
 
 /**
+ * Validate both author routes in every prepared language package.
+ *
+ * @param report - Original producer report.
+ */
+export const checkCallbackSubtypeLanguageReport = report => {
+	exactKeys(report, ["schemaVersion", "reports"]); assert.equal(report.schemaVersion, 1);
+	assert.equal(report.reports.length, 6);
+	const cells = new Set();
+	for(const item of report.reports)
+	{
+		exactKeys(item, ["bindingIrSha256", "checks", "compilerFreePath"
+			, "consumerSha256", "offlineInstall", "profile", "receiptSha256"
+			, "route", "sourceRemovedBeforeInstallation"]);
+		assert.ok(["ordinary", "reviewed"].includes(item.route));
+		assert.ok(["python", "ruby", "rust"].includes(item.profile));
+		assert.equal(item.checks, item.profile === "rust" ? 17 : 15);
+		for(const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation"])
+			assert.equal(item[flag], true);
+		for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])
+			digest(item[field]);
+		const cell = `${item.route}/${item.profile}`;
+		assert.equal(cells.has(cell), false); cells.add(cell);
+	}
+	const expected = ["ordinary/python", "ordinary/ruby"
+		, "ordinary/rust", "reviewed/python"
+		, "reviewed/ruby", "reviewed/rust"];
+	assert.deepEqual([...cells].sort(), expected);
+	return { routes: ["ordinary", "reviewed"], profiles: ["python", "ruby", "rust"], reports: 6 };
+};
+
+/**
  * Bind independently checked output to its producer revision.
  *
  * @param kind - Native or Perl acceptance kind.
@@ -139,10 +172,14 @@ export const checkCallbackSubtypePerlReport = report => {
  */
 export const callbackSubtypeNativeVerification = (kind, producer, tap, report) => {
 	assert.match(producer, /^[a-f0-9]{40}$/u);
-	const name = kind === "native" ? callbackSubtypeNativeTestName : callbackSubtypePerlTestName;
+	assert.ok(["native", "perl", "language"].includes(kind));
+	const name = kind === "native" ? callbackSubtypeNativeTestName
+		: kind === "perl" ? callbackSubtypePerlTestName : callbackSubtypeLanguageTestName;
 	assertCallbackSubtypeNativeTap(tap, name);
 	const checked = kind === "native"
-		? checkCallbackSubtypeNativeReport(report) : checkCallbackSubtypePerlReport(report);
+		? checkCallbackSubtypeNativeReport(report)
+		: kind === "perl" ? checkCallbackSubtypePerlReport(report)
+			: checkCallbackSubtypeLanguageReport(report);
 	return { schemaVersion: 1, producerCommit: producer, kind
 		, reportSha256: sha256(canonicalJson(report)), ...checked };
 };

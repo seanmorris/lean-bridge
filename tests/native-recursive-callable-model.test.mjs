@@ -9,12 +9,16 @@ import { canonicalJson } from "../src/capsule/node.mjs";
 import { containsCallbackSubtype, createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "../src/build/native-graph-model.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } from "../src/build/native-callable-graph.mjs";
 import { generateCompiledCallbacks } from "../src/build/native-component.mjs";
+import { compileNativeGraphProjection } from "../src/build/native-graph-projection.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { descriptor } from "./helpers/npm-structured-callable-fixture.mjs";
 import { compileNativeCallableGraphPayloads } from "../src/backends/c/native-callable-graph-payloads.mjs";
 import { generateNativeCopiedGraphAdapters } from "../src/backends/c/native-graph-adapters.mjs";
 import { generateNativeCallableGraphCalls } from "../src/backends/c/native-callable-graph-calls.mjs";
+import { generateCallablePythonGraphPackage } from "../src/backends/python/callable-graph-package.mjs";
+import { generateCallableRubyGraphPackage } from "../src/backends/ruby/callable-graph-package.mjs";
+import { generateCallableRustGraphPackage } from "../src/backends/rust/callable-graph-package.mjs";
 
 const fixture = () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
@@ -139,6 +143,49 @@ test("native callback Subtype trampolines require typed recovery and report cons
 	assert.match(callbacks, new RegExp(`${symbol}_structured_callback_controls`, "u"));
 	assert.match(callbacks, /controls->recovery\(callback\.context\)/u);
 	assert.match(callbacks, /controls->reject\(callback\.context, recovery\)/u);
+});
+
+test("Python, Ruby and Rust project callback Subtype direction into typed recovery APIs", () => {
+	const { ir } = structuredCallableDirectionalSubtypeIr();
+	for(const target of ["pypi", "rubygems", "cargo"])
+		assert.ok(compileNativeGraphProjection(ir, [target]));
+	assert.ok(compileNativeGraphProjection(ir, ["pypi", "rubygems", "cargo"]));
+	for(const target of ["nuget", "maven", "php-native", "wit-wasi"])
+		assert.throws(() => compileNativeGraphProjection(ir, [target]), { code: "native-graph-projection-unavailable" });
+	const python = generateCallablePythonGraphPackage(ir);
+	const pythonPublic = python[Object.keys(python).find(path => path.endsWith("/__init__.py"))];
+	const pythonNative = python[Object.keys(python).find(path => path.endsWith("/_native.py"))];
+	assert.match(pythonPublic, /class WithRecovery\(_Generic\[_P, _R\]\):/u);
+	assert.match(pythonPublic, /def with_recovery\(/u);
+	assert.match(pythonNative, /class _Callback0[\s\S]+\("recovery", _c\.POINTER/u);
+	assert.match(pythonNative, /def _check_callback0[\s\S]+requires with_recovery/u);
+	assert.match(pythonNative, /status == 10:[\s\S]+failed its Lean constructor/u);
+	assert.match(pythonNative, /callback = function[\s\S]+_graph_synchronous\(callback\(/u);
+	assert.doesNotMatch(pythonNative, /function = _CallbackFn/u);
+	assert.doesNotMatch(pythonNative, /_owned0 =/u);
+	assert.match(pythonNative, /_owned1 =/u);
+	assert.deepEqual(JSON.parse(python["binding-manifest.json"]).exports.slice(0, 4),
+		["LeanBridgeError", "LeanClosure", "WithRecovery", "with_recovery"]);
+
+	const ruby = generateCallableRubyGraphPackage(ir);
+	const rubyPublic = ruby[Object.keys(ruby).find(path => /\/structured\.rb$/u.test(path))];
+	const rubyNative = ruby[Object.keys(ruby).find(path => path.endsWith("/native.rb"))];
+	assert.match(rubyPublic, /WithRecovery = ::Data\.define\(:function, :recovery\)/u);
+	assert.match(rubyPublic, /def self\.with_recovery\(/u);
+	assert.match(rubyNative, /def check_callback0[\s\S]+requires with_recovery/u);
+	assert.match(rubyNative, /frame\.scope\.allocate\(24\)/u);
+	assert.match(rubyNative, /status == 10/u);
+	assert.doesNotMatch(rubyNative, /OWNED0 =/u);
+	assert.match(rubyNative, /OWNED1 =/u);
+
+	const rust = generateCallableRustGraphPackage(ir, null, { name: "structured", version: "1.0.0" });
+	assert.match(rust["src/lib.rs"], /pub struct WithRecovery<F, R>/u);
+	assert.match(rust["src/lib.rs"], /WithRecovery<impl FnMut\([^)]*\) -> Result<[^>]+>, BigUint>/u);
+	assert.match(rust["src/__runtime.rs"], /struct Callback0 \{[^}]+recovery: \*const/u);
+	assert.match(rust["src/__runtime.rs"], /graph_check\d+\(&arg\d+\.recovery/u);
+	assert.match(rust["src/__runtime.rs"], /status == 10/u);
+	assert.doesNotMatch(rust["src/__runtime.rs"], /owned0:/u);
+	assert.match(rust["src/__runtime.rs"], /owned1:/u);
 });
 
 test("native callable graph admission retains identity ownership and lifetime checks", () => {

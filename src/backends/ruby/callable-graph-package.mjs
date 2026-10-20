@@ -17,8 +17,9 @@ import { hashBindingIr } from "../../binding-ir/canonical.mjs";
  */
 export const generateCallableRubyGraphPackage = (ir, evidence = null) => {
 	const { model, source, constants, methods } = generateCallableRubyGraphConversions(ir);
+	const callbackRecovery = [...model.callbacks.values()].some(callback => callback.direction === "host");
 	const publicFunctions = model.functions.map(fn => {
-		const block = !!fn.parameters.at(-1)?.callback;
+		const block = !!fn.parameters.at(-1)?.callback && fn.parameters.at(-1).callback.direction !== "host";
 		const args = fn.parameters.map((_, i) => "arg" + i), ordinary = block ? args.slice(0, -1) : args;
 		return `    def ${fn.publicName}(${[...ordinary, ...block ? ["*callback", "&block"] : []].join(", ")})
 ${block ? `      raise ArgumentError, "Pass one callback argument or one block" unless callback.length == (block ? 0 : 1)\n      ${args.at(-1)} = block || callback[0]\n` : ""}      Native.call${fn.index}(${args.join(", ")})
@@ -34,9 +35,14 @@ module LeanBridge
         super(message)
         @status = status
       end
-    end
+	    end
 ${rubyClosurePublic}
-    module_function
+${callbackRecovery ? `    WithRecovery = ::Data.define(:function, :recovery)
+    def self.with_recovery(function, recovery)
+      WithRecovery.new(function: function, recovery: recovery)
+    end
+` : ""}\
+	    module_function
 ${publicFunctions}
   end
 end
@@ -68,9 +74,12 @@ Install the prepared gem and require "${model.requirePath}". The gem includes it
 
 Records and variant constructors are frozen classes with required keyword fields. Arrays and Lists use exact Ruby Arrays and return independent copied storage. Concrete aliases retain their names and targets without wrapper classes. Unit is ${model.namespace}::UNIT. Options use nil or Some.new(value), including Some.new(nil). Results use Ok.new(value) or Err.new(error), and products remain nested pairs. Frozen fields can contain mutable arrays and strings; do not mutate inputs during conversion or while using them as Hash keys.
 
-Pass a synchronous callable, method object or block to a callback parameter. Each invocation receives independently copied values. Ruby exceptions return after native cleanup. Non-local throw, break and return are contained and reported as LocalJumpError. Borrowed callbacks expire when the exporting call returns. Another Fiber cannot enter Lean while a native call is suspended on the same thread.
+	Pass a synchronous callable, method object or block to a callback parameter. Each invocation receives independently copied values. Ruby exceptions return after native cleanup. Non-local throw, break and return are contained and reported as LocalJumpError. Borrowed callbacks expire when the exporting call returns. Another Fiber cannot enter Lean while a native call is suspended on the same thread.
 
-Returned LeanClosure values own their captures. Use with { |closure| ... } or close; repeated close is safe. Invocation belongs to the creating Ruby thread lifetime, not a reusable native thread ID. Closing during an active call defers disposal until that call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.
+	${callbackRecovery ? `A host callback whose result contains a checked Lean Subtype must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.
+
+` : ""}\
+	Returned LeanClosure values own their captures. Use with { |closure| ... } or close; repeated close is safe. Invocation belongs to the creating Ruby thread lifetime, not a reusable native thread ID. Closing during an active call defers disposal until that call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.
 
 Finite copied values have a maximum depth of 128, 262144 visited nodes, a 16 MiB native-copy budget and a separate 16 MiB conversion-storage budget. These bounds do not cover Lean working memory or every Ruby allocator overhead. Cycles and uninhabited values reject. Input validation precedes native initialization; temporary buffers and callbacks clear on failure. Malformed native output retires the runtime. Native reentry is bounded to 64 active calls, with 4096 shared closure identities.
 
@@ -84,7 +93,7 @@ Integers remain exact. Nat rejects negative values, fixed-width integers reject 
 		, bindingIrSha256: hashBindingIr(ir), namespace: model.namespace
 		, files: Object.keys(files)
 		, publicFiles: [entry], internalFiles: [internal, shared], packageFiles: []
-		, exports: ["LeanBridgeError", "LeanClosure", ...model.exports, ...model.functions.map(fn => fn.publicName)]
+		, exports: ["LeanBridgeError", "LeanClosure", ...callbackRecovery ? ["WithRecovery", "with_recovery"] : [], ...model.exports, ...model.functions.map(fn => fn.publicName)]
 		, aliases: model.aliases
 		, copiedGraph: { schemaVersion: 1, layoutSha256: model.layoutSha256 }
 		, supportedFeatures: ["direct-functions", "copied-values", "recursive-values", "callbacks", "deterministic-close"]

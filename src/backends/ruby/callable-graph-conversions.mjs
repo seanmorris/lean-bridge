@@ -142,11 +142,11 @@ export const generateCallableRubyGraphConversions = ir => {
 	const methods = [support], constants = [];
 	const read = (node, value) => node.aggregate ? value : `${value}[0, ${node.size}].unpack1("${node.pack}")`;
 	const write = (node, value) => node.aggregate ? `${value}[0, ${node.size}]` : `[${value}].pack("${node.pack}")`;
-	const callableStatus = `raise frame.failure if frame.failure\n            raise LeanBridgeError.new(6, "Host callback failed") if status == 6\n            graph_status(status)`;
+	const callableStatus = `raise frame.failure if frame.failure\n            raise LeanBridgeError.new(6, "Host callback failed") if status == 6\n            raise LeanBridgeError.new(1, "Host callback result failed its Lean constructor") if status == 10\n            graph_status(status)`;
 	const makeCall = (name, symbol, parameters, result, leading = false) => {
 		const args = parameters.map((_, i) => `arg${i}`);
 		const input = (parameter, i, checking) => parameter.callback
-			? checking ? `graph_require_callback(arg${i})` : `callback${parameter.callback.index}(arg${i}, frame)`
+			? checking ? `check_callback${parameter.callback.index}(arg${i}, checked)` : `callback${parameter.callback.index}(arg${i}, frame)`
 			: `graph_input${parameter.node.index}(arg${i}, ${checking ? "checked" : "frame.scope"})`;
 		return `      def ${name}(${[...leading ? ["token"] : [], ...args].join(", ")})
         graph_context
@@ -188,17 +188,29 @@ ${result.callback ? `            owned = graph_own(output, method(:invoke${resul
 	};
 	for(const callback of model.callbacks.values())
 	{
-		const { index, parameters, result } = callback, args = parameters.map((_, i) => "arg" + i);
+		const { index, parameters, result } = callback, host = callback.direction === "host";
+		const args = parameters.map((_, i) => "arg" + i);
 		const ffi = Array(parameters.length + 2).fill("::Fiddle::TYPE_VOIDP");
-		constants.push(`      ARGS${index} = [${ffi.join(", ")}].freeze\n      OWNED${index} = ::Fiddle::Function.new(LIBRARY["${callback.call}"], [-::Fiddle::TYPE_LONG_LONG, ${ffi.slice(1).join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)\n      DISPOSE${index} = ::Fiddle::Function.new(LIBRARY["${callback.dispose}"], [-::Fiddle::TYPE_LONG_LONG], ::Fiddle::TYPE_VOID, need_gvl: true)`);
-		methods.push(`      def callback${index}(value, frame)
-        graph_require_callback(value)
-        function = ::Fiddle::Closure::BlockCaller.new(::Fiddle::TYPE_INT, ARGS${index}) do |context, ${[...args, "output"].join(", ")}|
-          callback_invoke${index}(value, frame, context, ${[...args, "output"].join(", ")})
-        end
-        frame.retain(function)
-        result = frame.scope.allocate(16)
-        result[0, 16] = [function.to_i, 0].pack("Q<Q<")
+		constants.push(`      ARGS${index} = [${ffi.join(", ")}].freeze${host ? "" : `\n      OWNED${index} = ::Fiddle::Function.new(LIBRARY["${callback.call}"], [-::Fiddle::TYPE_LONG_LONG, ${ffi.slice(1).join(", ")}], ::Fiddle::TYPE_INT, need_gvl: true)\n      DISPOSE${index} = ::Fiddle::Function.new(LIBRARY["${callback.dispose}"], [-::Fiddle::TYPE_LONG_LONG], ::Fiddle::TYPE_VOID, need_gvl: true)`}`);
+		methods.push(`      def check_callback${index}(value, scope)
+${host ? `        raise TypeError, "This callback requires with_recovery(function, value)" unless EXACT.bind_call(value, WithRecovery)
+        graph_require_callback(value.function)
+        graph_input${result.index}(value.recovery, scope)` : "        graph_require_callback(value)"}
+      end
+      def callback${index}(value, frame)
+${host ? `        raise TypeError, "This callback requires with_recovery(function, value)" unless EXACT.bind_call(value, WithRecovery)
+        callback_value, recovery_value = value.function, value.recovery` : "        callback_value = value"}
+	        graph_require_callback(callback_value)
+	        function = ::Fiddle::Closure::BlockCaller.new(::Fiddle::TYPE_INT, ARGS${index}) do |context, ${[...args, "output"].join(", ")}|
+	          callback_invoke${index}(callback_value, frame, context, ${[...args, "output"].join(", ")})
+	        end
+	        frame.retain(function)
+${host ? `        converted_recovery = graph_input${result.index}(recovery_value, frame.scope)
+${result.aggregate ? "        recovery = converted_recovery" : `        recovery = frame.scope.allocate(${result.size})
+        recovery[0, ${result.size}] = ${write(result, "converted_recovery")}`}
+` : ""}\
+	        result = frame.scope.allocate(${host ? 24 : 16})
+	        result[0, ${host ? 24 : 16}] = [function.to_i, 0${host ? ", recovery.to_i" : ""}].pack("${host ? "Q<Q<Q<" : "Q<Q<"}")
         result
       end
       def callback_invoke${index}(value, frame, _context, ${[...args, "output"].join(", ")})
@@ -219,7 +231,7 @@ ${parameters.map((node, i) => `            value${i} = graph_output${node.index}
           return status
         end
       end`);
-		methods.push(makeCall("invoke" + index, "OWNED" + index, parameters.map(node => ({ node })), { node: result }, true));
+		if(!host) methods.push(makeCall("invoke" + index, "OWNED" + index, parameters.map(node => ({ node })), { node: result }, true));
 	}
 	for(const fn of model.functions)
 	{

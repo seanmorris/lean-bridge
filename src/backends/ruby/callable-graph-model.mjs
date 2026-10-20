@@ -5,13 +5,14 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedRubyGraphPackageModel } from "./copied-graph-package.mjs";
 import { compileCopiedRubyGraphLayout } from "./copied-graph-layout.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 
-const reserved = new Set("nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy new send public_send method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise".split(" "));
+const reserved = new Set("nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy new send public_send method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise with_recovery".split(" "));
 
 /**
  * Bind public functions and closure signatures to their private native layout.
@@ -26,6 +27,7 @@ export const compileCallableRubyGraphPackageModel = ir => {
 	const copy = ref => nodes.get(payloads.copy(ref).id);
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const callback = { ...signature, index
+			, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)
 			, parameters: signature.parameters.map(copy)
 			, result: copy(signature.result)
 			, call: `${values.prefix}_callback_${signature.key}_lease_call`

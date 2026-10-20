@@ -9,7 +9,9 @@ import test from "node:test";
 import {
 	callbackSubtypeNativeTestName
 	, callbackSubtypeNativeVerification
+	, callbackSubtypeLanguageTestName
 	, callbackSubtypePerlTestName
+	, checkCallbackSubtypeLanguageReport
 	, checkCallbackSubtypeNativeReport
 	, checkCallbackSubtypePerlReport
 	, parseCallbackSubtypeNativeCiArgs
@@ -74,8 +76,26 @@ const perlReport = () => {
 	return { schemaVersion: 1, reports };
 };
 
+const languageReport = () => {
+	const reports = [];
+	for(const route of ["ordinary", "reviewed"])
+		for(const [index, profile] of ["python", "ruby", "rust"].entries())
+			reports.push({
+				bindingIrSha256: sha(route === "ordinary" ? "a" : "b")
+				, checks: profile === "rust" ? 17 : 15
+				, compilerFreePath: true
+				, consumerSha256: sha(String(index + 1))
+				, offlineInstall: true
+				, profile
+				, receiptSha256: sha(route === "ordinary" ? "c" : "d")
+				, route
+				, sourceRemovedBeforeInstallation: true
+			});
+	return { schemaVersion: 1, reports };
+};
+
 test("callback Subtype CI checkers require the closed native and Perl matrices", () => {
-	const native = nativeReport(), perl = perlReport();
+	const native = nativeReport(), perl = perlReport(), language = languageReport();
 	assert.deepEqual(checkCallbackSubtypeNativeReport(native), {
 		routes: ["ordinary", "reviewed"]
 		, profiles: ["c", "cpp"]
@@ -87,11 +107,18 @@ test("callback Subtype CI checkers require the closed native and Perl matrices",
 		, interpreterCount: 4
 		, reports: 16
 	});
+	assert.deepEqual(checkCallbackSubtypeLanguageReport(language), {
+		routes: ["ordinary", "reviewed"]
+		, profiles: ["python", "ruby", "rust"]
+		, reports: 6
+	});
 	const commit = "e".repeat(40);
 	assert.equal(callbackSubtypeNativeVerification("native", commit
 		, tap(callbackSubtypeNativeTestName), native).reports, 4);
 	assert.equal(callbackSubtypeNativeVerification("perl", commit
 		, tap(callbackSubtypePerlTestName), perl).reports, 16);
+	assert.equal(callbackSubtypeNativeVerification("language", commit
+		, tap(callbackSubtypeLanguageTestName), language).reports, 6);
 	const changed = structuredClone(perl); changed.reports[0].rejected = 5;
 	assert.throws(() => checkCallbackSubtypePerlReport(changed));
 	assert.throws(() => callbackSubtypeNativeVerification("native", commit
@@ -112,6 +139,9 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	const perlWorkflow = await readFile(
 		".github/workflows/callback-subtype-perl.yml", "utf8"
 	);
+	const languageWorkflow = await readFile(
+		".github/workflows/callback-subtype-languages.yml", "utf8"
+	);
 	const workflows = [
 		[nativeWorkflow, [
 			"group: callback-subtype-native-${{ github.ref }}"
@@ -128,6 +158,15 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 			, "5.38.2 unthreaded"
 			, "bash scripts/run-callback-subtype-perl-ci.sh"
 			, "build/callback-subtype-perl-ci/"
+		]]
+		, [languageWorkflow, [
+			"group: callback-subtype-languages-${{ github.ref }}"
+			, "runs-on: ubuntu-24.04"
+			, "ruby-version: '3.3.12'"
+			, 'python-version: "3.12"'
+			, "bash scripts/bootstrap-rust-ci.sh"
+			, "bash scripts/run-callback-subtype-languages-ci.sh"
+			, "build/callback-subtype-languages-ci/"
 		]]
 	];
 	for(const [source, required] of workflows)
@@ -151,6 +190,9 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 	const perlShell = await readFile(
 		"scripts/run-callback-subtype-perl-ci.sh", "utf8"
 	);
+	const languageShell = await readFile(
+		"scripts/run-callback-subtype-languages-ci.sh", "utf8"
+	);
 	for(const value of [
 		"set -euo pipefail"
 		, "LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES=c,cpp"
@@ -165,4 +207,11 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 		, "--test-concurrency=1"
 		, "check-callback-subtype-perl-ci.mjs"
 	]) assert.ok(perlShell.includes(value), value);
+	for(const value of [
+		"set -euo pipefail"
+		, "LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_PROFILES=python,ruby,rust"
+		, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38"
+		, "--test-concurrency=1"
+		, "check-callback-subtype-languages-ci.mjs"
+	]) assert.ok(languageShell.includes(value), value);
 });

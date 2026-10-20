@@ -13,6 +13,16 @@ const closureSource = (model, stub) => `from typing import Never as _Never\n${py
 	.replace("def __deepcopy__(self, memo):", "def __deepcopy__(self, memo: dict[int, object]) -> _Never:")
 	.replace("def __reduce__(self):", "def __reduce__(self) -> _Never:");
 
+const recoverySource = (model, stub) => ![...model.callbacks.values()].some(callback => callback.direction === "host") ? "" : `
+@_dataclass(frozen=True, slots=True)
+class WithRecovery(_Generic[_P, _R]):
+    function: _Callable[_P, _R]
+    recovery: _R
+
+def with_recovery(function: _Callable[_P, _R], recovery: _R) -> WithRecovery[_P, _R]:
+    ${stub ? "..." : "return WithRecovery(function, recovery)"}
+`;
+
 const publicSource = (model, stub) => `${model[stub ? "stub" : "source"].replace(/^__all__ = .+$/m, `__all__ = (${model.exports.map(name => JSON.stringify(name)).join(", ")},)`)}
 class LeanBridgeError(RuntimeError):
     status: int
@@ -20,6 +30,7 @@ class LeanBridgeError(RuntimeError):
         ${stub ? "..." : "super().__init__(message)\n        self.status = status"}
 
 ${closureSource(model, stub)}
+${recoverySource(model, stub)}
 ${[...model.callbacks.values()].map(callback => `${callback.publicName}: _TypeAlias = ${callback.callableType}`).join("\n")}
 
 ${model.functions.map(fn => `def ${fn.publicName}(${fn.signature}) -> ${fn.result.annotation}:

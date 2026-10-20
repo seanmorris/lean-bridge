@@ -779,6 +779,25 @@ They cover both author routes on Python 3.11 and 3.12.
 These local runs do not measure dispatch counts or establish hosted
 release-floor acceptance.
 
+### Subtypes across callback boundaries
+
+When a host callback returns a selected `Subtype`, pass the callback and one
+valid value of that callback's declared result type through
+`with_recovery(function, value)`. The package checks the recovery value before
+Lean or the callback runs. Lean then applies the selected constructor to the
+callback's actual reply. Constructor rejection raises `LeanBridgeError` with
+status 1; an exception raised by the Python function returns as the same
+exception object. The recovery value only lets Lean finish the rejected call.
+It is never substituted for successful output.
+
+Returned Lean closures accept the generated base Python types and check every
+selected `Subtype` leaf before their body runs. This includes the admitted
+copied containers, such as options, results and arrays. A rejected call leaves
+the closure open, so a later valid call can reuse it. Call `close()` when the
+closure is no longer needed. These directional callback checks are implemented
+for synchronous copied-value callbacks; retained or asynchronous host callbacks
+and owned `Subtype` payloads remain unsupported.
+
 ### Subtypes in copied records
 
 Use the generated frozen dataclass for a copied record or variant. A checked

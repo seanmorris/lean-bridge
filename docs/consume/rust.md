@@ -764,8 +764,26 @@ The [installed structural checks](../evidence/structural-subtype-promotion-20261
 cover primitive `Nat`, `String` and `UInt8` bases, mixed `Fin`, transparent
 aliases with distinct constructor choices, and one closed `List` specialization.
 They cover both author routes.
-Refined callback signatures and owned Subtypes remain unsupported. These local
-runs do not measure dispatch counts or establish hosted release-floor acceptance.
+These local runs do not measure dispatch counts or establish hosted
+release-floor acceptance.
+
+### Subtypes across callback boundaries
+
+When a host callback returns a selected `Subtype`, pass a valid value of its
+declared result type with `with_recovery(callback, value)`. The callback returns
+`Result<T, Error>`. The generated crate validates the recovery before entering
+Lean or invoking the callback, and Lean applies the selected constructor to the
+actual reply. Constructor rejection returns `Error::Native` with code 1. A
+callback error or panic is preserved and delivered after the native trampoline
+has returned. Recovery only completes the rejected Lean call; it is never
+successful output.
+
+Returned Lean closures check selected `Subtype` leaves in borrowed Rust inputs
+before their body runs, including admitted copied containers. Rejection leaves
+the closure open for later calls. Use `close()` for deterministic release;
+repeated calls are harmless. Directional checks are implemented for synchronous
+copied-value callbacks. Retained or asynchronous host callbacks and owned
+`Subtype` payloads remain unsupported.
 
 ### Subtypes in copied records
 

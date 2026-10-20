@@ -779,6 +779,23 @@ They cover both author routes.
 These local runs do not measure dispatch counts or establish hosted
 release-floor acceptance.
 
+### Subtypes across callback boundaries
+
+When a host callback returns a selected `Subtype`, wrap it with one valid value
+of the declared result type: `API.with_recovery(callable, value)`. The generated
+package validates that recovery before entering Lean or invoking the callable.
+Lean applies the selected constructor to the callable's actual reply. Rejection
+raises `API::LeanBridgeError` with status 1, while an exception raised by the
+Ruby callable returns as the same exception object. Recovery is used only to
+finish the failed Lean call and never becomes successful output.
+
+A returned Lean closure checks selected `Subtype` leaves in its Ruby arguments
+before its body runs, including admitted copied containers. Rejection leaves
+the closure usable for a later valid call. Call `close` when finished; repeated
+close calls are harmless. Directional checks currently require synchronous MRI
+callbacks. Retained or asynchronous host callbacks and owned `Subtype` payloads
+remain unsupported.
+
 ### Subtypes in copied records
 
 Use the generated frozen, keyword-initialized class for a copied record or

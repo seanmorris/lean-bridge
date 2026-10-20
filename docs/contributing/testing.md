@@ -3826,7 +3826,7 @@ C/PHP-Wasm release through an installed CLI. The independent receiver CI job
 requires seventeen passes without skips and retains thirteen JSON reports in
 `build/owned-php-wasm-receivers/` plus `build/owned-php-wasm-receivers.log`.
 
-## Directional callback Subtypes in C, C++ and Perl
+## Directional callback Subtypes in native language packages
 
 Run the installed C-family matrix with the pinned Lean compiler and native build
 dependencies:
@@ -3861,9 +3861,29 @@ adds nested `Except (Option Subtype)` host results and `Array (Option Subtype)`
 closure inputs, exception identity and idempotent close. The default record is
 `build/callback-subtypes/perl.json`.
 
+Run Python, Ruby and Rust together on a Linux x64 host that meets the generated
+package floor, with Python 3.12, MRI Ruby 3.3.12 and the pinned Rust 1.90.0
+toolchain:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_PROFILES=python,ruby,rust \
+  node --test --test-concurrency=1 tests/callback-subtype-language-installed.test.mjs
+```
+
+The test builds ordinary-source and independently reviewed wheels, gems and
+crates in two combined releases. It verifies each package-set receipt, removes
+the author root, installs from copied archives without registry access and runs
+independent consumers. Python and Ruby complete fifteen checks per route; Rust
+completes seventeen. They cover exact typed recovery, recovery validation before
+callback entry, constructor rejection, exception or error preservation, nested
+option/result replies, returned-closure input rejection, reuse and idempotent
+close. The default record is `build/callback-subtypes/languages.json`.
+
 The recurring hosted entry points are
 `scripts/run-callback-subtype-native-ci.sh` and
-`scripts/run-callback-subtype-perl-ci.sh`. They refuse environment variables
+`scripts/run-callback-subtype-perl-ci.sh`, plus
+`scripts/run-callback-subtype-languages-ci.sh`. They refuse environment variables
 that could narrow the matrix, force one build thread and the glibc 2.38 package
 floor, retain terminal TAP and the original report, and run an independent
 checker bound to the exact producer commit. Their workflows upload complete or

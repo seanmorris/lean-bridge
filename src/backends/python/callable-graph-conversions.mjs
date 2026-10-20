@@ -40,6 +40,8 @@ def _graph_callable_status(status, frame):
         raise frame.failure
     if status == 6:
         raise LeanBridgeError(6, "Host callback failed")
+    if status == 10:
+        raise LeanBridgeError(1, "Host callback result failed its Lean constructor")
     _graph_status(status)
 
 class _GraphLease:
@@ -116,6 +118,7 @@ export const generateCallablePythonGraphConversions = ir => {
 	const raw = new Map(generated.rawTypes.map(node => [node.id, node.name]));
 	const callbacks = [...model.callbacks.values()];
 	const imports = [...new Set(["LeanBridgeError", "LeanClosure"
+		, ...callbacks.some(callback => callback.direction === "host") ? ["WithRecovery"] : []
 		, ...model.types.flatMap(node => node.kind === "record" ? [node.publicType]
 			: node.kind === "variant" ? node.cases.map(branch => branch.publicName)
 				: node.kind === "option" ? ["Some"] : node.kind === "result" ? ["Ok", "Err"] : [])])];
@@ -128,39 +131,53 @@ export const generateCallablePythonGraphConversions = ir => {
 	const pointer = node => `_c.POINTER(${raw.get(node.id)})`;
 	for(const callback of callbacks)
 	{
-		const { index, parameters, result } = callback;
+		const { index, parameters, result } = callback, host = callback.direction === "host";
 		const types = [...parameters, result].map(pointer);
 		source.push(`${callback.function} = _c.CFUNCTYPE(_c.c_uint32, _c.c_void_p, ${types.join(", ")})`
 			, `class ${callback.raw}(_c.Structure):`
-			, `    _fields_ = [("call", ${callback.function}), ("context", _c.c_void_p)]`, ""
-			, `_owned${index} = _GraphAssets._LIBRARY["${callback.call}"]`
-			, `_owned${index}.argtypes = [_c.c_uint64, ${types.join(", ")}]`
-			, `_owned${index}.restype = _c.c_uint32`
-			, `_dispose${index} = _GraphAssets._LIBRARY["${callback.dispose}"]`
-			, `_dispose${index}.argtypes = [_c.c_uint64]`, `_dispose${index}.restype = None`, ""
+			, `    _fields_ = [("call", ${callback.function}), ("context", _c.c_void_p)${host ? `, ("recovery", ${pointer(result)})` : ""}]`, ""
+			, ...host ? [] : [`_owned${index} = _GraphAssets._LIBRARY["${callback.call}"]`
+				, `_owned${index}.argtypes = [_c.c_uint64, ${types.join(", ")}]`
+				, `_owned${index}.restype = _c.c_uint32`
+				, `_dispose${index} = _GraphAssets._LIBRARY["${callback.dispose}"]`
+				, `_dispose${index}.argtypes = [_c.c_uint64]`
+				, `_dispose${index}.restype = None`, ""]
+			, `def _check_callback${index}(value, scope):`
+			, ...host ? ["    if type(value) is not WithRecovery:"
+				, '        raise TypeError("This callback requires with_recovery(function, value)")'
+				, "    _graph_require_callback(value.function)"
+				, `    _graph_input${result.index}(value.recovery, scope)`] : ["    _graph_require_callback(value)"]
+			, ""
 			, `def _callback${index}(value, frame):`
-			, "    _graph_require_callback(value)"
+			, ...host ? ["    if type(value) is not WithRecovery:"
+				, '        raise TypeError("This callback requires with_recovery(function, value)")'
+				, "    function, recovery_value = value.function, value.recovery"] : ["    function = value"]
+			, "    _graph_require_callback(function)"
+			, "    callback = function"
 			, `    def invoke(${["_context", ...parameters.map((_, i) => `arg${i}`), "output"].join(", ")}):`
 			, "        try:"
 			, "            if not frame.alive or frame.failure is not None or _threading.current_thread() is not frame.thread:"
 			, "                return 6"
 			, ...parameters.map((node, i) => `            value${i} = _graph_output${node.index}(arg${i}${node.aggregate ? ".contents" : "[0]"}, frame.scope)`)
-			, `            result = _graph_synchronous(value(${parameters.map((_, i) => `value${i}`).join(", ")}))`
+			, `            result = _graph_synchronous(callback(${parameters.map((_, i) => `value${i}`).join(", ")}))`
 			, `            converted = _graph_input${result.index}(result, frame.scope)`
 			, "            output[0] = converted", "            return 0"
 			, "        except BaseException as failure:"
 			, "            if isinstance(failure, _GraphInvalidNative): _graph_retire()"
 			, "            if frame.failure is None: frame.failure = failure"
 			, "            return 6"
-			, `    function = ${callback.function}(invoke)`
-			, "    frame.scope.owners.append(function)"
-			, `    return ${callback.raw}(function, None)`, "");
+			, `    trampoline = ${callback.function}(invoke)`
+			, "    frame.scope.owners.append(trampoline)"
+			, ...host ? [`    recovery = _graph_input${result.index}(recovery_value, frame.scope)`
+				, ...result.aggregate ? [] : [`    recovery = frame.scope.value(${raw.get(result.id)}, recovery)`]
+				, `    return ${callback.raw}(trampoline, None, _c.pointer(recovery))`] : [`    return ${callback.raw}(trampoline, None)`]
+			, "");
 	}
 	const call = (name, symbol, parameters, result, leading = false) => {
 		const outputType = result.callback ? "_c.c_uint64" : raw.get(result.node.id);
 		const args = parameters.map((_, i) => `arg${i}`);
 		const input = (parameter, i, checking) => parameter.callback
-			? checking ? `_graph_require_callback(arg${i})` : `_callback${parameter.callback.index}(arg${i}, frame)`
+			? checking ? `_check_callback${parameter.callback.index}(arg${i}, checked)` : `_callback${parameter.callback.index}(arg${i}, frame)`
 			: `_graph_input${parameter.node.index}(arg${i}, ${checking ? "checked" : "frame.scope"})`;
 		source.push(`def ${name}(${[...leading ? ["_self"] : [], ...args].join(", ")}):`
 			, "    _GraphAssets._ensure_process()", "    checked = _GraphScope(True)", "    try:"
@@ -182,7 +199,7 @@ export const generateCallablePythonGraphConversions = ir => {
 				: ["            _graph_clear(output)"]
 			, "        finally:", "            frame.close()", "");
 	};
-	for(const callback of callbacks)
+	for(const callback of callbacks.filter(item => item.direction !== "host"))
 		call(`_invoke${callback.index}`, `_owned${callback.index}`, callback.parameters.map(node => ({ node })), { node: callback.result }, true);
 	for(const fn of model.functions)
 	{
