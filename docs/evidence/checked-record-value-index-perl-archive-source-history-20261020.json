@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-perl-archive-source-v1",
+  "predecessorCommit": "99ebea35d6eaf3f7a5a0d53a5e855f2348b8c25b",
+  "draftParentCommit": "3d543b1eb175de2859a2b6485c3d6fa528e83d6a",
+  "pathsSha256": "79e24970b23ce2f0ee2a2c990d100a33bac38a6aa2ed385fc0aab1edc832ddf5",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-perl-20261019",
+    "indexSha256": "ffb4b76ea9e79a3035f6b84c586101c034e0f29dad67ddd79b225e7e9f75b2a9",
+    "indexedFileCount": 2175,
+    "archiveFileCount": 2176,
+    "addedFileCount": 2178
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-perl-evidence-tests.mjs",
+      "currentSha256": "fc9c15dbfeab2eea7d0918c283775ad3c06b545b7b2a684e755e2d874a9d5050"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-perl-evidence.mjs",
+      "currentSha256": "82e507fd2b6b77d0c8dfe7c0bea992d48d37daad00ea1a8d4c4d661e5d312a68"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-perl.test.mjs",
+      "previousSha256": "1d11e2ae0daee46240a7e4c7d356a5cc6403763ae162cc0a854e326ea5cf1784",
+      "currentSha256": "f501098d97fe2e9ddf0762928d4ca6638efee25e5c05f7b22d3868fc53fbbbb5",
+      "edits": [
+        {
+          "start": 530,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-perl-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

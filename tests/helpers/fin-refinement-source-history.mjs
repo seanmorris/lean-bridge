@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCheckedRecordValueIndexPerlArchiveSource, checkedRecordValueIndexPerlArchiveChangedPaths } from "./checked-record-value-index-perl-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpPromotionSource, checkedRecordValueIndexPhpPromotionChangedPaths } from "./checked-record-value-index-php-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexPhpArchiveSource, checkedRecordValueIndexPhpArchiveChangedPaths } from "./checked-record-value-index-php-archive-source-history.mjs";
 import { beforeValueIndexTestProfileGapSource, valueIndexTestProfileGapChangedPaths, valueIndexTestProfileGapHistoricalPaths } from "./value-index-test-profile-gap-source-history.mjs";
@@ -1348,7 +1349,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...valueIndexNativeTapContractChangedPaths
+	...checkedRecordValueIndexPerlArchiveChangedPaths
+	, ...valueIndexNativeTapContractChangedPaths
 	, ...checkedRecordValueIndexWitAcceptanceChangedPaths
 	, ...checkedRecordValueIndexWitChangedPaths
 	, ...checkedRecordValueIndexRustAcceptanceChangedPaths
@@ -1768,7 +1770,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeValueIndexNativeTapContractSource(path, text, expected);
+	let previous = beforeCheckedRecordValueIndexPerlArchiveSource(
+		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeValueIndexNativeTapContractSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexWitAcceptanceSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
