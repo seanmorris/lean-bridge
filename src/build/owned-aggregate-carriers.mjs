@@ -56,7 +56,7 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256, hostCallbacks = false }) => {
 	const component = document.component;
 	const model = compileOwnedAggregateModel(document);
-	if(model.declarations.some(declaration => declaration.refinements !== undefined))
+	if(model.refinementModel !== undefined)
 		throw Object.assign(new TypeError("Owned aggregate carriers require checked Subtype adapters"), {
 			code: "owned-refinements-unavailable"
 		});

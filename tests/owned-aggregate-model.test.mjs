@@ -17,6 +17,7 @@ test("owned models preserve complete contracts and exact copied-versus-retained 
 	const ir = ownedAggregateReviewedIr(), before = structuredClone(ir);
 	const model = compileOwnedAggregateModel(ir), types = new Map(model.types.map(type => [type.id, type]));
 	assert.deepEqual(ir, before); assert.deepEqual(compileOwnedAggregateModel(ir), model);
+	assert.equal(model.refinementModel, undefined);
 	assert.equal(model.bindingIrSha256, sha256Text(canonicalizeJsonValue(ir)));
 	assert.deepEqual(model.bindingIr, ir); assert.equal(Object.isFrozen(ir), false);
 	assert.ok(model.declarations.every(declaration => declaration.parameters.every(site => site.optional === false && site.default === null)));
@@ -57,6 +58,28 @@ test("owned models authenticate and retain per-use Subtype decisions without ope
 	assert.deepEqual(model.declarations.find(item => item.name === "echoRecord").refinements
 		, declaration.source.extensions["lean-lang.org/refinements"]);
 	assert.equal(Object.isFrozen(model.declarations.find(item => item.name === "echoRecord").refinements), true);
+	assert.deepEqual(model.refinementModel.sites.map(site => [site.direction
+		, site.position.kind, site.type]), [
+		["input", "parameter", "lean:Owned.Bundle"]
+		, ["result", "result", "lean:Owned.Bundle"]]
+	);
+	assert.equal(model.refinementModel.sites[0].carrierKey
+		, model.refinementModel.sites[1].carrierKey);
+	assert.notEqual(model.refinementModel.sites[0].adapterKey
+		, model.refinementModel.sites[1].adapterKey);
+	const inputCount = model.refinementModel.sites[0].tree.fields[4]
+		.refinement.fields[0].refinement;
+	const resultCount = model.refinementModel.sites[1].tree.fields[4]
+		.refinement.fields[0].refinement;
+	assert.deepEqual(inputCount, { kind: "subtype", type: "primitive:int"
+		, path: [{ kind: "field", name: "payload" }
+			, { kind: "field", name: "count" }]
+		, operation: "construct", constructor: "Owned.checkedCount" });
+	assert.deepEqual(resultCount, { kind: "subtype", type: "primitive:int"
+		, path: [{ kind: "field", name: "payload" }
+			, { kind: "field", name: "count" }]
+		, operation: "project", constructor: null });
+	assert.equal(Object.isFrozen(model.refinementModel.sites[0].tree), true);
 	assert.throws(() => generateOwnedBindingCarriers({
 		document: ir
 		, sourceIdentity: {}
@@ -77,6 +100,28 @@ test("owned models authenticate and retain per-use Subtype decisions without ope
 	wrongField.declarations.find(item => item.name === "echoRecord")
 		.source.extensions["lean-lang.org/refinements"].parameters[0].fields[4].name = "other";
 	assert.throws(() => compileOwnedAggregateModel(wrongField), /Invalid declaration refinement|Refinement does not match/u);
+});
+
+test("owned refinement carriers share erased shape without sharing constructors", () => {
+	const ir = ownedSubtypeReviewedIr();
+	const original = ir.declarations.find(item => item.name === "echoRecord");
+	const alternate = structuredClone(original);
+	alternate.id = "lean:Owned.echoRecordAlternate";
+	alternate.name = "echoRecordAlternate";
+	alternate.overloadKey = "Owned.echoRecordAlternate";
+	alternate.source.declaration = "Owned.echoRecordAlternate";
+	alternate.source.extensions["lean-lang.org/refinements"].parameters[0]
+		.fields[4].refinement.fields[0].refinement.constructor
+		= "Owned.checkedCountAlternate";
+	ir.declarations.push(alternate);
+	const sites = compileOwnedAggregateModel(ir).refinementModel.sites;
+	const inputs = sites.filter(site => site.direction === "input");
+	const results = sites.filter(site => site.direction === "result");
+	assert.equal(inputs.length, 2); assert.equal(results.length, 2);
+	assert.equal(inputs[0].carrierKey, inputs[1].carrierKey);
+	assert.notEqual(inputs[0].adapterKey, inputs[1].adapterKey);
+	assert.equal(results[0].carrierKey, results[1].carrierKey);
+	assert.equal(results[0].adapterKey, results[1].adapterKey);
 });
 
 test("callback arguments, returned closures and borrowed anchors retain ownership sites", () => {

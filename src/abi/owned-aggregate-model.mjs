@@ -8,6 +8,7 @@ import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
 import { declarationRefinements } from "./refinements.mjs";
+import { compileOwnedRefinementModel } from "./owned-refinement-model.mjs";
 
 const freeze = value => {
 	if(value && typeof value === "object" && !Object.isFrozen(value))
@@ -104,10 +105,13 @@ export const compileOwnedAggregateModel = input => {
 	if(![...nodes.values()].some(node => node.representation === "owned")
 		&& !declarations.some(declaration => declaration.receiver))
 		fail("owned-aggregate-required", "This model requires at least one reachable owned aggregate");
+	const refinementModel = compileOwnedRefinementModel({ declarations
+		, types: [...nodes.values()] });
 	return freeze({ schemaVersion: 1, kind: "owned-aggregate-value-model"
 		, bindingIr: ir, bindingIrSha256: sha256Text(canonicalizeJsonValue(ir))
 		, component: ir.component, declarations
 		, types: [...nodes.values()].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0)
+		, ...(refinementModel === null ? {} : { refinementModel })
 		, limits: { depth: 128, visits: 262144, bytes: 16777216, retained: 4096 }
 		, assurance: ir.assurance, assuranceScope: "original-lean-binding-ir"
 	});
