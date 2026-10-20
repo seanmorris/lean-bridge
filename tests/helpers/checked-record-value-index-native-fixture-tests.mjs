@@ -133,17 +133,17 @@ test("value-index native hosted checker closes CLI scope and terminal TAP", () =
 	assert.deepEqual(parseCheckedRecordValueIndexNativeCiArgs(args), options);
 	const name = "installed value-index records reproduce and relocate in C/C++ for ordinary-source";
 	assertCheckedRecordValueIndexNativeTap(namedTap(name), 1, 0, name);
-	assertCheckedRecordValueIndexNativeTap(tap(12, 4), 12, 4);
+	assertCheckedRecordValueIndexNativeTap(tap(20, 4), 20, 4);
 	for(const changed of [
 		args.slice(2), [...args, "--route", "ordinary-source"]
 		, args.with(1, "ordinary"), args.with(3, "head")
 		, args.with(args.indexOf("--floor") + 1, "latest")
 	]) assert.throws(() => parseCheckedRecordValueIndexNativeCiArgs(changed));
 	for(const changed of [
-		tap(11, 10), tap(12, 3), tap(12, 4).replace("# fail 0", "# fail 1")
-		, tap(12, 4).replace("ok 1", "not ok 1")
+		tap(19, 15), tap(20, 3), tap(20, 4).replace("# fail 0", "# fail 1")
+		, tap(20, 4).replace("ok 1", "not ok 1")
 	]) assert.throws(() => assertCheckedRecordValueIndexNativeTap(
-		changed, 12, 4));
+		changed, 20, 4));
 	assert.throws(() => assertCheckedRecordValueIndexNativeTap(
 		namedTap(name.replace("ordinary-source", "reviewed-ir")), 1, 0, name));
 });

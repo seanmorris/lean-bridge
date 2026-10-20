@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "milestone": "value-index-native-tap-contract-source-v1",
+  "predecessorCommit": "a8df14e0ea26ff7e046b3e9843c1541819479f0b",
+  "pathsSha256": "5d0efc4fa96977594cc8894ad8c23630a614bda6a6174e5a710e69b38684152d",
+  "additions": [
+    {
+      "path": "scripts/update-value-index-native-tap-contract-source-history.mjs",
+      "currentSha256": "bcb2fa3dddf6a5237c96e724dea89bb9e9e1b6d957ad68da944fddf1aaf02eda"
+    },
+    {
+      "path": "tests/helpers/value-index-native-tap-contract-source-history-tests.mjs",
+      "currentSha256": "7b140f8239f7265e74e9132907de6a8df66965f554308ab86a3ce4d3c0944212"
+    },
+    {
+      "path": "tests/helpers/value-index-native-tap-contract-source-history.mjs",
+      "currentSha256": "6fa339be53ef5e8547f32c379d5ea3e1f4c112fac01bbc9f71dc0c25f23dba2d"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-native.test.mjs",
+      "previousSha256": "a171e50a7a12978f044e0e69c1b491b72da258ea74bb44aa5c717dda5e68f613",
+      "currentSha256": "9eb6d50e8f8a1c686238e00c17307fe50a666c7081ae1c00d5fa56833bd7b7cf",
+      "edits": [
+        {
+          "start": 492,
+          "previous": "",
+          "current": "import \"./helpers/value-index-native-tap-contract-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-ci-report.mjs",
+      "previousSha256": "e39027fb21eac57754dfd513e72b960fc8b198aaf9f3b76846d8e5e82be43b03",
+      "currentSha256": "fafbcefc8d96c1a052e9b2912ed346ad3553e78dae5860c9aa07cab0b4e9f839",
+      "edits": [
+        {
+          "start": 3886,
+          "previous": "\tassertCheckedRecordValueIndexNativeTap(controlsTap, 17, 4);\n",
+          "current": "\tassertCheckedRecordValueIndexNativeTap(controlsTap, 20, 4);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-native-fixture-tests.mjs",
+      "previousSha256": "ae90a939caf33294a6025a9362055621ab23c50a749d71e480dba7763890dd62",
+      "currentSha256": "99655bdbbd941e93808f7041660f24d79ece5100c08e0e814a8cac2bb192510f",
+      "edits": [
+        {
+          "start": 6434,
+          "previous": "\tassertCheckedRecordValueIndexNativeTap(tap(12, 4), 12, 4);\n",
+          "current": "\tassertCheckedRecordValueIndexNativeTap(tap(20, 4), 20, 4);\n"
+        },
+        {
+          "start": 6779,
+          "previous": "\t\ttap(11, 10), tap(12, 3), tap(12, 4).replace(\"# fail 0\", \"# fail 1\")\n\t\t, tap(12, 4).replace(\"ok 1\", \"not ok 1\")\n",
+          "current": "\t\ttap(19, 15), tap(20, 3), tap(20, 4).replace(\"# fail 0\", \"# fail 1\")\n\t\t, tap(20, 4).replace(\"ok 1\", \"not ok 1\")\n"
+        },
+        {
+          "start": 6956,
+          "previous": "\t\tchanged, 12, 4));\n",
+          "current": "\t\tchanged, 20, 4));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c3d11bba3a148c76e7bfe205b3eb31e6c3cdf385fc7c6904ace2b7ba1dcb3c3d",
+      "currentSha256": "d74a9c41ce60dfa4ec31126d6515b463779f68098d005f9ee021f9043003ffcd",
+      "edits": [
+        {
+          "start": 1556,
+          "previous": "",
+          "current": "import { beforeValueIndexNativeTapContractSource, valueIndexNativeTapContractChangedPaths } from \"./value-index-native-tap-contract-source-history.mjs\";\n"
+        },
+        {
+          "start": 84378,
+          "previous": "",
+          "current": "\tsource = beforeValueIndexNativeTapContractSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 101955,
+          "previous": "\t...checkedRecordValueIndexWitAcceptanceChangedPaths\n",
+          "current": "\t...valueIndexNativeTapContractChangedPaths\n\t, ...checkedRecordValueIndexWitAcceptanceChangedPaths\n"
+        },
+        {
+          "start": 120265,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexWitAcceptanceSource(path, text, expected);\n",
+          "current": "\tlet previous = beforeValueIndexNativeTapContractSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexWitAcceptanceSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}

@@ -14,6 +14,7 @@ import { beforeCheckedRecordValueIndexRubySource, checkedRecordValueIndexRubyCha
 import { beforeCheckedRecordValueIndexRustSource, checkedRecordValueIndexRustChangedPaths } from "./checked-record-value-index-rust-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustAcceptanceSource, checkedRecordValueIndexRustAcceptanceChangedPaths } from "./checked-record-value-index-rust-acceptance-source-history.mjs";
 import { beforeCheckedRecordValueIndexWitAcceptanceSource, checkedRecordValueIndexWitAcceptanceChangedPaths } from "./checked-record-value-index-wit-acceptance-source-history.mjs";
+import { beforeValueIndexNativeTapContractSource, valueIndexNativeTapContractChangedPaths } from "./value-index-native-tap-contract-source-history.mjs";
 import { beforeCheckedRecordValueIndexWitSource, checkedRecordValueIndexWitChangedPaths } from "./checked-record-value-index-wit-source-history.mjs";
 import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from "./value-index-native-binding-ir-ordering-repair-source-history.mjs";
@@ -998,6 +999,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeValueIndexNativeTapContractSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexWitAcceptanceSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexWitSource(path, source, expected);
@@ -1345,7 +1348,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexWitAcceptanceChangedPaths
+	...valueIndexNativeTapContractChangedPaths
+	, ...checkedRecordValueIndexWitAcceptanceChangedPaths
 	, ...checkedRecordValueIndexWitChangedPaths
 	, ...checkedRecordValueIndexRustAcceptanceChangedPaths
 	, ...checkedRecordValueIndexRustChangedPaths
@@ -1764,7 +1768,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexWitAcceptanceSource(path, text, expected);
+	let previous = beforeValueIndexNativeTapContractSource(path, text, expected);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexWitAcceptanceSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexWitSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;

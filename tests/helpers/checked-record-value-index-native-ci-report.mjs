@@ -90,7 +90,7 @@ export const checkCheckedRecordValueIndexNativeCiRecords = async (
 		Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]));
 	assertCheckedRecordValueIndexNativeTap(acceptanceTap, 1, 0
 		, `installed value-index records reproduce and relocate in C/C++ for ${selected.route}`);
-	assertCheckedRecordValueIndexNativeTap(controlsTap, 17, 4);
+	assertCheckedRecordValueIndexNativeTap(controlsTap, 20, 4);
 	assert.deepEqual(Object.keys(runtime).sort()
 		, ["arch", "cc", "cpp", "glibc", "platform"]);
 	const report = JSON.parse(await read("report.json"));
