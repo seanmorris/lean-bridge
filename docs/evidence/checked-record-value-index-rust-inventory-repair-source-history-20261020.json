@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-inventory-repair-v1",
+  "previousCommit": "ac17ed03d7071151ce3b232fb7dd5cf3b78119ae",
+  "currentCommit": "45d13fb3eea6f041998d659a3b96eb5109363321",
+  "registrationParent": "a62018388d33a75ef46a5ea10ec02457b2c1bbc9",
+  "pathsSha256": "9ab852167669e0d8cee62b1ea46a9b524b7f953f0158da8b50ad743338ce3479",
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-inventory-repair-source-history-tests.mjs",
+      "currentSha256": "9ec084e1d181eae2b8cc2403308b154bdeffaf5f971eafebdd9a58e5f14a27f9"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-inventory-repair-source-history.mjs",
+      "currentSha256": "d347e0144ee629e9088c906cf5d8ef02d25bcc6787e03e48fe048bf7f8624cfc"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "kind": "registration",
+      "previousSha256": "dd0d590a53bc1cf0e7b111a142da8479f90198d8713d0ad09c698a94dbdeb17b",
+      "currentSha256": "83e7f7587cb82b2b80e919040456a2a8bf2cc60ac92927967c50a10f1e4de6fa",
+      "edits": [
+        {
+          "start": 401,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-rust-inventory-repair-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "kind": "registration",
+      "previousSha256": "72c18c6eb28b3651eb82387e7057ca3a055b8e32f540e34d71d107ee8794e966",
+      "currentSha256": "a44ebc0cacb0620d31cdfbe06083be1ee4641936dc3757f5ea389aaf39f9f945",
+      "edits": [
+        {
+          "start": 701,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustInventoryRepairSource, checkedRecordValueIndexRustInventoryRepairChangedPaths } from \"./checked-record-value-index-rust-inventory-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 104416,
+          "previous": "\t...checkedRecordValueIndexWitCallerWarningRepairChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustInventoryRepairChangedPaths\n\t, ...checkedRecordValueIndexWitCallerWarningRepairChangedPaths\n"
+        },
+        {
+          "start": 123478,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustInventoryRepairSource(\n"
+        },
+        {
+          "start": 123573,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(\n\t\tpath, previous, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-report.mjs",
+      "kind": "historical",
+      "previousSha256": "0b5fbaed098b1f57e2d0ff1e4187992ce0f7579d1e2039430a25623a96f30fc4",
+      "currentSha256": "a4d3e53b9ee7eb6927d5512b8e4269bc78c1dbf36aff3aa44f6fed59208c9b5c",
+      "edits": [
+        {
+          "start": 5850,
+          "previous": "\t\tassert.deepEqual({ bytes: moduleInput.bytes, sha256: moduleInput.sha256 }\n\t\t\t, { bytes: source.length, sha256: sha256(source) });\n",
+          "current": "\t\tassert.equal(moduleInput.sha256, sha256(source));\n\t\tassert.equal(moduleInput.mode & 0o170000, 0o100000);\n"
+        }
+      ]
+    }
+  ]
+}
