@@ -10,6 +10,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import {
+	beforeCallbackSubtypeBrowserArtifactSource
+} from "./callback-subtype-browser-artifact-source-history.mjs";
+import {
 	callbackSubtypeBrowserCiAddedPaths
 	, callbackSubtypeBrowserCiHistoryPath
 	, callbackSubtypeBrowserCiImplementation
@@ -35,7 +38,11 @@ test("callback Subtype browser CI history authenticates every added source", asy
 		assert.equal(execFileSync("git", ["ls-tree", "--name-only"
 			, callbackSubtypeBrowserCiPredecessor, "--", addition.path]
 		, { encoding: "utf8" }).trim(), "", addition.path);
-		assert.equal(sha256(await readFile(addition.path))
+		const source = beforeCallbackSubtypeBrowserArtifactSource(
+			addition.path, await readFile(addition.path, "utf8")
+			, addition.currentSha256
+		);
+		assert.equal(sha256(source)
 			, addition.currentSha256, addition.path);
 	}
 });

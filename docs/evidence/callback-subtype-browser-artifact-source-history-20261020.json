@@ -1,0 +1,209 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a2eb69897a32d8387c85795496809aa11df7b84da0f77cb423b861e24f3c83d1",
+      "path": "scripts/update-callback-subtype-browser-artifact-source-history.mjs"
+    },
+    {
+      "currentSha256": "1c8c05eb2e44b8b8d0ced5c5bb7f4d6079c754c26391310ca98a3ac39117b314",
+      "path": "tests/helpers/callback-subtype-browser-artifact-source-history.mjs"
+    },
+    {
+      "currentSha256": "ff8d02fefbcf68f3f94875e8671a217af385cba86ea1acecc72289c504229003",
+      "path": "tests/helpers/callback-subtype-browser-artifact-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "d24b8990a52cda6aa5a2eee38041db9d62a663bf",
+  "milestone": "callback-subtype-browser-artifact-source-v1",
+  "predecessorCommit": "fd80f73a1d9ac1d4e006dd98a77dccaad9ae25db",
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "fc17a0dc3ae9aabd01f78662014a739f6246e792ec30baa176735cd748bea5a6",
+      "edits": [
+        {
+          "current": "\t, checkCallbackSubtypeBrowserRecords\n",
+          "previous": "",
+          "start": 247
+        },
+        {
+          "current": "const records = await checkCallbackSubtypeBrowserRecords(\n\tselected.records, selected.producer\n);\nprocess.stdout.write(canonicalJson({ ...checked, records }));\n",
+          "previous": "process.stdout.write(canonicalJson(checked));\n",
+          "start": 627
+        }
+      ],
+      "path": "scripts/check-callback-subtype-browser-ci.mjs",
+      "previousSha256": "0155fe9873d3df26ffdd78214ce47a724b16ede4efc8e0ab116cedabf6835906"
+    },
+    {
+      "currentSha256": "6ac1f173e332a71c8495f37f63c05765c304d153581048a2ebaf8d54139bfc11",
+      "edits": [
+        {
+          "current": "for variable in LEAN_BRIDGE_LAKE_RUNTIME_ROOT LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT LEAN_BRIDGE_TYPE_CORPUS_BROWSERS; do\n",
+          "previous": "for variable in LEAN_BRIDGE_LAKE_RUNTIME_ROOT LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST LEAN_BRIDGE_TYPE_CORPUS_BROWSERS; do\n",
+          "start": 255
+        },
+        {
+          "current": "export LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT=\"$PWD/$output/records\"\n",
+          "previous": "",
+          "start": 935
+        },
+        {
+          "current": "  --runtime \"$output/runtime-before.json\" --records \"$output/records\" \\\n  2>&1 | tee \"$output/verification.json\"\n",
+          "previous": "  --runtime \"$output/runtime-before.json\" 2>&1 | tee \"$output/verification.json\"\n",
+          "start": 1791
+        }
+      ],
+      "path": "scripts/run-callback-subtype-browser-ci.sh",
+      "previousSha256": "fce2f44d795d30eb9ec961fb4abda3e1f90a4a6c6cfcbfdcb84363c9e26a0ad9"
+    },
+    {
+      "currentSha256": "545f77e1adc2132871ba679f980b849c4531d1ca4b8a5ec76b7e696c8e329c7c",
+      "edits": [
+        {
+          "current": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 390
+        },
+        {
+          "current": "\t, checkCallbackSubtypeBrowserRecords\n",
+          "previous": "",
+          "start": 549
+        },
+        {
+          "current": "import \"./helpers/callback-subtype-browser-artifact-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 749
+        },
+        {
+          "current": "\tconst options = { producer: commit, tap: \"run.tap\", runtime: \"runtime.json\"\n\t\t, records: \"records\" };\n",
+          "previous": "\tconst options = { producer: commit, tap: \"run.tap\", runtime: \"runtime.json\" };\n",
+          "start": 1314
+        },
+        {
+          "current": "\tfor(const args of [[], [\"--producer\", commit]\n\t\t, [\"--unknown\", \"x\", \"--tap\", \"x\", \"--runtime\", \"x\", \"--records\", \"x\"]\n\t\t, [\"--producer\", \"short\", \"--tap\", \"x\", \"--runtime\", \"x\", \"--records\", \"x\"]\n\t\t, [\"--producer\", commit, \"--producer\", commit, \"--runtime\", \"x\", \"--records\", \"x\"]])\n",
+          "previous": "\tfor(const args of [[], [\"--producer\", commit], [\"--unknown\", \"x\", \"--tap\", \"x\", \"--runtime\", \"x\"], [\"--producer\", \"short\", \"--tap\", \"x\", \"--runtime\", \"x\"], [\"--producer\", commit, \"--producer\", commit, \"--runtime\", \"x\"]])\n",
+          "start": 2258
+        },
+        {
+          "current": "test(\"callback Subtype browser records authenticate both archive handoffs and six reports\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-callback-browser-records-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst expected = { checks: 18, rejections: 7, callbackCalls: 3 };\n\tconst profiles = [\"browser-javascript\", \"browser-react\", \"browser-worker\"];\n\tconst engines = [\"chromium\", \"firefox\", \"webkit\"];\n\tconst routes = {}, builds = [\n\t\t{ route: \"ordinary\", attempt: 0, bindingIrSha256: \"1\".repeat(64)\n\t\t\t, receiptSha256: \"2\".repeat(64), componentArchiveSha256: \"3\".repeat(64)\n\t\t\t, runtimeArchiveSha256: \"4\".repeat(64) }\n\t\t, { route: \"ordinary\", attempt: 1, bindingIrSha256: \"1\".repeat(64)\n\t\t\t, receiptSha256: \"2\".repeat(64), componentArchiveSha256: \"3\".repeat(64)\n\t\t\t, runtimeArchiveSha256: \"4\".repeat(64) }\n\t\t, { route: \"reviewed\", attempt: 0, bindingIrSha256: \"5\".repeat(64)\n\t\t\t, receiptSha256: \"6\".repeat(64), componentArchiveSha256: \"7\".repeat(64)\n\t\t\t, runtimeArchiveSha256: \"4\".repeat(64) }\n\t];\n\tawait writeFile(join(root, \"start.json\"), JSON.stringify({ schemaVersion: 1\n\t\t, producerCommit: commit, routes: [\"ordinary\", \"reviewed\"]\n\t\t, profiles, engines }));\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t{\n\t\tconst handoff = join(root, route, \"handoff\"); await mkdir(handoff, { recursive: true });\n\t\tconst receipt = { package: { archive: \"component.tgz\" }\n\t\t\t, runtime: { archive: \"runtime.tgz\" } };\n\t\tconst contents = { \"component.tgz\": `component-${route}`\n\t\t\t, \"runtime.tgz\": \"runtime\"\n\t\t\t, \"component-package-receipt.json\": JSON.stringify(receipt)\n\t\t\t, \"verify-component-package-receipt.mjs\": \"export default true;\\n\" };\n\t\tconst files = {};\n\t\tfor(const [name, source] of Object.entries(contents))\n\t\t{\n\t\t\tawait writeFile(join(handoff, name), source);\n\t\t\tconst bytes = Buffer.from(source);\n\t\t\tfiles[name] = { bytes: bytes.length, sha256: sha256(bytes) };\n\t\t}\n\t\tconst browsers = [];\n\t\tfor(const profile of profiles)\n\t\t{\n\t\t\tconst variants = profile === \"browser-react\" ? [\"production\", \"strict\"] : [\"production\"];\n\t\t\tconst observation = { profile, results: { route, ...expected } };\n\t\t\tconst executions = engines.flatMap(engine => variants.map(variant => ({\n\t\t\t\tengine, variant, failedAssetRecovery: true\n\t\t\t\t, ...profile === \"browser-react\" ? { pendingUnmount: true } : {}\n\t\t\t\t, observation\n\t\t\t})));\n\t\t\tconst browser = { requestedEngines: engines, installedSourcesRemoved: true\n\t\t\t\t, externalNetworkBlocked: true\n\t\t\t\t, executions };\n\t\t\tconst item = { schemaVersion: 1, producerCommit: commit, route\n\t\t\t\t, profile, observation, browser };\n\t\t\tbrowsers.push(item);\n\t\t\tawait writeFile(join(root, route, profile + \".json\"), JSON.stringify(item));\n\t\t}\n\t\troutes[route] = { receipt, files, node: { ...expected, relocations: 2 }\n\t\t\t, typescript: true, browsers };\n\t}\n\tawait writeFile(join(root, \"report.json\"), JSON.stringify({ schemaVersion: 1\n\t\t, producerCommit: commit, expected, builds, routes }));\n\tassert.deepEqual(await checkCallbackSubtypeBrowserRecords(root, commit), {\n\t\treportSha256: sha256(await readFile(join(root, \"report.json\")))\n\t\t, archiveCount: 4, browserReportCount: 6\n\t});\n\tawait writeFile(join(root, \"ordinary/handoff/component.tgz\"), \"changed\");\n\tawait assert.rejects(checkCallbackSubtypeBrowserRecords(root, commit));\n});\n\n",
+          "previous": "",
+          "start": 2724
+        },
+        {
+          "current": "assert.equal(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT, process.cwd() + '/build/callback-subtype-browser-ci/records');\n",
+          "previous": "",
+          "start": 9902
+        },
+        {
+          "current": "  assert.deepEqual(args, ['scripts/check-callback-subtype-browser-ci.mjs','--producer','${commit}','--tap','build/callback-subtype-browser-ci/acceptance.tap','--runtime','build/callback-subtype-browser-ci/runtime-before.json','--records','build/callback-subtype-browser-ci/records']);\n",
+          "previous": "  assert.deepEqual(args, ['scripts/check-callback-subtype-browser-ci.mjs','--producer','${commit}','--tap','build/callback-subtype-browser-ci/acceptance.tap','--runtime','build/callback-subtype-browser-ci/runtime-before.json']);\n",
+          "start": 10781
+        },
+        {
+          "current": "\tfor(const variable of [\"LEAN_BRIDGE_LAKE_RUNTIME_ROOT\", \"LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST\", \"LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST\", \"LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT\", \"LEAN_BRIDGE_TYPE_CORPUS_BROWSERS\"])\n",
+          "previous": "\tfor(const variable of [\"LEAN_BRIDGE_LAKE_RUNTIME_ROOT\", \"LEAN_BRIDGE_CALLBACK_SUBTYPE_NPM_TEST\", \"LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_TEST\", \"LEAN_BRIDGE_TYPE_CORPUS_BROWSERS\"])\n",
+          "start": 12912
+        }
+      ],
+      "path": "tests/callback-subtype-browser-ci.test.mjs",
+      "previousSha256": "2b83b4522d7ba64cb06dce8a1d68358cf828dd7d15e2a55f594804956cb38aab"
+    },
+    {
+      "currentSha256": "02ee48837a6a8bda7d5624a13d32bb66f807591ed74a51a9289578c824a3c874",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "const outputFlag = \"LEAN_BRIDGE_CALLBACK_SUBTYPE_BROWSER_OUTPUT\";\n",
+          "previous": "",
+          "start": 1684
+        },
+        {
+          "current": "\tassert.ok(process.env[outputFlag]?.startsWith(\"/\"),\n\t\t\"Browser acceptance requires an absolute retained-output path\");\n",
+          "previous": "",
+          "start": 2216
+        },
+        {
+          "current": "\tconst records = process.env[outputFlag];\n\tconst producerCommit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"])\n\t\t.toString().trim();\n\tif(records)\n\t{\n\t\tawait mkdir(records);\n\t\tawait saveLakeFile(records, \"start.json\", canonicalJson({\n\t\t\tschemaVersion: 1, producerCommit, routes: [\"ordinary\", \"reviewed\"]\n\t\t\t, profiles: [\"browser-javascript\", \"browser-react\", \"browser-worker\"]\n\t\t\t, engines: browserEnabled\n\t\t\t\t? [\"chromium\", \"firefox\", \"webkit\"] : []\n\t\t}));\n\t}\n",
+          "previous": "",
+          "start": 4737
+        },
+        {
+          "current": "\tconst artifacts = {}, routeReports = {};\n",
+          "previous": "\tconst artifacts = {};\n",
+          "start": 8390
+        },
+        {
+          "current": "\t\tconst retainedHandoff = records && join(records, route, \"handoff\");\n\t\tconst files = {};\n\t\tif(retainedHandoff)\n\t\t{\n\t\t\tawait mkdir(retainedHandoff, { recursive: true });\n\t\t\tconst retainedNames = [receipt.package.archive, receipt.runtime.archive\n\t\t\t\t, \"component-package-receipt.json\"\n\t\t\t\t, \"verify-component-package-receipt.mjs\"];\n\t\t\tfor(const name of retainedNames)\n\t\t\t{\n\t\t\t\tconst bytes = await readFile(join(handoff, name));\n\t\t\t\tawait saveLakeFile(retainedHandoff, name, bytes);\n\t\t\t\tfiles[name] = { bytes: bytes.length, sha256: sha256(bytes) };\n\t\t\t}\n\t\t}\n\t\trouteReports[route] = { receipt, files, node: null, typescript: false\n\t\t\t, browsers: [] };\n",
+          "previous": "",
+          "start": 9667
+        },
+        {
+          "current": "\t\trouteReports[route].node = { ...expected, relocations: 2 };\n\t\trouteReports[route].typescript = true;\n",
+          "previous": "",
+          "start": 12434
+        },
+        {
+          "current": "\t\t\t\tconst result = await installedBrowserCorpus({ library: { npmModule: callbackSubtypeName }\n",
+          "previous": "\t\t\t\tawait installedBrowserCorpus({ library: { npmModule: callbackSubtypeName }\n",
+          "start": 13316
+        },
+        {
+          "current": "\t\t\t\tconst report = { schemaVersion: 1, producerCommit, route, profile\n\t\t\t\t\t, ...result };\n\t\t\t\trouteReports[route].browsers.push(report);\n\t\t\t\tif(records) await saveLakeFile(records\n\t\t\t\t\t, `${route}/${profile}.json`, canonicalJson(report));\n",
+          "previous": "",
+          "start": 13769
+        },
+        {
+          "current": "\tif(records) await saveLakeFile(records, \"report.json\", canonicalJson({\n\t\tschemaVersion: 1, producerCommit, expected, builds\n\t\t, routes: routeReports\n\t}));\n",
+          "previous": "",
+          "start": 14016
+        }
+      ],
+      "path": "tests/callback-subtype-npm-browser.test.mjs",
+      "previousSha256": "b011c474a8e0b42f2cb540efcb70054be5cffdbb0aa9f7f50972b806abc037ba"
+    },
+    {
+      "currentSha256": "16b480e1d36aff740f2cf41abdcf2211471befbde446fbdc9927ec8f22662cd1",
+      "edits": [
+        {
+          "current": "import {\n\tbeforeCallbackSubtypeBrowserArtifactSource\n} from \"./callback-subtype-browser-artifact-source-history.mjs\";\n",
+          "previous": "",
+          "start": 370
+        },
+        {
+          "current": "\t\tconst source = beforeCallbackSubtypeBrowserArtifactSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n\t\t);\n\t\tassert.equal(sha256(source)\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 1536
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-ci-source-history-tests.mjs",
+      "previousSha256": "d7f9074718e7633a08805f28f53c924f91556b38e80b7de245aba8965e13fdd6"
+    },
+    {
+      "currentSha256": "4e90b3e6b0446206365ab3ddb678fdca3e99ad3f31f5a3051843a2a8c8fdab62",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\nimport { join } from \"node:path\";\nimport { nativeArtifactPaths } from \"../../src/build/native-artifacts.mjs\";\nimport { sha256 } from \"../../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tconst usage = \"Usage: check-callback-subtype-browser-ci.mjs --producer <commit> --tap <original-tap> --runtime <independent-runtime-json> --records <retained-record-directory>\";\n\tconst allowed = [\"producer\", \"tap\", \"runtime\", \"records\"], selected = {};\n",
+          "previous": "\tconst usage = \"Usage: check-callback-subtype-browser-ci.mjs --producer <commit> --tap <original-tap> --runtime <independent-runtime-json>\";\n\tconst allowed = [\"producer\", \"tap\", \"runtime\"], selected = {};\n",
+          "start": 855
+        },
+        {
+          "current": "\nconst expected = Object.freeze({ checks: 18, rejections: 7\n\t, callbackCalls: 3 });\nconst profiles = Object.freeze([\n\t\"browser-javascript\", \"browser-react\", \"browser-worker\"\n]);\nconst routes = Object.freeze([\"ordinary\", \"reviewed\"]);\nconst engines = Object.freeze([\"chromium\", \"firefox\", \"webkit\"]);\n\n/**\n * Authenticate every retained archive and browser observation by exact path.\n *\n * @param directory - Closed retained-record directory.\n * @param producerCommit - Exact producer revision selected outside the test.\n */\nexport const checkCallbackSubtypeBrowserRecords = async (\n\tdirectory, producerCommit\n) => {\n\tconst read = path => readFile(join(directory, path));\n\tconst json = async path => JSON.parse(await read(path));\n\tconst start = await json(\"start.json\"), report = await json(\"report.json\");\n\texactKeys(start, [\"schemaVersion\", \"producerCommit\", \"routes\"\n\t\t, \"profiles\", \"engines\"]);\n\tassert.deepEqual(start, { schemaVersion: 1, producerCommit\n\t\t, routes: [...routes], profiles: [...profiles], engines: [...engines] });\n\texactKeys(report, [\"schemaVersion\", \"producerCommit\", \"expected\"\n\t\t, \"builds\", \"routes\"]);\n\tassert.equal(report.schemaVersion, 1);\n\tassert.equal(report.producerCommit, producerCommit);\n\tassert.deepEqual(report.expected, expected);\n\tassert.equal(report.builds.length, 3);\n\tassert.deepEqual(report.builds.map(({ route, attempt }) => ({ route, attempt }))\n\t\t, [{ route: \"ordinary\", attempt: 0 }, { route: \"ordinary\", attempt: 1 }\n\t\t\t, { route: \"reviewed\", attempt: 0 }]);\n\tfor(const build of report.builds)\n\t{\n\t\texactKeys(build, [\"route\", \"attempt\", \"bindingIrSha256\"\n\t\t\t, \"receiptSha256\", \"componentArchiveSha256\"\n\t\t\t, \"runtimeArchiveSha256\"]);\n\t\tfor(const key of [\"bindingIrSha256\", \"receiptSha256\"\n\t\t\t, \"componentArchiveSha256\", \"runtimeArchiveSha256\"])\n\t\t\tassert.match(build[key], /^[a-f0-9]{64}$/u);\n\t}\n\tfor(const key of [\"bindingIrSha256\", \"receiptSha256\"\n\t\t, \"componentArchiveSha256\", \"runtimeArchiveSha256\"])\n\t\tassert.equal(report.builds[1][key], report.builds[0][key], key);\n\tassert.equal(report.builds[2].runtimeArchiveSha256\n\t\t, report.builds[0].runtimeArchiveSha256);\n\tassert.notEqual(report.builds[2].componentArchiveSha256\n\t\t, report.builds[0].componentArchiveSha256);\n\tassert.notEqual(report.builds[2].receiptSha256\n\t\t, report.builds[0].receiptSha256);\n\n\tconst expectedPaths = [\"start.json\", \"report.json\"];\n\texactKeys(report.routes, routes);\n\tfor(const route of routes)\n\t{\n\t\tconst item = report.routes[route];\n\t\texactKeys(item, [\"receipt\", \"files\", \"node\", \"typescript\", \"browsers\"]);\n\t\tassert.deepEqual(item.node, { ...expected, relocations: 2 });\n\t\tassert.equal(item.typescript, true);\n\t\tconst receipt = JSON.parse(await read(\n\t\t\t`${route}/handoff/component-package-receipt.json`\n\t\t));\n\t\tassert.deepEqual(item.receipt, receipt);\n\t\tconst handoff = [receipt.package.archive, receipt.runtime.archive\n\t\t\t, \"component-package-receipt.json\"\n\t\t\t, \"verify-component-package-receipt.mjs\"];\n\t\tfor(const name of handoff)\n\t\t\tassert.match(name, /^[A-Za-z0-9_@.+-]+$/u);\n\t\texactKeys(item.files, handoff);\n\t\tfor(const name of handoff)\n\t\t{\n\t\t\tconst path = `${route}/handoff/${name}`, bytes = await read(path);\n\t\t\tassert.deepEqual(item.files[name]\n\t\t\t\t, { bytes: bytes.length, sha256: sha256(bytes) });\n\t\t\texpectedPaths.push(path);\n\t\t}\n\t\tassert.deepEqual(item.browsers.map(browser => browser.profile), profiles);\n\t\tfor(const browser of item.browsers)\n\t\t{\n\t\t\texactKeys(browser, [\"schemaVersion\", \"producerCommit\", \"route\"\n\t\t\t\t, \"profile\", \"observation\", \"browser\"]);\n\t\t\tassert.equal(browser.schemaVersion, 1);\n\t\t\tassert.equal(browser.producerCommit, producerCommit);\n\t\t\tassert.equal(browser.route, route);\n\t\t\tassert.deepEqual(browser.observation.results, { route, ...expected });\n\t\t\tassert.equal(browser.observation.profile, browser.profile);\n\t\t\tassert.deepEqual(browser.browser.requestedEngines, engines);\n\t\t\tassert.equal(browser.browser.installedSourcesRemoved, true);\n\t\t\tassert.equal(browser.browser.externalNetworkBlocked, true);\n\t\t\tconst variants = browser.profile === \"browser-react\"\n\t\t\t\t? [\"production\", \"strict\"] : [\"production\"];\n\t\t\tassert.deepEqual(browser.browser.executions.map(({ engine, variant }) => (\n\t\t\t\t{ engine, variant }\n\t\t\t)), engines.flatMap(engine => variants.map(variant => (\n\t\t\t\t{ engine, variant }\n\t\t\t))));\n\t\t\tfor(const execution of browser.browser.executions)\n\t\t\t{\n\t\t\t\tassert.equal(execution.failedAssetRecovery, true);\n\t\t\t\tif(browser.profile === \"browser-react\")\n\t\t\t\t\tassert.equal(execution.pendingUnmount, true);\n\t\t\t\tassert.deepEqual(execution.observation.results\n\t\t\t\t\t, { route, ...expected });\n\t\t\t}\n\t\t\tconst path = `${route}/${browser.profile}.json`;\n\t\t\tassert.deepEqual(browser, await json(path)); expectedPaths.push(path);\n\t\t}\n\t}\n\tassert.deepEqual(await nativeArtifactPaths(directory)\n\t\t, expectedPaths.sort());\n\treturn { reportSha256: sha256(await read(\"report.json\"))\n\t\t, archiveCount: routes.length * 2\n\t\t, browserReportCount: routes.length * profiles.length };\n};\n",
+          "previous": "",
+          "start": 3448
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-ci.mjs",
+      "previousSha256": "fc91c13fecd75e5d10898df44c9b8385029c08dff9481130254f861c3b3ef716"
+    }
+  ]
+}
