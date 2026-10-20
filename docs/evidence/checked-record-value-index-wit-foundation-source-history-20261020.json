@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-wit-foundation-source-v1",
+  "predecessorCommit": "8524753e5fd8e66f0926d2c166a4d1db42f04582",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-wit-source-history.mjs",
+      "currentSha256": "03d5cb20a3ce2989b2c0f06e5a4f3e488e11f14cef069b640703d0275bbc964b"
+    },
+    {
+      "path": "tests/checked-record-value-index-wit.test.mjs",
+      "currentSha256": "1768c17933a8a1ce20d00977cdbdb8800c20e83b6ca7e1fb7fb99c266f9dae50"
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-wit/wit-values.h",
+      "currentSha256": "6d34727f7b78f04e3d237004a73319bdffb299e2ac210d139f8cac7fa89dea66"
+    },
+    {
+      "path": "tests/fixtures/checked-record-value-index-wit/wit-wasi.c",
+      "currentSha256": "9842cafc7c1d79a5d8ad867dd9b7ed8c5cf79bee0880f85c32d1525d820bdc98"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-fixture-tests.mjs",
+      "currentSha256": "b0f8ba8393563f8825fe5c49e6bf53d1efa64b11190b48be7e880373d87033d7"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-fixture.mjs",
+      "currentSha256": "8a97e172df04051d9f3fcf254b77d27f782da2f12f79044ffed7a6444d4ce3b5"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-source-history-tests.mjs",
+      "currentSha256": "01c0176d7eb778d21d6be3a16edb1d54e21bea244ddf39de1f0f747bcf927044"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-source-history.mjs",
+      "currentSha256": "5c84b6b229d1279dcd767e5c5e8e86cedd13d0e10ea12c05a8b8b19f42aafb55"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "17c6e2ea45548a73ed7c886c54ebd0bcece8640923d79cf582310acef682099b",
+      "currentSha256": "7258c77a190aa742b65a5bfc5b157976b2d152f84714f1b404666ad5efdc3887",
+      "edits": [
+        {
+          "start": 12825,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-wit\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4f6002e027ada7be0af9459aafaf868665715aa2f6425869620cce7b19bb99f3",
+      "currentSha256": "cfcbc5061e6576b396c10b96abbc3652ceb5c44e3dd319a88adca9a4a6369600",
+      "edits": [
+        {
+          "start": 1375,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexWitSource, checkedRecordValueIndexWitChangedPaths } from \"./checked-record-value-index-wit-source-history.mjs\";\n"
+        },
+        {
+          "start": 84044,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexWitSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 101366,
+          "previous": "\t...checkedRecordValueIndexRustAcceptanceChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexWitChangedPaths\n\t, ...checkedRecordValueIndexRustAcceptanceChangedPaths\n"
+        },
+        {
+          "start": 119575,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustAcceptanceSource(path, text, expected);\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexWitSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustAcceptanceSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}

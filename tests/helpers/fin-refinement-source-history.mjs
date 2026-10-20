@@ -13,6 +13,7 @@ import { beforeValueIndexTestProfileGapSource, valueIndexTestProfileGapChangedPa
 import { beforeCheckedRecordValueIndexRubySource, checkedRecordValueIndexRubyChangedPaths } from "./checked-record-value-index-ruby-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustSource, checkedRecordValueIndexRustChangedPaths } from "./checked-record-value-index-rust-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustAcceptanceSource, checkedRecordValueIndexRustAcceptanceChangedPaths } from "./checked-record-value-index-rust-acceptance-source-history.mjs";
+import { beforeCheckedRecordValueIndexWitSource, checkedRecordValueIndexWitChangedPaths } from "./checked-record-value-index-wit-source-history.mjs";
 import { beforeCoreThirdRunResidualRepairSource, coreThirdRunResidualRepairChangedPaths } from "./core-third-run-residual-repair-source-history.mjs";
 import { beforeValueIndexNativeBindingIrOrderingRepairSource, valueIndexNativeBindingIrOrderingRepairChangedPaths } from "./value-index-native-binding-ir-ordering-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexNativeBindingIrSource, checkedRecordValueIndexNativeBindingIrChangedPaths } from "./checked-record-value-index-native-binding-ir-source-history.mjs";
@@ -996,6 +997,8 @@ const beforeFinTypeSurface = source => {
  * @param expected - Optional exact stopping SHA-256.
  */
 const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expected) => {
+	source = beforeCheckedRecordValueIndexWitSource(path, source, expected);
+	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexRustAcceptanceSource(path, source, expected);
 	if(sha256(source) === expected) return source;
 	source = beforeCheckedRecordValueIndexRustSource(path, source, expected);
@@ -1339,7 +1342,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexRustAcceptanceChangedPaths
+	...checkedRecordValueIndexWitChangedPaths
+	, ...checkedRecordValueIndexRustAcceptanceChangedPaths
 	, ...checkedRecordValueIndexRustChangedPaths
 	, ...checkedRecordValueIndexRubyChangedPaths
 	, ...checkedRecordValueIndexPhpPromotionChangedPaths
@@ -1756,7 +1760,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexRustAcceptanceSource(path, text, expected);
+	let previous = beforeCheckedRecordValueIndexWitSource(path, text, expected);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexRustAcceptanceSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexRustSource(path, previous, expected);
 	if(sha256(previous) === expected) return previous;
