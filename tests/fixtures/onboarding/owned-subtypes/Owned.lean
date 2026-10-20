@@ -1,6 +1,8 @@
 namespace Owned
 
-opaque Ticket : Type
+structure Ticket where
+  serial : Nat
+  label : String
 
 def checkedCount (value : Int) : Option { count : Int // 0 ≤ count } :=
   if proof : 0 ≤ value then some ⟨value, proof⟩ else none
@@ -18,6 +20,11 @@ structure Bundle where
   peers : Array Ticket
   history : List Ticket
   payload : Payload
+
+def newTicket (serial : Nat) (label : String) : Ticket :=
+  ⟨serial, label⟩
+
+def serial (ticket : Ticket) : Nat := ticket.serial
 
 def echoRecord (value : Bundle) : Bundle := value
 

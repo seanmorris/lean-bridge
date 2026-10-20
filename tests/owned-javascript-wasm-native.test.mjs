@@ -10,6 +10,29 @@ import { compileOwnedJavaScriptWasmFixture } from "./helpers/owned-javascript-wa
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_JS_WASM_TEST === "1";
 
+test("proof-erased owned Subtype fields reject before resource movement on wasm32", {
+	skip: !enabled, timeout: 360000
+}, async t => {
+	const { call, close, module } = await compileOwnedJavaScriptWasmFixture(t, "owned-subtypes");
+	const ticket = call("newTicket", 41n, "checked");
+	const value = { primary: ticket, spare: { tag: "none" }, peers: [ticket]
+		, history: [ticket]
+		, payload: { count: 7n, bytes: new Uint8Array([0, 255]) } };
+	assert.deepEqual(call("echoRecord", value), value);
+	assert.deepEqual(call("echoRecordAlternate", value), value);
+	const baseline = [module._owned_results(), module._owned_live(), module._owned_identities()];
+	const invalid = { ...value, payload: { ...value.payload, count: -1n } };
+	assert.throws(() => call("echoRecord", invalid), /Owned Lean call failed/u);
+	assert.deepEqual([module._owned_results(), module._owned_live(), module._owned_identities()], baseline);
+	assert.equal(call("serial", ticket), 41n, "failed refinement leaves the borrowed resource usable");
+	assert.throws(() => call("echoRecordAlternate", invalid), /Owned Lean call failed/u);
+	assert.deepEqual([module._owned_results(), module._owned_live(), module._owned_identities()], baseline);
+	assert.equal(call("serial", ticket), 41n);
+	ticket.dispose();
+	assert.equal(module._owned_results(), 0); assert.equal(module._owned_live(), 0);
+	close();
+});
+
 test("JavaScript aggregates execute typed Lean carriers in the real wasm32 runtime", {
 	skip: !enabled, timeout: 360000
 }, async t => {

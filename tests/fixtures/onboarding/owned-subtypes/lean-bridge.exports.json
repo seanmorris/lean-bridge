@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "description": "Owned values with proof-erased checked fields."
+  },
+  "modules": ["Owned"],
+  "resources": ["Owned.Ticket"],
+  "ownedAggregates": {
+    "ownership": "lease",
+    "disposal": "required",
+    "fallback": "queued-finalizer",
+    "cycles": "reject"
+  },
+  "exports": [
+    "Owned.newTicket",
+    "Owned.serial",
+    "Owned.echoRecord",
+    "Owned.echoRecordAlternate"
+  ],
+  "arities": {},
+  "contracts": {
+    "Owned.echoRecord": {
+      "parameters": [
+        {
+          "ownership": "borrow",
+          "lifetime": { "scope": "call", "anchor": null },
+          "refinement": {
+            "kind": "record",
+            "name": "Owned.Bundle",
+            "fields": [
+              { "name": "primary", "refinement": null },
+              { "name": "spare", "refinement": null },
+              { "name": "peers", "refinement": null },
+              { "name": "history", "refinement": null },
+              {
+                "name": "payload",
+                "refinement": {
+                  "kind": "record",
+                  "name": "Owned.Payload",
+                  "fields": [
+                    {
+                      "name": "count",
+                      "refinement": { "constructor": "Owned.checkedCount" }
+                    },
+                    { "name": "bytes", "refinement": null }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      }
+    },
+    "Owned.echoRecordAlternate": {
+      "parameters": [
+        {
+          "ownership": "borrow",
+          "lifetime": { "scope": "call", "anchor": null },
+          "refinement": {
+            "kind": "record",
+            "name": "Owned.Bundle",
+            "fields": [
+              { "name": "primary", "refinement": null },
+              { "name": "spare", "refinement": null },
+              { "name": "peers", "refinement": null },
+              { "name": "history", "refinement": null },
+              {
+                "name": "payload",
+                "refinement": {
+                  "kind": "record",
+                  "name": "Owned.Payload",
+                  "fields": [
+                    {
+                      "name": "count",
+                      "refinement": { "constructor": "Owned.checkedCountAlternate" }
+                    },
+                    { "name": "bytes", "refinement": null }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result": {
+        "ownership": "lease",
+        "lifetime": { "scope": "explicit", "anchor": null }
+      }
+    }
+  },
+  "targets": {
+    "npm": {
+      "name": "@lean-bridge/owned-subtypes",
+      "version": "1.0.0"
+    }
+  }
+}

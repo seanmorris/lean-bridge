@@ -137,3 +137,22 @@ export const ownedSubtypeReviewedIr = () => {
 	};
 	return ir;
 };
+
+/** Independently describe the focused authored package used for installed checks. */
+export const ownedSubtypePackageReviewedIr = () => {
+	const ir = ownedSubtypeReviewedIr();
+	ir.component = { id: "owned-subtypes@1.0.0", name: "owned-subtypes", version: "1.0.0" };
+	const echo = ir.declarations.find(item => item.name === "echoRecord");
+	const alternate = structuredClone(echo);
+	alternate.id = "lean:Owned.echoRecordAlternate";
+	alternate.name = "echoRecordAlternate";
+	alternate.overloadKey = "Owned.echoRecordAlternate";
+	alternate.source.declaration = "Owned.echoRecordAlternate";
+	alternate.source.extensions["lean-lang.org/refinements"].parameters[0]
+		.fields[4].refinement.fields[0].refinement.constructor = "Owned.checkedCountAlternate";
+	ir.declarations = ["newTicket", "serial", "echoRecord"]
+		.map(name => ir.declarations.find(item => item.name === name)).concat(alternate);
+	ir.types = ir.types.filter(item => ["Ticket", "Payload", "Bundle"].includes(item.name));
+	ir.errors = [];
+	return ir;
+};

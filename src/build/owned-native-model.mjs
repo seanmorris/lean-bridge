@@ -83,7 +83,9 @@ export const createOwnedCompiledNativeModel = options => {
 	if(typeof receivers !== "boolean") throw new TypeError("Owned receiver capability must be explicit");
 	const callbackResults = options.callbackResultAnchors === undefined ? false : options.callbackResultAnchors;
 	if(typeof callbackResults !== "boolean") throw new TypeError("Owned callback result anchor capability must be explicit");
-	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
+	const elaborated = projectNativeMetadata(metadata, sourceIdentity, {
+		copiedGraphs: true, ownedGraphs: true, refinements: true
+	});
 	const carriers = generateOwnedAggregateCarriers(options);
 	const callbackResultAnchors = callbackResultCapability(carriers.model.bindingIr, callbackResults, transferredInputs, anchoredResults, receivers);
 	const receiverExports = receiverCapability(carriers.model.bindingIr, receivers, transferredInputs, anchoredResults, callbackResults);

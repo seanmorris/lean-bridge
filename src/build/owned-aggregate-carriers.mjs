@@ -32,7 +32,9 @@ const fail = message => { throw new TypeError(`Owned aggregate carriers: ${messa
  * @param options.hostCallbacks - Explicit admission of borrowed host wrappers.
  */
 export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, component, hostCallbacks = false }) => {
-	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, ownedGraphs: true });
+	const elaborated = projectNativeMetadata(metadata, sourceIdentity, {
+		copiedGraphs: true, ownedGraphs: true, refinements: true
+	});
 	const semantic = createOwnedElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });

@@ -97,6 +97,8 @@ jobs:
       LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_BUILD_TEST: "1"
       LEAN_BRIDGE_OWNED_JS_WASM_BROWSER_TEST: "1"
+      LEAN_BRIDGE_OWNED_SUBTYPE_JS_TEST: "1"
+      LEAN_BRIDGE_OWNED_SUBTYPE_BROWSER_TEST: "1"
       LEAN_BRIDGE_COMPILER_ANALYSIS_TEST: "1"
       EMCC_CORES: "2"
     steps:
@@ -165,10 +167,12 @@ jobs:
             tests/javascript-wasm-compiler-inputs.test.mjs \
             tests/owned-javascript-cli.test.mjs \
             tests/owned-javascript-wasm-build.test.mjs \
+            tests/owned-subtype-javascript-packaging.test.mjs \
             2>&1 | tee build/owned-javascript-wasm/installed.log
           test -s build/owned-javascript-wasm/installed.log
           rg '^# fail 0$' build/owned-javascript-wasm/installed.log
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
+          test -s build/owned-subtype-javascript-packaging/report.json
       - name: Verify consuming JavaScript input ownership
         shell: bash
         run: |
@@ -259,6 +263,7 @@ jobs:
             build/owned-javascript-wasm/runtime.log
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
+            build/owned-subtype-javascript-packaging/report.json
             build/owned-javascript-wasm/transfers.log
             build/owned-javascript-transfers/ordinary.json
             build/owned-javascript-transfers/reviewed.json
