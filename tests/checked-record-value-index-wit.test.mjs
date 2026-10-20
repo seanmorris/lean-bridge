@@ -13,3 +13,4 @@ import "./helpers/checked-record-value-index-wit-acceptance-source-history-tests
 import "./helpers/checked-record-value-index-wit-verifier-repair-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-wit-caller-warning-repair-source-history-tests.mjs";
 import "./helpers/checked-record-value-index-wit-source-history-tests.mjs";
+import "./helpers/checked-record-value-index-wit-evidence-tests.mjs";
