@@ -1,0 +1,52 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "7f4c7a4c4958c5d1cc81c747362a4ba2b92185051e4ebc4b3ba7e6c169d96d6e",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:CheckedRecordValueIndices.produceAb",
+      "witName": "produce-ab"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceEmptySized",
+      "witName": "produce-empty-sized"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceEmptyString",
+      "witName": "produce-empty-string"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceFalseBool",
+      "witName": "produce-false-bool"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceTrueBool",
+      "witName": "produce-true-bool"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceUnicodeString",
+      "witName": "produce-unicode-string"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceWideNat",
+      "witName": "produce-wide-nat"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceZeroNat",
+      "witName": "produce-zero-nat"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:checkedrecordvalueindices/api@1.0.0",
+    "nativeImport": "lean-bridge:checkedrecordvalueindices/native@1.0.0",
+    "package": "lean-bridge:checkedrecordvalueindices@1.0.0",
+    "world": "checkedrecordvalueindices"
+  }
+}

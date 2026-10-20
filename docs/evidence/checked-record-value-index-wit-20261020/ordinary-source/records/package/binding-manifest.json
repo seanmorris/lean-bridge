@@ -1,0 +1,84 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "2c7e74417b7f51859bf6479e41bcc3a5c1bbb35cd8d9df3ad3b2244e31807fc1",
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:CheckedRecordValueIndices.abStringIndex",
+      "witName": "ab-string-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.emptySizedIndex",
+      "witName": "empty-sized-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.emptyStringIndex",
+      "witName": "empty-string-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.falseBoolIndex",
+      "witName": "false-bool-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceAb",
+      "witName": "produce-ab"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceEmptySized",
+      "witName": "produce-empty-sized"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceEmptyString",
+      "witName": "produce-empty-string"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceFalseBool",
+      "witName": "produce-false-bool"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceTrueBool",
+      "witName": "produce-true-bool"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceUnicodeString",
+      "witName": "produce-unicode-string"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceWideNat",
+      "witName": "produce-wide-nat"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.produceZeroNat",
+      "witName": "produce-zero-nat"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.trueBoolIndex",
+      "witName": "true-bool-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.unicodeStringIndex",
+      "witName": "unicode-string-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.wideNatIndex",
+      "witName": "wide-nat-index"
+    },
+    {
+      "id": "lean:CheckedRecordValueIndices.zeroNatIndex",
+      "witName": "zero-nat-index"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:checkedrecordvalueindices/api@1.0.0",
+    "nativeImport": "lean-bridge:checkedrecordvalueindices/native@1.0.0",
+    "package": "lean-bridge:checkedrecordvalueindices@1.0.0",
+    "world": "checkedrecordvalueindices"
+  }
+}

@@ -1,0 +1,39 @@
+package lean-bridge:checkedrecordvalueindices@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record ab { size: bridge-value-0 }
+  type bridge-value-2 = list<bridge-value-0>;
+  record empty-sized { data: bridge-value-2 }
+  record empty-token { count: bridge-value-0 }
+  record off { count: bridge-value-0 }
+  record on { count: bridge-value-0 }
+  record unicode-token { count: bridge-value-0 }
+  record wide-token { count: bridge-value-0 }
+  record zero-token { count: bridge-value-0 }
+  produce-ab: func() -> ab;
+  produce-empty-sized: func() -> empty-sized;
+  produce-empty-string: func(value0: bridge-value-0) -> empty-token;
+  produce-false-bool: func() -> off;
+  produce-true-bool: func() -> on;
+  produce-unicode-string: func(value0: bridge-value-0) -> unicode-token;
+  produce-wide-nat: func(value0: bridge-value-0) -> wide-token;
+  produce-zero-nat: func(value0: bridge-value-0) -> zero-token;
+}
+
+interface api {
+  use native.{bridge-value-0, ab, bridge-value-2, empty-sized, empty-token, off, on, unicode-token, wide-token, zero-token};
+  produce-ab: func() -> ab;
+  produce-empty-sized: func() -> empty-sized;
+  produce-empty-string: func(value0: bridge-value-0) -> empty-token;
+  produce-false-bool: func() -> off;
+  produce-true-bool: func() -> on;
+  produce-unicode-string: func(value0: bridge-value-0) -> unicode-token;
+  produce-wide-nat: func(value0: bridge-value-0) -> wide-token;
+  produce-zero-nat: func(value0: bridge-value-0) -> zero-token;
+}
+
+world checkedrecordvalueindices {
+  import native;
+  export api;
+}

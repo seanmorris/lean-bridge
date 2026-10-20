@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "2c7e74417b7f51859bf6479e41bcc3a5c1bbb35cd8d9df3ad3b2244e31807fc1",
+  "componentReceiptSha256": "8e871a1b072724f5cc550f8742e233a10ffda15676be24edc2bc654e0d27ab58",
+  "files": {
+    "README.md": {
+      "bytes": 959,
+      "sha256": "6a308fcb682457489809e2bb62c51e28ab5cf513118a90077414fa6a4935cf20"
+    },
+    "binding-manifest.json": {
+      "bytes": 1435,
+      "sha256": "0a444a1232a3e2596f22ccb78e7edc744031a453546a18af408fadc0834876c6"
+    },
+    "include/checkedrecordvalueindices.h": {
+      "bytes": 7563,
+      "sha256": "86e44be122bce3a3582ddcfa63811168f27ce57a784dab701474ca4b1bae220b"
+    },
+    "internal/checkedrecordvalueindices_runtime.h": {
+      "bytes": 3616,
+      "sha256": "3df23a53549d50c7337f36706149779fc5c79986f93e39f5a9fa169e08d572c5"
+    },
+    "lib/libcheckedrecordvalueindices.so": {
+      "bytes": 63176,
+      "sha256": "5cfe7d6326c0bdfd323d394261e6e9aa161de72a33dfccb0f18488c59a3e9e15"
+    },
+    "src/checkedrecordvalueindices.c": {
+      "bytes": 21814,
+      "sha256": "9d36281c56ba60a2aa5fde4a329fa7e81a4460115a8e6c2112882de00cd1a028"
+    },
+    "src/native.c": {
+      "bytes": 38834,
+      "sha256": "80cff6489a54430ba3017012836f9e29e388949181926edab05b08e6bffd86d9"
+    }
+  },
+  "library": "libcheckedrecordvalueindices.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1
+}

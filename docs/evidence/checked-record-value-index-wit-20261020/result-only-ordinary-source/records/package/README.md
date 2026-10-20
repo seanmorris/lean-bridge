@@ -1,0 +1,37 @@
+# checkedrecordvalueindices 1.0.0
+
+WIT API compiled from checkedrecordvalueindices@1.0.0. Linux x86-64, glibc 2.38 or newer. The archive includes Wasmtime 42.0.1 and the compiled native Lean runtime. Consumers do not install Lean. Keep lib/ and include/ together.
+
+Use pkg-config checkedrecordvalueindices-wit, include checkedrecordvalueindices_wasmtime.h, open a session with checkedrecordvalueindices_wasmtime_open, and call a WIT function by name with checkedrecordvalueindices_wasmtime_call. Calls cross the embedded Component Model component. checkedrecordvalueindices_wasmtime_link supplies the native import to custom Wasmtime embeddings loading component/checkedrecordvalueindices.wasm. The component requires its native host; it is not a standalone WASI command. The host helper embeds exactly the same component bytes.
+
+Arguments borrow caller-owned Wasmtime C values. Delete each owned result with wasmtime_component_val_delete; results remain valid after closing the session. Errors return an owned wasmtime_error_t and leave the result unchanged. Delete errors with wasmtime_error_delete. Close sessions with checkedrecordvalueindices_wasmtime_close. Do not call one session concurrently. Separate sessions and components share the native Lean runtime automatically.
+
+Unit is enum { unit }, including arguments, results and fields. Nat is list<u32>, least-significant limb first; [] is zero. Int is { negative: bool, limbs: list<u32> }. Reject trailing zero limbs and negative zero. Fixed-width values use their WIT scalar widths. Float values preserve NaN classification, infinities and signed zero. Strings are UTF-8 including NUL; bytes are list<u8>. Options use option<T>, results use result<Success, Error>, and binary products use nested tuple<A, B>. Unit stays a single-case enum even inside an option or result, preserving present Unit and nested options. Lean Lists and Arrays both use canonical WIT `list<T>`, preserving order, duplicates and empty sequences. They retain distinct IR constructors and native C types. Returned sequences own independent storage. List parameters, results and record fields are supported; List callback payloads are not. Compound payloads compose with arrays, Lists and acyclic records, at most 32 types deep; empty records use a single-case enum { empty }. Record entries follow WIT field order. No resources, callbacks or effectful exports are admitted here.
+
+The adapter enforces a 16 MiB conversion budget, counting Wasmtime slots and native scratch copies; the native C adapter also enforces its combined input/output budget. Canonical-ABI scratch memory is capped at 64 MiB and reset after each successful call. The session helper replaces a trapped store before reuse; custom embeddings must discard a trapped instance. These limits do not bound Lean algorithm or Wasmtime engine working memory. Native scratch allocation failures return errors and free scratch buffers. Wasmtime's allocation API does not expose recoverable out-of-memory errors.
+
+- produce-ab: lean:CheckedRecordValueIndices.produceAb
+- produce-empty-sized: lean:CheckedRecordValueIndices.produceEmptySized
+- produce-empty-string: lean:CheckedRecordValueIndices.produceEmptyString
+- produce-false-bool: lean:CheckedRecordValueIndices.produceFalseBool
+- produce-true-bool: lean:CheckedRecordValueIndices.produceTrueBool
+- produce-unicode-string: lean:CheckedRecordValueIndices.produceUnicodeString
+- produce-wide-nat: lean:CheckedRecordValueIndices.produceWideNat
+- produce-zero-nat: lean:CheckedRecordValueIndices.produceZeroNat
+
+## Bounded integers
+
+Checked records cross as generated record values containing only their payload fields. The bundled native library validates each input through the constructor selected for that exact occurrence before calling the export. Nested arrays, Lists, options, products, Except values, plain records and active variant cases retain their own checked-record constructors. Fin and Subtype payload fields run their checks before the outer record constructor. A rejection names the argument, nested path and failing constructor or bound. A normalizing constructor changes the copied value received by Lean without changing the caller's record. Results recursively project the payload fields and refined base values of records whose proofs Lean has already constructed. No proof object or input constructor is needed for a result-only export. Ordinary and reviewed APIs retain every per-occurrence constructor choice. Recursive, generic, owned and callback checked-record positions remain unsupported.
+
+- produce-ab: result projects proof-backed record payload fields
+- produce-empty-sized: result projects proof-backed record payload fields
+- produce-empty-string: result projects proof-backed record payload fields
+- produce-false-bool: result projects proof-backed record payload fields
+- produce-true-bool: result projects proof-backed record payload fields
+- produce-unicode-string: result projects proof-backed record payload fields
+- produce-wide-nat: result projects proof-backed record payload fields
+- produce-zero-nat: result projects proof-backed record payload fields
+
+## Loaded-library identity
+
+The host checks the loaded native adapter, Lean component, both runtime libraries and Wasmtime against the sizes and SHA-256 hashes in its compiler receipts. A conflicting library already loaded under the same name makes session opens, calls and custom-linker imports return an error. Keep the installed library files unchanged while loading hosts. Inherited hosts reject calls and session opens after fork; exec a fresh consumer process. Closing an inherited session in the child does nothing. The parent still owns its session.
