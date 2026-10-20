@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-foundation-source-v1",
+  "predecessorCommit": "167ee182dc760c6d6f4a40765f94941741f40938",
+  "draftParentCommit": "6c49d3720ac398b5a9675f0e88ef4369dcfa2f65",
+  "pathsSha256": "8818c134fcb814d82386434b11c72f6cf0bfdc76956aef8fef70387c1fd1437d",
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-rust-source-history.mjs",
+      "currentSha256": "7b34b96bfa60b5c11648708da92e7d1c74bd7f9329e0ddb905dd124d9d79993e"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-source-history-tests.mjs",
+      "currentSha256": "ea512e0267dbdede17b0d44ef9cd5261c35824a3108257a198651ed222c49857"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-source-history.mjs",
+      "currentSha256": "ff7d0e1606aa93f2fcfe9b94128e07b42863ff2e2b113942105ae4182c52b5af"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "4f5aee14a4ecbfabdbacffd0757ff9b71e002f1e4cb7daa00007667efff2ec55",
+      "currentSha256": "17c6e2ea45548a73ed7c886c54ebd0bcece8640923d79cf582310acef682099b",
+      "edits": [
+        {
+          "start": 12787,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-rust\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cd4f2ee86d994ea6428047747cf43b5cd01c08978830718f336270b26db3c0c7",
+      "currentSha256": "777ae36e5bd7c5e5afe57a85100d5e1e0654b51e4e1f64594754072e56d57845",
+      "edits": [
+        {
+          "start": 1038,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustSource, checkedRecordValueIndexRustChangedPaths } from \"./checked-record-value-index-rust-source-history.mjs\";\n"
+        },
+        {
+          "start": 83710,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexRustSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 100777,
+          "previous": "\t...checkedRecordValueIndexRubyChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustChangedPaths\n\t, ...checkedRecordValueIndexRubyChangedPaths\n"
+        },
+        {
+          "start": 118885,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRubySource(path, text, expected);\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRubySource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}
