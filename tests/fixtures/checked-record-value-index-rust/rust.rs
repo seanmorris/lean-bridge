@@ -1,7 +1,9 @@
 // Independent Rust caller for proof-erased checked records with closed value
 // indices. It uses only the generated public crate surface.
 use checkedrecordvalueindices as api;
-use api::{Ab, BigUint, EmptySized, EmptyToken, Error, Off, On, UnicodeToken, WideToken, ZeroToken};
+use api::{Ab, BigUint, EmptySized, EmptyToken, Off, On, UnicodeToken, WideToken, ZeroToken};
+#[cfg(not(feature = "result-only"))]
+use api::Error;
 
 #[derive(Default)]
 struct Counts {
@@ -18,6 +20,7 @@ impl Counts {
         self.checks += 1;
     }
 
+    #[cfg(not(feature = "result-only"))]
     fn call<I, O>(&mut self, input: &I, invoke: impl FnOnce(&I) -> Result<O, Error>, expected: O)
     where
         I: Clone + PartialEq,
@@ -53,6 +56,7 @@ impl Counts {
 }
 
 fn n(value: u64) -> BigUint { BigUint::from(value) }
+#[cfg(not(feature = "result-only"))]
 fn wide() -> BigUint { (n(1) << 128usize) + n(1) }
 fn produced_wide() -> BigUint { (n(1) << 100usize) + n(17) }
 fn on(count: u64) -> On { On { count: n(count) } }

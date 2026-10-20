@@ -85,6 +85,9 @@ test("Rust copied bindings retain every compiler-derived closed index and API bo
 	assert.match(caller, /Independent Rust caller/u);
 	assert.match(caller, /checkedrecordvalueindices as api/u);
 	assert.match(caller, /cfg\(not\(feature = "result-only"\)\)/u);
+	assert.match(caller, /#\[cfg\(not\(feature = "result-only"\)\)\]\nuse api::Error;/u);
+	assert.match(caller, /#\[cfg\(not\(feature = "result-only"\)\)\]\n    fn call/u);
+	assert.match(caller, /#\[cfg\(not\(feature = "result-only"\)\)\]\nfn wide/u);
 });
 
 test("independent Rust caller retains constructor refusals, recovery and result-only boundaries", async () => {
