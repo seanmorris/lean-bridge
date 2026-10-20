@@ -1,0 +1,85 @@
+name: Installed owned Subtypes in Python, Ruby and Rust
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-subtype-languages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-subtype-languages:
+    name: Ordinary and reviewed owned Subtypes in three language packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 210
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Select Ruby 3.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3.12'
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean and Rust compilers
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build/owned-subtype-languages-ci
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-subtype-languages-ci/toolchain.log
+          bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/owned-subtype-languages-ci/toolchain.log
+      - name: Execute source-free language acceptance
+        id: acceptance
+        timeout-minutes: 155
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          export LEAN_BRIDGE_PYTHON=$(command -v python)
+          export LEAN_BRIDGE_RUBY=$(command -v ruby)
+          export LEAN_BRIDGE_GEM=$(command -v gem)
+          export LEAN_BRIDGE_RUSTC=$PWD/.toolchains/rust-1.90.0/bin/rustc
+          export LEAN_BRIDGE_CARGO=$PWD/.toolchains/rust-1.90.0/bin/cargo
+          npm run test:owned-subtype-languages 2>&1 | tee build/owned-subtype-languages-ci/acceptance.log
+          rg '^# fail 0$' build/owned-subtype-languages-ci/acceptance.log
+          rg '^# skipped 0$' build/owned-subtype-languages-ci/acceptance.log
+          test -s build/owned-subtype-language-packaging/report.json
+      - name: Preserve language acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-subtype-languages-${{ github.sha }}
+          path: |
+            build/owned-subtype-languages-ci/
+            build/owned-subtype-language-packaging/report.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed language acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1
