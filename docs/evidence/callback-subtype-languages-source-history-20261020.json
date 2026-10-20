@@ -1,0 +1,1550 @@
+{
+  "additions": [
+    {
+      "currentSha256": "58479fbba04cb26d3e8023aa8388a0650cf4cb9b71be0543de0d58829a341d1b",
+      "path": ".github/workflows/callback-subtype-languages.yml"
+    },
+    {
+      "currentSha256": "4643b3a8c7fcd70fedf4b80063635f364ca9d1b54a84c66eaa94691015b18cea",
+      "path": "scripts/check-callback-subtype-languages-ci.mjs"
+    },
+    {
+      "currentSha256": "e385592c473313cae354dc5146ee0c538a71724c8417ff1625868dadb6dcc6c7",
+      "path": "scripts/run-callback-subtype-languages-ci.sh"
+    },
+    {
+      "currentSha256": "748ffd30a02a211e12a05c9ed25f104bc4aaeb9349c952ba71de33ba389019fb",
+      "path": "scripts/update-callback-subtype-language-source-history.mjs"
+    },
+    {
+      "currentSha256": "38f404706f8ae94ab10a19c6e5b92e22e416d8a8d65973b38e4bca8258199240",
+      "path": "tests/callback-subtype-language-installed.test.mjs"
+    },
+    {
+      "currentSha256": "c13ae1064d82e9c0b1c0c41d8678c8b47a9876fef3e7cf3ad1f4a8ad5cdcfa3b",
+      "path": "tests/fixtures/callback-subtype-consumers/python.py"
+    },
+    {
+      "currentSha256": "5d2b7f3c40eed552641fce43e9a4dd74ffeaedf5cec13c730071301c0fc4c173",
+      "path": "tests/fixtures/callback-subtype-consumers/ruby.rb"
+    },
+    {
+      "currentSha256": "12de593929a64b0cdd3313d80ddb44b8c4f21021ee96a227b9ab391f811f309e",
+      "path": "tests/fixtures/callback-subtype-consumers/rust.rs"
+    },
+    {
+      "currentSha256": "5ef792561c04f5096bae0be9ae770c75c6d79a932b5ce5c54386485f7a03e797",
+      "path": "tests/helpers/callback-subtype-language-source-history.mjs"
+    },
+    {
+      "currentSha256": "3ddda0b268168bcf29edbf21f598db9380606c535e0641b5fc99624bd34a4c08",
+      "path": "tests/helpers/callback-subtype-language-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "c11b7c6dbd0842eb4adac520c98f0faba4fd62c3",
+  "milestone": "callback-subtype-languages-source-v1",
+  "predecessorCommit": "8430f5c82ca80caf73420da29fd8fb536c8fcbe8",
+  "repairedTypeSurfacePointers": 185,
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "a146841726cf944fadf07c23b2fcb9b3c5621b79e4d78c769c1a29d5349956ea",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 50871
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 67416
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 71488
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 88324
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 91684
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 104174
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 107770
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 119775
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 122115
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 131294
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 133022
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 157430
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 165573
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 173951
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 188149
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 202630
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 215271
+        },
+        {
+          "current": "          \"sha256\": \"aa56437c82ff9706a16fa1eefe90b13747f5976dffe3b8d7018a4077547428db\"\n",
+          "previous": "          \"sha256\": \"bfdbc3f5279a89da3c225b664a66dc1cb2408eb335c17db3993511857b598144\"\n",
+          "start": 222432
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 226817
+        },
+        {
+          "current": "          \"sha256\": \"282a0928e5e8c488e55663f06c251bb256da10409c42e7b4e4927f25ed0c833e\"\n",
+          "previous": "          \"sha256\": \"c7dda2e93bd59797f8d2fdf3e910b14bdba3378515df80eca18a89911a862252\"\n",
+          "start": 230967
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 235542
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 245167
+        },
+        {
+          "current": "          \"sha256\": \"2711f28b288b5dee3ef36e253a11ec7b2dfb75ab62a44d6c5197a127a536f8f1\"\n",
+          "previous": "          \"sha256\": \"97f54f06125aa949ed5b5c700ddf1f3a7df60e1f886d96b36518ff521c577f8e\"\n",
+          "start": 248412
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 252783
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 262093
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 270520
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 281132
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 292254
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 303775
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 312478
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 321885
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 331685
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 344547
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 353115
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 362757
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 371796
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 379353
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 386757
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 395918
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 405154
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 411879
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 419614
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 426871
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 438068
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 444349
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 450737
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 456353
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 478424
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 488645
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 499935
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 509624
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 518193
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 530099
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 538989
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 550014
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 557512
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 565409
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 572923
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 588260
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 598986
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 607606
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 619522
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 628374
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 639345
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 646752
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 654379
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 661748
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 707040
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 707695
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 721251
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 721726
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 732287
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 733101
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 746667
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 747321
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 757279
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 758775
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 769166
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 770846
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 780933
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 782134
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 789858
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 790717
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 796312
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 797175
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 805046
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 805561
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 813030
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 813538
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 835500
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 836468
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 904761
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1048508
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1060775
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1072635
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1078061
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1080224
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1084759
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1086825
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1091762
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1093933
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1099268
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1101427
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1106222
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1108483
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1113856
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1116084
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1123094
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1126365
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1132221
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1138698
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1147156
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1155203
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1164175
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1167543
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1173566
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1177657
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1181492
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1186102
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1186589
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1189593
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1192157
+        },
+        {
+          "current": "          \"sha256\": \"e6034f91ed9b5abe3fb8d4d38e0489519a468e8e997894a988f69981442d2374\"\n",
+          "previous": "          \"sha256\": \"ac76f6acb11db8b0f3aeb4b48d6f94232d8f458b74f0a8fcb44b861f97bad016\"\n",
+          "start": 1198891
+        },
+        {
+          "current": "          \"sha256\": \"34e52d5b435163e22d265a5a11328f3486b74ef6609f2376ccb2b0dd6906d76b\"\n",
+          "previous": "          \"sha256\": \"8c07aed433cfb341ecbef2dc9ec1b3f8332ca59f2422dd802b27d3b2bc829867\"\n",
+          "start": 1199065
+        },
+        {
+          "current": "          \"sha256\": \"00426fcc51150d290ce6fb39829c0cd795980cb39736dce5e1ea0b6dcc48c89c\"\n",
+          "previous": "          \"sha256\": \"a7e626a61ade486ccbe7885520571818a27a5bff77677733445f06af94fe58ea\"\n",
+          "start": 1199241
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1203064
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1210737
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1216965
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1219701
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1222154
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1224700
+        },
+        {
+          "current": "          \"sha256\": \"8226ed342c4c5e49a68ff7b8ac2cf7a3f51bda514a677b1c14bda78d8b5b716d\"\n",
+          "previous": "          \"sha256\": \"f5f904e7d8f1a16267a0a24179f0c549b2d6fbf246fed369c603029cd54621fc\"\n",
+          "start": 1231433
+        },
+        {
+          "current": "          \"sha256\": \"d4afa87744e83bed18c699b286ac30d09da8a46e56a42534070baed123facd07\"\n",
+          "previous": "          \"sha256\": \"830908a0cdf67043c5c43572cadae43961af6bf9ce04a309501444ada48c0be6\"\n",
+          "start": 1231605
+        },
+        {
+          "current": "          \"sha256\": \"ffe2ea85d76c53a814e070382f4ca5d0b4c54f3cf1f2c3ce76f4877894b18f63\"\n",
+          "previous": "          \"sha256\": \"93bfad153cf1e7e7d80db752fb58e952318586f790deee1f57c465059ad83ee7\"\n",
+          "start": 1231779
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1234741
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1240128
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1247050
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1249945
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1252433
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1254979
+        },
+        {
+          "current": "          \"sha256\": \"63947f8ec7d447cc58375a6c4eca235acd579a7823a30c3420a63267044d0545\"\n",
+          "previous": "          \"sha256\": \"518ba57706b4f9c65c52ef4522d8e727f54f49be9c34f98a6cd3d339fec272f8\"\n",
+          "start": 1262407
+        },
+        {
+          "current": "          \"sha256\": \"951014f9501669bbeb876411f2ac9fe8d0a1bc62b48a21bb0128bdef09a065cf\"\n",
+          "previous": "          \"sha256\": \"8ae65fcbd9e78382fb9285617063d9be7ead9ea3d0ffada100dfe56978a738ac\"\n",
+          "start": 1262579
+        },
+        {
+          "current": "          \"sha256\": \"1477c1254b4d367e29bf332623cf6c27d1c2e0ab9d6c184cdcf0cce89a6837f5\"\n",
+          "previous": "          \"sha256\": \"35a63d953a4363f0831b6472e4c11426edf5d8acaa7c4cef1b271f730ee66060\"\n",
+          "start": 1262753
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1267068
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1273926
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1279982
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1282881
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1285584
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1287946
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1301848
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1310109
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1318954
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1322184
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1325687
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1329356
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1334635
+        },
+        {
+          "current": "          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n",
+          "previous": "          \"sha256\": \"a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa\"\n",
+          "start": 1347352
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1348725
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1352107
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1355204
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1358618
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1371105
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1374787
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1377884
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1380488
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1390997
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1394454
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1397576
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1412450
+        },
+        {
+          "current": "          \"sha256\": \"3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63\"\n",
+          "previous": "          \"sha256\": \"59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a\"\n",
+          "start": 1417542
+        },
+        {
+          "current": "          \"sha256\": \"abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a\"\n",
+          "previous": "          \"sha256\": \"5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859\"\n",
+          "start": 1418061
+        },
+        {
+          "current": "          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n",
+          "previous": "          \"sha256\": \"00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7\"\n",
+          "start": 1420689
+        },
+        {
+          "current": "          \"sha256\": \"7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed\"\n",
+          "previous": "          \"sha256\": \"0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c\"\n",
+          "start": 1425469
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1715567
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1721346
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1725958
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1730124
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1913974
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1922764
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1931472
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1937250
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1943587
+        },
+        {
+          "current": "          \"sha256\": \"b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103\"\n",
+          "previous": "          \"sha256\": \"dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df\"\n",
+          "start": 1949562
+        },
+        {
+          "current": "          \"sha256\": \"e821ab7988f29fdd7ff1bf1fda095a96630ba66101e950a9a3a4ca4a35253fe4\"\n",
+          "previous": "          \"sha256\": \"65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256\"\n",
+          "start": 53279033
+        },
+        {
+          "current": "          \"sha256\": \"e821ab7988f29fdd7ff1bf1fda095a96630ba66101e950a9a3a4ca4a35253fe4\"\n",
+          "previous": "          \"sha256\": \"65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256\"\n",
+          "start": 53281155
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-languages-generation\",\n      \"kind\": \"test\",\n      \"revision\": \"c11b7c6dbd0842eb4adac520c98f0faba4fd62c3\",\n      \"command\": \"node --test tests/native-recursive-callable-model.test.mjs tests/callback-subtype-native-ci.test.mjs\",\n      \"scope\": \"Source and generator checks admit directional callback Subtypes for Python, Ruby and Rust, retain host-versus-closure direction, emit typed recovery APIs, omit host-only lease symbols and preserve constructor rejection as an ordinary boundary error. Local installed spot checks reached both Ruby and Rust author routes and an Ubuntu 24.04 Python wheel, but this entry does not promote those observations into closed installed acceptance. The dedicated hosted workflow must retain one complete six-cell report before installed support is claimed.\",\n      \"files\": [\n        {\n          \"path\": \".github/workflows/callback-subtype-languages.yml\",\n          \"sha256\": \"58479fbba04cb26d3e8023aa8388a0650cf4cb9b71be0543de0d58829a341d1b\"\n        },\n        {\n          \"path\": \"src/backends/python/callable-graph-conversions.mjs\",\n          \"sha256\": \"e6034f91ed9b5abe3fb8d4d38e0489519a468e8e997894a988f69981442d2374\"\n        },\n        {\n          \"path\": \"src/backends/python/callable-graph-package.mjs\",\n          \"sha256\": \"00426fcc51150d290ce6fb39829c0cd795980cb39736dce5e1ea0b6dcc48c89c\"\n        },\n        {\n          \"path\": \"src/backends/ruby/callable-graph-conversions.mjs\",\n          \"sha256\": \"63947f8ec7d447cc58375a6c4eca235acd579a7823a30c3420a63267044d0545\"\n        },\n        {\n          \"path\": \"src/backends/ruby/callable-graph-package.mjs\",\n          \"sha256\": \"1477c1254b4d367e29bf332623cf6c27d1c2e0ab9d6c184cdcf0cce89a6837f5\"\n        },\n        {\n          \"path\": \"src/backends/rust/callable-graph-conversions.mjs\",\n          \"sha256\": \"8226ed342c4c5e49a68ff7b8ac2cf7a3f51bda514a677b1c14bda78d8b5b716d\"\n        },\n        {\n          \"path\": \"src/backends/rust/callable-graph-package.mjs\",\n          \"sha256\": \"ffe2ea85d76c53a814e070382f4ca5d0b4c54f3cf1f2c3ce76f4877894b18f63\"\n        },\n        {\n          \"path\": \"src/build/native-graph-projection.mjs\",\n          \"sha256\": \"e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08\"\n        },\n        {\n          \"path\": \"tests/callback-subtype-language-installed.test.mjs\",\n          \"sha256\": \"38f404706f8ae94ab10a19c6e5b92e22e416d8a8d65973b38e4bca8258199240\"\n        },\n        {\n          \"path\": \"tests/native-recursive-callable-model.test.mjs\",\n          \"sha256\": \"42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396\"\n        }\n      ],\n      \"artifacts\": []\n",
+          "previous": "",
+          "start": 53282226
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-languages-ordinary\",\n      \"profiles\": [\n        \"python\",\n        \"ruby\",\n        \"rust\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Generated synchronous copied-value callbacks carry exact typed recovery for checked host replies and validate checked returned-closure inputs. Host-only callbacks do not acquire a public closure lease.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean through with_recovery(callback, value)\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Python, Ruby and Rust require with_recovery(callback, value) for host callbacks returning selected Subtypes. Recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected ordinary-source constructors and both callback directions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Generated Python, Ruby and Rust APIs retain direction, checked payload types and exact recovery values without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Local package compilation found no generator defect, but the closed hosted matrix remains pending.\"\n        },\n        \"packaging\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Prepared wheels, gems and crates were spot-checked locally; complete hosted package records remain pending.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Local language consumers exercised the transition, but no complete retained six-cell hosted report is claimed here.\"\n        }\n      },\n      \"limitations\": [\n        \"The generated contract covers synchronous copied-value callbacks, the fixture's selected Nat Subtypes, admitted copied containers and returned closures. Retained or asynchronous host callbacks, checked-record callback positions, owned Subtypes, arbitrary predicates, recursive or generic refined callback payloads, dispatch cost and memory bounds remain separate work.\",\n        \"Compilation, packaging and installed execution remain inspected rather than passed until the dedicated Ubuntu 24.04 workflow retains and independently checks ordinary and reviewed Python, Ruby and Rust reports.\"\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-languages-reviewed\",\n      \"profiles\": [\n        \"python\",\n        \"ruby\",\n        \"rust\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Generated synchronous copied-value callbacks carry exact typed recovery for checked host replies and validate checked returned-closure inputs. Host-only callbacks do not acquire a public closure lease.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean through with_recovery(callback, value)\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Python, Ruby and Rust require with_recovery(callback, value) for host callbacks returning selected Subtypes. Recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected reviewed-ir constructors and both callback directions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Generated Python, Ruby and Rust APIs retain direction, checked payload types and exact recovery values without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Local package compilation found no generator defect, but the closed hosted matrix remains pending.\"\n        },\n        \"packaging\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Prepared wheels, gems and crates were spot-checked locally; complete hosted package records remain pending.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-subtype-languages-generation\"\n          ],\n          \"note\": \"Local language consumers exercised the transition, but no complete retained six-cell hosted report is claimed here.\"\n        }\n      },\n      \"limitations\": [\n        \"The generated contract covers synchronous copied-value callbacks, the fixture's selected Nat Subtypes, admitted copied containers and returned closures. Retained or asynchronous host callbacks, checked-record callback positions, owned Subtypes, arbitrary predicates, recursive or generic refined callback payloads, dispatch cost and memory bounds remain separate work.\",\n        \"Compilation, packaging and installed execution remain inspected rather than passed until the dedicated Ubuntu 24.04 workflow retains and independently checks ordinary and reviewed Python, Ruby and Rust reports.\"\n      ]\n",
+          "previous": "",
+          "start": 63707407
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4b48101b5b4b06339c1c5c43d7e5436109c0d2f6a7c0cfec5c421836513acc56"
+    },
+    {
+      "currentSha256": "282a0928e5e8c488e55663f06c251bb256da10409c42e7b4e4927f25ed0c833e",
+      "edits": [
+        {
+          "current": "### Subtypes across callback boundaries\n\nWhen a host callback returns a selected `Subtype`, pass the callback and one\nvalid value of that callback's declared result type through\n`with_recovery(function, value)`. The package checks the recovery value before\nLean or the callback runs. Lean then applies the selected constructor to the\ncallback's actual reply. Constructor rejection raises `LeanBridgeError` with\nstatus 1; an exception raised by the Python function returns as the same\nexception object. The recovery value only lets Lean finish the rejected call.\nIt is never substituted for successful output.\n\nReturned Lean closures accept the generated base Python types and check every\nselected `Subtype` leaf before their body runs. This includes the admitted\ncopied containers, such as options, results and arrays. A rejected call leaves\nthe closure open, so a later valid call can reuse it. Call `close()` when the\nclosure is no longer needed. These directional callback checks are implemented\nfor synchronous copied-value callbacks; retained or asynchronous host callbacks\nand owned `Subtype` payloads remain unsupported.\n\n",
+          "previous": "",
+          "start": 41315
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "c7dda2e93bd59797f8d2fdf3e910b14bdba3378515df80eca18a89911a862252"
+    },
+    {
+      "currentSha256": "2711f28b288b5dee3ef36e253a11ec7b2dfb75ab62a44d6c5197a127a536f8f1",
+      "edits": [
+        {
+          "current": "### Subtypes across callback boundaries\n\nWhen a host callback returns a selected `Subtype`, wrap it with one valid value\nof the declared result type: `API.with_recovery(callable, value)`. The generated\npackage validates that recovery before entering Lean or invoking the callable.\nLean applies the selected constructor to the callable's actual reply. Rejection\nraises `API::LeanBridgeError` with status 1, while an exception raised by the\nRuby callable returns as the same exception object. Recovery is used only to\nfinish the failed Lean call and never becomes successful output.\n\nA returned Lean closure checks selected `Subtype` leaves in its Ruby arguments\nbefore its body runs, including admitted copied containers. Rejection leaves\nthe closure usable for a later valid call. Call `close` when finished; repeated\nclose calls are harmless. Directional checks currently require synchronous MRI\ncallbacks. Retained or asynchronous host callbacks and owned `Subtype` payloads\nremain unsupported.\n\n",
+          "previous": "",
+          "start": 38469
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "97f54f06125aa949ed5b5c700ddf1f3a7df60e1f886d96b36518ff521c577f8e"
+    },
+    {
+      "currentSha256": "aa56437c82ff9706a16fa1eefe90b13747f5976dffe3b8d7018a4077547428db",
+      "edits": [
+        {
+          "current": "These local runs do not measure dispatch counts or establish hosted\nrelease-floor acceptance.\n\n### Subtypes across callback boundaries\n\nWhen a host callback returns a selected `Subtype`, pass a valid value of its\ndeclared result type with `with_recovery(callback, value)`. The callback returns\n`Result<T, Error>`. The generated crate validates the recovery before entering\nLean or invoking the callback, and Lean applies the selected constructor to the\nactual reply. Constructor rejection returns `Error::Native` with code 1. A\ncallback error or panic is preserved and delivered after the native trampoline\nhas returned. Recovery only completes the rejected Lean call; it is never\nsuccessful output.\n\nReturned Lean closures check selected `Subtype` leaves in borrowed Rust inputs\nbefore their body runs, including admitted copied containers. Rejection leaves\nthe closure open for later calls. Use `close()` for deterministic release;\nrepeated calls are harmless. Directional checks are implemented for synchronous\ncopied-value callbacks. Retained or asynchronous host callbacks and owned\n`Subtype` payloads remain unsupported.\n",
+          "previous": "Refined callback signatures and owned Subtypes remain unsupported. These local\nruns do not measure dispatch counts or establish hosted release-floor acceptance.\n",
+          "start": 40358
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "bfdbc3f5279a89da3c225b664a66dc1cb2408eb335c17db3993511857b598144"
+    },
+    {
+      "currentSha256": "3ca488f5b6026e8415718d7307c93af192c68c23ca3f5b7391793f7568b3dd63",
+      "edits": [
+        {
+          "current": "## Directional callback Subtypes in native language packages\n",
+          "previous": "## Directional callback Subtypes in C, C++ and Perl\n",
+          "start": 235889
+        },
+        {
+          "current": "Run Python, Ruby and Rust together on a Linux x64 host that meets the generated\npackage floor, with Python 3.12, MRI Ruby 3.3.12 and the pinned Rust 1.90.0\ntoolchain:\n\n```sh\nsource scripts/env.sh\nLEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_PROFILES=python,ruby,rust \\\n  node --test --test-concurrency=1 tests/callback-subtype-language-installed.test.mjs\n```\n\nThe test builds ordinary-source and independently reviewed wheels, gems and\ncrates in two combined releases. It verifies each package-set receipt, removes\nthe author root, installs from copied archives without registry access and runs\nindependent consumers. Python and Ruby complete fifteen checks per route; Rust\ncompletes seventeen. They cover exact typed recovery, recovery validation before\ncallback entry, constructor rejection, exception or error preservation, nested\noption/result replies, returned-closure input rejection, reuse and idempotent\nclose. The default record is `build/callback-subtypes/languages.json`.\n\n",
+          "previous": "",
+          "start": 237476
+        },
+        {
+          "current": "`scripts/run-callback-subtype-perl-ci.sh`, plus\n`scripts/run-callback-subtype-languages-ci.sh`. They refuse environment variables\n",
+          "previous": "`scripts/run-callback-subtype-perl-ci.sh`. They refuse environment variables\n",
+          "start": 238539
+        }
+      ],
+      "path": "docs/contributing/testing.md",
+      "previousSha256": "59c75300f3ddcbacef5a45b0f9e224662d42a8dd4e3f2a4b6db07f13c475cb6a"
+    },
+    {
+      "currentSha256": "abbcb2bcf526deca64314d713d1118a87a16d64fa4ecd67d200a044c5f40307a",
+      "edits": [
+        {
+          "current": "C/C++ execute closure inputs, Lean-produced results and arguments sent to host callbacks for `Fin` and selected `Subtype` values, including supported copied containers and mixed refined/unrefined arguments. Python, Ruby and Rust execute the same two selected-`Subtype` directions for their admitted copied values. For a host callback result containing a selected `Subtype`, the host supplies one typed recovery value before the call: the C callback descriptor's `recovery` pointer or the generated `with_recovery(callback, value)` API in C++, Python, Ruby and Rust. The public wrapper validates and copies that value before Lean or the callback runs. Lean independently runs the selected checked constructor on every host-produced refined leaf. A rejected recovery prevents the callback from running; a rejected callback result records the first error, suppresses later callbacks and leaves the caller's output unchanged. The recovery exists only so Lean can finish its failure path and is never returned as success. Ordinary and independently reviewed packages exercise the same direction and exact constructor choices. CPAN supplies the same directional contract through `Runtime::Callback`. Nested callbacks, retained or asynchronous callbacks, checked-record callback positions, owned callback Subtypes, .NET, JVM, native PHP and WIT/WASI remain separate work.\n",
+          "previous": "C and C++ packages check `Fin` and selected `Subtype` arguments of a returned Lean closure before invoking it, including supported copied containers and mixed refined/unrefined arguments. They also preserve refined values that Lean produces as closure results or host-callback arguments. A returned closure rejects an invalid argument with `INVALID_ARGUMENT`; C++ throws `Error`. For a host callback result containing a selected `Subtype`, the host supplies one typed recovery value before the call: the C callback descriptor's `recovery` pointer or C++ `with_recovery(callback, value)`. The public wrapper validates and copies that value before Lean or the callback runs. Lean independently runs the selected checked constructor on every host-produced refined leaf. A rejected recovery prevents the callback from running; a rejected callback result records the first error, suppresses later callbacks and leaves the caller's output unchanged. The recovery exists only so Lean can finish its failure path and is never returned as success. Ordinary and independently reviewed packages exercise the same direction and exact constructor choices. Nested callbacks, retained or asynchronous callbacks, checked-record callback positions, owned callback Subtypes and other native targets remain separate work.\n",
+          "start": 94117
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "5fa734bf58da1334437f29779d954b5edf6e1200785cfce95b3a6cb695428859"
+    },
+    {
+      "currentSha256": "e6034f91ed9b5abe3fb8d4d38e0489519a468e8e997894a988f69981442d2374",
+      "edits": [
+        {
+          "current": "    if status == 10:\n        raise LeanBridgeError(1, \"Host callback result failed its Lean constructor\")\n",
+          "previous": "",
+          "start": 1402
+        },
+        {
+          "current": "\t\t, ...callbacks.some(callback => callback.direction === \"host\") ? [\"WithRecovery\"] : []\n",
+          "previous": "",
+          "start": 4122
+        },
+        {
+          "current": "\t\tconst { index, parameters, result } = callback, host = callback.direction === \"host\";\n",
+          "previous": "\t\tconst { index, parameters, result } = callback;\n",
+          "start": 4960
+        },
+        {
+          "current": "\t\t\t, `    _fields_ = [(\"call\", ${callback.function}), (\"context\", _c.c_void_p)${host ? `, (\"recovery\", ${pointer(result)})` : \"\"}]`, \"\"\n\t\t\t, ...host ? [] : [`_owned${index} = _GraphAssets._LIBRARY[\"${callback.call}\"]`\n\t\t\t\t, `_owned${index}.argtypes = [_c.c_uint64, ${types.join(\", \")}]`\n\t\t\t\t, `_owned${index}.restype = _c.c_uint32`\n\t\t\t\t, `_dispose${index} = _GraphAssets._LIBRARY[\"${callback.dispose}\"]`\n\t\t\t\t, `_dispose${index}.argtypes = [_c.c_uint64]`\n\t\t\t\t, `_dispose${index}.restype = None`, \"\"]\n\t\t\t, `def _check_callback${index}(value, scope):`\n\t\t\t, ...host ? [\"    if type(value) is not WithRecovery:\"\n\t\t\t\t, '        raise TypeError(\"This callback requires with_recovery(function, value)\")'\n\t\t\t\t, \"    _graph_require_callback(value.function)\"\n\t\t\t\t, `    _graph_input${result.index}(value.recovery, scope)`] : [\"    _graph_require_callback(value)\"]\n\t\t\t, \"\"\n",
+          "previous": "\t\t\t, `    _fields_ = [(\"call\", ${callback.function}), (\"context\", _c.c_void_p)]`, \"\"\n\t\t\t, `_owned${index} = _GraphAssets._LIBRARY[\"${callback.call}\"]`\n\t\t\t, `_owned${index}.argtypes = [_c.c_uint64, ${types.join(\", \")}]`\n\t\t\t, `_owned${index}.restype = _c.c_uint32`\n\t\t\t, `_dispose${index} = _GraphAssets._LIBRARY[\"${callback.dispose}\"]`\n\t\t\t, `_dispose${index}.argtypes = [_c.c_uint64]`, `_dispose${index}.restype = None`, \"\"\n",
+          "start": 5245
+        },
+        {
+          "current": "\t\t\t, ...host ? [\"    if type(value) is not WithRecovery:\"\n\t\t\t\t, '        raise TypeError(\"This callback requires with_recovery(function, value)\")'\n\t\t\t\t, \"    function, recovery_value = value.function, value.recovery\"] : [\"    function = value\"]\n\t\t\t, \"    _graph_require_callback(function)\"\n\t\t\t, \"    callback = function\"\n",
+          "previous": "\t\t\t, \"    _graph_require_callback(value)\"\n",
+          "start": 6150
+        },
+        {
+          "current": "\t\t\t, `            result = _graph_synchronous(callback(${parameters.map((_, i) => `value${i}`).join(\", \")}))`\n",
+          "previous": "\t\t\t, `            result = _graph_synchronous(value(${parameters.map((_, i) => `value${i}`).join(\", \")}))`\n",
+          "start": 6894
+        },
+        {
+          "current": "\t\t\t, `    trampoline = ${callback.function}(invoke)`\n\t\t\t, \"    frame.scope.owners.append(trampoline)\"\n\t\t\t, ...host ? [`    recovery = _graph_input${result.index}(recovery_value, frame.scope)`\n\t\t\t\t, ...result.aggregate ? [] : [`    recovery = frame.scope.value(${raw.get(result.id)}, recovery)`]\n\t\t\t\t, `    return ${callback.raw}(trampoline, None, _c.pointer(recovery))`] : [`    return ${callback.raw}(trampoline, None)`]\n\t\t\t, \"\");\n",
+          "previous": "\t\t\t, `    function = ${callback.function}(invoke)`\n\t\t\t, \"    frame.scope.owners.append(function)\"\n\t\t\t, `    return ${callback.raw}(function, None)`, \"\");\n",
+          "start": 7374
+        },
+        {
+          "current": "\t\t\t? checking ? `_check_callback${parameter.callback.index}(arg${i}, checked)` : `_callback${parameter.callback.index}(arg${i}, frame)`\n",
+          "previous": "\t\t\t? checking ? `_graph_require_callback(arg${i})` : `_callback${parameter.callback.index}(arg${i}, frame)`\n",
+          "start": 8075
+        },
+        {
+          "current": "\tfor(const callback of callbacks.filter(item => item.direction !== \"host\"))\n",
+          "previous": "\tfor(const callback of callbacks)\n",
+          "start": 10165
+        }
+      ],
+      "path": "src/backends/python/callable-graph-conversions.mjs",
+      "previousSha256": "ac76f6acb11db8b0f3aeb4b48d6f94232d8f458b74f0a8fcb44b861f97bad016"
+    },
+    {
+      "currentSha256": "34e52d5b435163e22d265a5a11328f3486b74ef6609f2376ccb2b0dd6906d76b",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 224
+        },
+        {
+          "current": "const reserved = new Set(\"False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object dict set frozenset len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure WithRecovery with_recovery Some Option Ok Err Result invoke dispatch handle token\".split(\" \"));\n",
+          "previous": "const reserved = new Set(\"False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case type list tuple str bytes bytearray int float bool object dict set frozenset len range super property staticmethod classmethod isinstance getattr setattr dataclass abs ord chr sum min max enumerate callable BaseException Exception RuntimeError TypeError ValueError MemoryError ImportError LeanBridgeError LeanClosure Some Option Ok Err Result invoke dispatch handle token\".split(\" \"));\n",
+          "start": 614
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n\t\tconst callable = `[${signature.parameters.map(ref => copiedType(ref)).join(\", \")}], ${copiedType(signature.result, true)}`;\n",
+          "previous": "",
+          "start": 2649
+        },
+        {
+          "current": "\t\t\t, direction\n",
+          "previous": "",
+          "start": 2937
+        },
+        {
+          "current": "\t\t\t, callableType: direction === \"host\" ? `WithRecovery[${callable}]` : `_Callable[${callable}]`\n",
+          "previous": "\t\t\t, callableType: `_Callable[[${signature.parameters.map(ref => copiedType(ref)).join(\", \")}], ${copiedType(signature.result, true)}]`\n",
+          "start": 3103
+        },
+        {
+          "current": "\t\t, exports: [\"LeanBridgeError\", \"LeanClosure\"\n\t\t\t, ...[...callbacks.values()].some(callback => callback.direction === \"host\") ? [\"WithRecovery\", \"with_recovery\"] : []\n\t\t\t, ...values.exports\n",
+          "previous": "\t\t, exports: [\"LeanBridgeError\", \"LeanClosure\", ...values.exports\n",
+          "start": 4789
+        }
+      ],
+      "path": "src/backends/python/callable-graph-model.mjs",
+      "previousSha256": "8c07aed433cfb341ecbef2dc9ec1b3f8332ca59f2422dd802b27d3b2bc829867"
+    },
+    {
+      "currentSha256": "00426fcc51150d290ce6fb39829c0cd795980cb39736dce5e1ea0b6dcc48c89c",
+      "edits": [
+        {
+          "current": "const recoverySource = (model, stub) => ![...model.callbacks.values()].some(callback => callback.direction === \"host\") ? \"\" : `\n@_dataclass(frozen=True, slots=True)\nclass WithRecovery(_Generic[_P, _R]):\n    function: _Callable[_P, _R]\n    recovery: _R\n\ndef with_recovery(function: _Callable[_P, _R], recovery: _R) -> WithRecovery[_P, _R]:\n    ${stub ? \"...\" : \"return WithRecovery(function, recovery)\"}\n`;\n\n",
+          "previous": "",
+          "start": 757
+        },
+        {
+          "current": "${recoverySource(model, stub)}\n",
+          "previous": "",
+          "start": 1562
+        }
+      ],
+      "path": "src/backends/python/callable-graph-package.mjs",
+      "previousSha256": "a7e626a61ade486ccbe7885520571818a27a5bff77677733445f06af94fe58ea"
+    },
+    {
+      "currentSha256": "63947f8ec7d447cc58375a6c4eca235acd579a7823a30c3420a63267044d0545",
+      "edits": [
+        {
+          "current": "\tconst callableStatus = `raise frame.failure if frame.failure\\n            raise LeanBridgeError.new(6, \"Host callback failed\") if status == 6\\n            raise LeanBridgeError.new(1, \"Host callback result failed its Lean constructor\") if status == 10\\n            graph_status(status)`;\n",
+          "previous": "\tconst callableStatus = `raise frame.failure if frame.failure\\n            raise LeanBridgeError.new(6, \"Host callback failed\") if status == 6\\n            graph_status(status)`;\n",
+          "start": 5457
+        },
+        {
+          "current": "\t\t\t? checking ? `check_callback${parameter.callback.index}(arg${i}, checked)` : `callback${parameter.callback.index}(arg${i}, frame)`\n",
+          "previous": "\t\t\t? checking ? `graph_require_callback(arg${i})` : `callback${parameter.callback.index}(arg${i}, frame)`\n",
+          "start": 5936
+        },
+        {
+          "current": "\t\tconst { index, parameters, result } = callback, host = callback.direction === \"host\";\n\t\tconst args = parameters.map((_, i) => \"arg\" + i);\n",
+          "previous": "\t\tconst { index, parameters, result } = callback, args = parameters.map((_, i) => \"arg\" + i);\n",
+          "start": 8334
+        },
+        {
+          "current": "\t\tconstants.push(`      ARGS${index} = [${ffi.join(\", \")}].freeze${host ? \"\" : `\\n      OWNED${index} = ::Fiddle::Function.new(LIBRARY[\"${callback.call}\"], [-::Fiddle::TYPE_LONG_LONG, ${ffi.slice(1).join(\", \")}], ::Fiddle::TYPE_INT, need_gvl: true)\\n      DISPOSE${index} = ::Fiddle::Function.new(LIBRARY[\"${callback.dispose}\"], [-::Fiddle::TYPE_LONG_LONG], ::Fiddle::TYPE_VOID, need_gvl: true)`}`);\n\t\tmethods.push(`      def check_callback${index}(value, scope)\n${host ? `        raise TypeError, \"This callback requires with_recovery(function, value)\" unless EXACT.bind_call(value, WithRecovery)\n        graph_require_callback(value.function)\n        graph_input${result.index}(value.recovery, scope)` : \"        graph_require_callback(value)\"}\n      end\n      def callback${index}(value, frame)\n${host ? `        raise TypeError, \"This callback requires with_recovery(function, value)\" unless EXACT.bind_call(value, WithRecovery)\n        callback_value, recovery_value = value.function, value.recovery` : \"        callback_value = value\"}\n\t        graph_require_callback(callback_value)\n\t        function = ::Fiddle::Closure::BlockCaller.new(::Fiddle::TYPE_INT, ARGS${index}) do |context, ${[...args, \"output\"].join(\", \")}|\n\t          callback_invoke${index}(callback_value, frame, context, ${[...args, \"output\"].join(\", \")})\n\t        end\n\t        frame.retain(function)\n${host ? `        converted_recovery = graph_input${result.index}(recovery_value, frame.scope)\n${result.aggregate ? \"        recovery = converted_recovery\" : `        recovery = frame.scope.allocate(${result.size})\n        recovery[0, ${result.size}] = ${write(result, \"converted_recovery\")}`}\n` : \"\"}\\\n\t        result = frame.scope.allocate(${host ? 24 : 16})\n\t        result[0, ${host ? 24 : 16}] = [function.to_i, 0${host ? \", recovery.to_i\" : \"\"}].pack(\"${host ? \"Q<Q<Q<\" : \"Q<Q<\"}\")\n",
+          "previous": "\t\tconstants.push(`      ARGS${index} = [${ffi.join(\", \")}].freeze\\n      OWNED${index} = ::Fiddle::Function.new(LIBRARY[\"${callback.call}\"], [-::Fiddle::TYPE_LONG_LONG, ${ffi.slice(1).join(\", \")}], ::Fiddle::TYPE_INT, need_gvl: true)\\n      DISPOSE${index} = ::Fiddle::Function.new(LIBRARY[\"${callback.dispose}\"], [-::Fiddle::TYPE_LONG_LONG], ::Fiddle::TYPE_VOID, need_gvl: true)`);\n\t\tmethods.push(`      def callback${index}(value, frame)\n        graph_require_callback(value)\n        function = ::Fiddle::Closure::BlockCaller.new(::Fiddle::TYPE_INT, ARGS${index}) do |context, ${[...args, \"output\"].join(\", \")}|\n          callback_invoke${index}(value, frame, context, ${[...args, \"output\"].join(\", \")})\n        end\n        frame.retain(function)\n        result = frame.scope.allocate(16)\n        result[0, 16] = [function.to_i, 0].pack(\"Q<Q<\")\n",
+          "start": 8547
+        },
+        {
+          "current": "\t\tif(!host) methods.push(makeCall(\"invoke\" + index, \"OWNED\" + index, parameters.map(node => ({ node })), { node: result }, true));\n",
+          "previous": "\t\tmethods.push(makeCall(\"invoke\" + index, \"OWNED\" + index, parameters.map(node => ({ node })), { node: result }, true));\n",
+          "start": 11311
+        }
+      ],
+      "path": "src/backends/ruby/callable-graph-conversions.mjs",
+      "previousSha256": "518ba57706b4f9c65c52ef4522d8e727f54f49be9c34f98a6cd3d339fec272f8"
+    },
+    {
+      "currentSha256": "951014f9501669bbeb876411f2ac9fe8d0a1bc62b48a21bb0128bdef09a065cf",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 232
+        },
+        {
+          "current": "const reserved = new Set(\"nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy new send public_send method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise with_recovery\".split(\" \"));\n",
+          "previous": "const reserved = new Set(\"nil true false self super class module def end begin rescue ensure return yield alias and or not if unless while until case when then else elsif for in do break next redo retry undef defined initialize initialize_copy new send public_send method_missing object_id freeze frozen hash eql equal dup clone tap inspect to_s respond_to const_get const_set module_function private_constant deconstruct deconstruct_keys raise\".split(\" \"));\n",
+          "start": 694
+        },
+        {
+          "current": "\t\t\t, direction: callbackSubtypeDirection(signature, signature.refinements, descriptor.types)\n",
+          "previous": "",
+          "start": 1874
+        }
+      ],
+      "path": "src/backends/ruby/callable-graph-model.mjs",
+      "previousSha256": "8ae65fcbd9e78382fb9285617063d9be7ead9ea3d0ffada100dfe56978a738ac"
+    },
+    {
+      "currentSha256": "1477c1254b4d367e29bf332623cf6c27d1c2e0ab9d6c184cdcf0cce89a6837f5",
+      "edits": [
+        {
+          "current": "\tconst callbackRecovery = [...model.callbacks.values()].some(callback => callback.direction === \"host\");\n",
+          "previous": "",
+          "start": 857
+        },
+        {
+          "current": "\t\tconst block = !!fn.parameters.at(-1)?.callback && fn.parameters.at(-1).callback.direction !== \"host\";\n",
+          "previous": "\t\tconst block = !!fn.parameters.at(-1)?.callback;\n",
+          "start": 1015
+        },
+        {
+          "current": "\t    end\n",
+          "previous": "    end\n",
+          "start": 1859
+        },
+        {
+          "current": "${callbackRecovery ? `    WithRecovery = ::Data.define(:function, :recovery)\n    def self.with_recovery(function, recovery)\n      WithRecovery.new(function: function, recovery: recovery)\n    end\n` : \"\"}\\\n\t    module_function\n",
+          "previous": "    module_function\n",
+          "start": 1889
+        },
+        {
+          "current": "\tPass a synchronous callable, method object or block to a callback parameter. Each invocation receives independently copied values. Ruby exceptions return after native cleanup. Non-local throw, break and return are contained and reported as LocalJumpError. Borrowed callbacks expire when the exporting call returns. Another Fiber cannot enter Lean while a native call is suspended on the same thread.\n",
+          "previous": "Pass a synchronous callable, method object or block to a callback parameter. Each invocation receives independently copied values. Ruby exceptions return after native cleanup. Non-local throw, break and return are contained and reported as LocalJumpError. Borrowed callbacks expire when the exporting call returns. Another Fiber cannot enter Lean while a native call is suspended on the same thread.\n",
+          "start": 4103
+        },
+        {
+          "current": "\t${callbackRecovery ? `A host callback whose result contains a checked Lean Subtype must be wrapped with ${model.namespace}.with_recovery(callback, value). The recovery has the callback's exact erased result type and is validated before Lean or the callback runs. It is used only to finish Lean's failure path and is never returned as a successful result.\n\n` : \"\"}\\\n\tReturned LeanClosure values own their captures. Use with { |closure| ... } or close; repeated close is safe. Invocation belongs to the creating Ruby thread lifetime, not a reusable native thread ID. Closing during an active call defers disposal until that call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.\n",
+          "previous": "Returned LeanClosure values own their captures. Use with { |closure| ... } or close; repeated close is safe. Invocation belongs to the creating Ruby thread lifetime, not a reusable native thread ID. Closing during an active call defers disposal until that call finishes. Copying and serialization are rejected. Finalization provides fallback cleanup.\n",
+          "start": 4505
+        },
+        {
+          "current": "\t\t, exports: [\"LeanBridgeError\", \"LeanClosure\", ...callbackRecovery ? [\"WithRecovery\", \"with_recovery\"] : [], ...model.exports, ...model.functions.map(fn => fn.publicName)]\n",
+          "previous": "\t\t, exports: [\"LeanBridgeError\", \"LeanClosure\", ...model.exports, ...model.functions.map(fn => fn.publicName)]\n",
+          "start": 6632
+        }
+      ],
+      "path": "src/backends/ruby/callable-graph-package.mjs",
+      "previousSha256": "35a63d953a4363f0831b6472e4c11426edf5d8acaa7c4cef1b271f730ee66060"
+    },
+    {
+      "currentSha256": "8226ed342c4c5e49a68ff7b8ac2cf7a3f51bda514a677b1c14bda78d8b5b716d",
+      "edits": [
+        {
+          "current": "    if status == 10 { return Err(Error::Native { code: 1, message: \"Host callback result failed its Lean constructor\".into() }); }\n",
+          "previous": "",
+          "start": 3102
+        },
+        {
+          "current": "\tconst { index, parameters, result } = callback, host = callback.direction === \"host\";\n",
+          "previous": "\tconst { index, parameters, result } = callback;\n",
+          "start": 3314
+        },
+        {
+          "current": "\tstruct Callback${index} { call: ${signature}, context: *mut std::ffi::c_void${host ? `, recovery: *const ${result.raw}` : \"\"} }\n",
+          "previous": "struct Callback${index} { call: ${signature}, context: *mut std::ffi::c_void }\n",
+          "start": 3581
+        },
+        {
+          "current": "\tconst preflight = (node, i) => !callable(node)\n\t\t? `    graph_check${node.index}(${argument(node, i)}, 0, true, &mut budget).map_err(graph_error)?;`\n\t\t: node.direction === \"host\"\n\t\t\t? `    graph_check${node.result.index}(&arg${i}.recovery, 0, true, &mut budget).map_err(graph_error)?;`\n\t\t\t: \"\";\n\tconst callbackInput = (node, i) => {\n\t\tconst callableValue = node.direction === \"host\" ? `arg${i}.function` : `arg${i}`;\n\t\tconst recovery = node.direction === \"host\" ? `\n    let recovery${i} = {\n        let mut scope = state.scope.borrow_mut();\n        graph_to${node.result.index}(&arg${i}.recovery, &mut scope).map_err(graph_error)?\n    };` : \"\";\n\t\treturn `    let context${i} = Context${node.index} { function: std::cell::RefCell::new(&mut ${callableValue}), state: &state };${recovery}\n    let input${i} = Callback${node.index} { call: callback${node.index}, context: (&context${i} as *const Context${node.index}<'_>).cast_mut().cast()${node.direction === \"host\" ? `, recovery: &recovery${i}` : \"\"} };`;\n\t};\n",
+          "previous": "",
+          "start": 5978
+        },
+        {
+          "current": "\t    let ${parameters.some(node => !callable(node) || node.direction === \"host\") ? 'mut ' : ''}budget = GraphBudget::new();\n${parameters.map(preflight).filter(Boolean).join('\\n')}\n",
+          "previous": "    let ${parameters.some(node=>!callable(node))?'mut ':''}budget = GraphBudget::new();\n${parameters.map((node,i)=>callable(node)?'':`    graph_check${node.index}(${argument(node,i)}, 0, true, &mut budget).map_err(graph_error)?;`).join('\\n')}\n",
+          "start": 7250
+        },
+        {
+          "current": "${parameters.map((node,i)=>callable(node) ? callbackInput(node, i) : `    let input${i} = graph_to${node.index}(${argument(node,i)}, ${scope}).map_err(graph_error)?;`).join('\\n')}\n",
+          "previous": "${parameters.map((node,i)=>callable(node)?`    let context${i} = Context${node.index} { function: std::cell::RefCell::new(&mut arg${i}), state: &state };\n    let input${i} = Callback${node.index} { call: callback${node.index}, context: (&context${i} as *const Context${node.index}<'_>).cast_mut().cast() };`:`    let input${i} = graph_to${node.index}(${argument(node,i)}, ${scope}).map_err(graph_error)?;`).join('\\n')}\n",
+          "start": 7740
+        }
+      ],
+      "path": "src/backends/rust/callable-graph-conversions.mjs",
+      "previousSha256": "f5f904e7d8f1a16267a0a24179f0c549b2d6fbf246fed369c603029cd54621fc"
+    },
+    {
+      "currentSha256": "d4afa87744e83bed18c699b286ac30d09da8a46e56a42534070baed123facd07",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 222
+        },
+        {
+          "current": "const reserved = new Set(\"dispatch invoke handle token __runtime std num_bigint sha2 as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union Error Result Ok Err Vec String BigUint BigInt Sign Option Some None Drop Copy Clone Send Sync Default assets LeanClosure WithRecovery with_recovery Lease CallGuard CallbackState CallbackFailure Box FnMut GraphNative graph_runtime graph_error graph_symbol GRAPH_NATIVE GRAPH_PID copied callable_status bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char\".split(\" \"));\n",
+          "previous": "const reserved = new Set(\"dispatch invoke handle token __runtime std num_bigint sha2 as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while abstract become box do final gen macro override priv typeof unsized virtual yield try union Error Result Ok Err Vec String BigUint BigInt Sign Option Some None Drop Copy Clone Send Sync Default assets LeanClosure Lease CallGuard CallbackState CallbackFailure Box FnMut GraphNative graph_runtime graph_error graph_symbol GRAPH_NATIVE GRAPH_PID copied callable_status bool u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64 str usize isize char\".split(\" \"));\n",
+          "start": 695
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(callback, callback.refinements, descriptor.types);\n\t\tconst functionType = `impl FnMut(${callback.parameters.map(ref => annotated(ref).publicType).join(\", \")}) -> Result<${annotated(callback.result).publicType}, Error>`;\n\t\tconst value = { ...callback, index, parameters, result, signature, direction\n",
+          "previous": "\t\tconst value = { ...callback, index, parameters, result, signature\n",
+          "start": 3657
+        },
+        {
+          "current": "\t\t\t, inputType: direction === \"host\" ? `WithRecovery<${functionType}, ${annotated(callback.result).publicType}>` : functionType\n",
+          "previous": "\t\t\t, inputType: `impl FnMut(${callback.parameters.map(ref => annotated(ref).publicType).join(\", \")}) -> Result<${annotated(callback.result).publicType}, Error>`\n",
+          "start": 4046
+        },
+        {
+          "current": "\t\tif(direction !== \"host\")\n\t\t{\n\t\t\tif(!signatures.has(signature)) signatures.set(signature, value);\n\t\t\tvalue.hostIndex = signatures.get(signature).index;\n\t\t}\n",
+          "previous": "\t\tif(!signatures.has(signature)) signatures.set(signature, value);\n\t\tvalue.hostIndex = signatures.get(signature).index;\n",
+          "start": 4312
+        },
+        {
+          "current": "\t\t, exports: [\"Error\", \"LeanClosure\"\n\t\t\t, ...[...callbacks.values()].some(callback => callback.direction === \"host\") ? [\"WithRecovery\", \"with_recovery\"] : []\n\t\t\t, ...values.bigint ? [\"BigInt\", \"BigUint\"] : []\n\t\t\t, ...payloads.ir.types.map(type => type.name)\n\t\t\t, ...functions.map(fn => fn.name)]\n",
+          "previous": "\t\t, exports: [\"Error\", \"LeanClosure\", ...values.bigint ? [\"BigInt\", \"BigUint\"] : [], ...payloads.ir.types.map(type => type.name), ...functions.map(fn => fn.name)]\n",
+          "start": 5318
+        }
+      ],
+      "path": "src/backends/rust/callable-graph-model.mjs",
+      "previousSha256": "830908a0cdf67043c5c43572cadae43961af6bf9ce04a309501444ada48c0be6"
+    },
+    {
+      "currentSha256": "ffe2ea85d76c53a814e070382f4ca5d0b4c54f3cf1f2c3ce76f4877894b18f63",
+      "edits": [
+        {
+          "current": "\t, ...[...model.callbacks.values()].filter(cb => cb.direction !== \"host\").flatMap(cb => [\n",
+          "previous": "\t, ...[...model.callbacks.values()].flatMap(cb => [\n",
+          "start": 1928
+        },
+        {
+          "current": "\tconst callbackRecovery = [...model.callbacks.values()].some(callback => callback.direction === \"host\");\n",
+          "previous": "",
+          "start": 5102
+        },
+        {
+          "current": "${callbackRecovery ? `/// A typed failure-path value used only if a host callback cannot produce a valid reply.\npub struct WithRecovery<F, R> { function: F, recovery: R }\npub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }\n` : \"\"}\\\n",
+          "previous": "",
+          "start": 5692
+        },
+        {
+          "current": "${callbackRecovery ? \"A host callback whose result contains a checked Lean Subtype must use with_recovery(callback, value). The recovery has the callback's exact erased result type, is checked before Lean or the callback runs, and is never returned as success.\\n\\n\" : \"\"}\\\n",
+          "previous": "",
+          "start": 8413
+        }
+      ],
+      "path": "src/backends/rust/callable-graph-package.mjs",
+      "previousSha256": "93bfad153cf1e7e7d80db752fb58e952318586f790deee1f57c465059ad83ee7"
+    },
+    {
+      "currentSha256": "e28803c52d1add5c03ae6ee7c2c797dd452827d203f786e1e92f3ae41274bc08",
+      "edits": [
+        {
+          "current": "\t\tif(callbackSubtypes && targets.some(target => ![\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\"].includes(target)))\n\t\t\tthrow Object.assign(new TypeError(\"Callback Subtypes currently require C, C++, PyPI, Cargo, RubyGems or CPAN projections\"), { code: \"native-graph-projection-unavailable\" });\n",
+          "previous": "\t\tif(callbackSubtypes && targets.some(target => ![\"c\", \"cpp\", \"cpan\"].includes(target)))\n\t\t\tthrow Object.assign(new TypeError(\"Callback Subtypes currently require C, C++ or CPAN projections\"), { code: \"native-graph-projection-unavailable\" });\n",
+          "start": 3398
+        }
+      ],
+      "path": "src/build/native-graph-projection.mjs",
+      "previousSha256": "00b00e99fa36ffb9d2ed501bd609f6ed349ad7a68bf9bbe75a9a0ff9edbf6bc7"
+    },
+    {
+      "currentSha256": "ccf37856b2d6b6d29c5f061d0c97a11e24d34633ec91a8e0e836797f36f74cfe",
+      "edits": [
+        {
+          "current": "\t, callbackSubtypeLanguageTestName\n",
+          "previous": "",
+          "start": 281
+        },
+        {
+          "current": "\t, checkCallbackSubtypeLanguageReport\n",
+          "previous": "",
+          "start": 347
+        },
+        {
+          "current": "const languageReport = () => {\n\tconst reports = [];\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\tfor(const [index, profile] of [\"python\", \"ruby\", \"rust\"].entries())\n\t\t\treports.push({\n\t\t\t\tbindingIrSha256: sha(route === \"ordinary\" ? \"a\" : \"b\")\n\t\t\t\t, checks: profile === \"rust\" ? 17 : 15\n\t\t\t\t, compilerFreePath: true\n\t\t\t\t, consumerSha256: sha(String(index + 1))\n\t\t\t\t, offlineInstall: true\n\t\t\t\t, profile\n\t\t\t\t, receiptSha256: sha(route === \"ordinary\" ? \"c\" : \"d\")\n\t\t\t\t, route\n\t\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t});\n\treturn { schemaVersion: 1, reports };\n};\n\n",
+          "previous": "",
+          "start": 2416
+        },
+        {
+          "current": "\tconst native = nativeReport(), perl = perlReport(), language = languageReport();\n",
+          "previous": "\tconst native = nativeReport(), perl = perlReport();\n",
+          "start": 3073
+        },
+        {
+          "current": "\tassert.deepEqual(checkCallbackSubtypeLanguageReport(language), {\n\t\troutes: [\"ordinary\", \"reviewed\"]\n\t\t, profiles: [\"python\", \"ruby\", \"rust\"]\n\t\t, reports: 6\n\t});\n",
+          "previous": "",
+          "start": 3478
+        },
+        {
+          "current": "\tassert.equal(callbackSubtypeNativeVerification(\"language\", commit\n\t\t, tap(callbackSubtypeLanguageTestName), language).reports, 6);\n",
+          "previous": "",
+          "start": 3919
+        },
+        {
+          "current": "\tconst languageWorkflow = await readFile(\n\t\t\".github/workflows/callback-subtype-languages.yml\", \"utf8\"\n\t);\n",
+          "previous": "",
+          "start": 4969
+        },
+        {
+          "current": "\t\t, [languageWorkflow, [\n\t\t\t\"group: callback-subtype-languages-${{ github.ref }}\"\n\t\t\t, \"runs-on: ubuntu-24.04\"\n\t\t\t, \"ruby-version: '3.3.12'\"\n\t\t\t, 'python-version: \"3.12\"'\n\t\t\t, \"bash scripts/bootstrap-rust-ci.sh\"\n\t\t\t, \"bash scripts/run-callback-subtype-languages-ci.sh\"\n\t\t\t, \"build/callback-subtype-languages-ci/\"\n\t\t]]\n",
+          "previous": "",
+          "start": 5595
+        },
+        {
+          "current": "\tconst languageShell = await readFile(\n\t\t\"scripts/run-callback-subtype-languages-ci.sh\", \"utf8\"\n\t);\n",
+          "previous": "",
+          "start": 6519
+        },
+        {
+          "current": "\tfor(const value of [\n\t\t\"set -euo pipefail\"\n\t\t, \"LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_PROFILES=python,ruby,rust\"\n\t\t, \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38\"\n\t\t, \"--test-concurrency=1\"\n\t\t, \"check-callback-subtype-languages-ci.mjs\"\n\t]) assert.ok(languageShell.includes(value), value);\n",
+          "previous": "",
+          "start": 7141
+        }
+      ],
+      "path": "tests/callback-subtype-native-ci.test.mjs",
+      "previousSha256": "3ae497dda666073aa9fe0b702e34148e59d4455ce8b68d8b85913e39ca836985"
+    },
+    {
+      "currentSha256": "e821ab7988f29fdd7ff1bf1fda095a96630ba66101e950a9a3a4ca4a35253fe4",
+      "edits": [
+        {
+          "current": "export const callbackSubtypeLanguageTestName\n\t= \"ordinary and reviewed Python, Ruby and Rust callback Subtypes install offline\";\n",
+          "previous": "",
+          "start": 460
+        },
+        {
+          "current": "\tconst usage = \"Usage: check-callback-subtype-<native|perl|languages>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>\";\n",
+          "previous": "\tconst usage = \"Usage: check-callback-subtype-<native|perl>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>\";\n",
+          "start": 999
+        },
+        {
+          "current": "/**\n * Validate both author routes in every prepared language package.\n *\n * @param report - Original producer report.\n */\nexport const checkCallbackSubtypeLanguageReport = report => {\n\texactKeys(report, [\"schemaVersion\", \"reports\"]); assert.equal(report.schemaVersion, 1);\n\tassert.equal(report.reports.length, 6);\n\tconst cells = new Set();\n\tfor(const item of report.reports)\n\t{\n\t\texactKeys(item, [\"bindingIrSha256\", \"checks\", \"compilerFreePath\"\n\t\t\t, \"consumerSha256\", \"offlineInstall\", \"profile\", \"receiptSha256\"\n\t\t\t, \"route\", \"sourceRemovedBeforeInstallation\"]);\n\t\tassert.ok([\"ordinary\", \"reviewed\"].includes(item.route));\n\t\tassert.ok([\"python\", \"ruby\", \"rust\"].includes(item.profile));\n\t\tassert.equal(item.checks, item.profile === \"rust\" ? 17 : 15);\n\t\tfor(const flag of [\"compilerFreePath\", \"offlineInstall\", \"sourceRemovedBeforeInstallation\"])\n\t\t\tassert.equal(item[flag], true);\n\t\tfor(const field of [\"bindingIrSha256\", \"consumerSha256\", \"receiptSha256\"])\n\t\t\tdigest(item[field]);\n\t\tconst cell = `${item.route}/${item.profile}`;\n\t\tassert.equal(cells.has(cell), false); cells.add(cell);\n\t}\n\tconst expected = [\"ordinary/python\", \"ordinary/ruby\"\n\t\t, \"ordinary/rust\", \"reviewed/python\"\n\t\t, \"reviewed/ruby\", \"reviewed/rust\"];\n\tassert.deepEqual([...cells].sort(), expected);\n\treturn { routes: [\"ordinary\", \"reviewed\"], profiles: [\"python\", \"ruby\", \"rust\"], reports: 6 };\n};\n\n",
+          "previous": "",
+          "start": 5939
+        },
+        {
+          "current": "\tassert.ok([\"native\", \"perl\", \"language\"].includes(kind));\n\tconst name = kind === \"native\" ? callbackSubtypeNativeTestName\n\t\t: kind === \"perl\" ? callbackSubtypePerlTestName : callbackSubtypeLanguageTestName;\n",
+          "previous": "\tconst name = kind === \"native\" ? callbackSubtypeNativeTestName : callbackSubtypePerlTestName;\n",
+          "start": 7690
+        },
+        {
+          "current": "\t\t? checkCallbackSubtypeNativeReport(report)\n\t\t: kind === \"perl\" ? checkCallbackSubtypePerlReport(report)\n\t\t\t: checkCallbackSubtypeLanguageReport(report);\n",
+          "previous": "\t\t? checkCallbackSubtypeNativeReport(report) : checkCallbackSubtypePerlReport(report);\n",
+          "start": 7977
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-native-ci.mjs",
+      "previousSha256": "65246f8e58f5946a76e46948f5c7cfdc8ea9612c22350e8c5a26b6dd0a031256"
+    },
+    {
+      "currentSha256": "b4504b7bbe13710215395882b1ee28ec91d6200a26bd9c19f9143dece8e70103",
+      "edits": [
+        {
+          "current": "\t, LEAN_BRIDGE_RUBY: resolve(process.env.LEAN_BRIDGE_RUBY ?? \".toolchains/ruby33/bin/ruby\")\n\t, LEAN_BRIDGE_GEM: resolve(process.env.LEAN_BRIDGE_GEM ?? \".toolchains/ruby33/bin/gem\")\n",
+          "previous": "",
+          "start": 1709
+        }
+      ],
+      "path": "tests/helpers/copied-fixture-install.mjs",
+      "previousSha256": "dbcbea3be5c9ff1647a4140c5e7b5b6060f6890d0fc52ae9e6aa7842437b24df"
+    },
+    {
+      "currentSha256": "289265fccb27db252697c4ab38b6780fdf76c9560a55b9ae60ddf9f412fe1884",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeLanguageSource, callbackSubtypeLanguageChangedPaths } from \"./callback-subtype-language-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeLanguageChangedPaths\n\t, ...callbackSubtypeNativeChangedPaths\n",
+          "previous": "\t...callbackSubtypeNativeChangedPaths\n",
+          "start": 108342
+        },
+        {
+          "current": "\tconst languages = beforeCallbackSubtypeLanguageSource(\n",
+          "previous": "\tconst nativeCallbacks = beforeCallbackSubtypeNativeSource(\n",
+          "start": 128640
+        },
+        {
+          "current": "\tif(sha256(languages) === expected) return languages;\n\tconst nativeCallbacks = beforeCallbackSubtypeNativeSource(\n\t\tpath, languages, expected\n\t);\n",
+          "previous": "",
+          "start": 128723
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0ac9bd401f84deb354e8bf5c26558925e9921089a3c4050785d7c62911102bbf"
+    },
+    {
+      "currentSha256": "42019addaa7325673822ef1568a6abb26a86e317d7aa998ec3153ab2d31e9396",
+      "edits": [
+        {
+          "current": "import { compileNativeGraphProjection } from \"../src/build/native-graph-projection.mjs\";\n",
+          "previous": "",
+          "start": 596
+        },
+        {
+          "current": "import { generateCallablePythonGraphPackage } from \"../src/backends/python/callable-graph-package.mjs\";\nimport { generateCallableRubyGraphPackage } from \"../src/backends/ruby/callable-graph-package.mjs\";\nimport { generateCallableRustGraphPackage } from \"../src/backends/rust/callable-graph-package.mjs\";\n",
+          "previous": "",
+          "start": 1268
+        },
+        {
+          "current": "test(\"Python, Ruby and Rust project callback Subtype direction into typed recovery APIs\", () => {\n\tconst { ir } = structuredCallableDirectionalSubtypeIr();\n\tfor(const target of [\"pypi\", \"rubygems\", \"cargo\"])\n\t\tassert.ok(compileNativeGraphProjection(ir, [target]));\n\tassert.ok(compileNativeGraphProjection(ir, [\"pypi\", \"rubygems\", \"cargo\"]));\n\tfor(const target of [\"nuget\", \"maven\", \"php-native\", \"wit-wasi\"])\n\t\tassert.throws(() => compileNativeGraphProjection(ir, [target]), { code: \"native-graph-projection-unavailable\" });\n\tconst python = generateCallablePythonGraphPackage(ir);\n\tconst pythonPublic = python[Object.keys(python).find(path => path.endsWith(\"/__init__.py\"))];\n\tconst pythonNative = python[Object.keys(python).find(path => path.endsWith(\"/_native.py\"))];\n\tassert.match(pythonPublic, /class WithRecovery\\(_Generic\\[_P, _R\\]\\):/u);\n\tassert.match(pythonPublic, /def with_recovery\\(/u);\n\tassert.match(pythonNative, /class _Callback0[\\s\\S]+\\(\"recovery\", _c\\.POINTER/u);\n\tassert.match(pythonNative, /def _check_callback0[\\s\\S]+requires with_recovery/u);\n\tassert.match(pythonNative, /status == 10:[\\s\\S]+failed its Lean constructor/u);\n\tassert.match(pythonNative, /callback = function[\\s\\S]+_graph_synchronous\\(callback\\(/u);\n\tassert.doesNotMatch(pythonNative, /function = _CallbackFn/u);\n\tassert.doesNotMatch(pythonNative, /_owned0 =/u);\n\tassert.match(pythonNative, /_owned1 =/u);\n\tassert.deepEqual(JSON.parse(python[\"binding-manifest.json\"]).exports.slice(0, 4),\n\t\t[\"LeanBridgeError\", \"LeanClosure\", \"WithRecovery\", \"with_recovery\"]);\n\n\tconst ruby = generateCallableRubyGraphPackage(ir);\n\tconst rubyPublic = ruby[Object.keys(ruby).find(path => /\\/structured\\.rb$/u.test(path))];\n\tconst rubyNative = ruby[Object.keys(ruby).find(path => path.endsWith(\"/native.rb\"))];\n\tassert.match(rubyPublic, /WithRecovery = ::Data\\.define\\(:function, :recovery\\)/u);\n\tassert.match(rubyPublic, /def self\\.with_recovery\\(/u);\n\tassert.match(rubyNative, /def check_callback0[\\s\\S]+requires with_recovery/u);\n\tassert.match(rubyNative, /frame\\.scope\\.allocate\\(24\\)/u);\n\tassert.match(rubyNative, /status == 10/u);\n\tassert.doesNotMatch(rubyNative, /OWNED0 =/u);\n\tassert.match(rubyNative, /OWNED1 =/u);\n\n\tconst rust = generateCallableRustGraphPackage(ir, null, { name: \"structured\", version: \"1.0.0\" });\n\tassert.match(rust[\"src/lib.rs\"], /pub struct WithRecovery<F, R>/u);\n\tassert.match(rust[\"src/lib.rs\"], /WithRecovery<impl FnMut\\([^)]*\\) -> Result<[^>]+>, BigUint>/u);\n\tassert.match(rust[\"src/__runtime.rs\"], /struct Callback0 \\{[^}]+recovery: \\*const/u);\n\tassert.match(rust[\"src/__runtime.rs\"], /graph_check\\d+\\(&arg\\d+\\.recovery/u);\n\tassert.match(rust[\"src/__runtime.rs\"], /status == 10/u);\n\tassert.doesNotMatch(rust[\"src/__runtime.rs\"], /owned0:/u);\n\tassert.match(rust[\"src/__runtime.rs\"], /owned1:/u);\n});\n\n",
+          "previous": "",
+          "start": 8938
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "a8be31aa81ea40ea9ceb831a84c370d26b61bd2376a008c31d703ee1574385aa"
+    },
+    {
+      "currentSha256": "7bf039fde542e11044b8f88cebddafa0ff731a11668996a5d211af2bdbb086ed",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-language-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 425
+        },
+        {
+          "current": "\t\t&& !cell.stages.installedExecution.evidence.some(id => [\"python-callables-installed\", \"python-structured-callables-installed\", \"python-recursive-callables-installed\", \"ruby-callables-installed\", \"ruby-structured-callables-installed\", \"ruby-recursive-callables-installed\", \"rust-callables-installed\", \"rust-structured-callables-installed\", \"rust-recursive-callables-installed\", \"cpp-callables-installed\", \"dotnet-callables-installed\", \"dotnet-structured-callables-installed\", \"dotnet-recursive-callables-installed\", \"jvm-callables-installed\", \"jvm-structured-callables-installed\", \"jvm-recursive-callables-installed\", \"php-native-callables-installed\", \"php-native-structured-callables-installed\", \"php-native-recursive-callables-installed\", \"php-wasm-callables-installed\", \"php-wasm-structured-callables-installed\", \"php-wasm-recursive-callables-installed\", \"php-wasm-owned-callback-results-installed\", \"wit-wasi-callables-installed\", \"wit-wasi-structured-callables-installed\", \"wit-wasi-recursive-callables-installed\", \"callback-subtype-languages-generation\"].includes(id))))\n",
+          "previous": "\t\t&& !cell.stages.installedExecution.evidence.some(id => [\"python-callables-installed\", \"python-structured-callables-installed\", \"python-recursive-callables-installed\", \"ruby-callables-installed\", \"ruby-structured-callables-installed\", \"ruby-recursive-callables-installed\", \"rust-callables-installed\", \"rust-structured-callables-installed\", \"rust-recursive-callables-installed\", \"cpp-callables-installed\", \"dotnet-callables-installed\", \"dotnet-structured-callables-installed\", \"dotnet-recursive-callables-installed\", \"jvm-callables-installed\", \"jvm-structured-callables-installed\", \"jvm-recursive-callables-installed\", \"php-native-callables-installed\", \"php-native-structured-callables-installed\", \"php-native-recursive-callables-installed\", \"php-wasm-callables-installed\", \"php-wasm-structured-callables-installed\", \"php-wasm-recursive-callables-installed\", \"php-wasm-owned-callback-results-installed\", \"wit-wasi-callables-installed\", \"wit-wasi-structured-callables-installed\", \"wit-wasi-recursive-callables-installed\"].includes(id))))\n",
+          "start": 41467
+        },
+        {
+          "current": "\tconst languageCallbacks = cells.filter(cell => [\"python\", \"ruby\", \"rust\"].includes(cell.profile)\n\t\t&& [\"callback-parameter\", \"callback-result\"].includes(cell.position));\n\tassert.equal(languageCallbacks.length, 12);\n\tfor(const cell of languageCallbacks)\n\t{\n\t\tassert.equal(cell.stages.analysis.state, \"passed\");\n\t\tassert.equal(cell.stages.generation.state, \"passed\");\n\t\tfor(const name of [\"compilation\", \"packaging\", \"installedExecution\"])\n\t\t\tassert.equal(cell.stages[name].state, \"inspected\");\n\t\tfor(const stage of Object.values(cell.stages))\n\t\t\tassert.deepEqual(stage.evidence, [\"callback-subtype-languages-generation\"]);\n\t}\n",
+          "previous": "",
+          "start": 50120
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "0d11835fb39291ee284824853d3019e1f88203f0aad9e8764eff9dfdbf6d8f2c"
+    }
+  ]
+}
