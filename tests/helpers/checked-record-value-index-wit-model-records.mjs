@@ -69,17 +69,17 @@ export const checkCheckedRecordValueIndexWitModels = async ({ report, read, json
 		for(const key of ["leanCompilerSha256", "sourceTreeSha256"]) assert.match(identity[key], /^[a-f0-9]{64}$/u);
 		assert.deepEqual(identity.request.metadata.modules.map(item => item.sourceSha256), [sha256(source)]);
 		assert.equal(identity.request.metadata.toolchain, inputs["lean-toolchain"].toString().trim());
-		let selection = configuration;
+		let request = configuration;
 		if(selection.reviewed)
 		{
 			assert.deepEqual(await json(prefix + "api.binding-ir.json"), expected);
 			assert.equal(identity.reviewedBindingIr.source, canonicalJson(expected));
 			assert.equal(identity.reviewedBindingIr.sourceSha256, sha256(canonicalJson(expected)));
 			assert.equal(identity.reviewedBindingIr.semanticSha256, hashBindingIr(expected));
-			selection = reviewedSourceSelection(identity.reviewedBindingIr);
+			request = reviewedSourceSelection(identity.reviewedBindingIr);
 		}
 		else assert.equal(identity.reviewedBindingIr, undefined);
-		for(const key of ["contracts", "exports", "specializations"]) assert.deepEqual(identity.request[key], selection[key]);
+		for(const key of ["contracts", "exports", "specializations"]) assert.deepEqual(identity.request[key], request[key]);
 		for(const key of ["arities", "resources"]) assert.deepEqual(identity.request[key], []);
 		for(const key of ["modules", "exportModules"]) assert.deepEqual(identity.request[key], [checkedRecordValueIndexModule]);
 		assert.equal(identity.request.profile, "native-library-v1");
