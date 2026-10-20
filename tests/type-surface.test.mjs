@@ -527,7 +527,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 						`recursive-checked-record-${recursiveLane}-ordinary-${fixture}-installed`
 					);
 					const valueIndexLane = {
-						"php-native": "php", python: "python", ruby: "ruby"
+						"php-native": "php", "php-wasm": "php-wasm"
+						, python: "python", ruby: "ruby"
 					}[profile];
 					const valueIndexed = !valueIndexLane || cell.position === "field" ? []
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]

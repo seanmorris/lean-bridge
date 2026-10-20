@@ -2,6 +2,11 @@
 
 Evidence documents record commands, artifact identities, measured results, and limitations for the proof of concept. Architecture requirements remain in the [architecture index](../architecture/README.md). Consumer claims remain in the [versioned support contract](../consumer-support.v1.json).
 
+[PHP-Wasm closed value-index checked records](checked-record-value-index-php-wasm-promotion-20261020.md)
+record four hosted Composer/npm selections under Node and Chromium for
+top-level copied checked-record parameter/result sites with closed Bool,
+String, and Nat indices.
+
 [Ruby closed value-index checked records](checked-record-value-index-ruby-promotion-20261020.md)
 record four hosted native-gem selections on MRI 3.3.12 for top-level copied
 checked-record parameter/result sites with closed Bool, String, and Nat indices.
