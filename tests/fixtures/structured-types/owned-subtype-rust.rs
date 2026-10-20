@@ -79,6 +79,19 @@ fn main() {
     serial_is(&mut checks, &moved.primary, 51,
         "successful transfer returns a usable resource");
 
+    let dropped = new_ticket(&BigUint::from(61u32), "dropped").expect("drop owner");
+    let mut drop_survivor = dropped.retain().expect("retain drop owner");
+    drop(dropped);
+    serial_is(&mut checks, &drop_survivor, 61,
+        "Drop preserves an independent retain");
+    drop_survivor.close();
+    check(&mut checks, drop_survivor.is_closed(),
+        "retained owner still supports explicit cleanup after Drop");
+    let after_drop = new_ticket(&BigUint::from(62u32), "after-drop").expect("after drop");
+    serial_is(&mut checks, &after_drop, 62,
+        "runtime remains usable after automatic Drop cleanup");
+    drop(after_drop);
+
     close_bundle(moved);
     close_bundle(rejected_bundle);
     ticket.close();

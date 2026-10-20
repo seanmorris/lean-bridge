@@ -65,11 +65,15 @@ test("Python, Ruby and Rust generate callback-free checked transfer copies", () 
 });
 
 test("owned Subtype language consumers and required workflow stay registered", async () => {
-	for(const [path, marker] of [
-		["tests/fixtures/structured-types/owned-subtype-python.py", "owned-subtype-python"]
-		, ["tests/fixtures/structured-types/owned-subtype-ruby.rb", "owned-subtype-ruby"]
-		, ["tests/fixtures/structured-types/owned-subtype-rust.rs", "owned-subtype-rust"]
-	]) assert.match(await readFile(path, "utf8"), new RegExp(marker, "u"));
+	for(const [path, marker, lifecycle] of [
+		["tests/fixtures/structured-types/owned-subtype-python.py", "owned-subtype-python", "gc.collect()"]
+		, ["tests/fixtures/structured-types/owned-subtype-ruby.rb", "owned-subtype-ruby", "GC.start(full_mark: true, immediate_sweep: true)"]
+		, ["tests/fixtures/structured-types/owned-subtype-rust.rs", "owned-subtype-rust", "drop(dropped)"]
+	]) {
+		const consumer = await readFile(path, "utf8");
+		assert.match(consumer, new RegExp(marker, "u"));
+		assert.ok(consumer.includes(lifecycle), `${marker} lifecycle`);
+	}
 	const source = await readFile(".github/workflows/owned-subtype-languages.yml", "utf8");
 	for(const required of [
 		"on:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
@@ -246,6 +250,11 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} owned Subt
 		, relocatedInstallation: true, handoffRemovedBeforeRelocatedExecution: true
 		, deterministicReassembly: true, compilerSelectedConstructors: true
 		, transferredInputCheckedBeforeHandoff: true
+		, lifecycle: {
+			python: { fallback: "gc-finalizer", observation: "owning-slot-baseline-restored" }
+			, ruby: { fallback: "gc-finalizer", observation: "queued-owner-drained" }
+			, rust: { fallback: "drop", observation: "independent-retain-survives" }
+		}
 		, versions, dependencies, reassembled
 		, observations: Object.fromEntries(profiles.map(profile => [profile, {
 			checks: observations[profile].checks

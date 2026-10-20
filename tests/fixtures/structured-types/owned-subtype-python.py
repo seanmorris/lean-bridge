@@ -1,5 +1,6 @@
 """Independent installed-wheel consumer for checked owned aggregates."""
 import dataclasses
+import gc
 
 import lean_owned_subtypes as api
 
@@ -53,6 +54,13 @@ def serial_is(ticket, expected: int, message: str) -> None:
     check(api.serial(ticket) == expected, message)
 
 
+def owning_state(ticket):
+    """Expose acceptance-only lifecycle state without adding a public API."""
+    lease = ticket._lease
+    check(lease is not None, "lifecycle probe requires an open owner")
+    return lease.state
+
+
 ticket = api.new_ticket(41, "python\x00checked")
 retained = ticket.retain()
 serial_is(ticket, 41, "fresh resource is usable")
@@ -88,6 +96,25 @@ check(moving.is_closed, "successful transfer consumes the selected owner")
 serial_is(kept, 51, "successful transfer preserves an independent retain")
 check(moved.payload.count == 9, "successful transfer preserves the checked field")
 serial_is(moved.primary, 51, "successful transfer returns a usable resource")
+
+finalizer_anchor = api.new_ticket(61, "finalizer-anchor")
+finalizer_state = owning_state(finalizer_anchor)
+baseline_slots = len(finalizer_state.slots)
+finalized = api.new_ticket(62, "finalized")
+finalizer_survivor = finalized.retain()
+check(len(finalizer_state.slots) == baseline_slots + 2,
+      "finalizer probe owns two independent native results")
+del finalized
+gc.collect()
+serial_is(finalizer_survivor, 62,
+          "garbage collection preserves an independent retain")
+check(len(finalizer_state.slots) == baseline_slots + 1,
+      "garbage collection releases the abandoned native owner")
+finalizer_survivor.close()
+serial_is(finalizer_anchor, 61, "runtime remains usable after finalizer cleanup")
+check(len(finalizer_state.slots) == baseline_slots,
+      "explicit survivor cleanup restores the owning-slot baseline")
+finalizer_anchor.close()
 
 release(moved)
 ticket.close()
