@@ -27,6 +27,8 @@ import {
 } from "./checked-record-value-index-php-wasm-fixture.mjs";
 import { assertPhpWasmRefinementPackage } from "./php-wasm-fin-direct-report.mjs";
 import { validateBrickMathInstall } from "./brick-math.mjs";
+import { readClosedPackageZip } from "./closed-package-zip.mjs";
+import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
 
 const identity = value => ({ bytes: Buffer.byteLength(value), sha256: sha256(value) });
@@ -41,25 +43,32 @@ export const checkedRecordValueIndexPhpWasmDeploymentRecords = Object.freeze([
 ]);
 
 /**
- * Return the route-relative closure independently of a producer's claimed inventory.
+ * Return the fixed route records and, after receipt validation, its complete archive closure.
  *
  * @param route - Exact ordinary/reviewed and full/result-only author route.
+ * @param receipt - Optional validated package-set receipt.
  */
-export const checkedRecordValueIndexPhpWasmRecords = route => {
+export const checkedRecordValueIndexPhpWasmRecords = (route, receipt = undefined) => {
 	assert.ok(checkedRecordValueIndexBrowserRoutes.includes(route));
+	if(receipt !== undefined) validatePackageSetReceipt(receipt);
 	return [
 		"report.json"
 		, "context.json"
 		, "expected.binding-ir.json"
 		, "configuration.json"
 		, "weak.php", "strict.php", "request-embedded.json", "request-composer.json"
+		, "handoff/package-set-receipt.json"
+		, "handoff/package-set-receipt.json.sha256"
 		, ...[0, 1].flatMap(index => ["model.json", "package-set-receipt.json"
 			, "php-wasm-package-set.json", "CheckedRecordValueIndices.lean"
 			, "lean-bridge.exports.json"
 			, ...route.endsWith("reviewed-ir") ? ["api.binding-ir.json"] : []]
 			.map(path => `build-${index}/${path}`))
 		, ...checkedRecordValueIndexPhpWasmDeploymentRecords.map(path => "deployment/" + path)
-		, ...Array.from({ length: 12 }, (_, index) => `executions/${index}.json`)];
+		, ...Array.from({ length: 12 }, (_, index) => `executions/${index}.json`)
+		, ...(receipt === undefined ? [] : receipt.packages.flatMap(pkg => pkg.artifacts
+			.map(artifact => "handoff/" + artifact.path)))
+	];
 };
 
 /**
@@ -74,9 +83,18 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 	assert.ok(checkedRecordValueIndexBrowserRoutes.includes(route));
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
 	const files = new Map();
+	const bytes = async path => {
+		assert.match(path, /^(?:[A-Za-z0-9_@.+-]+\/)*[A-Za-z0-9_@.+-]+$/u);
+		assert.ok(path.split("/").every(part => part !== "." && part !== ".."));
+		if(!files.has(path))
+		{
+			const value = await read(path); assert.ok(Buffer.isBuffer(value), path); files.set(path, value);
+		}
+		return files.get(path);
+	};
 	for(const path of checkedRecordValueIndexPhpWasmRecords(route))
 	{
-		const bytes = await read(path); assert.ok(Buffer.isBuffer(bytes), path); files.set(path, bytes);
+		await bytes(path);
 	}
 	const text = path => files.get(path).toString();
 	const json = path => {
@@ -191,7 +209,16 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 			assert.deepEqual(Object.keys(entry).sort(), ["bytes", "sha256"]);
 			assert.ok(Number.isSafeInteger(entry.bytes) && entry.bytes >= 0); digest(entry.sha256);
 		}
+	const receiptBytes = await bytes("handoff/package-set-receipt.json");
+	assert.equal(receiptBytes.toString(), canonicalJson(report.receipt));
+	assert.equal(text("handoff/package-set-receipt.json.sha256")
+		, sha256(receiptBytes) + "  package-set-receipt.json\n");
+	assert.deepEqual(report.receipt.packages.map(pkg => pkg.role).sort()
+		, ["api", "component", "runtime"]);
+	for(const path of checkedRecordValueIndexPhpWasmRecords(route, report.receipt))
+		await bytes(path);
 	assert.equal(set.archives.length, 3);
+	const unpacked = new Map();
 	for(const pkg of report.receipt.packages)
 	{
 		assert.equal(pkg.artifacts.length, 1); assert.equal(pkg.runtimeIdentity, component.runtimeIdentity);
@@ -201,9 +228,24 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 		assert.equal(packed.archive, basename(artifact.path));
 		assert.equal(packed.sha256, artifact.sha256); assert.equal(packed.bytes, artifact.bytes);
 		assert.deepEqual(set.files[`archives/${packed.archive}`], { bytes: artifact.bytes, sha256: artifact.sha256 });
-		assert.deepEqual(subset(deployment, `${pkg.ecosystem === "composer" ? "vendor" : "node_modules"}/${pkg.name}/`)
-			, subset(set.files, packed.directory + "/"));
+		const archived = await bytes("handoff/" + artifact.path);
+		assert.deepEqual(identity(archived), { bytes: artifact.bytes, sha256: artifact.sha256 });
+		const members = pkg.ecosystem === "composer" ? readClosedPackageZip(archived)
+			: readOwnedPerlCallbackVariantTar(archived, "package", set.packing.collationLocale);
+		const closure = Object.fromEntries([...members]
+			.map(([path, contents]) => [path, identity(contents)]));
+		assert.deepEqual(closure, subset(set.files, packed.directory + "/"));
+		assert.deepEqual(subset(deployment
+			, `${pkg.ecosystem === "composer" ? "vendor" : "node_modules"}/${pkg.name}/`)
+			, closure);
+		unpacked.set(pkg.role, members);
 	}
+	assert.deepEqual(unpacked.get("component").get("compiled/model.json")
+		, files.get("build-0/model.json"));
+	assert.equal(unpacked.get("component").get("compiled/php-wasm-component.json").toString()
+		, canonicalJson(component));
+	assert.equal(unpacked.get("runtime").get("compiled/runtime.json").toString()
+		, canonicalJson(runtime));
 	const componentRoot = `node_modules/${fixture.settings.npm.name}/compiled/`;
 	const runtimeRoot = "node_modules/@lean-bridge/php-wasm-copied-runtime/compiled/";
 	assert.deepEqual(deployment[componentRoot + "model.json"], identity(files.get("build-0/model.json")));
@@ -242,6 +284,8 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 	const generated = copiedPhpPublicSource(compileCopiedPhpModel(model.bindingIr, {
 		integerBits: 32, structuredCallables: true, lists: true, variants: true
 	}));
+	assert.equal(unpacked.get("component").get("compiled/src/Api.php").toString(), generated);
+	assert.equal(unpacked.get("api").get("src/Api.php").toString(), generated);
 	assert.deepEqual(deployment[componentRoot + "src/Api.php"], identity(generated));
 	assert.deepEqual(deployment[`vendor/${fixture.settings.composer.name}/src/Api.php`]
 		, deployment[componentRoot + "src/Api.php"]);
@@ -262,11 +306,15 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 		assert.ok(execution.requests.some(request => request.path.startsWith("node_modules/php-wasm/")
 			&& request.path.endsWith(".wasm")));
 	}
+	assert.deepEqual([...files.keys()].sort()
+		, checkedRecordValueIndexPhpWasmRecords(route, report.receipt).sort());
 	return {
 		route
 		, producerCommit
 		, records: files.size
 		, executions: evidence.executions.length
+		, packageFiles: Object.fromEntries([...unpacked]
+			.map(([role, members]) => [role, members.size]))
 		, counts: evidence.executions[0].observation
 	};
 };

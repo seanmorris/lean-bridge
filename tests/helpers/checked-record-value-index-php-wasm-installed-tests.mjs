@@ -107,7 +107,11 @@ for(const route of routes) test(
 				, packageSetSha256: sha256(packageBytes)
 				, archives: Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts
 					.map(item => [item.path, item.sha256]))) });
-			if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
+			if(attempt === 0)
+			{
+				await copyPackageSetHandoff(outputRoot, handoff);
+				await copyPackageSetHandoff(handoff, join(output, "handoff"));
+			}
 			await rm(author, { recursive: true }); await assert.rejects(access(author), { code: "ENOENT" });
 		}
 		assert.deepEqual(builds[1], builds[0]);
@@ -145,6 +149,9 @@ for(const route of routes) test(
 			await saveLakeFile(output, "deployment/" + path, await readFile(join(deployment, path)));
 		for(const [index, execution] of installed.phpWasm.executions.entries())
 			await saveLakeFile(output, `executions/${index}.json`, canonicalJson(execution));
+		await verifyPackageSetReceipt({
+			receiptPath: join(output, "handoff/package-set-receipt.json")
+		});
 		await saveLakeFile(output, "report.json", canonicalJson({
 			schemaVersion: 1, route, producerCommit, configuration
 			, expectedBindingIrSha256: hashBindingIr(expected)

@@ -13,6 +13,8 @@ import {
 	, assertCheckedRecordValueIndexPhpWasmCompilerTap
 	, parseCheckedRecordValueIndexPhpWasmCiArgs
 } from "./checked-record-value-index-php-wasm-ci-report.mjs";
+import { checkedRecordValueIndexPhpWasmRecords } from "./checked-record-value-index-php-wasm-report.mjs";
+import { createPackageSetHandoff } from "./package-set.mjs";
 
 const route = "ordinary-source";
 const args = [
@@ -81,4 +83,20 @@ test("value-index PHP-Wasm compiler parser closes four fresh compiler diagnostic
 			"scripts/check-checked-record-value-index-php-wasm-compiler-ci.mjs"
 			, ...invalid
 		], { encoding: "utf8" }).status, 0);
+});
+
+test("value-index PHP-Wasm record closure retains the receipt sidecar and every prepared archive", async t => {
+	const { receipt } = await createPackageSetHandoff(t);
+	for(const selectedRoute of checkedRecordValueIndexBrowserRoutes)
+	{
+		const fixed = checkedRecordValueIndexPhpWasmRecords(selectedRoute);
+		const complete = checkedRecordValueIndexPhpWasmRecords(selectedRoute, receipt);
+		assert.ok(fixed.includes("handoff/package-set-receipt.json"));
+		assert.ok(fixed.includes("handoff/package-set-receipt.json.sha256"));
+		assert.equal(fixed.includes("build-0/api.binding-ir.json")
+			, selectedRoute.endsWith("reviewed-ir"));
+		assert.deepEqual(complete.slice(fixed.length), receipt.packages.flatMap(pkg =>
+			pkg.artifacts.map(artifact => "handoff/" + artifact.path)));
+		assert.equal(new Set(complete).size, complete.length);
+	}
 });
