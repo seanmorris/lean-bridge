@@ -37,6 +37,7 @@ test("value-index WIT source foundation has an exact reversible lineage", async 
 		assert.ok(finRefinementNormalizationPaths.includes(update.path));
 	}
 	for(const addition of ledger.additions)
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256))
+			, addition.currentSha256, addition.path);
 	assert.equal(beforeCheckedRecordValueIndexWitSource("missing", "text"), "text");
 });

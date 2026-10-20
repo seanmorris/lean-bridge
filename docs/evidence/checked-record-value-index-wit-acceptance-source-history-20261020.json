@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-wit-acceptance-source-v1",
+  "predecessorCommit": "a23cef183152257e67f438da5c1d9529832da661",
+  "pathsSha256": "8e125b2b7d53a162e31a975225e29769b088129978c438b27a9d33dd9d4ebe6e",
+  "additions": [
+    {
+      "path": ".github/workflows/checked-record-value-index-wit.yml",
+      "currentSha256": "db21e5b567335e1d98dbff8d32e70c970338b10d87315678bfaff8eeca9ba98f"
+    },
+    {
+      "path": "scripts/check-checked-record-value-index-wit-ci.mjs",
+      "currentSha256": "470d20d77c44ded1f490cb2817b50470225e5cc8958c1a4afa619d992b6d3b57"
+    },
+    {
+      "path": "scripts/run-checked-record-value-index-wit-ci.sh",
+      "currentSha256": "0442dd4f19aad4141e6cb770355190df3f8b43db0ee2faadccecb657dbe938f0"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-wit-acceptance-source-history.mjs",
+      "currentSha256": "c94dd924f14af94f704aaea9b4071efc3d7880f05d1f6dbe1a0c75efd33bc59d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-acceptance-source-history-tests.mjs",
+      "currentSha256": "80014b86f939b3992c52bb7b635732a607b10ec8bc9fed20a00db07e0619d59a"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-acceptance-source-history.mjs",
+      "currentSha256": "ea9d819c5534265c43f50054bbb5bc9272deac1d18c05e1440c777a12e14ed0f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-handoff-tests.mjs",
+      "currentSha256": "8cec04311bf07c53afb1c1a869b78751564a6019168a2a5bec09f33f9e9c2e42"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-report-tests.mjs",
+      "currentSha256": "91cdb994b067aff480b745e63e779f96c097ce93b1d88f6b520090de9523081d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-report.mjs",
+      "currentSha256": "883af8458e35161ec3711909ed06f60e63b05768e5edefe0b62cd987404002af"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-shell-tests.mjs",
+      "currentSha256": "0c21ae543ab327f6f6bf81872868fa04b2f7fcc25e9ca69f52f8cdd60bea7998"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow-tests.mjs",
+      "currentSha256": "40b1e1b24ac71b43a183f0abf0caabe3105983e9aead634911ec52c5b9958161"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-ci-workflow.mjs",
+      "currentSha256": "ee2039252aa791e5c33e37a9e990bc3e4af4a9e39e193af4d599861b0bff62e3"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-environment-records.mjs",
+      "currentSha256": "9fff818d6df27e57af401b6dd357dc6832cdc1e1807227ab9a1b3d23b24b9945"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-handoff.mjs",
+      "currentSha256": "238a0e8cb1c27352d5e6ea17fa44bb6236659cf1103a1089fb14b2e54e1b9423"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-install.mjs",
+      "currentSha256": "60eb30e87fb4ec94b916915b9397028a1585316d32e9158c221ce284e2de2d97"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-installed-tests.mjs",
+      "currentSha256": "9fe3ba4acc4ae04df3ac2ba66ba7e50d6a0e09f72f2d3d14d511f91bed27c102"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-model-records.mjs",
+      "currentSha256": "238fe2091155d1c545ad9ecbf0b55d4f56c2465b0acaa0033d54cba3c81d8d0d"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-package-records.mjs",
+      "currentSha256": "f02d4669a65d027703c26f85d578c58246a0c4630ee9a5e4efa279dbf53ae45f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-package.mjs",
+      "currentSha256": "2a60f35337acde1a4fed5936791e214b784a18824832a8979ccd51364ab4d8cf"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-report.mjs",
+      "currentSha256": "01ba336116a98651a2df737454735627b080d5e92a47b5ce8d1ffb170fb5d7d0"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-resources.mjs",
+      "currentSha256": "0b76fed51c25aec6a4051b8c3329693d4d72beafa9cca6508ec9ccf5a0d28141"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-wit.test.mjs",
+      "previousSha256": "1768c17933a8a1ce20d00977cdbdb8800c20e83b6ca7e1fb7fb99c266f9dae50",
+      "currentSha256": "56c56151c6f0ecabac25377dda306649661e9245e2edea5f68316fb119d5f546",
+      "edits": [
+        {
+          "start": 103,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-wit-ci-handoff-tests.mjs\";\nimport \"./helpers/checked-record-value-index-wit-ci-report-tests.mjs\";\nimport \"./helpers/checked-record-value-index-wit-ci-shell-tests.mjs\";\nimport \"./helpers/checked-record-value-index-wit-ci-workflow-tests.mjs\";\n"
+        },
+        {
+          "start": 458,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-wit-installed-tests.mjs\";\nimport \"./helpers/checked-record-value-index-wit-acceptance-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-source-history-tests.mjs",
+      "previousSha256": "01c0176d7eb778d21d6be3a16edb1d54e21bea244ddf39de1f0f747bcf927044",
+      "currentSha256": "26351127b9c728d83f9b2afa69a9822104ea42e6ca6812384b24ad828a4dafe8",
+      "edits": [
+        {
+          "start": 2133,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cfcbc5061e6576b396c10b96abbc3652ceb5c44e3dd319a88adca9a4a6369600",
+      "currentSha256": "c3d11bba3a148c76e7bfe205b3eb31e6c3cdf385fc7c6904ace2b7ba1dcb3c3d",
+      "edits": [
+        {
+          "start": 1375,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexWitAcceptanceSource, checkedRecordValueIndexWitAcceptanceChangedPaths } from \"./checked-record-value-index-wit-acceptance-source-history.mjs\";\n"
+        },
+        {
+          "start": 84225,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexWitAcceptanceSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 101679,
+          "previous": "\t...checkedRecordValueIndexWitChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexWitAcceptanceChangedPaths\n\t, ...checkedRecordValueIndexWitChangedPaths\n"
+        },
+        {
+          "start": 119943,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexWitSource(path, text, expected);\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexWitAcceptanceSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexWitSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}
