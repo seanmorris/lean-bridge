@@ -13,6 +13,7 @@ import {
 import "./checked-record-value-index-python-archive-source-history-tests.mjs";
 import "./checked-record-value-index-python-archive-history-gap-source-history-tests.mjs";
 import "./checked-record-value-index-python-promotion-tests.mjs";
+import "./checked-record-value-index-python-promotion-source-history-tests.mjs";
 
 test("hosted value-index Python archive authenticates every retained route", {
 	timeout: 120_000
