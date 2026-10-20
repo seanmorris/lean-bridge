@@ -22,16 +22,22 @@ import { packageOwnedRuby } from "../release/owned-rubygems.mjs";
 export const projectOwnedRuby = async options => {
 	const { working, nativeRoot, runtimeRoot, environment = process.env, signal } = options;
 	const { identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Ruby requires authenticated callback/copy, receiver or callback-result support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Ruby requires authenticated callback/copy, transfer, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
-	const contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...contractOptions });
-	const ruby = generateOwnedRubyPackage(model.bindingIr, null, contractOptions), prefix = c.values.prefix;
+	const contractOptions = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors };
+	const ruby = generateOwnedRubyPackage(model.bindingIr, null, contractOptions);
+	const c = generateOwnedCPackage({
+		metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, ...contractOptions
+		, valueCopies: Boolean(ruby.c.copies?.length)
+	});
+	const prefix = c.values.prefix;
 	const root = join(working, "native/owned-ruby-binding"), gmpRoot = join(root, "gmp");
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.38";
 	if(!/^2\.\d+$/u.test(floor)) throw new TypeError("Invalid Ruby native glibc floor");

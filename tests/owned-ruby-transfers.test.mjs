@@ -12,6 +12,7 @@ import { generateOwnedCPackage } from "../src/backends/c/owned-package.mjs";
 import { generateOwnedRubyConversions } from "../src/backends/ruby/owned-conversions.mjs";
 import { ownedRubyRuntime } from "../src/backends/ruby/owned-runtime.mjs";
 import { compileOwnedAggregateFixture } from "./helpers/owned-aggregate-native.mjs";
+import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
 import { ownedRustTransferReviewedIr, ownedRustTransferConfiguration, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
@@ -38,6 +39,19 @@ test("Ruby consuming inputs require explicit capability without changing borrowe
 		const enabled = generateOwnedRubyConversions(fixture(), { transferredInputs: true });
 		for(const key of ["valuesSource", "source", "cSource"]) assert.equal(enabled[key], original[key]);
 	}
+});
+
+test("Ruby snapshots checked aggregate transfers without enabling callbacks", () => {
+	const ir = ownedSubtypePackageReviewedIr(), before = structuredClone(ir);
+	const generated = generateOwnedRubyConversions(ir, {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.deepEqual(ir, before);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.match(generated.source, /moves\.arm/u);
+	assert.match(generated.cSource, /owned_subtypes_bundle_t_copy/u);
+	assert.doesNotMatch(generated.valuesSource, /WithRecovery|with_recovery/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`Ruby leases move at the compiled Lean handoff (${mode})`, {

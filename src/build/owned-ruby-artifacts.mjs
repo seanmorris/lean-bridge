@@ -31,16 +31,22 @@ export const ownedRubyAdapterSources = (c, ruby) => ({ ...c.files
  */
 export const ownedRubyEvidence = async ({ nativeRoot, runtimeRoot, adapterRoot }) => {
 	const { manifest: runtime, identity } = await readVerifiedNativeRuntime(runtimeRoot);
-	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true });
-	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Ruby requires authenticated callback/copy, receiver or callback-result support");
+	const { model, receipt } = await readVerifiedNativeComponent(nativeRoot, identity, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true, ownedAnchoredResults: true, ownedReceiverExports: true, ownedCallbackResultAnchors: true, nativeRefinements: true, nativeCheckedRecords: true });
+	if(!model.ownedGraph?.hostCallbacks && !model.ownedGraph?.inputTransfers && !model.ownedGraph?.receiverExports && !model.ownedGraph?.callbackResultAnchors) throw new TypeError("Owned Ruby requires authenticated callback/copy, transfer, receiver or callback-result support");
 	const metadata = JSON.parse(await readFile(join(nativeRoot, "metadata.json"), "utf8"));
 	const transferredInputs = Boolean(model.ownedGraph.inputTransfers);
 	const anchoredResults = Boolean(model.ownedGraph.resultAnchors);
 	const receiverExports = Boolean(model.ownedGraph.receiverExports), hostCallbacks = Boolean(model.ownedGraph.hostCallbacks);
 	const callbackResultAnchors = Boolean(model.ownedGraph.callbackResultAnchors);
-	const options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors, valueCopies: callbackResultAnchors };
-	const c = generateOwnedCPackage({ metadata, sourceIdentity: model.sourceIdentity, component: model.component, ...options });
-	const ruby = generateOwnedRubyPackage(model.bindingIr, null, options), prefix = c.values.prefix;
+	const options = { transferredInputs, anchoredResults, receiverExports, hostCallbacks, callbackResultAnchors };
+	const ruby = generateOwnedRubyPackage(model.bindingIr, null, options);
+	const c = generateOwnedCPackage({
+		metadata, sourceIdentity: model.sourceIdentity
+		, component: model.component
+		, ...options
+		, valueCopies: Boolean(ruby.c.copies?.length)
+	});
+	const prefix = c.values.prefix;
 	const adapter = JSON.parse(await readFile(join(adapterRoot, "native-ruby-adapter.json"), "utf8"));
 	await verifyNativeFiles(adapterRoot, adapter.files);
 	const sources = ownedRubyAdapterSources(c, ruby), gmpLibrary = "libgmp-lean-bridge.so.10";

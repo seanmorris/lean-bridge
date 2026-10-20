@@ -19,6 +19,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { ownedRustTransferReviewedIr, ownedRustTransferConfiguration, ownedRustTransferSource } from "./helpers/owned-rust-transfer-fixture.mjs";
 import { ownedCppCompositionReviewedIr } from "./helpers/owned-cpp-composition-fixture.mjs";
 import { ownedPythonScalarsReviewedIr } from "./helpers/owned-python-scalars-fixture.mjs";
+import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { installPythonWheel } from "./helpers/python-wheel-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
@@ -42,6 +43,17 @@ test("Ruby gems bind consuming arguments without changing borrow-only packages",
 		assert.deepEqual(enabled.contract, unchanged.contract);
 		assert.equal(enabled.abiHeader, unchanged.abiHeader);
 	}
+});
+
+test("Ruby package sources include checked transfer copies without callbacks", () => {
+	const generated = generateOwnedRubyPackage(ownedSubtypePackageReviewedIr(), null, {
+		transferredInputs: true, hostCallbacks: false
+	});
+	assert.equal(generated.contract.schemaVersion, 2);
+	assert.equal(generated.c.callbacks.length, 0);
+	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
+	assert.match(generated.cSource, /owned_subtypes_bundle_t_copy/u);
+	assert.doesNotMatch(generated.valuesSource, /WithRecovery|with_recovery/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`installed Ruby inputs preserve transfer decisions (${mode})`, {

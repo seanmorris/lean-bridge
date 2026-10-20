@@ -3,7 +3,7 @@
  *
  * @file
  */
-import { generateOwnedCValues } from "../c/owned-values.mjs";
+import { generateOwnedCValues, ownedCProjectionRequiresValueCopies } from "../c/owned-values.mjs";
 import { cIdentifier } from "../c/generate.mjs";
 
 const constant = name => name.split("_").filter(Boolean).map(part => part[0].toUpperCase() + part.slice(1)).join("") + (name.match(/_+$/u)?.[0] ?? "");
@@ -53,8 +53,10 @@ ${fields.map(field => `        @${field.publicName} = ${field.publicName}`).join
  * @param options.hostCallbacks - The adapter provides callback and copy helpers.
  */
 export const generateOwnedRubyValues = (ir, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false, hostCallbacks = true } = {}) => {
-	const valueCopies = callbackResultAnchors && ir.types.some(type => type.kind === "callback" && type.callable.result.ownership === "borrow");
-	const c = generateOwnedCValues(ir, { hostCallbacks, valueCopies, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
+	const options = { hostCallbacks, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors };
+	let c = generateOwnedCValues(ir, options);
+	if(!c.copies && ownedCProjectionRequiresValueCopies(c))
+		c = generateOwnedCValues(ir, { ...options, valueCopies: true });
 	const anchored = c.functions.some(fn => fn.anchor !== undefined) || c.callbacks.some(fn => fn.anchor !== undefined);
 	const receivers = c.functions.filter(fn => fn.receiver === 0), wholeOwners = anchored || receivers.length > 0;
 	const componentName = constant(c.prefix), occupied = new Set(reservedConstants), names = new Map();
