@@ -14,6 +14,7 @@ import {
 	, checkedRecordValueIndexJvmEvidenceSources
 	, checkedRecordValueIndexNativeEvidenceSources
 	, checkedRecordValueIndexPerlEvidenceSources, checkedRecordValueIndexPhpEvidenceSources
+	, checkedRecordValueIndexPythonEvidenceSources
 } from "./checked-record-value-index-hosted-evidence-sources.mjs";
 import {
 	checkedRecordValueIndexHostedSafeZipPath
@@ -146,6 +147,23 @@ test("value-index native-PHP evidence closes Composer production, consumption an
 		, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
 		, ["archiver", "scripts/archive-checked-record-value-index-php-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-php-controls.mjs"]
+		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
+	]);
+});
+
+test("value-index Python evidence closes wheel production, consumption and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = checkedRecordValueIndexPythonEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	authenticate(sources, ["producer", "consumer", "checker", "archiver"], [
+		["producer", "tests/fixtures/checked-record-value-index-python/python.py"]
+		, ["consumer", "tests/helpers/checked-record-value-index-python-fixture.mjs"]
+		, ["checker", ".github/workflows/checked-record-value-index-python.yml"]
+		, ["checker", "scripts/check-checked-record-value-index-python-ci.mjs"]
+		, ["archiver", "scripts/archive-checked-record-value-index-python-evidence.mjs"]
 		, ["archiver", "tests/helpers/checked-record-value-index-hosted-archive.mjs"]
 	]);
 });
