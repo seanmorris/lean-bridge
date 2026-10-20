@@ -2,6 +2,11 @@
 
 Evidence documents record commands, artifact identities, measured results, and limitations for the proof of concept. Architecture requirements remain in the [architecture index](../architecture/README.md). Consumer claims remain in the [versioned support contract](../consumer-support.v1.json).
 
+[Perl closed value-index checked records](checked-record-value-index-perl-promotion-20261020.md)
+record four hosted CPAN selections across four interpreter ABIs and both
+prebuilt-only and build-XS delivery modes for top-level copied checked-record
+parameter/result sites with closed Bool, String, and Nat indices.
+
 [Native-PHP closed value-index checked records](checked-record-value-index-php-promotion-20261019.md)
 record four hosted Composer installations for top-level copied checked-record
 parameter/result sites with closed Bool, String, and Nat indices.

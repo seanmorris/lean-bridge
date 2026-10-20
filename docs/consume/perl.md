@@ -713,6 +713,11 @@ checked inputs.
 ordinary and independently reviewed packages, including separate result-only
 packages, on all four pinned Perl ABIs and both installation modes.
 
+The [closed value-index archive](../evidence/checked-record-value-index-perl-promotion-20261020.md)
+adds top-level copied records indexed by closed `Bool`, `String`, and `Nat`
+values. The index remains authenticated Lean metadata rather than a Perl field;
+`Math::BigInt` carries every Nat payload field.
+
 The [nested `Packet` archive](../evidence/nested-checked-record-perl-20261016/index.json)
 adds a record containing a `Fin 10` digit and a checked `Nat` subtype word. Full
 packages cover direct and repeated parameters, `Array`, `List`, `Option`,
