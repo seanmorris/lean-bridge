@@ -15,6 +15,7 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
 import { callbackSubtypeJvmInstaller } from "./helpers/callback-subtype-jvm-install.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
+import { checkInstalledDotnetValues } from "./helpers/dotnet-copied-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";
@@ -64,6 +65,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
 		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
+		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
 		let installJvm;
 		if(profiles.some(profile => ["java", "kotlin"].includes(profile)))
 		{
@@ -94,6 +96,23 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 				}
 			});
 			delete observation.command;
+			if(profile === "dotnet")
+			{
+				const runtimeHandoff = join(routeRoot, "dotnet-runtime-handoff");
+				await cp(handoff, runtimeHandoff, { recursive: true });
+				const deployed = await checkInstalledDotnetValues({ consumer
+					, handoff: runtimeHandoff
+					, packages: receipt.packages.filter(pkg => pkg.target === target)
+					, environment, checks: 14
+					, fixture: { namespace: "LeanBridge.Callbacksubtypes"
+						, success: "callback-subtype-remaining-ok"
+						, rejectedSources: {}, expectedDiagnostics: {} }
+				});
+				Object.assign(observation, { sdkFreeRuntime: true, repeatExecution: true
+					, sourceFreeExecution: deployed.sourceFree
+					, runtimeVersion: deployed.runtimeVersion
+					, installedAssemblySha256: deployed.assemblySha256 });
+			}
 			if(observation.jvmEnvironment)
 			{
 				Object.assign(observation, observation.jvmEnvironment);
@@ -101,7 +120,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 			}
 			reports.push({ ...observation, route, profile
 				, bindingIrSha256: built.bindingIrSha256
-				, receiptSha256: sha256(await readFile(join(handoff, "package-set-receipt.json")))
+				, receiptSha256
 				, sourceRemovedBeforeInstallation: true });
 			await rm(consumer, { recursive: true, force: true });
 		}

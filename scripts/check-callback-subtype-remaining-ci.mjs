@@ -38,7 +38,12 @@ const cells = new Set();
 for(const item of report.reports)
 {
 	const jvmKeys = ["componentSha256", "dependencyClosureSha256", "offlineMaven", "repeatExecution", "runtimeOnly"];
-	assert.deepEqual(Object.keys(item).sort(), [...exact, ...["java", "kotlin"].includes(item.profile) ? jvmKeys : []].sort());
+	const dotnetKeys = ["installedAssemblySha256", "repeatExecution", "runtimeVersion", "sdkFreeRuntime", "sourceFreeExecution"];
+	assert.deepEqual(Object.keys(item).sort(), [
+		...exact
+		, ...["java", "kotlin"].includes(item.profile) ? jvmKeys : []
+		, ...item.profile === "dotnet" ? dotnetKeys : []
+	].sort());
 	assert.ok(profiles.includes(item.profile)); assert.ok(["ordinary", "reviewed"].includes(item.route));
 	assert.equal(item.checks, item.profile === "wit-wasi" ? 26 : 14);
 	for(const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation"])
@@ -48,6 +53,13 @@ for(const item of report.reports)
 		for(const flag of ["offlineMaven", "repeatExecution", "runtimeOnly"]) assert.equal(item[flag], true);
 		for(const field of ["componentSha256", "dependencyClosureSha256"])
 			assert.match(item[field], /^[a-f0-9]{64}$/u);
+	}
+	if(item.profile === "dotnet")
+	{
+		for(const flag of ["repeatExecution", "sdkFreeRuntime", "sourceFreeExecution"])
+			assert.equal(item[flag], true);
+		assert.match(item.installedAssemblySha256, /^[a-f0-9]{64}$/u);
+		assert.match(item.runtimeVersion, /^8\.0\./u);
 	}
 	for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])
 		assert.match(item[field], /^[a-f0-9]{64}$/u);
