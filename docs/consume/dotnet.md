@@ -608,6 +608,15 @@ depth/node limits raise `ArgumentException`; native allocation or identity-arena
 exhaustion raises `OutOfMemoryException`. Those errors allow subsequent calls.
 Malformed native output retires the runtime.
 
+When a synchronous host callback returns a selected `Subtype`, pass a generated
+`WithRecovery<TDelegate, TResult>` containing the delegate and one valid erased
+result value. The package validates both before loading native code. Lean uses
+the recovery only to finish cleanup when the callback's actual reply fails the
+selected constructor; it is never returned as successful output. A returned
+`LeanClosure` validates selected `Subtype` arguments before invoking Lean and
+remains open after a rejected argument. Source generation and exact C#
+compilation cover this contract; installed-package acceptance remains pending.
+
 Resource-containing aggregates, callable identities inside copied containers,
 retained host callbacks, asynchronous delivery and post-fork calls are not part
 of this projection.
@@ -774,7 +783,7 @@ The [installed structural checks](../evidence/structural-subtype-promotion-20261
 cover primitive `Nat`, `String` and `UInt8` bases, mixed `Fin`, transparent
 aliases with distinct constructor choices, and one closed `List` specialization.
 They cover both author routes.
-Refined callback signatures and owned Subtypes remain unsupported. These local
+Installed refined-callback acceptance and owned Subtypes remain pending. These local
 runs do not measure dispatch counts or establish hosted release-floor acceptance.
 
 ### Subtypes in copied records
@@ -824,7 +833,7 @@ again after deleting consumer sources. Standalone result-only packages omit
 input constructor selections. These checks use 64-bit machine words, .NET SDK
 8.0.424 and shared framework 8.0.30 on Linux x64/glibc 2.36. The
 [hosted C# workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-dotnet.yml)
-repeats the four source/API selections. Refined callbacks, owned, recursive,
+repeats the four source/API selections. Installed refined-callback acceptance, owned, recursive,
 dependent and broader generic Subtypes still need separate acceptance.
 
 The [hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) retains ordinary-source and reviewed NuGet packages for closed `Bool`, `String`, and `Nat` indexed records. Indices remain metadata; callers pass only generated proof-free C# records with `BigInteger` payloads.

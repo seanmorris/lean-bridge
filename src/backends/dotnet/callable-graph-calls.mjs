@@ -15,10 +15,12 @@ import { dotnetGraphAssets } from "./copied-graph-assets.mjs";
 export const generateCallableDotnetGraphSources = (model, evidence) => {
 	const callbacks = [...model.callbacks.values()];
 	const ready = model.prefix + "_graph_ready", retire = model.prefix + "_graph_retire";
-	const symbols = [...model.functions.map(fn => fn.native), ...callbacks.flatMap(cb => [cb.call, cb.dispose]), ready, retire];
+	const symbols = [...model.functions.map(fn => fn.native)
+		, ...callbacks.filter(cb => cb.direction !== "host").flatMap(cb => [cb.call, cb.dispose])
+		, ready, retire];
 	const symbol = name => `symbols[${symbols.indexOf(name)}]`;
 	const raw = value => value.callback ? `GraphCallback${value.callback.index}` : value.node.raw;
-	const publicType = value => value.callback ? value.callback.publicType : value.node.publicType;
+	const publicType = value => value.callback ? value.callback.inputType : value.node.publicType;
 	const unit = value => !value.callback && value.node.ref.kind === "primitive" && value.node.ref.name === "unit";
 	const resultType = value => value.callback ? `_V.LeanClosure<${value.callback.publicType}>` : unit(value) ? "void" : value.node.publicType;
 	const render = (name, parameters, result, native, lease = null) => {
@@ -29,9 +31,12 @@ export const generateCallableDotnetGraphSources = (model, evidence) => {
     {
         ProcessGuard.Ensure();
         ${lease?'using var active = lease.Enter();':''}
-        using (var check = new GraphScope(true))
-        {
-${parameters.map((p,index)=>p.callback?`            CallbackFrame.Validate(arg${index});`:`            GraphRuntime.Write${p.node.index}(arg${index}, check);`).join('\n')}
+		using (var check = new GraphScope(true))
+		{
+${parameters.map((p,index)=>p.callback ? p.callback.direction === "host"
+	? `            CallbackFrame.Validate(arg${index}.Function);\n            GraphRuntime.Write${p.callback.result.index}(arg${index}.Recovery, check);`
+	: `            CallbackFrame.Validate(arg${index});`
+	: `            GraphRuntime.Write${p.node.index}(arg${index}, check);`).join('\n')}
         }
         using var scope = new GraphScope();
         using var frame = new CallbackFrame(scope);
@@ -63,14 +68,17 @@ ${parameters.map((p,index)=>`        var input${index} = ${p.callback?`Borrow${p
 	const declarations = [], methods = [];
 	for(const cb of callbacks)
 	{
+		const host = cb.direction === "host";
 		const arguments_ = ["nint context", ...cb.parameters.map((node, i) => `${node.raw}* p${i}`), `${cb.result.raw}* output`];
 		declarations.push(`[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Sequential)]
-internal struct GraphCallback${cb.index} { internal nint Call; internal nint Context; }
+internal unsafe struct GraphCallback${cb.index} { internal nint Call; internal nint Context;${host ? ` internal ${cb.result.raw}* Recovery;` : ""} }
 [global::System.Runtime.InteropServices.UnmanagedFunctionPointer(global::System.Runtime.InteropServices.CallingConvention.Cdecl)]
 internal unsafe delegate uint GraphDelegate${cb.index}(${arguments_.join(', ')});`);
-		methods.push(`    private static GraphCallback${cb.index} Borrow${cb.index}(${cb.publicType} callback, CallbackFrame frame)
-    {
-        GraphDelegate${cb.index} invoke = (${arguments_.join(', ')}) =>
+		methods.push(`    private static GraphCallback${cb.index} Borrow${cb.index}(${cb.inputType} value, CallbackFrame frame)
+	{
+		${host ? "var callback = value.Function;" : "var callback = value;"}
+		CallbackFrame.Validate(callback);
+		GraphDelegate${cb.index} invoke = (${arguments_.join(', ')}) =>
         {
             if (frame.Failure is not null) return 6;
             try
@@ -86,16 +94,18 @@ internal unsafe delegate uint GraphDelegate${cb.index}(${arguments_.join(', ')})
                 return 0;
             }
             catch (global::System.Exception error) { frame.Fail(error); return 6; }
-        };
-        frame.Keep(invoke);
-        return new GraphCallback${cb.index} { Call = global::System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(invoke), Context = 0 };
-    }`);
-		methods.push(render("Invoke" + cb.index, cb.parameters.map(node => ({ node })), { node: cb.result }, cb.call, cb));
+		};
+		frame.Keep(invoke);
+		${host ? `var recovery = GraphRuntime.Write${cb.result.index}(value.Recovery, frame.Replies);
+		return new GraphCallback${cb.index} { Call = global::System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(invoke), Context = 0, Recovery = (${cb.result.raw}*)frame.Replies.Store(recovery) };`
+			: `return new GraphCallback${cb.index} { Call = global::System.Runtime.InteropServices.Marshal.GetFunctionPointerForDelegate(invoke), Context = 0 };`}
+	}`);
+		if(!host) methods.push(render("Invoke" + cb.index, cb.parameters.map(node => ({ node })), { node: cb.result }, cb.call, cb));
 	}
 	methods.push(...model.functions.map(fn => render("Call" + fn.index, fn.parameters, fn.result, fn.native)));
 	const api = `using _V = global::${model.namespace};
 namespace ${model.namespace};
-${publicClosure}
+${publicClosure(callbacks.some(callback => callback.direction === "host"))}
 public static class Api
 {
 ${model.functions.map(fn=>`    public static ${resultType(fn.result)} ${fn.publicName}(${fn.parameters.map((p,i)=>`${publicType(p)} @${fn.parameterNames[i]}`).join(', ')}) => Interop.GraphCalls.Call${fn.index}(${fn.parameterNames.map(name=>'@'+name).join(', ')});`).join('\n')}

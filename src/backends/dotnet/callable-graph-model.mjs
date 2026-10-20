@@ -4,6 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
 import { compileCopiedDotnetGraphPackageModel } from "./copied-graph-package.mjs";
@@ -23,8 +24,13 @@ export const compileCallableDotnetGraphPackageModel = ir => {
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
 		const unit = result.ref.kind === "primitive" && result.ref.name === "unit";
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const publicType = `global::System.${unit ? "Action" : "Func"}<${[...parameters.map(node => node.publicType), ...unit ? [] : [result.publicType]].join(", ")}>`;
 		return [signature.id, { ...signature, index, parameters, result, unit
-			, publicType: `global::System.${unit ? "Action" : "Func"}<${[...parameters.map(node => node.publicType), ...unit ? [] : [result.publicType]].join(", ")}>`
+			, direction, publicType
+			, inputType: direction === "host"
+				? `global::${generated.namespace}.WithRecovery<${publicType}, ${result.publicType}>`
+				: publicType
 			, call: `${generated.layout.prefix}_callback_${signature.key}_lease_call`
 			, dispose: `${generated.layout.prefix}_callback_${signature.key}_lease_dispose` }];
 	}));

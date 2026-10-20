@@ -37,11 +37,12 @@ internal sealed class CallbackFrame : global::System.IDisposable
             throw new global::System.InvalidOperationException("A callback must run on its initiating thread");
     }
     internal void Fail(global::System.Exception failure) => global::System.Threading.Interlocked.CompareExchange(ref Failure, failure, null);
-    internal void Finish(uint status)
-    {
-        if (Failure is not null) global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(Failure);
-        if (status == 6) throw new LeanBridgeException(6, "Host callback failed");
-        GraphRuntime.Status(status);
+	internal void Finish(uint status)
+	{
+		if (Failure is not null) global::System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(Failure);
+		if (status == 6) throw new LeanBridgeException(6, "Host callback failed");
+		if (status == 10) throw new LeanBridgeException(1, "Host callback result failed its Lean constructor");
+		GraphRuntime.Status(status);
     }
     public void Dispose() { global::System.GC.KeepAlive(roots); roots.Clear(); }
 }
@@ -95,7 +96,16 @@ internal readonly struct ActiveCall : global::System.IDisposable
 }
 `;
 
-export const publicClosure = `
+/**
+ * Emit public closure ownership and the optional callback recovery carrier.
+ *
+ * @param recovery - Include the host-direction selected-Subtype wrapper.
+ */
+export const publicClosure = (recovery = false) => `
+${recovery ? `public sealed record WithRecovery<TDelegate, TResult>(TDelegate Function, TResult Recovery)
+    where TDelegate : global::System.Delegate;
+
+` : ""}
 public sealed class LeanClosure<TDelegate> : global::System.IDisposable where TDelegate : global::System.Delegate
 {
     private readonly Interop.ClosureLease lease;

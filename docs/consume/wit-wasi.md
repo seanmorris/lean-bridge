@@ -52,7 +52,7 @@ local load-admission ceiling of 8.
 
 The [required WIT workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-wit.yml)
 runs those four selections on the pinned Nix-built Wasmtime C API. The local
-archive does not establish its hosted glibc 2.38 result. Refined callbacks,
+archive does not establish its hosted glibc 2.38 result. Installed refined-callback acceptance,
 owned values, recursive graphs, dependent and broader generic Subtypes, plus
 constructor/source entry counts, remain separate work.
 
@@ -960,6 +960,15 @@ invalidates its aliases and defers active cleanup. The [recursive limits](#recur
 also apply to callback arguments, replies and captured values. Limits leave the
 session usable; malformed native outputs retire the shared runtime.
 
+For a host callback returning a selected `Subtype`, its generated typed
+`*_callbackN_create` helper takes an additional pointer to one valid erased
+result value. Registration validates and owns a copy before application
+execution. Lean uses it only when the callback's actual reply fails the selected
+constructor; it is not successful output. Returned function helpers validate
+selected `Subtype` arguments before entering Lean and keep the token usable
+after rejection. The generated host and headers pass strict C and C++ source
+checks; installed archive acceptance remains pending.
+
 ### Bounded integers
 
 A Lean `Fin n` parameter or result uses the `Nat` representation: `list<u32>` little-endian limbs. The WIT text is the same with or without the bound. For `Library.mirror (value : Fin 10) : Fin 10`, calling `mirror` with `[3]` returns `[6]`. Calling it with `[10]` fails the Wasmtime call with an error whose message is `arg0 is not below its Fin 10 bound`, and the result slot is unchanged. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. The package README lists each export's bounds.
@@ -1102,7 +1111,7 @@ The [installed structural checks](../evidence/structural-subtype-promotion-20261
 cover primitive `Nat`, `String` and `UInt8` bases, mixed `Fin`, transparent
 aliases with distinct constructor choices, and one closed `List` specialization.
 They cover both author routes.
-Subtype fields in nominal records or variants, refined callback signatures and
+Subtype fields in nominal records or variants, installed refined-callback acceptance and
 owned Subtypes remain unsupported. These local runs do not measure dispatch
 counts or establish hosted release-floor acceptance.
 

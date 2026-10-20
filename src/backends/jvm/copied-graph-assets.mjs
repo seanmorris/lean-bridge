@@ -23,8 +23,8 @@ export const jvmGraphAssets = (model, evidence, callable = false) => {
 	const array = items => "new java.lang.invoke.MethodHandle[] { " + items.join(", ") + " }";
 	const resolved = callable ? "                var resolved = new Links("
 		+ array(model.functions.map(fn => lookup(fn.native, descriptor(fn.parameters.length)))) + ", "
-		+ array([...model.callbacks.values()].map(cb => lookup(cb.call, descriptor(cb.parameters.length, true)))) + ", "
-		+ array([...model.callbacks.values()].map(cb => lookup(cb.dispose, "java.lang.foreign.FunctionDescriptor.ofVoid(" + long + ")")))
+		+ array([...model.callbacks.values()].map(cb => cb.direction === "host" ? "null" : lookup(cb.call, descriptor(cb.parameters.length, true)))) + ", "
+		+ array([...model.callbacks.values()].map(cb => cb.direction === "host" ? "null" : lookup(cb.dispose, "java.lang.foreign.FunctionDescriptor.ofVoid(" + long + ")")))
 		+ ", clear, lifecycle);" : `                var resolved = new _GraphRuntime.Target[${model.functions.length}];
 ${model.functions.map((fn, index) => `                resolved[${index}] = new _GraphRuntime.Target(downcall(lookup, "${fn.name}_graph", java.lang.foreign.FunctionDescriptor.of(java.lang.foreign.ValueLayout.JAVA_INT, ${Array.from({ length: fn.parameters.length + 1 }, () => "java.lang.foreign.ValueLayout.ADDRESS").join(", ")})), ${diagnostics ? "diagnostic, " : ""}clear, lifecycle);`).join("\n")}`;
 	if(evidence === null) return `package ${model.namespace};

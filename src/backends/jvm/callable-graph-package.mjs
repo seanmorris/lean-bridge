@@ -15,6 +15,7 @@ import { jvmGraphAssets } from './copied-graph-assets.mjs';
  */
 export const generateCallableJvmGraphPackage = (ir, evidence = null) => {
 	const model = generateCallableJvmGraphSources(ir), files = { ...model.files };
+	const recovery = [...model.callbacks.values()].some(callback => callback.direction === 'host');
 	files['src/main/java/' + model.namespace.replaceAll('.', '/') + '/_CallableGraphNative.java'] = jvmGraphAssets(model, evidence, true);
 	files['README.md'] = `# ${model.namespace}
 
@@ -42,6 +43,14 @@ defers release until that call returns. Cleaner reclamation is a fallback, not
 a substitute for explicit close. Host exceptions keep their original identity
 after native cleanup. Borrowed callbacks expire when the exporting call ends.
 
+${recovery ? `A host callback returning a selected Lean Subtype uses a typed WithRecovery
+record containing its SAM and one value of the exact erased result type. The
+recovery is validated before Lean or the callback runs, is used only to finish
+a rejected native call and is never successful output. Returned LeanClosure
+values validate selected Subtype inputs before their body runs and remain open
+after rejection. Java and Kotlin expose the same directional contract.
+
+` : ''}
 Conversion permits 128 value levels, 262144 visited values, a 16 MiB native-copy
 budget and a separate 16 MiB accounted host-storage budget. These do not measure
 Lean working memory or every JVM allocation. Reentry allows 64 active calls;

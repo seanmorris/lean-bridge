@@ -14,6 +14,7 @@ const helperName = (model, fn) => fn.callback ? `${model.prefix}_wasmtime_functi
 const parameters = (model, nodes) => nodes.map((node, i) => node.kind === "callback"
 	? `${model.prefix}_wasmtime_function arg${i}` : `const ${node.name} *arg${i}`);
 const output = (model, node) => `${node.kind === "callback" ? `${model.prefix}_wasmtime_function` : node.name} *out`;
+const recovery = callback => callback.direction === "host" ? `const ${callback.result.name} *recovery` : null;
 const callSignature = (model, fn) => `wasmtime_error_t *${helperName(model, fn)}(${[`${model.prefix}_wasmtime *session`, ...parameters(model, fn.parameters), output(model, fn.result)].join(", ")})`;
 const copySignature = node => `wasmtime_error_t *${node.name}_wasmtime_copy(const ${node.name} *value, ${node.name} *out)`;
 
@@ -58,7 +59,7 @@ ${model.nodes.filter(node => node.aggregate).map(node => copySignature(node) + "
 ${[...model.callbacks.values()].map(callback => {
 	const base = callbackBase(model, callback);
 	return `typedef wasmtime_error_t *(*${base}_fn)(${["void *data", ...parameters(model, callback.parameters), output(model, callback.result)].join(", ")});
-wasmtime_error_t *${base}_create(${model.prefix}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *), ${model.prefix}_wasmtime_function *out);`;
+wasmtime_error_t *${base}_create(${model.prefix}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *)${recovery(callback) ? `, ${recovery(callback)}` : ""}, ${model.prefix}_wasmtime_function *out);`;
 }).join("\n")}
 #ifdef __cplusplus
 }
@@ -118,12 +119,13 @@ done:
 }`).join("\n");
 
 const callbacks = model => [...model.callbacks.values()].map(callback => {
-	const base = callbackBase(model, callback), result = callback.result;
+	const base = callbackBase(model, callback), result = callback.result, host = callback.direction === "host";
 	return `
-typedef struct { ${base}_fn callback; void *data; void (*release)(void *); } ${base}_context;
+typedef struct { ${base}_fn callback; void *data; void (*release)(void *);${host ? ` ${result.name} recovery;` : ""} } ${base}_context;
 static void ${base}_release(void *data) {
   ${base}_context *context = data;
   if (context->release) context->release(context->data);
+  ${host && result.aggregate ? `${result.name}_clear(&context->recovery);` : ""}
   free(context);
 }
 static wasmtime_error_t *${base}_invoke(void *data, const wasmtime_component_val_t *args, size_t count, wasmtime_component_val_t *out) {
@@ -143,13 +145,23 @@ done:
   lb_scope_close(&output.memory); lb_scope_close(&input.memory);
   return failure;
 }
-wasmtime_error_t *${base}_create(${model.prefix}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *), ${model.prefix}_wasmtime_function *out) {
-  if (!callback || !lb_thread(session) || session->closing || !lb_buffer(out, 1, sizeof(*out), _Alignof(${model.prefix}_wasmtime_function)) || *out) return wasmtime_error_new("Invalid typed WIT callback registration");
+wasmtime_error_t *${base}_create(${model.prefix}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *)${host ? `, const ${result.name} *recovery` : ""}, ${model.prefix}_wasmtime_function *out) {
+  if (!callback || !lb_thread(session) || session->closing${host ? ` || !lb_buffer(recovery, 1, sizeof(*recovery), _Alignof(${result.name}))` : ""} || !lb_buffer(out, 1, sizeof(*out), _Alignof(${model.prefix}_wasmtime_function)) || *out) return wasmtime_error_new("Invalid typed WIT callback registration");
   ${base}_context *context = malloc(sizeof(*context));
   if (!context) return wasmtime_error_new("Cannot allocate typed WIT callback context");
-  *context = (${base}_context){callback, data, release};
-  wasmtime_error_t *failure = ${model.prefix}_wasmtime_callback_create(session, "${callback.resource.witName}", ${base}_invoke, context, ${base}_release, out);
-  if (failure) free(context);
+  *context = (${base}_context){.callback = callback, .data = data, .release = release};
+  wasmtime_error_t *failure = NULL;
+  ${host ? result.aggregate
+		? `failure = ${result.name}_wasmtime_copy(recovery, &context->recovery);
+  if (failure) { free(context); return failure; }`
+		: `context->recovery = *recovery;` : ""}
+  failure = ${model.prefix}_wasmtime_callback_create(session, "${callback.resource.witName}", ${base}_invoke, context, ${base}_release, out);
+  if (failure) { ${host && result.aggregate ? `${result.name}_clear(&context->recovery); ` : ""}free(context); }
+  ${host ? `else {
+    lb_entry *entry = lb_entry_find(session, *out);
+    if (!entry) { failure = wasmtime_error_new("Missing typed WIT callback recovery owner"); ${model.prefix}_wasmtime_function_close(session, out); }
+    else entry->recovery = &context->recovery;
+  }` : ""}
   return failure;
 }`;
 }).join("\n");

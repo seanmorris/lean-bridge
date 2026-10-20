@@ -4,6 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from '../../capsule/node.mjs';
+import { callbackSubtypeDirection } from '../../abi/refinements.mjs';
 import { createNativeCallableGraphDescriptor } from '../../build/native-callable-graph.mjs';
 import { compileNativeCallableGraphPayloads } from '../c/native-callable-graph-payloads.mjs';
 import { compileCopiedPhpGraphPackageModel } from './copied-graph-package.mjs';
@@ -27,9 +28,11 @@ export const compileCallablePhpGraphPackageModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
 		const projected = {
 			...signature
 			, index
+			, direction
 			, parameters
 			, result
 			, docType: `callable(${parameters.map(node => node.docType).join(', ')}): ${result.docType}`
@@ -39,7 +42,7 @@ export const compileCallablePhpGraphPackageModel = ir => {
 		return [signature.id, projected];
 	}));
 	const value = ref => callbacks.has(ref.id) ? { callback: callbacks.get(ref.id) } : { node: copy(ref) };
-	const names = new Set();
+	const names = new Set([...callbacks.values()].some(callback => callback.direction === 'host') ? ['with_recovery'] : []);
 	const functions = ir.declarations.map((declaration, index) => {
 		const publicName = phpClassName(cIdentifier(declaration.name));
 		if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(publicName) || names.has(publicName.toLowerCase()))

@@ -14,19 +14,21 @@ import { compileCallableWitGraphPackageModel } from "../src/backends/wit/callabl
 import { renderWitGraphCallableHostHeader, renderWitGraphCallableHostSource } from "../src/backends/wit/callable-graph-host.mjs";
 import { generateNativeCallableGraphCalls } from "../src/backends/c/native-callable-graph-calls.mjs";
 import { brokerHeader } from "../src/backends/native/runtime-broker.mjs";
-import { structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
+import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { nativeRecursiveCallableReviewedIr } from "./helpers/native-recursive-callable-fixture.mjs";
 import { runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { witRecursiveCallableValues } from "./helpers/wit-recursive-callable-values.mjs";
 import { witRecursiveMixedFixture, witRecursivePrimitiveConsumer } from "./helpers/wit-recursive-callable-mixed.mjs";
 
-for(const fixture of ["independent", "nested", "mixed"])
+for(const fixture of ["independent", "nested", "mixed", "directional-subtype"])
 	test(`recursive WIT ${fixture} host matches the original native callback ABI under strict C`, {
 		skip: process.env.LEAN_BRIDGE_WIT_RECURSIVE_CALLABLE_TEST !== "1"
 	}, async t => {
 		const ir = fixture === "independent" ? structuredCallableReviewedIr({ recursive: true })
-			: fixture === "nested" ? nativeRecursiveCallableReviewedIr() : (await witRecursiveMixedFixture()).ir;
+			: fixture === "nested" ? nativeRecursiveCallableReviewedIr()
+				: fixture === "mixed" ? (await witRecursiveMixedFixture()).ir
+					: structuredCallableDirectionalSubtypeIr().ir;
 		const model = compileCallableWitGraphModel(ir);
 		const native = generateNativeCallableGraphCalls(ir, model.native.descriptor, { initializer: "initialize_LeanBridgeNative0000000000000000" });
 		assert.deepEqual(model.layout, native.layout);
@@ -56,7 +58,7 @@ for(const fixture of ["independent", "nested", "mixed"])
 				, "-Wall", "-Wextra", "-Werror"
 				, "-I", root, "-I", join(sdk, "include")
 				, "-fsyntax-only", "headers.c"], root, process.env);
-		if(fixture !== "independent")
+		if(["nested", "mixed"].includes(fixture))
 		{
 			const consumer = witRecursiveCallableValues(packaged);
 			assert.doesNotMatch(consumer, /lb_graph_|lb_entry_|host\.c/);

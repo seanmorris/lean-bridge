@@ -840,6 +840,16 @@ Zend resource for each owned function, so its 64-bit identity never passes
 through a 32-bit PHP integer. Its borrowed callback identities expire with the
 call and cannot be reused after exhaustion.
 
+For native PHP, a synchronous host callback returning a selected `Subtype` must
+be wrapped with the generated namespace's `with_recovery($callback, $value)`
+function. The package validates the callable and the recovery's exact erased result shape
+before loading native libraries. Lean uses that recovery only to finish a call
+whose actual callback reply fails the selected constructor; it is not successful
+output. Returned `LeanClosure` objects validate selected `Subtype` arguments
+before invoking Lean and remain usable after rejection. Generated PHP source and
+the native carrier compile checks cover this contract; installed Composer
+acceptance remains pending. PHP-Wasm callback Subtypes remain separate work.
+
 ### Bounded integers
 
 In native PHP packages, a Lean `Fin n` parameter or result is a `Brick\Math\BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger::of(3))` returns 6. `mirror(BigInteger::of(10))` throws `LeanBridgeError` with code 1 and the message `arg0 is not below its Fin 10 bound`. A negative value throws `ValueError` and a non-BigInteger argument throws `TypeError`, as they do for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. PHPDoc on each function and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. See the [installed scalar checks](evidence/native-fin-hosts-20261006.md) and the [container checks](evidence/native-fin-containers-20261006.md). Both ordinary-source and independently reviewed native PHP packages also check Fin inside pairs, active `Except` branches and plain record or variant fields, including Array/List/Option compositions. The [hosted product and field checks](evidence/fin-native-hosted-20261010/receipt.json) exercise those shapes through installed Composer packages. These reports do not add PHP-Wasm or Fin callback coverage.
@@ -1629,7 +1639,7 @@ Both routes reproduce all three packages and run the twelve Node and Chromium
 loading, installation and strictness arrangements after offline installation
 and relocation on wasm32 PHP 8.4.1.
 
-Refined callbacks, owned, dependent and broader generic Subtypes remain
+Installed native refined-callback acceptance, owned, dependent and broader generic Subtypes remain
 pending. Recursive checked-record combinations remain separate work. The
 local PHP-Wasm checks do not measure constructor/source entry counts or dispatch.
 

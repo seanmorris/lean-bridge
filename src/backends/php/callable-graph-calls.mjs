@@ -26,7 +26,7 @@ export const generateCallablePhpGraphSources = ir => {
 	const model = compileCallablePhpGraphPackageModel(ir), files = { ...model.files };
 	const copied = node => ({ type: node.index, aggregate: node.aggregate });
 	const value = site => site.callback ? { callback: site.callback.index } : copied(site.node);
-	const callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, parameters: cb.parameters.map(copied), result: copied(cb.result), call: cb.call, dispose: cb.dispose }));
+	const callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, direction: cb.direction, parameters: cb.parameters.map(copied), result: copied(cb.result), call: cb.call, dispose: cb.dispose }));
 	const functions = model.functions.map(fn => ({ name: fn.publicName, symbol: fn.native, parameters: fn.parameters.map(value), result: value(fn.result) }));
 	const definitions = [
 		'uint32_t ' + model.prefix + '_graph_initialize(void);'
@@ -34,15 +34,28 @@ export const generateCallablePhpGraphSources = ir => {
 		, 'void ' + model.prefix + '_graph_retire(void);'
 		, 'void ' + model.prefix + '_php_graph_clear(void *);'
 		, ...callbacks.flatMap(cb => [
-			'typedef struct { uint32_t (*call)(void *, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + '); void *context; } ' + cb.ctype + ';'
+			'typedef struct { uint32_t (*call)(void *, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + '); void *context;' + (cb.direction === 'host' ? ' void *recovery;' : '') + ' } ' + cb.ctype + ';'
 			, 'uint32_t ' + cb.call + '(uint64_t, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + ');'
 			, 'void ' + cb.dispose + '(uint64_t);'])
 		, ...functions.map(fn => 'uint32_t ' + fn.symbol + '(' + Array(fn.parameters.length + 1).fill('void *').join(', ') + ');')
 	].join('\n');
 	const doc = site => site.callback ? site.callback.docType : site.node.docType;
-	files['src/Api.php'] += '\n' + phpClosurePublic + "\nrequire_once __DIR__ . '/Internal/Native.php';\n\n" + model.functions.map(fn => [
+	const recovery = [...model.callbacks.values()].some(callback => callback.direction === 'host') ? `
+final readonly class WithRecovery
+{
+    public function __construct(public mixed $function, public mixed $recovery) {
+        if (\\func_num_args() !== 2) throw new \\ArgumentCountError('WithRecovery requires a callback and typed value');
+        if (!\\is_callable($function)) throw new \\TypeError('WithRecovery requires a synchronous callable');
+    }
+}
+function with_recovery(mixed $function, mixed $recovery): WithRecovery {
+    if (\\func_num_args() !== 2) throw new \\ArgumentCountError('with_recovery requires a callback and typed value');
+    return new WithRecovery($function, $recovery);
+}
+` : '';
+	files['src/Api.php'] += '\n' + phpClosurePublic + recovery + "\nrequire_once __DIR__ . '/Internal/Native.php';\n\n" + model.functions.map(fn => [
 		'/**'
-		, ...fn.parameters.map((site, index) => ' * @param ' + doc(site) + ' $' + fn.parameterNames[index])
+		, ...fn.parameters.map((site, index) => ' * @param ' + (site.callback?.direction === 'host' ? 'WithRecovery' : doc(site)) + ' $' + fn.parameterNames[index])
 		, ' * @return ' + (fn.result.callback ? 'LeanClosure&' + doc(fn.result) : doc(fn.result))
 		, ' */'
 		, 'function ' + fn.publicName + '(' + fn.parameterNames.map(name => 'mixed $' + name).join(', ') + '): ' + (fn.result.callback ? 'LeanClosure' : fn.result.node.publicType) + ' {'

@@ -147,8 +147,9 @@ final class CallableRuntime
         if (!$this->ffi->{$this->catalog['prefix'].'_graph_ready'}()) throw new GRAPH_NAMESPACE\LeanBridgeError('Native runtime is retired',5);
     }
     private function status(int $status): void {
-        if (!in_array($status,[0,1,2,3,5,6],true)) throw new GraphInvalidNative('Invalid native callback output or status',4);
-        if ($status!==0) throw new GRAPH_NAMESPACE\LeanBridgeError('Native callable failed with status '.$status,$status);
+		if (!in_array($status,[0,1,2,3,5,6,10],true)) throw new GraphInvalidNative('Invalid native callback output or status',4);
+		if ($status===10) throw new GRAPH_NAMESPACE\LeanBridgeError('Host callback result failed its Lean constructor',1);
+		if ($status!==0) throw new GRAPH_NAMESPACE\LeanBridgeError('Native callable failed with status '.$status,$status);
     }
     private static function callback(mixed $value): \Closure {
         if (!is_callable($value)) throw new \TypeError('Expected a synchronous callable');
@@ -158,7 +159,7 @@ final class CallableRuntime
             if ($parameter->isPassedByReference()) throw new \TypeError('Callbacks cannot take references');
         return $callback;
     }
-    private function borrow(int $signature, \Closure $callback, NativeCallableFrame $frame): \FFI\CData {
+	private function borrow(int $signature, \Closure $callback, NativeCallableFrame $frame, ?\FFI\CData $recovery): \FFI\CData {
         $cb=$this->catalog['callbacks'][$signature]; $ffi=$this->load();
         if (!isset($this->stubs[$signature])) {
             $stub=$ffi->new($cb['ctype']);
@@ -187,8 +188,9 @@ final class CallableRuntime
         if ($this->nextContext===PHP_INT_MAX) throw new \OverflowException('Callback context identities exhausted');
         $id=++$this->nextContext;
         $input=$ffi->new($cb['ctype']);
-        $input->call=$this->stubs[$signature]->call;
-        $input->context=$ffi->cast('void *',$id);
+		$input->call=$this->stubs[$signature]->call;
+		$input->context=$ffi->cast('void *',$id);
+		if ($cb['direction']==='host') $input->recovery=$recovery;
         $frame->ids[]=$id; $this->contexts[$id]=[$signature,$callback,$frame];
         return $input;
     }
@@ -199,10 +201,18 @@ final class CallableRuntime
     private function execute(array $fn,array $arguments,?int $token=null): mixed {
         Lease::ensureCall();
         if (!array_is_list($arguments) || count($arguments)!==count($fn['parameters'])) throw new \ArgumentCountError('Wrong callable arity');
-        $copiedTypes=[]; $copiedValues=[]; $callbacks=[];
-        foreach ($fn['parameters'] as $index=>$node) {
-            if (isset($node['callback'])) $callbacks[$index]=self::callback($arguments[$index]);
-            else { $copiedTypes[]=$node['type']; $copiedValues[]=$arguments[$index]; }
+		$copiedTypes=[]; $copiedValues=[]; $callbacks=[]; $rootSites=[]; $recoverySites=[];
+		foreach ($fn['parameters'] as $index=>$node) {
+			if (isset($node['callback'])) {
+				$cb=$this->catalog['callbacks'][$node['callback']]; $value=$arguments[$index];
+				if ($cb['direction']==='host') {
+					if (!$value instanceof GRAPH_NAMESPACE\WithRecovery) throw new \TypeError('This callback requires with_recovery(function, value)');
+					$callbacks[$index]=self::callback($value->function); $recoverySites[$index]=count($copiedTypes);
+					$copiedTypes[]=$cb['result']['type']; $copiedValues[]=$value->recovery;
+				} else $callbacks[$index]=self::callback($value);
+			} else {
+				$rootSites[$index]=count($copiedTypes); $copiedTypes[]=$node['type']; $copiedValues[]=$arguments[$index];
+			}
         }
         if ($this->depth===64) throw new \OverflowException('Lean callable reentry limit exceeded');
         ++$this->depth;
@@ -214,12 +224,12 @@ final class CallableRuntime
             $result=$owned ? null : $scope->schema->nodes[$resultType];
             $output=$scope->allocate($owned ? 8 : $result['size']);
             if (!$owned && $result['kind']==='variant') $scope->schema->ffi->cast('uint32_t *',$output+16)[0]=4294967295;
-            $ffi=$this->load(); $inputs=[]; $owners=[]; $next=0;
-            foreach ($fn['parameters'] as $index=>$node) {
-                if (isset($node['callback'])) {
-                    $owner=$this->borrow($node['callback'],$callbacks[$index],$frame);
-                    $owners[]=$owner; $inputs[]=\FFI::addr($owner);
-                } else $inputs[]=$roots[$next++];
+			$ffi=$this->load(); $inputs=[]; $owners=[];
+			foreach ($fn['parameters'] as $index=>$node) {
+				if (isset($node['callback'])) {
+					$owner=$this->borrow($node['callback'],$callbacks[$index],$frame,isset($recoverySites[$index]) ? $roots[$recoverySites[$index]] : null);
+					$owners[]=$owner; $inputs[]=\FFI::addr($owner);
+				} else $inputs[]=$roots[$rootSites[$index]];
             }
             $this->status($ffi->{$this->catalog['prefix'].'_graph_initialize'}()); $entered=true;
             if ($token!==null) array_unshift($inputs,$token);

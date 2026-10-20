@@ -36,10 +36,30 @@ export const generateCallableJvmGraphSources = ir => {
 		}).join(', ') + '>';
 	};
 	const name = (cb, k) => k ? cb.kotlinJavaName : cb.publicName;
-	const parameter = (value, k) => value.callback ? name(value.callback, k) : type(value.node, k);
+	const callbackParameter = (callback, k) => {
+		if(callback.direction !== 'host') return name(callback, k);
+		const rawResultType = type(callback.result, k);
+		const resultType = boxes[rawResultType] ? 'java.lang.' + boxes[rawResultType] : rawResultType;
+		return 'WithRecovery<' + name(callback, k)
+			+ ', ' + resultType + '>';
+	};
+	const parameter = (value, k) => value.callback ? callbackParameter(value.callback, k) : type(value.node, k);
+	const kotlinApiParameter = value => {
+		if(!value.callback) return model.kotlin.publicTypes[value.node.id];
+		if(value.callback.direction !== 'host') return quoted(ns + '.' + value.callback.kotlinJavaName);
+		return quoted(ns + '.WithRecovery')
+			+ '<' + quoted(ns + '.' + value.callback.kotlinJavaName)
+			+ ', ' + model.kotlin.publicTypes[value.callback.result.id] + '>';
+	};
 	const result = (value, k) => value.callback ? name(value.callback, k) + '.LeanClosure' : unit(value.node) ? 'void' : type(value.node, k);
 	const add = (path, source, isPublic = false) => { if(Object.hasOwn(files, path)) throw new Error('Generated source collision ' + path); files[path] = source; (isPublic ? publicFiles : internalFiles).push(path); };
 	const methods = [];
+	if([...model.callbacks.values()].some(callback => callback.direction === 'host'))
+		add(java + '/WithRecovery.java', `package ${ns};
+public record WithRecovery<F, R>(F function, R recovery) {
+    public WithRecovery { java.util.Objects.requireNonNull(function); java.util.Objects.requireNonNull(recovery); }
+}
+`, true);
 	const render = (method, parameters, output, native, k, lease = false) => {
 		const catalog = k ? '_KotlinGraphTypes.CATALOG' : '_GraphTypes.CATALOG';
 		const resultSize = output.callback ? '8' : String(output.node.size), resultAlignment = output.callback ? '8' : String(output.node.alignment);
@@ -51,7 +71,11 @@ export const generateCallableJvmGraphSources = ir => {
             ${lease ? 'long token = lease.enter(); try {' : ''}
             var catalog = ${catalog};
             try (var check = new _GraphRuntime.Scope(true)) {
-${parameters.map((value, i) => '                ' + (value.callback ? 'java.util.Objects.requireNonNull(arg' + i + ');' : `_GraphRuntime.write(catalog, ${value.node.index}, arg${i}, check);`)).join('\n')}
+${parameters.map((value, i) => '                ' + (value.callback
+	? value.callback.direction === 'host'
+		? `java.util.Objects.requireNonNull(arg${i}); java.util.Objects.requireNonNull(arg${i}.function()); _GraphRuntime.write(catalog, ${value.callback.result.index}, arg${i}.recovery(), check);`
+		: `java.util.Objects.requireNonNull(arg${i});`
+	: `_GraphRuntime.write(catalog, ${value.node.index}, arg${i}, check);`)).join('\n')}
             }
             var links = _CallableGraphNative.resolve();
             try (var scope = new _GraphRuntime.Scope(false); var frame = new CallbackFrame(catalog, scope, links.lifecycle())) {
@@ -80,6 +104,7 @@ ${parameters.map((value, i) => `                    var input${i} = ${value.call
 	};
 	for(const cb of model.callbacks.values())
 	{
+		const hostDirection = cb.direction === 'host';
 		for(const k of cb.structured ? [false, true] : [false])
 		{
 			const family = k ? 'Kotlin' : 'Java', publicName = name(cb, k), output = { node: cb.result };
@@ -88,7 +113,7 @@ ${parameters.map((value, i) => `                    var input${i} = ${value.call
 @FunctionalInterface
 public interface ${publicName} {
     ${result(output, k)} invoke(${args});
-    final class LeanClosure implements ${publicName}, java.lang.AutoCloseable {
+${hostDirection ? '' : `    final class LeanClosure implements ${publicName}, java.lang.AutoCloseable {
         private final _CallableGraphRuntime.ClosureLease lease;
         private final java.lang.ref.Cleaner.Cleanable cleanable;
         LeanClosure(_CallableGraphRuntime.ClosureLease lease) { this.lease = lease; cleanable = _CallableGraphRuntime.register(this, lease); }
@@ -99,6 +124,7 @@ public interface ${publicName} {
         public boolean isClosed() { return lease.isClosed(); }
         @Override public void close() { lease.close(); cleanable.clean(); }
     }
+`}
 }
 `, true);
 			const descriptor = 'DESC' + family + cb.index, host = 'Host' + family + cb.index, thunk = 'callback' + family + cb.index;
@@ -122,12 +148,16 @@ ${cb.parameters.map((node, i) => `            var arg${i} = (${type(node, k)})_G
             return 0;
         } catch (Throwable error) { frame.fail(error); return 6; }
     }
-    private static java.lang.foreign.MemorySegment borrow${family}${cb.index}(${publicName} callback, CallbackFrame frame) {
-        var host = new ${host}(java.util.Objects.requireNonNull(callback), frame); frame.keep(host);
-        var stub = java.lang.foreign.Linker.nativeLinker().upcallStub(UPCALL${family}${cb.index}.bindTo(host), ${descriptor}, frame.replies.arena);
-        var output = frame.replies.allocate(16, 8); output.set(java.lang.foreign.ValueLayout.ADDRESS, 0, stub); return output;
-    }`);
-			methods.push(render('invoke' + family + cb.index, cb.parameters.map(node => ({ node })), output, `links.invokes()[${cb.index}]`, k, true));
+	private static java.lang.foreign.MemorySegment borrow${family}${cb.index}(${parameter({ callback: cb }, k)} value, CallbackFrame frame) {
+		var callback = ${hostDirection ? 'value.function()' : 'value'};
+		var host = new ${host}(java.util.Objects.requireNonNull(callback), frame); frame.keep(host);
+		var stub = java.lang.foreign.Linker.nativeLinker().upcallStub(UPCALL${family}${cb.index}.bindTo(host), ${descriptor}, frame.replies.arena);
+		var output = frame.replies.allocate(${hostDirection ? '24' : '16'}, 8); output.set(java.lang.foreign.ValueLayout.ADDRESS, 0, stub);
+		${hostDirection ? `var recovery = _GraphRuntime.write(frame.catalog, ${cb.result.index}, value.recovery(), frame.replies);
+		output.set(java.lang.foreign.ValueLayout.ADDRESS, 16, recovery);` : ''}
+		return output;
+	}`);
+			if(!hostDirection) methods.push(render('invoke' + family + cb.index, cb.parameters.map(node => ({ node })), output, `links.invokes()[${cb.index}]`, k, true));
 		}
 		add(kotlin + '/kotlin/' + cb.publicName + '.kt', `package ${quoted(ns + '.kotlin')}
 typealias ${quoted(cb.publicName)} = ${quoted(ns + '.' + cb.kotlinJavaName)}
@@ -159,7 +189,7 @@ ${model.functions.map(fn => `    public static ${result(fn.result, false)} ${fn.
 `, true);
 	add(kotlin + '/_KotlinCallableGraphApiCalls.kt', `package ${quoted(ns)}
 internal object _KotlinCallableGraphApiCalls {
-${model.functions.map(fn => `    @kotlin.jvm.JvmSynthetic fun call${fn.index}(${fn.parameters.map((value, i) => 'arg' + i + ': ' + (value.callback ? quoted(ns + '.' + value.callback.kotlinJavaName) : model.kotlin.publicTypes[value.node.id])).join(', ')}) =
+${model.functions.map(fn => `    @kotlin.jvm.JvmSynthetic fun call${fn.index}(${fn.parameters.map((value, i) => 'arg' + i + ': ' + kotlinApiParameter(value)).join(', ')}) =
         _CallableGraphRuntime.callKotlin${fn.index}(${fn.parameters.map((_, i) => 'arg' + i).join(', ')})`).join('\n')}
 }
 `);
@@ -167,7 +197,7 @@ ${model.functions.map(fn => `    @kotlin.jvm.JvmSynthetic fun call${fn.index}(${
 class Api private constructor() {
     companion object {
 ${model.functions.map(fn => `        @kotlin.jvm.JvmStatic
-        fun ${quoted(fn.publicName)}(${fn.parameters.map((value, i) => quoted(fn.parameterNames[i]) + ': ' + (value.callback ? quoted(ns + '.' + value.callback.kotlinJavaName) : model.kotlin.publicTypes[value.node.id])).join(', ')})${fn.result.callback ? '' : ': ' + (unit(fn.result.node) ? 'kotlin.Unit' : model.kotlin.publicTypes[fn.result.node.id])} =
+		fun ${quoted(fn.publicName)}(${fn.parameters.map((value, i) => quoted(fn.parameterNames[i]) + ': ' + kotlinApiParameter(value)).join(', ')})${fn.result.callback ? '' : ': ' + (unit(fn.result.node) ? 'kotlin.Unit' : model.kotlin.publicTypes[fn.result.node.id])} =
             ${quoted(ns)}._KotlinCallableGraphApiCalls.call${fn.index}(${fn.parameterNames.map(quoted).join(', ')})`).join('\n')}
     }
 }

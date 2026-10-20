@@ -15,6 +15,7 @@ import { compileCallableDotnetGraphPackageModel } from "./callable-graph-model.m
  */
 export const generateCallableDotnetGraphPackage = (ir, evidence = null) => {
 	const model = compileCallableDotnetGraphPackageModel(ir), path = "src/" + model.assembly;
+	const recovery = [...model.callbacks.values()].some(callback => callback.direction === "host");
 	const generated = generateCallableDotnetGraphSources(model, evidence);
 	const publicFiles = [path + "/Values.cs", path + "/Api.cs"], internalFiles = [path + "/Runtime.cs", path + "/Calls.cs"];
 	const project = path + "/" + model.assembly + ".csproj", packageFiles = [project, "NuGet.Config"];
@@ -51,6 +52,13 @@ call returns. A new thread cannot acquire a departed thread's closure. Callbacks
 expire when their call finishes. Callback errors retain their exception objects
 and return after conversion storage and native outputs are released.
 
+${recovery ? `A host callback returning a selected Lean Subtype is passed as a typed
+WithRecovery<TDelegate,TResult>. Recovery is validated before Lean or the
+delegate runs, is used only to finish a rejected native call, and is never
+returned as successful output. Returned Lean closures validate selected
+Subtype inputs before their body runs and remain usable after rejection.
+
+` : ""}
 Conversions allow 128 value levels, 262144 visited nodes, a 16 MiB native-copy
 budget and a separate 16 MiB accounted storage budget. Native reentry allows 64
 active calls; returned closures share 4096 identity slots. These limits do not

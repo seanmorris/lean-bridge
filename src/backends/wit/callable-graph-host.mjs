@@ -32,11 +32,11 @@ static uint32_t lb_graph_callback_${index}(void *data, ${callback.parameters.map
   ${model.prefix}_wasmtime *session = entry->session;
   if (session->poisoned || session->closing) return 1;
   if (!lb_buffer(out, 1, sizeof(*out), _Alignof(${result.name}))${result.aggregate ? " || out->_bridge_owner || out->_bridge_release" : ""}) return 1;
-  if (entry->owned) {
+  ${callback.direction === "host" ? "" : `if (entry->owned) {
     uint32_t status = ${callback.call}(((lb_graph_lease *)entry->owned)->token, ${callback.parameters.map((_, i) => `arg${i}`).concat("out").join(", ")});
     if (status) lb_record_text(session, "Native Lean closure call failed", sizeof("Native Lean closure call failed") - 1);
     return status;
-  }
+  }`}
   ${scope("input")}
   ${scope("output")}
   wasmtime_component_val_t args[${Math.max(1, callback.parameters.length)}] = {{0}}, reply = {0};
@@ -67,9 +67,9 @@ done:
   wasmtime_component_val_delete(&reply); lb_scope_close(&output.memory); lb_scope_close(&input.memory);
   return status;
 }
-static inline void lb_graph_owned_drop_${index}(void *data) {
+${callback.direction === "host" ? "" : `static inline void lb_graph_owned_drop_${index}(void *data) {
   lb_graph_lease *lease = data; ${callback.dispose}(lease->token); free(lease);
-}`;
+}`}`;
 }).join("\n");
 
 const importBodies = model => witGraphCallableFunctions(model).map((fn, index) => {
@@ -96,9 +96,10 @@ ${fn.parameters.map((node, i) => node.kind === "callback"
 ${fn.parameters.map((node, i) => node.kind === "callback"
 		? `  failure = lb_borrow(session, context, &args[${i}], ${tag(model, node)}, &entry${i});
   if (failure) goto done;
-${fn.callback ? "" : `  arg${i} = (${node.name}){.call = lb_graph_callback_${tag(model, node)}, .context = entry${i}};`}`
+${fn.callback ? "" : `${node.direction === "host" ? `  if (!entry${i}->recovery) { failure = wasmtime_error_new("Missing callback Subtype recovery"); goto done; }\n` : ""}  arg${i} = (${node.name}){.call = lb_graph_callback_${tag(model, node)}, .context = entry${i}${node.direction === "host" ? `, .recovery = entry${i}->recovery` : ""}};`}`
 		: `  if (!lb_graph_decode_${node.index}(&args[${i}], &input, &arg${i})) { failure = wasmtime_error_new("Invalid WIT graph input, conversion limit or allocation failure"); goto done; }`).join("\n")}
-  if (${call}) { failure = wasmtime_error_new("Native Lean graph call failed"); goto done; }
+  uint32_t native_status = ${call};
+  if (native_status) { failure = wasmtime_error_new(${fn.callback ? '"WIT callback failed"' : 'native_status == 10 ? "Host callback result failed its Lean constructor" : "Native Lean graph call failed"'}); goto done; }
   if (session->poisoned || session->closing) { failure = wasmtime_error_new("WIT callback failed or session closed"); goto done; }
 ${returned ? `  if (!value) { lean_bridge_native_runtime_retire(); failure = wasmtime_error_new("Missing native closure identity; runtime retired"); goto done; }
   session->frame->pending = lb_entry_new(session, ${tag(model, result)});

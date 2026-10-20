@@ -5,6 +5,7 @@
  */
 import { basename } from 'node:path';
 import { canonicalJson, sha256 } from '../../capsule/node.mjs';
+import { callbackSubtypeDirection } from '../../abi/refinements.mjs';
 import { createNativeCallableGraphDescriptor } from '../../build/native-callable-graph.mjs';
 import { compileNativeCallableGraphPayloads } from '../c/native-callable-graph-payloads.mjs';
 import { compileCopiedJvmGraphPackageModel } from './copied-graph-package.mjs';
@@ -37,10 +38,12 @@ export const compileCallableJvmGraphPackageModel = ir => {
 		const structured = [...signature.parameters, signature.result].some(ref => ref.kind !== 'primitive');
 		const publicName = claim(structured ? 'Fn' + pascal(cIdentifier(definitions.get(signature.id).name)) : 'Fn' + signature.parameters.map(ref => primitiveName(ref.name)).join('') + 'To' + primitiveName(signature.result.name));
 		const kotlinJavaName = structured ? claim('Kotlin' + publicName) : publicName;
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
 		return [signature.id
 			, {
 			...signature
 			, index
+			, direction
 			, parameters
 			, result
 			, structured

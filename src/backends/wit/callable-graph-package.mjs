@@ -19,10 +19,16 @@ const publicCallables = model => {
 			const base = `${p}_wasmtime_${fn.field}_callback${index}`;
 			const canonical = `${p}_wasmtime_callback_${signature(callback)}`;
 			names.push(`${base}_fn`, `${base}_create`);
-			entry.callbacks.push({ parameter: index, id: callback.id, type: `${base}_fn`, create: `${base}_create` });
+			entry.callbacks.push({
+				parameter: index
+				, id: callback.id
+				, type: `${base}_fn`
+				, create: `${base}_create`
+				, requiresRecovery: callback.direction === "host"
+				, ...callback.direction === "host" ? { recovery: callback.result.name } : {} });
 			headers.push(`typedef ${canonical}_fn ${base}_fn;
-static inline wasmtime_error_t *${base}_create(${p}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *), ${p}_wasmtime_function *out) {
-  return ${canonical}_create(session, callback, data, release, out);
+static inline wasmtime_error_t *${base}_create(${p}_wasmtime *session, ${base}_fn callback, void *data, void (*release)(void *)${callback.direction === "host" ? `, const ${callback.result.name} *recovery` : ""}, ${p}_wasmtime_function *out) {
+  return ${canonical}_create(session, callback, data, release${callback.direction === "host" ? ", recovery" : ""}, out);
 }`);
 		}
 		if(fn.result.kind === "callback")
@@ -88,7 +94,9 @@ ${publicApi.headers.join("\n")}
 		, callbacks: [...model.callbacks.values()].map(callback => {
 			const field = callback.publicName.slice(p.length + 1);
 			return { id: callback.id, create: `${p}_wasmtime_callback_${field}_create`
-				, invoke: `${p}_wasmtime_function_${field}_call` };
+				, invoke: `${p}_wasmtime_function_${field}_call`
+				, requiresRecovery: callback.direction === "host"
+				, ...callback.direction === "host" ? { recovery: callback.result.name } : {} };
 		})
 	}
 	};
@@ -103,6 +111,9 @@ ${publicApi.headers.join("\n")}
  */
 export const witCallableGraphPackageReadme = (model, glibc) => {
 	const { name, version, prefix: p } = model;
+	const recovery = [...model.callbacks.values()].some(callback => callback.direction === "host")
+		? "A callback returning a selected Lean Subtype must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only when the callback reply fails the selected constructor.\n\n"
+		: "";
 	return `# ${name} ${version}
 
 Compiled Lean recursive values, callbacks and returned functions for Linux x86-64, glibc ${glibc} or newer. This archive includes Wasmtime 42.0.1, the Component Model binary, generated headers and the shared native Lean runtime. Consumers do not install Lean. Keep include/ and lib/ together.
@@ -117,7 +128,7 @@ Arguments borrow immutable values for the call. Initialize each result with {0}.
 
 Register a typed callback with the export's ${p}_wasmtime_*_callbackN_create helper, where N is its zero-based parameter position. The matching names appear in binding-manifest.json. Registration returns an opaque ${p}_wasmtime_function token. Pass that token to an export expecting the same signature. The callback borrows its arguments. Use the copied type's _wasmtime_copy helper to create an independent reply. The adapter consumes an owned reply on success and on failure. An unowned reply must remain valid until the adapter finishes copying it after the callback returns. Never return pointers to a callback's local stack objects.
 
-Callback data transfers only when registration succeeds. Its optional release function runs once after active calls finish. Finalizers must not reenter the session. Lean borrows a registered host callback only during the exporting call. If Lean retains that borrow, later invocation fails even while its session token remains open.
+${recovery}Callback data transfers only when registration succeeds. Its optional release function runs once after active calls finish. Finalizers must not reenter the session. Lean borrows a registered host callback only during the exporting call. If Lean retains that borrow, later invocation fails even while its session token remains open.
 
 Returned Lean functions use owned tokens. Invoke them with the returning export's ${p}_wasmtime_*_call helper from binding-manifest.json. Close a token with ${p}_wasmtime_function_close(session, &token). Successful close zeroes that variable. Closing zero is harmless. Closing a token invalidates its aliases immediately and defers cleanup of active uses. Wrong-session, wrong-signature and stale tokens fail before Wasmtime execution.
 

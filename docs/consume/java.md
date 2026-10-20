@@ -369,6 +369,15 @@ results retire the runtime; conversion limits and allocation failures allow
 later calls. Resources or callable identities inside copied aggregates,
 retained host callbacks and asynchronous delivery remain unsupported.
 
+When a synchronous Java or Kotlin callback returns a selected `Subtype`, pass a
+generated `WithRecovery<SAM, Result>` containing the callback and one valid
+erased result value. The package validates both before native loading. Lean uses
+the recovery only when the callback reply fails the selected constructor; it is
+not successful output. Returned `LeanClosure` values validate selected
+`Subtype` arguments before invoking Lean and stay open after rejection. Java 22
+and Kotlin 2.2 source compilation cover this contract; installed JAR acceptance
+remains pending.
+
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths, typed callers, failure cleanup and runtime-only execution.
 
@@ -896,7 +905,7 @@ runs use JDK 22.0.2 and Kotlin 2.2.0 on Linux x64/glibc 2.36 with an explicit
 
 The [required JVM workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nominal-primitive-subtype-jvm.yml)
 runs those four selections. The local archive does not establish its hosted
-glibc 2.38 result. Refined callbacks, owned, recursive, dependent and broader
+glibc 2.38 result. Installed refined-callback acceptance, owned, recursive, dependent and broader
 generic Subtypes still need acceptance. These runs do not measure
 constructor/source entry counts or memory.
 

@@ -52,6 +52,7 @@ static uint64_t lb_thread_identity(void) {
   return lb_thread_serial;
 }`);
 	prelude = replace(prelude, "  pthread_t thread;", "  pthread_t thread;\n  uint64_t thread_serial;");
+	prelude = replace(prelude, "  void *data, *owned;", "  void *data, *owned, *recovery;");
 	prelude = replace(prelude, "session->process == getpid() && pthread_equal(session->thread, pthread_self())",
 		"session->process == getpid() && session->thread_serial == lb_thread_identity() && pthread_equal(session->thread, pthread_self())");
 	prelude += `
@@ -75,7 +76,7 @@ static lb_entry *lb_graph_callback_entry(void *raw, uint32_t tag) {
   (void)session; (void)args; (void)entries;
   switch (function) {
 ${functions.map((fn, i) => `  case ${i}: valid = ${fn.parameters.map((node, n) => node.kind === "callback"
-	? `((entries[${n}] = lb_entry_find(session, args[${n}].function)) && entries[${n}]->tag == ${model.wire.resources.indexOf(node.resource) + 1})`
+	? `((entries[${n}] = lb_entry_find(session, args[${n}].function)) && entries[${n}]->tag == ${model.wire.resources.indexOf(node.resource) + 1}${node.direction === "host" ? ` && entries[${n}]->recovery` : ""})`
 	: `(!args[${n}].function && lb_graph_decode_${node.index}(&args[${n}].value, &scope, NULL))`).join(" && ") || "true"}; break;`).join("\n")}
   default: break;
   }

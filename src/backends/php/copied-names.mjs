@@ -4,7 +4,7 @@
  * @file
  */
 const keywords = new Set("__halt_compiler abstract and array as bool break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile enum eval exit extends false final finally float fn for foreach from function global goto if implements include include_once instanceof insteadof int interface isset iterable list match mixed namespace never new null object or parent print private protected public readonly require require_once resource return self static string switch throw trait true try unset use var void while xor yield".split(" "));
-export const reservedPhpNames = new Set([...keywords, ..."bigint biginteger bytes leanbridgeerror leanclosure internal this globals dispatch invoke".split(" ")]);
+export const reservedPhpNames = new Set([...keywords, ..."bigint biginteger bytes leanbridgeerror leanclosure withrecovery internal this globals dispatch invoke".split(" ")]);
 const forbiddenFields = new Set(["this", "GLOBALS", "_SERVER", "_GET", "_POST", "_FILES", "_COOKIE", "_SESSION", "_REQUEST", "_ENV", "__lbBudget"]);
 
 /**

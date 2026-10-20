@@ -19,6 +19,11 @@ import { generateNativeCallableGraphCalls } from "../src/backends/c/native-calla
 import { generateCallablePythonGraphPackage } from "../src/backends/python/callable-graph-package.mjs";
 import { generateCallableRubyGraphPackage } from "../src/backends/ruby/callable-graph-package.mjs";
 import { generateCallableRustGraphPackage } from "../src/backends/rust/callable-graph-package.mjs";
+import { generateCallableDotnetGraphPackage } from "../src/backends/dotnet/callable-graph-package.mjs";
+import { generateCallableJvmGraphPackage } from "../src/backends/jvm/callable-graph-package.mjs";
+import { generateCallablePhpGraphPackage } from "../src/backends/php/callable-graph-package.mjs";
+import { compileCallableWitGraphPackageModel } from "../src/backends/wit/callable-graph-package.mjs";
+import { renderWitGraphCallableHostSource } from "../src/backends/wit/callable-graph-host.mjs";
 
 const fixture = () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
@@ -145,13 +150,11 @@ test("native callback Subtype trampolines require typed recovery and report cons
 	assert.match(callbacks, /controls->reject\(callback\.context, recovery\)/u);
 });
 
-test("Python, Ruby and Rust project callback Subtype direction into typed recovery APIs", () => {
+test("native language projections retain callback Subtype direction and typed recovery", () => {
 	const { ir } = structuredCallableDirectionalSubtypeIr();
-	for(const target of ["pypi", "rubygems", "cargo"])
+	for(const target of ["pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"])
 		assert.ok(compileNativeGraphProjection(ir, [target]));
-	assert.ok(compileNativeGraphProjection(ir, ["pypi", "rubygems", "cargo"]));
-	for(const target of ["nuget", "maven", "php-native", "wit-wasi"])
-		assert.throws(() => compileNativeGraphProjection(ir, [target]), { code: "native-graph-projection-unavailable" });
+	assert.ok(compileNativeGraphProjection(ir, ["pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"]));
 	const python = generateCallablePythonGraphPackage(ir);
 	const pythonPublic = python[Object.keys(python).find(path => path.endsWith("/__init__.py"))];
 	const pythonNative = python[Object.keys(python).find(path => path.endsWith("/_native.py"))];
@@ -186,6 +189,52 @@ test("Python, Ruby and Rust project callback Subtype direction into typed recove
 	assert.match(rust["src/__runtime.rs"], /status == 10/u);
 	assert.doesNotMatch(rust["src/__runtime.rs"], /owned0:/u);
 	assert.match(rust["src/__runtime.rs"], /owned1:/u);
+
+	const dotnet = generateCallableDotnetGraphPackage(ir);
+	const dotnetApi = dotnet[Object.keys(dotnet).find(path => path.endsWith("/Api.cs"))];
+	const dotnetCalls = dotnet[Object.keys(dotnet).find(path => path.endsWith("/Calls.cs"))];
+	assert.match(dotnetApi, /record WithRecovery<TDelegate, TResult>/u);
+	assert.match(dotnetApi, /WithRecovery<global::System\.Func<[^>]+>, global::System\.Numerics\.BigInteger>/u);
+	assert.match(dotnetCalls, /struct GraphCallback0 \{[^}]+Recovery;/u);
+	assert.match(dotnetCalls, /GraphRuntime\.Write\d+\(arg\d+\.Recovery, check\)/u);
+	assert.match(dotnetCalls, /frame\.Replies\.Store\(recovery\)/u);
+	assert.match(dotnetCalls, /status == 10/u);
+	assert.doesNotMatch(dotnetCalls, /Invoke0\(/u);
+	assert.match(dotnetCalls, /Invoke1\(/u);
+
+	const jvm = generateCallableJvmGraphPackage(ir);
+	const jvmRecovery = jvm[Object.keys(jvm).find(path => path.endsWith("/WithRecovery.java"))];
+	const jvmApi = jvm[Object.keys(jvm).find(path => path.endsWith("/Api.java"))];
+	const jvmRuntime = jvm[Object.keys(jvm).find(path => path.endsWith("/_CallableGraphRuntime.java"))];
+	assert.match(jvmRecovery, /record WithRecovery<F, R>/u);
+	assert.match(jvmApi, /WithRecovery<[^>]+, java\.math\.BigInteger>/u);
+	assert.match(jvmRuntime, /allocate\(24, 8\)/u);
+	assert.match(jvmRuntime, /value\.recovery\(\), frame\.replies/u);
+	assert.match(jvmRuntime, /status == 10/u);
+	assert.doesNotMatch(jvmRuntime, /invokeJava0\(/u);
+	assert.match(jvmRuntime, /invokeJava1\(/u);
+	const jvmHost = jvm[Object.keys(jvm).find(path => path.endsWith("/FnNatToNat.java"))];
+	assert.doesNotMatch(jvmHost, /class LeanClosure/u);
+
+	const php = generateCallablePhpGraphPackage(ir);
+	const phpApi = php["src/Api.php"], phpNative = php["src/Internal/Native.php"];
+	const phpRuntime = php["src/Internal/CallableRuntime.php"];
+	assert.match(phpApi, /final readonly class WithRecovery/u);
+	assert.match(phpApi, /function with_recovery\(/u);
+	assert.match(phpNative, /void \*recovery;/u);
+	assert.match(phpRuntime, /requires with_recovery\(function, value\)/u);
+	assert.match(phpRuntime, /\$input->recovery=\$recovery/u);
+	assert.match(phpRuntime, /\$status===10/u);
+
+	const wit = compileCallableWitGraphPackageModel(ir);
+	const witHost = renderWitGraphCallableHostSource(wit, new Uint8Array([0]));
+	const hostCallback = [...wit.callbacks.values()].find(callback => callback.direction === "host");
+	assert.equal(wit.manifest.cHost.callbacks.find(callback => callback.id === hostCallback.id).requiresRecovery, true);
+	assert.match(wit.hostHeader, new RegExp(`const ${hostCallback.result.name.replaceAll("$", "\\$")} \\*recovery`, "u"));
+	assert.match(witHost, /entry->recovery = &context->recovery/u);
+	assert.match(witHost, /\.recovery = entry\d+->recovery/u);
+	assert.match(witHost, /native_status == 10 \? "Host callback result failed its Lean constructor"/u);
+	assert.doesNotMatch(witHost, new RegExp(hostCallback.call, "u"));
 });
 
 test("native callable graph admission retains identity ownership and lifetime checks", () => {

@@ -47,10 +47,11 @@ export const state = `
             lifecycle.after();
         }
         synchronized void fail(Throwable error) { if (failure == null) failure = error; }
-        void finish(int status) {
-            if (failure != null) throw rethrow(failure);
-            if (status == 6) throw new LeanBridgeException(6, "Host callback failed", null);
-            _GraphRuntime.status(status);
+		void finish(int status) {
+			if (failure != null) throw rethrow(failure);
+			if (status == 6) throw new LeanBridgeException(6, "Host callback failed", null);
+			if (status == 10) throw new LeanBridgeException(1, "Host callback result failed its Lean constructor", null);
+			_GraphRuntime.status(status);
         }
         @Override public void close() { java.lang.ref.Reference.reachabilityFence(roots); roots.clear(); }
     }
