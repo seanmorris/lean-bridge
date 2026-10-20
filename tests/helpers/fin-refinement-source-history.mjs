@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { beforeCheckedRecordValueIndexPhpWasmSource, checkedRecordValueIndexPhpWasmChangedPaths } from "./checked-record-value-index-php-wasm-source-history.mjs";
+import { beforeCheckedRecordValueIndexPhpWasmArchiveSource, checkedRecordValueIndexPhpWasmArchiveChangedPaths } from "./checked-record-value-index-php-wasm-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustCountRepairSource, checkedRecordValueIndexRustCountRepairChangedPaths } from "./checked-record-value-index-rust-count-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexRustInventoryRepairSource, checkedRecordValueIndexRustInventoryRepairChangedPaths } from "./checked-record-value-index-rust-inventory-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexRubyPromotionSource, checkedRecordValueIndexRubyPromotionChangedPaths } from "./checked-record-value-index-ruby-promotion-source-history.mjs";
@@ -1361,7 +1362,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexRustInventoryRepairChangedPaths
+	...checkedRecordValueIndexPhpWasmArchiveChangedPaths
+	, ...checkedRecordValueIndexRustInventoryRepairChangedPaths
 	, ...checkedRecordValueIndexWitCallerWarningRepairChangedPaths
 	, ...checkedRecordValueIndexPhpWasmChangedPaths
 	, ...checkedRecordValueIndexRustCountRepairChangedPaths
@@ -1799,6 +1801,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexPhpWasmArchiveSource(
 		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;

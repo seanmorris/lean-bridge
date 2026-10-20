@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-php-wasm-archive-source-v1",
+  "predecessorCommit": "352c592c2bd85481d996759b812d597bc54b5354",
+  "draftParentCommit": "3bf9c4dc8437f48e86105e5d6f948197afe07e11",
+  "pathsSha256": "b53f8b750607cf5a90591f2e270f94a00f14326a0f3c5968ef737a75472b7c3a",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-php-wasm-20261020",
+    "indexSha256": "049131f6a2ef0059dd3808252f980a12c5cf780d72677420f3107d285e26ba6f",
+    "indexedFileCount": 2836,
+    "archiveFileCount": 2837,
+    "addedFileCount": 2839
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-php-wasm-evidence-tests.mjs",
+      "currentSha256": "cf1d55533e9ec23fb4115d9fb977c0317d49d8b5ef5926e3944149adcb7892c9"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-php-wasm-evidence.mjs",
+      "currentSha256": "a02a8c2bdfb6c2f540377bc27f81c5dbaeb03abfc5dbd3c25bd06579eebc223a"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "previousSha256": "457387b70111fbd25ad6c9c8ab5f622da8822212e1e0c61dab2bb2751ae618ab",
+      "currentSha256": "2015d4719f3ce528d6025f3d6b8dc459430cb2d9540523061189f9c3c4747506",
+      "edits": [
+        {
+          "start": 692,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-php-wasm-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
