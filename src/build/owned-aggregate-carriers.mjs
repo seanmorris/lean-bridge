@@ -10,6 +10,7 @@ import { projectNativeMetadata } from "../analyze/native-metadata.mjs";
 import { createOwnedElaboratedSemanticModel } from "../analyze/semantic-model.mjs";
 import { reconcileReviewedOwnedSource } from "../analyze/reviewed-owned-source.mjs";
 import { generateOwnedCallbackCarriers } from "./owned-callback-carriers.mjs";
+import { createOwnedRefinementCarriers } from "./owned-refinement-carriers.mjs";
 
 const primitives = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int", uint8: "UInt8", uint16: "UInt16"
@@ -56,10 +57,6 @@ export const generateOwnedAggregateCarriers = ({ metadata, sourceIdentity, compo
 export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declarations: selected, metadataSha256, hostCallbacks = false }) => {
 	const component = document.component;
 	const model = compileOwnedAggregateModel(document);
-	if(model.refinementModel !== undefined)
-		throw Object.assign(new TypeError("Owned aggregate carriers require checked Subtype adapters"), {
-			code: "owned-refinements-unavailable"
-		});
 	const nodes = new Map(model.types.map(type => [type.id, type]));
 	const definitions = new Map(document.types.map(type => [type.id, type]));
 	const declarations = new Map(document.declarations.map(item => [item.id, item]));
@@ -67,21 +64,23 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 	const module = `LeanBridgeOwned${sha256(prefix).slice(0, 16)}`;
 	const symbols = { types: Object.fromEntries(model.types.map(type => [type.id, `${prefix}_t${sha256(type.id).slice(0, 20)}`]))
 		, exports: Object.fromEntries(model.declarations.map(item => [item.id, `${prefix}_f${sha256(item.id).slice(0, 20)}`])) };
-	const sourceType = (id, active = new Set()) => {
+	const unrefinedSourceType = (id, active = new Set()) => {
 		if(active.has(id)) fail("recursive callable type lacks a nominal value boundary");
 		const node = nodes.get(id);
 		if(node.kind === "primitive") return `_root_.${primitives[node.name]}`;
 		if(node.kind === "callback")
 		{
 			const seen = new Set(active); seen.add(id);
-			return `(${[...node.callable.parameters, node.callable.result].map(site => sourceType(site.type, seen)).join(" → ")})`;
+			return `(${[...node.callable.parameters, node.callable.result].map(site => unrefinedSourceType(site.type, seen)).join(" → ")})`;
 		}
 		const definition = definitions.get(id);
 		if(definition) return `_root_.${definition.source.declaration}`;
-		const children = node.arguments.map(id => sourceType(id, active));
+		const children = node.arguments.map(id => unrefinedSourceType(id, active));
 		if(node.kind === "result") return `(_root_.Except ${children[1]} ${children[0]})`;
 		return `(_root_.${{ array: "Array", list: "List", option: "Option", tuple: "Prod" }[node.kind]} ${children.join(" ")})`;
 	};
+	const refinements = createOwnedRefinementCarriers(model, definitions);
+	const sourceType = refinements?.sourceType ?? unrefinedSourceType;
 	const carrier = id => `(_root_.Array ${sourceType(id)})`;
 	const lines = [...new Set(selected.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000"
@@ -104,9 +103,11 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		, "    | fuel + 1, head :: tail, acc => loop fuel tail (acc.push #[head])"
 		, `  loop (min limit ${model.limits.visits + 1}) values #[]`
 		, ""
+		, ...refinements?.lines ?? []
 	];
 	const header = ["#pragma once", "#include <lean/lean.h>", "#include <stdint.h>"
-		, "/* Private typed helpers consume their Array arguments and return an owned Array. */"];
+		, "/* Private typed helpers consume their Array arguments and return an owned Array. */"
+		, ...refinements?.header ?? []];
 	const checked = (names, body) => ["carrierResult (do"
 		, ...names.map(name => `  let ${name} ← carrierValue ${name}`)
 		, ...body.map(line => `  ${line}`), ")"];
@@ -198,15 +199,33 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		const inputs = [...declaration.receiver ? [declaration.receiver] : [], ...declaration.parameters];
 		const names = inputs.map((_, index) => `a${index}`);
 		const parameters = inputs.map((site, index) => `(${names[index]} : ${carrier(site.type)})`).join(" ");
-		const call = `${source.specialization ? `(${source.specialization.application})` : `_root_.${source.name}`} ${names.join(" ")}`;
+		const converted = names.map((name, index) => {
+			if(!refinements || (declaration.receiver && index === 0)) return name;
+			const parameter = index - Number(Boolean(declaration.receiver));
+			const site = refinements.byPosition.get(refinements.siteKey(declaration.id, "parameter", parameter));
+			return site ? `_source${index}` : name;
+		});
+		const guards = names.flatMap((name, index) => {
+			if(!refinements || (declaration.receiver && index === 0)) return [];
+			const parameter = index - Number(Boolean(declaration.receiver));
+			const site = refinements.byPosition.get(refinements.siteKey(declaration.id, "parameter", parameter));
+			return site ? [`let _source${index} ← ${refinements.inputConversion(site.tree, name)}`] : [];
+		});
+		const rawCall = `${source.specialization ? `(${source.specialization.application})` : `_root_.${source.name}`} ${converted.join(" ")}`;
+		const resultSite = refinements?.byPosition.get(refinements.siteKey(declaration.id, "result"));
+		const call = resultSite ? refinements.resultConversion(resultSite.tree, "_sourceResult") : rawCall;
+		const body = [...guards];
+		if(resultSite) body.push(`let _sourceResult := ${rawCall}`);
+		body.push(`pure (${call})`);
 		emit(symbols.exports[declaration.id], parameters || "(_bridgeUnit : _root_.Unit)", carrier(declaration.result.type)
-			, checked(names, [`pure (${call})`]), names.length);
+			, checked(names, body), names.length);
 	}
 	const callbacks = hostCallbacks ? generateOwnedCallbackCarriers({ model, symbols, sourceType, carrier }) : null;
 	if(callbacks)
 	{ lines.push(...callbacks.lines); header.push(...callbacks.header); }
 	lines.push(`end ${module}`, "");
 	return Object.freeze({ model, module, symbols
+		, ...(refinements ? { refinementValidators: Object.fromEntries(refinements.validators) } : {})
 		, ...(callbacks ? { hostCallbacks: callbacks.callbacks, callbackSource: callbacks.source } : {})
 		, leanSource: lines.join("\n")
 		, header: header.join("\n") + "\n"

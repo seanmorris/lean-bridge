@@ -4,7 +4,7 @@
  *
  * @file
  */
-import { generateOwnedAggregateCarriers } from "../../build/owned-aggregate-carriers.mjs";
+import { generateOwnedAggregateCarriers, generateOwnedBindingCarriers } from "../../build/owned-aggregate-carriers.mjs";
 import { compileOwnedNativeValueLayout } from "./owned-value-layout.mjs";
 import { ownedNativeValueRuntime } from "./owned-value-runtime.mjs";
 import { ownedNativeInputTransferRuntime } from "./owned-value-transfers.mjs";
@@ -20,10 +20,10 @@ const suffix = name => ({ uint32: "_uint32", int32: "_uint32", char: "_uint32"
  *
  * @param options - Fresh metadata, source identity, component coordinates and
  * optional wordBits (32 or 64, default 64).
+ * @param carriers - Reconciled typed carrier bundle for the same Binding IR.
  */
-export const generateOwnedNativeValueAdapters = options => {
+const renderOwnedNativeValueAdapters = (options, carriers) => {
 	const { wordBits = 64, transferredInputs = false, anchoredResults = false, receiverExports = false, callbackResultAnchors = false } = options;
-	const carriers = generateOwnedAggregateCarriers(options);
 	const layout = compileOwnedNativeValueLayout(carriers.model.bindingIr, { wordBits, transferredInputs, anchoredResults, receiverExports, callbackResultAnchors });
 	const hasTransfers = layout.functions.some(item => item.transfers?.length);
 	const hasAnchors = [...layout.functions, ...layout.callbacks].some(item => item.anchor !== undefined);
@@ -242,6 +242,7 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 		const result = table.get(declaration.result), parameters = declaration.parameters.map((type, i) => `const ${table.get(type).cName} *a${i}`);
 		const transfers = declaration.transfers ?? [];
 		const callback = !carriers.symbols.exports[declaration.id];
+		const refinementValidators = carriers.refinementValidators ?? {};
 		const symbol = callback ? `${carriers.symbols.types[declaration.id]}_apply` : carriers.symbols.exports[declaration.id];
 		lines.push(`static inline int ${declaration.symbol}(lb_owned_context *context, ${[...parameters, ...transfers.length ? ["ov_input_transfers *transfer"] : [], ...declaration.anchor !== undefined ? ["const ov_input_anchor *anchor"] : [], `${result.cName} *out`, "ov_result_owner *owner"].join(", ")}) {`
 			, `  if (!ov_pointer(out, sizeof(*out), _Alignof(${result.cName})) || !ov_pointer(owner, sizeof(*owner), _Alignof(ov_result_owner))) return LB_OWNED_INVALID;`
@@ -274,6 +275,10 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 				] : []
 				, `    status = ${table.get(type).walker}_in(a${i}, 0, 1, &transaction, &child);`
 				, "    if (status) { lean_dec(arguments); return ov_abort(&transaction, status); }"
+				, ...(!callback && refinementValidators[`${declaration.id}\0parameter\0${i - Number(declaration.receiver === 0)}`] ? [
+					"    lean_inc(child);"
+					, `    if (!${refinementValidators[`${declaration.id}\0parameter\0${i - Number(declaration.receiver === 0)}`]}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`
+				] : [])
 				, "    arguments = lean_array_push(arguments, child);", "  }"])
 			, ...hasAnchors ? ["  transaction.anchor_input = 0;"] : []
 			, ...transfers.length ? [
@@ -304,3 +309,20 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 	}
 	return { carriers, layout, typesHeader: layout.header, source: lines.join("\n") + "\n" };
 };
+
+/**
+ * Generate native walkers from an already reconciled owned Binding IR.
+ * Artifact readers use this path only after reconstructing the same compiler evidence.
+ *
+ * @param options - Validated Binding IR carrier inputs and native capabilities.
+ */
+export const generateOwnedNativeBindingAdapters = options =>
+	renderOwnedNativeValueAdapters(options, generateOwnedBindingCarriers(options));
+
+/**
+ * Generate native walkers directly from fresh compiler metadata.
+ *
+ * @param options - Fresh metadata, retained source identity and native capabilities.
+ */
+export const generateOwnedNativeValueAdapters = options =>
+	renderOwnedNativeValueAdapters(options, generateOwnedAggregateCarriers(options));
