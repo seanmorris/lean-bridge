@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-matrix-registration-source-v1",
+  "predecessorCommit": "d8f87b3743790d99b1238cb0b78a4cfc8d9b8bf1",
+  "draftParentCommit": "c4f81e11ae8816b2b5239a01cd2695ffd641485b",
+  "foundation": {
+    "modifiedPaths": [
+      "src/adoption/test-profiles.mjs",
+      "tests/test-profiles.test.mjs"
+    ],
+    "addedPaths": []
+  },
+  "additions": [
+    {
+      "path": "scripts/update-checked-record-value-index-matrix-registration-source-history.mjs",
+      "currentSha256": "da2ac24cc82056f5b05cde93c97a96b40d1ef5bbc6c38f5fffd91a3be58b8cee"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-registration-source-history-tests.mjs",
+      "currentSha256": "243b9159afc0431b2b8a23fa4fc800c1cb8eed32cd2e4d4c4cf75fbf72f7f38a"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-matrix-registration-source-history.mjs",
+      "currentSha256": "0edaf30ed832bd6c3ba93e06e809e544a983e090971aa075326c6ffc123f07b5"
+    }
+  ],
+  "updates": [
+    {
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "7258c77a190aa742b65a5bfc5b157976b2d152f84714f1b404666ad5efdc3887",
+      "currentSha256": "51cf77fb11f603407943bf2c56a763e0d3cc627a47c48868ef6604525f8040f1",
+      "edits": [
+        {
+          "start": 12503,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-matrix\"\n\t\t, \"checked-record-value-index-matrix-inventory\"\n"
+        }
+      ],
+      "addedTests": [
+        "checked-record-value-index-matrix",
+        "checked-record-value-index-matrix-inventory"
+      ]
+    },
+    {
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "e733695a23b638f96139fa43b1637621e431e5d9b223a588e38edda20f42c6c3",
+      "currentSha256": "db10766ff884b52990f3afa15b4e102e42448bf57f3f38b8a5865810e74f2ebd",
+      "edits": [
+        {
+          "start": 1867,
+          "previous": "",
+          "current": "\t\t, \"checked-record-value-index-matrix\"\n\t\t, \"checked-record-value-index-matrix-inventory\"\n"
+        }
+      ]
+    }
+  ]
+}
