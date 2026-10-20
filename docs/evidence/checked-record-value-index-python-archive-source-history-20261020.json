@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-python-archive-source-v1",
+  "predecessorCommit": "8bc597686328278d4ea78551e08d7862c996eb0c",
+  "draftParentCommit": "6f90d9e54c38d5e06cad98dfb1d2afbb58b0cdb1",
+  "pathsSha256": "aa235475232d156b10782779777b42432e4ae99de42288a5c464f8549093a9ae",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-python-20261020",
+    "indexSha256": "f06a15fd17e5a78c62c7d3a2e4fd0bc07d5acc1e96dfbf95f42d3203d88aa8c7",
+    "indexedFileCount": 1415,
+    "archiveFileCount": 1416,
+    "addedFileCount": 1418
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-python-evidence-tests.mjs",
+      "currentSha256": "ba52dbff8082e8e89f425a3afc3ef462dd55b6737da68c42661030199b6b86d6"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-python-evidence.mjs",
+      "currentSha256": "91e1afcfa9c0245a81120277796d0aa6fdec93915f2082e9001f3ca2e3d696c3"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-python.test.mjs",
+      "previousSha256": "56cb57742e98d23f73429b40f342d453c75cb0972e527d1366a2eb4d44708bb1",
+      "currentSha256": "842174349a175144474db26fc182e4de5f56b2dc1864b9fbdf7424d019d6d99a",
+      "edits": [
+        {
+          "start": 318,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-python-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

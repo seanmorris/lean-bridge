@@ -10,6 +10,7 @@ import {
 	checkCheckedRecordValueIndexPythonEvidence
 	, checkedRecordValueIndexPythonEvidence
 } from "./checked-record-value-index-python-evidence.mjs";
+import "./checked-record-value-index-python-archive-source-history-tests.mjs";
 
 test("hosted value-index Python archive authenticates every retained route", {
 	timeout: 120_000
