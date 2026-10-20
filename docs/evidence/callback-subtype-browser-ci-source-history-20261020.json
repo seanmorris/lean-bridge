@@ -1,0 +1,40 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ac33e17bf8f4fb81f17db9ced2d60c61d144cc8a7a7c76c3dc9baa21519d3d3b",
+      "path": ".github/workflows/callback-subtype-browser.yml"
+    },
+    {
+      "currentSha256": "0155fe9873d3df26ffdd78214ce47a724b16ede4efc8e0ab116cedabf6835906",
+      "path": "scripts/check-callback-subtype-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "fce2f44d795d30eb9ec961fb4abda3e1f90a4a6c6cfcbfdcb84363c9e26a0ad9",
+      "path": "scripts/run-callback-subtype-browser-ci.sh"
+    },
+    {
+      "currentSha256": "499ec241b6299fc883d5a3ff41fbc5da7a22838e328beb556f8b1fc9b6f1ecf2",
+      "path": "scripts/update-callback-subtype-browser-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "2b83b4522d7ba64cb06dce8a1d68358cf828dd7d15e2a55f594804956cb38aab",
+      "path": "tests/callback-subtype-browser-ci.test.mjs"
+    },
+    {
+      "currentSha256": "b29546fcc367a6a2293981b6efe38ccc8ca8e2a89ebfe1a64b1a0761dc2311ac",
+      "path": "tests/helpers/callback-subtype-browser-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "d7f9074718e7633a08805f28f53c924f91556b38e80b7de245aba8965e13fdd6",
+      "path": "tests/helpers/callback-subtype-browser-ci-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fc91c13fecd75e5d10898df44c9b8385029c08dff9481130254f861c3b3ef716",
+      "path": "tests/helpers/callback-subtype-browser-ci.mjs"
+    }
+  ],
+  "implementationCommit": "228cbffa2c746b150df2a1deafe4fbb03abfcbaf",
+  "milestone": "callback-subtype-browser-ci-source-v1",
+  "predecessorCommit": "0d757d45caa8118e62ab7dad4a1f6a49ff665147",
+  "schemaVersion": 1
+}

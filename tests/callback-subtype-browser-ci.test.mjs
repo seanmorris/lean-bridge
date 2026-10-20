@@ -17,6 +17,7 @@ import {
 	, checkCallbackSubtypeBrowserCi
 	, parseCallbackSubtypeBrowserCiArgs
 } from "./helpers/callback-subtype-browser-ci.mjs";
+import "./helpers/callback-subtype-browser-ci-source-history-tests.mjs";
 
 const commit = "a".repeat(40);
 const runtime = { node: process.version, platform: process.platform
