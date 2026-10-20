@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Materialize the remaining hosted value-index matrix at its exact parent. */
+/**
+ * Materialize the remaining hosted value-index matrix at its exact parent.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
@@ -29,7 +33,7 @@ const stable = inventory => {
 };
 assert.ok(JSON.stringify(stable(current)) === JSON.stringify(stable(baseline))
 	|| JSON.stringify(stable(current)) === JSON.stringify(stable(promoted))
-	, "Never overwrite unrelated type-surface changes");
+, "Never overwrite unrelated type-surface changes");
 await writeFile(path, JSON.stringify(promoted, null, 2) + "\n");
 process.stdout.write(
 	"Promoted twelve hosted native/managed routes into twenty exact cells.\n");

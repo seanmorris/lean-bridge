@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Record omitted matrix/browser history-hub and Rust expectation edges. */
+/**
+ * Record omitted matrix/browser history-hub and Rust expectation edges.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -8,7 +12,6 @@ import { join } from "node:path";
 import { sha256 } from "../src/capsule/node.mjs";
 import {
 	checkedRecordValueIndexMatrixHistoryGapAddedPaths
-	, checkedRecordValueIndexMatrixHistoryGapChangedPaths
 	, checkedRecordValueIndexMatrixHistoryGapDraftParent
 	, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths
 	, checkedRecordValueIndexMatrixHistoryGapPath
@@ -60,8 +63,8 @@ assert.deepEqual([...new Set([
 ])].sort(), [...checkedRecordValueIndexMatrixHistoryGapAddedPaths].sort());
 assert.deepEqual(names(["diff", "HEAD", "--name-only", "--"
 	, "tests/checked-record-value-index-matrix.test.mjs", hubPath]), [
-	"tests/checked-record-value-index-matrix.test.mjs", hubPath
-]);
+	"tests/checked-record-value-index-matrix.test.mjs", hubPath]
+);
 
 const directory = await mkdtemp(join(
 	tmpdir(), "lean-bridge-value-index-matrix-history-gap-"

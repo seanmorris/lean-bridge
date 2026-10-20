@@ -1,4 +1,8 @@
-/** Preserve the exact hosted-checkout correction for the value-index matrix. */
+/**
+ * Preserve the exact hosted-checkout correction for the value-index matrix.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -29,7 +33,12 @@ const record = () => history ??= JSON.parse(readFileSync(
 	checkedRecordValueIndexMatrixCheckoutHistoryPath, "utf8"
 ));
 
-/** Reverse one exact hosted-checkout repair. */
+/**
+ * Reverse one exact hosted-checkout repair.
+ *
+ * @param source - Current source text.
+ * @param update - Reversible update record.
+ */
 export const reverseCheckedRecordValueIndexMatrixCheckoutUpdate = (
 	source, update
 ) => {
@@ -59,7 +68,13 @@ export const reverseCheckedRecordValueIndexMatrixCheckoutUpdate = (
 	return previous;
 };
 
-/** Remove only the exact hosted-checkout repair layer. */
+/**
+ * Remove only the exact hosted-checkout repair layer.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Current source text.
+ * @param expected - Expected historical digest.
+ */
 export const beforeCheckedRecordValueIndexMatrixCheckoutSource = (
 	path, source, expected
 ) => {

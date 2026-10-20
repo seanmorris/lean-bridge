@@ -1,4 +1,8 @@
-/** Audit the promoted claims in a fresh process after archive replay exits. */
+/**
+ * Audit the promoted claims in a fresh process after archive replay exits.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";

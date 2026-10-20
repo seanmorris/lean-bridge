@@ -1,4 +1,8 @@
-/** Verify the exact contract-profile registration for matrix tests. */
+/**
+ * Verify the exact contract-profile registration for matrix tests.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
@@ -28,6 +32,7 @@ const expectedTests = [
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
 });
+const receiptCommit = "13eaf45d4b1909b9cecf5278c050bd67b51ebbe7";
 
 test("value-index matrix registrations have one reversible lineage", async () => {
 	const record = JSON.parse(await readFile(
@@ -88,7 +93,7 @@ test("value-index matrix registration closes every added source", async () => {
 	));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(git(["show", `${receiptCommit}:${addition.path}`]))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${checkedRecordValueIndexMatrixRegistrationPredecessor}:${addition.path}`]

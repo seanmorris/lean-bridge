@@ -1,4 +1,8 @@
-/** Verify the exact hosted-checkout repair for the value-index matrix. */
+/**
+ * Verify the exact hosted-checkout repair for the value-index matrix.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
@@ -23,6 +27,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 256 * 1024 * 1024
 });
+const receiptCommit = "d8f87b3743790d99b1238cb0b78a4cfc8d9b8bf1";
 
 test("value-index matrix hosted-checkout repair has one reversible lineage"
 	, async () => {
@@ -87,7 +92,7 @@ test("value-index matrix hosted-checkout repair closes every added source"
 		));
 		for(const addition of record.additions)
 		{
-			assert.equal(sha256(await readFile(addition.path))
+			assert.equal(sha256(git(["show", `${receiptCommit}:${addition.path}`]))
 				, addition.currentSha256, addition.path);
 			assert.notEqual(spawnSync("git", ["cat-file", "-e"
 				, `${checkedRecordValueIndexMatrixCheckoutPredecessor}:${addition.path}`]

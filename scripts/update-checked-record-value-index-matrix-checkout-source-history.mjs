@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Record the exact hosted-checkout correction for the value-index matrix. */
+/**
+ * Record the exact hosted-checkout correction for the value-index matrix.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -49,8 +53,8 @@ assert.deepEqual(names(["diff", "HEAD", "--name-only", "--"
 	, "tests/checked-record-value-index-matrix.test.mjs"
 	, "tests/helpers/fin-refinement-source-history.mjs"]), [
 	"tests/checked-record-value-index-matrix.test.mjs"
-	, "tests/helpers/fin-refinement-source-history.mjs"
-]);
+	, "tests/helpers/fin-refinement-source-history.mjs"]
+);
 
 const sources = new Map();
 for(const path of checkedRecordValueIndexMatrixCheckoutChangedPaths)

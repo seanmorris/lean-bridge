@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Record the exact source transition for the complete value-index matrix. */
+/**
+ * Record the exact source transition for the complete value-index matrix.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";

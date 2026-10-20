@@ -1,4 +1,8 @@
-/** Verify the exact source layer that promotes the complete value-index matrix. */
+/**
+ * Verify the exact source layer that promotes the complete value-index matrix.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";

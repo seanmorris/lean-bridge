@@ -1,4 +1,8 @@
-/** Close omitted matrix/browser history-hub and Rust expectation transitions. */
+/**
+ * Close omitted matrix/browser history-hub and Rust expectation transitions.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -50,16 +54,34 @@ const reverse = (source, update, paths) => {
 	return previous;
 };
 
+/**
+ * Reverse the live matrix history-hub update.
+ *
+ * @param source - Current source text.
+ * @param update - Reversible update record.
+ */
 export const reverseCheckedRecordValueIndexMatrixHistoryGapUpdate = (
 	source, update
 ) => reverse(source, update, checkedRecordValueIndexMatrixHistoryGapChangedPaths);
 
+/**
+ * Reverse one omitted historical matrix-adjacent update.
+ *
+ * @param source - Current source text.
+ * @param update - Reversible update record.
+ */
 export const reverseCheckedRecordValueIndexMatrixHistoricalGapUpdate = (
 	source, update
 ) => reverse(source, update
 	, checkedRecordValueIndexMatrixHistoryGapHistoricalPaths);
 
-/** Reconstruct across the live hub wiring and every omitted historical edge. */
+/**
+ * Reconstruct across the live hub wiring and every omitted historical edge.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Current source text.
+ * @param expected - Expected historical digest.
+ */
 export const beforeCheckedRecordValueIndexMatrixHistoryGapSource = (
 	path, source, expected
 ) => {

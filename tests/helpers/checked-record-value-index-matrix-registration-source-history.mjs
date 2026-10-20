@@ -1,4 +1,8 @@
-/** Preserve the exact contract-profile registration for matrix tests. */
+/**
+ * Preserve the exact contract-profile registration for matrix tests.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -28,7 +32,12 @@ const record = () => history ??= JSON.parse(readFileSync(
 	checkedRecordValueIndexMatrixRegistrationHistoryPath, "utf8"
 ));
 
-/** Reverse one exact matrix test registration update. */
+/**
+ * Reverse one exact matrix test registration update.
+ *
+ * @param source - Current source text.
+ * @param update - Reversible update record.
+ */
 export const reverseCheckedRecordValueIndexMatrixRegistrationUpdate = (
 	source, update
 ) => {
@@ -58,7 +67,13 @@ export const reverseCheckedRecordValueIndexMatrixRegistrationUpdate = (
 	return previous;
 };
 
-/** Remove only the exact matrix test registration layer. */
+/**
+ * Remove only the exact matrix test registration layer.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Current source text.
+ * @param expected - Expected historical digest.
+ */
 export const beforeCheckedRecordValueIndexMatrixRegistrationSource = (
 	path, source, expected
 ) => {

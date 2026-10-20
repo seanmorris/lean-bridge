@@ -237,7 +237,7 @@ export const checkCheckedRecordValueIndexPhpWasmReport = async (read, { route, p
 		assert.deepEqual(closure, subset(set.files, packed.directory + "/"));
 		assert.deepEqual(subset(deployment
 			, `${pkg.ecosystem === "composer" ? "vendor" : "node_modules"}/${pkg.name}/`)
-			, closure);
+		, closure);
 		unpacked.set(pkg.role, members);
 	}
 	assert.deepEqual(unpacked.get("component").get("compiled/model.json")

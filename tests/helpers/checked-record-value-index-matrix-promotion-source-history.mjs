@@ -59,7 +59,12 @@ const record = () => history ??= JSON.parse(readFileSync(
 	checkedRecordValueIndexMatrixPromotionHistoryPath, "utf8"
 ));
 
-/** Reverse one exact complete value-index matrix promotion transition. */
+/**
+ * Reverse one exact complete value-index matrix promotion transition.
+ *
+ * @param source - Current source text.
+ * @param update - Reversible update record.
+ */
 export const reverseCheckedRecordValueIndexMatrixPromotionUpdate = (
 	source, update
 ) => {
@@ -89,7 +94,13 @@ export const reverseCheckedRecordValueIndexMatrixPromotionUpdate = (
 	return previous;
 };
 
-/** Remove only the exact complete value-index matrix promotion layer. */
+/**
+ * Remove only the exact complete value-index matrix promotion layer.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Current source text.
+ * @param expected - Expected historical digest.
+ */
 export const beforeCheckedRecordValueIndexMatrixPromotionSource = (
 	path, source, expected
 ) => {

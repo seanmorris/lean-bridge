@@ -171,7 +171,11 @@ const referenceContract = Object.freeze([
 	}
 ]);
 
-/** Refuse missing, reordered or forged route/reference metadata. */
+/**
+ * Refuse missing, reordered or forged route/reference metadata.
+ *
+ * @param references - Hosted route records to authenticate.
+ */
 export const assertCheckedRecordValueIndexMatrixPromotionReferences
 	= references => {
 		assert.ok(Array.isArray(references));
@@ -263,7 +267,12 @@ export const checkedRecordValueIndexMatrixPromotionReferences = async () => {
 	return assertCheckedRecordValueIndexMatrixPromotionReferences(references);
 };
 
-/** Promote exactly twenty cells from the authenticated native/managed lanes. */
+/**
+ * Promote exactly twenty cells from the authenticated native/managed lanes.
+ *
+ * @param original - Current type-surface inventory.
+ * @param references - Authenticated hosted route records.
+ */
 export const promoteCheckedRecordValueIndexMatrix = async (
 	original, references
 ) => {
@@ -271,10 +280,14 @@ export const promoteCheckedRecordValueIndexMatrix = async (
 	const inventory = structuredClone(original);
 	const sourcesByLane = new Map();
 	for(const definition of laneDefinitions)
-		sourcesByLane.set(definition.lane, await Promise.all(
+	{
+		const sources = await Promise.all(
 			[...definition.validators, ...promotionValidators].map(async path => ({
 				path, sha256: sha256(await readFile(path))
-			}))));
+			}))
+		);
+		sourcesByLane.set(definition.lane, sources);
+	}
 	for(const reference of references)
 	{
 		assert.ok(!inventory.evidence.some(item => item.id === reference.id)

@@ -1,4 +1,8 @@
-/** Authenticate the final native/managed value-index route references. */
+/**
+ * Authenticate the final native/managed value-index route references.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
