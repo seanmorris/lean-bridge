@@ -29,6 +29,14 @@ int main(void) {
     auto ticket = api::new_ticket(41, "native"), retained = ticket.retain();
     ticket.close(); CHECK(ticket.is_closed()); CHECK(api::serial(retained) == 41);
     const auto value = bundle(retained, 7);
+		api::CallbackBundle callbackValue{retained, {7, {0, 255}}};
+		size_t callbackCalls = 0;
+		auto callbackResult = api::callback_record(callbackValue
+			, [&](const api::CallbackBundle& incoming) {
+				++callbackCalls; return incoming;
+			});
+		CHECK(callbackCalls == 1 && callbackResult.payload.count == 7
+			&& api::serial(callbackResult.primary) == 41);
     for(size_t i = 0; i < 30; ++i) {
       const auto echoed = api::echo_record(value);
       const auto alternate = api::echo_record_alternate(value);

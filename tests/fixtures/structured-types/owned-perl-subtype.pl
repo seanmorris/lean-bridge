@@ -44,6 +44,15 @@ sub bundle {
     payload => payload($count)
   );
 }
+sub callback_bundle {
+  my ($ticket, $count) = @_;
+  return LeanBridge::OwnedProbe::CallbackBundle->new(
+    primary => $ticket,
+    payload => LeanBridge::OwnedProbe::CallbackPayload->new(
+      count => Math::BigInt->new($count), bytes => "\0\xff"
+    )
+  );
+}
 sub serial_is {
   my ($ticket, $expected, $message) = @_;
   check(invoke('serial', $ticket)->bcmp($expected) == 0, $message);
@@ -56,6 +65,15 @@ serial_is($ticket, 41, 'fresh resource is usable');
 serial_is($retained, 41, 'explicit retain is independent');
 
 my $valid = bundle($ticket, 7);
+my $callback_calls = 0;
+my $callback_result = invoke('callback_record', callback_bundle($ticket, 7), sub {
+  my ($incoming) = @_; ++$callback_calls; return $incoming;
+});
+check($callback_calls == 1, 'host callback executes beside checked constructors');
+check($callback_result->payload->count->bcmp(7) == 0,
+  'host callback preserves its separately erased aggregate');
+serial_is($callback_result->primary, 41, 'host callback preserves the resource');
+release($callback_result);
 for (1 .. 12) {
   my $echoed = invoke('echo_record', $valid);
   check($echoed->payload->count->bcmp(7) == 0, 'selected constructor accepts a valid value');

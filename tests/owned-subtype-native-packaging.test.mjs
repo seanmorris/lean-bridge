@@ -14,7 +14,7 @@ import { buildCanonicalProject } from "../src/build/canonical-build.mjs";
 import { readVerifiedNativeComponent, readVerifiedNativeRuntime } from "../src/build/native-artifacts.mjs";
 import { packageOwnedNativeC } from "../src/release/owned-c-package.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
-import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
+import { ownedSubtypeCallbackPackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
 import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
@@ -31,13 +31,13 @@ test.after(async () => {
 		}));
 });
 
-test("owned Subtype native consumers match host-neutral generated headers", async t => {
+test("owned Subtype and callback native consumers match generated headers", async t => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-owned-subtype-native-headers-"));
 	t.after(() => rm(directory, { recursive: true, force: true }));
-	const generated = generateOwnedCppPackage(ownedSubtypePackageReviewedIr(), {
-		transferredInputs: true, anchoredResults: true, hostCallbacks: false
+	const generated = generateOwnedCppPackage(ownedSubtypeCallbackPackageReviewedIr(), {
+		transferredInputs: true, anchoredResults: true, hostCallbacks: true
 	});
-	assert.equal(generated.c.callbacks.length, 0);
+	assert.equal(generated.c.callbacks.length, 1);
 	assert.ok(generated.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
 	for(const [path, source] of Object.entries({
 		...generated.files, [`include/${generated.c.prefix}.h`]: generated.c.header
@@ -123,12 +123,14 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	await cp(resolve("tests/fixtures/onboarding/owned-subtypes"), project, { recursive: true });
 	const config = reviewed ? { schemaVersion: 1, modules: ["Owned"] }
 		: await json(join(project, "lean-bridge.exports.json"));
+	if(!reviewed) config.exports.push("Owned.callbackRecord");
 	config.targets = {
 		c: { name: "owned-subtypes-c", version: "1.0.0" }
 		, cpp: { name: "owned-subtypes-cpp", version: "1.0.0" }
 	};
 	await saveLakeFile(project, "lean-bridge.exports.json", canonicalJson(config));
-	if(reviewed) await saveLakeFile(project, "reviewed.binding-ir.json", canonicalJson(ownedSubtypePackageReviewedIr()));
+	if(reviewed) await saveLakeFile(project, "reviewed.binding-ir.json"
+		, canonicalJson(ownedSubtypeCallbackPackageReviewedIr()));
 	const before = await lakeInputState(project), environment = nativeFixtureEnvironment(["c", "cpp"]);
 	const built = await buildCanonicalProject({
 		projectRoot: project, outputRoot: output
@@ -144,7 +146,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, nativeCheckedRecords: true
 	});
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), reviewed);
-	assert.equal(model.ownedGraph.hostCallbacks, undefined);
+	assert.ok(model.ownedGraph.hostCallbacks);
 	assert.ok(model.ownedGraph.inputTransfers);
 	const echo = model.bindingIr.declarations.find(item => item.name === "echoRecord");
 	const transfer = model.bindingIr.declarations.find(item => item.name === "transferRecord");
@@ -153,7 +155,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	assert.equal(transfer.parameters[0].ownership, "transfer");
 	const adapterRoot = join(output, "native/owned-c-binding");
 	const adapter = await json(join(adapterRoot, "native-c-adapter.json"));
-	assert.ok(adapter.cppValues); assert.equal(adapter.ownedValues.hostCallbacks, undefined);
+	assert.ok(adapter.cppValues); assert.ok(adapter.ownedValues.hostCallbacks);
 	for(const target of ["c", "cpp"])
 	{
 		const projection = built.projections.find(item => item.ecosystem === target);
@@ -198,6 +200,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		reviewed, sourceUnchanged: true, sourceFreeInstallation: true
 		, relocatedInstallation: true, deterministicReassembly: true
 		, transferredInputCheckedBeforeHandoff: true
+		, callbackCoexistence: true
 		, componentReceipt, adapter, packageSetReceipt: receipt
 		, observed, relocated });
 	t.diagnostic(JSON.stringify({

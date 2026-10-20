@@ -164,3 +164,53 @@ export const ownedSubtypePackageReviewedIr = () => {
 	ir.errors = [];
 	return ir;
 };
+
+/**
+ * Add an independently erased owned callback carrier to the checked package.
+ * Keeping callback and checked carrier identities distinct makes the per-site
+ * constructor contract explicit rather than silently assigning it to callbacks.
+ */
+export const ownedSubtypeCallbackPackageReviewedIr = () => {
+	const ir = ownedSubtypePackageReviewedIr();
+	const ticket = named("Ticket"), payload = named("CallbackPayload");
+	const bundle = named("CallbackBundle");
+	const callbackPayload = definition("CallbackPayload", "record", "copied", {
+		fields: [field("count", primitive("int")), field("bytes", primitive("bytes"))]
+	});
+	const callbackBundle = definition("CallbackBundle", "record", "owned", {
+		fields: [field("primary", ticket), field("payload", payload)]
+	});
+	const site = (type, result = false) => ({ type
+		, ownership: type.kind === "primitive" || type.id === payload.id
+			? "copy" : result ? "lease" : "borrow"
+		, lifetime: type.kind === "primitive" || type.id === payload.id
+			? null : { scope: result ? "explicit" : "call", anchor: null } });
+	const parameter = (type, index) => ({ name: `arg${index}`
+		, ...site(type)
+		, mutability: "immutable", optional: false, default: null });
+	const callbackFailure = { mode: "declared"
+		, errors: ["error:native-callback"], unexpected: "poison-runtime" };
+	const callbackName = `Callback${sha256(canonicalJson({
+		parameters: [bundle], result: bundle
+	})).slice(0, 20)}`;
+	const callback = { ...definition(callbackName, "callback", "identity")
+		, id: `bridge:${callbackName}`, source: source(callbackName)
+		, callable: { parameters: [parameter(bundle, 0)], result: site(bundle, true)
+			, effects: ["host-call", "fails"], failure: callbackFailure
+			, resultMode: "value", invocation: "many"
+			, reentry: "same-agent", selfDisposal: "defer" } };
+	const template = ir.declarations.find(item => item.name === "echoRecord");
+	const declaration = { ...template
+		, id: "lean:Owned.callbackRecord", name: "callbackRecord"
+		, overloadKey: "Owned.callbackRecord"
+		, parameters: [parameter(bundle, 0)
+			, parameter({ kind: "named", id: callback.id }, 1)]
+		, result: site(bundle, true)
+		, effects: ["reads-resource", "allocates", "host-call", "fails"]
+		, failure: callbackFailure, source: source("Owned.callbackRecord") };
+	ir.types.push(callbackPayload, callbackBundle, callback);
+	ir.declarations.push(declaration);
+	ir.errors = [{ id: "error:native-callback", name: "NativeCallbackFailure"
+		, category: "boundary", payload: null, documentation }];
+	return ir;
+};

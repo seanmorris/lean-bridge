@@ -21,6 +21,14 @@ structure Bundle where
   history : List Ticket
   payload : Payload
 
+structure CallbackPayload where
+  count : Int
+  bytes : ByteArray
+
+structure CallbackBundle where
+  primary : Ticket
+  payload : CallbackPayload
+
 def newTicket (serial : Nat) (label : String) : Ticket :=
   ⟨serial, label⟩
 
@@ -31,5 +39,9 @@ def echoRecord (value : Bundle) : Bundle := value
 def echoRecordAlternate (value : Bundle) : Bundle := value
 
 def transferRecord (value : Bundle) : Bundle := value
+
+def callbackRecord (value : CallbackBundle)
+    (callback : CallbackBundle → CallbackBundle) : CallbackBundle :=
+  callback value
 
 end Owned

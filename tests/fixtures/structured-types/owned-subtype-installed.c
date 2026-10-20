@@ -33,6 +33,16 @@ static void expect_serial(
   CHECK(mpz_cmp_ui(value, expected) == 0); release(&owner);
 }
 
+typedef struct { size_t calls; } callback_state;
+static owned_subtypes_status callback_record(
+  void *context, owned_subtypes_session *session,
+  const owned_subtypes_callback_bundle_t *input,
+  owned_subtypes_callback_bundle_t *out, owned_subtypes_result **owner
+) {
+  (void)session; (void)owner; callback_state *state = context;
+  ++state->calls; *out = *input; return OWNED_SUBTYPES_OK;
+}
+
 int main(void) {
   owned_subtypes_session *session = NULL; OK(owned_subtypes_session_open(&session));
   owned_subtypes_result *ticket_owner = NULL, *owner = NULL;
@@ -48,6 +58,18 @@ int main(void) {
   owned_subtypes_bundle_t input = {ticket, &spare, &peers, &history, &payload};
   owned_subtypes_bundle_t bad = {ticket, &spare, &peers, &history, &bad_payload};
   owned_subtypes_bundle_t out = {0};
+	owned_subtypes_callback_payload_t callback_payload = {valid, {bytes, 2}};
+	owned_subtypes_callback_bundle_t callback_input = {ticket, &callback_payload};
+	owned_subtypes_callback_bundle_t callback_out = {0};
+	callback_state callback_observed = {0};
+	owned_subtypes_callback_record_argument1_t_host callback = {
+		.call = callback_record, .context = &callback_observed
+	};
+	OK(owned_subtypes_callback_record(session, &callback_input, &callback
+		, &callback_out, &owner));
+	CHECK(callback_observed.calls == 1 && callback_out.primary == ticket
+		&& mpz_cmp_si(callback_out.payload->count, 7) == 0);
+	release(&owner); expect_serial(session, ticket, 41);
 
   for(size_t i = 0; i < 12; ++i) {
     OK(owned_subtypes_echo_record(session, &input, &out, &owner));
