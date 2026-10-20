@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-wit-archive-source-v1",
+  "predecessorCommit": "dd2ee7a08530f5956912616442bc0a110c5708e9",
+  "draftParentCommit": "0af79d1441b0e8fb8b1e483a6c08811eaf0a2c21",
+  "pathsSha256": "11f465a5c53660cd8f9bb73e5a10341dbcec0405afae7ff6cff4b0fdc6dfd231",
+  "archive": {
+    "root": "docs/evidence/checked-record-value-index-wit-20261020",
+    "indexSha256": "a985723dd4dab68794a7061752c7dbf093c19a949a58b574a37063fa17d296b9",
+    "indexedFileCount": 2036,
+    "archiveFileCount": 2037,
+    "addedFileCount": 2039
+  },
+  "additions": [
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-evidence-tests.mjs",
+      "currentSha256": "7db85c41d208cc2be42e4be6929f256e1e0843917bd9fcec6c1d38deb937b97f"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-wit-evidence.mjs",
+      "currentSha256": "2070d6cf22576664d667111def0758292b2cfa3a9503f341dcbd33b2b670f45b"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-wit.test.mjs",
+      "previousSha256": "602da97596a4a4a3977075c96cf832383050fe063dfcc08bd087890a41d5b464",
+      "currentSha256": "2fb53ca41ceddb710eb203319bda9a04e74766ae2b3cb9a1f5d53a0866f0830d",
+      "edits": [
+        {
+          "start": 882,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-wit-evidence-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}

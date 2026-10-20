@@ -17,6 +17,7 @@ import { beforeCheckedRecordValueIndexRubyArchiveSource, checkedRecordValueIndex
 import { beforeCheckedRecordValueIndexPythonPromotionSource, checkedRecordValueIndexPythonPromotionChangedPaths } from "./checked-record-value-index-python-promotion-source-history.mjs";
 import { beforeCheckedRecordValueIndexWitVerifierRepairSource, checkedRecordValueIndexWitVerifierRepairChangedPaths } from "./checked-record-value-index-wit-verifier-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexWitCallerWarningRepairSource, checkedRecordValueIndexWitCallerWarningRepairChangedPaths } from "./checked-record-value-index-wit-caller-warning-repair-source-history.mjs";
+import { beforeCheckedRecordValueIndexWitArchiveSource, checkedRecordValueIndexWitArchiveChangedPaths } from "./checked-record-value-index-wit-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonArchiveHistoryGapSource, checkedRecordValueIndexPythonArchiveHistoryGapHistoricalPaths } from "./checked-record-value-index-python-archive-history-gap-source-history.mjs";
 import { beforeCheckedRecordValueIndexPythonArchiveSource, checkedRecordValueIndexPythonArchiveChangedPaths } from "./checked-record-value-index-python-archive-source-history.mjs";
 import { beforeCheckedRecordValueIndexPerlPromotionSource, checkedRecordValueIndexPerlPromotionChangedPaths } from "./checked-record-value-index-perl-promotion-source-history.mjs";
@@ -1363,7 +1364,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexPhpWasmPromotionChangedPaths
+	...checkedRecordValueIndexWitArchiveChangedPaths
+	, ...checkedRecordValueIndexPhpWasmPromotionChangedPaths
 	, ...checkedRecordValueIndexPhpWasmArchiveChangedPaths
 	, ...checkedRecordValueIndexRustInventoryRepairChangedPaths
 	, ...checkedRecordValueIndexWitCallerWarningRepairChangedPaths
@@ -1798,8 +1800,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexRustInventoryRepairSource(
+	let previous = beforeCheckedRecordValueIndexWitArchiveSource(
 		path, text, expected
+	);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexRustInventoryRepairSource(
+		path, previous, expected
 	);
 	if(sha256(previous) === expected) return previous;
 	previous = beforeCheckedRecordValueIndexWitCallerWarningRepairSource(
