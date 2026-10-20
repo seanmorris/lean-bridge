@@ -64,15 +64,17 @@ const verifyFiles = async (root, files, exact = false) => {
  *
  * @param bytes - Original deterministic NuGet archive.
  * @param archiveSha256 - Package-set artifact digest.
+ * @param receiptContract - Expected receipt kind and schema version.
  */
-export const inspectFinContainerEdgeDotnetArchive = (bytes, archiveSha256) => {
+export const inspectFinContainerEdgeDotnetArchive = (bytes, archiveSha256, receiptContract = {}) => {
+	const { kind = "lean-bridge-ordinary-nuget-package", schemaVersion = 1 } = receiptContract;
 	assert.match(archiveSha256, /^[a-f0-9]{64}$/u);
 	assert.equal(sha256(bytes), archiveSha256, "original .NET archive drift");
 	const members = readClosedPackageZip(bytes), receiptBytes = members.get(receiptPath)?.toString("utf8");
 	assert.equal(typeof receiptBytes, "string", ".NET receipt missing");
 	const receipt = JSON.parse(receiptBytes);
-	assert.equal(canonicalJson(receipt), receiptBytes); assert.equal(receipt.schemaVersion, 1);
-	assert.equal(receipt.kind, "lean-bridge-ordinary-nuget-package"); assert.equal(receipt.ecosystem, "nuget");
+	assert.equal(canonicalJson(receipt), receiptBytes); assert.equal(receipt.schemaVersion, schemaVersion);
+	assert.equal(receipt.kind, kind); assert.equal(receipt.ecosystem, "nuget");
 	assert.match(receipt.name, /^[A-Za-z][A-Za-z0-9_.-]*$/u);
 	assert.match(receipt.version, /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)$/u);
 	assert.match(receipt.assembly, /^[A-Za-z][A-Za-z0-9_.]*$/u);
@@ -155,11 +157,18 @@ export const runFinContainerEdgeDotnet = async context => {
  * @param options.archive - Original verified archive path.
  * @param options.archiveSha256 - Package-set digest.
  * @param options.command - Explicit trusted .NET host.
+ * @param options.receiptKind - Optional non-default package receipt kind.
+ * @param options.receiptSchemaVersion - Optional non-default receipt schema.
  */
-export const installFinContainerEdgeDotnet = async ({ root, archive, archiveSha256, command: selected }) => {
+export const installFinContainerEdgeDotnet = async options => {
+	const { root, archive, archiveSha256, command: selected
+		, receiptKind, receiptSchemaVersion } = options;
 	assert.equal(await realpath(root), resolve(root));
 	assert.deepEqual(await nativeArtifactPaths(root), ["consumer.cs"], "fresh .NET consumer directory required");
-	const bytes = await readFile(archive), original = inspectFinContainerEdgeDotnetArchive(bytes, archiveSha256);
+	const bytes = await readFile(archive), original = inspectFinContainerEdgeDotnetArchive(bytes, archiveSha256, {
+		...(receiptKind === undefined ? {} : { kind: receiptKind })
+		, ...(receiptSchemaVersion === undefined ? {} : { schemaVersion: receiptSchemaVersion })
+	});
 	const { receipt } = original, command = await realpath(selected), env = environment(root, command);
 	const interpreter = identity(await readFile(command));
 	const listed = await runCopied(command, ["--list-sdks"], root, env);

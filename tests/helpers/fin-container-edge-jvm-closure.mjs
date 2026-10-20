@@ -23,15 +23,17 @@ const invocation = profile => ["--enable-native-access=ALL-UNNAMED", "-cp"
  *
  * @param bytes - Original archive bytes, before a compiler can inspect the classpath.
  * @param archiveSha256 - Digest from the verified package-set receipt.
+ * @param receiptContract - Expected receipt kind and schema version.
  */
-export const inspectFinContainerEdgeJvmArchive = (bytes, archiveSha256) => {
+export const inspectFinContainerEdgeJvmArchive = (bytes, archiveSha256, receiptContract = {}) => {
+	const { kind = "lean-bridge-ordinary-maven-package", schemaVersion = 1 } = receiptContract;
 	assert.match(archiveSha256, /^[a-f0-9]{64}$/u);
 	assert.equal(sha256(bytes), archiveSha256, "original JVM archive drift");
 	const files = readClosedPackageZip(bytes), receiptBytes = files.get(receiptPath)?.toString("utf8");
 	assert.equal(typeof receiptBytes, "string", "JVM archive receipt missing");
 	const receipt = JSON.parse(receiptBytes);
 	assert.equal(canonicalJson(receipt), receiptBytes, "canonical JVM receipt");
-	assert.equal(receipt.schemaVersion, 1); assert.equal(receipt.kind, "lean-bridge-ordinary-maven-package");
+	assert.equal(receipt.schemaVersion, schemaVersion); assert.equal(receipt.kind, kind);
 	assert.equal(receipt.ecosystem, "maven");
 	assert.ok(receipt.files && !Array.isArray(receipt.files) && typeof receipt.files === "object");
 	assert.deepEqual([...files.keys()].sort(), [...Object.keys(receipt.files), receiptPath].sort(), "unrecorded or missing JVM archive file");
@@ -98,13 +100,20 @@ export const runFinContainerEdgeJvm = async context => {
  * @param options.archive - Original package-set JAR.
  * @param options.archiveSha256 - Original artifact digest.
  * @param options.environment - Selected JDK and Kotlin paths, not inherited JVM options.
+ * @param options.receiptKind - Optional non-default package receipt kind.
+ * @param options.receiptSchemaVersion - Optional non-default receipt schema.
  */
-export const installFinContainerEdgeJvm = async ({ profile, root, archive, archiveSha256, environment }) => {
+export const installFinContainerEdgeJvm = async options => {
+	const { profile, root, archive, archiveSha256, environment
+		, receiptKind, receiptSchemaVersion } = options;
 	assert.ok(["java", "kotlin"].includes(profile));
 	assert.equal(await realpath(root), resolve(root), "JVM root must not traverse a symlink");
 	const source = `consumer.${profile === "java" ? "java" : "kt"}`;
 	assert.deepEqual(await nativeArtifactPaths(root), [source], "fresh JVM consumer directory required");
-	const bytes = await readFile(archive), original = inspectFinContainerEdgeJvmArchive(bytes, archiveSha256);
+	const bytes = await readFile(archive), original = inspectFinContainerEdgeJvmArchive(bytes, archiveSha256, {
+		...(receiptKind === undefined ? {} : { kind: receiptKind })
+		, ...(receiptSchemaVersion === undefined ? {} : { schemaVersion: receiptSchemaVersion })
+	});
 	const command = await realpath(environment.LEAN_BRIDGE_JAVA), interpreterSha256 = sha256(await readFile(command));
 	const files = { [source]: identity(await readFile(join(root, source))), "component.jar": identity(bytes) };
 	await writeFile(join(root, "component.jar"), bytes, { flag: "wx" });

@@ -42,15 +42,17 @@ const verifyFiles = async (root, files, exact = false) => {
  *
  * @param bytes - Original ZIP bytes.
  * @param archiveSha256 - Package-set digest.
+ * @param receiptContract - Expected receipt kind and schema version.
  */
-export const inspectFinContainerEdgePhpArchive = (bytes, archiveSha256) => {
+export const inspectFinContainerEdgePhpArchive = (bytes, archiveSha256, receiptContract = {}) => {
+	const { kind = "lean-bridge-ordinary-php-package", schemaVersion = 1 } = receiptContract;
 	assert.match(archiveSha256, /^[a-f0-9]{64}$/u);
 	assert.equal(sha256(bytes), archiveSha256, "original PHP archive drift");
 	const members = readClosedPackageZip(bytes), receiptBytes = members.get(receiptPath)?.toString("utf8");
 	assert.equal(typeof receiptBytes, "string", "PHP receipt missing");
 	const receipt = JSON.parse(receiptBytes);
-	assert.equal(canonicalJson(receipt), receiptBytes); assert.equal(receipt.schemaVersion, 1);
-	assert.equal(receipt.kind, "lean-bridge-ordinary-php-package"); assert.equal(receipt.ecosystem, "composer");
+	assert.equal(canonicalJson(receipt), receiptBytes); assert.equal(receipt.schemaVersion, schemaVersion);
+	assert.equal(receipt.kind, kind); assert.equal(receipt.ecosystem, "composer");
 	assert.match(receipt.name, /^[a-z0-9][a-z0-9_.-]*\/[a-z0-9][a-z0-9_.-]*$/u);
 	assert.match(receipt.version, /^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)$/u);
 	assert.deepEqual([...members.keys()].sort(), [...Object.keys(receipt.files), receiptPath].sort(), "unrecorded or missing PHP archive file");
@@ -124,11 +126,19 @@ export const runFinContainerEdgePhp = async (context, mode = "weak") => {
  * @param options.archiveSha256 - Original archive digest.
  * @param options.command - Selected trusted PHP executable.
  * @param options.composer - Selected trusted Composer executable or PHAR.
+ * @param options.receiptKind - Optional non-default package receipt kind.
+ * @param options.receiptSchemaVersion - Optional non-default receipt schema.
  */
-export const installFinContainerEdgePhp = async ({ root, archive, archiveSha256, command: selected, composer: selectedComposer }) => {
+export const installFinContainerEdgePhp = async options => {
+	const { root, archive, archiveSha256
+		, command: selected, composer: selectedComposer
+		, receiptKind, receiptSchemaVersion } = options;
 	assert.equal(await realpath(root), resolve(root));
 	assert.deepEqual(await nativeArtifactPaths(root), ["consumer.php"], "fresh PHP consumer directory required");
-	const bytes = await readFile(archive), original = inspectFinContainerEdgePhpArchive(bytes, archiveSha256);
+	const bytes = await readFile(archive), original = inspectFinContainerEdgePhpArchive(bytes, archiveSha256, {
+		...(receiptKind === undefined ? {} : { kind: receiptKind })
+		, ...(receiptSchemaVersion === undefined ? {} : { schemaVersion: receiptSchemaVersion })
+	});
 	const command = await realpath(selected), composer = await realpath(selectedComposer);
 	const host = JSON.parse((await runCopied(command, ["-n", "-r", 'echo json_encode(["directory"=>ini_get("extension_dir"),"modules"=>get_loaded_extensions()]);'], root)).stdout);
 	const tools = { [command]: identity(await readFile(command)), [composer]: identity(await readFile(composer)) };
