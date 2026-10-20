@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeNominalSubtypeEntryMeasurementSource, nominalSubtypeEntryMeasurementChangedPaths } from "./nominal-subtype-entry-measurement-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource, checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths } from "./checked-record-value-index-matrix-evidence-pin-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixPinRepairSource, checkedRecordValueIndexMatrixPinRepairChangedPaths } from "./checked-record-value-index-matrix-pin-repair-source-history.mjs";
 import { beforeCheckedRecordValueIndexMatrixLintSource, checkedRecordValueIndexMatrixLintChangedPaths } from "./checked-record-value-index-matrix-lint-source-history.mjs";
@@ -1377,7 +1378,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths
+	...nominalSubtypeEntryMeasurementChangedPaths
+	, ...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths
 	, ...checkedRecordValueIndexMatrixPinRepairChangedPaths
 	, ...checkedRecordValueIndexMatrixLintChangedPaths
 	, ...checkedRecordValueIndexMatrixHistoryGapChangedPaths
@@ -1827,7 +1829,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	let previous = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(
+	let previous = beforeNominalSubtypeEntryMeasurementSource(path, text, expected);
+	if(sha256(previous) === expected) return previous;
+	previous = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(
 		path, text, expected
 	);
 	if(sha256(previous) === expected) return previous;

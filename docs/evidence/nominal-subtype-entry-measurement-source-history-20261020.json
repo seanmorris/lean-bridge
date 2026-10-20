@@ -1,0 +1,128 @@
+{
+  "additions": [
+    {
+      "currentSha256": "925c7a6ad69fb7f358e5878fbb40c0d6d33c536c85118bd3506aa821e7fec369",
+      "path": ".github/workflows/nominal-subtype-entry-browser.yml"
+    },
+    {
+      "currentSha256": "8f0b789eb87f2be880a660d7c2c2344b1011a3aa8e46972cf6c142dce9503edb",
+      "path": ".github/workflows/nominal-subtype-entry-native.yml"
+    },
+    {
+      "currentSha256": "b334b2fef92910e76262cece45845d5dc90752f439d570780125b59fd049e681",
+      "path": "scripts/check-nominal-subtype-entry-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "0daf6905203039bfd93e3aa69b61fedc0a2da9daf18392dd8745b878afc256c8",
+      "path": "scripts/check-nominal-subtype-entry-native-ci.mjs"
+    },
+    {
+      "currentSha256": "b3e935d5de2f8ee7ee3bcdda5f717ce4f4acf58cd51b2b16f1718c83240effaa",
+      "path": "scripts/run-nominal-subtype-entry-browser-ci.sh"
+    },
+    {
+      "currentSha256": "e87e6e945e11c0c837ee6e67627be45445efa22c5d0bc47adef47e59115d18ad",
+      "path": "scripts/run-nominal-subtype-entry-native-ci.sh"
+    },
+    {
+      "currentSha256": "9f2f541dde395f5b7499d5797e8fe8328272483ca2a5500b8e6787e62d789c7d",
+      "path": "scripts/update-nominal-subtype-entry-measurement-source-history.mjs"
+    },
+    {
+      "currentSha256": "dd4c46ed6fc3bcf7e204463d8d2193651101b5dca396995d895c09b98759043a",
+      "path": "tests/helpers/nominal-subtype-entry-browser-ci-report.mjs"
+    },
+    {
+      "currentSha256": "6fb2cf00a482b8052bd285bc7d1b45160e0c6aa7e168c13494ed9159a09b472c",
+      "path": "tests/helpers/nominal-subtype-entry-browser-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "0a5de89260a2a9ceaba1095b84e2e996362e09acbf36887372a478e767039d0e",
+      "path": "tests/helpers/nominal-subtype-entry-measurement-source-history.mjs"
+    },
+    {
+      "currentSha256": "67ea9ed6524a5410ed70fa07c1254be03f2f97b5f234c62ce148f4f305b1889f",
+      "path": "tests/helpers/nominal-subtype-entry-measurement-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "51beb18f2c14c8db8406454d7632ee2b04b0753da95c2ddf8596747774d66629",
+      "path": "tests/helpers/nominal-subtype-entry-native-ci-report.mjs"
+    },
+    {
+      "currentSha256": "493d74b170d5779311afe241549f79abf210eb2bd633ea049e6c7833e2a004ed",
+      "path": "tests/helpers/nominal-subtype-entry-native-ci-tests.mjs"
+    }
+  ],
+  "implementationCommit": "83f7142a5437b8b4477c85fc2f1e6411ccea2b21",
+  "milestone": "nominal-subtype-entry-measurement-source-v1",
+  "pinUpdates": [
+    {
+      "containerCurrentSha256": "c27ea39d9f5592a961009c252618390137a9d6085cdde36d4fa0820d7f453a2d",
+      "containerPath": "docs/evidence/core-first-run-residual-repair-source-history-20261019.json",
+      "containerPreviousSha256": "8c2eda9fbf01fef2c5ab7e6bbd8758a8f0441cf6f0ca022ffbd3dd388bee005e",
+      "count": 1,
+      "currentSha256": "dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d",
+      "previousSha256": "3331489dcab7a9b9dda3450440438c2444405a48009a086be465ca428c878b2f",
+      "sourcePath": "tests/helpers/component-nominal-subtype-tests.mjs"
+    },
+    {
+      "containerCurrentSha256": "aca91b143e1c0623806b6dc801d00ccb721faac635d4b7b5a1d142b22ac75be8",
+      "containerPath": "docs/evidence/checked-record-value-index-matrix-evidence-pin-repair-source-history-20261020.json",
+      "containerPreviousSha256": "938e98619a591b8a8ba3285be47e317dba17391cb22a5c534f5f3b60b627353b",
+      "count": 1,
+      "currentSha256": "d307adaee39c24b9ba54eafdd392c3bbcce54cf04478d5a1f72a2a156e056308",
+      "previousSha256": "7869b6c0707b95a367aec4a35654979b5acedad1b7eacd95b96c7cead017280a",
+      "sourcePath": "tests/helpers/fin-refinement-source-history.mjs"
+    }
+  ],
+  "predecessorCommit": "b72154dd80bc6c86f9764c11f68505ed9b656039",
+  "schemaVersion": 1,
+  "updates": [
+    {
+      "currentSha256": "dce5bd7367d8764c2b2f5a93a69baba56e724a5db623d033707d39bea24b547d",
+      "edits": [
+        {
+          "current": "import \"./nominal-subtype-entry-browser-ci-tests.mjs\";\nimport \"./nominal-subtype-entry-native-ci-tests.mjs\";\nimport \"./nominal-subtype-entry-measurement-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1860
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "3331489dcab7a9b9dda3450440438c2444405a48009a086be465ca428c878b2f"
+    },
+    {
+      "currentSha256": "d307adaee39c24b9ba54eafdd392c3bbcce54cf04478d5a1f72a2a156e056308",
+      "edits": [
+        {
+          "current": "import { beforeNominalSubtypeEntryMeasurementSource, nominalSubtypeEntryMeasurementChangedPaths } from \"./nominal-subtype-entry-measurement-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...nominalSubtypeEntryMeasurementChangedPaths\n\t, ...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths\n",
+          "previous": "\t...checkedRecordValueIndexMatrixEvidencePinRepairChangedPaths\n",
+          "start": 107624
+        },
+        {
+          "current": "\tlet previous = beforeNominalSubtypeEntryMeasurementSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(\n",
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexMatrixEvidencePinRepairSource(\n",
+          "start": 127705
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7869b6c0707b95a367aec4a35654979b5acedad1b7eacd95b96c7cead017280a"
+    },
+    {
+      "currentSha256": "ed0ea856c91decebb39efaf15692d963d1348e29c3f23bd2d15f6949d512f188",
+      "edits": [
+        {
+          "current": "/**\n * Exact records emitted by the separately identified Node entry probe and, when selected, its browser replay.\n *\n * @param options - Optional browser replay selection.\n * @param options.browser - Include the static page, deployment and three browser console traces.\n */\nexport const nominalSubtypeEntryRecordPaths = ({ browser = false } = {}) => [\n\t\"entry/fixture.probe.lean\", \"entry/entry.mjs\"\n\t, \"entry/stderr.txt\", \"entry/stdout.json\"\n\t, \"entry/component-package-receipt.json\", \"entry/entry.json\"\n\t, ...browser ? [\"entry/browser/entry-page.mjs\"\n\t\t, \"entry/browser/index.html\", \"entry/browser/deployment.json\"\n\t\t, \"entry/browser/chromium.console.txt\"\n\t\t, \"entry/browser/firefox.console.txt\"\n\t\t, \"entry/browser/webkit.console.txt\"\n\t\t, \"entry/browser/browser.json\"] : []\n];\n\n",
+          "previous": "",
+          "start": 1498
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-npm.mjs",
+      "previousSha256": "e0da787d958673c423e1d9c876e1c90f4a585b64a953c8b15a6a04c5859e1909"
+    }
+  ]
+}
