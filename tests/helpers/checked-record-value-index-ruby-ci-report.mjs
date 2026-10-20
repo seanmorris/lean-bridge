@@ -327,6 +327,7 @@ export const checkCheckedRecordValueIndexRubyCiRecords = async (args, {
 }) => {
 	const selected = parseCheckedRecordValueIndexRubyCiArgs(args);
 	assertCheckedRecordValueIndexRubyCiTap(tap, selected.route);
+	assert.equal(interpreter.command, selected.ruby);
 	return checkCheckedRecordValueIndexRubyReport(read, {
 		route: selected.route, producerCommit: selected.producer, runtime
 		, floor: selected.glibc, interpreter

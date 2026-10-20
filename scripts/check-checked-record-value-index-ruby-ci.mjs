@@ -38,7 +38,8 @@ const read = async path => {
 };
 const tap = await readFile(tapPath, "utf8");
 assert.equal((await read("run.tap")).toString(), tap, "Retained TAP drift");
-const result = await checkCheckedRecordValueIndexRubyCiRecords(process.argv.slice(2), {
+const options = Object.entries({ ...selected, ruby: command }).flatMap(([key, value]) => [`--${key}`, value]);
+const result = await checkCheckedRecordValueIndexRubyCiRecords(options, {
 	tap
 	, read
 	, runtime: { platform: process.platform, arch: process.arch, glibc: glibc.slice(6) }
