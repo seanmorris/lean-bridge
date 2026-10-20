@@ -1,0 +1,18 @@
+{
+  "modules": [
+    "CheckedRecordValueIndices"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-checkedrecordvalueindices/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-checkedrecordvalueindices-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

@@ -1,0 +1,466 @@
+{
+  "archives": [
+    {
+      "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz",
+      "bytes": 1660980,
+      "directory": "runtime/package",
+      "ecosystem": "npm",
+      "name": "@lean-bridge/php-wasm-copied-runtime",
+      "role": "runtime",
+      "sha256": "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780",
+      "version": "0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a"
+    },
+    {
+      "archive": "lean-bridge-checkedrecordvalueindices-wasm-1.0.0.tgz",
+      "bytes": 127219,
+      "directory": "component/package",
+      "ecosystem": "npm",
+      "name": "lean-bridge-checkedrecordvalueindices-wasm",
+      "role": "component",
+      "sha256": "ab80d1dffcd0d79310110746fdac47deacd6290e447a8b2cc0d2ca496cc8cecc",
+      "version": "1.0.0"
+    },
+    {
+      "archive": "lean-bridge-checkedrecordvalueindices-wasm-1.0.0-php-wasm.zip",
+      "bytes": 79043,
+      "directory": "composer",
+      "ecosystem": "composer",
+      "name": "lean-bridge-checkedrecordvalueindices/wasm",
+      "role": "api",
+      "sha256": "b81ee35106f2cc83bcbdd0244fbaeb2889b2d4b42bc25e3102ba43d6718dae2e",
+      "version": "1.0.0"
+    }
+  ],
+  "component": {
+    "id": "checkedrecordvalueindices@1.0.0",
+    "name": "checkedrecordvalueindices",
+    "version": "1.0.0"
+  },
+  "componentIdentity": "30a489e65ee9be7d974425401c486e2dafad6fc974e5757c7da1fe1381342805",
+  "composerSettings": {
+    "name": "lean-bridge-checkedrecordvalueindices/wasm",
+    "version": "1.0.0"
+  },
+  "files": {
+    "archives/lean-bridge-checkedrecordvalueindices-wasm-1.0.0-php-wasm.zip": {
+      "bytes": 79043,
+      "sha256": "b81ee35106f2cc83bcbdd0244fbaeb2889b2d4b42bc25e3102ba43d6718dae2e"
+    },
+    "archives/lean-bridge-checkedrecordvalueindices-wasm-1.0.0.tgz": {
+      "bytes": 127219,
+      "sha256": "ab80d1dffcd0d79310110746fdac47deacd6290e447a8b2cc0d2ca496cc8cecc"
+    },
+    "archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz": {
+      "bytes": 1660980,
+      "sha256": "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780"
+    },
+    "component/package/README.md": {
+      "bytes": 5905,
+      "sha256": "11eb48fa75cc00ea5ed8547a4a90ae09a6b1a5ee8ba2b9fa6e21c352b93d9d13"
+    },
+    "component/package/compiled/artifacts.json": {
+      "bytes": 2176,
+      "sha256": "1acd5e4b9d76ea994967b8254c50f34fb4144eadde9a55327882277ad6ee8a60"
+    },
+    "component/package/compiled/binding-ir.json": {
+      "bytes": 24019,
+      "sha256": "31f1cb6685a4241984f47aa6551f5c7ad2d3ea89e8ffd9a126bc21be6b73242c"
+    },
+    "component/package/compiled/component.h": {
+      "bytes": 1781,
+      "sha256": "3608fbf168d7f92c05853bf7bbb59d23a1e385fca70d570d9b853d79e1c4818a"
+    },
+    "component/package/compiled/copied-zend-manifest.json": {
+      "bytes": 3540,
+      "sha256": "ae5770620e1d183dffb5baf5cc4ae46ef59fc8f93942d2f4ef03a18aaeebea52"
+    },
+    "component/package/compiled/extension/lb_checkedrecordvalueindices_7f07c761828d996f.c": {
+      "bytes": 36878,
+      "sha256": "cdd92b3cd89e3620a11dabdbc749158ef4c721df59de8c9be49efd18949a9e69"
+    },
+    "component/package/compiled/generated.lean": {
+      "bytes": 8091,
+      "sha256": "ae21fdcea0756a53730efe47cbd11b40719873f74cae7f59ba8b033f37803d93"
+    },
+    "component/package/compiled/include/checkedrecordvalueindices.h": {
+      "bytes": 5964,
+      "sha256": "6ca76894e8733b6109afa8bfa55ac7ae2b186072725dce1081bb9f3f433a4dfe"
+    },
+    "component/package/compiled/lib/php8.4-lb_checkedrecordvalueindices_7f07c761828d996f.so": {
+      "bytes": 31808,
+      "sha256": "165b2d02b3e414acf530d1dcea9ab4330d37bbc6575f0ba2bda156ed67cd0618"
+    },
+    "component/package/compiled/metadata.json": {
+      "bytes": 48565,
+      "sha256": "a0c8314353841018332caff8c9accac4ebe0bf69e7238781b0f32f05168014b9"
+    },
+    "component/package/compiled/model.json": {
+      "bytes": 90260,
+      "sha256": "de56b16811caa37836eaa33cd7b4adcbbea86266a02bbc2ca641f415a2b5d78b"
+    },
+    "component/package/compiled/php-wasm-component.json": {
+      "bytes": 35476,
+      "sha256": "30a489e65ee9be7d974425401c486e2dafad6fc974e5757c7da1fe1381342805"
+    },
+    "component/package/compiled/source-notices.json": {
+      "bytes": 2314,
+      "sha256": "9999db0a7504eb69786fac121419d0e8c2c14163bf8b7f5e7eb3dba8b0191d4e"
+    },
+    "component/package/compiled/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "component/package/compiled/src/Api.php": {
+      "bytes": 7480,
+      "sha256": "c451c1e26f70dfe2e2631a1352a9560f564cbe4b5419a181463f7c3b7bc324b7"
+    },
+    "component/package/compiled/src/Internal/Native.php": {
+      "bytes": 21223,
+      "sha256": "bc4dd61d2b1a77de656ec362954bcba4567490db10522245758402a55bfa3308"
+    },
+    "component/package/index.mjs": {
+      "bytes": 4928,
+      "sha256": "80486f12f077be9d31958456f209fd8a0520781b7b1c9154fbe769eb95c449b0"
+    },
+    "component/package/lazy-library.txt": {
+      "bytes": 55,
+      "sha256": "c429f045ee162bb566e51b596b5548e4e59a37164d7b83b35787c358d791058d"
+    },
+    "component/package/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "component/package/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "component/package/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "component/package/licenses/runtime/NOTICE.txt": {
+      "bytes": 782,
+      "sha256": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117"
+    },
+    "component/package/licenses/runtime/emscripten.txt": {
+      "bytes": 5092,
+      "sha256": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe"
+    },
+    "component/package/licenses/runtime/lean-bundled.txt": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "component/package/licenses/runtime/lean.txt": {
+      "bytes": 9159,
+      "sha256": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114"
+    },
+    "component/package/licenses/runtime/libuv.txt": {
+      "bytes": 1079,
+      "sha256": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c"
+    },
+    "component/package/licenses/runtime/llvm.txt": {
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    "component/package/licenses/runtime/musl.txt": {
+      "bytes": 6196,
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    "component/package/licenses/source-notices.json": {
+      "bytes": 2314,
+      "sha256": "9999db0a7504eb69786fac121419d0e8c2c14163bf8b7f5e7eb3dba8b0191d4e"
+    },
+    "component/package/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "component/package/package.json": {
+      "bytes": 1176,
+      "sha256": "661859861d789e4a19869f89c28dbd180cd223ebf80b3c661989835c873a739b"
+    },
+    "component/package/php/bootstrap.php": {
+      "bytes": 134,
+      "sha256": "6e918326a787c7443d044f36a92fd4659e4d118ece57d37c33eaa47305f1f6d3"
+    },
+    "component/package/php/dependencies/brick-math/LICENSE": {
+      "bytes": 1089,
+      "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+    },
+    "component/package/php/dependencies/brick-math/autoload.php": {
+      "bytes": 526,
+      "sha256": "f1d3416b09e0d9e4f6db55b6d64dc1c73b29f66c2f0babc98ae3c2bdeed1c123"
+    },
+    "component/package/php/dependencies/brick-math/composer.json": {
+      "bytes": 816,
+      "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+    },
+    "component/package/php/dependencies/brick-math/src/BigDecimal.php": {
+      "bytes": 38820,
+      "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+    },
+    "component/package/php/dependencies/brick-math/src/BigInteger.php": {
+      "bytes": 47781,
+      "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+    },
+    "component/package/php/dependencies/brick-math/src/BigNumber.php": {
+      "bytes": 31254,
+      "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+    },
+    "component/package/php/dependencies/brick-math/src/BigRational.php": {
+      "bytes": 18121,
+      "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/DivisionByZeroException.php": {
+      "bytes": 1296,
+      "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/IntegerOverflowException.php": {
+      "bytes": 1174,
+      "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/InvalidArgumentException.php": {
+      "bytes": 2957,
+      "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/MathException.php": {
+      "bytes": 179,
+      "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/NegativeNumberException.php": {
+      "bytes": 1316,
+      "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/NoInverseException.php": {
+      "bytes": 658,
+      "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/NumberFormatException.php": {
+      "bytes": 3718,
+      "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/PlatformException.php": {
+      "bytes": 1283,
+      "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/RandomSourceException.php": {
+      "bytes": 1343,
+      "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+    },
+    "component/package/php/dependencies/brick-math/src/Exception/RoundingNecessaryException.php": {
+      "bytes": 3878,
+      "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/Calculator.php": {
+      "bytes": 20316,
+      "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/Calculator/BcMathCalculator.php": {
+      "bytes": 2078,
+      "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/Calculator/GmpCalculator.php": {
+      "bytes": 3668,
+      "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/Calculator/NativeCalculator.php": {
+      "bytes": 14245,
+      "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/CalculatorRegistry.php": {
+      "bytes": 1887,
+      "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/DecimalHelper.php": {
+      "bytes": 4779,
+      "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+    },
+    "component/package/php/dependencies/brick-math/src/Internal/Safe.php": {
+      "bytes": 1645,
+      "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+    },
+    "component/package/php/dependencies/brick-math/src/NumberSyntax.php": {
+      "bytes": 1705,
+      "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+    },
+    "component/package/php/dependencies/brick-math/src/RoundingMode.php": {
+      "bytes": 5370,
+      "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+    },
+    "composer/README.md": {
+      "bytes": 5905,
+      "sha256": "11eb48fa75cc00ea5ed8547a4a90ae09a6b1a5ee8ba2b9fa6e21c352b93d9d13"
+    },
+    "composer/composer.json": {
+      "bytes": 915,
+      "sha256": "09ccaa07aea69e1d9ca3b9184d841aa8f545af4a9ca162bbd2be8c6be54afe5b"
+    },
+    "composer/lean-bridge/compiled-package.json": {
+      "bytes": 31315,
+      "sha256": "930eb109ec592ff8b38d6aac013c196d37e59729d300c00c5df718f29a6bcc98"
+    },
+    "composer/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "composer/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "composer/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "composer/licenses/runtime/NOTICE.txt": {
+      "bytes": 782,
+      "sha256": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117"
+    },
+    "composer/licenses/runtime/emscripten.txt": {
+      "bytes": 5092,
+      "sha256": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe"
+    },
+    "composer/licenses/runtime/lean-bundled.txt": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "composer/licenses/runtime/lean.txt": {
+      "bytes": 9159,
+      "sha256": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114"
+    },
+    "composer/licenses/runtime/libuv.txt": {
+      "bytes": 1079,
+      "sha256": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c"
+    },
+    "composer/licenses/runtime/llvm.txt": {
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    "composer/licenses/runtime/musl.txt": {
+      "bytes": 6196,
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    "composer/licenses/source-notices.json": {
+      "bytes": 2314,
+      "sha256": "9999db0a7504eb69786fac121419d0e8c2c14163bf8b7f5e7eb3dba8b0191d4e"
+    },
+    "composer/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "composer/src/Api.php": {
+      "bytes": 7480,
+      "sha256": "c451c1e26f70dfe2e2631a1352a9560f564cbe4b5419a181463f7c3b7bc324b7"
+    },
+    "composer/src/Internal/Native.php": {
+      "bytes": 21223,
+      "sha256": "bc4dd61d2b1a77de656ec362954bcba4567490db10522245758402a55bfa3308"
+    },
+    "runtime/package/compiled/include/lean/config.h": {
+      "bytes": 232,
+      "sha256": "572a0f7b542ab8952c515f3bded35135494c2884cae49cdbf047d78b394bf84f"
+    },
+    "runtime/package/compiled/include/lean/lean.h": {
+      "bytes": 131189,
+      "sha256": "22eed50aa703c4403010fabc12a7231ffa34dc979bd59ca1bfbac13c29a1dad2"
+    },
+    "runtime/package/compiled/include/lean/lean_gmp.h": {
+      "bytes": 578,
+      "sha256": "f4dd6a073992fa8b9d776e9ff44b70133afdfd68f72823b19d1bfe63b247939d"
+    },
+    "runtime/package/compiled/include/lean/lean_libuv.h": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runtime/package/compiled/include/lean/version.h": {
+      "bytes": 401,
+      "sha256": "8a7e9a86df3878287e29d2db2e4f99c9a43f2028f47e66a5667ff59cf7b37c6c"
+    },
+    "runtime/package/compiled/include/lean_bridge_native_runtime.h": {
+      "bytes": 2331,
+      "sha256": "8e2b345b6ba174e8c2e7273df267bfa15fd8f7a2a828a1e0aae704cb3511718b"
+    },
+    "runtime/package/compiled/lib/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so": {
+      "bytes": 9045493,
+      "sha256": "fcbab3494667abe57f38fceff49d6c8a42a8f9b6de3c1fd824d19f021c532f73"
+    },
+    "runtime/package/compiled/runtime.json": {
+      "bytes": 6745,
+      "sha256": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+    },
+    "runtime/package/host.mjs": {
+      "bytes": 6801,
+      "sha256": "9ad2e82a6d1e20dc4f569c11850b9f180223958393951e1316e83da8b4520e6f"
+    },
+    "runtime/package/index.mjs": {
+      "bytes": 548,
+      "sha256": "700e8a806522452880aef9c72cc380c7be30d99698beb90df7d969c61eabe964"
+    },
+    "runtime/package/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "runtime/package/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "runtime/package/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "runtime/package/licenses/runtime/NOTICE.txt": {
+      "bytes": 782,
+      "sha256": "2b3402d0d98f7ad752153038319af37135f57552b434b286f9b0633403490117"
+    },
+    "runtime/package/licenses/runtime/emscripten.txt": {
+      "bytes": 5092,
+      "sha256": "51aea7641f81d560eb039bc97ce35e2517e2656fe8731eb49ce6a18498eb22fe"
+    },
+    "runtime/package/licenses/runtime/lean-bundled.txt": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "runtime/package/licenses/runtime/lean.txt": {
+      "bytes": 9159,
+      "sha256": "7ef159fd8db5a7a9e8051aac48997353f26d744e25f730a0594a806c126d2114"
+    },
+    "runtime/package/licenses/runtime/libuv.txt": {
+      "bytes": 1079,
+      "sha256": "16de0c32b265cb7d46a6d3bd614f259dd4d693a5e26b3407b04aae8d73041f0c"
+    },
+    "runtime/package/licenses/runtime/llvm.txt": {
+      "bytes": 16703,
+      "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+    },
+    "runtime/package/licenses/runtime/musl.txt": {
+      "bytes": 6196,
+      "sha256": "b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b"
+    },
+    "runtime/package/package.json": {
+      "bytes": 644,
+      "sha256": "151f689a1f8a78b14f3ec3927920bb46fc71082a995752ad38677572b7480625"
+    },
+    "runtime/package/runtime-identity.json": {
+      "bytes": 8051,
+      "sha256": "1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a"
+    }
+  },
+  "kind": "lean-bridge-php-wasm-copied-package-set",
+  "loaderIdentity": "1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a",
+  "npmSettings": {
+    "name": "lean-bridge-checkedrecordvalueindices-wasm",
+    "version": "1.0.0"
+  },
+  "packing": {
+    "architecture": "x64",
+    "archiveRoot": "package",
+    "collationLocale": "en-US",
+    "icuVersion": "78.3",
+    "implementationSha256": "cb8a2db8a3679fa14405ebfd8e374932321c8053060359828f2be870a04b8235",
+    "nodeVersion": "22.23.3",
+    "platform": "linux",
+    "sourceDateEpoch": 1,
+    "zlibVersion": "1.3.1-e00f703"
+  },
+  "profile": "php-wasm-copied-loading-v1",
+  "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a",
+  "schemaVersion": 1
+}

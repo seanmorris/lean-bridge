@@ -1,0 +1,96 @@
+{
+    "packages": [
+        {
+            "name": "brick/math",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-value-index-php-wasm-installed-7YC4pI/consumer/project/feed/brick-math-1.0.0.zip",
+                "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Math\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Brick\\Math\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Arbitrary-precision arithmetic library",
+            "keywords": [
+                "Arbitrary-precision",
+                "Arithmetic",
+                "BigDecimal",
+                "BigInteger",
+                "BigNumber",
+                "BigRational",
+                "Bignum",
+                "Brick",
+                "Decimal",
+                "Integer",
+                "Math",
+                "Mathematics",
+                "Rational"
+            ],
+            "install-path": "../brick/math"
+        },
+        {
+            "name": "lean-bridge-checkedrecordvalueindices/wasm",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-value-index-php-wasm-installed-7YC4pI/consumer/project/feed/api.zip",
+                "shasum": "dde2c08e313c66856b1fd70e288a18fc1e1ead8c"
+            },
+            "require": {
+                "brick/math": "1.0.0",
+                "php": ">=8.4 <8.5"
+            },
+            "type": "library",
+            "extra": {
+                "lean-bridge": {
+                    "component": {
+                        "id": "checkedrecordvalueindices@1.0.0",
+                        "name": "checkedrecordvalueindices",
+                        "version": "1.0.0"
+                    },
+                    "componentIdentity": "30a489e65ee9be7d974425401c486e2dafad6fc974e5757c7da1fe1381342805",
+                    "namespace": "LeanCheckedrecordvalueindices",
+                    "npm": {
+                        "name": "lean-bridge-checkedrecordvalueindices-wasm",
+                        "version": "1.0.0"
+                    },
+                    "profile": "php-wasm-copied-loading-v1",
+                    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/Api.php"
+                ]
+            },
+            "description": "Compiled Lean copied API for PHP-Wasm: checkedrecordvalueindices",
+            "install-path": "../lean-bridge-checkedrecordvalueindices/wasm"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}
