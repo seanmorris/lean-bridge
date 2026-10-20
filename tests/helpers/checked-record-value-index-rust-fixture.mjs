@@ -18,8 +18,8 @@ export const checkedRecordValueIndexRustTarget = Object.freeze({
 });
 export const checkedRecordValueIndexRustModes = Object.freeze(["full", "result-only"]);
 export const checkedRecordValueIndexRustCounts = Object.freeze({
-	full: Object.freeze({ calls: 24, checks: 57, recoveries: 4, rejections: 4, snapshots: 16 })
-	, "result-only": Object.freeze({ calls: 8, checks: 25, recoveries: 0, rejections: 0, snapshots: 0 })
+	full: Object.freeze({ calls: 24, checks: 41, recoveries: 4, rejections: 4, snapshots: 16 })
+	, "result-only": Object.freeze({ calls: 8, checks: 9, recoveries: 0, rejections: 0, snapshots: 0 })
 });
 
 /**

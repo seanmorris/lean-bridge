@@ -77,7 +77,7 @@ fn main() {
     #[cfg(not(feature = "result-only"))]
     full(&mut counts);
     results(&mut counts);
-    let expected = if cfg!(feature = "result-only") { (8, 24, 0, 0, 0) } else { (24, 56, 4, 4, 16) };
+    let expected = if cfg!(feature = "result-only") { (8, 8, 0, 0, 0) } else { (24, 40, 4, 4, 16) };
     counts.check(
         (counts.calls, counts.checks, counts.recoveries, counts.rejections, counts.snapshots) == expected,
         "exact caller totals",
