@@ -46,7 +46,7 @@ private fun abandon(): Abandoned {
 private fun collect(weak: java.lang.ref.WeakReference<*>) {
     repeat(100) {
         if (weak.get() == null) return
-        System.gc(); System.runFinalization(); Thread.sleep(5)
+        System.gc(); Thread.sleep(5)
     }
     check(false, "garbage collection reaches the abandoned owner")
 }

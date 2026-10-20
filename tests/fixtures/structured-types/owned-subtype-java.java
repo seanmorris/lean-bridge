@@ -51,7 +51,7 @@ public final class Consumer {
 
     private static void collect(java.lang.ref.WeakReference<?> weak) {
         for (var index = 0; index < 100 && weak.get() != null; index++) {
-            System.gc(); System.runFinalization();
+            System.gc();
             try { Thread.sleep(5); }
             catch (InterruptedException error) { throw new AssertionError(error); }
         }

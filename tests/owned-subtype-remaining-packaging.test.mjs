@@ -131,8 +131,8 @@ test("remaining owned Subtype fixtures and required matrix stay registered", asy
 		assert.ok(source.includes(profile === "wit-wasi" ? "owned-subtype-c" : markers[profile]), path);
 		const lifecycleMarker = {
 			dotnet: "GC.WaitForPendingFinalizers()"
-			, java: "System.runFinalization()"
-			, kotlin: "System.runFinalization()"
+			, java: "System.gc()"
+			, kotlin: "System.gc()"
 			, "php-native": "WeakReference::create"
 			, "wit-wasi": "retained_after_release"
 		}[profile];
