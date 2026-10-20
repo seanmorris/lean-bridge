@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "milestone": "checked-record-value-index-rust-acceptance-source-v1",
+  "predecessorCommit": "ea32df252b1786d4163c8a4082c6de0a190e7271",
+  "pathsSha256": "89312b5402bdc00fc82e988589d392bcbc451dc3d02c161b4567dd53232c4374",
+  "additions": [
+    {
+      "path": ".github/workflows/checked-record-value-index-rust.yml",
+      "currentSha256": "cf50da5e7ac1742b2ee5c6f1f79d869650dc5193db10fac1273a7887e4ca7833"
+    },
+    {
+      "path": "scripts/check-checked-record-value-index-rust-ci.mjs",
+      "currentSha256": "3b3325ad4a2f1018435d1220fc7c38be9d56b2b947a49b577eba65e331e3498a"
+    },
+    {
+      "path": "scripts/run-checked-record-value-index-rust-ci.sh",
+      "currentSha256": "91b87427e8e2988fba858d0a577fd3d908188cfc4baaa1d7fbd1a1a7a72ad010"
+    },
+    {
+      "path": "scripts/update-checked-record-value-index-rust-acceptance-source-history.mjs",
+      "currentSha256": "6cdd9cf9643e5a0c71da02956f9d5b52d9b59175429c41623c6a5d02f5dc7b81"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-acceptance-source-history-tests.mjs",
+      "currentSha256": "b08ab38909460fca601cafa7dc89bc0af4dbcaabb4113330a8afb9509aaa6bb2"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-acceptance-source-history.mjs",
+      "currentSha256": "e871d100f7245d6472a2016b1eeec03c57f0e4b4f91cb14031a33e380dbc0e93"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-ci-policy-tests.mjs",
+      "currentSha256": "812c6cc8fd8f59ed533d8c256048852e5000a42ae2f0fdf3977f1ce786f58eda"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-ci-report.mjs",
+      "currentSha256": "e4680fd4f0852f73a6b6af2e1712aa1b6ab440b20b3438963ed02e30a65c5475"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-dependency-records.mjs",
+      "currentSha256": "0e659c1dd2a0fb7be77b798e6588c30fcfb68e64cce43d476bdb508b882ff491"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-install.mjs",
+      "currentSha256": "3b9fc6953c7743342d7206d26adb11bc5f1fdef6823d9a204046877f7f1fed18"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-installed-tests.mjs",
+      "currentSha256": "43129b8d34ce5f282dd49505a0fac0f0ef149cb20d127c2dcac06d9dbc62801c"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-package.mjs",
+      "currentSha256": "e4afb92619e0dabed510b110061750bfef71c84a3f1e0baa05ba90440aa47dc4"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-report.mjs",
+      "currentSha256": "0b5fbaed098b1f57e2d0ff1e4187992ce0f7579d1e2039430a25623a96f30fc4"
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-resources.mjs",
+      "currentSha256": "9af0af2fda4862b362058330cd59b308fb4f941a62909e8dfcf91076c73961a1"
+    }
+  ],
+  "updates": [
+    {
+      "path": "tests/checked-record-value-index-rust.test.mjs",
+      "previousSha256": "427d85424edd9323e715fe744ca4a5c51edf9af490d8a5a8a8cc2a982cc3e891",
+      "currentSha256": "6e699fb172e4fcc6fa87b93fd5c270f653193e2876f26126cfda3a20c8b37421",
+      "edits": [
+        {
+          "start": 167,
+          "previous": "",
+          "current": "import \"./helpers/checked-record-value-index-rust-ci-policy-tests.mjs\";\nimport \"./helpers/checked-record-value-index-rust-installed-tests.mjs\";\nimport \"./helpers/checked-record-value-index-rust-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-ci-report.mjs",
+      "previousSha256": "e02be1eb18107cca7778f578cca198ed365e5990a8e0f08ddc8c70a26d6681a9",
+      "currentSha256": "ea6810c62303d5c51e565b4f7278a285849ff8a9f3d7d54b4d69c34c2f014eed",
+      "edits": [
+        {
+          "start": 1005,
+          "previous": "",
+          "current": " * Encode the package-set handoff checksum in its on-disk sha256sum form.\n *\n * @param source - Exact canonical receipt bytes.\n */\nexport const checkedRecordValueIndexRubyReceiptChecksum = source =>\n\t`${sha256(source)}  package-set-receipt.json\\n`;\n\n/**\n"
+        },
+        {
+          "start": 10536,
+          "previous": "\tassert.equal(sha256(canonicalJson(handoffReceipt)), receiptSha256);\n\tassert.equal(Buffer.from(await read(\"handoff/package-set-receipt.json.sha256\")).toString().trim()\n\t\t, sha256(canonicalJson(handoffReceipt)));\n",
+          "current": "\tconst handoffBytes = Buffer.from(canonicalJson(handoffReceipt));\n\tassert.equal(sha256(handoffBytes), receiptSha256);\n\tassert.equal(Buffer.from(await read(\"handoff/package-set-receipt.json.sha256\")).toString()\n\t\t, checkedRecordValueIndexRubyReceiptChecksum(handoffBytes));\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-fixture-tests.mjs",
+      "previousSha256": "6abb506d6b14a1812c4f29c29da90c3638b84ef7f7f62b50fe90e6b1b8e3a148",
+      "currentSha256": "ee82c7ccca6ac34671e206476d317f7f04ba5eb5564ff17c18a30bec2db5dc57",
+      "edits": [
+        {
+          "start": 1388,
+          "previous": "\t, parseCheckedRecordValueIndexRubyCiArgs\n",
+          "current": "\t, checkedRecordValueIndexRubyReceiptChecksum, parseCheckedRecordValueIndexRubyCiArgs\n"
+        },
+        {
+          "start": 8330,
+          "previous": "",
+          "current": "\tassert.equal(checkedRecordValueIndexRubyReceiptChecksum(Buffer.from(\"receipt\\n\"))\n\t\t, `${sha256(Buffer.from(\"receipt\\n\"))}  package-set-receipt.json\\n`);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-ruby-source-history-tests.mjs",
+      "previousSha256": "58e51d35a68b21d96b292f8a926115435e75c509b2cf1bd8f3efb166602891a7",
+      "currentSha256": "4e2a2ab70860d519b4c0b63ef36f29d76f31a5dc5a0c52d381c9a7555e64f8ee",
+      "edits": [
+        {
+          "start": 330,
+          "previous": "\t, checkedRecordValueIndexRubyHistoryPath, reverseCheckedRecordValueIndexRubyUpdate\n",
+          "current": "\t, checkedRecordValueIndexRubyHistoryAddedPaths, checkedRecordValueIndexRubyHistoryPath\n\t, reverseCheckedRecordValueIndexRubyUpdate\n"
+        },
+        {
+          "start": 579,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1064,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeCheckedRecordValueIndexRubySource\n\t\t);\n"
+        },
+        {
+          "start": 1618,
+          "previous": "",
+          "current": "\tassert.deepEqual(ledger.additions.map(item => item.path).sort()\n\t\t, [...checkedRecordValueIndexRubyHistoryAddedPaths].sort());\n\tfor(const addition of ledger.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-fixture-tests.mjs",
+      "previousSha256": "0367cf0ff9540640f7e99b2d9fb2c179cf00b48bf147015e5441c5c5ada2bc0d",
+      "currentSha256": "bf0a5d70a85b71166bd8c40591ea4713c95d33410a9b249aa3e310e3b9a86342",
+      "edits": [
+        {
+          "start": 228,
+          "previous": "import { generateCopiedRustPackage } from \"../../src/backends/rust/copied-values.mjs\";\n",
+          "current": "import { copiedRustLock, generateCopiedRustPackage } from \"../../src/backends/rust/copied-values.mjs\";\n"
+        },
+        {
+          "start": 917,
+          "previous": "",
+          "current": "import {\n\tcheckedRecordValueIndexRustConsumerLock, checkedRecordValueIndexRustLockedPackages\n} from \"./checked-record-value-index-rust-dependency-records.mjs\";\nimport {\n\tcheckCheckedRecordValueIndexRustApiProbe, checkedRecordValueIndexRustCargoArguments\n\t, checkedRecordValueIndexRustPublicInputs\n} from \"./checked-record-value-index-rust-install.mjs\";\n"
+        },
+        {
+          "start": 5246,
+          "previous": "",
+          "current": "});\n\ntest(\"Rust offline controls close dependency locks, features, and result-only inputs\", async () => {\n\tassert.deepEqual(checkedRecordValueIndexRustCargoArguments(\"ordinary-source\")\n\t\t, [\"--locked\", \"--offline\", \"--target\", \"x86_64-unknown-linux-gnu\"]);\n\tassert.deepEqual(checkedRecordValueIndexRustCargoArguments(\"result-only-reviewed-ir\")\n\t\t, [\"--locked\", \"--offline\", \"--target\", \"x86_64-unknown-linux-gnu\"\n\t\t\t, \"--features\", \"result-only,reviewed\"]);\n\tconst lock = await copiedRustLock(\"checkedrecordvalueindices\", \"1.0.0\");\n\tconst packages = checkedRecordValueIndexRustLockedPackages(lock);\n\tassert.equal(packages.length, 15);\n\tassert.match(checkedRecordValueIndexRustConsumerLock(lock)\n\t\t, /name = \"value-index-consumer\"\\nversion = \"0\\.0\\.0\"/u);\n\tassert.deepEqual(checkCheckedRecordValueIndexRustApiProbe({\n\t\tcode: 0, stderr: \"\", stdout: '{\"reason\":\"build-finished\",\"success\":true}\\n'\n\t}, false), { absent: [], present: checkedRecordValueIndexRustPublicInputs });\n\tconst message = checkedRecordValueIndexRustPublicInputs\n\t\t.map(name => `\\`checkedrecordvalueindices::${name}\\``).join(\", \");\n\tconst diagnostics = [\n\t\t{\n\t\t\treason: \"compiler-message\"\n\t\t\t, message: {\n\t\t\t\tlevel: \"error\"\n\t\t\t\t, code: { code: \"E0432\" }\n\t\t\t\t, message\n\t\t\t\t, spans: [{ is_primary: true, file_name: \"src/bin/api-probe.rs\" }]\n\t\t\t}\n\t\t}\n\t\t, { reason: \"build-finished\", success: false }\n\t].map(value => JSON.stringify(value)).join(\"\\n\") + \"\\n\";\n\tassert.deepEqual(checkCheckedRecordValueIndexRustApiProbe({\n\t\tcode: 101, stderr: \"\", stdout: diagnostics\n\t}, true), { absent: checkedRecordValueIndexRustPublicInputs, present: [] });\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/checked-record-value-index-rust-source-history-tests.mjs",
+      "previousSha256": "ea512e0267dbdede17b0d44ef9cd5261c35824a3108257a198651ed222c49857",
+      "currentSha256": "92670d6f3777e2dc97ae4c207ada1a4174321316078742baa367645fe8078552",
+      "edits": [
+        {
+          "start": 330,
+          "previous": "\t, checkedRecordValueIndexRustHistoryPath, reverseCheckedRecordValueIndexRustUpdate\n",
+          "current": "\t, checkedRecordValueIndexRustHistoryAddedPaths, checkedRecordValueIndexRustHistoryPath\n\t, reverseCheckedRecordValueIndexRustUpdate\n"
+        },
+        {
+          "start": 579,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 1064,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeCheckedRecordValueIndexRustSource\n\t\t);\n"
+        },
+        {
+          "start": 1618,
+          "previous": "",
+          "current": "\tassert.deepEqual(ledger.additions.map(item => item.path).sort()\n\t\t, [...checkedRecordValueIndexRustHistoryAddedPaths].sort());\n\tfor(const addition of ledger.additions)\n\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(addition.path, addition.currentSha256))\n\t\t\t, addition.currentSha256, addition.path);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "777ae36e5bd7c5e5afe57a85100d5e1e0654b51e4e1f64594754072e56d57845",
+      "currentSha256": "4f6002e027ada7be0af9459aafaf868665715aa2f6425869620cce7b19bb99f3",
+      "edits": [
+        {
+          "start": 1191,
+          "previous": "",
+          "current": "import { beforeCheckedRecordValueIndexRustAcceptanceSource, checkedRecordValueIndexRustAcceptanceChangedPaths } from \"./checked-record-value-index-rust-acceptance-source-history.mjs\";\n"
+        },
+        {
+          "start": 83894,
+          "previous": "",
+          "current": "\tsource = beforeCheckedRecordValueIndexRustAcceptanceSource(path, source, expected);\n\tif(sha256(source) === expected) return source;\n"
+        },
+        {
+          "start": 101094,
+          "previous": "\t...checkedRecordValueIndexRustChangedPaths\n",
+          "current": "\t...checkedRecordValueIndexRustAcceptanceChangedPaths\n\t, ...checkedRecordValueIndexRustChangedPaths\n"
+        },
+        {
+          "start": 119258,
+          "previous": "\tlet previous = beforeCheckedRecordValueIndexRustSource(path, text, expected);\n",
+          "current": "\tlet previous = beforeCheckedRecordValueIndexRustAcceptanceSource(path, text, expected);\n\tif(sha256(previous) === expected) return previous;\n\tprevious = beforeCheckedRecordValueIndexRustSource(path, previous, expected);\n"
+        }
+      ]
+    }
+  ]
+}

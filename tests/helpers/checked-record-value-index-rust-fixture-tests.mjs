@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { generateCopiedRustPackage } from "../../src/backends/rust/copied-values.mjs";
+import { copiedRustLock, generateCopiedRustPackage } from "../../src/backends/rust/copied-values.mjs";
 import {
 	checkedRecordValueIndexBrowserSelection, checkedRecordValueIndexInputNames
 	, checkedRecordValueIndexResultNames
@@ -18,6 +18,13 @@ import {
 	, checkedRecordValueIndexRustSelection, checkedRecordValueIndexRustTarget
 	, parseCheckedRecordValueIndexRustResult
 } from "./checked-record-value-index-rust-fixture.mjs";
+import {
+	checkedRecordValueIndexRustConsumerLock, checkedRecordValueIndexRustLockedPackages
+} from "./checked-record-value-index-rust-dependency-records.mjs";
+import {
+	checkCheckedRecordValueIndexRustApiProbe, checkedRecordValueIndexRustCargoArguments
+	, checkedRecordValueIndexRustPublicInputs
+} from "./checked-record-value-index-rust-install.mjs";
 
 test("value-index Rust selections retain all four author routes and both API modes", () => {
 	assert.deepEqual(checkedRecordValueIndexRustRoutes, [
@@ -93,4 +100,37 @@ test("independent Rust caller retains constructor refusals, recovery and result-
 	assert.match(caller, /rejection\("mkOff"\)/u);
 	assert.match(caller, /let huge = wide\(\);/u);
 	assert.throws(() => parseCheckedRecordValueIndexRustResult("{}\n", "full"));
+});
+
+test("Rust offline controls close dependency locks, features, and result-only inputs", async () => {
+	assert.deepEqual(checkedRecordValueIndexRustCargoArguments("ordinary-source")
+		, ["--locked", "--offline", "--target", "x86_64-unknown-linux-gnu"]);
+	assert.deepEqual(checkedRecordValueIndexRustCargoArguments("result-only-reviewed-ir")
+		, ["--locked", "--offline", "--target", "x86_64-unknown-linux-gnu"
+			, "--features", "result-only,reviewed"]);
+	const lock = await copiedRustLock("checkedrecordvalueindices", "1.0.0");
+	const packages = checkedRecordValueIndexRustLockedPackages(lock);
+	assert.equal(packages.length, 15);
+	assert.match(checkedRecordValueIndexRustConsumerLock(lock)
+		, /name = "value-index-consumer"\nversion = "0\.0\.0"/u);
+	assert.deepEqual(checkCheckedRecordValueIndexRustApiProbe({
+		code: 0, stderr: "", stdout: '{"reason":"build-finished","success":true}\n'
+	}, false), { absent: [], present: checkedRecordValueIndexRustPublicInputs });
+	const message = checkedRecordValueIndexRustPublicInputs
+		.map(name => `\`checkedrecordvalueindices::${name}\``).join(", ");
+	const diagnostics = [
+		{
+			reason: "compiler-message"
+			, message: {
+				level: "error"
+				, code: { code: "E0432" }
+				, message
+				, spans: [{ is_primary: true, file_name: "src/bin/api-probe.rs" }]
+			}
+		}
+		, { reason: "build-finished", success: false }
+	].map(value => JSON.stringify(value)).join("\n") + "\n";
+	assert.deepEqual(checkCheckedRecordValueIndexRustApiProbe({
+		code: 101, stderr: "", stdout: diagnostics
+	}, true), { absent: checkedRecordValueIndexRustPublicInputs, present: [] });
 });

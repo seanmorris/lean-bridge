@@ -29,7 +29,7 @@ import {
 } from "./checked-record-value-index-ruby-package.mjs";
 import {
 	assertCheckedRecordValueIndexRubyCiTap, checkedRecordValueIndexRubyCiTestName
-	, parseCheckedRecordValueIndexRubyCiArgs
+	, checkedRecordValueIndexRubyReceiptChecksum, parseCheckedRecordValueIndexRubyCiArgs
 } from "./checked-record-value-index-ruby-ci-report.mjs";
 
 test("value-index Ruby selections retain all four author routes and both API modes", () => {
@@ -151,6 +151,8 @@ test("independent Ruby caller detects a wrong value, preserves rejected inputs, 
 });
 
 test("value-index Ruby hosted checker closes each route and its complete TAP stream", () => {
+	assert.equal(checkedRecordValueIndexRubyReceiptChecksum(Buffer.from("receipt\n"))
+		, `${sha256(Buffer.from("receipt\n"))}  package-set-receipt.json\n`);
 	const options = {
 		route: "ordinary-source"
 		, producer: "a".repeat(40)

@@ -20,6 +20,14 @@ import {
 import { checkedRecordValueIndexBrowserSelection } from "./checked-record-value-index-browser-fixture.mjs";
 
 /**
+ * Encode the package-set handoff checksum in its on-disk sha256sum form.
+ *
+ * @param source - Exact canonical receipt bytes.
+ */
+export const checkedRecordValueIndexRubyReceiptChecksum = source =>
+	`${sha256(source)}  package-set-receipt.json\n`;
+
+/**
  * Name the one installed route a retained Ruby TAP stream must cover.
  *
  * @param route - One closed ordinary/reviewed and full/result-only route.
@@ -210,9 +218,10 @@ export const checkCheckedRecordValueIndexRubyReport = async (read, {
 	}
 	const handoffReceipt = await json("handoff/package-set-receipt.json");
 	assert.deepEqual(report.receipt, handoffReceipt);
-	assert.equal(sha256(canonicalJson(handoffReceipt)), receiptSha256);
-	assert.equal(Buffer.from(await read("handoff/package-set-receipt.json.sha256")).toString().trim()
-		, sha256(canonicalJson(handoffReceipt)));
+	const handoffBytes = Buffer.from(canonicalJson(handoffReceipt));
+	assert.equal(sha256(handoffBytes), receiptSha256);
+	assert.equal(Buffer.from(await read("handoff/package-set-receipt.json.sha256")).toString()
+		, checkedRecordValueIndexRubyReceiptChecksum(handoffBytes));
 	const pkg = receiptComponent(handoffReceipt), model = JSON.parse(await read("build-0/model.json"));
 	const archive = pkg.artifacts[0], archiveBytes = await read(`handoff/${archive.path}`);
 	assert.deepEqual({ bytes: archiveBytes.length, sha256: sha256(archiveBytes) }, { bytes: archive.bytes, sha256: archive.sha256 });
