@@ -37,6 +37,8 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.native.includes("tests/rust-generator.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/perl-contract.test.mjs"));
 	for(const name of ["checked-record-value-index-jvm-evidence"
+		, "checked-record-value-index-matrix"
+		, "checked-record-value-index-matrix-inventory"
 		, "checked-record-value-index-native-evidence"
 		, "checked-record-value-index-php"
 		, "checked-record-value-index-python"])

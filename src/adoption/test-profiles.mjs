@@ -328,6 +328,8 @@ const profileManifest = Object.freeze({
 		, "checked-record-value-index-dotnet-evidence"
 		, "checked-record-value-index-jvm"
 		, "checked-record-value-index-jvm-evidence"
+		, "checked-record-value-index-matrix"
+		, "checked-record-value-index-matrix-inventory"
 		, "checked-record-value-index-native"
 		, "checked-record-value-index-native-evidence"
 		, "checked-record-value-index-perl"
