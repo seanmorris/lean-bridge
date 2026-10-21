@@ -6,3 +6,5 @@
 import "./helpers/dependent-checked-record-native-tests.mjs";
 import "./helpers/dependent-checked-record-native-installed-tests.mjs";
 import "./helpers/dependent-checked-record-perl-tests.mjs";
+import "./helpers/dependent-checked-record-python-tests.mjs";
+import "./helpers/dependent-checked-record-python-installed-tests.mjs";
