@@ -1,0 +1,128 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6053c75672375d78a6d105847721b716f3425f365c0bd1b014446a0d3aacb29e",
+      "path": "scripts/update-callback-subtype-remaining-php-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "944442df4cfa27f0a5b1c996e76176d32a3775e678bc1adf5a4c857378784c7b",
+      "path": "tests/helpers/callback-subtype-remaining-php-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ff4bee42ca6246876265ef50c36c0479977500385bbc766f8d88358b8a055006",
+      "path": "tests/helpers/callback-subtype-remaining-php-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "0e8b0f36182a5ae90bf47da2439faae3e3a60b49",
+  "integrationBaseCommit": "84cc7e4926d581d5e8054748b9decc3d22d58ca1",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6d8be3fe28aa940499afc9762c7d6c621b4fd64452e38b93bad1d67996312576",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-remaining-php-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4656
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "1623fbb3ffed99598d69a1e653db835a5309e63fcadf1412d848dd62a5e18460"
+    },
+    {
+      "currentSha256": "00ee4be5bf7fa53a8bbcb5028e7ab4bb3ba743e773c1f1e6fd1ab164d9125879",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeRemainingPhpRepairSource, callbackSubtypeRemainingPhpRepairChangedPaths, callbackSubtypeRemainingPhpRepairIntegrationPaths } from \"./callback-subtype-remaining-php-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeRemainingPhpRepairChangedPaths\n\t, ...callbackSubtypeRemainingPhpRepairIntegrationPaths\n\t, ...zeroPayloadPhpWasmPromotionChangedPaths\n",
+          "previous": "\t...zeroPayloadPhpWasmPromotionChangedPaths\n",
+          "start": 121033
+        },
+        {
+          "current": "\tconst phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(\n",
+          "previous": "\tconst phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(\n",
+          "start": 147177
+        },
+        {
+          "current": "\tif(sha256(phpCallbackRepair) === expected) return phpCallbackRepair;\n\tconst phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(\n\t\tpath, phpCallbackRepair, expected\n\t);\n",
+          "previous": "",
+          "start": 147278
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c5c355ac1435e36c59efcf6bd5f635238ffe7034dbc17a8f4ff604ad190af594"
+    }
+  ],
+  "milestone": "callback-subtype-remaining-php-repair-source-v1",
+  "predecessorCommit": "d62793d1a2ca0f1adaf1b2b788b3b9841d6e41ec",
+  "schemaVersion": 1,
+  "scope": "Native PHP remaining-host callback packages use the php-native author target and declare lease entry points only for exported Lean closures; host callbacks retain their ordinary callable path without phantom native symbols.",
+  "updates": [
+    {
+      "currentSha256": "cdb2462379e509503e44046e9855d6cb11a42460e1cb64001c1567bf5f8546e8",
+      "edits": [
+        {
+          "current": "\tconst callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, direction: cb.direction, parameters: cb.parameters.map(copied), result: copied(cb.result), ...cb.direction === 'host' ? {} : { call: cb.call, dispose: cb.dispose } }));\n",
+          "previous": "\tconst callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, direction: cb.direction, parameters: cb.parameters.map(copied), result: copied(cb.result), call: cb.call, dispose: cb.dispose }));\n",
+          "start": 1365
+        },
+        {
+          "current": "\t\t\t, ...(cb.direction === 'host' ? [] : [\n\t\t\t\t'uint32_t ' + cb.call + '(uint64_t, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + ');'\n\t\t\t\t, 'void ' + cb.dispose + '(uint64_t);'\n\t\t\t])\n\t\t])\n",
+          "previous": "\t\t\t, 'uint32_t ' + cb.call + '(uint64_t, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + ');'\n\t\t\t, 'void ' + cb.dispose + '(uint64_t);'])\n",
+          "start": 2289
+        }
+      ],
+      "path": "src/backends/php/callable-graph-calls.mjs",
+      "previousSha256": "bea02f00f74a8020aafab78fb2e61c7961c2ec47281316d18cd3a1630ea075cd"
+    },
+    {
+      "currentSha256": "f767934700e597b3e05bf1ca527edcf0dd8a1b8745176d4f67d579a4960246ac",
+      "edits": [
+        {
+          "current": "\t\t\t, ...direction === 'host' ? {} : {\n\t\t\t\tcall: `${generated.prefix}_callback_${signature.key}_lease_call`\n\t\t\t\t, dispose: `${generated.prefix}_callback_${signature.key}_lease_dispose`\n\t\t\t}\n",
+          "previous": "\t\t\t, call: `${generated.prefix}_callback_${signature.key}_lease_call`\n\t\t\t, dispose: `${generated.prefix}_callback_${signature.key}_lease_dispose`\n",
+          "start": 1682
+        }
+      ],
+      "path": "src/backends/php/callable-graph-model.mjs",
+      "previousSha256": "c9a045fcca9cfb0b83b174540ee47cda01291332c42eaa9eac4dd1b792a2b3dd"
+    },
+    {
+      "currentSha256": "88890862d12b1b3933dd941c3405199e5bede6749f99bf4e962a99d254ac4a4d",
+      "edits": [
+        {
+          "current": "\tdotnet: [\"nuget\", { name: \"LeanBridge.Callbacksubtypes\", version: \"1.0.0\" }]\n\t, java: [\"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, kotlin: [\"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"php-native\": [\"php-native\", { name: \"lean-bridge/callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"wit-wasi\": [\"wit-wasi\", { name: \"callback-subtypes\", version: \"1.0.0\" }]\n",
+          "previous": "\tdotnet: [\"nuget\", \"nuget\", { name: \"LeanBridge.Callbacksubtypes\", version: \"1.0.0\" }]\n\t, java: [\"maven\", \"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, kotlin: [\"maven\", \"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"php-native\": [\"composer\", \"php-native\", { name: \"lean-bridge/callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"wit-wasi\": [\"wit-wasi\", \"wit-wasi\", { name: \"callback-subtypes\", version: \"1.0.0\" }]\n",
+          "start": 1859
+        },
+        {
+          "current": "const configuredTargets = selected => Object.fromEntries(selected.map(profile => targets[profile]));\n",
+          "previous": "const configuredTargets = selected => Object.fromEntries(selected.map(profile => [\n\ttargets[profile][1], targets[profile][2]\n]));\n",
+          "start": 2377
+        }
+      ],
+      "path": "tests/callback-subtype-remaining-installed.test.mjs",
+      "previousSha256": "3c47925f998302a1e6ea1ed629b12980eea0294091a505237773f66d672c7235"
+    },
+    {
+      "currentSha256": "62ae8b51ba0b7d3b6ac96f1e567b8ea378e1797f8a079b59f066fef324c5361d",
+      "edits": [
+        {
+          "current": "\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n",
+          "previous": "\tconst { ir } = structuredCallableDirectionalSubtypeIr();\n",
+          "start": 9706
+        },
+        {
+          "current": "\tconst phpDescriptor = createNativeCallableGraphDescriptor(ir);\n\tconst phpHost = phpDescriptor.callbacks.find(item => item.id === host.id);\n\tconst phpClosure = phpDescriptor.callbacks.find(item => item.id === closure.id);\n\tassert.doesNotMatch(phpNative\n\t\t, new RegExp(`${phpHost.key}_lease_(?:call|dispose)`, \"u\"));\n\tassert.match(phpNative\n\t\t, new RegExp(`${phpClosure.key}_lease_call`, \"u\"));\n",
+          "previous": "",
+          "start": 14477
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "fb987a98290503cd1250b246ec18e6f0c249a0372f6a84c7b1001c42cd591abd"
+    }
+  ]
+}

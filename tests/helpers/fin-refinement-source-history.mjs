@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeRemainingPhpRepairSource, callbackSubtypeRemainingPhpRepairChangedPaths, callbackSubtypeRemainingPhpRepairIntegrationPaths } from "./callback-subtype-remaining-php-repair-source-history.mjs";
 import { beforeZeroPayloadPhpWasmPromotionSource, zeroPayloadPhpWasmPromotionChangedPaths, zeroPayloadPhpWasmPromotionIntegrationPaths } from "./zero-payload-php-wasm-promotion-source-history.mjs";
 import { beforeZeroPayloadPhpWasmArchiveSource, zeroPayloadPhpWasmArchiveChangedPaths, zeroPayloadPhpWasmArchiveIntegrationPaths } from "./zero-payload-php-wasm-archive-source-history.mjs";
 import { beforeCallbackSubtypeRemainingRuntimeRepairSource, callbackSubtypeRemainingRuntimeRepairChangedPaths, callbackSubtypeRemainingRuntimeRepairIntegrationPaths } from "./callback-subtype-remaining-runtime-repair-source-history.mjs";
@@ -1452,7 +1453,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadPhpWasmPromotionChangedPaths
+	...callbackSubtypeRemainingPhpRepairChangedPaths
+	, ...callbackSubtypeRemainingPhpRepairIntegrationPaths
+	, ...zeroPayloadPhpWasmPromotionChangedPaths
 	, ...zeroPayloadPhpWasmPromotionIntegrationPaths
 	, ...zeroPayloadPhpWasmArchiveChangedPaths
 	, ...zeroPayloadPhpWasmArchiveIntegrationPaths
@@ -2034,8 +2037,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(
+	const phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(
 		path, text, expected
+	);
+	if(sha256(phpCallbackRepair) === expected) return phpCallbackRepair;
+	const phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(
+		path, phpCallbackRepair, expected
 	);
 	if(sha256(phpWasmPromotion) === expected) return phpWasmPromotion;
 	const phpWasmArchive = beforeZeroPayloadPhpWasmArchiveSource(
