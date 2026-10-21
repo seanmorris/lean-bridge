@@ -23,6 +23,7 @@ import {
 	, reverseOwnedRefinementModelUpdate
 } from "./owned-refinement-model-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedRefinementModelPredecessor}:${path}`]
@@ -41,8 +42,8 @@ test("owned refinement model history restores every source", async () => {
 		, ownedRefinementModelChangedPaths);
 	for(const update of record.updates)
 	{
-		const registered = beforeOwnedSubtypeHostRegistrationSource(
-			update.path, await readFile(update.path, "utf8")
+		const registered = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		const live = beforeOwnedSubtypeJavaScriptTransferSource(
 			update.path, registered
@@ -67,8 +68,8 @@ test("owned refinement model history restores every source", async () => {
 	}
 	for(const addition of record.additions)
 	{
-		const registered = beforeOwnedSubtypeHostRegistrationSource(
-			addition.path, await readFile(addition.path, "utf8")
+		const registered = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		const live = beforeOwnedSubtypeJavaScriptTransferSource(
 			addition.path, registered

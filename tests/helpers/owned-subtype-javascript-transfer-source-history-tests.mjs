@@ -21,6 +21,7 @@ import {
 	, reverseOwnedSubtypeJavaScriptTransferUpdate
 } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedSubtypeJavaScriptTransferPredecessor}:${path}`]
@@ -46,8 +47,8 @@ test("retained and transferred JavaScript owned Subtype history restores every s
 		, ownedSubtypeJavaScriptTransferChangedPaths);
 	for(const update of history.updates)
 	{
-		const current = beforeOwnedSubtypeHostRegistrationSource(
-			update.path, await readFile(update.path, "utf8"), update.currentSha256
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseOwnedSubtypeJavaScriptTransferUpdate(
@@ -63,8 +64,8 @@ test("retained and transferred JavaScript owned Subtype history restores every s
 	}
 	for(const addition of history.additions)
 	{
-		const current = beforeOwnedSubtypeHostRegistrationSource(
-			addition.path, await readFile(addition.path, "utf8"), addition.currentSha256
+		const current = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		assert.equal(sha256(current), addition.currentSha256, addition.path);
 	}

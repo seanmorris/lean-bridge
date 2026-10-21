@@ -1,0 +1,1699 @@
+{
+  "schemaVersion": 1,
+  "milestone": "hub-transition-gap-source-v1",
+  "predecessorCommit": "c2b8a0db192646b3a5b8271b55a47b4f0a468ec0",
+  "pathsSha256": "e9037a33d3eaf13bc7bf85a03152b5239a5956e4b6589c5b6bbaa2ac0a48c866",
+  "historicalPathsSha256": "75f3cf69bd317e4a070a81aeb7e456ca2ce8d95252e84f82ad6e8c800de0dea7",
+  "pinCount": 9,
+  "pinUpdates": [
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94",
+      "currentSha256": "52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e",
+      "count": 9
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-hub-transition-gap-source-history.mjs",
+      "currentSha256": "c95218877a38a67d3f204b79f0b8818d2099fccf8af695bf6fd4b27d2de04f81"
+    },
+    {
+      "path": "tests/helpers/hub-transition-gap-source-history-tests.mjs",
+      "currentSha256": "50c7bb48ce91b4c2a69c5fa6b3832606f3f04f89c53dee35a36db2e70a8e8151"
+    },
+    {
+      "path": "tests/helpers/hub-transition-gap-source-history.mjs",
+      "currentSha256": "3cb47e11d77af00cbbd3fba0b1d427317c94dcc9e11abf9f818b3cfd36186160"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "8294e36230b803df202ceb6233187028cc5b463f",
+      "currentCommit": "c2b8a0db192646b3a5b8271b55a47b4f0a468ec0",
+      "previousSha256": "35c14cad959163ec70e6b1d6af44620d0185459640d72df083a8121b2179f935",
+      "currentSha256": "b7674b4f01c49d713476572c07fb289dadfcb4ef4b372d022c6368e7ea47f71d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from \"./history-reader-hub-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 117427,
+          "previous": "\t...ledgerTransitionGapChangedPaths\n",
+          "current": "\t...historyReaderHubRepairChangedPaths\n\t, ...historyReaderHubRepairIntegrationPaths\n\t, ...ledgerTransitionGapChangedPaths\n"
+        },
+        {
+          "start": 141872,
+          "previous": "\tconst ledgerGap = beforeLedgerTransitionGapSource(path, text, expected);\n",
+          "current": "\tconst readerRepair = beforeHistoryReaderHubRepairSource(path, text, expected);\n\tif(sha256(readerRepair) === expected) return readerRepair;\n\tconst ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "736ce9d03fc324ed6004aa77de534cd9885bfa83",
+      "currentCommit": "8294e36230b803df202ceb6233187028cc5b463f",
+      "previousSha256": "5a021097f0896d68416f08a55457785bec6bce000c3e5c3d56c5a1ae130df45a",
+      "currentSha256": "35c14cad959163ec70e6b1d6af44620d0185459640d72df083a8121b2179f935",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeLedgerTransitionGapSource, ledgerTransitionGapChangedPaths, ledgerTransitionGapHistoricalPaths } from \"./ledger-transition-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 117250,
+          "previous": "\t...zeroPayloadRustPromotionChangedPaths\n",
+          "current": "\t...ledgerTransitionGapChangedPaths\n\t, ...ledgerTransitionGapHistoricalPaths\n\t, ...zeroPayloadRustPromotionChangedPaths\n"
+        },
+        {
+          "start": 141609,
+          "previous": "",
+          "current": "\tconst ledgerGap = beforeLedgerTransitionGapSource(path, text, expected);\n\tif(sha256(ledgerGap) === expected) return ledgerGap;\n"
+        },
+        {
+          "start": 141809,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, ledgerGap, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "d6756d1895ea96497c84c23a5f18f5a9ca721620",
+      "currentCommit": "736ce9d03fc324ed6004aa77de534cd9885bfa83",
+      "previousSha256": "da6f3c4b5bfea7a42bc8ed542797072f3512c0ce80ddd4b4b9957db696a82e6c",
+      "currentSha256": "5a021097f0896d68416f08a55457785bec6bce000c3e5c3d56c5a1ae130df45a",
+      "edits": [
+        {
+          "start": 2598,
+          "previous": "",
+          "current": "import { beforeZeroPayloadPerlBooleanRepairSource, zeroPayloadPerlBooleanRepairChangedPaths } from \"./zero-payload-perl-boolean-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 118054,
+          "previous": "",
+          "current": "\t, ...zeroPayloadPerlBooleanRepairChangedPaths\n"
+        },
+        {
+          "start": 143623,
+          "previous": "",
+          "current": "\tconst zeroPayloadPerlBooleanRepair\n\t\t= beforeZeroPayloadPerlBooleanRepairSource(\n\t\t\tpath, zeroPayloadNativeEvidence, expected\n\t\t);\n\tif(sha256(zeroPayloadPerlBooleanRepair) === expected)\n\t\treturn zeroPayloadPerlBooleanRepair;\n"
+        },
+        {
+          "start": 143908,
+          "previous": "\t\tpath, zeroPayloadNativeEvidence, expected\n",
+          "current": "\t\tpath, zeroPayloadPerlBooleanRepair, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "38355ab8e3d57ef1c1a4fcb76debfb4cdb5202d0",
+      "currentCommit": "d6756d1895ea96497c84c23a5f18f5a9ca721620",
+      "previousSha256": "0e29ae9f6a29541a3a061a4b728ecca9a6489625c0ccd4ca1816f97866409772",
+      "currentSha256": "da6f3c4b5bfea7a42bc8ed542797072f3512c0ce80ddd4b4b9957db696a82e6c",
+      "edits": [
+        {
+          "start": 2433,
+          "previous": "",
+          "current": "import { beforeZeroPayloadWitHistorySource, zeroPayloadWitHistoryChangedPaths, zeroPayloadWitHistoryIntegrationPaths } from \"./zero-payload-wit-source-history.mjs\";\n"
+        },
+        {
+          "start": 117898,
+          "previous": "",
+          "current": "\t, ...zeroPayloadWitHistoryChangedPaths\n\t, ...zeroPayloadWitHistoryIntegrationPaths\n"
+        },
+        {
+          "start": 143420,
+          "previous": "\tconst zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(\n",
+          "current": "\tconst zeroPayloadWit = beforeZeroPayloadWitHistorySource(\n"
+        },
+        {
+          "start": 143523,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadWit) === expected) return zeroPayloadWit;\n\tconst zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(\n\t\tpath, zeroPayloadWit, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "ef2091c069be13fc37fd30525e5f373268296e53",
+      "currentCommit": "38355ab8e3d57ef1c1a4fcb76debfb4cdb5202d0",
+      "previousSha256": "98d60adbee944f085a2be63b50bac40c5b1aea21abfa539df98097970f358dcf",
+      "currentSha256": "0e29ae9f6a29541a3a061a4b728ecca9a6489625c0ccd4ca1816f97866409772",
+      "edits": [
+        {
+          "start": 2268,
+          "previous": "",
+          "current": "import { beforeZeroPayloadPhpHistorySource, zeroPayloadPhpHistoryChangedPaths, zeroPayloadPhpHistoryIntegrationPaths } from \"./zero-payload-php-source-history.mjs\";\n"
+        },
+        {
+          "start": 117733,
+          "previous": "",
+          "current": "\t, ...zeroPayloadPhpHistoryChangedPaths\n\t, ...zeroPayloadPhpHistoryIntegrationPaths\n"
+        },
+        {
+          "start": 143171,
+          "previous": "\tconst zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(\n",
+          "current": "\tconst zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(\n"
+        },
+        {
+          "start": 143274,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadPhp) === expected) return zeroPayloadPhp;\n\tconst zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(\n\t\tpath, zeroPayloadPhp, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0a52816693dbe9a4e701ce3ab54ebf08a906b735",
+      "currentCommit": "ef2091c069be13fc37fd30525e5f373268296e53",
+      "previousSha256": "b474f61527b48d48a22f9bd85b0ffaddfa3bc770e11f360dcef645086124fee9",
+      "currentSha256": "98d60adbee944f085a2be63b50bac40c5b1aea21abfa539df98097970f358dcf",
+      "edits": [
+        {
+          "start": 2268,
+          "previous": "",
+          "current": "import { beforeZeroPayloadPerlArchiveSource, zeroPayloadPerlArchiveChangedPaths, zeroPayloadPerlArchiveIntegrationPaths } from \"./zero-payload-perl-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 117568,
+          "previous": "",
+          "current": "\t, ...zeroPayloadPerlArchiveChangedPaths\n\t, ...zeroPayloadPerlArchiveIntegrationPaths\n"
+        },
+        {
+          "start": 142922,
+          "previous": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n",
+          "current": "\tconst zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(\n"
+        },
+        {
+          "start": 143034,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadPerlArchive) === expected)\n\t\treturn zeroPayloadPerlArchive;\n\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n\t\tpath, zeroPayloadPerlArchive, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "7e292652ee56efb8e201a52628385498ef2febf9",
+      "currentCommit": "0a52816693dbe9a4e701ce3ab54ebf08a906b735",
+      "previousSha256": "8eecfc1d9cd96859f6786317b9513ecdb80f39f944b9e4e1908b2b13e0fae99d",
+      "currentSha256": "b474f61527b48d48a22f9bd85b0ffaddfa3bc770e11f360dcef645086124fee9",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustPromotionSource, zeroPayloadRustPromotionChangedPaths, zeroPayloadRustPromotionIntegrationPaths } from \"./zero-payload-rust-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 116424,
+          "previous": "\t...zeroPayloadTypeSurfaceGapHistoricalPaths\n",
+          "current": "\t...zeroPayloadRustPromotionChangedPaths\n\t, ...zeroPayloadRustPromotionIntegrationPaths\n\t, ...zeroPayloadTypeSurfaceGapHistoricalPaths\n"
+        },
+        {
+          "start": 140403,
+          "previous": "",
+          "current": "\tconst zeroPayloadRustPromotion = beforeZeroPayloadRustPromotionSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadRustPromotion) === expected)\n\t\treturn zeroPayloadRustPromotion;\n"
+        },
+        {
+          "start": 140628,
+          "previous": "\t\t= beforeZeroPayloadTypeSurfaceGapSource(path, text, expected);\n",
+          "current": "\t\t= beforeZeroPayloadTypeSurfaceGapSource(\n\t\t\tpath, zeroPayloadRustPromotion, expected\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "fb0e66e9739ebf7990b05800c2046ea91ac72f8e",
+      "currentCommit": "7e292652ee56efb8e201a52628385498ef2febf9",
+      "previousSha256": "ee43a221bea3631d63fdd3be97967590218584d76cfb55d9002d00579dfafff2",
+      "currentSha256": "8eecfc1d9cd96859f6786317b9513ecdb80f39f944b9e4e1908b2b13e0fae99d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadTypeSurfaceGapSource, zeroPayloadTypeSurfaceGapHistoricalPaths, zeroPayloadTypeSurfaceGapIntegrationPaths } from \"./zero-payload-type-surface-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 116239,
+          "previous": "\t...zeroPayloadDotnetPromotionChangedPaths\n",
+          "current": "\t...zeroPayloadTypeSurfaceGapHistoricalPaths\n\t, ...zeroPayloadTypeSurfaceGapIntegrationPaths\n\t, ...zeroPayloadDotnetPromotionChangedPaths\n"
+        },
+        {
+          "start": 140128,
+          "previous": "",
+          "current": "\tconst zeroPayloadTypeSurfaceGapPrelude\n\t\t= beforeZeroPayloadTypeSurfaceGapSource(path, text, expected);\n\tif(sha256(zeroPayloadTypeSurfaceGapPrelude) === expected)\n\t\treturn zeroPayloadTypeSurfaceGapPrelude;\n"
+        },
+        {
+          "start": 140411,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadTypeSurfaceGapPrelude, expected\n"
+        },
+        {
+          "start": 140932,
+          "previous": "\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n",
+          "current": "\tconst zeroPayloadTypeSurfaceGap = beforeZeroPayloadTypeSurfaceGapSource(\n"
+        },
+        {
+          "start": 141044,
+          "previous": "",
+          "current": "\tif(sha256(zeroPayloadTypeSurfaceGap) === expected)\n\t\treturn zeroPayloadTypeSurfaceGap;\n\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n\t\tpath, zeroPayloadTypeSurfaceGap, expected\n\t);\n"
+        },
+        {
+          "start": 158163,
+          "previous": "\treturn previous === text ? source : previous;\n",
+          "current": "\tif(previous === text) return source;\n\treturn expected !== undefined && sha256(previous) !== expected\n\t\t? beforeFinRefinementSource(path, previous, expected)\n\t\t: previous;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "60412850d9ecc85cddcf271dd6d15884e370ca40",
+      "currentCommit": "fb0e66e9739ebf7990b05800c2046ea91ac72f8e",
+      "previousSha256": "352dc8d471a9d2f7a9e91b70625e5e4f6cb07831893471327a2b037c6bea8810",
+      "currentSha256": "ee43a221bea3631d63fdd3be97967590218584d76cfb55d9002d00579dfafff2",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetPromotionSource, zeroPayloadDotnetPromotionChangedPaths, zeroPayloadDotnetPromotionIntegrationPaths } from \"./zero-payload-dotnet-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 116046,
+          "previous": "\t...zeroPayloadJvmPromotionChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetPromotionChangedPaths\n\t, ...zeroPayloadDotnetPromotionIntegrationPaths\n\t, ...zeroPayloadJvmPromotionChangedPaths\n"
+        },
+        {
+          "start": 139840,
+          "previous": "\tconst zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(\n",
+          "current": "\tconst zeroPayloadDotnetPromotion = beforeZeroPayloadDotnetPromotionSource(\n"
+        },
+        {
+          "start": 139939,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadDotnetPromotion) === expected)\n\t\treturn zeroPayloadDotnetPromotion;\n\tconst zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(\n\t\tpath, zeroPayloadDotnetPromotion, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "a8d917cbefe102a098f8469f7fa4522b6ea6adf5",
+      "currentCommit": "60412850d9ecc85cddcf271dd6d15884e370ca40",
+      "previousSha256": "80360782caf3f3bc099c12db7a2f2d17cc2a48e62973190058318557ec074a28",
+      "currentSha256": "352dc8d471a9d2f7a9e91b70625e5e4f6cb07831893471327a2b037c6bea8810",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadJvmPromotionSource, zeroPayloadJvmPromotionChangedPaths, zeroPayloadJvmPromotionIntegrationPaths } from \"./zero-payload-jvm-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 115853,
+          "previous": "\t...zeroPayloadRubyHistoryChangedPaths\n",
+          "current": "\t...zeroPayloadJvmPromotionChangedPaths\n\t, ...zeroPayloadJvmPromotionIntegrationPaths\n\t, ...zeroPayloadRubyHistoryChangedPaths\n"
+        },
+        {
+          "start": 139553,
+          "previous": "\tconst zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(\n",
+          "current": "\tconst zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(\n"
+        },
+        {
+          "start": 139646,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadJvmPromotion) === expected)\n\t\treturn zeroPayloadJvmPromotion;\n\tconst zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(\n\t\tpath, zeroPayloadJvmPromotion, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0d420c0dda5953f0167f55421887838a646b6296",
+      "currentCommit": "a8d917cbefe102a098f8469f7fa4522b6ea6adf5",
+      "previousSha256": "759bf3fcd95f3aa3a0686e411108b9321d4d87ddac29a5c13d747f9657573d22",
+      "currentSha256": "80360782caf3f3bc099c12db7a2f2d17cc2a48e62973190058318557ec074a28",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from \"./zero-payload-ruby-source-history.mjs\";\n"
+        },
+        {
+          "start": 115672,
+          "previous": "\t...zeroPayloadPythonHistoryChangedPaths\n",
+          "current": "\t...zeroPayloadRubyHistoryChangedPaths\n\t, ...zeroPayloadRubyHistoryIntegrationPaths\n\t, ...zeroPayloadPythonHistoryChangedPaths\n"
+        },
+        {
+          "start": 139284,
+          "previous": "\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n",
+          "current": "\tconst zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(\n"
+        },
+        {
+          "start": 139368,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;\n\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n\t\tpath, zeroPayloadRuby, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+      "currentCommit": "0d420c0dda5953f0167f55421887838a646b6296",
+      "previousSha256": "81f7e98585091305b56ecf73298df25608b8bc14e441600d94d882f7e2296b38",
+      "currentSha256": "759bf3fcd95f3aa3a0686e411108b9321d4d87ddac29a5c13d747f9657573d22",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from \"./zero-payload-python-source-history.mjs\";\n"
+        },
+        {
+          "start": 115503,
+          "previous": "\t...zeroPayloadJvmNullBoundaryChangedPaths\n",
+          "current": "\t...zeroPayloadPythonHistoryChangedPaths\n\t, ...zeroPayloadPythonHistoryIntegrationPaths\n\t, ...zeroPayloadJvmNullBoundaryChangedPaths\n"
+        },
+        {
+          "start": 139029,
+          "previous": "\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n",
+          "current": "\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n"
+        },
+        {
+          "start": 139117,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;\n\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n\t\tpath, zeroPayloadPython, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "7fe7c5d805361495603c26a32f7a9a3a5dea02a0",
+      "currentCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+      "previousSha256": "7e988675b39d0a134d7dd1ea2f2d1339c9317d452aa20e636bf5bd6a45637207",
+      "currentSha256": "81f7e98585091305b56ecf73298df25608b8bc14e441600d94d882f7e2296b38",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChangedPaths, zeroPayloadJvmNullBoundaryHistoricalPaths, zeroPayloadJvmNullBoundaryIntegrationPaths } from \"./zero-payload-jvm-null-boundary-source-history.mjs\";\n"
+        },
+        {
+          "start": 115326,
+          "previous": "\t...zeroPayloadNativePromotionChangedPaths\n",
+          "current": "\t...zeroPayloadJvmNullBoundaryChangedPaths\n\t, ...zeroPayloadJvmNullBoundaryHistoricalPaths\n\t, ...zeroPayloadJvmNullBoundaryIntegrationPaths\n\t, ...zeroPayloadNativePromotionChangedPaths\n"
+        },
+        {
+          "start": 138762,
+          "previous": "\tconst zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(\n",
+          "current": "\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n"
+        },
+        {
+          "start": 138865,
+          "previous": "",
+          "current": "\tif(sha256(zeroPayloadJvmNullBoundary) === expected)\n\t\treturn zeroPayloadJvmNullBoundary;\n\tconst zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(\n\t\tpath, zeroPayloadJvmNullBoundary, expected\n\t);\n"
+        },
+        {
+          "start": 155227,
+          "previous": "",
+          "current": "\tprevious = beforeZeroPayloadJvmNullBoundarySource(\n\t\tpath, previous, expected\n\t);\n\tif(sha256(previous) === expected) return previous;\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "54e040d40391ddb8e23b9764c1a75765abb0f458",
+      "currentCommit": "7fe7c5d805361495603c26a32f7a9a3a5dea02a0",
+      "previousSha256": "21a49612cdebaffa3f983a81cc9bc1ef1f2e510c36822caffb96343f32ca8631",
+      "currentSha256": "7e988675b39d0a134d7dd1ea2f2d1339c9317d452aa20e636bf5bd6a45637207",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from \"./zero-payload-native-promotion-source-history.mjs\";\n"
+        },
+        {
+          "start": 115089,
+          "previous": "\t...zeroPayloadBrowserDiagnosticChangedPaths\n",
+          "current": "\t...zeroPayloadNativePromotionChangedPaths\n\t, ...zeroPayloadNativePromotionIntegrationPaths\n\t, ...zeroPayloadBrowserDiagnosticChangedPaths\n"
+        },
+        {
+          "start": 138383,
+          "previous": "\tconst zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(\n",
+          "current": "\tconst zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(\n"
+        },
+        {
+          "start": 138482,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadNativePromotion) === expected)\n\t\treturn zeroPayloadNativePromotion;\n\tconst zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(\n\t\tpath, zeroPayloadNativePromotion, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "25c5e950cc5bbb033c508620e76642655625d09c",
+      "currentCommit": "54e040d40391ddb8e23b9764c1a75765abb0f458",
+      "previousSha256": "b61706e470e9958bc23bea9a1ce44395656092b5a61154ac86af29542483a522",
+      "currentSha256": "21a49612cdebaffa3f983a81cc9bc1ef1f2e510c36822caffb96343f32ca8631",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from \"./zero-payload-browser-diagnostic-source-history.mjs\";\n"
+        },
+        {
+          "start": 114896,
+          "previous": "\t...zeroPayloadNativeEvidenceChangedPaths\n",
+          "current": "\t...zeroPayloadBrowserDiagnosticChangedPaths\n\t, ...zeroPayloadBrowserDiagnosticIntegrationPaths\n\t, ...zeroPayloadNativeEvidenceChangedPaths\n"
+        },
+        {
+          "start": 138096,
+          "previous": "\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n",
+          "current": "\tconst zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(\n"
+        },
+        {
+          "start": 138199,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadBrowserDiagnostic) === expected)\n\t\treturn zeroPayloadBrowserDiagnostic;\n\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n\t\tpath, zeroPayloadBrowserDiagnostic, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "05af12cf39dc3ebe95c499e8b386ce8d4db756b6",
+      "currentCommit": "25c5e950cc5bbb033c508620e76642655625d09c",
+      "previousSha256": "339893d73f4a4df190fa79948cae3df2b25fd45a209b07340859ee5149ae3b12",
+      "currentSha256": "b61706e470e9958bc23bea9a1ce44395656092b5a61154ac86af29542483a522",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from \"./zero-payload-native-evidence-source-history.mjs\";\n"
+        },
+        {
+          "start": 114695,
+          "previous": "\t...zeroPayloadRustArchiveChangedPaths\n",
+          "current": "\t...zeroPayloadNativeEvidenceChangedPaths\n\t, ...zeroPayloadNativeEvidenceIntegrationPaths\n\t, ...zeroPayloadRustArchiveChangedPaths\n"
+        },
+        {
+          "start": 137797,
+          "previous": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n",
+          "current": "\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n"
+        },
+        {
+          "start": 137894,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadNativeEvidence) === expected)\n\t\treturn zeroPayloadNativeEvidence;\n\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n\t\tpath, zeroPayloadNativeEvidence, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "073f490bdb039ae62368e639ea14e3728cec12cb",
+      "currentCommit": "05af12cf39dc3ebe95c499e8b386ce8d4db756b6",
+      "previousSha256": "7c138e2010bdb48d86085389403124425416cea9cf16998156d0ab97f6cb51e5",
+      "currentSha256": "339893d73f4a4df190fa79948cae3df2b25fd45a209b07340859ee5149ae3b12",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from \"./zero-payload-rust-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 114506,
+          "previous": "\t...zeroPayloadRustCiChangedPaths\n",
+          "current": "\t...zeroPayloadRustArchiveChangedPaths\n\t, ...zeroPayloadRustArchiveIntegrationPaths\n\t, ...zeroPayloadRustCiChangedPaths\n"
+        },
+        {
+          "start": 137516,
+          "previous": "\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n",
+          "current": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n"
+        },
+        {
+          "start": 137607,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadRustArchive) === expected)\n\t\treturn zeroPayloadRustArchive;\n\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n\t\tpath, zeroPayloadRustArchive, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "62359d47252ee76a6ad0b679e78c37f5e6a5f510",
+      "currentCommit": "073f490bdb039ae62368e639ea14e3728cec12cb",
+      "previousSha256": "166b3d16421c9054b8b5e07a123592bc77e582f0a6085adabc626bad78621699",
+      "currentSha256": "7c138e2010bdb48d86085389403124425416cea9cf16998156d0ab97f6cb51e5",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from \"./zero-payload-rust-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 114329,
+          "previous": "\t...zeroPayloadRustAuditRepairChangedPaths\n",
+          "current": "\t...zeroPayloadRustCiChangedPaths\n\t, ...zeroPayloadRustCiIntegrationPaths\n\t, ...zeroPayloadRustAuditRepairChangedPaths\n"
+        },
+        {
+          "start": 137253,
+          "previous": "\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n",
+          "current": "\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n"
+        },
+        {
+          "start": 137334,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadRustCi) === expected) return zeroPayloadRustCi;\n\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n\t\tpath, zeroPayloadRustCi, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "55c5ea683fe94c50bf8d8d77def76c89cb89c110",
+      "currentCommit": "62359d47252ee76a6ad0b679e78c37f5e6a5f510",
+      "previousSha256": "4a9f659512c61ef0c8dd14f8fbc28afbb4d9d812dfe4a39ffc7faf4bfd23c963",
+      "currentSha256": "166b3d16421c9054b8b5e07a123592bc77e582f0a6085adabc626bad78621699",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustAuditRepairSource, zeroPayloadRustAuditRepairChangedPaths, zeroPayloadRustAuditRepairIntegrationPaths } from \"./zero-payload-rust-audit-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 114172,
+          "previous": "\t...zeroPayloadRustInstalledChangedPaths\n",
+          "current": "\t...zeroPayloadRustAuditRepairChangedPaths\n\t, ...zeroPayloadRustAuditRepairIntegrationPaths\n\t, ...zeroPayloadRustInstalledChangedPaths\n"
+        },
+        {
+          "start": 137020,
+          "previous": "\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n",
+          "current": "\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n"
+        },
+        {
+          "start": 137119,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadRustAuditRepair) === expected)\n\t\treturn zeroPayloadRustAuditRepair;\n\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n\t\tpath, zeroPayloadRustAuditRepair, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "870b23d4306bf9a5c105f6c199d5cb9dd157c865",
+      "currentCommit": "55c5ea683fe94c50bf8d8d77def76c89cb89c110",
+      "previousSha256": "42a807cffff2c6d412b9fe8d25dd503115dfed2f9d7b5080bb4632bf447c8d0d",
+      "currentSha256": "4a9f659512c61ef0c8dd14f8fbc28afbb4d9d812dfe4a39ffc7faf4bfd23c963",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustInstalledSource, zeroPayloadRustInstalledChangedPaths, zeroPayloadRustInstalledIntegrationPaths } from \"./zero-payload-rust-installed-source-history.mjs\";\n"
+        },
+        {
+          "start": 113978,
+          "previous": "\t...zeroPayloadRustChangedPaths\n",
+          "current": "\t...zeroPayloadRustInstalledChangedPaths\n\t, ...zeroPayloadRustInstalledIntegrationPaths\n\t, ...zeroPayloadRustChangedPaths\n"
+        },
+        {
+          "start": 136732,
+          "previous": "\tconst zeroPayloadRust = beforeZeroPayloadRustSource(path, text, expected);\n",
+          "current": "\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadRustInstalled) === expected)\n\t\treturn zeroPayloadRustInstalled;\n\tconst zeroPayloadRust = beforeZeroPayloadRustSource(\n\t\tpath, zeroPayloadRustInstalled, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "b5317e6b0abc215d43557eb341ec6f9ed10077f9",
+      "currentCommit": "870b23d4306bf9a5c105f6c199d5cb9dd157c865",
+      "previousSha256": "f33f434aa82b54b6b7114e0392874b756c7eb1769ccd844171c54a9970360d52",
+      "currentSha256": "42a807cffff2c6d412b9fe8d25dd503115dfed2f9d7b5080bb4632bf447c8d0d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadRustSource, zeroPayloadRustChangedPaths, zeroPayloadRustIntegrationPaths } from \"./zero-payload-rust-source-history.mjs\";\n"
+        },
+        {
+          "start": 113793,
+          "previous": "\t...zeroPayloadJvmArchiveChangedPaths\n",
+          "current": "\t...zeroPayloadRustChangedPaths\n\t, ...zeroPayloadRustIntegrationPaths\n\t, ...zeroPayloadJvmArchiveChangedPaths\n"
+        },
+        {
+          "start": 136457,
+          "previous": "",
+          "current": "\tconst zeroPayloadRust = beforeZeroPayloadRustSource(path, text, expected);\n\tif(sha256(zeroPayloadRust) === expected) return zeroPayloadRust;\n"
+        },
+        {
+          "start": 136665,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadRust, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+      "currentCommit": "b5317e6b0abc215d43557eb341ec6f9ed10077f9",
+      "previousSha256": "6ed68fc245ae6478e6e535c4a89b329c6eabfb1a93f8da33387db099e61fac7d",
+      "currentSha256": "f33f434aa82b54b6b7114e0392874b756c7eb1769ccd844171c54a9970360d52",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadJvmArchiveSource, zeroPayloadJvmArchiveChangedPaths, zeroPayloadJvmArchiveIntegrationPaths } from \"./zero-payload-jvm-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 113645,
+          "previous": "\t...zeroPayloadJvmChangedPaths\n",
+          "current": "\t...zeroPayloadJvmArchiveChangedPaths\n\t, ...zeroPayloadJvmArchiveIntegrationPaths\n\t, ...zeroPayloadJvmChangedPaths\n"
+        },
+        {
+          "start": 136237,
+          "previous": "\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);\n",
+          "current": "\tconst zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadJvmArchive) === expected)\n\t\treturn zeroPayloadJvmArchive;\n\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(\n\t\tpath, zeroPayloadJvmArchive, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "28ead008be53cf8d8ed53b6d5ee6afeb053c6514",
+      "currentCommit": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+      "previousSha256": "ce376fbff0a169348e91beda32352e722641d9e49cf30c896d6d63455148f605",
+      "currentSha256": "6ed68fc245ae6478e6e535c4a89b329c6eabfb1a93f8da33387db099e61fac7d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadJvmSource, zeroPayloadJvmChangedPaths, zeroPayloadJvmIntegrationPaths } from \"./zero-payload-jvm-source-history.mjs\";\n"
+        },
+        {
+          "start": 113472,
+          "previous": "\t...zeroPayloadDotnetControlRepairChangedPaths\n",
+          "current": "\t...zeroPayloadJvmChangedPaths\n\t, ...zeroPayloadJvmIntegrationPaths\n\t, ...zeroPayloadDotnetControlRepairChangedPaths\n"
+        },
+        {
+          "start": 135980,
+          "previous": "",
+          "current": "\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);\n\tif(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;\n"
+        },
+        {
+          "start": 136156,
+          "previous": "\t\t= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);\n",
+          "current": "\t\t= beforeZeroPayloadDotnetControlRepairSource(\n\t\t\tpath, zeroPayloadJvm, expected\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "e2971f3094a4d3b82d253c0d01082e26334beae6",
+      "currentCommit": "28ead008be53cf8d8ed53b6d5ee6afeb053c6514",
+      "previousSha256": "654e8a0f9bb4e0f7366222609080efdd9436c78c2ed769f75bb440426669d02c",
+      "currentSha256": "ce376fbff0a169348e91beda32352e722641d9e49cf30c896d6d63455148f605",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from \"./zero-payload-dotnet-control-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 113328,
+          "previous": "\t...zeroPayloadDotnetArchiveChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetControlRepairChangedPaths\n\t, ...zeroPayloadDotnetControlRepairIntegrationPaths\n\t, ...zeroPayloadDotnetArchiveChangedPaths\n"
+        },
+        {
+          "start": 135766,
+          "previous": "",
+          "current": "\tconst zeroPayloadDotnetControlRepair\n\t\t= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);\n\tif(sha256(zeroPayloadDotnetControlRepair) === expected)\n\t\treturn zeroPayloadDotnetControlRepair;\n"
+        },
+        {
+          "start": 136044,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadDotnetControlRepair, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "e71b69bed3a79b0c3131ee27fd71212f99841bae",
+      "currentCommit": "e2971f3094a4d3b82d253c0d01082e26334beae6",
+      "previousSha256": "b4529fbc0e5e9e5493cd13b5c430aa7da5c07bd16801ca521a8ed1131ed453b8",
+      "currentSha256": "654e8a0f9bb4e0f7366222609080efdd9436c78c2ed769f75bb440426669d02c",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetArchiveSource, zeroPayloadDotnetArchiveChangedPaths, zeroPayloadDotnetArchiveIntegrationPaths } from \"./zero-payload-dotnet-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 113118,
+          "previous": "\t...zeroPayloadVariantChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetArchiveChangedPaths\n\t, ...zeroPayloadDotnetArchiveIntegrationPaths\n\t, ...zeroPayloadVariantChangedPaths\n"
+        },
+        {
+          "start": 135454,
+          "previous": "\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n",
+          "current": "\tconst zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(\n"
+        },
+        {
+          "start": 135549,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadDotnetArchive) === expected)\n\t\treturn zeroPayloadDotnetArchive;\n\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n\t\tpath, zeroPayloadDotnetArchive, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0aece3431691044e091e1abdb3af1571dd91d051",
+      "currentCommit": "e71b69bed3a79b0c3131ee27fd71212f99841bae",
+      "previousSha256": "5a2df95e76a5aaae446d5be1982a3db3b21c75151b3c29257c6389178f3e0af3",
+      "currentSha256": "b4529fbc0e5e9e5493cd13b5c430aa7da5c07bd16801ca521a8ed1131ed453b8",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadVariantSource, zeroPayloadVariantChangedPaths, zeroPayloadVariantIntegrationPaths } from \"./zero-payload-variant-source-history.mjs\";\n"
+        },
+        {
+          "start": 112933,
+          "previous": "\t...zeroPayloadDotnetVerifierRepairChangedPaths\n",
+          "current": "\t...zeroPayloadVariantChangedPaths\n\t, ...zeroPayloadVariantIntegrationPaths\n\t, ...zeroPayloadDotnetVerifierRepairChangedPaths\n"
+        },
+        {
+          "start": 135179,
+          "previous": "",
+          "current": "\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadVariant) === expected) return zeroPayloadVariant;\n"
+        },
+        {
+          "start": 135426,
+          "previous": "\t\t\tpath, text, expected\n",
+          "current": "\t\t\tpath, zeroPayloadVariant, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "548cad1fdb2104b5feaec42b1aec380e73ed642a",
+      "currentCommit": "0aece3431691044e091e1abdb3af1571dd91d051",
+      "previousSha256": "7de717fb4bc7ce2a23d4ecadb72373dc5dea603376b25cbdf7c87e5ac3b50bfb",
+      "currentSha256": "5a2df95e76a5aaae446d5be1982a3db3b21c75151b3c29257c6389178f3e0af3",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetVerifierRepairSource, zeroPayloadDotnetVerifierRepairChangedPaths, zeroPayloadDotnetVerifierRepairIntegrationPaths } from \"./zero-payload-dotnet-verifier-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 112773,
+          "previous": "\t...zeroPayloadDotnetCiChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetVerifierRepairChangedPaths\n\t, ...zeroPayloadDotnetVerifierRepairIntegrationPaths\n\t, ...zeroPayloadDotnetCiChangedPaths\n"
+        },
+        {
+          "start": 134941,
+          "previous": "",
+          "current": "\tconst zeroPayloadDotnetVerifierRepair\n\t\t= beforeZeroPayloadDotnetVerifierRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(zeroPayloadDotnetVerifierRepair) === expected)\n\t\treturn zeroPayloadDotnetVerifierRepair;\n"
+        },
+        {
+          "start": 135220,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadDotnetVerifierRepair, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "9d47c4c31dc77023126596cca276af05bbe02ddd",
+      "currentCommit": "548cad1fdb2104b5feaec42b1aec380e73ed642a",
+      "previousSha256": "df09f7f7b3e238fd1fb80d41578550207b87633dc6cf80d32d357a686f614a04",
+      "currentSha256": "7de717fb4bc7ce2a23d4ecadb72373dc5dea603376b25cbdf7c87e5ac3b50bfb",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetCiSource, zeroPayloadDotnetCiChangedPaths, zeroPayloadDotnetCiIntegrationPaths } from \"./zero-payload-dotnet-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 112559,
+          "previous": "\t...zeroPayloadDotnetChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetCiChangedPaths\n\t, ...zeroPayloadDotnetCiIntegrationPaths\n\t, ...zeroPayloadDotnetChangedPaths\n"
+        },
+        {
+          "start": 134623,
+          "previous": "\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n",
+          "current": "\tconst zeroPayloadDotnetCi = beforeZeroPayloadDotnetCiSource(\n"
+        },
+        {
+          "start": 134708,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadDotnetCi) === expected) return zeroPayloadDotnetCi;\n\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n\t\tpath, zeroPayloadDotnetCi, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "00451b44487f514344dccfbaf53194c19863e742",
+      "currentCommit": "9d47c4c31dc77023126596cca276af05bbe02ddd",
+      "previousSha256": "13a7f48eefd0593906106b6c54055d374606e5fe679369c451aee7a442d83398",
+      "currentSha256": "df09f7f7b3e238fd1fb80d41578550207b87633dc6cf80d32d357a686f614a04",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadDotnetSource, zeroPayloadDotnetChangedPaths, zeroPayloadDotnetIntegrationPaths } from \"./zero-payload-dotnet-source-history.mjs\";\n"
+        },
+        {
+          "start": 112394,
+          "previous": "\t...zeroPayloadNativeArchiveChangedPaths\n",
+          "current": "\t...zeroPayloadDotnetChangedPaths\n\t, ...zeroPayloadDotnetIntegrationPaths\n\t, ...zeroPayloadNativeArchiveChangedPaths\n"
+        },
+        {
+          "start": 134378,
+          "previous": "\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n",
+          "current": "\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n"
+        },
+        {
+          "start": 134459,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadDotnet) === expected) return zeroPayloadDotnet;\n\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, zeroPayloadDotnet, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "17de8ed392e65237636d4749e65247fa45d739be",
+      "currentCommit": "00451b44487f514344dccfbaf53194c19863e742",
+      "previousSha256": "e82e5a2fe22afa50c38ec6bf90bfcbd0335640b68d9e203853df4d977bd04f59",
+      "currentSha256": "13a7f48eefd0593906106b6c54055d374606e5fe679369c451aee7a442d83398",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNativeArchiveSource, zeroPayloadNativeArchiveChangedPaths, zeroPayloadNativeArchiveIntegrationPaths } from \"./zero-payload-native-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 112238,
+          "previous": "\t...zeroPayloadNativeChangedPaths\n",
+          "current": "\t...zeroPayloadNativeArchiveChangedPaths\n\t, ...zeroPayloadNativeArchiveIntegrationPaths\n\t, ...zeroPayloadNativeChangedPaths\n"
+        },
+        {
+          "start": 134146,
+          "previous": "\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);\n",
+          "current": "\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadNativeArchive) === expected)\n\t\treturn zeroPayloadNativeArchive;\n\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(\n\t\tpath, zeroPayloadNativeArchive, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "88d5b78cb7c77328231f0a89e7d31ab6432c00df",
+      "currentCommit": "17de8ed392e65237636d4749e65247fa45d739be",
+      "previousSha256": "12ec7ce96af490b7204d85d038adbab9e4c106cdc601d99ed8046ee883323a0a",
+      "currentSha256": "e82e5a2fe22afa50c38ec6bf90bfcbd0335640b68d9e203853df4d977bd04f59",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNativeSource, zeroPayloadNativeChangedPaths, zeroPayloadNativeIntegrationPaths } from \"./zero-payload-native-source-history.mjs\";\n"
+        },
+        {
+          "start": 112053,
+          "previous": "\t...zeroPayloadBrowserArchiveChangedPaths\n",
+          "current": "\t...zeroPayloadNativeChangedPaths\n\t, ...zeroPayloadNativeIntegrationPaths\n\t, ...zeroPayloadBrowserArchiveChangedPaths\n"
+        },
+        {
+          "start": 133871,
+          "previous": "",
+          "current": "\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);\n\tif(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;\n"
+        },
+        {
+          "start": 134095,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadNative, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "5667a26826838580efaf9abec9947501610c90a4",
+      "currentCommit": "88d5b78cb7c77328231f0a89e7d31ab6432c00df",
+      "previousSha256": "d8e60c22f3141c055ccee2684e32d2b514121cdb45e62d6cb55c43217f158513",
+      "currentSha256": "12ec7ce96af490b7204d85d038adbab9e4c106cdc601d99ed8046ee883323a0a",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadBrowserArchiveSource, zeroPayloadBrowserArchiveChangedPaths, zeroPayloadBrowserArchiveIntegrationPaths } from \"./zero-payload-browser-archive-source-history.mjs\";\n"
+        },
+        {
+          "start": 111897,
+          "previous": "\t...zeroPayloadBrowserCiChangedPaths\n",
+          "current": "\t...zeroPayloadBrowserArchiveChangedPaths\n\t, ...zeroPayloadBrowserArchiveIntegrationPaths\n\t, ...zeroPayloadBrowserCiChangedPaths\n"
+        },
+        {
+          "start": 133639,
+          "previous": "\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n",
+          "current": "\tconst zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(\n"
+        },
+        {
+          "start": 133736,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadBrowserArchive) === expected)\n\t\treturn zeroPayloadBrowserArchive;\n\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n\t\tpath, zeroPayloadBrowserArchive, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "2b17ad4ca92335e96207f6b7284aa593da1b5cc3",
+      "currentCommit": "5667a26826838580efaf9abec9947501610c90a4",
+      "previousSha256": "63e965a7a4dc1e7f6ac0d554b4a96fa841d03f9ff66101a8a7a6dceb2654b1b7",
+      "currentSha256": "d8e60c22f3141c055ccee2684e32d2b514121cdb45e62d6cb55c43217f158513",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from \"./zero-payload-browser-ci-source-history.mjs\";\n"
+        },
+        {
+          "start": 111708,
+          "previous": "\t...zeroPayloadBrowserChangedPaths\n",
+          "current": "\t...zeroPayloadBrowserCiChangedPaths\n\t, ...zeroPayloadBrowserCiIntegrationPaths\n\t, ...zeroPayloadBrowserChangedPaths\n"
+        },
+        {
+          "start": 133358,
+          "previous": "\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(path, text, expected);\n",
+          "current": "\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;\n\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(\n\t\tpath, zeroPayloadBrowserCi, expected\n\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "f49d1344f5fc174f3ce53a816fac71f62144ac6a",
+      "currentCommit": "2b17ad4ca92335e96207f6b7284aa593da1b5cc3",
+      "previousSha256": "b2d7afffb8a5a5055b7f81ca3f8aa8a6565a33901d47f73954729c37b3612cbb",
+      "currentSha256": "63e965a7a4dc1e7f6ac0d554b4a96fa841d03f9ff66101a8a7a6dceb2654b1b7",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadBrowserSource, zeroPayloadBrowserChangedPaths, zeroPayloadBrowserIntegrationPaths } from \"./zero-payload-browser-source-history.mjs\";\n"
+        },
+        {
+          "start": 111539,
+          "previous": "\t...zeroPayloadNpmInstalledChangedPaths\n",
+          "current": "\t...zeroPayloadBrowserChangedPaths\n\t, ...zeroPayloadBrowserIntegrationPaths\n\t, ...zeroPayloadNpmInstalledChangedPaths\n"
+        },
+        {
+          "start": 133107,
+          "previous": "",
+          "current": "\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(path, text, expected);\n\tif(sha256(zeroPayloadBrowser) === expected) return zeroPayloadBrowser;\n"
+        },
+        {
+          "start": 133331,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, zeroPayloadBrowser, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "319891d4d6b9c693d443dfa4a899adab6418db1f",
+      "currentCommit": "f49d1344f5fc174f3ce53a816fac71f62144ac6a",
+      "previousSha256": "3f5ba9fffc2d466e411b4363d431eaa2a26f1fe1081de54d5f78b76046994238",
+      "currentSha256": "b2d7afffb8a5a5055b7f81ca3f8aa8a6565a33901d47f73954729c37b3612cbb",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNpmInstalledSource, zeroPayloadNpmInstalledChangedPaths, zeroPayloadNpmInstalledIntegrationPaths } from \"./zero-payload-npm-installed-source-history.mjs\";\n"
+        },
+        {
+          "start": 111379,
+          "previous": "\t...zeroPayloadJavaScriptChangedPaths\n",
+          "current": "\t...zeroPayloadNpmInstalledChangedPaths\n\t, ...zeroPayloadNpmInstalledIntegrationPaths\n\t, ...zeroPayloadJavaScriptChangedPaths\n"
+        },
+        {
+          "start": 132869,
+          "previous": "\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n",
+          "current": "\tconst zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(\n"
+        },
+        {
+          "start": 132962,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadNpmInstalled) === expected) return zeroPayloadNpmInstalled;\n\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n\t\tpath, zeroPayloadNpmInstalled, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "556bddd612d8562654904920a39b44dc1e569742",
+      "currentCommit": "319891d4d6b9c693d443dfa4a899adab6418db1f",
+      "previousSha256": "7675159d6529981e10237e70a597d52264f713359b9fc678622c8e1689b4b612",
+      "currentSha256": "3f5ba9fffc2d466e411b4363d431eaa2a26f1fe1081de54d5f78b76046994238",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadJavaScriptSource, zeroPayloadJavaScriptChangedPaths, zeroPayloadJavaScriptIntegrationPaths } from \"./zero-payload-javascript-source-history.mjs\";\n"
+        },
+        {
+          "start": 111198,
+          "previous": "\t...zeroPayloadNpmFoundationChangedPaths\n",
+          "current": "\t...zeroPayloadJavaScriptChangedPaths\n\t, ...zeroPayloadJavaScriptIntegrationPaths\n\t, ...zeroPayloadNpmFoundationChangedPaths\n"
+        },
+        {
+          "start": 132600,
+          "previous": "\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n",
+          "current": "\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n"
+        },
+        {
+          "start": 132689,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;\n\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n\t\tpath, zeroPayloadJavaScript, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "a9968c5e1b0710091880409280d8047ce001fc4f",
+      "currentCommit": "556bddd612d8562654904920a39b44dc1e569742",
+      "previousSha256": "38a802b066cba5048104279630eefca6847164925d1d28fc61e3a9ea6df0fb7d",
+      "currentSha256": "7675159d6529981e10237e70a597d52264f713359b9fc678622c8e1689b4b612",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadNpmFoundationSource, zeroPayloadNpmFoundationChangedPaths, zeroPayloadNpmFoundationIntegrationPaths } from \"./zero-payload-npm-foundation-source-history.mjs\";\n"
+        },
+        {
+          "start": 111026,
+          "previous": "\t...zeroPayloadCheckedRecordChangedPaths\n",
+          "current": "\t...zeroPayloadNpmFoundationChangedPaths\n\t, ...zeroPayloadNpmFoundationIntegrationPaths\n\t, ...zeroPayloadCheckedRecordChangedPaths\n"
+        },
+        {
+          "start": 132344,
+          "previous": "\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n",
+          "current": "\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n"
+        },
+        {
+          "start": 132429,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;\n\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n\t\tpath, zeroPayloadNpm, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0dcfb0379be5af7128d682d319e2d89472b426f3",
+      "currentCommit": "a9968c5e1b0710091880409280d8047ce001fc4f",
+      "previousSha256": "56e7d32744f77355be14a1438c35decdeb075c7377d2a80b2c8ddbc9e1e45297",
+      "currentSha256": "38a802b066cba5048104279630eefca6847164925d1d28fc61e3a9ea6df0fb7d",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeZeroPayloadCheckedRecordSource, zeroPayloadCheckedRecordChangedPaths, zeroPayloadCheckedRecordIntegrationPaths } from \"./zero-payload-checked-record-source-history.mjs\";\n"
+        },
+        {
+          "start": 110841,
+          "previous": "\t...projectedCheckedRecordMirrorChangedPaths\n",
+          "current": "\t...zeroPayloadCheckedRecordChangedPaths\n\t, ...zeroPayloadCheckedRecordIntegrationPaths\n\t, ...projectedCheckedRecordMirrorChangedPaths\n"
+        },
+        {
+          "start": 132069,
+          "previous": "\tconst projectedMirror = beforeProjectedCheckedRecordMirrorSource(\n",
+          "current": "\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n"
+        },
+        {
+          "start": 132151,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(zeroPayload) === expected) return zeroPayload;\n\tconst projectedMirror = beforeProjectedCheckedRecordMirrorSource(\n\t\tpath, zeroPayload, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "7c12bbf6eb5e0e9d1875e9c438f2ed4478e25de3",
+      "currentCommit": "0dcfb0379be5af7128d682d319e2d89472b426f3",
+      "previousSha256": "edb014e4e4b76641f4dc1be433ccfb27d7a729aa3287b42db55b33dc3b161b26",
+      "currentSha256": "56e7d32744f77355be14a1438c35decdeb075c7377d2a80b2c8ddbc9e1e45297",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeProjectedCheckedRecordMirrorSource, projectedCheckedRecordMirrorChangedPaths, projectedCheckedRecordMirrorIntegrationPaths } from \"./projected-checked-record-mirror-source-history.mjs\";\n"
+        },
+        {
+          "start": 110656,
+          "previous": "\t...perlEngineOwnedRefinementClosureChangedPaths\n",
+          "current": "\t...projectedCheckedRecordMirrorChangedPaths\n\t, ...projectedCheckedRecordMirrorIntegrationPaths\n\t, ...perlEngineOwnedRefinementClosureChangedPaths\n"
+        },
+        {
+          "start": 131794,
+          "previous": "\tconst perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(\n",
+          "current": "\tconst projectedMirror = beforeProjectedCheckedRecordMirrorSource(\n"
+        },
+        {
+          "start": 131884,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(projectedMirror) === expected) return projectedMirror;\n\tconst perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(\n\t\tpath, projectedMirror, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "b103cdc1751d57b0ae5621f43a25a11cec80e9e3",
+      "currentCommit": "7c12bbf6eb5e0e9d1875e9c438f2ed4478e25de3",
+      "previousSha256": "cf025b86a717cfb5e10be5e5f204ea6240384d1b2f3876448bfc11d9ef6786b1",
+      "currentSha256": "edb014e4e4b76641f4dc1be433ccfb27d7a729aa3287b42db55b33dc3b161b26",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from \"./perl-engine-owned-refinement-closure-source-history.mjs\";\n"
+        },
+        {
+          "start": 110455,
+          "previous": "\t...structuralSubtypePartitionValidatorChangedPaths\n",
+          "current": "\t...perlEngineOwnedRefinementClosureChangedPaths\n\t, ...perlEngineOwnedRefinementClosureIntegrationPaths\n\t, ...structuralSubtypePartitionValidatorChangedPaths\n"
+        },
+        {
+          "start": 131495,
+          "previous": "\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n",
+          "current": "\tconst perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(\n"
+        },
+        {
+          "start": 131591,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(perlEngineClosure) === expected) return perlEngineClosure;\n\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n\t\tpath, perlEngineClosure, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "0bcbfabc708b746de492d55409ce1845c081e24b",
+      "currentCommit": "b103cdc1751d57b0ae5621f43a25a11cec80e9e3",
+      "previousSha256": "a0253500a39481b1f664c53f547bad91634736a7787f259ca88c5e8ce9be0abc",
+      "currentSha256": "cf025b86a717cfb5e10be5e5f204ea6240384d1b2f3876448bfc11d9ef6786b1",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from \"./structural-subtype-partition-validator-source-history.mjs\";\n"
+        },
+        {
+          "start": 110237,
+          "previous": "\t...genericSubtypeNpmBrowserChangedPaths\n",
+          "current": "\t...structuralSubtypePartitionValidatorChangedPaths\n\t, ...structuralSubtypePartitionValidatorIntegrationPaths\n\t, ...genericSubtypeNpmBrowserChangedPaths\n"
+        },
+        {
+          "start": 131171,
+          "previous": "\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n",
+          "current": "\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n"
+        },
+        {
+          "start": 131271,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(partitionValidator) === expected) return partitionValidator;\n\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n\t\tpath, partitionValidator, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "09bbcdf19160e1d32f27a1e4dda9463654049378",
+      "currentCommit": "0bcbfabc708b746de492d55409ce1845c081e24b",
+      "previousSha256": "d6b122abddcb72a27c9f5d93d17dbe12aa33106a2db809c0cffb4ddf728075bc",
+      "currentSha256": "a0253500a39481b1f664c53f547bad91634736a7787f259ca88c5e8ce9be0abc",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from \"./generic-subtype-npm-browser-source-history.mjs\";\n"
+        },
+        {
+          "start": 110008,
+          "previous": "\t...ownedSubtypeCoreRegistrationChangedPaths\n",
+          "current": "\t...genericSubtypeNpmBrowserChangedPaths\n\t, ...genericSubtypeNpmBrowserIntegrationPaths\n\t, ...ownedSubtypeCoreRegistrationChangedPaths\n"
+        },
+        {
+          "start": 130830,
+          "previous": "\tconst ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(\n",
+          "current": "\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n"
+        },
+        {
+          "start": 130918,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;\n\tconst ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(\n\t\tpath, genericSubtypeNpm, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "b63c176128abed85f895dd9056e72ac4d7e78ec5",
+      "currentCommit": "09bbcdf19160e1d32f27a1e4dda9463654049378",
+      "previousSha256": "5601a9a684b5509348dc83f6a48009d445e4ed202d6ba25a9caa176155f57a3c",
+      "currentSha256": "d6b122abddcb72a27c9f5d93d17dbe12aa33106a2db809c0cffb4ddf728075bc",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from \"./owned-subtype-core-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 109823,
+          "previous": "\t...coreRunnerHeadroomChangedPaths\n",
+          "current": "\t...ownedSubtypeCoreRegistrationChangedPaths\n\t, ...coreRunnerHeadroomChangedPaths\n"
+        },
+        {
+          "start": 130555,
+          "previous": "\tconst runnerHeadroom = beforeCoreRunnerHeadroomSource(\n",
+          "current": "\tconst ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(\n"
+        },
+        {
+          "start": 130654,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(ownedSubtypeRegistration) === expected)\n\t\treturn ownedSubtypeRegistration;\n\tconst runnerHeadroom = beforeCoreRunnerHeadroomSource(\n\t\tpath, ownedSubtypeRegistration, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "fce86f9eb299073eca8dc0ab4ebeafabdb01381f",
+      "currentCommit": "b63c176128abed85f895dd9056e72ac4d7e78ec5",
+      "previousSha256": "7c123fd39bb29ee20c44e8fdede55c32ecaab979359f2f78fefcd9fa8b71f819",
+      "currentSha256": "5601a9a684b5509348dc83f6a48009d445e4ed202d6ba25a9caa176155f57a3c",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from \"./core-runner-headroom-source-history.mjs\";\n"
+        },
+        {
+          "start": 109668,
+          "previous": "\t...genericSubtypeCompositionChangedPaths\n",
+          "current": "\t...coreRunnerHeadroomChangedPaths\n\t, ...genericSubtypeCompositionChangedPaths\n"
+        },
+        {
+          "start": 130353,
+          "previous": "\tconst genericSubtype = beforeGenericSubtypeCompositionSource(\n",
+          "current": "\tconst runnerHeadroom = beforeCoreRunnerHeadroomSource(\n"
+        },
+        {
+          "start": 130432,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(runnerHeadroom) === expected) return runnerHeadroom;\n\tconst genericSubtype = beforeGenericSubtypeCompositionSource(\n\t\tpath, runnerHeadroom, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousCommit": "8722c9ee9b25257ea132ed1be7310a833ede9893",
+      "currentCommit": "fce86f9eb299073eca8dc0ab4ebeafabdb01381f",
+      "previousSha256": "ad83e10a46a92d3b8a4848c12c22acd802dbc76063a48a6e38470b4cb7b32801",
+      "currentSha256": "7c123fd39bb29ee20c44e8fdede55c32ecaab979359f2f78fefcd9fa8b71f819",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeGenericSubtypeCompositionSource, genericSubtypeCompositionChangedPaths } from \"./generic-subtype-composition-source-history.mjs\";\n"
+        },
+        {
+          "start": 109544,
+          "previous": "\t...ownedSubtypeJavaScriptTransferChangedPaths\n",
+          "current": "\t...genericSubtypeCompositionChangedPaths\n\t, ...ownedSubtypeJavaScriptTransferChangedPaths\n"
+        },
+        {
+          "start": 130192,
+          "previous": "\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\tconst genericSubtype = beforeGenericSubtypeCompositionSource(\n"
+        },
+        {
+          "start": 130278,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(genericSubtype) === expected) return genericSubtype;\n\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\tpath, genericSubtype, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-subtype.test.mjs",
+      "previousCommit": "66639ddbe17be8d1d5264725c1e2816972a649ba",
+      "currentCommit": "fce86f9eb299073eca8dc0ab4ebeafabdb01381f",
+      "previousSha256": "5ac492e72723c3a82e094038a6a1c80f521cc8b91dd0233612225b57d99a7517",
+      "currentSha256": "966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d",
+      "edits": [
+        {
+          "start": 2878,
+          "previous": "",
+          "current": "import \"./helpers/generic-subtype-composition-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousCommit": "b103cdc1751d57b0ae5621f43a25a11cec80e9e3",
+      "currentCommit": "0dcfb0379be5af7128d682d319e2d89472b426f3",
+      "previousSha256": "d9fe5ed5e99653185757886b654c8bc524cc686e09f946965546e161ab80ec8d",
+      "currentSha256": "859aa2f7f22abbdffb01d978229cc962f41861c3f6a62841f0a9648c0c0f31df",
+      "edits": [
+        {
+          "start": 1958,
+          "previous": "",
+          "current": "import \"./helpers/projected-checked-record-mirror-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousCommit": "0bcbfabc708b746de492d55409ce1845c081e24b",
+      "currentCommit": "b103cdc1751d57b0ae5621f43a25a11cec80e9e3",
+      "previousSha256": "0f284792d42a4de3f54b7529cb9099eb7e4137e6b139c997972d69a55ea8cce9",
+      "currentSha256": "d9fe5ed5e99653185757886b654c8bc524cc686e09f946965546e161ab80ec8d",
+      "edits": [
+        {
+          "start": 4332,
+          "previous": "",
+          "current": "import \"./helpers/structural-subtype-partition-validator-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousCommit": "09bbcdf19160e1d32f27a1e4dda9463654049378",
+      "currentCommit": "0bcbfabc708b746de492d55409ce1845c081e24b",
+      "previousSha256": "2d070d3df96c30cfd32411aa51dd127f57ca6144c358115baf9baacd88755ec8",
+      "currentSha256": "0f284792d42a4de3f54b7529cb9099eb7e4137e6b139c997972d69a55ea8cce9",
+      "edits": [
+        {
+          "start": 4259,
+          "previous": "",
+          "current": "import \"./helpers/generic-subtype-npm-browser-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousCommit": "b63c176128abed85f895dd9056e72ac4d7e78ec5",
+      "currentCommit": "09bbcdf19160e1d32f27a1e4dda9463654049378",
+      "previousSha256": "ff747ecf1e20b6cc04f428adb9e76e37229e20f8f4130a473cdde85fa97424fd",
+      "currentSha256": "2d070d3df96c30cfd32411aa51dd127f57ca6144c358115baf9baacd88755ec8",
+      "edits": [
+        {
+          "start": 4259,
+          "previous": "",
+          "current": "import \"./helpers/owned-subtype-core-registration-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/component-array-contract.test.mjs",
+      "previousCommit": "4d813e8a9da8f81d6801869c09e0e5302496c452",
+      "currentCommit": "b63c176128abed85f895dd9056e72ac4d7e78ec5",
+      "previousSha256": "0c328bf3e4c31fbe59c7b4a9973e0eb854ac3ff981c3e8df50622b1fb456b678",
+      "currentSha256": "ff747ecf1e20b6cc04f428adb9e76e37229e20f8f4130a473cdde85fa97424fd",
+      "edits": [
+        {
+          "start": 4193,
+          "previous": "",
+          "current": "import \"./helpers/core-runner-headroom-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/fixtures/onboarding/owned-subtypes/Owned.lean",
+      "previousCommit": "c95b9ca0bcfcc5138cc50072a868dc37942291b4",
+      "currentCommit": "888b3470bade0b88cd022f0d68f185b1dbfb7396",
+      "previousSha256": "c592d143155ec0ba84a22f046bd9129a0b64a05154457ddeec048c0ea91da1ce",
+      "currentSha256": "c0346b3446761904f3d0e1dfe5c057e2f18418929d088feca3d373488fa34042",
+      "edits": [
+        {
+          "start": 525,
+          "previous": "",
+          "current": "structure CallbackPayload where\n  count : Int\n  bytes : ByteArray\n\nstructure CallbackBundle where\n  primary : Ticket\n  payload : CallbackPayload\n\n"
+        },
+        {
+          "start": 966,
+          "previous": "",
+          "current": "\ndef callbackRecord (value : CallbackBundle)\n    (callback : CallbackBundle → CallbackBundle) : CallbackBundle :=\n  callback value\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-aggregate-fixture.mjs",
+      "previousCommit": "c95b9ca0bcfcc5138cc50072a868dc37942291b4",
+      "currentCommit": "888b3470bade0b88cd022f0d68f185b1dbfb7396",
+      "previousSha256": "634ecc0369bc301052eb5402c8201c7950dea1bd05c36a63070c04cfce2c45ed",
+      "currentSha256": "be62cd1408d67a716d09c696b0a66fdc4dbc397becf06f1d8c3cc58fc1cbb9a6",
+      "edits": [
+        {
+          "start": 8746,
+          "previous": "",
+          "current": "\n/**\n * Add an independently erased owned callback carrier to the checked package.\n * Keeping callback and checked carrier identities distinct makes the per-site\n * constructor contract explicit rather than silently assigning it to callbacks.\n */\nexport const ownedSubtypeCallbackPackageReviewedIr = () => {\n\tconst ir = ownedSubtypePackageReviewedIr();\n\tconst ticket = named(\"Ticket\"), payload = named(\"CallbackPayload\");\n\tconst bundle = named(\"CallbackBundle\");\n\tconst callbackPayload = definition(\"CallbackPayload\", \"record\", \"copied\", {\n\t\tfields: [field(\"count\", primitive(\"int\")), field(\"bytes\", primitive(\"bytes\"))]\n\t});\n\tconst callbackBundle = definition(\"CallbackBundle\", \"record\", \"owned\", {\n\t\tfields: [field(\"primary\", ticket), field(\"payload\", payload)]\n\t});\n\tconst site = (type, result = false) => ({ type\n\t\t, ownership: type.kind === \"primitive\" || type.id === payload.id\n\t\t\t? \"copy\" : result ? \"lease\" : \"borrow\"\n\t\t, lifetime: type.kind === \"primitive\" || type.id === payload.id\n\t\t\t? null : { scope: result ? \"explicit\" : \"call\", anchor: null } });\n\tconst parameter = (type, index) => ({ name: `arg${index}`\n\t\t, ...site(type)\n\t\t, mutability: \"immutable\", optional: false, default: null });\n\tconst callbackFailure = { mode: \"declared\"\n\t\t, errors: [\"error:native-callback\"], unexpected: \"poison-runtime\" };\n\tconst callbackName = `Callback${sha256(canonicalJson({\n\t\tparameters: [bundle], result: bundle\n\t})).slice(0, 20)}`;\n\tconst callback = { ...definition(callbackName, \"callback\", \"identity\")\n\t\t, id: `bridge:${callbackName}`, source: source(callbackName)\n\t\t, callable: { parameters: [parameter(bundle, 0)], result: site(bundle, true)\n\t\t\t, effects: [\"host-call\", \"fails\"], failure: callbackFailure\n\t\t\t, resultMode: \"value\", invocation: \"many\"\n\t\t\t, reentry: \"same-agent\", selfDisposal: \"defer\" } };\n\tconst template = ir.declarations.find(item => item.name === \"echoRecord\");\n\tconst declaration = { ...template\n\t\t, id: \"lean:Owned.callbackRecord\", name: \"callbackRecord\"\n\t\t, overloadKey: \"Owned.callbackRecord\"\n\t\t, parameters: [parameter(bundle, 0)\n\t\t\t, parameter({ kind: \"named\", id: callback.id }, 1)]\n\t\t, result: site(bundle, true)\n\t\t, effects: [\"reads-resource\", \"allocates\", \"host-call\", \"fails\"]\n\t\t, failure: callbackFailure, source: source(\"Owned.callbackRecord\") };\n\tir.types.push(callbackPayload, callbackBundle, callback);\n\tir.declarations.push(declaration);\n\tir.errors = [{ id: \"error:native-callback\", name: \"NativeCallbackFailure\"\n\t\t, category: \"boundary\", payload: null, documentation }];\n\treturn ir;\n};\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d64e86a29b4e92f9a93301c9fe788962aecf1749c98778ed9f87a62941d42170",
+      "currentSha256": "9d83c0ced00fdc03d1420fdec7576e0849b7febf1c12e24adb8e38eb1fe55733",
+      "edits": [
+        {
+          "start": 29500,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 40480,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1519350,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1523361,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1526867,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1530743,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1534222,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1537706,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        },
+        {
+          "start": 1541194,
+          "previous": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "current": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b7674b4f01c49d713476572c07fb289dadfcb4ef4b372d022c6368e7ea47f71d",
+      "currentSha256": "0d6587fa19c55d66103386b5ff3a1560917355f2483ca835aa15068c88d5f964",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeHubTransitionGapSource, hubTransitionGapChangedPaths, hubTransitionGapHistoricalPaths } from \"./hub-transition-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 8529,
+          "previous": "",
+          "current": "import { beforeOwnedSubtypeHostRegistrationSource, ownedSubtypeHostRegistrationChangedPaths } from \"./owned-subtype-host-registration-source-history.mjs\";\n"
+        },
+        {
+          "start": 10013,
+          "previous": "",
+          "current": "import { beforeCallbackSubtypeBrowserArtifactSource, callbackSubtypeBrowserArtifactChangedPaths } from \"./callback-subtype-browser-artifact-source-history.mjs\";\n"
+        },
+        {
+          "start": 117894,
+          "previous": "\t...historyReaderHubRepairChangedPaths\n",
+          "current": "\t...hubTransitionGapChangedPaths\n\t, ...hubTransitionGapHistoricalPaths\n\t, ...ownedSubtypeHostRegistrationChangedPaths\n\t, ...callbackSubtypeBrowserArtifactChangedPaths\n\t, ...historyReaderHubRepairChangedPaths\n"
+        },
+        {
+          "start": 142508,
+          "previous": "\tconst readerRepair = beforeHistoryReaderHubRepairSource(path, text, expected);\n",
+          "current": "\tconst hubGap = beforeHubTransitionGapSource(path, text, expected);\n\tif(sha256(hubGap) === expected) return hubGap;\n\tconst readerRepair = beforeHistoryReaderHubRepairSource(path, hubGap, expected);\n"
+        },
+        {
+          "start": 151297,
+          "previous": "\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n",
+          "current": "\tconst hostRegistration = beforeOwnedSubtypeHostRegistrationSource(\n"
+        },
+        {
+          "start": 151402,
+          "previous": "",
+          "current": "\tif(sha256(hostRegistration) === expected) return hostRegistration;\n\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\tpath, hostRegistration, expected\n\t);\n"
+        },
+        {
+          "start": 153156,
+          "previous": "\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n",
+          "current": "\tconst browserArtifact = beforeCallbackSubtypeBrowserArtifactSource(\n"
+        },
+        {
+          "start": 153259,
+          "previous": "",
+          "current": "\t);\n\tif(sha256(browserArtifact) === expected) return browserArtifact;\n\tconst npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(\n\t\tpath, browserArtifact, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94",
+      "currentSha256": "52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e",
+      "edits": [
+        {
+          "start": 2328,
+          "previous": "",
+          "current": "import \"./helpers/hub-transition-gap-source-history-tests.mjs\";\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-refinement-carriers-source-history-tests.mjs",
+      "previousSha256": "a41817bc681db4352edb956783fd68affd5b65b49e6f20d2563437ed848bf388",
+      "currentSha256": "4c910e2f7a1c0da7e40c2e609a3a863effed989b20a7300e4068b4460b5864c7",
+      "edits": [
+        {
+          "start": 1129,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2017,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        },
+        {
+          "start": 2890,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs",
+      "previousSha256": "6116aa198100ac55c85076ce70e2487106c3c56f867584d2551574b9b94162a6",
+      "currentSha256": "dabbcb33f4034906859903a6cc4d7907aa5eb24742fdf2326ae84b2d20aab567",
+      "edits": [
+        {
+          "start": 1205,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2065,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        },
+        {
+          "start": 3125,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs",
+      "previousSha256": "4557aa632a09ad560af73548f35355fdf17e799c3aa95fd648db0f47bf881586",
+      "currentSha256": "1369d980ffed8047f1b51463144c48d8d57dafe33c06cf03d7ad6db551ce0e38",
+      "edits": [
+        {
+          "start": 1180,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2040,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n",
+          "current": "\t\tconst live = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeJavaScriptTransferSource\n"
+        },
+        {
+          "start": 3088,
+          "previous": "\t\tconst live = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n",
+          "current": "\t\tconst live = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeOwnedSubtypeJavaScriptTransferSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-source-history-tests.mjs",
+      "previousSha256": "7f3a5a2a1eb5651c5cee31738187c2f957b3d4267ee7874dd5f621a53d3ef166",
+      "currentSha256": "eeaa847e87b18ee89408f07b1838f3b7d5c864448fa143153afcffe49fbf5a2d",
+      "edits": [
+        {
+          "start": 1107,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 3710,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\")\n\t\t\t, update.currentSha256\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        },
+        {
+          "start": 4507,
+          "previous": "\t\tconst registered = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\")\n\t\t\t, addition.currentSha256\n",
+          "current": "\t\tconst registered = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/owned-subtype-javascript-transfer-source-history-tests.mjs",
+      "previousSha256": "83b393801d7ba742be789a3a31d9abbe126fa8d891b91526965e8f4dd9b13f23",
+      "currentSha256": "78663684f1701fa4dc7ce94527751c5492ebad885f257d3e0da0d8a8e77ac4d2",
+      "edits": [
+        {
+          "start": 1018,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2199,
+          "previous": "\t\tconst current = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\tupdate.path, await readFile(update.path, \"utf8\"), update.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        },
+        {
+          "start": 2904,
+          "previous": "\t\tconst current = beforeOwnedSubtypeHostRegistrationSource(\n\t\t\taddition.path, await readFile(addition.path, \"utf8\"), addition.currentSha256\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-subtype-host-registration-history.test.mjs",
+      "previousSha256": "dfa9ec30fa29f7bd8a94d4f0011e504f611c27d22809d47c2aca090abf8188be",
+      "currentSha256": "6cdfacb12fb3ebd22ff0989125ccfda319020a0b21256d4413301d891d2fe791",
+      "edits": [
+        {
+          "start": 889,
+          "previous": "",
+          "current": "import { sourceAtFinHistoryMilestone } from \"./helpers/source-at-fin-history-milestone.mjs\";\n"
+        },
+        {
+          "start": 2964,
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeOwnedSubtypeHostRegistrationSource\n\t\t);\n"
+        },
+        {
+          "start": 3431,
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256);\n",
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256);\n"
+        }
+      ]
+    }
+  ]
+}

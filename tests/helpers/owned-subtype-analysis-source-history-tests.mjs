@@ -23,6 +23,7 @@ import {
 	, reverseOwnedSubtypeAnalysisUpdate
 } from "./owned-subtype-analysis-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedSubtypeAnalysisPredecessor}:${path}`]
@@ -41,8 +42,8 @@ test("owned Subtype analysis history restores every source", async () => {
 		, ownedSubtypeAnalysisChangedPaths);
 	for(const update of record.updates)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
-			update.path, await readFile(update.path, "utf8")
+		const live = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeOwnedSubtypeJavaScriptTransferSource
 		);
 		const installed = beforeOwnedSubtypeJavaScriptSource(
 			update.path, live
@@ -67,8 +68,8 @@ test("owned Subtype analysis history restores every source", async () => {
 	}
 	for(const addition of record.additions)
 	{
-		const live = beforeOwnedSubtypeJavaScriptTransferSource(
-			addition.path, await readFile(addition.path, "utf8")
+		const live = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256, beforeOwnedSubtypeJavaScriptTransferSource
 		);
 		const installed = beforeOwnedSubtypeJavaScriptSource(
 			addition.path, live

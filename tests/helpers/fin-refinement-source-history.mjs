@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeHubTransitionGapSource, hubTransitionGapChangedPaths, hubTransitionGapHistoricalPaths } from "./hub-transition-gap-source-history.mjs";
 import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from "./history-reader-hub-repair-source-history.mjs";
 import { beforeLedgerTransitionGapSource, ledgerTransitionGapChangedPaths, ledgerTransitionGapHistoricalPaths } from "./ledger-transition-gap-source-history.mjs";
 import { beforeZeroPayloadRustPromotionSource, zeroPayloadRustPromotionChangedPaths, zeroPayloadRustPromotionIntegrationPaths } from "./zero-payload-rust-promotion-source-history.mjs";
@@ -52,6 +53,7 @@ import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPa
 import { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from "./owned-subtype-core-registration-source-history.mjs";
 import { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from "./core-runner-headroom-source-history.mjs";
 import { beforeGenericSubtypeCompositionSource, genericSubtypeCompositionChangedPaths } from "./generic-subtype-composition-source-history.mjs";
+import { beforeOwnedSubtypeHostRegistrationSource, ownedSubtypeHostRegistrationChangedPaths } from "./owned-subtype-host-registration-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptTransferSource, ownedSubtypeJavaScriptTransferChangedPaths } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptHistoricalSource, beforeOwnedSubtypeJavaScriptSource, ownedSubtypeJavaScriptChangedPaths } from "./owned-subtype-javascript-source-history.mjs";
 import { beforeOwnedRefinementCarriersSource, ownedRefinementCarriersChangedPaths } from "./owned-refinement-carriers-source-history.mjs";
@@ -61,6 +63,7 @@ import { beforeCallbackSubtypeRemainingSource, callbackSubtypeRemainingChangedPa
 import { beforeCallbackSubtypeRemainingAcceptanceSource, callbackSubtypeRemainingAcceptanceChangedPaths } from "./callback-subtype-remaining-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeLanguageSource, callbackSubtypeLanguageChangedPaths } from "./callback-subtype-language-source-history.mjs";
 import { beforeCallbackSubtypeNativeSource, callbackSubtypeNativeChangedPaths } from "./callback-subtype-native-source-history.mjs";
+import { beforeCallbackSubtypeBrowserArtifactSource, callbackSubtypeBrowserArtifactChangedPaths } from "./callback-subtype-browser-artifact-source-history.mjs";
 import { beforeCallbackSubtypeNpmAcceptanceSource, callbackSubtypeNpmAcceptanceChangedPaths } from "./callback-subtype-npm-acceptance-source-history.mjs";
 import { beforeCallbackSubtypeNpmBrowserSource, callbackSubtypeNpmBrowserChangedPaths } from "./callback-subtype-npm-browser-source-history.mjs";
 import { beforeCallbackSubtypeFoundationSource, callbackSubtypeFoundationChangedPaths } from "./callback-subtype-foundation-source-history.mjs";
@@ -1435,7 +1438,11 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...historyReaderHubRepairChangedPaths
+	...hubTransitionGapChangedPaths
+	, ...hubTransitionGapHistoricalPaths
+	, ...ownedSubtypeHostRegistrationChangedPaths
+	, ...callbackSubtypeBrowserArtifactChangedPaths
+	, ...historyReaderHubRepairChangedPaths
 	, ...historyReaderHubRepairIntegrationPaths
 	, ...ledgerTransitionGapChangedPaths
 	, ...ledgerTransitionGapHistoricalPaths
@@ -1985,7 +1992,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const readerRepair = beforeHistoryReaderHubRepairSource(path, text, expected);
+	const hubGap = beforeHubTransitionGapSource(path, text, expected);
+	if(sha256(hubGap) === expected) return hubGap;
+	const readerRepair = beforeHistoryReaderHubRepairSource(path, hubGap, expected);
 	if(sha256(readerRepair) === expected) return readerRepair;
 	const ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);
 	if(sha256(ledgerGap) === expected) return ledgerGap;
@@ -2190,8 +2199,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, runnerHeadroom, expected
 	);
 	if(sha256(genericSubtype) === expected) return genericSubtype;
-	const ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(
+	const hostRegistration = beforeOwnedSubtypeHostRegistrationSource(
 		path, genericSubtype, expected
+	);
+	if(sha256(hostRegistration) === expected) return hostRegistration;
+	const ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(
+		path, hostRegistration, expected
 	);
 	if(sha256(ownedJavaScriptTransfer) === expected)
 		return ownedJavaScriptTransfer;
@@ -2231,8 +2244,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, languages, expected
 	);
 	if(sha256(nativeCallbacks) === expected) return nativeCallbacks;
-	const npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(
+	const browserArtifact = beforeCallbackSubtypeBrowserArtifactSource(
 		path, nativeCallbacks, expected
+	);
+	if(sha256(browserArtifact) === expected) return browserArtifact;
+	const npmAcceptance = beforeCallbackSubtypeNpmAcceptanceSource(
+		path, browserArtifact, expected
 	);
 	if(sha256(npmAcceptance) === expected) return npmAcceptance;
 	const npmBrowser = beforeCallbackSubtypeNpmBrowserSource(

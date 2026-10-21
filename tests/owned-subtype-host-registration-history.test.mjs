@@ -21,6 +21,7 @@ import {
 	, reverseOwnedSubtypeHostRegistrationUpdate
 } from "./helpers/owned-subtype-host-registration-source-history.mjs";
 import { sha256 } from "./helpers/source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
 	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
@@ -62,7 +63,10 @@ test("owned Subtype host registration repair has closed source transitions", asy
 		, ownedSubtypeHostRegistrationAddedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeOwnedSubtypeHostRegistrationSource
+		);
 		const previous = git(["show"
 			, `${ownedSubtypeHostRegistrationPredecessor}:${update.path}`]);
 		assert.equal(reverseOwnedSubtypeHostRegistrationUpdate(current, update), previous);
@@ -71,7 +75,9 @@ test("owned Subtype host registration repair has closed source transitions", asy
 	}
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${ownedSubtypeHostRegistrationPredecessor}:${addition.path}`]
 		, { stdio: "ignore" }).status, 0);

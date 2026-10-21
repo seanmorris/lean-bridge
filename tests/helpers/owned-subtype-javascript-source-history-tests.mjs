@@ -23,6 +23,7 @@ import {
 	, reverseOwnedSubtypeJavaScriptUpdate
 } from "./owned-subtype-javascript-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedSubtypeJavaScriptPredecessor}:${path}`]
@@ -75,9 +76,8 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 	for(const update of history.updates)
 	{
-		const registered = beforeOwnedSubtypeHostRegistrationSource(
-			update.path, await readFile(update.path, "utf8")
-			, update.currentSha256
+		const registered = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		const current = beforeOwnedSubtypeJavaScriptTransferSource(
 			update.path, registered
@@ -95,9 +95,8 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	}
 	for(const addition of history.additions)
 	{
-		const registered = beforeOwnedSubtypeHostRegistrationSource(
-			addition.path, await readFile(addition.path, "utf8")
-			, addition.currentSha256
+		const registered = await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256, beforeOwnedSubtypeHostRegistrationSource
 		);
 		const current = beforeOwnedSubtypeJavaScriptTransferSource(
 			addition.path, registered
