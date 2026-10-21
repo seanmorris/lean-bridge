@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0a3858493f6b2a85a867bb7ce75b3f15ea87cf8e94ec5e8aa7ac8ea96cde7633",
+      "path": "scripts/update-zero-payload-php-wasm-plain-export-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "29dcea758841d59454649b9ad5cd38b1d3d1c4286472ca840bb7a8d1769f703b",
+      "path": "tests/helpers/zero-payload-php-wasm-plain-export-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "9781cd1fc4838c0e9901c2050232e71d94f89c8744b8668eca80d69a010db0bf",
+      "path": "tests/helpers/zero-payload-php-wasm-plain-export-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "1cbcba15dbc194a073f0b76de840bc4499bc89f0",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6f9e766905450864616839921e525da56f7d17bc010bed181d6ba0ea8be28751",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadPhpWasmPlainExportRepairSource, zeroPayloadPhpWasmPlainExportRepairChangedPaths, zeroPayloadPhpWasmPlainExportRepairIntegrationPaths } from \"./zero-payload-php-wasm-plain-export-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadPhpWasmPlainExportRepairChangedPaths\n\t, ...zeroPayloadPhpWasmPlainExportRepairIntegrationPaths\n\t, ...zeroPayloadHostedPromotionChangedPaths\n",
+          "previous": "\t...zeroPayloadHostedPromotionChangedPaths\n",
+          "start": 119746
+        },
+        {
+          "current": "\tconst plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(\n",
+          "previous": "\tconst hostedPromotion = beforeZeroPayloadHostedPromotionSource(\n",
+          "start": 145264
+        },
+        {
+          "current": "\tif(sha256(plainExportRepair) === expected) return plainExportRepair;\n\tconst hostedPromotion = beforeZeroPayloadHostedPromotionSource(\n\t\tpath, plainExportRepair, expected\n\t);\n",
+          "previous": "",
+          "start": 145367
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9caa5c4e296cc3c995a35e8c46d32e1aaaee163a0fca77d7b8f2278ba833e54d"
+    },
+    {
+      "currentSha256": "2059a31cce20cbc752c761d6ee09ceb6428b9bd55fe6d4ecb2a15c188d20ac7e",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-php-wasm-plain-export-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 287
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-php-wasm.test.mjs",
+      "previousSha256": "4c525a3c18e3d213298c5be1f9bf7d945fe3bd8dcf0d2782482ec2813a268fb1"
+    }
+  ],
+  "milestone": "zero-payload-php-wasm-plain-export-repair-source-v1",
+  "predecessorCommit": "7ed17799355ddaa53a00d4cd79516999e03129e9",
+  "schemaVersion": 1,
+  "scope": "The fresh Lean PHP-Wasm probe skips absent parameter refinements on plain exports while retaining every declared checked-parameter provider assertion.",
+  "updates": [
+    {
+      "currentSha256": "0649565c64df2f015ac1ccfaf6fe95cb1b697f0651188f53f9f61f32c93db52f",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadPhpWasmParameterRefinements\n",
+          "previous": "",
+          "start": 673
+        },
+        {
+          "current": "test(\"plain PHP-Wasm exports contribute no checked parameter refinements\", () => {\n\tassert.deepEqual(zeroPayloadPhpWasmParameterRefinements({}), []);\n\tconst parameters = [null, {\n\t\tkind: \"checked-record\", constructor: \"ZeroPayloadCheckedRecords.mkWitness\"\n\t}];\n\tassert.strictEqual(zeroPayloadPhpWasmParameterRefinements({\n\t\trefinements: { parameters }\n\t}), parameters);\n});\n\n",
+          "previous": "",
+          "start": 6654
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-fixture-tests.mjs",
+      "previousSha256": "4bb59a1421d1f92a741ad655936365efde28d2275efc691f5aa7168f97b2e3bc"
+    },
+    {
+      "currentSha256": "4d1a2bb8824c9c081e53b0597a04dc8ccba0c7368e838bbddf98c260c2c07da0",
+      "edits": [
+        {
+          "current": "/**\n * Return only declared input refinements; plain exports intentionally omit the\n * refinements object entirely.\n *\n * @param item - One compiled public export.\n */\nexport const zeroPayloadPhpWasmParameterRefinements = item =>\n\titem.refinements?.parameters ?? [];\n\n",
+          "previous": "",
+          "start": 7873
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-fixture.mjs",
+      "previousSha256": "6744cf292b9a87862ec5c9065d3d9a449536927e853705b913678078bdb1136b"
+    },
+    {
+      "currentSha256": "10e513861facb475a3a7d76d7929a6dfed2151ce956dbb590264dd819cd7ced5",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadPhpWasmParameterRefinements\n",
+          "previous": "",
+          "start": 1061
+        },
+        {
+          "current": "\t\t\tzeroPayloadPhpWasmParameterRefinements(item)\n\t\t\t\t.forEach((refinement, index) => {\n",
+          "previous": "\t\t\titem.refinements.parameters.forEach((refinement, index) => {\n",
+          "start": 3814
+        },
+        {
+          "current": "\t\t\t\t});\n",
+          "previous": "\t\t\t});\n",
+          "start": 4219
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-lean-tests.mjs",
+      "previousSha256": "26cb4d979bd3b9847af7239fc375f78859e7a58875d8c9b0644ae6bc296ab4b9"
+    }
+  ]
+}

@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadPhpWasmPlainExportRepairSource, zeroPayloadPhpWasmPlainExportRepairChangedPaths, zeroPayloadPhpWasmPlainExportRepairIntegrationPaths } from "./zero-payload-php-wasm-plain-export-repair-source-history.mjs";
 import { beforeZeroPayloadHostedPromotionSource, zeroPayloadHostedPromotionChangedPaths, zeroPayloadHostedPromotionIntegrationPaths } from "./zero-payload-hosted-promotion-source-history.mjs";
 import { beforeZeroPayloadPerlWitEvidenceSource, zeroPayloadPerlWitEvidenceChangedPaths, zeroPayloadPerlWitEvidenceIntegrationPaths } from "./zero-payload-perl-wit-evidence-source-history.mjs";
 import { beforeZeroPayloadLanguageEvidenceSource, zeroPayloadLanguageEvidenceChangedPaths, zeroPayloadLanguageEvidenceIntegrationPaths } from "./zero-payload-language-evidence-source-history.mjs";
@@ -1446,7 +1447,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadHostedPromotionChangedPaths
+	...zeroPayloadPhpWasmPlainExportRepairChangedPaths
+	, ...zeroPayloadPhpWasmPlainExportRepairIntegrationPaths
+	, ...zeroPayloadHostedPromotionChangedPaths
 	, ...zeroPayloadHostedPromotionIntegrationPaths
 	, ...zeroPayloadPerlWitEvidenceChangedPaths
 	, ...zeroPayloadPerlWitEvidenceIntegrationPaths
@@ -2016,8 +2019,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const hostedPromotion = beforeZeroPayloadHostedPromotionSource(
+	const plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(
 		path, text, expected
+	);
+	if(sha256(plainExportRepair) === expected) return plainExportRepair;
+	const hostedPromotion = beforeZeroPayloadHostedPromotionSource(
+		path, plainExportRepair, expected
 	);
 	if(sha256(hostedPromotion) === expected) return hostedPromotion;
 	const perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(
