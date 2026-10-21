@@ -1,0 +1,34 @@
+package lean-bridge:zeropayloadcheckedrecords@1.0.0;
+
+interface native {
+  enum witness { empty }
+  type bridge-value-2 = option<witness>;
+  record mark-marked-fields { witness: witness }
+  variant mark { blank, marked(mark-marked-fields) }
+  enum marker { empty }
+  enum bridge-value-5 { unit }
+  record token { tag: bridge-value-5 }
+  type bridge-value-7 = list<u32>;
+  type bridge-value-8 = list<witness>;
+  maybe-witness: func(arg0: bool) -> bridge-value-2;
+  produce-mark: func(arg0: bool) -> mark;
+  produce-marker: func() -> marker;
+  produce-token: func() -> token;
+  produce-witness: func() -> witness;
+  witnesses: func(arg0: bridge-value-7) -> bridge-value-8;
+}
+
+interface api {
+  use native.{witness, bridge-value-2, mark-marked-fields, mark, marker, bridge-value-5, token, bridge-value-7, bridge-value-8};
+  maybe-witness: func(arg0: bool) -> bridge-value-2;
+  produce-mark: func(arg0: bool) -> mark;
+  produce-marker: func() -> marker;
+  produce-token: func() -> token;
+  produce-witness: func() -> witness;
+  witnesses: func(arg0: bridge-value-7) -> bridge-value-8;
+}
+
+world zeropayloadcheckedrecords {
+  import native;
+  export api;
+}

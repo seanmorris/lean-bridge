@@ -1,0 +1,34 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "3bf2bb944ee3d8d2b36a8ba43ea1f8848d43a1c531fd2f10a79dc132b97caf7f",
+    "executable": {
+      "bytes": 26472,
+      "sha256": "f4c9ac37fb8c223ddbb214a2c3cd5ef6d0742ee60af1457e54ff0730de03cd10"
+    },
+    "packageFileSetSha256": "a40c6725b04b5a2ff4772c3d9dd47bafee8fc4deb9a33f453882696b59a9363d",
+    "receiptSha256": "2b8101142c8b9d96e8d2de9714955d341adf8a324467881e3d107eaf28957a2f"
+  },
+  "command": "/home/runner/work/_temp/lean-bridge-zero-payload-wit-bbmHp3/consumer/consumer",
+  "counts": {
+    "checks": 104,
+    "hostRejections": 8,
+    "recoveries": 9,
+    "rejections": 1,
+    "snapshots": 29
+  },
+  "cwd": "/home/runner/work/_temp/lean-bridge-zero-payload-wit-bbmHp3/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":104,\"rejections\":1,\"hostRejections\":8,\"recoveries\":9,\"snapshots\":29}\n"
+  }
+}

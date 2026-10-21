@@ -1,0 +1,330 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "2ea7c01605b91a548bf4250a0666484e0292380f9b7435c8863651145aa63169",
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "contracts": {
+    "declarations": [
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.absentCount",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            },
+            "witType": "witness"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-1"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.markCount",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Mark",
+              "kind": "named"
+            },
+            "witType": "mark"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-1"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.markerCount",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Marker",
+              "kind": "named"
+            },
+            "witType": "marker"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-1"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "witType": "bool"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-5"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.produceMark",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            },
+            "witType": "bool"
+          }
+        ],
+        "result": {
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Mark",
+            "kind": "named"
+          },
+          "witType": "mark"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.produceMarker",
+        "parameters": [],
+        "result": {
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Marker",
+            "kind": "named"
+          },
+          "witType": "marker"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.produceToken",
+        "parameters": [],
+        "result": {
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Token",
+            "kind": "named"
+          },
+          "witType": "token"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.produceWitness",
+        "parameters": [],
+        "result": {
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Witness",
+            "kind": "named"
+          },
+          "witType": "witness"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.tokenTag",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Token",
+              "kind": "named"
+            },
+            "witType": "token"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          },
+          "witType": "bridge-value-6"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.witnessCount",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            },
+            "witType": "witness"
+          }
+        ],
+        "result": {
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          },
+          "witType": "bridge-value-1"
+        }
+      },
+      {
+        "id": "lean:ZeroPayloadCheckedRecords.witnesses",
+        "parameters": [
+          {
+            "name": "arg0",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            },
+            "witType": "bridge-value-1"
+          }
+        ],
+        "result": {
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          },
+          "witType": "bridge-value-8"
+        }
+      }
+    ],
+    "records": [
+      {
+        "fields": [],
+        "id": "lean:ZeroPayloadCheckedRecords.Witness",
+        "witName": "witness"
+      },
+      {
+        "fields": [],
+        "id": "lean:ZeroPayloadCheckedRecords.Marker",
+        "witName": "marker"
+      },
+      {
+        "fields": [
+          {
+            "name": "tag",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            },
+            "witType": "bridge-value-6"
+          }
+        ],
+        "id": "lean:ZeroPayloadCheckedRecords.Token",
+        "witName": "token"
+      }
+    ],
+    "variants": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "blank",
+            "payloadType": null,
+            "witName": "blank"
+          },
+          {
+            "fields": [
+              {
+                "name": "witness",
+                "type": {
+                  "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                  "kind": "named"
+                },
+                "witName": "witness",
+                "witType": "witness"
+              }
+            ],
+            "name": "marked",
+            "payloadType": "mark-marked-fields",
+            "witName": "marked"
+          }
+        ],
+        "id": "lean:ZeroPayloadCheckedRecords.Mark",
+        "name": "Mark",
+        "witName": "mark"
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.absentCount",
+      "witName": "absent-count"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.markCount",
+      "witName": "mark-count"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.markerCount",
+      "witName": "marker-count"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+      "witName": "maybe-witness"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.produceMark",
+      "witName": "produce-mark"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.produceMarker",
+      "witName": "produce-marker"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.produceToken",
+      "witName": "produce-token"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.produceWitness",
+      "witName": "produce-witness"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.tokenTag",
+      "witName": "token-tag"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.witnessCount",
+      "witName": "witness-count"
+    },
+    {
+      "id": "lean:ZeroPayloadCheckedRecords.witnesses",
+      "witName": "witnesses"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:zeropayloadcheckedrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:zeropayloadcheckedrecords/native@1.0.0",
+    "package": "lean-bridge:zeropayloadcheckedrecords@1.0.0",
+    "world": "zeropayloadcheckedrecords"
+  }
+}

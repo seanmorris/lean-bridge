@@ -1,0 +1,416 @@
+{
+  "archive": {
+    "bytes": 59243331,
+    "path": "archives/zeropayloadcheckedrecords-1.0.0-wit-wasi.tar.gz",
+    "sha256": "4f0a36fb6f3bceb2216a68a297f3ddaecd8230a1edb59b908c26da84e4b46310"
+  },
+  "closure": {
+    "packageFileSetSha256": "a40c6725b04b5a2ff4772c3d9dd47bafee8fc4deb9a33f453882696b59a9363d",
+    "receiptSha256": "2b8101142c8b9d96e8d2de9714955d341adf8a324467881e3d107eaf28957a2f"
+  },
+  "evidence": {
+    "componentReceiptSha256": "e457cf1036ce747a501653bea10f8450bce259d17610e395a415fb75d22e4c6c",
+    "dependencies": [
+      {
+        "bytes": 44776,
+        "name": "libcomponent_d43d7c5a9f170f3ce127.so",
+        "sha256": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a"
+      },
+      {
+        "bytes": 21632,
+        "name": "liblean_bridge_native.so",
+        "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+      },
+      {
+        "bytes": 158401256,
+        "name": "libleanshared.so",
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      {
+        "bytes": 22277728,
+        "name": "libwasmtime.so",
+        "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+      },
+      {
+        "bytes": 41008,
+        "name": "libzeropayloadcheckedrecords.so",
+        "sha256": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+      }
+    ],
+    "libraries": {
+      "lib/libcomponent_d43d7c5a9f170f3ce127.so": {
+        "bytes": 44776,
+        "sha256": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a"
+      },
+      "lib/liblean_bridge_native.so": {
+        "bytes": 21632,
+        "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+      },
+      "lib/libleanshared.so": {
+        "bytes": 158401256,
+        "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+      },
+      "lib/libwasmtime.so": {
+        "bytes": 22277728,
+        "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+      },
+      "lib/libzeropayloadcheckedrecords.so": {
+        "bytes": 41008,
+        "sha256": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+      },
+      "lib/libzeropayloadcheckedrecords_wasmtime.so": {
+        "bytes": 48848,
+        "sha256": "724ba4812ca6561b6f2f9a181ef35e5768aa141426af5274120bab692ccc93a7"
+      }
+    },
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "README.md": {
+      "bytes": 7397,
+      "sha256": "6d77382aab8f179ec8c2a0bc72d9d019ca03231f7787aa4fbbae0a41efafc729"
+    },
+    "binding-manifest.json": {
+      "bytes": 8187,
+      "sha256": "37a25c922beae8c8863705406d4f72b860ed5f6213c55ef288d12a371cc3ec77"
+    },
+    "component/zeropayloadcheckedrecords.wasm": {
+      "bytes": 3998,
+      "sha256": "550142d32ee637bae7f3189e5b12226a281d54bdc2efd1082c9a748d98184a8f"
+    },
+    "component/zeropayloadcheckedrecords.wat": {
+      "bytes": 13950,
+      "sha256": "33b780f97e60bddc2663995cdd2338f052490ec2822fdc7edf6250a4a76b1f04"
+    },
+    "include/doc-wasm.h": {
+      "bytes": 79667,
+      "sha256": "7b66bccb05c26f62d73880f9db1b5dadd55ab9e93555bc80d2d38434336dfcea"
+    },
+    "include/wasi.h": {
+      "bytes": 9235,
+      "sha256": "06278fe344c9fb668439033b6fbdd11e53fe6065600dcc3a567f427331edd215"
+    },
+    "include/wasm.h": {
+      "bytes": 23219,
+      "sha256": "371ffb914950ebf5374555939dbeecbde35fd52b1c39b06ae9c84df6c8d431d6"
+    },
+    "include/wasmtime.h": {
+      "bytes": 9380,
+      "sha256": "c4a0b95cdd1d46b79e6e06eca71e436163ea226f8d8b15fa6d86a07da8a41ac2"
+    },
+    "include/wasmtime/async.h": {
+      "bytes": 13954,
+      "sha256": "414023002bf027fdcf1f32f97cb24241c9393ff272525f1d390de19100b027d8"
+    },
+    "include/wasmtime/component.h": {
+      "bytes": 324,
+      "sha256": "7230a0a2ef79976c079225a193006289d5538b2d6cb7e6180649c4526b9dd898"
+    },
+    "include/wasmtime/component/component.h": {
+      "bytes": 5709,
+      "sha256": "10508561342b18de23858dcb74945c395c8932bfbaf94ac00ff5d72b80e82e25"
+    },
+    "include/wasmtime/component/func.h": {
+      "bytes": 2856,
+      "sha256": "4129fe2706381e94b14d165f9f143faad30bafe135f46b26d857e729f1d9b3c9"
+    },
+    "include/wasmtime/component/instance.h": {
+      "bytes": 2428,
+      "sha256": "5f2928c0fa8a5b016560d2582b489ddeca28a1200227a7cd351ab4b16d2c8c3f"
+    },
+    "include/wasmtime/component/linker.h": {
+      "bytes": 7678,
+      "sha256": "f6cf1eb863c3d4bdc5743cb8b5fd8f7cba613d64c1c5daa6d685a7314772360c"
+    },
+    "include/wasmtime/component/types.h": {
+      "bytes": 419,
+      "sha256": "178795777a58f5ec7138a5932498904ed37fd37a1935b58f739fbd9e48a16614"
+    },
+    "include/wasmtime/component/types/component.h": {
+      "bytes": 6411,
+      "sha256": "92384d95d3f49c47c094e4da0f5fa2a4396c2ed012d46621171b02f446fdc7bc"
+    },
+    "include/wasmtime/component/types/func.h": {
+      "bytes": 2021,
+      "sha256": "217cb6fc6e86685dd5dc49604a47eb4b9b83e18ba3fd9dee11de54fc2f4d0e3d"
+    },
+    "include/wasmtime/component/types/instance.h": {
+      "bytes": 2065,
+      "sha256": "c1297d66711bfc896a969f8fed5f70c4ba1d8b43075b7ac19cf74a3aa1c3faba"
+    },
+    "include/wasmtime/component/types/module.h": {
+      "bytes": 1930,
+      "sha256": "705554a35f8fa35154e32b28d4c508a26739a594cbc38a3720193b5cdae2a48b"
+    },
+    "include/wasmtime/component/types/resource.h": {
+      "bytes": 2363,
+      "sha256": "29e8ea2ef512969f9bf82700d932d89cd78437c31c2a9c4b9919f2b0581fcdd9"
+    },
+    "include/wasmtime/component/types/val.h": {
+      "bytes": 21121,
+      "sha256": "a4e15d61ac405f5d08aa5d6fe7b69815a194d8b1f96496409d680a8cff64d706"
+    },
+    "include/wasmtime/component/val.h": {
+      "bytes": 19882,
+      "sha256": "c1080a34feea3711fb21c184e661376f76ac83853568b883ed734d69454353f3"
+    },
+    "include/wasmtime/conf.h": {
+      "bytes": 1190,
+      "sha256": "b63a6236773a02d4acc7d1b85433a3f90a65ed50ccbd4ff6c7a8c83a909d1da6"
+    },
+    "include/wasmtime/config.h": {
+      "bytes": 28137,
+      "sha256": "2bada4fe74d4d48b592a29c33462c2c2f22d00e7ece8eb3d9a73901c5ef06009"
+    },
+    "include/wasmtime/engine.h": {
+      "bytes": 1222,
+      "sha256": "026633dbd9328db187ccb86097479c02a7278de9eef59ae6d0eeb11d5b2868fa"
+    },
+    "include/wasmtime/error.h": {
+      "bytes": 2420,
+      "sha256": "6905acdfe81f5a7d31c49ac1af8221b3d98b61d5341b91a4a8232f2466dce8f0"
+    },
+    "include/wasmtime/extern.h": {
+      "bytes": 6028,
+      "sha256": "37e5062f8672ee07a9334f6e193a1875f194b9e2ea5a67dee75b708f28259d7c"
+    },
+    "include/wasmtime/func.h": {
+      "bytes": 12787,
+      "sha256": "9a4fee4a295a2b19a141cf84be4ceb9355bfc25394ae761d7f780ac49f2d65ad"
+    },
+    "include/wasmtime/global.h": {
+      "bytes": 2521,
+      "sha256": "0a328daecce4090157e99fbbf8398fce0ed78b30c9b7dbdfeb10f247a51e543d"
+    },
+    "include/wasmtime/instance.h": {
+      "bytes": 6356,
+      "sha256": "c476b65bee52ebf7bcbdd291e0c8c036496cff3c09e9ea61c7f4577fa7c736d2"
+    },
+    "include/wasmtime/linker.h": {
+      "bytes": 12873,
+      "sha256": "6549b3ee8d7264d4c8119682dc09e702ba2e0979fadff74f66b70c5d294159f3"
+    },
+    "include/wasmtime/memory.h": {
+      "bytes": 6005,
+      "sha256": "ebd6c718c6e9d2ee5beb1c32bdca401e281773586e43e5df8d2e02b7980f4ad2"
+    },
+    "include/wasmtime/module.h": {
+      "bytes": 5729,
+      "sha256": "b7ba6f0a0b15c5f252f63697707dbb9c0c854a65694b4b134bec13e7c43864e4"
+    },
+    "include/wasmtime/profiling.h": {
+      "bytes": 4400,
+      "sha256": "92ac5516a561bd062aaf302051373512970a0ea9641836a47993d32b1ab8b205"
+    },
+    "include/wasmtime/sharedmemory.h": {
+      "bytes": 3027,
+      "sha256": "521d632a5f5ee3e28125b22fdf4f517edb2965a49ebd838278d620368377a1fe"
+    },
+    "include/wasmtime/store.h": {
+      "bytes": 9653,
+      "sha256": "f96ef6fb062e8358d0a46a780283a8f7dc1733a14998b41d8aa8c536f45e5b51"
+    },
+    "include/wasmtime/table.h": {
+      "bytes": 3924,
+      "sha256": "1d4313d41a85989ae00c8c744c2e2415ac0694ea3bc3fb15d51cddf5fd74d1ba"
+    },
+    "include/wasmtime/trap.h": {
+      "bytes": 6726,
+      "sha256": "b786bf286f69b11c6b4e91ec9c40eb700b1791422d1bf501fa666c057e369106"
+    },
+    "include/wasmtime/val.h": {
+      "bytes": 18939,
+      "sha256": "4db26e438a8b66f237f19fc9e669f1d7f3f3a0a93cf49ca4fce977f3e16d7cd1"
+    },
+    "include/wasmtime/wat.h": {
+      "bytes": 1153,
+      "sha256": "7533f9c25ee267c88ea64e21a7550bf28585183184a29c575ceb419eb711fe9f"
+    },
+    "include/zeropayloadcheckedrecords.h": {
+      "bytes": 6533,
+      "sha256": "5bb9dd7a4763da0bd1d54129a57c4d27c997218dc14707e98a08a981476a094f"
+    },
+    "include/zeropayloadcheckedrecords_wasmtime.h": {
+      "bytes": 1219,
+      "sha256": "38c47355e6de39e2c2de620044abfd9a5e5211912a1f75877bf372b7a1f80f09"
+    },
+    "lean-bridge-package.json": {
+      "bytes": 40667,
+      "sha256": "2b8101142c8b9d96e8d2de9714955d341adf8a324467881e3d107eaf28957a2f"
+    },
+    "lib/libcomponent_d43d7c5a9f170f3ce127.so": {
+      "bytes": 44776,
+      "sha256": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a"
+    },
+    "lib/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lib/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lib/libwasmtime.so": {
+      "bytes": 22277728,
+      "sha256": "566e57cfeabafd6d44fab1b5e6660b4569a71aae4cff2e4d89563a424ee799f3"
+    },
+    "lib/libzeropayloadcheckedrecords.so": {
+      "bytes": 41008,
+      "sha256": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+    },
+    "lib/libzeropayloadcheckedrecords_wasmtime.so": {
+      "bytes": 48848,
+      "sha256": "724ba4812ca6561b6f2f9a181ef35e5768aa141426af5274120bab692ccc93a7"
+    },
+    "lib/pkgconfig/zeropayloadcheckedrecords-wit.pc": {
+      "bytes": 299,
+      "sha256": "b8ea5fd9098c003f2bd0983489dca7292bc9ffa8bd0f7f12e0d7b817a69c8918"
+    },
+    "native-wit-adapter.json": {
+      "bytes": 14041,
+      "sha256": "fd633a6052da092ae5beb2e8a5c653aea96b50afaedab958f1648ca11ee04f1f"
+    },
+    "package-metadata.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "share/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "share/lean-bridge/component/artifacts.json": {
+      "bytes": 1532,
+      "sha256": "5d01094c226d2e44ef0c2f735b7793b31b409245284ab0bf8af4e90350a46c5b"
+    },
+    "share/lean-bridge/component/binding-ir.json": {
+      "bytes": 26847,
+      "sha256": "2e14886e5110e12ac1813286afb010e2dcb63df66c47f770736e844ad58149c6"
+    },
+    "share/lean-bridge/component/component.h": {
+      "bytes": 1982,
+      "sha256": "07e17b6f343960bd817d7e6a5bb2bf5b428f0852c2009f78f4f765a7fc3952e0"
+    },
+    "share/lean-bridge/component/generated.lean": {
+      "bytes": 10087,
+      "sha256": "12e0a46617d1a872bf3834995eb678fe2a22b5d688796356d682f44b6078044e"
+    },
+    "share/lean-bridge/component/metadata.json": {
+      "bytes": 32653,
+      "sha256": "d623616582d8c1594eb596ddfd4d7ab920d71491f6feaf4e670b699a9bc05b5d"
+    },
+    "share/lean-bridge/component/model.json": {
+      "bytes": 83416,
+      "sha256": "4cabed9142600c5f634a9bc1f0395ad3ce17c5333bf05453e964f6ece1475909"
+    },
+    "share/lean-bridge/component/native-component.json": {
+      "bytes": 31708,
+      "sha256": "e457cf1036ce747a501653bea10f8450bce259d17610e395a415fb75d22e4c6c"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "share/lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/licenses/Wasmtime-LICENSE": {
+      "bytes": 12243,
+      "sha256": "268872b9816f90fd8e85db5a28d33f8150ebb8dd016653fb39ef1f94f2686bc5"
+    },
+    "share/lean-bridge/licenses/source-notices.json": {
+      "bytes": 2134,
+      "sha256": "73610e8c6ad5b53009814bb889fc8454fe6df2322b058a57053c945ce79456cf"
+    },
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "b394f6a06f49c9e397a6cb21c4ccb7910beda6d237663295ef1c3ea180cb6d1c"
+    },
+    "share/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "src/zeropayloadcheckedrecords_wasmtime.c": {
+      "bytes": 61964,
+      "sha256": "c66a51c76489372e92887e9a2a8dcf6957de03158f3a5dd357770c9174045ab7"
+    },
+    "wit/zeropayloadcheckedrecords.wit": {
+      "bytes": 1713,
+      "sha256": "c1d7a97f57337d7bae617b330425a0de787e69b1afc5e578505d92eba6f27bfc"
+    }
+  },
+  "receiptSha256": "2b8101142c8b9d96e8d2de9714955d341adf8a324467881e3d107eaf28957a2f",
+  "retained": [
+    "README.md",
+    "binding-manifest.json",
+    "component/zeropayloadcheckedrecords.wat",
+    "include/doc-wasm.h",
+    "include/wasi.h",
+    "include/wasm.h",
+    "include/wasmtime.h",
+    "include/wasmtime/async.h",
+    "include/wasmtime/component.h",
+    "include/wasmtime/component/component.h",
+    "include/wasmtime/component/func.h",
+    "include/wasmtime/component/instance.h",
+    "include/wasmtime/component/linker.h",
+    "include/wasmtime/component/types.h",
+    "include/wasmtime/component/types/component.h",
+    "include/wasmtime/component/types/func.h",
+    "include/wasmtime/component/types/instance.h",
+    "include/wasmtime/component/types/module.h",
+    "include/wasmtime/component/types/resource.h",
+    "include/wasmtime/component/types/val.h",
+    "include/wasmtime/component/val.h",
+    "include/wasmtime/conf.h",
+    "include/wasmtime/config.h",
+    "include/wasmtime/engine.h",
+    "include/wasmtime/error.h",
+    "include/wasmtime/extern.h",
+    "include/wasmtime/func.h",
+    "include/wasmtime/global.h",
+    "include/wasmtime/instance.h",
+    "include/wasmtime/linker.h",
+    "include/wasmtime/memory.h",
+    "include/wasmtime/module.h",
+    "include/wasmtime/profiling.h",
+    "include/wasmtime/sharedmemory.h",
+    "include/wasmtime/store.h",
+    "include/wasmtime/table.h",
+    "include/wasmtime/trap.h",
+    "include/wasmtime/val.h",
+    "include/wasmtime/wat.h",
+    "include/zeropayloadcheckedrecords.h",
+    "include/zeropayloadcheckedrecords_wasmtime.h",
+    "lean-bridge-package.json",
+    "lib/pkgconfig/zeropayloadcheckedrecords-wit.pc",
+    "native-wit-adapter.json",
+    "package-metadata.json",
+    "share/lean-bridge/component/allocation-guard.h",
+    "share/lean-bridge/component/artifacts.json",
+    "share/lean-bridge/component/binding-ir.json",
+    "share/lean-bridge/component/component.h",
+    "share/lean-bridge/component/generated.lean",
+    "share/lean-bridge/component/metadata.json",
+    "share/lean-bridge/component/model.json",
+    "share/lean-bridge/component/native-component.json",
+    "share/lean-bridge/licenses/Lean-LICENSE",
+    "share/lean-bridge/licenses/Lean-LICENSES",
+    "share/lean-bridge/licenses/LeanBridge-LICENSE",
+    "share/lean-bridge/licenses/Wasmtime-LICENSE",
+    "share/lean-bridge/licenses/source-notices.json",
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "share/lean-bridge/native-c-adapter.json",
+    "share/lean-bridge/runtime.json",
+    "src/zeropayloadcheckedrecords_wasmtime.c",
+    "wit/zeropayloadcheckedrecords.wit"
+  ]
+}

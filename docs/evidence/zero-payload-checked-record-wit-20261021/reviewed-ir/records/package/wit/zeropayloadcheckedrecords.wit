@@ -1,0 +1,44 @@
+package lean-bridge:zeropayloadcheckedrecords@1.0.0;
+
+interface native {
+  enum witness { empty }
+  type bridge-value-1 = list<u32>;
+  record mark-marked-fields { witness: witness }
+  variant mark { blank, marked(mark-marked-fields) }
+  enum marker { empty }
+  type bridge-value-5 = option<witness>;
+  enum bridge-value-6 { unit }
+  record token { tag: bridge-value-6 }
+  type bridge-value-8 = list<witness>;
+  absent-count: func(value0: witness) -> bridge-value-1;
+  mark-count: func(value0: mark) -> bridge-value-1;
+  marker-count: func(value0: marker) -> bridge-value-1;
+  maybe-witness: func(value0: bool) -> bridge-value-5;
+  produce-mark: func(value0: bool) -> mark;
+  produce-marker: func() -> marker;
+  produce-token: func() -> token;
+  produce-witness: func() -> witness;
+  token-tag: func(value0: token) -> bridge-value-6;
+  witness-count: func(value0: witness) -> bridge-value-1;
+  witnesses: func(value0: bridge-value-1) -> bridge-value-8;
+}
+
+interface api {
+  use native.{witness, bridge-value-1, mark-marked-fields, mark, marker, bridge-value-5, bridge-value-6, token, bridge-value-8};
+  absent-count: func(value0: witness) -> bridge-value-1;
+  mark-count: func(value0: mark) -> bridge-value-1;
+  marker-count: func(value0: marker) -> bridge-value-1;
+  maybe-witness: func(value0: bool) -> bridge-value-5;
+  produce-mark: func(value0: bool) -> mark;
+  produce-marker: func() -> marker;
+  produce-token: func() -> token;
+  produce-witness: func() -> witness;
+  token-tag: func(value0: token) -> bridge-value-6;
+  witness-count: func(value0: witness) -> bridge-value-1;
+  witnesses: func(value0: bridge-value-1) -> bridge-value-8;
+}
+
+world zeropayloadcheckedrecords {
+  import native;
+  export api;
+}

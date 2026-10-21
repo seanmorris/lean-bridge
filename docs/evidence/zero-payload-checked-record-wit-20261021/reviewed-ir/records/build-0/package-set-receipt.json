@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59243331,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "4f0a36fb6f3bceb2216a68a297f3ddaecd8230a1edb59b908c26da84e4b46310"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "cfe4b2151a27c732cd0f7f5bbcb0bfcdbdaf93648cfd23e3f491babffc637066",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "53281b26099066e0c0a0fc0597e5b87823417429231b430e330210c37ba10513"
+  }
+}
