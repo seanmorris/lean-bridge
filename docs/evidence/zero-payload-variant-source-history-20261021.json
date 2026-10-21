@@ -1,0 +1,518 @@
+{
+  "additions": [
+    {
+      "currentSha256": "491240b097d8749b4e019dddd816375e6ced3efc574d6f9c993e16c22990a53e",
+      "path": "scripts/update-zero-payload-variant-source-history.mjs"
+    },
+    {
+      "currentSha256": "b63f5130e0fb4513f15d0ebf92ddf0f707fc28c372ebad2120f627e82a840276",
+      "path": "tests/helpers/zero-payload-variant-source-history.mjs"
+    },
+    {
+      "currentSha256": "5ce24aaa40fd6106b4c2920a68431e394e915aca78d92808b68bf941f792393e",
+      "path": "tests/helpers/zero-payload-variant-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "8a0cb47c87016b5c96e91f6443ffef1f685b3443",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b4529fbc0e5e9e5493cd13b5c430aa7da5c07bd16801ca521a8ed1131ed453b8",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadVariantSource, zeroPayloadVariantChangedPaths, zeroPayloadVariantIntegrationPaths } from \"./zero-payload-variant-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadVariantChangedPaths\n\t, ...zeroPayloadVariantIntegrationPaths\n\t, ...zeroPayloadDotnetVerifierRepairChangedPaths\n",
+          "previous": "\t...zeroPayloadDotnetVerifierRepairChangedPaths\n",
+          "start": 112933
+        },
+        {
+          "current": "\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadVariant) === expected) return zeroPayloadVariant;\n",
+          "previous": "",
+          "start": 135179
+        },
+        {
+          "current": "\t\t\tpath, zeroPayloadVariant, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 135426
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5a2df95e76a5aaae446d5be1982a3db3b21c75151b3c29257c6389178f3e0af3"
+    }
+  ],
+  "milestone": "zero-payload-variant-coverage-v1",
+  "predecessorCommit": "0aece3431691044e091e1abdb3af1571dd91d051",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Zero-payload checked records retain active and inactive variant branches through Lean analysis and JavaScript, C, C++ and C# callers.",
+  "updates": [
+    {
+      "currentSha256": "8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391",
+      "edits": [
+        {
+          "current": "    -- A proof-only checked record has no payload members. It still needs the rich form when\n    -- selected below a nominal container so the site identity and nullary constructor remain\n    -- explicit; empty ordered fields are therefore valid here.\n",
+          "previous": "",
+          "start": 20429
+        },
+        {
+          "current": "        members.size > 1024 then return some \"invalid checked record selection\"\n",
+          "previous": "        members.isEmpty || members.size > 1024 then return some \"invalid checked record selection\"\n",
+          "start": 20766
+        }
+      ],
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "ff9300da690d903e14975db13013eb5164d6819729dbc07ab76c415238b0c661"
+    },
+    {
+      "currentSha256": "47dce4a5e1a77ca3dc50b10beab4e2dd3b646d44ff42cd37f77143fa60696168",
+      "edits": [
+        {
+          "current": "\t\t\t\t: type.kind === \"record\" ? Object.hasOwn(type, \"erased\")\n\t\t\t\t\t|| type.fields.some(field => hasSubtype(field.type, references, seen))\n",
+          "previous": "\t\t\t\t: type.kind === \"record\" ? type.fields.some(field => hasSubtype(field.type, references, seen))\n",
+          "start": 12904
+        }
+      ],
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "5a569a66d4ddf50d6ac12a98c8bedc7ef81246e73fb15593ae10bba11c8b469a"
+    },
+    {
+      "currentSha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8",
+      "edits": [
+        {
+          "current": "/-- A variant whose active branch carries a proof-only checked record. -/\ninductive Mark : Type where\n  | blank\n  | marked (witness : Witness)\n\n",
+          "previous": "",
+          "start": 423
+        },
+        {
+          "current": "/-- Both variant branches remain distinct after the nested proof has been erased. -/\n@[noinline] def markCount (value : Mark) : Nat :=\n  match value with\n  | .blank => 0\n  | .marked _ => 1\n@[noinline] def produceMark (active : Bool) : Mark :=\n  if active then .marked ⟨Nat.zero_lt_one⟩ else .blank\n",
+          "previous": "",
+          "start": 1966
+        }
+      ],
+      "path": "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean",
+      "previousSha256": "3a8255e9ebb71a6e522f49737d8546df0caa1eb02586bbaac102d5fa2bcd6b28"
+    },
+    {
+      "currentSha256": "14a6851b1866d02de383734ebd491fb96387523872f514b7664cb57954f0174f",
+      "edits": [
+        {
+          "current": "const blank: api.Mark = api.produceMark(false);\nconst marked: api.Mark = { kind: \"marked\", witness };\nconst branchCount: bigint = api.markCount(blank) + api.markCount(marked);\n",
+          "previous": "",
+          "start": 503
+        },
+        {
+          "current": "// @ts-expect-error The nested erased proof is not a public field.\napi.markCount({ kind: \"marked\", witness: { positive: true } });\nvoid count; void unit; void produced; void values; void maybe; void branchCount; void absent;\n",
+          "previous": "void count; void unit; void produced; void values; void maybe; void absent;\n",
+          "start": 985
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-browser/full.mts",
+      "previousSha256": "b1fbffc01e2c2098758568d86b064e1d98e2c05873d9927dc59ea04c60e8a184"
+    },
+    {
+      "currentSha256": "58961984ca7bcdd99c939f3f8542349861e88c023d3b5de3c67603eff4b120f5",
+      "edits": [
+        {
+          "current": "\t\t\t? failure instanceof TypeError && /declared copied fields|plain record|variant/u.test(failure.message)\n",
+          "previous": "\t\t\t? failure instanceof TypeError && /declared copied fields|plain record/u.test(failure.message)\n",
+          "start": 2454
+        },
+        {
+          "current": "\tconst blank = invoke(\"produceMark\", [false], { kind: \"blank\" });\n\tconst marked = invoke(\"produceMark\", [true], { kind: \"marked\", witness: {} });\n",
+          "previous": "",
+          "start": 3430
+        },
+        {
+          "current": "\tcheck(blank.kind === \"blank\" && marked.kind === \"marked\"\n\t\t&& Reflect.ownKeys(marked.witness).length === 0\n\t, \"inactive and active variant branches remain distinct\");\n",
+          "previous": "",
+          "start": 4066
+        },
+        {
+          "current": "\t\tfor(const name of [\"witnessCount\", \"absentCount\", \"tokenTag\", \"markerCount\", \"markCount\"])\n",
+          "previous": "\t\tfor(const name of [\"witnessCount\", \"absentCount\", \"tokenTag\", \"markerCount\"])\n",
+          "start": 4253
+        },
+        {
+          "current": "\tinvoke(\"markCount\", [{ kind: \"blank\" }], 0n);\n\tinvoke(\"markCount\", [{ kind: \"marked\", witness: {} }], 1n);\n",
+          "previous": "",
+          "start": 4611
+        },
+        {
+          "current": "\tinvalid(\"markCount\", [{ kind: \"marked\", witness: { positive: true } }]);\n\tinvalid(\"markCount\", [{ kind: \"blank\", witness: {} }]);\n",
+          "previous": "",
+          "start": 5050
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-browser/javascript.mjs",
+      "previousSha256": "be066922bda594a9d7debd8174e8684e5dec62aad340a628aa7606f530ec2ff3"
+    },
+    {
+      "currentSha256": "18a6c14a7bf4cb30d1889f69af55466ea444f8bf875f06c69e076cfb019c42b4",
+      "edits": [
+        {
+          "current": "const blank: api.Mark = api.produceMark(false);\nconst marked: api.Mark = api.produceMark(true);\n",
+          "previous": "",
+          "start": 339
+        },
+        {
+          "current": "// @ts-expect-error Result-only packages expose no checked variant input.\napi.markCount(marked);\nvoid token; void marker; void values; void blank; void forged;\n",
+          "previous": "void token; void marker; void values; void forged;\n",
+          "start": 647
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-browser/result-only.mts",
+      "previousSha256": "eb42bf7b5f3eb90fc0347d3ea3426fbf415ac317babe302fd3a2cb62f2911dd0"
+    },
+    {
+      "currentSha256": "cbab8dfd15adda804fac142fb68ea7d7fd101e2d65377698c2b4d9047ca2eea5",
+      "edits": [
+        {
+          "current": "        ++calls;\n        var blank = Api.ProduceMark(false);\n        Check(blank.Equals(new MarkBlank()), \"inactive variant branch remains blank\");\n        ++calls;\n        var marked = Api.ProduceMark(true);\n        Check(marked.Equals(new MarkMarked(new Witness()))\n            , \"active variant branch retains its empty Witness carrier\");\n",
+          "previous": "",
+          "start": 3989
+        },
+        {
+          "current": "        ++calls;\n        Check(Api.MarkCount(blank) == 0 && blank.Equals(new MarkBlank())\n            , \"inactive variant input\");\n        ++calls;\n        Check(Api.MarkCount(marked) == 1\n            && marked.Equals(new MarkMarked(new Witness()))\n            , \"active variant input checks its nested Witness\");\n",
+          "previous": "",
+          "start": 5051
+        },
+        {
+          "current": "        Check(NullRefused(() => Api.MarkCount(new MarkMarked(null!)))\n            , \"null nested Witness is not an empty carrier\");\n        ++rejections;\n        Check(Recover(), \"recover after null nested Witness refusal\");\n        Check(calls == 21 && rejections == 4 && recoveries == 4\n",
+          "previous": "        Check(calls == 15 && rejections == 3 && recoveries == 3\n",
+          "start": 5762
+        },
+        {
+          "current": "        Check(calls == 8 && rejections == 0 && recoveries == 0\n",
+          "previous": "        Check(calls == 6 && rejections == 0 && recoveries == 0\n",
+          "start": 6087
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-dotnet/dotnet.cs",
+      "previousSha256": "9eaf893831c68659d1ccb9e9af765be58d93ecd03a1f06681f99c5af17853fc7"
+    },
+    {
+      "currentSha256": "aa016f7956a52f871c8fd0841338c324e9bce4f694c77f85779cafa551b8b213",
+      "edits": [
+        {
+          "current": "  zeropayloadcheckedrecords_mark blank, marked;\n  zeropayloadcheckedrecords_mark_init(&blank);\n  zeropayloadcheckedrecords_mark_init(&marked);\n  CHECK(zeropayloadcheckedrecords_mark_select(&blank,\n    ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK) == ZEROPAYLOADCHECKEDRECORDS_STATUS_OK\n    && OK(RUN(zeropayloadcheckedrecords_mark_count(&blank, out, &error)))\n    && mpz_cmp_ui(out, 0) == 0 && blank.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);\n  CHECK(zeropayloadcheckedrecords_mark_select(&marked,\n    ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED) == ZEROPAYLOADCHECKEDRECORDS_STATUS_OK\n    && OK(RUN(zeropayloadcheckedrecords_mark_count(&marked, out, &error)))\n    && mpz_cmp_ui(out, 1) == 0 && marked.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);\n",
+          "previous": "",
+          "start": 2323
+        },
+        {
+          "current": "  zeropayloadcheckedrecords_mark made_mark;\n  zeropayloadcheckedrecords_mark_init(&made_mark);\n  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(false, &made_mark, &error)))\n    && made_mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);\n  zeropayloadcheckedrecords_mark_clear(&made_mark);\n  zeropayloadcheckedrecords_mark_init(&made_mark);\n  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(true, &made_mark, &error)))\n    && made_mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);\n",
+          "previous": "",
+          "start": 4171
+        },
+        {
+          "current": "  CHECK(calls == 15 && rejections == 1 && recoveries == 1);\n",
+          "previous": "  CHECK(calls == 11 && rejections == 1 && recoveries == 1);\n",
+          "start": 4674
+        },
+        {
+          "current": "  zeropayloadcheckedrecords_mark_clear(&blank);\n  zeropayloadcheckedrecords_mark_clear(&marked);\n  zeropayloadcheckedrecords_mark_clear(&made_mark);\n",
+          "previous": "",
+          "start": 5100
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-native/c.c",
+      "previousSha256": "41970caaab713625663c89309914715137ede146fdc5168340d75f7b280ff5e1"
+    },
+    {
+      "currentSha256": "de38ed55eaede512d6f3c7f5c517e60d49003b3bc46cc3298cc322abaeb3297d",
+      "edits": [
+        {
+          "current": "  ++calls; CHECK(mark_count(MarkBlank{}) == 0);\n  ++calls; CHECK(mark_count(MarkMarked{Witness{}}) == 1);\n",
+          "previous": "",
+          "start": 1491
+        },
+        {
+          "current": "  ++calls; CHECK(produce_mark(false) == Mark{MarkBlank{}});\n  ++calls; CHECK(produce_mark(true) == Mark{MarkMarked{Witness{}}});\n  CHECK(calls == 15 && rejections == 1 && recoveries == 1);\n",
+          "previous": "  CHECK(calls == 11 && rejections == 1 && recoveries == 1);\n",
+          "start": 1932
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-native/cpp.cpp",
+      "previousSha256": "44c153060617ca59db45721ce158b675daa508fc6ad85e809f3ff766d9869327"
+    },
+    {
+      "currentSha256": "944c385011cc6c11babb94311688d69766ef085b680287c055840b208ee773c0",
+      "edits": [
+        {
+          "current": "  zeropayloadcheckedrecords_mark mark;\n  zeropayloadcheckedrecords_mark_init(&mark);\n  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(false, &mark, &error)))\n    && mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);\n  zeropayloadcheckedrecords_mark_clear(&mark);\n  zeropayloadcheckedrecords_mark_init(&mark);\n  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(true, &mark, &error)))\n    && mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);\n  CHECK(calls == 8);\n",
+          "previous": "  CHECK(calls == 6);\n",
+          "start": 1825
+        },
+        {
+          "current": "  zeropayloadcheckedrecords_mark_clear(&mark);\n",
+          "previous": "",
+          "start": 2659
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-native/result-only-c.c",
+      "previousSha256": "88eb4a117cbe8b652798a1fb24bd82f373df63663cfb2cfd019327440a5e01ec"
+    },
+    {
+      "currentSha256": "1e55477dbb3dddfe97e9d4987cc317a381448e69ac10115986259f3a94b4a5f1",
+      "edits": [
+        {
+          "current": "  ++calls; CHECK(produce_mark(false) == Mark{MarkBlank{}});\n  ++calls; CHECK(produce_mark(true) == Mark{MarkMarked{Witness{}}});\n  CHECK(calls == 8);\n",
+          "previous": "  CHECK(calls == 6);\n",
+          "start": 830
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-native/result-only-cpp.cpp",
+      "previousSha256": "742756e222e34fd015d61cd80d68cc7c69122160617969525c5e76c747ede132"
+    },
+    {
+      "currentSha256": "088c1846ef7e037573dc5bdd04d765e5850d7033c19f50d813cb37374d5a3dbc",
+      "edits": [
+        {
+          "current": "\t\"witnessCount\", \"absentCount\", \"tokenTag\", \"markerCount\", \"markCount\"\n",
+          "previous": "\t\"witnessCount\", \"absentCount\", \"tokenTag\", \"markerCount\"\n",
+          "start": 773
+        },
+        {
+          "current": "\t, \"produceMark\"\n",
+          "previous": "",
+          "start": 989
+        },
+        {
+          "current": "\t\t? { checks: 28, rejections: 0, calls: 8, snapshots: 8, recoveries: 0 }\n\t\t: { checks: 73, rejections: 10, calls: 33, snapshots: 33, recoveries: 10 };\n",
+          "previous": "\t\t? { checks: 22, rejections: 0, calls: 6, snapshots: 6, recoveries: 0 }\n\t\t: { checks: 56, rejections: 8, calls: 25, snapshots: 25, recoveries: 8 };\n",
+          "start": 1300
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser-fixture.mjs",
+      "previousSha256": "f36434ce140afc5cf449f3531073af55b075f68bbf593de4e6982e6c38018ac0"
+    },
+    {
+      "currentSha256": "c75f07d0f34569bcde31c7e0b70de418adbe004bcd8064b6030ac0f9e0e9991d",
+      "edits": [
+        {
+          "current": "\t\t\t, selection.reviewed ? undefined : selection.resultOnly ? 6 : 11);\n",
+          "previous": "\t\t\t, selection.reviewed ? undefined : selection.resultOnly ? 5 : 9);\n",
+          "start": 2153
+        },
+        {
+          "current": "\t\t\t, selection.resultOnly ? 6 : 11);\n",
+          "previous": "\t\t\t, selection.resultOnly ? 5 : 9);\n",
+          "start": 2371
+        },
+        {
+          "current": "\t\t\t, [\"Witness\", \"Token\", \"Marker\", \"Mark\"]);\n",
+          "previous": "\t\t\t, [\"Witness\", \"Token\", \"Marker\"]);\n",
+          "start": 2475
+        },
+        {
+          "current": "\tassert.match(api, /public sealed record MarkBlank\\(\\) : Mark/u);\n\tassert.match(api, /public sealed record MarkMarked\\(Witness Witness\\) : Mark/u);\n",
+          "previous": "",
+          "start": 2981
+        },
+        {
+          "current": "\t\t\"WitnessCount\", \"AbsentCount\", \"TokenTag\", \"MarkerCount\", \"MarkCount\"\n",
+          "previous": "\t\t\"WitnessCount\", \"AbsentCount\", \"TokenTag\", \"MarkerCount\"\n",
+          "start": 3380
+        },
+        {
+          "current": "\t\t, \"ProduceMarker\", \"ProduceMark\"\n",
+          "previous": "\t\t, \"ProduceMarker\"\n",
+          "start": 3518
+        },
+        {
+          "current": "\tfor(const method of [\"WitnessCount\", \"AbsentCount\", \"TokenTag\", \"MarkerCount\", \"MarkCount\"])\n",
+          "previous": "\tfor(const method of [\"WitnessCount\", \"AbsentCount\", \"TokenTag\", \"MarkerCount\"])\n",
+          "start": 3805
+        },
+        {
+          "current": "\t\t, \"ProduceMarker\", \"ProduceMark\"\n",
+          "previous": "\t\t, \"ProduceMarker\"\n",
+          "start": 4056
+        },
+        {
+          "current": "\tassert.match(source, /new MarkBlank\\(\\)/u);\n\tassert.match(source, /new MarkMarked\\(new Witness\\(\\)\\)/u);\n\tassert.match(source, /new MarkMarked\\(null!\\)/u);\n",
+          "previous": "",
+          "start": 4486
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-fixture-tests.mjs",
+      "previousSha256": "4536407fd4fd503992b3635c6c5581e4861871c5be00c2234ad81babd5dc3c4a"
+    },
+    {
+      "currentSha256": "0a0966a603be2ee6edb80e18a231448d3bfa452413eb5208b11d14609c31c0ac",
+      "edits": [
+        {
+          "current": "\tfull: Object.freeze({ calls: 21, checks: 22, recoveries: 4, rejections: 4 })\n",
+          "previous": "\tfull: Object.freeze({ calls: 15, checks: 16, recoveries: 3, rejections: 3 })\n",
+          "start": 545
+        },
+        {
+          "current": "\t\tcalls: 8, checks: 9, recoveries: 0, rejections: 0\n",
+          "previous": "\t\tcalls: 6, checks: 7, recoveries: 0, rejections: 0\n",
+          "start": 657
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-fixture.mjs",
+      "previousSha256": "13ed2531f8683de8660a6dd3fed9a6290dfe1e264b5b598b973f24a19ae21ea2"
+    },
+    {
+      "currentSha256": "32397761a4b161ea8b0f4df7e37e5cf6301806de63a48f011125b1f82f86a8e0",
+      "edits": [
+        {
+          "current": "const markWitness = (module, constructor) => ({\n\tkind: \"checked-record\", name: `${module}.Witness`\n\t, constructor: constructor === null ? null : `${module}.${constructor}`\n\t, fields: []\n});\nconst markSelector = (module, constructor) => ({\n\tkind: \"variant\", name: `${module}.Mark`\n\t, cases: [\n\t\t{ name: \"blank\", fields: [] }\n\t\t, { name: \"marked\"\n\t\t\t, fields: [{ name: \"witness\", refinement: markWitness(module, constructor) }]\n\t\t}\n\t]\n});\n\n",
+          "previous": "",
+          "start": 997
+        },
+        {
+          "current": "\t, produceMarker: [[], \"Marker\"]\n\t, markCount: [[[\"Mark\", { mark: \"mkWitness\" }]], \"nat\"]\n\t, produceMark: [[[\"bool\", null]], { mark: \"Mark\" }] };\n",
+          "previous": "\t, produceMarker: [[], \"Marker\"] };\n",
+          "start": 2159
+        },
+        {
+          "current": "\t\t, { parameters: parameters.map(([, selector]) => selector?.mark\n\t\t\t? { ...plain, refinement: markSelector(module, selector.mark) }\n\t\t\t: selector ? site(`${module}.${selector}`) : plain)\n\t\t, result: plain }]));\n",
+          "previous": "\t\t, { parameters: parameters.map(([, constructor]) => constructor ? site(`${module}.${constructor}`) : plain), result: plain }]));\n",
+          "start": 2789
+        },
+        {
+          "current": "\tconst record = name => ({ record: `${module}.${name}`, fields: records[name].fields });\n",
+          "previous": "",
+          "start": 3373
+        },
+        {
+          "current": "\t\t? (name === \"Mark\" ? { record: `${module}.Mark`, fields: { witness: record(\"Witness\") } }\n\t\t\t: Object.hasOwn(records, name) ? record(name) : name)\n\t\t: name.array ? { array: type(name.array) }\n\t\t\t: name.option ? { option: type(name.option) } : type(name.mark);\n",
+          "previous": "\t\t? (Object.hasOwn(records, name) ? { record: `${module}.${name}`, fields: records[name].fields } : name)\n\t\t: name.array ? { array: type(name.array) } : { option: type(name.option) };\n",
+          "start": 3509
+        },
+        {
+          "current": "\tconst documentation = { summary: \"Independent zero-payload contract.\", details: \"\" };\n\tconst mark = ir.types.find(type_ => type_.name === \"Mark\");\n\tif(mark)\n\t{\n\t\tmark.kind = \"variant\"; mark.fields = [];\n\t\tmark.cases = [\n\t\t\t{ name: \"blank\", fields: [], documentation }\n\t\t\t, { name: \"marked\"\n\t\t\t\t, fields: [{\n\t\t\t\t\tname: \"witness\", type: { kind: \"named\", id: `lean:${module}.Witness` }\n\t\t\t\t\t, mutability: \"immutable\", documentation\n\t\t\t\t}]\n\t\t\t\t, documentation }\n\t\t];\n\t}\n",
+          "previous": "",
+          "start": 4030
+        },
+        {
+          "current": "\t\tif(record?.erased.length) definition.source.extensions[erasedProofsKey] = { fields: [...record.erased] };\n",
+          "previous": "\t\tif(record.erased.length) definition.source.extensions[erasedProofsKey] = { fields: [...record.erased] };\n",
+          "start": 4578
+        },
+        {
+          "current": "\t\t: result.mark ? markSelector(module, null)\n\t\t\t: { kind: result.array ? \"array\" : \"option\", arguments: [produced(result.array ?? result.option)] };\n",
+          "previous": "\t\t: { kind: result.array ? \"array\" : \"option\", arguments: [produced(result.array ?? result.option)] };\n",
+          "start": 4966
+        },
+        {
+          "current": "\t\tif(parameters.some(([, selector]) => selector) || tree !== null)\n\t\t\tdeclaration.source.extensions[refinementsKey] = { parameters: parameters.map(([, selector]) => selector?.mark\n\t\t\t\t? markSelector(module, selector.mark)\n\t\t\t\t: selector ? { kind: \"checked-record\", constructor: `${module}.${selector}` } : null)\n\t\t\t, result: tree };\n",
+          "previous": "\t\tif(parameters.some(([, constructor]) => constructor) || tree !== null)\n\t\t\tdeclaration.source.extensions[refinementsKey] = { parameters: parameters.map(([, constructor]) => constructor ? { kind: \"checked-record\", constructor: `${module}.${constructor}` } : null), result: tree };\n",
+          "start": 5254
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-fixture.mjs",
+      "previousSha256": "4c18990f84058e5b4a1efc57b92a811af9f2b1d4e2ec01915439a7c636590891"
+    },
+    {
+      "currentSha256": "ecaf0f1ebbf18b33de339593e241d57dd0cb62873262813160e54c5ce87b09c6",
+      "edits": [
+        {
+          "current": "\t\t\t, selected.resultOnly ? 6 : 11);\n",
+          "previous": "\t\t\t, selected.resultOnly ? 5 : 9);\n",
+          "start": 1429
+        },
+        {
+          "current": "\t\t\tassert.equal(caller.calls, route.startsWith(\"result-only-\") ? 8 : 15);\n",
+          "previous": "\t\t\tassert.equal(caller.calls, route.startsWith(\"result-only-\") ? 6 : 11);\n",
+          "start": 2907
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-fixture-tests.mjs",
+      "previousSha256": "6d7406a3619f4688f514887d0ec9feefc179386578eb2208e5c93c2835b8e859"
+    },
+    {
+      "currentSha256": "207892f686ffb7787bed5477e5da1358e8a32c082f279f780b656fd0e38b96c7",
+      "edits": [
+        {
+          "current": "\t\tsource, checks, calls: selection.resultOnly ? 8 : 15\n",
+          "previous": "\t\tsource, checks, calls: selection.resultOnly ? 6 : 11\n",
+          "start": 1988
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-fixture.mjs",
+      "previousSha256": "c606285434b5f0c10da03870fa362e4661604ec41571b430910cbf374d435ff7"
+    },
+    {
+      "currentSha256": "f5990b2def9c99e6cc4fe97458267f3f8ad245088bb5888e3416826f14b9e2ed",
+      "edits": [
+        {
+          "current": "\t\t[`lean:${zeroPayloadCheckedRecordModule}.Mark`, undefined]\n\t\t, [`lean:${zeroPayloadCheckedRecordModule}.Marker`, undefined]\n",
+          "previous": "\t\t[`lean:${zeroPayloadCheckedRecordModule}.Marker`, undefined]\n",
+          "start": 3511
+        },
+        {
+          "current": "\tassert.match(source, /inductive LbErased\\.ZeroPayloadCheckedRecords\\.Mark where/u);\n\tassert.match(source, /def LbErased\\.ZeroPayloadCheckedRecords\\.Mark\\.check/u);\n\tassert.match(source, /def LbErased\\.ZeroPayloadCheckedRecords\\.Mark\\.erase/u);\n",
+          "previous": "",
+          "start": 4147
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-browser-foundation.test.mjs",
+      "previousSha256": "33b8d1dc8ab219208fd977818bc0a55a561fb4a000955abdd2adac0138399b59"
+    },
+    {
+      "currentSha256": "c3e3e584453cc8b5e10c5cbdc0fcb2600508f197c17d805d6ae436efcd4633a9",
+      "edits": [
+        {
+          "current": "\t\t, produceMark: active => active\n\t\t\t? { kind: \"marked\", witness: {} } : { kind: \"blank\" }\n",
+          "previous": "",
+          "start": 2354
+        },
+        {
+          "current": "\t\t, markCount: value => {\n\t\t\texact(value, value?.kind === \"blank\" ? [\"kind\"] : [\"kind\", \"witness\"], \"Mark variant\");\n\t\t\tif(value.kind === \"blank\") return 0n;\n\t\t\tif(value.kind !== \"marked\") throw new TypeError(\"Mark must match a declared variant\");\n\t\t\texact(value.witness, [], \"Witness\"); return 1n;\n\t\t}\n",
+          "previous": "",
+          "start": 2866
+        },
+        {
+          "current": "\t\tassert.match(files[\"index.d.ts\"]\n\t\t\t, /export type Mark = Readonly<\\{ readonly kind: \"blank\" \\}> \\| Readonly<\\{ readonly kind: \"marked\"; readonly witness: Witness \\}>;/u);\n",
+          "previous": "",
+          "start": 7585
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "224697c87721fb0f5d6f91e79cc1e27d23754b7d4be12fb643483f6d5335d7d0"
+    },
+    {
+      "currentSha256": "6b52218fea1d2946656fdfb262a8e02e1503c325f2a951881d2b3a41d5ab18ac",
+      "edits": [
+        {
+          "current": "\t\t.filter(([name]) => [\n\t\t\t`${module}.witnessCount`, `${module}.absentCount`\n\t\t\t, `${module}.tokenTag`, `${module}.markCount`\n\t\t].includes(name)));\n",
+          "previous": "\t\t.filter(([name]) => [`${module}.witnessCount`, `${module}.absentCount`, `${module}.tokenTag`].includes(name)));\n",
+          "start": 3548
+        },
+        {
+          "current": "\tassert.deepEqual(types.Mark.cases.map(branch => [branch.name, branch.fields.map(field => field.name)])\n\t\t, [[\"blank\", []], [\"marked\", [\"witness\"]]]);\n\tconst markInput = review.declarations.find(item => item.name === \"markCount\")\n\t\t.source.extensions[refinementsKey].parameters[0];\n\tassert.equal(markInput.kind, \"variant\");\n\tassert.equal(markInput.cases[1].fields[0].refinement.constructor, `${module}.mkWitness`);\n\tconst markResult = review.declarations.find(item => item.name === \"produceMark\")\n\t\t.source.extensions[refinementsKey].result;\n\tassert.equal(markResult.cases[1].fields[0].refinement.constructor, null);\n",
+          "previous": "",
+          "start": 4512
+        },
+        {
+          "current": "\tconst nested = { kind: \"variant\", name: `${module}.Mark`\n\t, cases: [\n\t\t{ name: \"blank\", fields: [] }\n\t\t, { name: \"marked\", fields: [{ name: \"witness\", refinement: input }] }\n\t] };\n\tassert.deepEqual(validateCheckedRefinementSelection(nested), nested);\n",
+          "previous": "",
+          "start": 7192
+        },
+        {
+          "current": "\tassert.deepEqual(types.Mark.cases.map(branch => [branch.name, branch.fields.map(field => field.name)])\n\t\t, [[\"blank\", []], [\"marked\", [\"witness\"]]]);\n",
+          "previous": "",
+          "start": 10222
+        },
+        {
+          "current": "\tconst erasedWitness = constructor => ({\n\t\tkind: \"checked-record\", definition: `${module}.Witness`\n\t\t, constructor, fields: [], arguments: []\n\t});\n\tconst mark = constructor => ({\n\t\tkind: \"variant\", definition: `${module}.Mark`\n\t\t, cases: [\n\t\t\t{ name: \"blank\", fields: [], arguments: [] }\n\t\t\t, { name: \"marked\", fields: [\"witness\"], arguments: [erasedWitness(constructor)] }\n\t\t]\n\t});\n\tassert.deepEqual(exportNamed(model, \"markCount\").refinements\n\t\t, { parameters: [mark(`${module}.mkWitness`)], result: null });\n\tassert.deepEqual(exportNamed(model, \"produceMark\").refinements\n\t\t, { parameters: [null], result: mark(null) });\n",
+          "previous": "",
+          "start": 11193
+        },
+        {
+          "current": "\tassert.match(source, new RegExp(`inductive LbErased\\\\.${module}\\\\.Mark where`, \"u\"));\n\tassert.match(source, new RegExp(`def LbErased\\\\.${module}\\\\.Mark\\\\.check`, \"u\"));\n\tassert.match(source, new RegExp(`def LbErased\\\\.${module}\\\\.Mark\\\\.erase`, \"u\"));\n",
+          "previous": "",
+          "start": 12395
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "ac514a2255c78126c12d6856c926ebc5b1f2f2575093621c18f13ecd4c7b450c"
+    }
+  ]
+}
