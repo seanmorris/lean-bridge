@@ -9,6 +9,7 @@ import test from "node:test";
 import {
 	checkZeroPayloadPerlEvidence, zeroPayloadPerlEvidence
 } from "./helpers/zero-payload-checked-record-perl-evidence.mjs";
+import "./helpers/zero-payload-perl-wit-evidence-source-history-tests.mjs";
 
 test("hosted zero-payload Perl archive authenticates every retained route", {
 	timeout: 120_000

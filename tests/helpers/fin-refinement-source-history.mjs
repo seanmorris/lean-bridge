@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadPerlWitEvidenceSource, zeroPayloadPerlWitEvidenceChangedPaths, zeroPayloadPerlWitEvidenceIntegrationPaths } from "./zero-payload-perl-wit-evidence-source-history.mjs";
 import { beforeZeroPayloadLanguageEvidenceSource, zeroPayloadLanguageEvidenceChangedPaths, zeroPayloadLanguageEvidenceIntegrationPaths } from "./zero-payload-language-evidence-source-history.mjs";
 import { beforeZeroPayloadHostedArchivePreparationSource, zeroPayloadHostedArchivePreparationChangedPaths, zeroPayloadHostedArchivePreparationIntegrationPaths } from "./zero-payload-hosted-archive-preparation-source-history.mjs";
 import { beforeZeroPayloadBrowserEvidenceSource, zeroPayloadBrowserEvidenceChangedPaths, zeroPayloadBrowserEvidenceIntegrationPaths } from "./zero-payload-browser-evidence-source-history.mjs";
@@ -1444,7 +1445,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadLanguageEvidenceChangedPaths
+	...zeroPayloadPerlWitEvidenceChangedPaths
+	, ...zeroPayloadPerlWitEvidenceIntegrationPaths
+	, ...zeroPayloadLanguageEvidenceChangedPaths
 	, ...zeroPayloadLanguageEvidenceIntegrationPaths
 	, ...zeroPayloadHostedArchivePreparationChangedPaths
 	, ...zeroPayloadHostedArchivePreparationIntegrationPaths
@@ -2010,8 +2013,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const languageEvidence = beforeZeroPayloadLanguageEvidenceSource(
+	const perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(
 		path, text, expected
+	);
+	if(sha256(perlWitEvidence) === expected) return perlWitEvidence;
+	const languageEvidence = beforeZeroPayloadLanguageEvidenceSource(
+		path, perlWitEvidence, expected
 	);
 	if(sha256(languageEvidence) === expected) return languageEvidence;
 	const archivePreparation = beforeZeroPayloadHostedArchivePreparationSource(
