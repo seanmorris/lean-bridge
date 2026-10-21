@@ -1,0 +1,78 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fcbb1aa8b1f3db283972a6a2f3b2941c368e5240d2392a02eaad8fe701f38b65",
+      "path": "tests/helpers/dependent-checked-record-rust-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "4bc3c2679dd9fe614556230c81b7bb258204d154b963f60422135b92557c8429",
+      "path": "tests/helpers/dependent-checked-record-rust-evidence.mjs"
+    },
+    {
+      "currentSha256": "5614bd77d634aa8862ed5c42175c753b0809ebc10583b7e067e79a2d0018af84",
+      "path": "scripts/update-dependent-checked-record-rust-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "23bfac5089a197ae48e375dab638ec39a5a707f0a0fad943216c6278dc47f5ae",
+      "path": "tests/helpers/dependent-checked-record-rust-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "7e3fc043ef911a80142fe796a02a9308ef6b5ab04e62f4305b3d6d3b93955723",
+      "path": "tests/helpers/dependent-checked-record-rust-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1552,
+    "archiveFileCount": 1550,
+    "indexSha256": "72338890cb5b3be545196b9267887cb097bfa4758f7909b6323e49da11b6b197",
+    "indexedFileCount": 1549,
+    "root": "docs/evidence/dependent-checked-record-rust-20261021"
+  },
+  "implementationCommit": "19bfe7dba146a0f6e9f756f734827df595ccf65b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "766e100f7d9694f60420013db16383113dba918be7dee6482172bb035f83e408",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordRustArchiveSource, dependentCheckedRecordRustArchiveIntegrationPaths } from \"./dependent-checked-record-rust-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordRustArchiveIntegrationPaths\n\t, ...dependentCheckedRecordArchiveSelectionRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordArchiveSelectionRepairChangedPaths\n",
+          "start": 124795
+        },
+        {
+          "current": "\tconst dependentCheckedRecordRustArchive\n\t\t= beforeDependentCheckedRecordRustArchiveSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordRustArchive) === expected)\n\t\treturn dependentCheckedRecordRustArchive;\n",
+          "previous": "",
+          "start": 152743
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordRustArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 153075
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2fe8dd0e1eac2f5dbd7a483ef9a851cbd7563c323a48b5715510a0956bf13f0c"
+    },
+    {
+      "currentSha256": "a5f6b1f2164a3a403ec75ca01d171aad43c1c17fbb54654cc88f3ad249afedbb",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-rust-evidence-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3685
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "8c9892d2d519363aeec3a2154af9124ee3585624f35767bb894d52252a98d8de"
+    }
+  ],
+  "milestone": "dependent-checked-record-rust-archive-source-v1",
+  "predecessorCommit": "318a1d09bbba9dfe9c90a99fa7e7ada7b3924b32",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted Rust dependent checked-record evidence retains all four routes, exact source roles, independent replay, the vendored dependency closure and the original GitHub artifact bytes."
+}

@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordRustArchiveSource, dependentCheckedRecordRustArchiveIntegrationPaths } from "./dependent-checked-record-rust-archive-source-history.mjs";
 import { beforeDependentCheckedRecordArchiveSelectionRepairSource, dependentCheckedRecordArchiveSelectionRepairChangedPaths, dependentCheckedRecordArchiveSelectionRepairIntegrationPaths } from "./dependent-checked-record-archive-selection-repair-source-history.mjs";
 import { beforeZeroPayloadNativeControlContractSource, zeroPayloadNativeControlContractChangedPaths, zeroPayloadNativeControlContractIntegrationPaths } from "./zero-payload-native-control-contract-source-history.mjs";
 import { beforeDependentCheckedRecordHostedArchivePreparationSource, dependentCheckedRecordHostedArchivePreparationChangedPaths, dependentCheckedRecordHostedArchivePreparationIntegrationPaths } from "./dependent-checked-record-hosted-archive-preparation-source-history.mjs";
@@ -1470,7 +1471,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordArchiveSelectionRepairChangedPaths
+	...dependentCheckedRecordRustArchiveIntegrationPaths
+	, ...dependentCheckedRecordArchiveSelectionRepairChangedPaths
 	, ...dependentCheckedRecordArchiveSelectionRepairIntegrationPaths
 	, ...zeroPayloadNativeControlContractChangedPaths
 	, ...zeroPayloadNativeControlContractIntegrationPaths
@@ -2088,9 +2090,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordRustArchive
+		= beforeDependentCheckedRecordRustArchiveSource(path, text, expected);
+	if(sha256(dependentCheckedRecordRustArchive) === expected)
+		return dependentCheckedRecordRustArchive;
 	const dependentCheckedRecordArchiveSelectionRepair
 		= beforeDependentCheckedRecordArchiveSelectionRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordRustArchive, expected
 		);
 	if(sha256(dependentCheckedRecordArchiveSelectionRepair) === expected)
 		return dependentCheckedRecordArchiveSelectionRepair;
