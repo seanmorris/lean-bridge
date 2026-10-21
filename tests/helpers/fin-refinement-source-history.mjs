@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from "./generic-subtype-npm-browser-source-history.mjs";
 import { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from "./owned-subtype-core-registration-source-history.mjs";
 import { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from "./core-runner-headroom-source-history.mjs";
 import { beforeGenericSubtypeCompositionSource, genericSubtypeCompositionChangedPaths } from "./generic-subtype-composition-source-history.mjs";
@@ -1393,7 +1394,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeCoreRegistrationChangedPaths
+	...genericSubtypeNpmBrowserChangedPaths
+	, ...genericSubtypeNpmBrowserIntegrationPaths
+	, ...ownedSubtypeCoreRegistrationChangedPaths
 	, ...coreRunnerHeadroomChangedPaths
 	, ...genericSubtypeCompositionChangedPaths
 	, ...ownedSubtypeJavaScriptTransferChangedPaths
@@ -1859,8 +1862,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(
+	const genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(
 		path, text, expected
+	);
+	if(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;
+	const ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(
+		path, genericSubtypeNpm, expected
 	);
 	if(sha256(ownedSubtypeRegistration) === expected)
 		return ownedSubtypeRegistration;

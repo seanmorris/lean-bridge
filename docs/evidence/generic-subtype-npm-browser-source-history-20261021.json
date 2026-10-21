@@ -1,0 +1,233 @@
+{
+  "additions": [
+    {
+      "currentSha256": "54adfdf073f3fa18514a76256669d849f5f7eeb47c7656d8ed2347ac35e6e601",
+      "path": ".github/workflows/generic-subtype-npm-browser.yml"
+    },
+    {
+      "currentSha256": "daf27bd294ab4011f8c5b34fcb015f3d3a87d5019ad59dc61ecf6649d563143c",
+      "path": "tests/fixtures/generic-subtype-compositions/GenericCompositions.lean"
+    },
+    {
+      "currentSha256": "8c3ff860d40464f10636986103278623cf6400f845ef9080ccd6625b7f1f823b",
+      "path": "tests/fixtures/generic-subtype-consumers/browser.mjs"
+    },
+    {
+      "currentSha256": "dea2cb9b22f14a67fecbfe8286f5a2c320a66ca8433cd590b5196cb36238f62b",
+      "path": "tests/fixtures/generic-subtype-consumers/javascript.mjs"
+    },
+    {
+      "currentSha256": "614128a04dbe2c2794eaa1b18fd15655bc721307dfa87ba876fb2357ab47ae53",
+      "path": "tests/fixtures/nominal-subtype-consumers/generic.mts"
+    },
+    {
+      "currentSha256": "5093e4b3b0135f8eca74cc5c86f3d7841049abd59bc829cfe3456d4c5eafc1d8",
+      "path": "tests/generic-subtype-npm-browser.test.mjs"
+    },
+    {
+      "currentSha256": "40e65cd37345efa3b20904637a30dafd490571e4108999ef1690f26fba554815",
+      "path": "tests/helpers/generic-subtype-npm-browser-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "0e76de28d4a1828dd6755ed5a3a25e274372eff89b03f696d58b531f8518ee0a",
+      "path": "tests/helpers/generic-subtype-npm-browser.mjs"
+    },
+    {
+      "currentSha256": "bd8dd7be3dd1feef6f3cf643c73410891d63cebcdce0abbf5d241cf5fa1c45b5",
+      "path": "scripts/update-generic-subtype-npm-browser-source-history.mjs"
+    },
+    {
+      "currentSha256": "20bc286ea72674e20d5a8fe9ed69d57007597c3ed554bbc457766a24451710d2",
+      "path": "tests/helpers/generic-subtype-npm-browser-source-history.mjs"
+    },
+    {
+      "currentSha256": "1d7aed1d376fed6d9d45c4a9a93c88f67cc63760ad06a3ba7c56fb528e6b83b6",
+      "path": "tests/helpers/generic-subtype-npm-browser-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "71c542f8460b05a066885abaa41c60c3e7e0112a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a0253500a39481b1f664c53f547bad91634736a7787f259ca88c5e8ce9be0abc",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from \"./generic-subtype-npm-browser-source-history.mjs\";\nimport { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from \"./owned-subtype-core-registration-source-history.mjs\";\nimport { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from \"./core-runner-headroom-source-history.mjs\";\nimport { beforeGenericSubtypeCompositionSource, genericSubtypeCompositionChangedPaths } from \"./generic-subtype-composition-source-history.mjs\";\nimport { beforeOwnedSubtypeJavaScriptTransferSource, ownedSubtypeJavaScriptTransferChangedPaths } from \"./owned-subtype-javascript-transfer-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...genericSubtypeNpmBrowserChangedPaths\n\t, ...genericSubtypeNpmBrowserIntegrationPaths\n\t, ...ownedSubtypeCoreRegistrationChangedPaths\n\t, ...coreRunnerHeadroomChangedPaths\n\t, ...genericSubtypeCompositionChangedPaths\n\t, ...ownedSubtypeJavaScriptTransferChangedPaths\n\t, ...ownedSubtypeJavaScriptChangedPaths\n",
+          "previous": "\t...ownedSubtypeJavaScriptChangedPaths\n",
+          "start": 110008
+        },
+        {
+          "current": "\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n",
+          "previous": "\tconst ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(\n",
+          "start": 130830
+        },
+        {
+          "current": "\tif(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;\n\tconst ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(\n\t\tpath, genericSubtypeNpm, expected\n\t);\n\tif(sha256(ownedSubtypeRegistration) === expected)\n\t\treturn ownedSubtypeRegistration;\n\tconst runnerHeadroom = beforeCoreRunnerHeadroomSource(\n\t\tpath, ownedSubtypeRegistration, expected\n\t);\n\tif(sha256(runnerHeadroom) === expected) return runnerHeadroom;\n\tconst genericSubtype = beforeGenericSubtypeCompositionSource(\n\t\tpath, runnerHeadroom, expected\n\t);\n\tif(sha256(genericSubtype) === expected) return genericSubtype;\n\tconst ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(\n\t\tpath, genericSubtype, expected\n\t);\n\tif(sha256(ownedJavaScriptTransfer) === expected)\n\t\treturn ownedJavaScriptTransfer;\n\tconst ownedJavaScript = beforeOwnedSubtypeJavaScriptSource(\n\t\tpath, ownedJavaScriptTransfer, expected\n\t);\n",
+          "previous": "",
+          "start": 130922
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e69b3ab8ca5e7ab3d32d930b53f63dc84ee49a34312d330cd98aaa16423867d6"
+    }
+  ],
+  "milestone": "generic-subtype-npm-browser-source-v1",
+  "predecessorCommit": "09bbcdf19160e1d32f27a1e4dda9463654049378",
+  "reconciledTypeSurfacePointers": 97,
+  "schemaVersion": 1,
+  "scope": "Ordinary and independently reviewed generic-record Subtype packages installed offline in Node JavaScript, strict TypeScript, pages, React and workers across Chromium, Firefox and WebKit, with two-build reproduction, source removal and relocation.",
+  "updates": [
+    {
+      "currentSha256": "bebcc657631aedcd30f815ceed04c2de0c0fa7f4c0896cff80b910bfdb86054e",
+      "edits": [
+        {
+          "current": "\t\t, \"generic-subtype-npm-browser\"\n",
+          "previous": "",
+          "start": 15698
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "752a1a0f1d05bf23d2291387af270e42fbba693f94c25f732a46c902d48be469"
+    },
+    {
+      "currentSha256": "5506522c450f49e84aef7a39a45cc6951b189ec32bb34ee9a6fc4d457161130d",
+      "edits": [
+        {
+          "current": "/**\n * Independent source/constructor behavior used only in oracle mutation tests.\n *\n * @param options - Optional model surface.\n * @param options.genericCompositions - Include generic record specializations.\n */\nexport const nominalSubtypeCallerModel = ({ genericCompositions = false } = {}) => ({\n",
+          "previous": "/** Independent source/constructor behavior used only in oracle mutation tests. */\nexport const nominalSubtypeCallerModel = () => ({\n",
+          "start": 1473
+        },
+        {
+          "current": "\t, ...genericCompositions ? {\n\t\tgenericUse: value => first(value.value) + value.marker\n\t\t, echoGenericFirst: value => ({ value: first(value.value), marker: value.marker })\n\t\t, echoGenericSecond: value => ({ value: second(value.value), marker: value.marker })\n\t} : {}\n",
+          "previous": "",
+          "start": 3369
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-caller-model.mjs",
+      "previousSha256": "2fb57064e807563bf9be98a947c13a3190626673c5691c58335b1d84fc75db67"
+    },
+    {
+      "currentSha256": "0b0746a0b253223e681dbb8cf1bc2aef6844804674b8d316629c656b09f8a5c9",
+      "edits": [
+        {
+          "current": "import { checkGenericSubtypeCompositions } from \"../fixtures/generic-subtype-consumers/javascript.mjs\";\n",
+          "previous": "",
+          "start": 1064
+        },
+        {
+          "current": "const mockedPackage = async (t, resultOnly, genericCompositions = false) => {\n",
+          "previous": "const mockedPackage = async (t, resultOnly) => {\n",
+          "start": 6183
+        },
+        {
+          "current": "\tconst files = generateJavaScriptPackage(nominalSubtypeInstalledReview(resultOnly, { genericCompositions }));\n",
+          "previous": "\tconst files = generateJavaScriptPackage(nominalSubtypeInstalledReview(resultOnly));\n",
+          "start": 6399
+        },
+        {
+          "current": "\tcontrol.api = nominalSubtypeCallerModel({ genericCompositions });\n",
+          "previous": "\tcontrol.api = nominalSubtypeCallerModel();\n",
+          "start": 6935
+        },
+        {
+          "current": "test(\"generic Subtype compositions retain their record origin and independent specialization choices\", async t => {\n\tconst options = { genericCompositions: true };\n\tconst document = nominalSubtypeInstalledReview(false, options), configuration = nominalSubtypeInstalledConfiguration(\"ordinary\", [\"npm\"], false, options);\n\tvalidateBindingIr(document); validateExportConfiguration(configuration);\n\tassert.equal(document.declarations.length, 29);\n\tassert.deepEqual(reviewedSubtypeContracts(document), configuration.contracts);\n\tassert.deepEqual(configuration.modules, [\"NominalSubtypes\", \"NominalSubtypes.GenericCompositions\"]);\n\tassert.deepEqual(configuration.specializations.map(({ name, declaration }) => ({ name, declaration })), [\n\t\t{ name: \"NominalSubtypes.GenericCompositions.echoGenericFirst\", declaration: \"NominalSubtypes.GenericCompositions.genericEcho\" }\n\t\t, { name: \"NominalSubtypes.GenericCompositions.echoGenericSecond\", declaration: \"NominalSubtypes.GenericCompositions.genericEcho\" }\n\t]);\n\tconst record = document.types.find(type => type.id === \"lean:NominalSubtypes.GenericCompositions.GenericNat\");\n\tassert.deepEqual(record.source.extensions[\"lean-lang.org/instantiation\"], {\n\t\tstructure: \"NominalSubtypes.GenericCompositions.GenericCarrier\"\n\t\t, arguments: [{ kind: \"primitive\", name: \"nat\" }]\n\t});\n\tconst declarations = new Map(document.declarations.map(item => [item.id, item]));\n\tfor(const [name, constructor] of [[\"echoGenericFirst\", \"plusOne\"], [\"echoGenericSecond\", \"plusTwo\"]])\n\t{\n\t\tconst item = declarations.get(`lean:NominalSubtypes.GenericCompositions.${name}`);\n\t\tassert.equal(item.source.declaration, \"NominalSubtypes.GenericCompositions.genericEcho\");\n\t\tassert.equal(item.source.extensions[\"lean-lang.org/refinements\"].parameters[0].fields[0].refinement.constructor, `NominalSubtypes.${constructor}`);\n\t\tassert.equal(item.source.extensions[\"lean-lang.org/refinements\"].result.fields[0].refinement.constructor, null);\n\t\tassert.match(item.source.extensions[\"lean-lang.org/specialization\"].application, /genericEcho/u);\n\t}\n\tconst { api } = await mockedPackage(t, false, true);\n\tassert.deepEqual(checkGenericSubtypeCompositions(api), { checks: 611, rejections: 5 });\n});\n\n",
+          "previous": "",
+          "start": 7580
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-installed-fixture-tests.mjs",
+      "previousSha256": "3aba934872ed6c293177cda119ec7a69974e01ee06042e9a0e74d23673eb1191"
+    },
+    {
+      "currentSha256": "b0a01702d51527f5a801a27f4536e90bd6645b277be2b5c88d37a04e2b7c1c27",
+      "edits": [
+        {
+          "current": "export const genericSubtypeModule = \"NominalSubtypes.GenericCompositions\";\nexport const genericSubtypeSource = \"tests/fixtures/generic-subtype-compositions/GenericCompositions.lean\";\n",
+          "previous": "",
+          "start": 468
+        },
+        {
+          "current": "const genericQualified = name => `${genericSubtypeModule}.${name}`;\nconst publicName = name => name.includes(\".\") ? name : qualified(name);\n",
+          "previous": "",
+          "start": 712
+        },
+        {
+          "current": "const genericNat = { record: genericQualified(\"GenericNat\"), fields: { value: \"nat\", marker: \"nat\" } };\n",
+          "previous": "",
+          "start": 1296
+        },
+        {
+          "current": "const genericTree = constructor => ({\n\tkind: \"record\"\n\t, name: genericQualified(\"GenericNat\")\n\t, fields: [field(\"value\", sub(constructor)), field(\"marker\", null)]\n});\nconst genericSpecializations = Object.freeze([\"First\", \"Second\"].map(name => ({\n\tname: genericQualified(`echoGeneric${name}`)\n\t, declaration: genericQualified(\"genericEcho\")\n\t, types: [genericQualified(\"GenericNat\")]\n})));\n",
+          "previous": "",
+          "start": 2433
+        },
+        {
+          "current": "const genericInputs = [\n\t[genericQualified(\"genericUse\"), [genericNat], \"nat\", [genericTree(\"plusOne\")], null]\n\t, [genericQualified(\"echoGenericFirst\"), [genericNat], genericNat, [genericTree(\"plusOne\")], genericTree(null)]\n\t, [genericQualified(\"echoGenericSecond\"), [genericNat], genericNat, [genericTree(\"plusTwo\")], genericTree(null)]\n];\nconst signatures = (resultOnly, genericCompositions = false) => [\n\t...resultOnly ? [] : inputs\n\t, ...genericCompositions && !resultOnly ? genericInputs : []\n\t, ...results\n];\n",
+          "previous": "const signatures = resultOnly => [...resultOnly ? [] : inputs, ...results];\n",
+          "start": 4750
+        },
+        {
+          "current": " * @param options - Optional current generic/Subtype composition lane.\n * @param options.genericCompositions - Include one generic record and two specializations.\n",
+          "previous": "",
+          "start": 5430
+        },
+        {
+          "current": "export const nominalSubtypeInstalledReview = (resultOnly = false, { genericCompositions = false } = {}) => {\n\tassert.equal(typeof genericCompositions, \"boolean\");\n\tconst selected = signatures(resultOnly, genericCompositions);\n\tconst document = corpusReviewedIr({ id: nominalSubtypeName }, selected.map(([name, parameters, result]) => ({ name: publicName(name), parameters, result })));\n",
+          "previous": "export const nominalSubtypeInstalledReview = (resultOnly = false) => {\n\tconst selected = signatures(resultOnly);\n\tconst document = corpusReviewedIr({ id: nominalSubtypeName }, selected.map(([name, parameters, result]) => ({ name: qualified(name), parameters, result })));\n",
+          "start": 5597
+        },
+        {
+          "current": "\tif(genericCompositions && !resultOnly)\n\t{\n\t\tconst generic = document.types.find(type => type.id === `lean:${genericQualified(\"GenericNat\")}`);\n\t\tgeneric.source.extensions[\"lean-lang.org/instantiation\"] = {\n\t\t\tstructure: genericQualified(\"GenericCarrier\")\n\t\t\t, arguments: [structuredClone(nat)]\n\t\t};\n\t}\n",
+          "previous": "",
+          "start": 6912
+        },
+        {
+          "current": "\tconst specializations = new Map(genericSpecializations.map(item => [item.name, item]));\n",
+          "previous": "",
+          "start": 7385
+        },
+        {
+          "current": "\t\tconst specialization = specializations.get(declaration.source.declaration);\n\t\tif(specialization)\n\t\t{\n\t\t\tdeclaration.source.declaration = specialization.declaration;\n\t\t\tdeclaration.source.extensions[\"lean-lang.org/specialization\"] = { ...specialization\n\t\t\t\t, application: `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}))` };\n\t\t}\n",
+          "previous": "",
+          "start": 7703
+        },
+        {
+          "current": " * @param options - Optional current generic/Subtype composition lane.\n * @param options.genericCompositions - Include one generic record and two specializations.\n",
+          "previous": "",
+          "start": 9565
+        },
+        {
+          "current": "export const nominalSubtypeInstalledConfiguration = (route, profiles, resultOnly = false, { genericCompositions = false } = {}) => {\n",
+          "previous": "export const nominalSubtypeInstalledConfiguration = (route, profiles, resultOnly = false) => {\n",
+          "start": 9732
+        },
+        {
+          "current": "\tassert.equal(typeof genericCompositions, \"boolean\");\n",
+          "previous": "",
+          "start": 10072
+        },
+        {
+          "current": "\tconst generic = genericCompositions && !resultOnly;\n\tconst base = { schemaVersion: 1, modules: [nominalSubtypeModule, ...generic ? [genericSubtypeModule] : []], targets };\n",
+          "previous": "\tconst base = { schemaVersion: 1, modules: [nominalSubtypeModule], targets };\n",
+          "start": 10247
+        },
+        {
+          "current": "\tconst selected = signatures(resultOnly, genericCompositions);\n",
+          "previous": "\tconst selected = signatures(resultOnly);\n",
+          "start": 10459
+        },
+        {
+          "current": "\t\t.map(([name, , , parameters, result]) => [publicName(name), { parameters: parameters.map(site), result: site(result) }]));\n\treturn { ...base\n\t\t, exports: selected.map(([name]) => publicName(name))\n\t\t, ...generic ? { specializations: genericSpecializations.map(item => structuredClone(item)) } : {}\n\t\t, ...Object.keys(contracts).length ? { contracts } : {} };\n",
+          "previous": "\t\t.map(([name, , , parameters, result]) => [qualified(name), { parameters: parameters.map(site), result: site(result) }]));\n\treturn { ...base, exports: selected.map(([name]) => qualified(name)), ...Object.keys(contracts).length ? { contracts } : {} };\n",
+          "start": 10651
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-installed-fixture.mjs",
+      "previousSha256": "2521c4af98f9e90becbbe298cff9738f4408dcdf433ddd221d42367d76886c69"
+    }
+  ]
+}
