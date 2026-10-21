@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadJvmArchiveSource, zeroPayloadJvmArchiveChangedPaths, zeroPayloadJvmArchiveIntegrationPaths } from "./zero-payload-jvm-archive-source-history.mjs";
 import { beforeZeroPayloadJvmSource, zeroPayloadJvmChangedPaths, zeroPayloadJvmIntegrationPaths } from "./zero-payload-jvm-source-history.mjs";
 import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from "./zero-payload-dotnet-control-repair-source-history.mjs";
 import { beforeZeroPayloadDotnetArchiveSource, zeroPayloadDotnetArchiveChangedPaths, zeroPayloadDotnetArchiveIntegrationPaths } from "./zero-payload-dotnet-archive-source-history.mjs";
@@ -1413,7 +1414,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadJvmChangedPaths
+	...zeroPayloadJvmArchiveChangedPaths
+	, ...zeroPayloadJvmArchiveIntegrationPaths
+	, ...zeroPayloadJvmChangedPaths
 	, ...zeroPayloadJvmIntegrationPaths
 	, ...zeroPayloadDotnetControlRepairChangedPaths
 	, ...zeroPayloadDotnetControlRepairIntegrationPaths
@@ -1919,7 +1922,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);
+	const zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(
+		path, text, expected
+	);
+	if(sha256(zeroPayloadJvmArchive) === expected)
+		return zeroPayloadJvmArchive;
+	const zeroPayloadJvm = beforeZeroPayloadJvmSource(
+		path, zeroPayloadJvmArchive, expected
+	);
 	if(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;
 	const zeroPayloadDotnetControlRepair
 		= beforeZeroPayloadDotnetControlRepairSource(

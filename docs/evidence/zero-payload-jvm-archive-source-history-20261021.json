@@ -1,0 +1,98 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7dcc84b666ffd04c15eb71454dc98e7f1b8b566e08f94e5dcb8a4a497430006e",
+      "path": "scripts/archive-zero-payload-checked-record-jvm-evidence.mjs"
+    },
+    {
+      "currentSha256": "ff260ff6a937a69ffe387b2f63cea66ea1a1562400d13dbc5df3f609630545bd",
+      "path": "scripts/update-zero-payload-jvm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "15fc859e3e21eb70ac3a76cabcfca4b25992514be640e5e8da368b750bc3df16",
+      "path": "tests/helpers/zero-payload-jvm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "a3aed805d8082373e34102f88df0dde85e4a851887c9dadef8d702d4afcedd95",
+      "path": "tests/helpers/zero-payload-jvm-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "d7d03ccfa0fbb3e8de3d913e9286c1b26bcb1e39",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f33f434aa82b54b6b7114e0392874b756c7eb1769ccd844171c54a9970360d52",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadJvmArchiveSource, zeroPayloadJvmArchiveChangedPaths, zeroPayloadJvmArchiveIntegrationPaths } from \"./zero-payload-jvm-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadJvmArchiveChangedPaths\n\t, ...zeroPayloadJvmArchiveIntegrationPaths\n\t, ...zeroPayloadJvmChangedPaths\n",
+          "previous": "\t...zeroPayloadJvmChangedPaths\n",
+          "start": 113645
+        },
+        {
+          "current": "\tconst zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadJvmArchive) === expected)\n\t\treturn zeroPayloadJvmArchive;\n\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(\n\t\tpath, zeroPayloadJvmArchive, expected\n\t);\n",
+          "previous": "\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);\n",
+          "start": 136237
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6ed68fc245ae6478e6e535c4a89b329c6eabfb1a93f8da33387db099e61fac7d"
+    }
+  ],
+  "milestone": "zero-payload-jvm-archive-source-v1",
+  "predecessorCommit": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload Maven evidence binds author inputs and Java/Kotlin callers to Git and can be frozen only from authenticated successful GitHub records.",
+  "updates": [
+    {
+      "currentSha256": "f537c69a8346ded5376e07b281dd1636146ef0b92f37c81141653516d0e0a663",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadJvmEvidenceSources\n",
+          "previous": "",
+          "start": 364
+        },
+        {
+          "current": "\t\t, `${role}:${path}`);\n});\n\ntest(\"zero-payload JVM evidence closes every hosted source role\", {\n\ttimeout: 120_000\n}, () => {\n\tconst head = revision();\n\tconst sources = zeroPayloadJvmEvidenceSources({\n\t\tproducer: head, consumer: head, checker: head, archiver: head\n\t});\n\tassert.ok(sources.length > 80);\n\tassert.equal(new Set(sources.map(item =>\n\t\t`${item.role}:${item.path}`)).size, sources.length);\n\tassert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const item of sources)\n\t{\n\t\tassert.equal(item.revision, head);\n\t\tassert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0\n\t\t\t, `${item.role}:${item.path}`);\n\t}\n\tfor(const [role, path] of [\n\t\t[\"producer\", \"tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean\"]\n\t\t, [\"consumer\", \"tests/fixtures/zero-payload-checked-record-jvm/java.java\"]\n\t\t, [\"checker\", \".github/workflows/zero-payload-checked-record-jvm.yml\"]\n\t\t, [\"checker\", \"scripts/check-zero-payload-checked-record-jvm-ci.mjs\"]\n\t\t, [\"archiver\", \"scripts/archive-zero-payload-checked-record-jvm-evidence.mjs\"]\n\t\t, [\"archiver\", \"tests/helpers/zero-payload-checked-record-hosted-archive.mjs\"]\n\t]) assert.ok(sources.some(item => item.role === role && item.path === path)\n",
+          "previous": "",
+          "start": 4701
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "eb70e8f56876c3da226fdd0b9e7cab56549df2492609755bc5e5b40c3e62dfc8"
+    },
+    {
+      "currentSha256": "f725eb49afe934e7ad48fc8b1d3484b7035936defd0592342c224320ec9fd554",
+      "edits": [
+        {
+          "current": "const jvmCallers = [\"java.java\", \"kotlin.kt\"].map(\n\tpath => `tests/fixtures/zero-payload-checked-record-jvm/${path}`\n);\n",
+          "previous": "",
+          "start": 2500
+        },
+        {
+          "current": "\n/**\n * Select every source whose bytes explain the hosted Java/Kotlin artifact.\n *\n * @param revisions - Producer, consumer, checker and archiver revisions.\n */\nexport const zeroPayloadJvmEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-jvm-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...fixture, ...jvmCallers, \"src/analyze/NativeExports.lean\"\n\t\t\t\t, \"lean-toolchain\", \"package-lock.json\", \"package.json\"\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-jvm.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-zero-payload-checked-record-jvm-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: revisions.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.consumer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-jvm-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...jvmCallers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.checker, [\n\t\t\t\t\t\"scripts/check-zero-payload-checked-record-jvm-ci.mjs\"\n\t\t\t\t\t, \"tests/zero-payload-checked-record-jvm.test.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-jvm.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-zero-payload-checked-record-jvm-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-zero-payload-checked-record-jvm-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 8331
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "93289cf8a365ce17621d6c0d32a395f4c897b7bccff70f0160b2e8bad60ce5bb"
+    },
+    {
+      "currentSha256": "d6796a44003306130d2944a5c6d91241f86df664492c6fddc429e9e4d931027e",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-jvm-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 660
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-jvm.test.mjs",
+      "previousSha256": "1048e188705a0a85ad510cf6bbb671ca02ddc1c0b6b6417236594a85046df200"
+    }
+  ]
+}
