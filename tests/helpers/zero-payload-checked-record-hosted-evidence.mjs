@@ -78,6 +78,8 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	}
 	assert.deepEqual(index.runs.map(run => run.route), contract.routes);
 	const accepted = [];
+	const retainedRoutePaths = contract.retainedRoutePaths
+		?? ["run.tap", "verification.json"];
 	for(const run of index.runs)
 	{
 		const prefix = `${run.route}/records/`, records = new Map();
@@ -88,20 +90,22 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 			assert.ok(records.has(path), path);
 			return records.get(path);
 		};
-		const tap = get(`${run.route}/run.tap`)
-			, verification = get(`${run.route}/verification.json`);
+		const retained = Object.fromEntries(retainedRoutePaths.map(path => [
+			path, get(`${run.route}/${path}`)
+		]));
+		const tap = retained["run.tap"]
+			, verification = retained["verification.json"];
 		accepted.push(await contract.verifyRun({
-			index, run, records, read: originalRead, tap, verification
+			index, run, records, read: originalRead, retained, tap, verification
 		}));
-		expectedPaths.push(`${run.route}/run.tap`
-			, `${run.route}/verification.json`
-			, ...[...records.keys()].map(path => prefix + path));
-		expectedMembers.push(
-			`${contract.artifactRoot}/${run.route}/run.tap`
-			, `${contract.artifactRoot}/${run.route}/verification.json`
-			, ...[...records.keys()].map(path =>
-				`${contract.artifactRoot}/${run.route}/records/${run.route}/${path}`)
-		);
+		expectedPaths.push(...retainedRoutePaths.map(path =>
+			`${run.route}/${path}`)
+		, ...[...records.keys()].map(path => prefix + path));
+		expectedMembers.push(...retainedRoutePaths.map(path =>
+			`${contract.artifactRoot}/${run.route}/${path}`)
+		, ...[...records.keys()].map(path => contract.artifactRecordPath
+			? contract.artifactRecordPath(run.route, path)
+			: `${contract.artifactRoot}/${run.route}/records/${run.route}/${path}`));
 	}
 	assert.deepEqual(Object.keys(index.hostedRun).sort(), [
 		"apiRecords", "artifact", "createdAt", "event", "job", "repository"
@@ -119,8 +123,11 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	assert.ok(index.hostedRun.artifact.members.every(safePath));
 	assert.equal(index.hostedRun.artifact.members.length
 		, new Set(index.hostedRun.artifact.members).size);
+	const retainedLogs = contract.retainedLogs ?? [{
+		path: "hosted/logs/toolchain.log", artifact: contract.artifactToolchainLog
+	}];
 	assert.deepEqual(index.hostedRun.artifact.members.toSorted(), [
-		...expectedMembers, contract.artifactToolchainLog
+		...expectedMembers, ...retainedLogs.map(log => log.artifact)
 	].sort());
 	const archiveHash = createHash("sha256");
 	let archiveBytes = 0;
@@ -177,8 +184,12 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	assert.equal(api.artifact.expires_at, index.hostedRun.artifact.expiresAt);
 	assert.equal(api.artifact.workflow_run.id, contract.runId);
 	assert.equal(api.artifact.workflow_run.head_sha, contract.revisions.producer);
-	expectedPaths.push("hosted/logs/toolchain.log");
-	assert.ok(get("hosted/logs/toolchain.log").length > 0);
+	for(const log of retainedLogs)
+	{
+		assert.deepEqual(Object.keys(log).sort(), ["artifact", "path"]);
+		assert.ok(get(log.path).length > 0, log.path);
+		expectedPaths.push(log.path);
+	}
 	assert.deepEqual([...files.keys()].sort(), expectedPaths.sort());
 	return { index, accepted, files: index.files, hostedRun: index.hostedRun };
 };
