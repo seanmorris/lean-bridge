@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordWitSource, dependentCheckedRecordWitChangedPaths, dependentCheckedRecordWitIntegrationPaths } from "./dependent-checked-record-wit-source-history.mjs";
 import { beforeDependentCheckedRecordPhpSource, dependentCheckedRecordPhpChangedPaths, dependentCheckedRecordPhpIntegrationPaths } from "./dependent-checked-record-php-source-history.mjs";
 import { beforeDependentCheckedRecordRustArchiveSource, dependentCheckedRecordRustArchiveIntegrationPaths } from "./dependent-checked-record-rust-archive-source-history.mjs";
 import { beforeDependentCheckedRecordArchiveSelectionRepairSource, dependentCheckedRecordArchiveSelectionRepairChangedPaths, dependentCheckedRecordArchiveSelectionRepairIntegrationPaths } from "./dependent-checked-record-archive-selection-repair-source-history.mjs";
@@ -1472,7 +1473,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPhpChangedPaths
+	...dependentCheckedRecordWitChangedPaths
+	, ...dependentCheckedRecordWitIntegrationPaths
+	, ...dependentCheckedRecordPhpChangedPaths
 	, ...dependentCheckedRecordPhpIntegrationPaths
 	, ...dependentCheckedRecordRustArchiveIntegrationPaths
 	, ...dependentCheckedRecordArchiveSelectionRepairChangedPaths
@@ -2093,8 +2096,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordWit
+		= beforeDependentCheckedRecordWitSource(path, text, expected);
+	if(sha256(dependentCheckedRecordWit) === expected)
+		return dependentCheckedRecordWit;
 	const dependentCheckedRecordPhp
-		= beforeDependentCheckedRecordPhpSource(path, text, expected);
+		= beforeDependentCheckedRecordPhpSource(
+			path, dependentCheckedRecordWit, expected
+		);
 	if(sha256(dependentCheckedRecordPhp) === expected)
 		return dependentCheckedRecordPhp;
 	const dependentCheckedRecordRustArchive

@@ -1,0 +1,169 @@
+{
+  "additions": [
+    {
+      "currentSha256": "cfd70e35174d20c12a4153f51bf14f6887da5c356f8f6afa2df52563954c73e9",
+      "path": ".github/workflows/dependent-checked-record-wit.yml"
+    },
+    {
+      "currentSha256": "9e8703531f84684d6aa93dffd5b2d9b7908bf2a0bdb33685d73ced1db2bd101e",
+      "path": "scripts/check-dependent-checked-record-wit-ci.mjs"
+    },
+    {
+      "currentSha256": "2d74f17c700197012c21ba3705704eb6ca1f35166fd534d48b56113b703f1a82",
+      "path": "scripts/run-dependent-checked-record-wit-ci.sh"
+    },
+    {
+      "currentSha256": "ac4a9568704d79d1cd7fac8f8fcbfac554030911e61f0826d11c6a8ee5ba04fd",
+      "path": "tests/fixtures/dependent-checked-record-consumers/wit-values.h"
+    },
+    {
+      "currentSha256": "369712c5ba4ce89aaf0816740269652bdd05981bea8d27a6f12dcec091f2f94b",
+      "path": "tests/fixtures/dependent-checked-record-consumers/wit-wasi.c"
+    },
+    {
+      "currentSha256": "08281147383bc501e3c403c92543a1b06f8673058b53147bb73106537c55e0e8",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-handoff-tests.mjs"
+    },
+    {
+      "currentSha256": "894a8bd20ec5403aaca8a4b007bd20054fcd6e336da730221658aff5b1ce46b4",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "92ca448367dc1d0837892e024fe3fd43e7030bca15620ee2b3269f36ae6e36e2",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-report.mjs"
+    },
+    {
+      "currentSha256": "43141cb57acbf28bbd1db7f08f4357abae5b534cfbba985f4ff3f3784afb088c",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-shell-tests.mjs"
+    },
+    {
+      "currentSha256": "4c805f6d040bf9c46da73aba3c976ffc91bf4fe2e5105f3d7efe1f7022343a6c",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow-tests.mjs"
+    },
+    {
+      "currentSha256": "387976559ee170b2da79e827d3e65044d5a4f71200a65125d581d6ca3e4d418d",
+      "path": "tests/helpers/dependent-checked-record-wit-ci-workflow.mjs"
+    },
+    {
+      "currentSha256": "b683b8fc1db1b4e19c9190bd2eb36d2a8bbf12e033d9e360242df905c85c29c1",
+      "path": "tests/helpers/dependent-checked-record-wit-environment-records.mjs"
+    },
+    {
+      "currentSha256": "856871ac63199d8153d64f90b9f699e8ad30c1aa790ae051517e4946fa288528",
+      "path": "tests/helpers/dependent-checked-record-wit-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "6e0b44e1d48d57256975a350c19eda13d1985b26e363517bb01a136bcfa761b0",
+      "path": "tests/helpers/dependent-checked-record-wit-fixture.mjs"
+    },
+    {
+      "currentSha256": "44dc36f6ec9fb8ee68ef976185a0d602162f764d5519dea80d1dd969f6e46943",
+      "path": "tests/helpers/dependent-checked-record-wit-handoff.mjs"
+    },
+    {
+      "currentSha256": "57cc57576bfac5039adc03f621d4214244f0d849b5ef091bd13e75bf3e0a2bf3",
+      "path": "tests/helpers/dependent-checked-record-wit-install.mjs"
+    },
+    {
+      "currentSha256": "5a7caf3dacd031fd0f7e7cc1ef7a1a93a9560315c1cdab21addfd2e41cca5929",
+      "path": "tests/helpers/dependent-checked-record-wit-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "da3a52ee2710a56d05d63cfae157078bcc48e75506c3617697e4935d868b80a4",
+      "path": "tests/helpers/dependent-checked-record-wit-model-records.mjs"
+    },
+    {
+      "currentSha256": "c7d46691d03e3680a6bfb977c6ddc15de21efded72ac9dd7d164dc8dfa776393",
+      "path": "tests/helpers/dependent-checked-record-wit-model.c"
+    },
+    {
+      "currentSha256": "749a05752c18272c420c5b74ccfbb442b29dd6e29b3db4f74c35001cc03cba43",
+      "path": "tests/helpers/dependent-checked-record-wit-package-records.mjs"
+    },
+    {
+      "currentSha256": "72e7acb82e6af2f2afdda04ae8dcf8029fdaed0802516036aeec641c746ee799",
+      "path": "tests/helpers/dependent-checked-record-wit-package.mjs"
+    },
+    {
+      "currentSha256": "6ec36d6773dce250b60ec3cefc582ac851a7adfa5e7b8bf52d65dfa475553cce",
+      "path": "tests/helpers/dependent-checked-record-wit-report.mjs"
+    },
+    {
+      "currentSha256": "de992b16081fd11f0416b2ffa34d669ffe15e22a5a9a39997146265bbc6deb89",
+      "path": "tests/helpers/dependent-checked-record-wit-resources.mjs"
+    },
+    {
+      "currentSha256": "0420c71e9fda07da6daab21812a29792d2d68abcb84e06ea53a8b32729ec913f",
+      "path": "scripts/update-dependent-checked-record-wit-source-history.mjs"
+    },
+    {
+      "currentSha256": "227d53cf42c7b90b022c9010571efb307c5594185765ff9df45fa4f99516d7af",
+      "path": "tests/helpers/dependent-checked-record-wit-source-history.mjs"
+    },
+    {
+      "currentSha256": "6ab0d8ecddfae9fc53ce5ab24cebc108eafcfaf1a871e152383bd69af72da525",
+      "path": "tests/helpers/dependent-checked-record-wit-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "14d8b6311962db9d7273f609afc30e5561c75f02",
+  "integrationUpdates": [
+    {
+      "currentSha256": "65e7b8270a601cfa64bf16e651dfbdac9dd619f607576f46bb8696989cd21267",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordWitSource, dependentCheckedRecordWitChangedPaths, dependentCheckedRecordWitIntegrationPaths } from \"./dependent-checked-record-wit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordWitChangedPaths\n\t, ...dependentCheckedRecordWitIntegrationPaths\n\t, ...dependentCheckedRecordPhpChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPhpChangedPaths\n",
+          "start": 125173
+        },
+        {
+          "current": "\tconst dependentCheckedRecordWit\n\t\t= beforeDependentCheckedRecordWitSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordWit) === expected)\n\t\treturn dependentCheckedRecordWit;\n",
+          "previous": "",
+          "start": 153305
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordPhpSource(\n\t\t\tpath, dependentCheckedRecordWit, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordPhpSource(path, text, expected);\n",
+          "start": 153524
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "64b35f937dbaef063dc4c6734c9512b3af5091035334755b531b35a73af7c53c"
+    },
+    {
+      "currentSha256": "4bc924ff706bb3e3d4efae17fb52469b0e21c8e35f9eb5d323429c5637dd0bac",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "bf620abea207442957ddf63dae946694b6261d7b5b185b0b5ebc5c4a5713fd4e"
+    }
+  ],
+  "milestone": "dependent-checked-record-wit-source-v1",
+  "predecessorCommit": "3b6501b0da89768a10429d8f31a89765aef112ce",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline as WIT/WASI components consumed by an independent Wasmtime caller, in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "6348ffa4b02e561e514c9fa479aa4adca006931378972a86e808c938f4f968e1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-fixture-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-ci-report-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-ci-shell-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-ci-workflow-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-ci-handoff-tests.mjs\";\nimport \"./helpers/dependent-checked-record-wit-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 1044
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "c28947ceeffb24b4c3db14b18789d3c0b9524825bb5f941b8849631e82198379"
+    }
+  ]
+}
