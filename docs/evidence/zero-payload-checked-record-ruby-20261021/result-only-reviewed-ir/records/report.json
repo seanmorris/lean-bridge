@@ -1,0 +1,219 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/zeropayloadcheckedrecords-1.0.0-x86_64-linux.gem": "5ada759b8012c034dafe7da37e4d571cda25da8e30f45ce97262c23e9d65465f"
+      },
+      "bindingIrSha256": "6fbc95a51288bdeb75f32628da286edb899bf3c48f90ec47a9d438d4fea364b8",
+      "modelSha256": "250b69d018c484c4bb6a9583a0be44488a46855392e27d368198d05a1719f480",
+      "receiptSha256": "07799740c28085f5f4492f825d51594e620917c9882db763867e2fe287d8de1c"
+    },
+    {
+      "archives": {
+        "archives/zeropayloadcheckedrecords-1.0.0-x86_64-linux.gem": "5ada759b8012c034dafe7da37e4d571cda25da8e30f45ce97262c23e9d65465f"
+      },
+      "bindingIrSha256": "6fbc95a51288bdeb75f32628da286edb899bf3c48f90ec47a9d438d4fea364b8",
+      "modelSha256": "250b69d018c484c4bb6a9583a0be44488a46855392e27d368198d05a1719f480",
+      "receiptSha256": "07799740c28085f5f4492f825d51594e620917c9882db763867e2fe287d8de1c"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "declaredGlibcFloor": "2.38",
+  "expectedBindingIrSha256": "103a7768ced18c23783194a7e1159413c634953fd548757c4ec2b453a0032373",
+  "gemReceiptSha256": "d0c8ec02616405a9f495b9c7db8eb5dfe76023c362855433bf1b101914b4ccff",
+  "independentBuilds": 2,
+  "interpreter": {
+    "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+    "identity": {
+      "bytes": 222952,
+      "sha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"engine\":\"ruby\",\"version\":\"3.3.12\",\"platform\":\"x86_64-linux\"}"
+    }
+  },
+  "loadCeiling": 8,
+  "mode": "result-only",
+  "observations": [
+    {
+      "args": [
+        "consumer.rb",
+        "--result-only",
+        "--reviewed"
+      ],
+      "closure": {
+        "environmentSha256": "6a71b204c665a22f5dc3ddee17838400c543444dffa1f34d32a92e9ad75a4f0f",
+        "gemspecSha256": "c3312eb210bae49a4179cb6af2d125a1815f6b9af0fdef06cd1ddb7a4177cd46",
+        "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+        "packageFileSetSha256": "978a92d4a135f4017eac32e524b148522433c2a74cc4e319b13e796c1b9b6107",
+        "receiptSha256": "d0c8ec02616405a9f495b9c7db8eb5dfe76023c362855433bf1b101914b4ccff"
+      },
+      "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+      "counts": {
+        "calls": 9,
+        "checks": 38,
+        "recoveries": 0,
+        "rejections": 0,
+        "snapshots": 9
+      },
+      "cwd": "/tmp/lean-bridge-zero-payload-ruby-bBHd0R/consumer",
+      "gems": "/tmp/lean-bridge-zero-payload-ruby-bBHd0R/consumer/gems",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":9,\"checks\":38,\"recoveries\":0,\"rejections\":0,\"snapshots\":9}\n"
+      }
+    },
+    {
+      "args": [
+        "consumer.rb",
+        "--result-only",
+        "--reviewed"
+      ],
+      "closure": {
+        "environmentSha256": "6a71b204c665a22f5dc3ddee17838400c543444dffa1f34d32a92e9ad75a4f0f",
+        "gemspecSha256": "c3312eb210bae49a4179cb6af2d125a1815f6b9af0fdef06cd1ddb7a4177cd46",
+        "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+        "packageFileSetSha256": "978a92d4a135f4017eac32e524b148522433c2a74cc4e319b13e796c1b9b6107",
+        "receiptSha256": "d0c8ec02616405a9f495b9c7db8eb5dfe76023c362855433bf1b101914b4ccff"
+      },
+      "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+      "counts": {
+        "calls": 9,
+        "checks": 38,
+        "recoveries": 0,
+        "rejections": 0,
+        "snapshots": 9
+      },
+      "cwd": "/tmp/lean-bridge-zero-payload-ruby-bBHd0R/consumer-relocated",
+      "gems": "/tmp/lean-bridge-zero-payload-ruby-bBHd0R/consumer-relocated/gems",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":9,\"checks\":38,\"recoveries\":0,\"rejections\":0,\"snapshots\":9}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "736ce9d03fc324ed6004aa77de534cd9885bfa83",
+  "receipt": {
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 50089984,
+            "path": "archives/zeropayloadcheckedrecords-1.0.0-x86_64-linux.gem",
+            "sha256": "5ada759b8012c034dafe7da37e4d571cda25da8e30f45ce97262c23e9d65465f"
+          }
+        ],
+        "ecosystem": "rubygems",
+        "name": "zeropayloadcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "rubygems",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "6fbc95a51288bdeb75f32628da286edb899bf3c48f90ec47a9d438d4fea364b8",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "65a7675959a353a63c2adbd67bb190dd8b69474f4a5d3bb1d2df61958e5c152c"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15287865344,
+          "freeBytes": 64461111296,
+          "load": 1.43
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15287820288,
+          "freeBytes": 64461066240,
+          "load": 1.43
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15481602048,
+          "freeBytes": 64410869760,
+          "load": 1.22
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15466885120,
+          "freeBytes": 64360656896,
+          "load": 1.12
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 14910631936,
+          "freeBytes": 64151265280,
+          "load": 1.11
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15037837312,
+          "freeBytes": 64151261184,
+          "load": 1.11
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "result-only-reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

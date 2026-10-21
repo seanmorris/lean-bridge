@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "zeropayloadcheckedrecords@1.0.0",
+  "bindingIrSha256": "6fbc95a51288bdeb75f32628da286edb899bf3c48f90ec47a9d438d4fea364b8",
+  "namespace": "LeanBridge::Zeropayloadcheckedrecords",
+  "files": [
+    "lib/lean_bridge/zeropayloadcheckedrecords.rb",
+    "lib/lean_bridge/zeropayloadcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/zeropayloadcheckedrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/zeropayloadcheckedrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "7cb60ae3ac714122a89bd1aa8378f5707ed1e12bfa61df57be65f1a156fc92a5",
+  "componentReceiptSha256": "21c64e02a3b6a536eb1f4d5ff54a49c49c60cb325c9c711a97ff01bcf9dca0f6",
+  "files": {
+    "README.md": {
+      "bytes": 932,
+      "sha256": "86643e46e812b232947753d4781f9cd654084a1dd8ed518aea533480593a030b"
+    },
+    "binding-manifest.json": {
+      "bytes": 1130,
+      "sha256": "f71d12632d73b5eb0b2e7fef9608192e09a77ca9f6837bc503d4b070f1738960"
+    },
+    "include/zeropayloadcheckedrecords.h": {
+      "bytes": 6533,
+      "sha256": "0d38545d64b81c35bff6d3f839b5f141981fb80f11afbce32f42aa536f0dba20"
+    },
+    "internal/zeropayloadcheckedrecords_runtime.h": {
+      "bytes": 2618,
+      "sha256": "72e647f64a620ffdb9a9037ca73dcf2f9bab05f644f0a2ec7311520340f19b0d"
+    },
+    "lib/libzeropayloadcheckedrecords.so": {
+      "bytes": 41008,
+      "sha256": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+    },
+    "src/native.c": {
+      "bytes": 29859,
+      "sha256": "b443c76950019deaec8a1b66cd20b2b5e43c6436ad8ae65ffccdc4715a12abe7"
+    },
+    "src/zeropayloadcheckedrecords.c": {
+      "bytes": 16322,
+      "sha256": "ea90eb4047bbe0df701b69d2a8c5e58016ba371532727118f89e9bf56432456b"
+    }
+  },
+  "library": "libzeropayloadcheckedrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1
+}

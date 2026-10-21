@@ -1,0 +1,28 @@
+{
+  "args": [
+    "consumer.rb"
+  ],
+  "closure": {
+    "environmentSha256": "144c008fc3ac3559285a75f96cd8961f2da8e68fff1d82eabb1f59eadb677efc",
+    "gemspecSha256": "0c41cb8db975b20c1bef0b4df82ee7e04db4be85672ddd49e8f40e9ea13702ee",
+    "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+    "packageFileSetSha256": "978a92d4a135f4017eac32e524b148522433c2a74cc4e319b13e796c1b9b6107",
+    "receiptSha256": "368bcc9f45cd8ce28a5cd375dd26375cfe4ee115f6fc1bc076a27cea7b7c5455"
+  },
+  "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+  "counts": {
+    "calls": 30,
+    "checks": 80,
+    "recoveries": 8,
+    "rejections": 8,
+    "snapshots": 30
+  },
+  "cwd": "/tmp/lean-bridge-zero-payload-ruby-cgDOR5/consumer",
+  "gems": "/tmp/lean-bridge-zero-payload-ruby-cgDOR5/consumer/gems",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":30,\"checks\":80,\"recoveries\":8,\"rejections\":8,\"snapshots\":30}\n"
+  }
+}
