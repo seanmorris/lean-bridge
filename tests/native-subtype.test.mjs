@@ -58,6 +58,7 @@ import "./helpers/dependent-checked-record-rust-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs";
 import "./helpers/zero-payload-native-control-contract-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-ruby-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-rust-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-rust-archive-source-history-tests.mjs";
 import "./helpers/dependent-generic-subtype-source-history-tests.mjs";

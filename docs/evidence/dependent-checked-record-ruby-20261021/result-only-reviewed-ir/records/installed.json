@@ -1,0 +1,30 @@
+{
+  "args": [
+    "consumer.rb",
+    "--result-only",
+    "--reviewed"
+  ],
+  "closure": {
+    "environmentSha256": "6ff117d52cb5c7b0e35ea76a782a55ed81ff6faa8271f13e221dce9d1044ad83",
+    "gemspecSha256": "468bc3707df2b95eb02bc50f43842aba380f292b45c3bfdbe1e360508b452cee",
+    "interpreterSha256": "5705533003a8ca00e6359e2430ddf7a1737eb439983e1e1a4236d0396ec8771e",
+    "packageFileSetSha256": "4abb6c96133e4bb89d47feb5ae6aa0c92b08618af8514107c5a7f0b615e6e699",
+    "receiptSha256": "083f2b344540307462a3d872162eb2e9b596fa843a55837dadd3790542c9a17f"
+  },
+  "command": "/opt/hostedtoolcache/Ruby/3.3.12/x64/bin/ruby",
+  "counts": {
+    "calls": 513,
+    "checks": 516,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 513
+  },
+  "cwd": "/tmp/lean-bridge-dependent-checked-record-ruby-MmAgoD/consumer",
+  "gems": "/tmp/lean-bridge-dependent-checked-record-ruby-MmAgoD/consumer/gems",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":513,\"checks\":516,\"recoveries\":0,\"rejections\":0,\"snapshots\":513}\n"
+  }
+}

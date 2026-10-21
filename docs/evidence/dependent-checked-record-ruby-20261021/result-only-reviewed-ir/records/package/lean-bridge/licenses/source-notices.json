@@ -1,0 +1,59 @@
+{
+  "kind": "lean-bridge-source-notices",
+  "packages": [
+    {
+      "configurationSource": "{\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"rubygems\": {\n      \"name\": \"dependentrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+      "name": "dependentrecords",
+      "notices": [
+        {
+          "bytes": 1093,
+          "path": "LICENSE",
+          "payload": "source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        }
+      ],
+      "source": {
+        "inputs": [
+          {
+            "bytes": 4043,
+            "path": "api.binding-ir.json",
+            "sha256": "068c522ab32b536c5dda626a72d8e5ce1d1cf1fea1489acfa13be5a93fc6bf40"
+          },
+          {
+            "bytes": 930,
+            "path": "DependentRecords.lean",
+            "sha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+          },
+          {
+            "bytes": 83,
+            "path": "lakefile.toml",
+            "sha256": "e942abaa717fe3b3354bdadec1a5ae3cd174d5980ceba25b19c98e28ae572cd4"
+          },
+          {
+            "bytes": 171,
+            "path": "lean-bridge.exports.json",
+            "sha256": "572214f6b34965272dc11acad5c360aabdeac5d7a6b88f6dcf84dc7127adad2c"
+          },
+          {
+            "bytes": 25,
+            "path": "lean-toolchain",
+            "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+          },
+          {
+            "bytes": 1093,
+            "path": "LICENSE",
+            "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+          },
+          {
+            "bytes": 62,
+            "path": "package.json",
+            "sha256": "c696403db9377ca7c565fead5388f93c8ed4258bf844b8a7ec42f6bb3aad4328"
+          }
+        ],
+        "kind": "root",
+        "sourceTreeSha256": "3618e5e1af2fe48cfeeb8da807e55d276d7fbf00a60abc8195b9285936137229"
+      }
+    }
+  ],
+  "schemaVersion": 2
+}
