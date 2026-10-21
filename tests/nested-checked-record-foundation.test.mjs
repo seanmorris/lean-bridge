@@ -219,7 +219,7 @@ test("rich checked records retain outer and field constructors through nested co
 	assert.match(source, /let a0 ← \(if proof : \(value\.«digit»\) < 10/u);
 	assert.match(source, /let a1 ← _root_\.NestedChecked\.(?:mkWord|normalizeWord) value\.«word»/u);
 	assert.match(source, /_root_\.NestedChecked\.(?:mkPacket|normalizePacket) a0 a1/u);
-	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(value\.«word»\)\.val/u);
+	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(_root_\.Subtype\.val \(value\.«word»\)\)/u);
 	assert.match(source, /def LbErased\.NestedChecked\.Packet\.validFin[\s\S]*value\.«digit»/u);
 	assert.match(source, /def LbErased\.NestedChecked\.Holder\.validFin[\s\S]*Packet\.validFin \(value\.«packet»\)/u);
 	assert.match(source, /def LbErased\.NestedChecked\.Choice\.validFin[\s\S]*Packet\.validFin \(_bridgeFinField0\)/u);
@@ -301,7 +301,7 @@ test("recursive checked records use one finite constructor cycle", () => {
 	assert.match(source, /_root_\.NestedChecked\.mkPacket b0 b1/u);
 });
 
-test("legacy generic checked records stay top-level while rich and nested generic forms remain separate work", () => {
+test("legacy and rich generic checked records stay top-level while nested generic forms remain separate work", () => {
 	const nat = { kind: "primitive", name: "nat" };
 	const packet = { kind: "named", id: "lean:NestedChecked.Packet" };
 	const definition = {
@@ -326,8 +326,9 @@ test("legacy generic checked records stay top-level while rich and nested generi
 			{ name: "digit", refinement: null }, { name: "word", refinement: null }
 		]
 	};
-	assert.throws(() => assertRefinement(rich, packet, 0, true, [definition]), /Refinement does not match its transport type/u);
+	assert.doesNotThrow(() => assertRefinement(rich, packet, 0, true, [definition]));
 	assert.throws(() => assertRefinement(legacy, packet, 1, true, [definition]), /Refinement does not match its transport type/u);
+	assert.throws(() => assertRefinement(rich, packet, 1, true, [definition]), /Refinement does not match its transport type/u);
 });
 
 test("native models retain rich checked-record checks and projections at nested sites", () => {
@@ -369,7 +370,7 @@ test("native models retain rich checked-record checks and projections at nested 
 	const source = generateNativeLeanAdapters(model).leanSource;
 	assert.match(source, /NestedChecked\.mkPacket a0 a1/u);
 	assert.match(source, /NestedChecked\.mkWord value\.«word»/u);
-	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(value\.«word»\)\.val/u);
+	assert.match(source, /Packet\.mk \(value\.«digit»\)\.val \(_root_\.Subtype\.val \(value\.«word»\)\)/u);
 	const calls = generateCopiedNativeCalls(model, compilePrimitiveCSurface(model.bindingIr, { compounds: true }));
 	assert.match(calls, new RegExp(`${model.exports[0].symbol}_refinement_0_0\\(`, "u"));
 	assert.match(calls, new RegExp(`${model.exports[0].symbol}_refinement_0_0_1\\(`, "u"));
