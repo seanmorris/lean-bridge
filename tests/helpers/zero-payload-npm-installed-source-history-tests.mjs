@@ -10,7 +10,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import {
 	beforeZeroPayloadNpmInstalledSource
@@ -24,6 +23,7 @@ import {
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+const historyCommit = "f49d1344f5fc174f3ce53a816fac71f62144ac6a";
 
 test("zero-payload installed npm history restores every source", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadNpmInstalledHistoryPath, "utf8"));
@@ -38,9 +38,7 @@ test("zero-payload installed npm history restores every source", async () => {
 		, zeroPayloadNpmInstalledIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource
-		);
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(reverseZeroPayloadNpmInstalledUpdate(current, update)
 			, sourceAt(zeroPayloadNpmInstalledPredecessor, update.path));
 		assert.equal(beforeZeroPayloadNpmInstalledSource(update.path, current)
@@ -53,24 +51,19 @@ test("zero-payload installed npm history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource
-		);
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(reverseZeroPayloadNpmInstalledUpdate(current, update)
 			, sourceAt(zeroPayloadNpmInstalledImplementation, update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256
-		)), addition.currentSha256, addition.path);
+		assert.equal(sha256(sourceAt(historyCommit, addition.path))
+			, addition.currentSha256, addition.path);
 });
 
 test("zero-payload installed npm history rejects altered transitions", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadNpmInstalledHistoryPath, "utf8"));
 	const update = structuredClone(record.updates[0]);
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource
-	);
+	const current = sourceAt(historyCommit, update.path);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadNpmInstalledUpdate(current, update));
 	update.currentSha256 = sha256(current);

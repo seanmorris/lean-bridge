@@ -42,6 +42,76 @@ export const zeroPayloadBrowserExpected = route => {
 		: { checks: 56, rejections: 8, calls: 25, snapshots: 25, recoveries: 8 };
 };
 
+export const zeroPayloadBrowserPackageSource
+	= `import request from "./request.json";
+export { request };
+export const loadApi = () => import("zeropayloadcheckedrecords");
+`;
+
+/**
+ * Validate one exact real-browser observation.
+ *
+ * @param result - Original observation.
+ * @param profile - Browser execution context.
+ * @param route - Exact author route.
+ */
+export const validateZeroPayloadBrowserObservation = (result, profile, route) => {
+	assert.ok(zeroPayloadBrowserProfiles.includes(profile));
+	assert.ok(zeroPayloadBrowserRoutes.includes(route));
+	assert.equal(typeof result.hostVersion, "string");
+	assert.ok(result.hostVersion.length > 0);
+	assert.deepEqual(result, {
+		schemaVersion: 1, profile, module: zeroPayloadBrowserName
+		, realm: profile === "browser-worker" ? "dedicated-worker" : "window"
+		, results: {
+			module: zeroPayloadBrowserName, route
+			, resultOnly: route.startsWith("result-only-")
+			, ...zeroPayloadBrowserExpected(route)
+		}
+		, hostVersion: result.hostVersion
+	});
+};
+
+/**
+ * Enumerate every lifecycle observation required for one browser context.
+ *
+ * @param profile - Browser execution context.
+ */
+export const zeroPayloadBrowserPhases = profile => {
+	assert.ok(zeroPayloadBrowserProfiles.includes(profile));
+	return profile === "browser-react"
+		? ["first", "remount-1", "remount-2", "failure-recovery", "pending-unmount"]
+		: profile === "browser-worker"
+			? ["first", "rerun", "worker-restart", "failure-recovery"]
+			: ["first", "rerun", "failure-recovery"];
+};
+
+/**
+ * Require every engine, variant and lifecycle observation in exact order.
+ *
+ * @param observations - Original lifecycle observations.
+ * @param profile - Browser execution context.
+ * @param engines - Complete ordered engine selection.
+ * @param route - Exact author route.
+ */
+export const validateZeroPayloadBrowserPhases = (
+	observations, profile, engines, route
+) => {
+	assert.deepEqual(engines, zeroPayloadBrowserEngines);
+	const variants = profile === "browser-react" ? ["production", "strict"] : ["production"];
+	const expected = engines.flatMap(engine => variants.flatMap(variant =>
+		zeroPayloadBrowserPhases(profile).map(phase => ({ engine, variant, phase }))));
+	assert.deepEqual(observations.map(({ engine, variant, phase }) => ({
+		engine, variant, phase
+	})), expected);
+	for(const item of observations)
+	{
+		assert.deepEqual(Object.keys(item).sort()
+			, ["engine", "observation", "phase", "variant"]);
+		validateZeroPayloadBrowserObservation(item.observation, profile, route);
+	}
+};
+
 /**
  * Select a complete or result-only ordinary/reviewed API.
  *

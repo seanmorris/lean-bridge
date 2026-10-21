@@ -23,6 +23,7 @@ import {
 import { runCopied, copiedCleanEnvironment } from "./copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
+import { checkZeroPayloadBrowsers } from "./zero-payload-checked-record-browser.mjs";
 import {
 	zeroPayloadCheckedRecordFixture
 	, zeroPayloadCheckedRecordModule
@@ -38,9 +39,13 @@ import {
 import "./zero-payload-npm-installed-source-history-tests.mjs";
 
 const enabledFlag = "LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_NPM_TEST";
-if(process.env[enabledFlag] !== undefined)
-	assert.ok(["0", "1"].includes(process.env[enabledFlag]), `Invalid ${enabledFlag}`);
+const browserFlag = "LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_BROWSER_TEST";
+for(const flag of [enabledFlag, browserFlag])
+	if(process.env[flag] !== undefined)
+		assert.ok(["0", "1"].includes(process.env[flag]), `Invalid ${flag}`);
 const enabled = process.env[enabledFlag] === "1";
+const browsers = process.env[browserFlag] === "1";
+if(browsers) assert.ok(enabled, "Browser acceptance requires installed npm packages");
 const routeVariable = "LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_ROUTES";
 const routes = process.env[routeVariable]?.split(",") ?? [...zeroPayloadBrowserRoutes];
 assert.ok(routes.length && new Set(routes).size === routes.length
@@ -209,7 +214,10 @@ for(const route of routes) test(
 			+ `console.log(JSON.stringify(checkZeroPayloadRecords(api, ${selection.resultOnly})));\n`;
 		for(const [path, source] of [
 			["index.mjs", script], ["check.mjs", corpus], ["index.mts", typescript]
-		]) await saveLakeFile(consumer, path, source);
+		]) {
+			await saveLakeFile(consumer, path, source);
+			await saveLakeFile(output, `callers/${path}`, source);
+		}
 		const expected = zeroPayloadBrowserExpected(route), observations = [];
 		const runtime = { node: process.version, platform: process.platform, arch: process.arch };
 		const runtimeProbe = "console.log(JSON.stringify({node:process.version"
@@ -268,6 +276,10 @@ for(const route of routes) test(
 			, observations
 			, expectedBindingIrSha256: hashBindingIr(selection.expected), expected
 			, consumerProfiles: ["node-javascript", "node-typescript"]
+			, callers: {
+				"index.mjs": sha256(script), "check.mjs": sha256(corpus)
+				, "index.mts": sha256(typescript)
+			}
 			, independentBuilds: 2, reproducible: true
 			, authorInputsUnchanged: true, sourceCommitClean: true
 			, sourceRemovedBeforeInstallation: true, offlineInstall: true
@@ -277,6 +289,10 @@ for(const route of routes) test(
 				? { checkedRefusals: 0, shapeRefusals: 0, recoveries: 0 }
 				: { checkedRefusals: 1, shapeRefusals: 7, recoveries: 8 }
 		}));
+		if(browsers) await checkZeroPayloadBrowsers({
+			directory: join(root, "browsers"), records: output, route
+			, producerCommit, consumerCommit: producerCommit, runtime
+		});
 		complete = true;
 	}
 );
