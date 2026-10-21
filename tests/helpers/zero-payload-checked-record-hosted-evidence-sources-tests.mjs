@@ -10,6 +10,7 @@ import test from "node:test";
 import {
 	zeroPayloadBrowserEvidenceSources, zeroPayloadHostedOriginal
 	, zeroPayloadDotnetEvidenceSources
+	, zeroPayloadJvmEvidenceSources
 	, zeroPayloadNativeEvidenceSources
 } from "./zero-payload-checked-record-hosted-evidence-sources.mjs";
 import {
@@ -106,6 +107,36 @@ test("zero-payload .NET evidence closes every hosted source role", {
 		, ["checker", ".github/workflows/zero-payload-checked-record-dotnet.yml"]
 		, ["checker", "scripts/check-zero-payload-checked-record-dotnet-ci.mjs"]
 		, ["archiver", "scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload JVM evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadJvmEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-jvm/java.java"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-jvm.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-jvm-ci.mjs"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-jvm-evidence.mjs"]
 		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
 	]) assert.ok(sources.some(item => item.role === role && item.path === path)
 		, `${role}:${path}`);
