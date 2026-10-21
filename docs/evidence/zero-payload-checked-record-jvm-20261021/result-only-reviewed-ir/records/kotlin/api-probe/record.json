@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "daefcf2049b468690452828187f6defc51edf82ad7398b6500a3332fd5bb3d53",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-HugRca/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "outputs": {},
+  "profile": "kotlin",
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:30: error: [UNRESOLVED_REFERENCE] Unresolved reference 'witnessCount'.\nval probeWitnessCount = Api::witnessCount\n                             ^^^^^^^^^^^^\nprobe.kt:3:29: error: [UNRESOLVED_REFERENCE] Unresolved reference 'absentCount'.\nval probeAbsentCount = Api::absentCount\n                            ^^^^^^^^^^^\nprobe.kt:4:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'tokenTag'.\nval probeTokenTag = Api::tokenTag\n                         ^^^^^^^^\nprobe.kt:5:29: error: [UNRESOLVED_REFERENCE] Unresolved reference 'markerCount'.\nval probeMarkerCount = Api::markerCount\n                            ^^^^^^^^^^^\nprobe.kt:6:27: error: [UNRESOLVED_REFERENCE] Unresolved reference 'markCount'.\nval probeMarkCount = Api::markCount\n                          ^^^^^^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nval probeWitnessCount = Api::witnessCount\nval probeAbsentCount = Api::absentCount\nval probeTokenTag = Api::tokenTag\nval probeMarkerCount = Api::markerCount\nval probeMarkCount = Api::markCount\n",
+  "sourceSha256": "f25bbb0ae7fd28ace55435e73f10399552db06c2a5efd77354d5c2f0e9b28ede"
+}

@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "2d7b487f6e4c6d49fe0fda4374635be42a2cfaba8de46dc57883b3938e980f10",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-VVAWoT/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "route": "ordinary-source",
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Witness'.\nfun witnessCountNull() = Api.witnessCount(null)\n                                          ^^^^\nNullProbe.kt:3:41: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Witness'.\nfun absentCountNull() = Api.absentCount(null)\n                                        ^^^^\nNullProbe.kt:4:35: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Token'.\nfun tokenTagNull() = Api.tokenTag(null)\n                                  ^^^^\nNullProbe.kt:5:41: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Marker'.\nfun markerCountNull() = Api.markerCount(null)\n                                        ^^^^\nNullProbe.kt:6:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Mark'.\nfun markCountNull() = Api.markCount(null)\n                                    ^^^^\nNullProbe.kt:7:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun witnessesNull() = Api.witnesses(null)\n                                    ^^^^\nNullProbe.kt:8:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun maybeWitnessNull() = Api.maybeWitness(null)\n                                          ^^^^\nNullProbe.kt:9:41: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun produceMarkNull() = Api.produceMark(null)\n                                        ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nfun witnessCountNull() = Api.witnessCount(null)\nfun absentCountNull() = Api.absentCount(null)\nfun tokenTagNull() = Api.tokenTag(null)\nfun markerCountNull() = Api.markerCount(null)\nfun markCountNull() = Api.markCount(null)\nfun witnessesNull() = Api.witnesses(null)\nfun maybeWitnessNull() = Api.maybeWitness(null)\nfun produceMarkNull() = Api.produceMark(null)\n",
+  "sourceSha256": "0814d47b8e26b068eb43b0805ed2d38873e3b9a127d4bce6f04e03f26e8d7647"
+}

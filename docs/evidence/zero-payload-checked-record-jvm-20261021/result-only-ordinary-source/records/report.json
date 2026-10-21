@@ -1,0 +1,1045 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/zeropayloadcheckedrecords-1.0.0.jar": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "archives/zeropayloadcheckedrecords-1.0.0.pom": "172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e"
+      },
+      "bindingIrSha256": "425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481",
+      "compiledSha256": "aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc",
+      "modelSha256": "179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644",
+      "receiptSha256": "4f0912e0d7d10a9babd42ff331db49a2d216fdc49c4bc6f0eaf116e4b2e4a489"
+    },
+    {
+      "archives": {
+        "archives/zeropayloadcheckedrecords-1.0.0.jar": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "archives/zeropayloadcheckedrecords-1.0.0.pom": "172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e"
+      },
+      "bindingIrSha256": "425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481",
+      "compiledSha256": "aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc",
+      "modelSha256": "179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644",
+      "receiptSha256": "4f0912e0d7d10a9babd42ff331db49a2d216fdc49c4bc6f0eaf116e4b2e4a489"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumerCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+  "consumers": [
+    {
+      "apiProbe": {
+        "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "args": [
+          "--release",
+          "22",
+          "-Werror",
+          "-proc:none",
+          "-XDrawDiagnostics",
+          "-cp",
+          "component.jar",
+          "-d",
+          "classes",
+          "probe.java"
+        ],
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+        "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/probes/java",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/unavailable"
+        },
+        "outputs": {},
+        "profile": "java",
+        "route": "result-only-ordinary-source",
+        "run": {
+          "code": 1,
+          "stderr": "probe.java:3:46: compiler.err.cant.resolve.location.args: kindname.method, witnessCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:4:45: compiler.err.cant.resolve.location.args: kindname.method, absentCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:5:33: compiler.err.cant.resolve.location.args: kindname.method, tokenTag, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:6:45: compiler.err.cant.resolve.location.args: kindname.method, markerCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:7:43: compiler.err.cant.resolve.location.args: kindname.method, markCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\n5 errors\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.zeropayloadcheckedrecords.*;\nfinal class Probe {\n    static Object witnessCount() { return Api.witnessCount(null); }\n    static Object absentCount() { return Api.absentCount(null); }\n    static void tokenTag() { Api.tokenTag(null); }\n    static Object markerCount() { return Api.markerCount(null); }\n    static Object markCount() { return Api.markCount(null); }\n}\n",
+        "sourceSha256": "072d6e9057fc9ef64acfa47a2809023bad8bbf8bfc72437cb3e57d451295ca95"
+      },
+      "context": {
+        "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+        "files": {
+          "classes/Consumer.class": {
+            "bytes": 4305,
+            "sha256": "309ddcc2db94bc6533212ca3a147b3b366fe96553f715fb70011d16d87c7c240"
+          },
+          "component.jar": {
+            "bytes": 51435370,
+            "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+          },
+          "consumer.java": {
+            "bytes": 2745,
+            "sha256": "b048fdd585bc107de30f6777d5d8306cd77a10aee5f8cb63ed7c7a9770e1f736"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+        "profile": "java",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481\",\n  \"compiledProjectionSha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\",\n  \"component\": {\n    \"id\": \"zeropayloadcheckedrecords@1.0.0\",\n    \"name\": \"zeropayloadcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"82dce86aef741c324597f5316fd94f5e4640c579b39c55dec9b74abd4e7c0b75\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 16588,\n      \"sha256\": \"a4cac833c21a54cba097181f538604a883d6dd59d71f206c8129636d414c1a2b\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1389,\n      \"sha256\": \"ef684dc579545d0ff2a25b1848d5dbb862ba92d0f99383865325a0f159fa4d00\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 5876,\n      \"sha256\": \"ad4421d2f991f0d7142dea4a98473927748da4b9139afa29c89a404b13b979a7\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 25188,\n      \"sha256\": \"3c1388e802f72785e8e02ba445342eba818d345ee368ed7e131880f2cd31df37\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 39029,\n      \"sha256\": \"179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 7383,\n      \"sha256\": \"515f80acdcbd901aa88753640a8baa7cfd7a8b15d63803c13d449c0a94fc38a3\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 6958,\n      \"sha256\": \"9e060ee1f3746bdb6824cc2986cbc14d61567ca0c7ccb554d70378cec01d8594\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Api.java\": {\n      \"bytes\": 1036,\n      \"sha256\": \"79cfcb4680f2487d5d68d7e277b4754e2902fc18a945c7691ce284bd479f235e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 658,\n      \"sha256\": \"90e3e62ef51d7706c914e1cf6d749aa39e3c413f3ce4426837cc37f5f9223a6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 15546,\n      \"sha256\": \"084443e1bc0c804a36e4d0e74d374e3416949ff894fc5904985ae225a41381a0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 255,\n      \"sha256\": \"acc7fb64a20455557e271b9b28e96b882739de8b03a6992edd08b09001bf217a\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Mark.java\": {\n      \"bytes\": 113,\n      \"sha256\": \"be3cdec8e9e428c84875af723652019333b45e5a15aba3378ad87039d38998de\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkBlank.java\": {\n      \"bytes\": 379,\n      \"sha256\": \"b826b880b8e51779e3aba27904700ff56dbc0a62fd61331570b61ad70602fca7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkMarked.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"38cd2f2c4ec370c10e666fa4c07ea591f330907b97c812813680bbab9965bf4f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Marker.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"e4444985bcc2e67cc5bd48b5c98246d0d1d439a785c86442472a9dbff53f13a2\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13615,\n      \"sha256\": \"cfadcc3245ed6f9757c76439be957d0dcd85555375fe6871b1fbe6121a7444bc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Option.java\": {\n      \"bytes\": 1058,\n      \"sha256\": \"6224c889e718580367ea768ccb3a5f022a0be05a6ba88788847774053f3dcf29\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Pair.java\": {\n      \"bytes\": 722,\n      \"sha256\": \"fb00c0a334205cb819c4147fe1d6be9280803507a95605314f8190243eeca20f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Result.java\": {\n      \"bytes\": 1623,\n      \"sha256\": \"f4b3f225ea9426da8a40a63f23e68aa06699580831160a092626bd9fff68d85b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Runtime.java\": {\n      \"bytes\": 13950,\n      \"sha256\": \"485dfc3f55cc4d9f75a1cd235b8c0bb67d0dbf9496cba64e879b3e10ad01ce9b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Scope.java\": {\n      \"bytes\": 558,\n      \"sha256\": \"8d24800d93186254472b913d235cad6dfd241c218b0db03e4853b305205fed7f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Token.java\": {\n      \"bytes\": 506,\n      \"sha256\": \"4dfa235781d618f76e3782c7f7c25fa12bf154ba80bfec8e0633e32ff6cb5cf4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Unit.java\": {\n      \"bytes\": 80,\n      \"sha256\": \"e8c797e166bedaf29498a5a5f0c431f6b5ddc157c2760a84f02e1f63e07a421c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Witness.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"73416f86f726cc81f515eb32077a18ba00f8bc2517c97d777d6c6ba4113c0848\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 612,\n      \"sha256\": \"f3064a1786c05e981df42ffcd45792fcb85628f22bb5ddae34f02e81ade5e6b4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 2323,\n      \"sha256\": \"6ee27fd2bb5320e7368451b043ec961664dfc8d63a13b68e9c4616888dd0811c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 164,\n      \"sha256\": \"809a40448b8427c0846933a5f10f235e222c2259becf9f8c559a06918a02e9f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.kt\": {\n      \"bytes\": 89,\n      \"sha256\": \"a44e33718c56ad39706add0b504066276b65b55a03716701307d818568838dc1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.kt\": {\n      \"bytes\": 425,\n      \"sha256\": \"351668cfabc38dec06f24641ce8905866aabfb64462f6a5dce2b3d9be57d6013\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.kt\": {\n      \"bytes\": 789,\n      \"sha256\": \"05d73fb9d76a56b60a0e1e4f6a7af843283b024199330790cac428a39725a578\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.kt\": {\n      \"bytes\": 351,\n      \"sha256\": \"75038abbd52f8d0bcce317a5b935d7b365b5b52a17c8ca3a62a02b3b93e606c0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1400,\n      \"sha256\": \"d597e384269c89bdf71a37aed31e3ce0877a8cdbea140346461caa3fd9a58baf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 781,\n      \"sha256\": \"da3f4c6e64715ca097ea53dab60d7c942d4d78fb9ba0e8181690d231ebf5eea0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1828,\n      \"sha256\": \"344c0653435f49b102c59899ce017398711dd6b9cee813827016d84ba75063c7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.kt\": {\n      \"bytes\": 653,\n      \"sha256\": \"504dca798eeaa92ee5d23a5280af9ceab08f0d180de12a346e27c5eedf180821\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 134,\n      \"sha256\": \"d7c2e0192a5e8e71f4e8195fc99bd6fbdddc80b5953736b1871697cbab0219f5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.kt\": {\n      \"bytes\": 354,\n      \"sha256\": \"9da5fe5e3c4c7fe731bf900fb6d45d8f63bc884011b3eacc1387123e8e566903\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 3658,\n      \"sha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1433,\n      \"sha256\": \"506121b978ccc891753b3a0b055ec9d6cafa2f866b76f83e20f2582044284de7\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 21579,\n      \"sha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_d43d7c5a9f170f3ce127.so\": {\n      \"bytes\": 38960,\n      \"sha256\": \"5a457d3be3c5d97ca78f9df38fa8517cde29f729d11cd058043d02c1ff1f26c6\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libzeropayloadcheckedrecords.so\": {\n      \"bytes\": 26936,\n      \"sha256\": \"18a2c6795f89bfbf3228fda0fd0b49ea4ecd938d608812e8665d9c63aa2bdcd1\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_zeropayloadcheckedrecords.kotlin_module\": {\n      \"bytes\": 106,\n      \"sha256\": \"1a867fb189d8a120105851a5ba3146c32674541df1ae476cbea92d804ab837e6\"\n    },\n    \"META-INF/maven/org.leanbridge/zeropayloadcheckedrecords/pom.xml\": {\n      \"bytes\": 635,\n      \"sha256\": \"172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e\"\n    },\n    \"README.md\": {\n      \"bytes\": 5062,\n      \"sha256\": \"b5aee597b26536b500e648915e99b153763b2334a58460609a2a925680dcc687\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Api.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"2e954de31e2062a59fc0d1508b23418afd7c47faefaa1e1452244d57e14eea58\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"bb0aae6d5106e15b4f6e2c5dc46daff7258b4560f93b6243c236ce218cc9c131\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1523,\n      \"sha256\": \"0ff8f5196a986249ac3a761ec7c84f42fb599938a84698201a95386b3fb59308\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 15571,\n      \"sha256\": \"5e8ec200864544483059453dd0768fc7d83f2bf2fe60ccbe36c8e94c92f60633\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 290,\n      \"sha256\": \"37c0988f357d19b5b80e103beded6a0db8eb985687487fe47459cb1ce7bef7fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Mark.class\": {\n      \"bytes\": 244,\n      \"sha256\": \"aa9a170ac9dd5fda4080740ef39fce1fc26d84eb16049b2de2f1bcd17133c81d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkBlank.class\": {\n      \"bytes\": 1052,\n      \"sha256\": \"d08e62d659143ded3a3a05159712a92c3849f97a8d017ec03a5859afa8454eee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkMarked.class\": {\n      \"bytes\": 1503,\n      \"sha256\": \"090b85b1c164f4238f7a816d60d27c0e97937a1c383e244edf88e7b8675ca934\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Marker.class\": {\n      \"bytes\": 993,\n      \"sha256\": \"f0e0f033fefb0cbe3b8df4abd95ad6738220b4874fe33e1c832bfd20d61cc06d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13432,\n      \"sha256\": \"8b5f5bea377a5e84544366d29ec817115158e3a397c6d8f5d7a354a3370db64e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 442,\n      \"sha256\": \"1b09abdbe1db729b00a470d80ed35def108a13f356ec1af677d3c7b10c5659c3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$None.class\": {\n      \"bytes\": 1442,\n      \"sha256\": \"ecb15ab0f24000725164fe32b6811a2eb07f73a89a98a0d165a9d04d8bef512f\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1658,\n      \"sha256\": \"44abfebd273c513c0e47352c15b5e604232a748cc841b443595c136a4bda39db\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option.class\": {\n      \"bytes\": 925,\n      \"sha256\": \"5d5bbd35c2d9a1246b5070c95dbfa451a5e18dfe1400aae00c8427c0897d1447\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Pair.class\": {\n      \"bytes\": 1657,\n      \"sha256\": \"5f97827e77dbbb2bc4263605901318f321e52edf5f62b759c23e244abbd02d31\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1837,\n      \"sha256\": \"030dbfde0727ab79d9a660c9a6397942a8aa6a6cd77034d51679318e707a63dd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1825,\n      \"sha256\": \"27be94fe6a3c23f9c35eeeadc0dde0a96abcd9b0aa3aa8bd03bd85a93e7adeee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result.class\": {\n      \"bytes\": 951,\n      \"sha256\": \"be2b6f02bc55a7cd919a894684c4c34164bc12868efb554f70bed00d5c705c25\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Runtime.class\": {\n      \"bytes\": 15272,\n      \"sha256\": \"a4a8b32745a4fdd294f44466ddc15bf01fdc7a8c2bc3219fdf5072b838ada9cb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Scope.class\": {\n      \"bytes\": 678,\n      \"sha256\": \"ea0b7cee2ea194ab47b33b4ed26393cb1c430881375bb20a6612e3b32ed8e6a5\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Token.class\": {\n      \"bytes\": 1427,\n      \"sha256\": \"b15af86d2bc854113228b8c8a7e56183346af9d6d3f027ffef0fcf642eb353bb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Unit.class\": {\n      \"bytes\": 930,\n      \"sha256\": \"83be7e27fa31c56148fb2354ae28fb586b595ea2ec68e8b1b5faab545fb79f67\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Witness.class\": {\n      \"bytes\": 995,\n      \"sha256\": \"fde70fe751ed1d106d60a19cf1c3e32f8d6c5dcfab516fc40b5807997f996fbd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 4342,\n      \"sha256\": \"6c76c695c3f24dd98cc4859141fd2d6b3c49a6ccdfbfc6708739774d982c3e75\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 2241,\n      \"sha256\": \"e24ef12fcc91f0bccb006f99d0b7d01d7ba8bbf0a24e79faca730e35e38da64d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 487,\n      \"sha256\": \"9363aaea9984e2de6ac6d7232dc5263d327192d82a0bb524f4ae6c1045cbe9e7\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.class\": {\n      \"bytes\": 741,\n      \"sha256\": \"e660ed0099c2f4e61c194207d853bfe89397f7e244f2f5bc1a34cbc168152eca\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.class\": {\n      \"bytes\": 1208,\n      \"sha256\": \"edb19ce04f284202dff8695f44c1c39a35c3c222cc369ca41bbaf53be894ee52\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.class\": {\n      \"bytes\": 2029,\n      \"sha256\": \"b374d8a2d8e19d89b8bf457b78964ea8bb3792bedb65dad67292ec08daebc05d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.class\": {\n      \"bytes\": 1073,\n      \"sha256\": \"b0ed1cd878d0c085086094f93eb50206ab977ef65f671294c3057c4327b3c1aa\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 2007,\n      \"sha256\": \"aa3baae7f44e2939080bece1f1b3dc9e4eb7eea02c2c99bf315f20debbdaead6\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1796,\n      \"sha256\": \"6ddf98ebf7825e1047ade5484ac8f440418e7c581c930c539e778934eceb8d60\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2207,\n      \"sha256\": \"350a4e94fadcb62607e6430aec36e7de9fcfd5aedfb8780c73b08be11b567f1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 2048,\n      \"sha256\": \"a0befb716664615916a90ddae64e0e4dff95fb2a89274436bbf22fbfd1b65bc3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2193,\n      \"sha256\": \"33efd54532e13ec0d2168026800768bb1c6fe66fbb9d2b98528f742ec0e55053\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2083,\n      \"sha256\": \"0f88cf199beb7c986b32a7f12f190d207c7a45ce32b2fafc0404d3969812c4cf\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2475,\n      \"sha256\": \"0d8f9473a358a25aa6d1031939a4db5cafb811db5deb696d8aaad48871e926fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2463,\n      \"sha256\": \"0b2c0064113781e9ed2224f247798943cbacea8fcd19c25fa746dc65eb60bb27\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2157,\n      \"sha256\": \"63ee1d39d75a39a57344891df037da67f873b0c37053c8aa27dfbb7c0d41b671\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.class\": {\n      \"bytes\": 1854,\n      \"sha256\": \"68d62c2fd3b9bbd42d0edae0da60c4d75647c7f264fc147df33b5f247b22bf70\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 427,\n      \"sha256\": \"2dc92b76e8379741b5189c7a0fdd2e15e2e3de15a866f9a9f3b92a76d4b77b1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.class\": {\n      \"bytes\": 1076,\n      \"sha256\": \"9346b2ef9d99439a7ba22bb4cb5a77c8a925d0e84c2c17a9bf6ea1243a3f5a1a\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:zeropayloadcheckedrecords\",\n  \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"ed558b1b548f0e48109ba7fec816f7f31256c4bc9dd3848bf5903c234b3cc572\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\",\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\",\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"ZeroPayloadCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:zeropayloadcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 115336,\n          \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n          \"sha256\": \"51f2c5096ffe219815bae77791b20f51de803308f0bffe69bae4802f3652fc2a\"\n        },\n        \"module\": \"ZeroPayloadCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2323,\n          \"path\": \"ZeroPayloadCheckedRecords.lean\",\n          \"sha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"ZeroPayloadCheckedRecords.maybeWitness\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMark\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMarker\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceToken\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceWitness\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.witnesses\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"exports\": [\n        \"ZeroPayloadCheckedRecords.produceWitness\",\n        \"ZeroPayloadCheckedRecords.produceToken\",\n        \"ZeroPayloadCheckedRecords.witnesses\",\n        \"ZeroPayloadCheckedRecords.maybeWitness\",\n        \"ZeroPayloadCheckedRecords.produceMarker\",\n        \"ZeroPayloadCheckedRecords.produceMark\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"f3cd46126895017082bd4fb8d4249befa30c6efd3dc09986730782c79617aebe\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n            \"name\": \"ZeroPayloadCheckedRecords\",\n            \"sourcePath\": \"ZeroPayloadCheckedRecords.lean\",\n            \"sourceSha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\",\n    \"sourceTreeSha256\": \"ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/java"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "b66809289b33f8af79cba76c83ec1f408139ce3fa5b116dff4b01caec71165c1",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+            "receiptSha256": "e3ee293b60ab5eb098c6db5dc93d8eab154ca63d56880d9cad24c6a235cbf9a7"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/java",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "b66809289b33f8af79cba76c83ec1f408139ce3fa5b116dff4b01caec71165c1",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+            "receiptSha256": "e3ee293b60ab5eb098c6db5dc93d8eab154ca63d56880d9cad24c6a235cbf9a7"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/java-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "b32a3c4a96401407239e4a6048becbfe024dbf2d3f6f2a96f787e5c817dcf40c",
+            "files": {
+              "classes/Consumer.class": {
+                "bytes": 4305,
+                "sha256": "309ddcc2db94bc6533212ca3a147b3b366fe96553f715fb70011d16d87c7c240"
+              },
+              "component.jar": {
+                "bytes": 51435370,
+                "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/java-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "java"
+    },
+    {
+      "apiProbe": {
+        "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "args": [
+          "-Werror",
+          "-jvm-target",
+          "22",
+          "-Xrender-internal-diagnostic-names",
+          "-cp",
+          "component.jar",
+          "probe.kt",
+          "-d",
+          "classes"
+        ],
+        "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+        "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/probes/kotlin",
+        "environment": {
+          "CC": "/unavailable/compiler",
+          "CXX": "/unavailable/compiler",
+          "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+          "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+          "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+          "PATH": "/usr/bin:/bin"
+        },
+        "outputs": {},
+        "profile": "kotlin",
+        "route": "result-only-ordinary-source",
+        "run": {
+          "code": 1,
+          "stderr": "probe.kt:2:30: error: [UNRESOLVED_REFERENCE] Unresolved reference 'witnessCount'.\nval probeWitnessCount = Api::witnessCount\n                             ^^^^^^^^^^^^\nprobe.kt:3:29: error: [UNRESOLVED_REFERENCE] Unresolved reference 'absentCount'.\nval probeAbsentCount = Api::absentCount\n                            ^^^^^^^^^^^\nprobe.kt:4:26: error: [UNRESOLVED_REFERENCE] Unresolved reference 'tokenTag'.\nval probeTokenTag = Api::tokenTag\n                         ^^^^^^^^\nprobe.kt:5:29: error: [UNRESOLVED_REFERENCE] Unresolved reference 'markerCount'.\nval probeMarkerCount = Api::markerCount\n                            ^^^^^^^^^^^\nprobe.kt:6:27: error: [UNRESOLVED_REFERENCE] Unresolved reference 'markCount'.\nval probeMarkCount = Api::markCount\n                          ^^^^^^^^^\n",
+          "stdout": ""
+        },
+        "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nval probeWitnessCount = Api::witnessCount\nval probeAbsentCount = Api::absentCount\nval probeTokenTag = Api::tokenTag\nval probeMarkerCount = Api::markerCount\nval probeMarkCount = Api::markCount\n",
+        "sourceSha256": "f25bbb0ae7fd28ace55435e73f10399552db06c2a5efd77354d5c2f0e9b28ede"
+      },
+      "context": {
+        "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+        "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/java",
+        "files": {
+          "component.jar": {
+            "bytes": 51435370,
+            "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+          },
+          "consumer.jar": {
+            "bytes": 5065100,
+            "sha256": "1ae6ae6db34aada7245addff88c39179dd2dfb88db857e63d61ef3fc261fb23e"
+          },
+          "consumer.kt": {
+            "bytes": 2376,
+            "sha256": "7af1bfbd403d4b4b9e6d94a41bd220e9cd734a45db4b2642d28040187b49dc76"
+          }
+        },
+        "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+        "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+        "profile": "kotlin",
+        "receiptBytes": "{\n  \"bindingIrSha256\": \"425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481\",\n  \"compiledProjectionSha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\",\n  \"component\": {\n    \"id\": \"zeropayloadcheckedrecords@1.0.0\",\n    \"name\": \"zeropayloadcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"82dce86aef741c324597f5316fd94f5e4640c579b39c55dec9b74abd4e7c0b75\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 16588,\n      \"sha256\": \"a4cac833c21a54cba097181f538604a883d6dd59d71f206c8129636d414c1a2b\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1389,\n      \"sha256\": \"ef684dc579545d0ff2a25b1848d5dbb862ba92d0f99383865325a0f159fa4d00\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 5876,\n      \"sha256\": \"ad4421d2f991f0d7142dea4a98473927748da4b9139afa29c89a404b13b979a7\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 25188,\n      \"sha256\": \"3c1388e802f72785e8e02ba445342eba818d345ee368ed7e131880f2cd31df37\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 39029,\n      \"sha256\": \"179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 7383,\n      \"sha256\": \"515f80acdcbd901aa88753640a8baa7cfd7a8b15d63803c13d449c0a94fc38a3\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 6958,\n      \"sha256\": \"9e060ee1f3746bdb6824cc2986cbc14d61567ca0c7ccb554d70378cec01d8594\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Api.java\": {\n      \"bytes\": 1036,\n      \"sha256\": \"79cfcb4680f2487d5d68d7e277b4754e2902fc18a945c7691ce284bd479f235e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 658,\n      \"sha256\": \"90e3e62ef51d7706c914e1cf6d749aa39e3c413f3ce4426837cc37f5f9223a6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 15546,\n      \"sha256\": \"084443e1bc0c804a36e4d0e74d374e3416949ff894fc5904985ae225a41381a0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 255,\n      \"sha256\": \"acc7fb64a20455557e271b9b28e96b882739de8b03a6992edd08b09001bf217a\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Mark.java\": {\n      \"bytes\": 113,\n      \"sha256\": \"be3cdec8e9e428c84875af723652019333b45e5a15aba3378ad87039d38998de\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkBlank.java\": {\n      \"bytes\": 379,\n      \"sha256\": \"b826b880b8e51779e3aba27904700ff56dbc0a62fd61331570b61ad70602fca7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkMarked.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"38cd2f2c4ec370c10e666fa4c07ea591f330907b97c812813680bbab9965bf4f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Marker.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"e4444985bcc2e67cc5bd48b5c98246d0d1d439a785c86442472a9dbff53f13a2\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13615,\n      \"sha256\": \"cfadcc3245ed6f9757c76439be957d0dcd85555375fe6871b1fbe6121a7444bc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Option.java\": {\n      \"bytes\": 1058,\n      \"sha256\": \"6224c889e718580367ea768ccb3a5f022a0be05a6ba88788847774053f3dcf29\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Pair.java\": {\n      \"bytes\": 722,\n      \"sha256\": \"fb00c0a334205cb819c4147fe1d6be9280803507a95605314f8190243eeca20f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Result.java\": {\n      \"bytes\": 1623,\n      \"sha256\": \"f4b3f225ea9426da8a40a63f23e68aa06699580831160a092626bd9fff68d85b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Runtime.java\": {\n      \"bytes\": 13950,\n      \"sha256\": \"485dfc3f55cc4d9f75a1cd235b8c0bb67d0dbf9496cba64e879b3e10ad01ce9b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Scope.java\": {\n      \"bytes\": 558,\n      \"sha256\": \"8d24800d93186254472b913d235cad6dfd241c218b0db03e4853b305205fed7f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Token.java\": {\n      \"bytes\": 506,\n      \"sha256\": \"4dfa235781d618f76e3782c7f7c25fa12bf154ba80bfec8e0633e32ff6cb5cf4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Unit.java\": {\n      \"bytes\": 80,\n      \"sha256\": \"e8c797e166bedaf29498a5a5f0c431f6b5ddc157c2760a84f02e1f63e07a421c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Witness.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"73416f86f726cc81f515eb32077a18ba00f8bc2517c97d777d6c6ba4113c0848\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 612,\n      \"sha256\": \"f3064a1786c05e981df42ffcd45792fcb85628f22bb5ddae34f02e81ade5e6b4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 2323,\n      \"sha256\": \"6ee27fd2bb5320e7368451b043ec961664dfc8d63a13b68e9c4616888dd0811c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 164,\n      \"sha256\": \"809a40448b8427c0846933a5f10f235e222c2259becf9f8c559a06918a02e9f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.kt\": {\n      \"bytes\": 89,\n      \"sha256\": \"a44e33718c56ad39706add0b504066276b65b55a03716701307d818568838dc1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.kt\": {\n      \"bytes\": 425,\n      \"sha256\": \"351668cfabc38dec06f24641ce8905866aabfb64462f6a5dce2b3d9be57d6013\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.kt\": {\n      \"bytes\": 789,\n      \"sha256\": \"05d73fb9d76a56b60a0e1e4f6a7af843283b024199330790cac428a39725a578\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.kt\": {\n      \"bytes\": 351,\n      \"sha256\": \"75038abbd52f8d0bcce317a5b935d7b365b5b52a17c8ca3a62a02b3b93e606c0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1400,\n      \"sha256\": \"d597e384269c89bdf71a37aed31e3ce0877a8cdbea140346461caa3fd9a58baf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 781,\n      \"sha256\": \"da3f4c6e64715ca097ea53dab60d7c942d4d78fb9ba0e8181690d231ebf5eea0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1828,\n      \"sha256\": \"344c0653435f49b102c59899ce017398711dd6b9cee813827016d84ba75063c7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.kt\": {\n      \"bytes\": 653,\n      \"sha256\": \"504dca798eeaa92ee5d23a5280af9ceab08f0d180de12a346e27c5eedf180821\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 134,\n      \"sha256\": \"d7c2e0192a5e8e71f4e8195fc99bd6fbdddc80b5953736b1871697cbab0219f5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.kt\": {\n      \"bytes\": 354,\n      \"sha256\": \"9da5fe5e3c4c7fe731bf900fb6d45d8f63bc884011b3eacc1387123e8e566903\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 3658,\n      \"sha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1433,\n      \"sha256\": \"506121b978ccc891753b3a0b055ec9d6cafa2f866b76f83e20f2582044284de7\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 21579,\n      \"sha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_d43d7c5a9f170f3ce127.so\": {\n      \"bytes\": 38960,\n      \"sha256\": \"5a457d3be3c5d97ca78f9df38fa8517cde29f729d11cd058043d02c1ff1f26c6\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libzeropayloadcheckedrecords.so\": {\n      \"bytes\": 26936,\n      \"sha256\": \"18a2c6795f89bfbf3228fda0fd0b49ea4ecd938d608812e8665d9c63aa2bdcd1\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_zeropayloadcheckedrecords.kotlin_module\": {\n      \"bytes\": 106,\n      \"sha256\": \"1a867fb189d8a120105851a5ba3146c32674541df1ae476cbea92d804ab837e6\"\n    },\n    \"META-INF/maven/org.leanbridge/zeropayloadcheckedrecords/pom.xml\": {\n      \"bytes\": 635,\n      \"sha256\": \"172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e\"\n    },\n    \"README.md\": {\n      \"bytes\": 5062,\n      \"sha256\": \"b5aee597b26536b500e648915e99b153763b2334a58460609a2a925680dcc687\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Api.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"2e954de31e2062a59fc0d1508b23418afd7c47faefaa1e1452244d57e14eea58\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"bb0aae6d5106e15b4f6e2c5dc46daff7258b4560f93b6243c236ce218cc9c131\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1523,\n      \"sha256\": \"0ff8f5196a986249ac3a761ec7c84f42fb599938a84698201a95386b3fb59308\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 15571,\n      \"sha256\": \"5e8ec200864544483059453dd0768fc7d83f2bf2fe60ccbe36c8e94c92f60633\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 290,\n      \"sha256\": \"37c0988f357d19b5b80e103beded6a0db8eb985687487fe47459cb1ce7bef7fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Mark.class\": {\n      \"bytes\": 244,\n      \"sha256\": \"aa9a170ac9dd5fda4080740ef39fce1fc26d84eb16049b2de2f1bcd17133c81d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkBlank.class\": {\n      \"bytes\": 1052,\n      \"sha256\": \"d08e62d659143ded3a3a05159712a92c3849f97a8d017ec03a5859afa8454eee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkMarked.class\": {\n      \"bytes\": 1503,\n      \"sha256\": \"090b85b1c164f4238f7a816d60d27c0e97937a1c383e244edf88e7b8675ca934\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Marker.class\": {\n      \"bytes\": 993,\n      \"sha256\": \"f0e0f033fefb0cbe3b8df4abd95ad6738220b4874fe33e1c832bfd20d61cc06d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13432,\n      \"sha256\": \"8b5f5bea377a5e84544366d29ec817115158e3a397c6d8f5d7a354a3370db64e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 442,\n      \"sha256\": \"1b09abdbe1db729b00a470d80ed35def108a13f356ec1af677d3c7b10c5659c3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$None.class\": {\n      \"bytes\": 1442,\n      \"sha256\": \"ecb15ab0f24000725164fe32b6811a2eb07f73a89a98a0d165a9d04d8bef512f\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1658,\n      \"sha256\": \"44abfebd273c513c0e47352c15b5e604232a748cc841b443595c136a4bda39db\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option.class\": {\n      \"bytes\": 925,\n      \"sha256\": \"5d5bbd35c2d9a1246b5070c95dbfa451a5e18dfe1400aae00c8427c0897d1447\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Pair.class\": {\n      \"bytes\": 1657,\n      \"sha256\": \"5f97827e77dbbb2bc4263605901318f321e52edf5f62b759c23e244abbd02d31\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1837,\n      \"sha256\": \"030dbfde0727ab79d9a660c9a6397942a8aa6a6cd77034d51679318e707a63dd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1825,\n      \"sha256\": \"27be94fe6a3c23f9c35eeeadc0dde0a96abcd9b0aa3aa8bd03bd85a93e7adeee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result.class\": {\n      \"bytes\": 951,\n      \"sha256\": \"be2b6f02bc55a7cd919a894684c4c34164bc12868efb554f70bed00d5c705c25\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Runtime.class\": {\n      \"bytes\": 15272,\n      \"sha256\": \"a4a8b32745a4fdd294f44466ddc15bf01fdc7a8c2bc3219fdf5072b838ada9cb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Scope.class\": {\n      \"bytes\": 678,\n      \"sha256\": \"ea0b7cee2ea194ab47b33b4ed26393cb1c430881375bb20a6612e3b32ed8e6a5\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Token.class\": {\n      \"bytes\": 1427,\n      \"sha256\": \"b15af86d2bc854113228b8c8a7e56183346af9d6d3f027ffef0fcf642eb353bb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Unit.class\": {\n      \"bytes\": 930,\n      \"sha256\": \"83be7e27fa31c56148fb2354ae28fb586b595ea2ec68e8b1b5faab545fb79f67\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Witness.class\": {\n      \"bytes\": 995,\n      \"sha256\": \"fde70fe751ed1d106d60a19cf1c3e32f8d6c5dcfab516fc40b5807997f996fbd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 4342,\n      \"sha256\": \"6c76c695c3f24dd98cc4859141fd2d6b3c49a6ccdfbfc6708739774d982c3e75\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 2241,\n      \"sha256\": \"e24ef12fcc91f0bccb006f99d0b7d01d7ba8bbf0a24e79faca730e35e38da64d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 487,\n      \"sha256\": \"9363aaea9984e2de6ac6d7232dc5263d327192d82a0bb524f4ae6c1045cbe9e7\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.class\": {\n      \"bytes\": 741,\n      \"sha256\": \"e660ed0099c2f4e61c194207d853bfe89397f7e244f2f5bc1a34cbc168152eca\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.class\": {\n      \"bytes\": 1208,\n      \"sha256\": \"edb19ce04f284202dff8695f44c1c39a35c3c222cc369ca41bbaf53be894ee52\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.class\": {\n      \"bytes\": 2029,\n      \"sha256\": \"b374d8a2d8e19d89b8bf457b78964ea8bb3792bedb65dad67292ec08daebc05d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.class\": {\n      \"bytes\": 1073,\n      \"sha256\": \"b0ed1cd878d0c085086094f93eb50206ab977ef65f671294c3057c4327b3c1aa\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 2007,\n      \"sha256\": \"aa3baae7f44e2939080bece1f1b3dc9e4eb7eea02c2c99bf315f20debbdaead6\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1796,\n      \"sha256\": \"6ddf98ebf7825e1047ade5484ac8f440418e7c581c930c539e778934eceb8d60\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2207,\n      \"sha256\": \"350a4e94fadcb62607e6430aec36e7de9fcfd5aedfb8780c73b08be11b567f1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 2048,\n      \"sha256\": \"a0befb716664615916a90ddae64e0e4dff95fb2a89274436bbf22fbfd1b65bc3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2193,\n      \"sha256\": \"33efd54532e13ec0d2168026800768bb1c6fe66fbb9d2b98528f742ec0e55053\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2083,\n      \"sha256\": \"0f88cf199beb7c986b32a7f12f190d207c7a45ce32b2fafc0404d3969812c4cf\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2475,\n      \"sha256\": \"0d8f9473a358a25aa6d1031939a4db5cafb811db5deb696d8aaad48871e926fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2463,\n      \"sha256\": \"0b2c0064113781e9ed2224f247798943cbacea8fcd19c25fa746dc65eb60bb27\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2157,\n      \"sha256\": \"63ee1d39d75a39a57344891df037da67f873b0c37053c8aa27dfbb7c0d41b671\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.class\": {\n      \"bytes\": 1854,\n      \"sha256\": \"68d62c2fd3b9bbd42d0edae0da60c4d75647c7f264fc147df33b5f247b22bf70\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 427,\n      \"sha256\": \"2dc92b76e8379741b5189c7a0fdd2e15e2e3de15a866f9a9f3b92a76d4b77b1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.class\": {\n      \"bytes\": 1076,\n      \"sha256\": \"9346b2ef9d99439a7ba22bb4cb5a77c8a925d0e84c2c17a9bf6ea1243a3f5a1a\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:zeropayloadcheckedrecords\",\n  \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"ed558b1b548f0e48109ba7fec816f7f31256c4bc9dd3848bf5903c234b3cc572\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\",\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\",\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"ZeroPayloadCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:zeropayloadcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 115336,\n          \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n          \"sha256\": \"51f2c5096ffe219815bae77791b20f51de803308f0bffe69bae4802f3652fc2a\"\n        },\n        \"module\": \"ZeroPayloadCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2323,\n          \"path\": \"ZeroPayloadCheckedRecords.lean\",\n          \"sha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"ZeroPayloadCheckedRecords.maybeWitness\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMark\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMarker\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceToken\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceWitness\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.witnesses\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"exports\": [\n        \"ZeroPayloadCheckedRecords.produceWitness\",\n        \"ZeroPayloadCheckedRecords.produceToken\",\n        \"ZeroPayloadCheckedRecords.witnesses\",\n        \"ZeroPayloadCheckedRecords.maybeWitness\",\n        \"ZeroPayloadCheckedRecords.produceMarker\",\n        \"ZeroPayloadCheckedRecords.produceMark\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"f3cd46126895017082bd4fb8d4249befa30c6efd3dc09986730782c79617aebe\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n            \"name\": \"ZeroPayloadCheckedRecords\",\n            \"sourcePath\": \"ZeroPayloadCheckedRecords.lean\",\n            \"sourceSha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\",\n    \"sourceTreeSha256\": \"ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e\"\n  },\n  \"version\": \"1.0.0\"\n}\n",
+        "root": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/kotlin"
+      },
+      "javaVersion": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "openjdk 22.0.2 2024-07-16\nOpenJDK Runtime Environment Temurin-22.0.2+9 (build 22.0.2+9)\nOpenJDK 64-Bit Server VM Temurin-22.0.2+9 (build 22.0.2+9, mixed mode, sharing)\n"
+      },
+      "nullability": [
+        {
+          "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/probes/nullability-false",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": false,
+          "outputs": {
+            "META-INF/main.kotlin_module": {
+              "bytes": 41,
+              "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+            },
+            "NullProbeKt.class": {
+              "bytes": 1874,
+              "sha256": "d44e39a183e6e972cf3c0ebce8c32a47b3624e2cd3deef02c28201ea659ffda3"
+            }
+          },
+          "route": "result-only-ordinary-source",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nfun witnessesNull() = Api.witnesses(java.math.BigInteger.ZERO)\nfun maybeWitnessNull() = Api.maybeWitness(false)\nfun produceMarkNull() = Api.produceMark(false)\n",
+          "sourceSha256": "5ab6987229986f93fc830e4da3b9d0eec3e15bc1f78b7c4e2e73b5e38f54c286"
+        },
+        {
+          "archiveSha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1",
+          "args": [
+            "-Werror",
+            "-jvm-target",
+            "22",
+            "-Xrender-internal-diagnostic-names",
+            "-cp",
+            "component.jar",
+            "NullProbe.kt",
+            "-d",
+            "classes"
+          ],
+          "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/probes/nullability-true",
+          "environment": {
+            "CC": "/unavailable/compiler",
+            "CXX": "/unavailable/compiler",
+            "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+            "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+            "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+            "PATH": "/usr/bin:/bin"
+          },
+          "invalid": true,
+          "outputs": {},
+          "route": "result-only-ordinary-source",
+          "run": {
+            "code": 1,
+            "stderr": "NullProbe.kt:2:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun witnessesNull() = Api.witnesses(null)\n                                    ^^^^\nNullProbe.kt:3:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun maybeWitnessNull() = Api.maybeWitness(null)\n                                          ^^^^\nNullProbe.kt:4:41: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun produceMarkNull() = Api.produceMark(null)\n                                        ^^^^\n",
+            "stdout": ""
+          },
+          "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nfun witnessesNull() = Api.witnesses(null)\nfun maybeWitnessNull() = Api.maybeWitness(null)\nfun produceMarkNull() = Api.produceMark(null)\n",
+          "sourceSha256": "5e6230b774aa92dd0491444ac0261c48bb4d739b274ce76d542f53a3f664b933"
+        }
+      ],
+      "observations": [
+        {
+          "closure": {
+            "classpathFilesSha256": "2dacf29e2df5a11d759e9987dc61d5c43a7602ee416036bed666872f3f0501ba",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+            "receiptSha256": "e3ee293b60ab5eb098c6db5dc93d8eab154ca63d56880d9cad24c6a235cbf9a7"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/kotlin",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "stage": "installed"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "2dacf29e2df5a11d759e9987dc61d5c43a7602ee416036bed666872f3f0501ba",
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e",
+            "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+            "receiptSha256": "e3ee293b60ab5eb098c6db5dc93d8eab154ca63d56880d9cad24c6a235cbf9a7"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/kotlin-relocated",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "stage": "relocated"
+        },
+        {
+          "closure": {
+            "classpathFilesSha256": "2ae0f9e47a995c548e7196db44d6e6b80fdf32f5204aebe2f36637faad3d816b",
+            "files": {
+              "component.jar": {
+                "bytes": 51435370,
+                "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+              },
+              "consumer.jar": {
+                "bytes": 5065100,
+                "sha256": "1ae6ae6db34aada7245addff88c39179dd2dfb88db857e63d61ef3fc261fb23e"
+              }
+            },
+            "interpreterSha256": "ea70a093b69c865f31ce1179d3a7b8e6f0a128092e3cbf6941f9a5159bc9536e"
+          },
+          "counts": {
+            "calls": 8,
+            "checks": 9,
+            "recoveries": 0,
+            "rejections": 0
+          },
+          "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-tfSNeb/kotlin-source-free",
+          "run": {
+            "code": 0,
+            "stderr": "",
+            "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+          },
+          "sourcesRemoved": true,
+          "stage": "source-free"
+        }
+      ],
+      "profile": "kotlin"
+    }
+  ],
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No JVM constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "103a7768ced18c23783194a7e1159413c634953fd548757c4ec2b453a0032373",
+  "independentBuilds": 2,
+  "installation": {
+    "artifact": {
+      "bytes": 51435370,
+      "path": "archives/zeropayloadcheckedrecords-1.0.0.jar",
+      "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+    },
+    "packageFileSetSha256": "884804802ca9419505339ee8df3ffbb704ce84c6dbb9eb403d66b3d1fc8d194d",
+    "receipt": {
+      "bindingIrSha256": "425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481",
+      "compiledProjectionSha256": "aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc",
+      "component": {
+        "id": "zeropayloadcheckedrecords@1.0.0",
+        "name": "zeropayloadcheckedrecords",
+        "version": "1.0.0"
+      },
+      "ecosystem": "maven",
+      "files": {
+        "META-INF/MANIFEST.MF": {
+          "bytes": 23,
+          "sha256": "172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b"
+        },
+        "META-INF/lean-bridge/component/allocation-guard.h": {
+          "bytes": 1309,
+          "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+        },
+        "META-INF/lean-bridge/component/artifacts.json": {
+          "bytes": 1530,
+          "sha256": "82dce86aef741c324597f5316fd94f5e4640c579b39c55dec9b74abd4e7c0b75"
+        },
+        "META-INF/lean-bridge/component/binding-ir.json": {
+          "bytes": 16588,
+          "sha256": "a4cac833c21a54cba097181f538604a883d6dd59d71f206c8129636d414c1a2b"
+        },
+        "META-INF/lean-bridge/component/component.h": {
+          "bytes": 1389,
+          "sha256": "ef684dc579545d0ff2a25b1848d5dbb862ba92d0f99383865325a0f159fa4d00"
+        },
+        "META-INF/lean-bridge/component/generated.lean": {
+          "bytes": 5876,
+          "sha256": "ad4421d2f991f0d7142dea4a98473927748da4b9139afa29c89a404b13b979a7"
+        },
+        "META-INF/lean-bridge/component/metadata.json": {
+          "bytes": 25188,
+          "sha256": "3c1388e802f72785e8e02ba445342eba818d345ee368ed7e131880f2cd31df37"
+        },
+        "META-INF/lean-bridge/component/model.json": {
+          "bytes": 39029,
+          "sha256": "179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644"
+        },
+        "META-INF/lean-bridge/component/native-component.json": {
+          "bytes": 7383,
+          "sha256": "515f80acdcbd901aa88753640a8baa7cfd7a8b15d63803c13d449c0a94fc38a3"
+        },
+        "META-INF/lean-bridge/jvm/binding-manifest.json": {
+          "bytes": 6958,
+          "sha256": "9e060ee1f3746bdb6824cc2986cbc14d61567ca0c7ccb554d70378cec01d8594"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Api.java": {
+          "bytes": 1036,
+          "sha256": "79cfcb4680f2487d5d68d7e277b4754e2902fc18a945c7691ce284bd479f235e"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.java": {
+          "bytes": 658,
+          "sha256": "90e3e62ef51d7706c914e1cf6d749aa39e3c413f3ce4426837cc37f5f9223a6f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.java": {
+          "bytes": 15546,
+          "sha256": "084443e1bc0c804a36e4d0e74d374e3416949ff894fc5904985ae225a41381a0"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.java": {
+          "bytes": 255,
+          "sha256": "acc7fb64a20455557e271b9b28e96b882739de8b03a6992edd08b09001bf217a"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Mark.java": {
+          "bytes": 113,
+          "sha256": "be3cdec8e9e428c84875af723652019333b45e5a15aba3378ad87039d38998de"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkBlank.java": {
+          "bytes": 379,
+          "sha256": "b826b880b8e51779e3aba27904700ff56dbc0a62fd61331570b61ad70602fca7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkMarked.java": {
+          "bytes": 565,
+          "sha256": "38cd2f2c4ec370c10e666fa4c07ea591f330907b97c812813680bbab9965bf4f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Marker.java": {
+          "bytes": 354,
+          "sha256": "e4444985bcc2e67cc5bd48b5c98246d0d1d439a785c86442472a9dbff53f13a2"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/NativeAssets.java": {
+          "bytes": 13615,
+          "sha256": "cfadcc3245ed6f9757c76439be957d0dcd85555375fe6871b1fbe6121a7444bc"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Option.java": {
+          "bytes": 1058,
+          "sha256": "6224c889e718580367ea768ccb3a5f022a0be05a6ba88788847774053f3dcf29"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Pair.java": {
+          "bytes": 722,
+          "sha256": "fb00c0a334205cb819c4147fe1d6be9280803507a95605314f8190243eeca20f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Result.java": {
+          "bytes": 1623,
+          "sha256": "f4b3f225ea9426da8a40a63f23e68aa06699580831160a092626bd9fff68d85b"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Runtime.java": {
+          "bytes": 13950,
+          "sha256": "485dfc3f55cc4d9f75a1cd235b8c0bb67d0dbf9496cba64e879b3e10ad01ce9b"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Scope.java": {
+          "bytes": 558,
+          "sha256": "8d24800d93186254472b913d235cad6dfd241c218b0db03e4853b305205fed7f"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Token.java": {
+          "bytes": 506,
+          "sha256": "4dfa235781d618f76e3782c7f7c25fa12bf154ba80bfec8e0633e32ff6cb5cf4"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Unit.java": {
+          "bytes": 80,
+          "sha256": "e8c797e166bedaf29498a5a5f0c431f6b5ddc157c2760a84f02e1f63e07a421c"
+        },
+        "META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Witness.java": {
+          "bytes": 357,
+          "sha256": "73416f86f726cc81f515eb32077a18ba00f8bc2517c97d777d6c6ba4113c0848"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.kt": {
+          "bytes": 612,
+          "sha256": "f3064a1786c05e981df42ffcd45792fcb85628f22bb5ddae34f02e81ade5e6b4"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.kt": {
+          "bytes": 2323,
+          "sha256": "6ee27fd2bb5320e7368451b043ec961664dfc8d63a13b68e9c4616888dd0811c"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeException.kt": {
+          "bytes": 164,
+          "sha256": "809a40448b8427c0846933a5f10f235e222c2259becf9f8c559a06918a02e9f6"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.kt": {
+          "bytes": 89,
+          "sha256": "a44e33718c56ad39706add0b504066276b65b55a03716701307d818568838dc1"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.kt": {
+          "bytes": 425,
+          "sha256": "351668cfabc38dec06f24641ce8905866aabfb64462f6a5dce2b3d9be57d6013"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.kt": {
+          "bytes": 789,
+          "sha256": "05d73fb9d76a56b60a0e1e4f6a7af843283b024199330790cac428a39725a578"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.kt": {
+          "bytes": 351,
+          "sha256": "75038abbd52f8d0bcce317a5b935d7b365b5b52a17c8ca3a62a02b3b93e606c0"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.kt": {
+          "bytes": 1400,
+          "sha256": "d597e384269c89bdf71a37aed31e3ce0877a8cdbea140346461caa3fd9a58baf"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.kt": {
+          "bytes": 781,
+          "sha256": "da3f4c6e64715ca097ea53dab60d7c942d4d78fb9ba0e8181690d231ebf5eea0"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.kt": {
+          "bytes": 1828,
+          "sha256": "344c0653435f49b102c59899ce017398711dd6b9cee813827016d84ba75063c7"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.kt": {
+          "bytes": 653,
+          "sha256": "504dca798eeaa92ee5d23a5280af9ceab08f0d180de12a346e27c5eedf180821"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Unit.kt": {
+          "bytes": 134,
+          "sha256": "d7c2e0192a5e8e71f4e8195fc99bd6fbdddc80b5953736b1871697cbab0219f5"
+        },
+        "META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.kt": {
+          "bytes": 354,
+          "sha256": "9da5fe5e3c4c7fe731bf900fb6d45d8f63bc884011b3eacc1387123e8e566903"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSE": {
+          "bytes": 9160,
+          "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+        },
+        "META-INF/lean-bridge/licenses/Lean-LICENSES": {
+          "bytes": 81854,
+          "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+        },
+        "META-INF/lean-bridge/licenses/LeanBridge-LICENSE": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/licenses/source-notices.json": {
+          "bytes": 3658,
+          "sha256": "48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312"
+        },
+        "META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+          "bytes": 1093,
+          "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+        },
+        "META-INF/lean-bridge/native-c-adapter.json": {
+          "bytes": 1433,
+          "sha256": "506121b978ccc891753b3a0b055ec9d6cafa2f866b76f83e20f2582044284de7"
+        },
+        "META-INF/lean-bridge/native-jvm.json": {
+          "bytes": 21579,
+          "sha256": "aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libcomponent_d43d7c5a9f170f3ce127.so": {
+          "bytes": 38960,
+          "sha256": "5a457d3be3c5d97ca78f9df38fa8517cde29f729d11cd058043d02c1ff1f26c6"
+        },
+        "META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so": {
+          "bytes": 21632,
+          "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libleanshared.so": {
+          "bytes": 158401256,
+          "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+        },
+        "META-INF/lean-bridge/native/linux-x64/libzeropayloadcheckedrecords.so": {
+          "bytes": 26936,
+          "sha256": "18a2c6795f89bfbf3228fda0fd0b49ea4ecd938d608812e8665d9c63aa2bdcd1"
+        },
+        "META-INF/lean-bridge/runtime.json": {
+          "bytes": 1466,
+          "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+        },
+        "META-INF/lean_bridge_org_leanbridge_zeropayloadcheckedrecords.kotlin_module": {
+          "bytes": 106,
+          "sha256": "1a867fb189d8a120105851a5ba3146c32674541df1ae476cbea92d804ab837e6"
+        },
+        "META-INF/maven/org.leanbridge/zeropayloadcheckedrecords/pom.xml": {
+          "bytes": 635,
+          "sha256": "172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e"
+        },
+        "README.md": {
+          "bytes": 5062,
+          "sha256": "b5aee597b26536b500e648915e99b153763b2334a58460609a2a925680dcc687"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Api.class": {
+          "bytes": 1068,
+          "sha256": "2e954de31e2062a59fc0d1508b23418afd7c47faefaa1e1452244d57e14eea58"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.class": {
+          "bytes": 1068,
+          "sha256": "bb0aae6d5106e15b4f6e2c5dc46daff7258b4560f93b6243c236ce218cc9c131"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.class": {
+          "bytes": 1523,
+          "sha256": "0ff8f5196a986249ac3a761ec7c84f42fb599938a84698201a95386b3fb59308"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.class": {
+          "bytes": 15571,
+          "sha256": "5e8ec200864544483059453dd0768fc7d83f2bf2fe60ccbe36c8e94c92f60633"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.class": {
+          "bytes": 290,
+          "sha256": "37c0988f357d19b5b80e103beded6a0db8eb985687487fe47459cb1ce7bef7fd"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Mark.class": {
+          "bytes": 244,
+          "sha256": "aa9a170ac9dd5fda4080740ef39fce1fc26d84eb16049b2de2f1bcd17133c81d"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/MarkBlank.class": {
+          "bytes": 1052,
+          "sha256": "d08e62d659143ded3a3a05159712a92c3849f97a8d017ec03a5859afa8454eee"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/MarkMarked.class": {
+          "bytes": 1503,
+          "sha256": "090b85b1c164f4238f7a816d60d27c0e97937a1c383e244edf88e7b8675ca934"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Marker.class": {
+          "bytes": 993,
+          "sha256": "f0e0f033fefb0cbe3b8df4abd95ad6738220b4874fe33e1c832bfd20d61cc06d"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/NativeAssets$_Assets.class": {
+          "bytes": 13432,
+          "sha256": "8b5f5bea377a5e84544366d29ec817115158e3a397c6d8f5d7a354a3370db64e"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/NativeAssets.class": {
+          "bytes": 442,
+          "sha256": "1b09abdbe1db729b00a470d80ed35def108a13f356ec1af677d3c7b10c5659c3"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Option$None.class": {
+          "bytes": 1442,
+          "sha256": "ecb15ab0f24000725164fe32b6811a2eb07f73a89a98a0d165a9d04d8bef512f"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Option$Some.class": {
+          "bytes": 1658,
+          "sha256": "44abfebd273c513c0e47352c15b5e604232a748cc841b443595c136a4bda39db"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Option.class": {
+          "bytes": 925,
+          "sha256": "5d5bbd35c2d9a1246b5070c95dbfa451a5e18dfe1400aae00c8427c0897d1447"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Pair.class": {
+          "bytes": 1657,
+          "sha256": "5f97827e77dbbb2bc4263605901318f321e52edf5f62b759c23e244abbd02d31"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Result$Err.class": {
+          "bytes": 1837,
+          "sha256": "030dbfde0727ab79d9a660c9a6397942a8aa6a6cd77034d51679318e707a63dd"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Result$Ok.class": {
+          "bytes": 1825,
+          "sha256": "27be94fe6a3c23f9c35eeeadc0dde0a96abcd9b0aa3aa8bd03bd85a93e7adeee"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Result.class": {
+          "bytes": 951,
+          "sha256": "be2b6f02bc55a7cd919a894684c4c34164bc12868efb554f70bed00d5c705c25"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Runtime.class": {
+          "bytes": 15272,
+          "sha256": "a4a8b32745a4fdd294f44466ddc15bf01fdc7a8c2bc3219fdf5072b838ada9cb"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Scope.class": {
+          "bytes": 678,
+          "sha256": "ea0b7cee2ea194ab47b33b4ed26393cb1c430881375bb20a6612e3b32ed8e6a5"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Token.class": {
+          "bytes": 1427,
+          "sha256": "b15af86d2bc854113228b8c8a7e56183346af9d6d3f027ffef0fcf642eb353bb"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Unit.class": {
+          "bytes": 930,
+          "sha256": "83be7e27fa31c56148fb2354ae28fb586b595ea2ec68e8b1b5faab545fb79f67"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/Witness.class": {
+          "bytes": 995,
+          "sha256": "fde70fe751ed1d106d60a19cf1c3e32f8d6c5dcfab516fc40b5807997f996fbd"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Api$Companion.class": {
+          "bytes": 4342,
+          "sha256": "6c76c695c3f24dd98cc4859141fd2d6b3c49a6ccdfbfc6708739774d982c3e75"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.class": {
+          "bytes": 2241,
+          "sha256": "e24ef12fcc91f0bccb006f99d0b7d01d7ba8bbf0a24e79faca730e35e38da64d"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeExceptionKt.class": {
+          "bytes": 487,
+          "sha256": "9363aaea9984e2de6ac6d7232dc5263d327192d82a0bb524f4ae6c1045cbe9e7"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.class": {
+          "bytes": 741,
+          "sha256": "e660ed0099c2f4e61c194207d853bfe89397f7e244f2f5bc1a34cbc168152eca"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.class": {
+          "bytes": 1208,
+          "sha256": "edb19ce04f284202dff8695f44c1c39a35c3c222cc369ca41bbaf53be894ee52"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.class": {
+          "bytes": 2029,
+          "sha256": "b374d8a2d8e19d89b8bf457b78964ea8bb3792bedb65dad67292ec08daebc05d"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.class": {
+          "bytes": 1073,
+          "sha256": "b0ed1cd878d0c085086094f93eb50206ab977ef65f671294c3057c4327b3c1aa"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Companion.class": {
+          "bytes": 2007,
+          "sha256": "aa3baae7f44e2939080bece1f1b3dc9e4eb7eea02c2c99bf315f20debbdaead6"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$None.class": {
+          "bytes": 1796,
+          "sha256": "6ddf98ebf7825e1047ade5484ac8f440418e7c581c930c539e778934eceb8d60"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Some.class": {
+          "bytes": 2207,
+          "sha256": "350a4e94fadcb62607e6430aec36e7de9fcfd5aedfb8780c73b08be11b567f1e"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.class": {
+          "bytes": 2048,
+          "sha256": "a0befb716664615916a90ddae64e0e4dff95fb2a89274436bbf22fbfd1b65bc3"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.class": {
+          "bytes": 2193,
+          "sha256": "33efd54532e13ec0d2168026800768bb1c6fe66fbb9d2b98528f742ec0e55053"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Companion.class": {
+          "bytes": 2083,
+          "sha256": "0f88cf199beb7c986b32a7f12f190d207c7a45ce32b2fafc0404d3969812c4cf"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Err.class": {
+          "bytes": 2475,
+          "sha256": "0d8f9473a358a25aa6d1031939a4db5cafb811db5deb696d8aaad48871e926fd"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Ok.class": {
+          "bytes": 2463,
+          "sha256": "0b2c0064113781e9ed2224f247798943cbacea8fcd19c25fa746dc65eb60bb27"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.class": {
+          "bytes": 2157,
+          "sha256": "63ee1d39d75a39a57344891df037da67f873b0c37053c8aa27dfbb7c0d41b671"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.class": {
+          "bytes": 1854,
+          "sha256": "68d62c2fd3b9bbd42d0edae0da60c4d75647c7f264fc147df33b5f247b22bf70"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/UnitKt.class": {
+          "bytes": 427,
+          "sha256": "2dc92b76e8379741b5189c7a0fdd2e15e2e3de15a866f9a9f3b92a76d4b77b1e"
+        },
+        "org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.class": {
+          "bytes": 1076,
+          "sha256": "9346b2ef9d99439a7ba22bb4cb5a77c8a925d0e84c2c17a9bf6ea1243a3f5a1a"
+        }
+      },
+      "glibcMinimumVersion": "2.38",
+      "kind": "lean-bridge-ordinary-maven-package",
+      "kotlin": {
+        "namespace": "org.leanbridge.zeropayloadcheckedrecords.kotlin",
+        "standardLibraryVersion": "2.2.0"
+      },
+      "name": "org.leanbridge:zeropayloadcheckedrecords",
+      "namespace": "org.leanbridge.zeropayloadcheckedrecords",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "schemaVersion": 1,
+      "sourceIdentity": {
+        "exportConfigurationSha256": "ed558b1b548f0e48109ba7fec816f7f31256c4bc9dd3848bf5903c234b3cc572",
+        "exportConfigurationSource": "{\n  \"contracts\": {\n    \"ZeroPayloadCheckedRecords.maybeWitness\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceMark\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceMarker\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceToken\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceWitness\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.witnesses\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"ZeroPayloadCheckedRecords.produceWitness\",\n    \"ZeroPayloadCheckedRecords.produceToken\",\n    \"ZeroPayloadCheckedRecords.witnesses\",\n    \"ZeroPayloadCheckedRecords.maybeWitness\",\n    \"ZeroPayloadCheckedRecords.produceMarker\",\n    \"ZeroPayloadCheckedRecords.produceMark\"\n  ],\n  \"modules\": [\n    \"ZeroPayloadCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"maven\": {\n      \"name\": \"org.leanbridge:zeropayloadcheckedrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+        "extractorSha256": "8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391",
+        "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+        "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "leanVersion": "4.32.2",
+        "modules": [
+          {
+            "interface": {
+              "bytes": 115336,
+              "interfaceSha256": "bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb",
+              "sha256": "51f2c5096ffe219815bae77791b20f51de803308f0bffe69bae4802f3652fc2a"
+            },
+            "module": "ZeroPayloadCheckedRecords",
+            "source": {
+              "bytes": 2323,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "sha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+            }
+          }
+        ],
+        "request": {
+          "arities": [],
+          "contracts": {
+            "ZeroPayloadCheckedRecords.maybeWitness": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "ZeroPayloadCheckedRecords.produceMark": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "ZeroPayloadCheckedRecords.produceMarker": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "ZeroPayloadCheckedRecords.produceToken": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "ZeroPayloadCheckedRecords.produceWitness": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "ZeroPayloadCheckedRecords.witnesses": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            }
+          },
+          "exportModules": [
+            "ZeroPayloadCheckedRecords"
+          ],
+          "exports": [
+            "ZeroPayloadCheckedRecords.produceWitness",
+            "ZeroPayloadCheckedRecords.produceToken",
+            "ZeroPayloadCheckedRecords.witnesses",
+            "ZeroPayloadCheckedRecords.maybeWitness",
+            "ZeroPayloadCheckedRecords.produceMarker",
+            "ZeroPayloadCheckedRecords.produceMark"
+          ],
+          "metadata": {
+            "invocationIdentitySha256": "f3cd46126895017082bd4fb8d4249befa30c6efd3dc09986730782c79617aebe",
+            "modules": [
+              {
+                "interfaceSha256": "bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb",
+                "name": "ZeroPayloadCheckedRecords",
+                "sourcePath": "ZeroPayloadCheckedRecords.lean",
+                "sourceSha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+              }
+            ],
+            "toolchain": "leanprover/lean4:v4.32.2"
+          },
+          "modules": [
+            "ZeroPayloadCheckedRecords"
+          ],
+          "profile": "native-library-v1",
+          "resources": []
+        },
+        "sourceNoticesSha256": "48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312",
+        "sourceTreeSha256": "ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e"
+      },
+      "version": "1.0.0"
+    },
+    "receiptBytes": "{\n  \"bindingIrSha256\": \"425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481\",\n  \"compiledProjectionSha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\",\n  \"component\": {\n    \"id\": \"zeropayloadcheckedrecords@1.0.0\",\n    \"name\": \"zeropayloadcheckedrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"ecosystem\": \"maven\",\n  \"files\": {\n    \"META-INF/MANIFEST.MF\": {\n      \"bytes\": 23,\n      \"sha256\": \"172b7aa6ab69ed805e5a9b5bbdbc6e770091086734509d44117852fc10592f6b\"\n    },\n    \"META-INF/lean-bridge/component/allocation-guard.h\": {\n      \"bytes\": 1309,\n      \"sha256\": \"f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83\"\n    },\n    \"META-INF/lean-bridge/component/artifacts.json\": {\n      \"bytes\": 1530,\n      \"sha256\": \"82dce86aef741c324597f5316fd94f5e4640c579b39c55dec9b74abd4e7c0b75\"\n    },\n    \"META-INF/lean-bridge/component/binding-ir.json\": {\n      \"bytes\": 16588,\n      \"sha256\": \"a4cac833c21a54cba097181f538604a883d6dd59d71f206c8129636d414c1a2b\"\n    },\n    \"META-INF/lean-bridge/component/component.h\": {\n      \"bytes\": 1389,\n      \"sha256\": \"ef684dc579545d0ff2a25b1848d5dbb862ba92d0f99383865325a0f159fa4d00\"\n    },\n    \"META-INF/lean-bridge/component/generated.lean\": {\n      \"bytes\": 5876,\n      \"sha256\": \"ad4421d2f991f0d7142dea4a98473927748da4b9139afa29c89a404b13b979a7\"\n    },\n    \"META-INF/lean-bridge/component/metadata.json\": {\n      \"bytes\": 25188,\n      \"sha256\": \"3c1388e802f72785e8e02ba445342eba818d345ee368ed7e131880f2cd31df37\"\n    },\n    \"META-INF/lean-bridge/component/model.json\": {\n      \"bytes\": 39029,\n      \"sha256\": \"179ea1353951968e4f67abdacc7be215cd2ee1ae738e0912748cf199f9bbf644\"\n    },\n    \"META-INF/lean-bridge/component/native-component.json\": {\n      \"bytes\": 7383,\n      \"sha256\": \"515f80acdcbd901aa88753640a8baa7cfd7a8b15d63803c13d449c0a94fc38a3\"\n    },\n    \"META-INF/lean-bridge/jvm/binding-manifest.json\": {\n      \"bytes\": 6958,\n      \"sha256\": \"9e060ee1f3746bdb6824cc2986cbc14d61567ca0c7ccb554d70378cec01d8594\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Api.java\": {\n      \"bytes\": 1036,\n      \"sha256\": \"79cfcb4680f2487d5d68d7e277b4754e2902fc18a945c7691ce284bd479f235e\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.java\": {\n      \"bytes\": 658,\n      \"sha256\": \"90e3e62ef51d7706c914e1cf6d749aa39e3c413f3ce4426837cc37f5f9223a6f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.java\": {\n      \"bytes\": 15546,\n      \"sha256\": \"084443e1bc0c804a36e4d0e74d374e3416949ff894fc5904985ae225a41381a0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.java\": {\n      \"bytes\": 255,\n      \"sha256\": \"acc7fb64a20455557e271b9b28e96b882739de8b03a6992edd08b09001bf217a\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Mark.java\": {\n      \"bytes\": 113,\n      \"sha256\": \"be3cdec8e9e428c84875af723652019333b45e5a15aba3378ad87039d38998de\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkBlank.java\": {\n      \"bytes\": 379,\n      \"sha256\": \"b826b880b8e51779e3aba27904700ff56dbc0a62fd61331570b61ad70602fca7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/MarkMarked.java\": {\n      \"bytes\": 565,\n      \"sha256\": \"38cd2f2c4ec370c10e666fa4c07ea591f330907b97c812813680bbab9965bf4f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Marker.java\": {\n      \"bytes\": 354,\n      \"sha256\": \"e4444985bcc2e67cc5bd48b5c98246d0d1d439a785c86442472a9dbff53f13a2\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/NativeAssets.java\": {\n      \"bytes\": 13615,\n      \"sha256\": \"cfadcc3245ed6f9757c76439be957d0dcd85555375fe6871b1fbe6121a7444bc\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Option.java\": {\n      \"bytes\": 1058,\n      \"sha256\": \"6224c889e718580367ea768ccb3a5f022a0be05a6ba88788847774053f3dcf29\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Pair.java\": {\n      \"bytes\": 722,\n      \"sha256\": \"fb00c0a334205cb819c4147fe1d6be9280803507a95605314f8190243eeca20f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Result.java\": {\n      \"bytes\": 1623,\n      \"sha256\": \"f4b3f225ea9426da8a40a63f23e68aa06699580831160a092626bd9fff68d85b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Runtime.java\": {\n      \"bytes\": 13950,\n      \"sha256\": \"485dfc3f55cc4d9f75a1cd235b8c0bb67d0dbf9496cba64e879b3e10ad01ce9b\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Scope.java\": {\n      \"bytes\": 558,\n      \"sha256\": \"8d24800d93186254472b913d235cad6dfd241c218b0db03e4853b305205fed7f\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Token.java\": {\n      \"bytes\": 506,\n      \"sha256\": \"4dfa235781d618f76e3782c7f7c25fa12bf154ba80bfec8e0633e32ff6cb5cf4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Unit.java\": {\n      \"bytes\": 80,\n      \"sha256\": \"e8c797e166bedaf29498a5a5f0c431f6b5ddc157c2760a84f02e1f63e07a421c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/java/org/leanbridge/zeropayloadcheckedrecords/Witness.java\": {\n      \"bytes\": 357,\n      \"sha256\": \"73416f86f726cc81f515eb32077a18ba00f8bc2517c97d777d6c6ba4113c0848\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.kt\": {\n      \"bytes\": 612,\n      \"sha256\": \"f3064a1786c05e981df42ffcd45792fcb85628f22bb5ddae34f02e81ade5e6b4\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.kt\": {\n      \"bytes\": 2323,\n      \"sha256\": \"6ee27fd2bb5320e7368451b043ec961664dfc8d63a13b68e9c4616888dd0811c\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeException.kt\": {\n      \"bytes\": 164,\n      \"sha256\": \"809a40448b8427c0846933a5f10f235e222c2259becf9f8c559a06918a02e9f6\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.kt\": {\n      \"bytes\": 89,\n      \"sha256\": \"a44e33718c56ad39706add0b504066276b65b55a03716701307d818568838dc1\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.kt\": {\n      \"bytes\": 425,\n      \"sha256\": \"351668cfabc38dec06f24641ce8905866aabfb64462f6a5dce2b3d9be57d6013\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.kt\": {\n      \"bytes\": 789,\n      \"sha256\": \"05d73fb9d76a56b60a0e1e4f6a7af843283b024199330790cac428a39725a578\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.kt\": {\n      \"bytes\": 351,\n      \"sha256\": \"75038abbd52f8d0bcce317a5b935d7b365b5b52a17c8ca3a62a02b3b93e606c0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.kt\": {\n      \"bytes\": 1400,\n      \"sha256\": \"d597e384269c89bdf71a37aed31e3ce0877a8cdbea140346461caa3fd9a58baf\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.kt\": {\n      \"bytes\": 781,\n      \"sha256\": \"da3f4c6e64715ca097ea53dab60d7c942d4d78fb9ba0e8181690d231ebf5eea0\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.kt\": {\n      \"bytes\": 1828,\n      \"sha256\": \"344c0653435f49b102c59899ce017398711dd6b9cee813827016d84ba75063c7\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.kt\": {\n      \"bytes\": 653,\n      \"sha256\": \"504dca798eeaa92ee5d23a5280af9ceab08f0d180de12a346e27c5eedf180821\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Unit.kt\": {\n      \"bytes\": 134,\n      \"sha256\": \"d7c2e0192a5e8e71f4e8195fc99bd6fbdddc80b5953736b1871697cbab0219f5\"\n    },\n    \"META-INF/lean-bridge/jvm/src/main/kotlin/org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.kt\": {\n      \"bytes\": 354,\n      \"sha256\": \"9da5fe5e3c4c7fe731bf900fb6d45d8f63bc884011b3eacc1387123e8e566903\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSE\": {\n      \"bytes\": 9160,\n      \"sha256\": \"8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e\"\n    },\n    \"META-INF/lean-bridge/licenses/Lean-LICENSES\": {\n      \"bytes\": 81854,\n      \"sha256\": \"00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce\"\n    },\n    \"META-INF/lean-bridge/licenses/LeanBridge-LICENSE\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices.json\": {\n      \"bytes\": 3658,\n      \"sha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\"\n    },\n    \"META-INF/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt\": {\n      \"bytes\": 1093,\n      \"sha256\": \"0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996\"\n    },\n    \"META-INF/lean-bridge/native-c-adapter.json\": {\n      \"bytes\": 1433,\n      \"sha256\": \"506121b978ccc891753b3a0b055ec9d6cafa2f866b76f83e20f2582044284de7\"\n    },\n    \"META-INF/lean-bridge/native-jvm.json\": {\n      \"bytes\": 21579,\n      \"sha256\": \"aff49c865c8fa104e2d0cf66f772203b8c6230d63a40a9cd0c908ce5902182fc\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libcomponent_d43d7c5a9f170f3ce127.so\": {\n      \"bytes\": 38960,\n      \"sha256\": \"5a457d3be3c5d97ca78f9df38fa8517cde29f729d11cd058043d02c1ff1f26c6\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/liblean_bridge_native.so\": {\n      \"bytes\": 21632,\n      \"sha256\": \"459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libleanshared.so\": {\n      \"bytes\": 158401256,\n      \"sha256\": \"d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4\"\n    },\n    \"META-INF/lean-bridge/native/linux-x64/libzeropayloadcheckedrecords.so\": {\n      \"bytes\": 26936,\n      \"sha256\": \"18a2c6795f89bfbf3228fda0fd0b49ea4ecd938d608812e8665d9c63aa2bdcd1\"\n    },\n    \"META-INF/lean-bridge/runtime.json\": {\n      \"bytes\": 1466,\n      \"sha256\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\"\n    },\n    \"META-INF/lean_bridge_org_leanbridge_zeropayloadcheckedrecords.kotlin_module\": {\n      \"bytes\": 106,\n      \"sha256\": \"1a867fb189d8a120105851a5ba3146c32674541df1ae476cbea92d804ab837e6\"\n    },\n    \"META-INF/maven/org.leanbridge/zeropayloadcheckedrecords/pom.xml\": {\n      \"bytes\": 635,\n      \"sha256\": \"172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e\"\n    },\n    \"README.md\": {\n      \"bytes\": 5062,\n      \"sha256\": \"b5aee597b26536b500e648915e99b153763b2334a58460609a2a925680dcc687\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Api.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"2e954de31e2062a59fc0d1508b23418afd7c47faefaa1e1452244d57e14eea58\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinBridge.class\": {\n      \"bytes\": 1068,\n      \"sha256\": \"bb0aae6d5106e15b4f6e2c5dc46daff7258b4560f93b6243c236ce218cc9c131\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinCalls.class\": {\n      \"bytes\": 1523,\n      \"sha256\": \"0ff8f5196a986249ac3a761ec7c84f42fb599938a84698201a95386b3fb59308\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/KotlinRuntime.class\": {\n      \"bytes\": 15571,\n      \"sha256\": \"5e8ec200864544483059453dd0768fc7d83f2bf2fe60ccbe36c8e94c92f60633\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/LeanBridgeException.class\": {\n      \"bytes\": 290,\n      \"sha256\": \"37c0988f357d19b5b80e103beded6a0db8eb985687487fe47459cb1ce7bef7fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Mark.class\": {\n      \"bytes\": 244,\n      \"sha256\": \"aa9a170ac9dd5fda4080740ef39fce1fc26d84eb16049b2de2f1bcd17133c81d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkBlank.class\": {\n      \"bytes\": 1052,\n      \"sha256\": \"d08e62d659143ded3a3a05159712a92c3849f97a8d017ec03a5859afa8454eee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/MarkMarked.class\": {\n      \"bytes\": 1503,\n      \"sha256\": \"090b85b1c164f4238f7a816d60d27c0e97937a1c383e244edf88e7b8675ca934\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Marker.class\": {\n      \"bytes\": 993,\n      \"sha256\": \"f0e0f033fefb0cbe3b8df4abd95ad6738220b4874fe33e1c832bfd20d61cc06d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets$_Assets.class\": {\n      \"bytes\": 13432,\n      \"sha256\": \"8b5f5bea377a5e84544366d29ec817115158e3a397c6d8f5d7a354a3370db64e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/NativeAssets.class\": {\n      \"bytes\": 442,\n      \"sha256\": \"1b09abdbe1db729b00a470d80ed35def108a13f356ec1af677d3c7b10c5659c3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$None.class\": {\n      \"bytes\": 1442,\n      \"sha256\": \"ecb15ab0f24000725164fe32b6811a2eb07f73a89a98a0d165a9d04d8bef512f\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option$Some.class\": {\n      \"bytes\": 1658,\n      \"sha256\": \"44abfebd273c513c0e47352c15b5e604232a748cc841b443595c136a4bda39db\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Option.class\": {\n      \"bytes\": 925,\n      \"sha256\": \"5d5bbd35c2d9a1246b5070c95dbfa451a5e18dfe1400aae00c8427c0897d1447\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Pair.class\": {\n      \"bytes\": 1657,\n      \"sha256\": \"5f97827e77dbbb2bc4263605901318f321e52edf5f62b759c23e244abbd02d31\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Err.class\": {\n      \"bytes\": 1837,\n      \"sha256\": \"030dbfde0727ab79d9a660c9a6397942a8aa6a6cd77034d51679318e707a63dd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result$Ok.class\": {\n      \"bytes\": 1825,\n      \"sha256\": \"27be94fe6a3c23f9c35eeeadc0dde0a96abcd9b0aa3aa8bd03bd85a93e7adeee\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Result.class\": {\n      \"bytes\": 951,\n      \"sha256\": \"be2b6f02bc55a7cd919a894684c4c34164bc12868efb554f70bed00d5c705c25\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Runtime.class\": {\n      \"bytes\": 15272,\n      \"sha256\": \"a4a8b32745a4fdd294f44466ddc15bf01fdc7a8c2bc3219fdf5072b838ada9cb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Scope.class\": {\n      \"bytes\": 678,\n      \"sha256\": \"ea0b7cee2ea194ab47b33b4ed26393cb1c430881375bb20a6612e3b32ed8e6a5\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Token.class\": {\n      \"bytes\": 1427,\n      \"sha256\": \"b15af86d2bc854113228b8c8a7e56183346af9d6d3f027ffef0fcf642eb353bb\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Unit.class\": {\n      \"bytes\": 930,\n      \"sha256\": \"83be7e27fa31c56148fb2354ae28fb586b595ea2ec68e8b1b5faab545fb79f67\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/Witness.class\": {\n      \"bytes\": 995,\n      \"sha256\": \"fde70fe751ed1d106d60a19cf1c3e32f8d6c5dcfab516fc40b5807997f996fbd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api$Companion.class\": {\n      \"bytes\": 4342,\n      \"sha256\": \"6c76c695c3f24dd98cc4859141fd2d6b3c49a6ccdfbfc6708739774d982c3e75\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Api.class\": {\n      \"bytes\": 2241,\n      \"sha256\": \"e24ef12fcc91f0bccb006f99d0b7d01d7ba8bbf0a24e79faca730e35e38da64d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/LeanBridgeExceptionKt.class\": {\n      \"bytes\": 487,\n      \"sha256\": \"9363aaea9984e2de6ac6d7232dc5263d327192d82a0bb524f4ae6c1045cbe9e7\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Mark.class\": {\n      \"bytes\": 741,\n      \"sha256\": \"e660ed0099c2f4e61c194207d853bfe89397f7e244f2f5bc1a34cbc168152eca\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkBlank.class\": {\n      \"bytes\": 1208,\n      \"sha256\": \"edb19ce04f284202dff8695f44c1c39a35c3c222cc369ca41bbaf53be894ee52\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/MarkMarked.class\": {\n      \"bytes\": 2029,\n      \"sha256\": \"b374d8a2d8e19d89b8bf457b78964ea8bb3792bedb65dad67292ec08daebc05d\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Marker.class\": {\n      \"bytes\": 1073,\n      \"sha256\": \"b0ed1cd878d0c085086094f93eb50206ab977ef65f671294c3057c4327b3c1aa\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Companion.class\": {\n      \"bytes\": 2007,\n      \"sha256\": \"aa3baae7f44e2939080bece1f1b3dc9e4eb7eea02c2c99bf315f20debbdaead6\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$None.class\": {\n      \"bytes\": 1796,\n      \"sha256\": \"6ddf98ebf7825e1047ade5484ac8f440418e7c581c930c539e778934eceb8d60\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option$Some.class\": {\n      \"bytes\": 2207,\n      \"sha256\": \"350a4e94fadcb62607e6430aec36e7de9fcfd5aedfb8780c73b08be11b567f1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Option.class\": {\n      \"bytes\": 2048,\n      \"sha256\": \"a0befb716664615916a90ddae64e0e4dff95fb2a89274436bbf22fbfd1b65bc3\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Pair.class\": {\n      \"bytes\": 2193,\n      \"sha256\": \"33efd54532e13ec0d2168026800768bb1c6fe66fbb9d2b98528f742ec0e55053\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Companion.class\": {\n      \"bytes\": 2083,\n      \"sha256\": \"0f88cf199beb7c986b32a7f12f190d207c7a45ce32b2fafc0404d3969812c4cf\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Err.class\": {\n      \"bytes\": 2475,\n      \"sha256\": \"0d8f9473a358a25aa6d1031939a4db5cafb811db5deb696d8aaad48871e926fd\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result$Ok.class\": {\n      \"bytes\": 2463,\n      \"sha256\": \"0b2c0064113781e9ed2224f247798943cbacea8fcd19c25fa746dc65eb60bb27\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Result.class\": {\n      \"bytes\": 2157,\n      \"sha256\": \"63ee1d39d75a39a57344891df037da67f873b0c37053c8aa27dfbb7c0d41b671\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Token.class\": {\n      \"bytes\": 1854,\n      \"sha256\": \"68d62c2fd3b9bbd42d0edae0da60c4d75647c7f264fc147df33b5f247b22bf70\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/UnitKt.class\": {\n      \"bytes\": 427,\n      \"sha256\": \"2dc92b76e8379741b5189c7a0fdd2e15e2e3de15a866f9a9f3b92a76d4b77b1e\"\n    },\n    \"org/leanbridge/zeropayloadcheckedrecords/kotlin/Witness.class\": {\n      \"bytes\": 1076,\n      \"sha256\": \"9346b2ef9d99439a7ba22bb4cb5a77c8a925d0e84c2c17a9bf6ea1243a3f5a1a\"\n    }\n  },\n  \"glibcMinimumVersion\": \"2.38\",\n  \"kind\": \"lean-bridge-ordinary-maven-package\",\n  \"kotlin\": {\n    \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords.kotlin\",\n    \"standardLibraryVersion\": \"2.2.0\"\n  },\n  \"name\": \"org.leanbridge:zeropayloadcheckedrecords\",\n  \"namespace\": \"org.leanbridge.zeropayloadcheckedrecords\",\n  \"runtimeIdentity\": \"4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5\",\n  \"schemaVersion\": 1,\n  \"sourceIdentity\": {\n    \"exportConfigurationSha256\": \"ed558b1b548f0e48109ba7fec816f7f31256c4bc9dd3848bf5903c234b3cc572\",\n    \"exportConfigurationSource\": \"{\\n  \\\"contracts\\\": {\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\": {\\n      \\\"parameters\\\": [],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    },\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\": {\\n      \\\"parameters\\\": [\\n        {\\n          \\\"lifetime\\\": null,\\n          \\\"ownership\\\": \\\"copy\\\"\\n        }\\n      ],\\n      \\\"result\\\": {\\n        \\\"lifetime\\\": null,\\n        \\\"ownership\\\": \\\"copy\\\"\\n      }\\n    }\\n  },\\n  \\\"exports\\\": [\\n    \\\"ZeroPayloadCheckedRecords.produceWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceToken\\\",\\n    \\\"ZeroPayloadCheckedRecords.witnesses\\\",\\n    \\\"ZeroPayloadCheckedRecords.maybeWitness\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMarker\\\",\\n    \\\"ZeroPayloadCheckedRecords.produceMark\\\"\\n  ],\\n  \\\"modules\\\": [\\n    \\\"ZeroPayloadCheckedRecords\\\"\\n  ],\\n  \\\"schemaVersion\\\": 1,\\n  \\\"targets\\\": {\\n    \\\"maven\\\": {\\n      \\\"name\\\": \\\"org.leanbridge:zeropayloadcheckedrecords\\\",\\n      \\\"version\\\": \\\"1.0.0\\\"\\n    }\\n  }\\n}\\n\",\n    \"extractorSha256\": \"8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391\",\n    \"leanCommit\": \"f3b06c705e6c85f5314019d5d3baab0fec5b580c\",\n    \"leanCompilerSha256\": \"e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550\",\n    \"leanVersion\": \"4.32.2\",\n    \"modules\": [\n      {\n        \"interface\": {\n          \"bytes\": 115336,\n          \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n          \"sha256\": \"51f2c5096ffe219815bae77791b20f51de803308f0bffe69bae4802f3652fc2a\"\n        },\n        \"module\": \"ZeroPayloadCheckedRecords\",\n        \"source\": {\n          \"bytes\": 2323,\n          \"path\": \"ZeroPayloadCheckedRecords.lean\",\n          \"sha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n        }\n      }\n    ],\n    \"request\": {\n      \"arities\": [],\n      \"contracts\": {\n        \"ZeroPayloadCheckedRecords.maybeWitness\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMark\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceMarker\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceToken\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.produceWitness\": {\n          \"parameters\": [],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        },\n        \"ZeroPayloadCheckedRecords.witnesses\": {\n          \"parameters\": [\n            {\n              \"lifetime\": null,\n              \"ownership\": \"copy\"\n            }\n          ],\n          \"result\": {\n            \"lifetime\": null,\n            \"ownership\": \"copy\"\n          }\n        }\n      },\n      \"exportModules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"exports\": [\n        \"ZeroPayloadCheckedRecords.produceWitness\",\n        \"ZeroPayloadCheckedRecords.produceToken\",\n        \"ZeroPayloadCheckedRecords.witnesses\",\n        \"ZeroPayloadCheckedRecords.maybeWitness\",\n        \"ZeroPayloadCheckedRecords.produceMarker\",\n        \"ZeroPayloadCheckedRecords.produceMark\"\n      ],\n      \"metadata\": {\n        \"invocationIdentitySha256\": \"f3cd46126895017082bd4fb8d4249befa30c6efd3dc09986730782c79617aebe\",\n        \"modules\": [\n          {\n            \"interfaceSha256\": \"bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb\",\n            \"name\": \"ZeroPayloadCheckedRecords\",\n            \"sourcePath\": \"ZeroPayloadCheckedRecords.lean\",\n            \"sourceSha256\": \"ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8\"\n          }\n        ],\n        \"toolchain\": \"leanprover/lean4:v4.32.2\"\n      },\n      \"modules\": [\n        \"ZeroPayloadCheckedRecords\"\n      ],\n      \"profile\": \"native-library-v1\",\n      \"resources\": []\n    },\n    \"sourceNoticesSha256\": \"48999f6fddd223847901841b9a656daa070c7e0e743b149998beaf23660d0312\",\n    \"sourceTreeSha256\": \"ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e\"\n  },\n  \"version\": \"1.0.0\"\n}\n"
+  },
+  "installerCommandLogs": "Closed installer retains package/source/output identities, not compiler stdout",
+  "loadCeiling": 6,
+  "offlineInstall": true,
+  "producerCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+  "receipt": {
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51435370,
+            "path": "archives/zeropayloadcheckedrecords-1.0.0.jar",
+            "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+          },
+          {
+            "bytes": 635,
+            "path": "archives/zeropayloadcheckedrecords-1.0.0.pom",
+            "sha256": "172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e"
+          }
+        ],
+        "ecosystem": "maven",
+        "name": "org.leanbridge:zeropayloadcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "maven",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15235416064,
+          "freeBytes": 65446191104,
+          "load": 1.46
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15235416064,
+          "freeBytes": 65446182912,
+          "load": 1.46
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15544119296,
+          "freeBytes": 65343180800,
+          "load": 1.35
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15243018240,
+          "freeBytes": 65343037440,
+          "load": 1.54
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15177142272,
+          "freeBytes": 65240096768,
+          "load": 1.66
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "result-only-ordinary-source",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "trustedToolchains": "Explicit JDK and Kotlin distributions; their complete contents are not authenticated"
+}

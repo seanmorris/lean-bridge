@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "daefcf2049b468690452828187f6defc51edf82ad7398b6500a3332fd5bb3d53",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-HugRca/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:37: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun witnessesNull() = Api.witnesses(null)\n                                    ^^^^\nNullProbe.kt:3:43: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun maybeWitnessNull() = Api.maybeWitness(null)\n                                          ^^^^\nNullProbe.kt:4:41: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'Boolean'.\nfun produceMarkNull() = Api.produceMark(null)\n                                        ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.zeropayloadcheckedrecords.kotlin.*\nfun witnessesNull() = Api.witnesses(null)\nfun maybeWitnessNull() = Api.maybeWitness(null)\nfun produceMarkNull() = Api.produceMark(null)\n",
+  "sourceSha256": "5e6230b774aa92dd0491444ac0261c48bb4d739b274ce76d542f53a3f664b933"
+}

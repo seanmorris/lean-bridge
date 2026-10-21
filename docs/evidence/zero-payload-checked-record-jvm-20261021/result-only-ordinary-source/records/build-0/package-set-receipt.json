@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51435370,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0.jar",
+          "sha256": "7b3813aa8260887a3770558e3299df200ad90cb46fcf6bb7c967ce86463a6fd1"
+        },
+        {
+          "bytes": 635,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0.pom",
+          "sha256": "172f14af8cc46515720e648199502776e36d904429e7535c138f37f1e0ce678e"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "425cc5d80ee19b3567ca4b8ab40e2ada20d0137f9fdcabac1fc326954d9d2481",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "ce6a4cf96dcae0eefa0e160e5e794a0bdcd500eb04425e8e0b45be75e6b8889e"
+  }
+}

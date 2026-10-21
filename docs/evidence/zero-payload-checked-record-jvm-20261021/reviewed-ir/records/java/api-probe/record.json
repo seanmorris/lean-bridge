@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "c4829a7f4238dc7fa30fc92a6c90e5d2375e2ab2bc100ed283c9a508dc909b85",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-kK2co5/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "outputs": {
+    "Probe.class": {
+      "bytes": 869,
+      "sha256": "f8ea06d244932c3bd4e51fddd735ae6842cc8d4ae15b7abe9f4c880ca242dd82"
+    }
+  },
+  "profile": "java",
+  "route": "reviewed-ir",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.zeropayloadcheckedrecords.*;\nfinal class Probe {\n    static Object witnessCount() { return Api.witnessCount(null); }\n    static Object absentCount() { return Api.absentCount(null); }\n    static void tokenTag() { Api.tokenTag(null); }\n    static Object markerCount() { return Api.markerCount(null); }\n    static Object markCount() { return Api.markCount(null); }\n}\n",
+  "sourceSha256": "072d6e9057fc9ef64acfa47a2809023bad8bbf8bfc72437cb3e57d451295ca95"
+}

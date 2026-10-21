@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "daefcf2049b468690452828187f6defc51edf82ad7398b6500a3332fd5bb3d53",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-zero-payload-jvm-installed-HugRca/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "outputs": {},
+  "profile": "java",
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "probe.java:3:46: compiler.err.cant.resolve.location.args: kindname.method, witnessCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:4:45: compiler.err.cant.resolve.location.args: kindname.method, absentCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:5:33: compiler.err.cant.resolve.location.args: kindname.method, tokenTag, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:6:45: compiler.err.cant.resolve.location.args: kindname.method, markerCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\nprobe.java:7:43: compiler.err.cant.resolve.location.args: kindname.method, markCount, , compiler.misc.type.null, (compiler.misc.location: kindname.class, org.leanbridge.zeropayloadcheckedrecords.Api, null)\n5 errors\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.zeropayloadcheckedrecords.*;\nfinal class Probe {\n    static Object witnessCount() { return Api.witnessCount(null); }\n    static Object absentCount() { return Api.absentCount(null); }\n    static void tokenTag() { Api.tokenTag(null); }\n    static Object markerCount() { return Api.markerCount(null); }\n    static Object markCount() { return Api.markCount(null); }\n}\n",
+  "sourceSha256": "072d6e9057fc9ef64acfa47a2809023bad8bbf8bfc72437cb3e57d451295ca95"
+}
