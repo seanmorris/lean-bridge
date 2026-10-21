@@ -1,0 +1,1336 @@
+{
+  "bindingIr": {
+    "assurance": [],
+    "capabilities": [],
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "declarations": [
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ZeroPayloadCheckedRecords.maybeWitness."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "maybeWitness",
+        "overloadKey": "ZeroPayloadCheckedRecords.maybeWitness",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.maybeWitness",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [],
+                    "kind": "checked-record",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  }
+                ],
+                "kind": "option"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 50,
+              "endLine": 39,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 38
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ZeroPayloadCheckedRecords.produceMark."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceMark",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceMark",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceMark",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "bool"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Mark",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceMark",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "cases": [
+                  {
+                    "fields": [],
+                    "name": "blank"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "name": "witness",
+                        "refinement": {
+                          "constructor": null,
+                          "fields": [],
+                          "kind": "checked-record",
+                          "name": "ZeroPayloadCheckedRecords.Witness"
+                        }
+                      }
+                    ],
+                    "name": "marked"
+                  }
+                ],
+                "kind": "variant",
+                "name": "ZeroPayloadCheckedRecords.Mark"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 54,
+              "endLine": 49,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 48
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ZeroPayloadCheckedRecords.produceMarker."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceMarker",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceMarker",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceMarker",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Marker",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceMarker",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 51,
+              "endLine": 42,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 42
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Call ZeroPayloadCheckedRecords.produceToken."
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceToken",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceToken",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceToken",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Token",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceToken",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 53,
+              "endLine": 34,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 34
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Lean produces the proof; the host receives the empty carrier. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.produceWitness",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "produceWitness",
+        "overloadKey": "ZeroPayloadCheckedRecords.produceWitness",
+        "owner": null,
+        "parameters": [],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ZeroPayloadCheckedRecords.Witness",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.produceWitness",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 61,
+              "endLine": 33,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 32
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "capabilities": [],
+        "documentation": {
+          "details": "",
+          "summary": "Containers of zero-payload results keep their length and presence. "
+        },
+        "effects": [],
+        "failure": {
+          "errors": [],
+          "mode": "none",
+          "unexpected": "poison-runtime"
+        },
+        "id": "lean:ZeroPayloadCheckedRecords.witnesses",
+        "kind": "function",
+        "mutability": "immutable",
+        "name": "witnesses",
+        "overloadKey": "ZeroPayloadCheckedRecords.witnesses",
+        "owner": null,
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "receiver": null,
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            ],
+            "constructor": "array",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.witnesses",
+          "extensions": {
+            "lean-lang.org/export-contract": {
+              "parameters": [
+                {
+                  "lifetime": null,
+                  "ownership": "copy"
+                }
+              ],
+              "result": {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            },
+            "lean-lang.org/refinements": {
+              "parameters": [
+                null
+              ],
+              "result": {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [],
+                    "kind": "checked-record",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  }
+                ],
+                "kind": "array"
+              }
+            },
+            "lean-lang.org/source-position": {
+              "endColumn": 62,
+              "endLine": 37,
+              "path": "ZeroPayloadCheckedRecords.lean",
+              "startColumn": 0,
+              "startLine": 35
+            },
+            "lean-lang.org/theorem-references": []
+          },
+          "producer": "lean"
+        },
+        "typeParameters": []
+      }
+    ],
+    "documentation": {
+      "details": "",
+      "summary": "Compiler-checked exports for zeropayloadcheckedrecords."
+    },
+    "errors": [],
+    "producers": [
+      {
+        "adapter": "lean-bridge-elaborator",
+        "adapterVersion": 2,
+        "extensions": {
+          "lean-lang.org/elaboration-sha256": "c5db9e0a53d4b63c2a42e84c8ef6fc291b1d1f0c4d0088981c5f8c7dd2c3860f",
+          "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+        },
+        "id": "lean",
+        "tool": "Lean",
+        "toolVersion": "4.32.2"
+      }
+    ],
+    "schemaVersion": 3,
+    "types": [
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "blank"
+            },
+            "fields": [],
+            "name": "blank"
+          },
+          {
+            "documentation": {
+              "details": "",
+              "summary": "marked"
+            },
+            "fields": [
+              {
+                "documentation": {
+                  "details": "",
+                  "summary": "witness"
+                },
+                "mutability": "immutable",
+                "name": "witness",
+                "type": {
+                  "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "marked"
+          }
+        ],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean ZeroPayloadCheckedRecords.Mark."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Mark",
+        "kind": "variant",
+        "mutability": "immutable",
+        "name": "Mark",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Mark",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean ZeroPayloadCheckedRecords.Marker."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Marker",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Marker",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Marker",
+          "extensions": {},
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean ZeroPayloadCheckedRecords.Token."
+        },
+        "fields": [
+          {
+            "documentation": {
+              "details": "",
+              "summary": "tag"
+            },
+            "mutability": "immutable",
+            "name": "tag",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          }
+        ],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Token",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Token",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Token",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "fresh"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      },
+      {
+        "assurance": [],
+        "callable": null,
+        "cases": [],
+        "documentation": {
+          "details": "",
+          "summary": "Checked Lean ZeroPayloadCheckedRecords.Witness."
+        },
+        "fields": [],
+        "host": null,
+        "id": "lean:ZeroPayloadCheckedRecords.Witness",
+        "kind": "record",
+        "mutability": "immutable",
+        "name": "Witness",
+        "representation": "copied",
+        "resource": null,
+        "source": {
+          "declaration": "ZeroPayloadCheckedRecords.Witness",
+          "extensions": {
+            "lean-lang.org/erased-proofs": {
+              "fields": [
+                "positive"
+              ]
+            }
+          },
+          "producer": "lean"
+        },
+        "target": null,
+        "typeParameters": []
+      }
+    ]
+  },
+  "bindingIrSha256": "1797c044d4bd5d670257e1f3fe7f220adec47be41d1004f06acc2b208f3a8dc2",
+  "byteOrder": "little",
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "exports": [
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.maybeWitness",
+      "parameters": [
+        {
+          "name": "present",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "uint8_t",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Bool",
+            "name": "bool"
+          }
+        }
+      ],
+      "publicName": "maybe_witness",
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [],
+              "constructor": null,
+              "definition": "ZeroPayloadCheckedRecords.Witness",
+              "fields": [],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+          "erased": [
+            "positive"
+          ],
+          "fields": [],
+          "kind": "record",
+          "lean": "ZeroPayloadCheckedRecords.Witness",
+          "name": "ZeroPayloadCheckedRecords.Witness"
+        },
+        "kind": "option"
+      },
+      "sourcePosition": {
+        "endColumn": 50,
+        "endLine": 39,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 38
+      },
+      "symbol": "lb_cde1a97bb44e62e5508a2ab3",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceMark",
+      "parameters": [
+        {
+          "name": "active",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "uint8_t",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Bool",
+            "name": "bool"
+          }
+        }
+      ],
+      "publicName": "produce_mark",
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "arguments": [],
+              "fields": [],
+              "name": "blank"
+            },
+            {
+              "arguments": [
+                {
+                  "arguments": [],
+                  "constructor": null,
+                  "definition": "ZeroPayloadCheckedRecords.Witness",
+                  "fields": [],
+                  "kind": "checked-record"
+                }
+              ],
+              "fields": [
+                "witness"
+              ],
+              "name": "marked"
+            }
+          ],
+          "definition": "ZeroPayloadCheckedRecords.Mark",
+          "kind": "variant"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "cases": [
+          {
+            "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+            "fields": [],
+            "name": "blank"
+          },
+          {
+            "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+            "fields": [
+              {
+                "name": "witness",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                  "erased": [
+                    "positive"
+                  ],
+                  "fields": [],
+                  "kind": "record",
+                  "lean": "ZeroPayloadCheckedRecords.Witness",
+                  "name": "ZeroPayloadCheckedRecords.Witness"
+                }
+              }
+            ],
+            "name": "marked"
+          }
+        ],
+        "kind": "variant",
+        "lean": "ZeroPayloadCheckedRecords.Mark",
+        "name": "ZeroPayloadCheckedRecords.Mark"
+      },
+      "sourcePosition": {
+        "endColumn": 54,
+        "endLine": 49,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 48
+      },
+      "symbol": "lb_3190b0fd601d06277d65cc15",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceMarker",
+      "parameters": [],
+      "publicName": "produce_marker",
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Marker",
+        "name": "ZeroPayloadCheckedRecords.Marker"
+      },
+      "sourcePosition": {
+        "endColumn": 51,
+        "endLine": 42,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 42
+      },
+      "symbol": "lb_53d00d3f28c820ff014ddaab",
+      "theoremReferences": []
+    },
+    {
+      "documentation": null,
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceToken",
+      "parameters": [],
+      "publicName": "produce_token",
+      "refinements": {
+        "parameters": [],
+        "result": {
+          "constructor": null,
+          "definition": "ZeroPayloadCheckedRecords.Token",
+          "fields": [
+            "tag"
+          ],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+        "erased": [
+          "fresh"
+        ],
+        "fields": [
+          {
+            "name": "tag",
+            "projection": "ZeroPayloadCheckedRecords.Token.tag",
+            "type": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Unit",
+              "name": "unit"
+            }
+          }
+        ],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Token",
+        "name": "ZeroPayloadCheckedRecords.Token"
+      },
+      "sourcePosition": {
+        "endColumn": 53,
+        "endLine": 34,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 34
+      },
+      "symbol": "lb_582f4605f271fe1a26173078",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Lean produces the proof; the host receives the empty carrier. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.produceWitness",
+      "parameters": [],
+      "publicName": "produce_witness",
+      "refinements": {
+        "parameters": [],
+        "result": {
+          "constructor": null,
+          "definition": "ZeroPayloadCheckedRecords.Witness",
+          "fields": [],
+          "kind": "checked-record"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "sourcePosition": {
+        "endColumn": 61,
+        "endLine": 33,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 32
+      },
+      "symbol": "lb_e28f59b3ac170ab2f8d671cf",
+      "theoremReferences": []
+    },
+    {
+      "documentation": "Containers of zero-payload results keep their length and presence. ",
+      "module": "ZeroPayloadCheckedRecords",
+      "name": "ZeroPayloadCheckedRecords.witnesses",
+      "parameters": [
+        {
+          "name": "count",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Nat",
+            "name": "nat"
+          }
+        }
+      ],
+      "publicName": "witnesses",
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "arguments": [],
+              "constructor": null,
+              "definition": "ZeroPayloadCheckedRecords.Witness",
+              "fields": [],
+              "kind": "checked-record"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "result": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": true,
+          "unbox": "lean_unbox"
+        },
+        "element": {
+          "abi": {
+            "box": "lean_box",
+            "cType": "lean_object*",
+            "heap": false,
+            "unbox": "lean_unbox"
+          },
+          "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+          "erased": [
+            "positive"
+          ],
+          "fields": [],
+          "kind": "record",
+          "lean": "ZeroPayloadCheckedRecords.Witness",
+          "name": "ZeroPayloadCheckedRecords.Witness"
+        },
+        "kind": "array"
+      },
+      "sourcePosition": {
+        "endColumn": 62,
+        "endLine": 37,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "startColumn": 0,
+        "startLine": 35
+      },
+      "symbol": "lb_77f288f49ad4518952eca999",
+      "theoremReferences": []
+    }
+  ],
+  "moduleName": "LeanBridge::ZeroPayloadCheckedRecords",
+  "pointerBits": 64,
+  "profile": "native-library-v1",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "9304c9d44aa34179404e0fbcab1a256852d350f72a345795ea2eb6084430ba8b",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"ZeroPayloadCheckedRecords.maybeWitness\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceMark\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceMarker\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceToken\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.produceWitness\": {\n      \"parameters\": [],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"ZeroPayloadCheckedRecords.witnesses\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"ZeroPayloadCheckedRecords.produceWitness\",\n    \"ZeroPayloadCheckedRecords.produceToken\",\n    \"ZeroPayloadCheckedRecords.witnesses\",\n    \"ZeroPayloadCheckedRecords.maybeWitness\",\n    \"ZeroPayloadCheckedRecords.produceMarker\",\n    \"ZeroPayloadCheckedRecords.produceMark\"\n  ],\n  \"modules\": [\n    \"ZeroPayloadCheckedRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cpan\": {\n      \"module\": \"LeanBridge::ZeroPayloadCheckedRecords\",\n      \"version\": \"1.000\"\n    }\n  }\n}\n",
+    "extractorSha256": "8840430f43990abcb697247dd28c856a9871d053dd43cf416efa5be029d0e391",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 115336,
+          "interfaceSha256": "bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb",
+          "sha256": "51f2c5096ffe219815bae77791b20f51de803308f0bffe69bae4802f3652fc2a"
+        },
+        "module": "ZeroPayloadCheckedRecords",
+        "source": {
+          "bytes": 2323,
+          "path": "ZeroPayloadCheckedRecords.lean",
+          "sha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "ZeroPayloadCheckedRecords.maybeWitness": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.produceMark": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.produceMarker": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.produceToken": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.produceWitness": {
+          "parameters": [],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "ZeroPayloadCheckedRecords.witnesses": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "ZeroPayloadCheckedRecords"
+      ],
+      "exports": [
+        "ZeroPayloadCheckedRecords.produceWitness",
+        "ZeroPayloadCheckedRecords.produceToken",
+        "ZeroPayloadCheckedRecords.witnesses",
+        "ZeroPayloadCheckedRecords.maybeWitness",
+        "ZeroPayloadCheckedRecords.produceMarker",
+        "ZeroPayloadCheckedRecords.produceMark"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "f3cd46126895017082bd4fb8d4249befa30c6efd3dc09986730782c79617aebe",
+        "modules": [
+          {
+            "interfaceSha256": "bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb",
+            "name": "ZeroPayloadCheckedRecords",
+            "sourcePath": "ZeroPayloadCheckedRecords.lean",
+            "sourceSha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "ZeroPayloadCheckedRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "4b5c6d2fc17f01e28d8f9d9e64f645679dbd05a1fe01591568d88bb4785fb621",
+    "sourceTreeSha256": "c024f394092dcd7190b24f09eea319501810003cdbc016f14fd50866fd34f136"
+  },
+  "types": [
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "uint8_t",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "4c1bd7bbac2488b31e7f",
+      "kind": "primitive",
+      "lean": "Bool",
+      "name": "bool"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+      "erased": [
+        "positive"
+      ],
+      "fields": [],
+      "key": "34d3e5dc58186a7e28fe",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Witness",
+      "name": "ZeroPayloadCheckedRecords.Witness"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "key": "69a9586cb343e910790a",
+      "kind": "option"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "cases": [
+        {
+          "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+          "fields": [],
+          "name": "blank"
+        },
+        {
+          "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+          "fields": [
+            {
+              "name": "witness",
+              "type": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              }
+            }
+          ],
+          "name": "marked"
+        }
+      ],
+      "key": "fb04270e7e168afb2516",
+      "kind": "variant",
+      "lean": "ZeroPayloadCheckedRecords.Mark",
+      "name": "ZeroPayloadCheckedRecords.Mark"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+      "fields": [],
+      "key": "c0930e24985d380f1be0",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Marker",
+      "name": "ZeroPayloadCheckedRecords.Marker"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "c6349afd7d22f2e92812",
+      "kind": "primitive",
+      "lean": "Unit",
+      "name": "unit"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+      "erased": [
+        "fresh"
+      ],
+      "fields": [
+        {
+          "name": "tag",
+          "projection": "ZeroPayloadCheckedRecords.Token.tag",
+          "type": {
+            "abi": {
+              "box": "lean_box",
+              "cType": "lean_object*",
+              "heap": false,
+              "unbox": "lean_unbox"
+            },
+            "kind": "primitive",
+            "lean": "Unit",
+            "name": "unit"
+          }
+        }
+      ],
+      "key": "57b6486affb0e5f49fdf",
+      "kind": "record",
+      "lean": "ZeroPayloadCheckedRecords.Token",
+      "name": "ZeroPayloadCheckedRecords.Token"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": false,
+        "unbox": "lean_unbox"
+      },
+      "key": "bcb803bc837008bec599",
+      "kind": "primitive",
+      "lean": "Nat",
+      "name": "nat"
+    },
+    {
+      "abi": {
+        "box": "lean_box",
+        "cType": "lean_object*",
+        "heap": true,
+        "unbox": "lean_unbox"
+      },
+      "element": {
+        "abi": {
+          "box": "lean_box",
+          "cType": "lean_object*",
+          "heap": false,
+          "unbox": "lean_unbox"
+        },
+        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "kind": "record",
+        "lean": "ZeroPayloadCheckedRecords.Witness",
+        "name": "ZeroPayloadCheckedRecords.Witness"
+      },
+      "key": "2d5a3c90d023dde89ed1",
+      "kind": "array"
+    }
+  ]
+}
