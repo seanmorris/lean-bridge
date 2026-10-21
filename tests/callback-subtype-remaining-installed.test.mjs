@@ -27,16 +27,14 @@ const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_PROFILES?.sp
 const supported = ["dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 assert.ok(profiles.length === new Set(profiles).size && profiles.every(profile => supported.includes(profile)));
 const targets = {
-	dotnet: ["nuget", "nuget", { name: "LeanBridge.Callbacksubtypes", version: "1.0.0" }]
-	, java: ["maven", "maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
-	, kotlin: ["maven", "maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
-	, "php-native": ["composer", "php-native", { name: "lean-bridge/callbacksubtypes", version: "1.0.0" }]
-	, "wit-wasi": ["wit-wasi", "wit-wasi", { name: "callback-subtypes", version: "1.0.0" }]
+	dotnet: ["nuget", { name: "LeanBridge.Callbacksubtypes", version: "1.0.0" }]
+	, java: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
+	, kotlin: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
+	, "php-native": ["php-native", { name: "lean-bridge/callbacksubtypes", version: "1.0.0" }]
+	, "wit-wasi": ["wit-wasi", { name: "callback-subtypes", version: "1.0.0" }]
 };
 const extension = { dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
-const configuredTargets = selected => Object.fromEntries(selected.map(profile => [
-	targets[profile][1], targets[profile][2]
-]));
+const configuredTargets = selected => Object.fromEntries(selected.map(profile => targets[profile]));
 
 test("remaining callback target mappings keep author keys separate from build aliases", () => {
 	assert.deepEqual(Object.keys(configuredTargets(["php-native"])), ["php-native"]);

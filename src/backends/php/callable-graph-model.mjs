@@ -36,8 +36,10 @@ export const compileCallablePhpGraphPackageModel = ir => {
 			, parameters
 			, result
 			, docType: `callable(${parameters.map(node => node.docType).join(', ')}): ${result.docType}`
-			, call: `${generated.prefix}_callback_${signature.key}_lease_call`
-			, dispose: `${generated.prefix}_callback_${signature.key}_lease_dispose`
+			, ...direction === 'host' ? {} : {
+				call: `${generated.prefix}_callback_${signature.key}_lease_call`
+				, dispose: `${generated.prefix}_callback_${signature.key}_lease_dispose`
+			}
 		};
 		return [signature.id, projected];
 	}));

@@ -26,7 +26,7 @@ export const generateCallablePhpGraphSources = ir => {
 	const model = compileCallablePhpGraphPackageModel(ir), files = { ...model.files };
 	const copied = node => ({ type: node.index, aggregate: node.aggregate });
 	const value = site => site.callback ? { callback: site.callback.index } : copied(site.node);
-	const callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, direction: cb.direction, parameters: cb.parameters.map(copied), result: copied(cb.result), call: cb.call, dispose: cb.dispose }));
+	const callbacks = [...model.callbacks.values()].map(cb => ({ index: cb.index, ctype: 'lb_php_callback_' + cb.index, direction: cb.direction, parameters: cb.parameters.map(copied), result: copied(cb.result), ...cb.direction === 'host' ? {} : { call: cb.call, dispose: cb.dispose } }));
 	const functions = model.functions.map(fn => ({ name: fn.publicName, symbol: fn.native, parameters: fn.parameters.map(value), result: value(fn.result) }));
 	const definitions = [
 		'uint32_t ' + model.prefix + '_graph_initialize(void);'
@@ -35,8 +35,11 @@ export const generateCallablePhpGraphSources = ir => {
 		, 'void ' + model.prefix + '_php_graph_clear(void *);'
 		, ...callbacks.flatMap(cb => [
 			'typedef struct { uint32_t (*call)(void *, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + '); void *context;' + (cb.direction === 'host' ? ' void *recovery;' : '') + ' } ' + cb.ctype + ';'
-			, 'uint32_t ' + cb.call + '(uint64_t, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + ');'
-			, 'void ' + cb.dispose + '(uint64_t);'])
+			, ...(cb.direction === 'host' ? [] : [
+				'uint32_t ' + cb.call + '(uint64_t, ' + Array(cb.parameters.length + 1).fill('void *').join(', ') + ');'
+				, 'void ' + cb.dispose + '(uint64_t);'
+			])
+		])
 		, ...functions.map(fn => 'uint32_t ' + fn.symbol + '(' + Array(fn.parameters.length + 1).fill('void *').join(', ') + ');')
 	].join('\n');
 	const doc = site => site.callback ? site.callback.docType : site.node.docType;

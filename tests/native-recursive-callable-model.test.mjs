@@ -153,7 +153,7 @@ test("native callback Subtype trampolines require typed recovery and report cons
 });
 
 test("native language projections retain callback Subtype direction and typed recovery", () => {
-	const { ir } = structuredCallableDirectionalSubtypeIr();
+	const { ir, host, closure } = structuredCallableDirectionalSubtypeIr();
 	for(const target of ["pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"])
 		assert.ok(compileNativeGraphProjection(ir, [target]));
 	assert.ok(compileNativeGraphProjection(ir, ["pypi", "rubygems", "cargo", "nuget", "maven", "php-native", "wit-wasi"]));
@@ -227,6 +227,13 @@ test("native language projections retain callback Subtype direction and typed re
 	assert.match(phpRuntime, /requires with_recovery\(function, value\)/u);
 	assert.match(phpRuntime, /\$input->recovery=\$recovery/u);
 	assert.match(phpRuntime, /\$status===10/u);
+	const phpDescriptor = createNativeCallableGraphDescriptor(ir);
+	const phpHost = phpDescriptor.callbacks.find(item => item.id === host.id);
+	const phpClosure = phpDescriptor.callbacks.find(item => item.id === closure.id);
+	assert.doesNotMatch(phpNative
+		, new RegExp(`${phpHost.key}_lease_(?:call|dispose)`, "u"));
+	assert.match(phpNative
+		, new RegExp(`${phpClosure.key}_lease_call`, "u"));
 
 	const wit = compileCallableWitGraphPackageModel(ir);
 	const witHost = renderWitGraphCallableHostSource(wit, new Uint8Array([0]));
