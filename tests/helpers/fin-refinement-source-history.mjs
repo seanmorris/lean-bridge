@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChangedPaths, zeroPayloadJvmNullBoundaryHistoricalPaths, zeroPayloadJvmNullBoundaryIntegrationPaths } from "./zero-payload-jvm-null-boundary-source-history.mjs";
 import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from "./zero-payload-native-promotion-source-history.mjs";
 import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from "./zero-payload-browser-diagnostic-source-history.mjs";
 import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from "./zero-payload-native-evidence-source-history.mjs";
@@ -1422,7 +1423,10 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadNativePromotionChangedPaths
+	...zeroPayloadJvmNullBoundaryChangedPaths
+	, ...zeroPayloadJvmNullBoundaryHistoricalPaths
+	, ...zeroPayloadJvmNullBoundaryIntegrationPaths
+	, ...zeroPayloadNativePromotionChangedPaths
 	, ...zeroPayloadNativePromotionIntegrationPaths
 	, ...zeroPayloadBrowserDiagnosticChangedPaths
 	, ...zeroPayloadBrowserDiagnosticIntegrationPaths
@@ -1946,8 +1950,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(
+	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadJvmNullBoundary) === expected)
+		return zeroPayloadJvmNullBoundary;
+	const zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(
+		path, zeroPayloadJvmNullBoundary, expected
 	);
 	if(sha256(zeroPayloadNativePromotion) === expected)
 		return zeroPayloadNativePromotion;
@@ -2350,6 +2359,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeCoreTerminalReachabilityRepairSource(
 		path, previous, expected
 	);
+	previous = beforeZeroPayloadJvmNullBoundarySource(
+		path, previous, expected
+	);
+	if(sha256(previous) === expected) return previous;
 	previous = path === typeSurfacePath
 		? normalizeExactTypeSurfaceHistory(previous, expected)
 		: normalizeFinRefinementSource(path, previous, expected);
