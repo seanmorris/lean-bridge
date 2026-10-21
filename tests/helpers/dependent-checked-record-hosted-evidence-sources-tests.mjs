@@ -9,7 +9,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-	dependentCheckedRecordHostedOriginal
+	dependentCheckedRecordDotnetEvidenceSources
+	, dependentCheckedRecordHostedOriginal
 	, dependentCheckedRecordPerlEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
@@ -87,6 +88,17 @@ test("dependent Perl evidence closes CPAN production, consumption and checking s
 	, ["checker", "scripts/check-dependent-checked-record-perl-ci.mjs"]
 	, ["checker", "scripts/build-perl-toolchains.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-perl-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent .NET evidence closes NuGet production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordDotnetEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/dotnet.cs"]
+	, ["checker", ".github/workflows/dependent-checked-record-dotnet.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-dotnet-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-dotnet-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

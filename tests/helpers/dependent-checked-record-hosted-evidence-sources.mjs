@@ -248,3 +248,53 @@ export const dependentCheckedRecordPerlEvidenceSources = value => {
 		}
 	]);
 };
+
+/**
+ * Select every source that explains the hosted dependent checked-record
+ * NuGet artifact and its independent C# verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordDotnetEvidenceSources = value => {
+	const selected = revisions(value);
+	const consumerCaller = caller("dotnet.cs");
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-dotnet-installed-tests.mjs"
+				])
+				, ...commonData, consumerCaller
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-dotnet-fixture.mjs"
+				])
+				, consumerCaller
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-dotnet-ci.mjs"
+					, "tests/helpers/dependent-checked-record-dotnet-controls.mjs"
+				])
+				, boundedApt, ".github/workflows/dependent-checked-record-dotnet.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-dependent-checked-record-dotnet-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-dotnet-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
