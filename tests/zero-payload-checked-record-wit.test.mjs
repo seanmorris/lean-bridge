@@ -3,6 +3,7 @@
  *
  * @file
  */
+import "./helpers/zero-payload-wit-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-wit-ci-handoff-tests.mjs";
 import "./helpers/zero-payload-checked-record-wit-ci-report-tests.mjs";
 import "./helpers/zero-payload-checked-record-wit-ci-shell-tests.mjs";
