@@ -24,6 +24,8 @@ import {
 	, zeroPayloadCheckedRecordReview
 } from "./helpers/zero-payload-checked-record-fixture.mjs";
 import "./helpers/zero-payload-checked-record-source-history-tests.mjs";
+import "./helpers/zero-payload-checked-record-native-fixture-tests.mjs";
+import "./helpers/zero-payload-checked-record-native-installed-tests.mjs";
 
 const lean = process.env.LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_LEAN_TEST === "1";
 const module = zeroPayloadCheckedRecordModule;
