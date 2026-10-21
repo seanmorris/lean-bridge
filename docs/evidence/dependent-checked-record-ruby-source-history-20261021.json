@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8db6c403cfcfc6911cb344ed42125189e5bd7ec69495f44365f3e34545ce130b",
+      "path": ".github/workflows/dependent-checked-record-ruby.yml"
+    },
+    {
+      "currentSha256": "bda6de8de69b64fb431760eac074f624bbe1971e361b678f1f7d943be773c2ae",
+      "path": "scripts/check-dependent-checked-record-ruby-ci.mjs"
+    },
+    {
+      "currentSha256": "4eb9959ec51a35f038ba9bf23209b72168678f2e8e0e56e8d04d88cf0bf3c8e9",
+      "path": "scripts/run-dependent-checked-record-ruby-ci.sh"
+    },
+    {
+      "currentSha256": "e021d7ccb5bd6d099836b9d08d3c945bc65ff4d2de444817ac7be0e9bdef7b4f",
+      "path": "tests/fixtures/dependent-checked-record-consumers/ruby.rb"
+    },
+    {
+      "currentSha256": "ae8ceded185ae68c273e7bd097fc979fc220ebfef822e77f1663747bfdf381d3",
+      "path": "tests/helpers/dependent-checked-record-ruby-ci-report.mjs"
+    },
+    {
+      "currentSha256": "3ff1b7f76afad412f37e9bbce270ac2a952cbdd77a79e3df965d720ba6ed4cc8",
+      "path": "tests/helpers/dependent-checked-record-ruby-fixture.mjs"
+    },
+    {
+      "currentSha256": "e797152fb987e36e1319394fe5ede2bdcebb5a27d7eede2029aad29a82529e0f",
+      "path": "tests/helpers/dependent-checked-record-ruby-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "a2b89af89157c8839662770a0879f03e7d1dbe9adc5d74478cab4df6e4048051",
+      "path": "tests/helpers/dependent-checked-record-ruby-model.rb"
+    },
+    {
+      "currentSha256": "a7556c01bd0daf1e7f740561ca24c5bf5ea209ee550411bfc1f81e9196bf05c3",
+      "path": "tests/helpers/dependent-checked-record-ruby-package.mjs"
+    },
+    {
+      "currentSha256": "026bc1a0489a29fab1a66871898e0e47d8f04cf3d811bc7734a81c4b4584f3b5",
+      "path": "tests/helpers/dependent-checked-record-ruby-tests.mjs"
+    },
+    {
+      "currentSha256": "5f0297f20767d89b68e774e50923caccaeeb41eb353900324a5f734be7297b27",
+      "path": "scripts/update-dependent-checked-record-ruby-source-history.mjs"
+    },
+    {
+      "currentSha256": "7d7bf1e4587e420fdca069d47ee2b3ed5996740d3ac9cc315dc944138176a4f6",
+      "path": "tests/helpers/dependent-checked-record-ruby-source-history.mjs"
+    },
+    {
+      "currentSha256": "5e67698023a54d2fd2ad7b26dc23cc7fcdf0004b4e583fdce829458f27444f48",
+      "path": "tests/helpers/dependent-checked-record-ruby-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "80ff8b6ac2acade0aec2b953b49b516543540059",
+  "integrationUpdates": [
+    {
+      "currentSha256": "59eb990ff9401e43d932d6847f49489510931a82b35c4a45c58b13072008db0f",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordRubySource, dependentCheckedRecordRubyChangedPaths, dependentCheckedRecordRubyIntegrationPaths } from \"./dependent-checked-record-ruby-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordRubyChangedPaths\n\t, ...dependentCheckedRecordRubyIntegrationPaths\n\t, ...dependentCheckedRecordPythonChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPythonChangedPaths\n",
+          "start": 123667
+        },
+        {
+          "current": "\tconst dependentCheckedRecordRuby\n\t\t= beforeDependentCheckedRecordRubySource(path, text, expected);\n\tif(sha256(dependentCheckedRecordRuby) === expected)\n\t\treturn dependentCheckedRecordRuby;\n",
+          "previous": "",
+          "start": 151095
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordPythonSource(\n\t\t\tpath, dependentCheckedRecordRuby, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordPythonSource(path, text, expected);\n",
+          "start": 151321
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "bea916287e9bcb1d523df38816329eba77fbd2f44230fa671677091c585955eb"
+    },
+    {
+      "currentSha256": "b544d86416e4868e9894fe3b9874ac3397ce5926a0f067cc940a91034995dcc1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-ruby-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3261
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "8b9644a715aa0a26790c1142d742a847da99c8ec4ebede74a41aa4ffa2091bab"
+    }
+  ],
+  "milestone": "dependent-checked-record-ruby-source-v1",
+  "predecessorCommit": "af223878e3f77975cec01cc8bb3995e7d6e83d24",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline on pinned CRuby 3.3 in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "f6607b6427ce2b0c3039572e2213e65ec5c4d06235a67d123a34ad6de8dd6f79",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-ruby-tests.mjs\";\nimport \"./helpers/dependent-checked-record-ruby-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 422
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "bf401dac099d1126ec9b631f9c2d22c0b1674ae7ee8a1021cb4b96c13b6930ae"
+    }
+  ]
+}
