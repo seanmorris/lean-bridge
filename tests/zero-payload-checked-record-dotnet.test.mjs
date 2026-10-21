@@ -11,3 +11,4 @@ import "./helpers/zero-payload-dotnet-ci-source-history-tests.mjs";
 import "./helpers/zero-payload-dotnet-source-history-tests.mjs";
 import "./helpers/zero-payload-dotnet-verifier-repair-source-history-tests.mjs";
 import "./helpers/zero-payload-dotnet-archive-source-history-tests.mjs";
+import "./helpers/zero-payload-dotnet-control-repair-source-history-tests.mjs";
