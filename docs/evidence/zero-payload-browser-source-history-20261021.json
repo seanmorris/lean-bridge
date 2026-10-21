@@ -1,0 +1,174 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b68dde72a6b0a63f494ade889bf599f2c05e48b719cf3e37f521090561d01105",
+      "path": "tests/fixtures/zero-payload-checked-record-browser/browser.mjs"
+    },
+    {
+      "currentSha256": "346220b199d4bfea080db7fd2d86cf028436fc04704716e19d6a2524ec50b664",
+      "path": "tests/helpers/zero-payload-checked-record-browser.mjs"
+    },
+    {
+      "currentSha256": "a3e2046ab49e0a5addf0e29e97d9ec3974ed3c0b015a030c0987df010a8d1fdf",
+      "path": "scripts/update-zero-payload-browser-source-history.mjs"
+    },
+    {
+      "currentSha256": "2358d885d7b74f40e962b9993addf151c7c023cc8c9eae035fa1a700886bd2c5",
+      "path": "tests/helpers/zero-payload-browser-source-history.mjs"
+    },
+    {
+      "currentSha256": "99991a1adccd4e6f05858f3f9b7258c5df703ec0f73e91852a1f3b62944806a6",
+      "path": "tests/helpers/zero-payload-browser-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "376f410c055cf657e99a29683d2b4f64bd5df1a4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "63e965a7a4dc1e7f6ac0d554b4a96fa841d03f9ff66101a8a7a6dceb2654b1b7",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadBrowserSource, zeroPayloadBrowserChangedPaths, zeroPayloadBrowserIntegrationPaths } from \"./zero-payload-browser-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadBrowserChangedPaths\n\t, ...zeroPayloadBrowserIntegrationPaths\n\t, ...zeroPayloadNpmInstalledChangedPaths\n",
+          "previous": "\t...zeroPayloadNpmInstalledChangedPaths\n",
+          "start": 111539
+        },
+        {
+          "current": "\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(path, text, expected);\n\tif(sha256(zeroPayloadBrowser) === expected) return zeroPayloadBrowser;\n",
+          "previous": "",
+          "start": 133107
+        },
+        {
+          "current": "\t\tpath, zeroPayloadBrowser, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 133331
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b2d7afffb8a5a5055b7f81ca3f8aa8a6565a33901d47f73954729c37b3612cbb"
+    }
+  ],
+  "milestone": "zero-payload-browser-source-v1",
+  "predecessorCommit": "f49d1344f5fc174f3ce53a816fac71f62144ac6a",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Source-free zero-payload packages execute through plain pages, React and workers in Chromium, Firefox and WebKit.",
+  "updates": [
+    {
+      "currentSha256": "f36434ce140afc5cf449f3531073af55b075f68bbf593de4e6982e6c38018ac0",
+      "edits": [
+        {
+          "current": "export const zeroPayloadBrowserPackageSource\n\t= `import request from \"./request.json\";\nexport { request };\nexport const loadApi = () => import(\"zeropayloadcheckedrecords\");\n`;\n\n/**\n * Validate one exact real-browser observation.\n *\n * @param result - Original observation.\n * @param profile - Browser execution context.\n * @param route - Exact author route.\n */\nexport const validateZeroPayloadBrowserObservation = (result, profile, route) => {\n\tassert.ok(zeroPayloadBrowserProfiles.includes(profile));\n\tassert.ok(zeroPayloadBrowserRoutes.includes(route));\n\tassert.equal(typeof result.hostVersion, \"string\");\n\tassert.ok(result.hostVersion.length > 0);\n\tassert.deepEqual(result, {\n\t\tschemaVersion: 1, profile, module: zeroPayloadBrowserName\n\t\t, realm: profile === \"browser-worker\" ? \"dedicated-worker\" : \"window\"\n\t\t, results: {\n\t\t\tmodule: zeroPayloadBrowserName, route\n\t\t\t, resultOnly: route.startsWith(\"result-only-\")\n\t\t\t, ...zeroPayloadBrowserExpected(route)\n\t\t}\n\t\t, hostVersion: result.hostVersion\n\t});\n};\n\n/**\n * Enumerate every lifecycle observation required for one browser context.\n *\n * @param profile - Browser execution context.\n */\nexport const zeroPayloadBrowserPhases = profile => {\n\tassert.ok(zeroPayloadBrowserProfiles.includes(profile));\n\treturn profile === \"browser-react\"\n\t\t? [\"first\", \"remount-1\", \"remount-2\", \"failure-recovery\", \"pending-unmount\"]\n\t\t: profile === \"browser-worker\"\n\t\t\t? [\"first\", \"rerun\", \"worker-restart\", \"failure-recovery\"]\n\t\t\t: [\"first\", \"rerun\", \"failure-recovery\"];\n};\n\n/**\n * Require every engine, variant and lifecycle observation in exact order.\n *\n * @param observations - Original lifecycle observations.\n * @param profile - Browser execution context.\n * @param engines - Complete ordered engine selection.\n * @param route - Exact author route.\n */\nexport const validateZeroPayloadBrowserPhases = (\n\tobservations, profile, engines, route\n) => {\n\tassert.deepEqual(engines, zeroPayloadBrowserEngines);\n\tconst variants = profile === \"browser-react\" ? [\"production\", \"strict\"] : [\"production\"];\n\tconst expected = engines.flatMap(engine => variants.flatMap(variant =>\n\t\tzeroPayloadBrowserPhases(profile).map(phase => ({ engine, variant, phase }))));\n\tassert.deepEqual(observations.map(({ engine, variant, phase }) => ({\n\t\tengine, variant, phase\n\t})), expected);\n\tfor(const item of observations)\n\t{\n\t\tassert.deepEqual(Object.keys(item).sort()\n\t\t\t, [\"engine\", \"observation\", \"phase\", \"variant\"]);\n\t\tvalidateZeroPayloadBrowserObservation(item.observation, profile, route);\n\t}\n};\n\n",
+          "previous": "",
+          "start": 1423
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser-fixture.mjs",
+      "previousSha256": "98654f0e94bcc6ebf66d0573c7d20ced48be42edfb86155c7c5145af89cdd377"
+    },
+    {
+      "currentSha256": "6a1a0f01dcb9822ccaa7aa5e9b949ae21e2080d4aac89557b73c07df65415917",
+      "edits": [
+        {
+          "current": "import { checkZeroPayloadBrowsers } from \"./zero-payload-checked-record-browser.mjs\";\n",
+          "previous": "",
+          "start": 1179
+        },
+        {
+          "current": "const browserFlag = \"LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_BROWSER_TEST\";\nfor(const flag of [enabledFlag, browserFlag])\n\tif(process.env[flag] !== undefined)\n\t\tassert.ok([\"0\", \"1\"].includes(process.env[flag]), `Invalid ${flag}`);\n",
+          "previous": "if(process.env[enabledFlag] !== undefined)\n\tassert.ok([\"0\", \"1\"].includes(process.env[enabledFlag]), `Invalid ${enabledFlag}`);\n",
+          "start": 1777
+        },
+        {
+          "current": "const browsers = process.env[browserFlag] === \"1\";\nif(browsers) assert.ok(enabled, \"Browser acceptance requires installed npm packages\");\n",
+          "previous": "",
+          "start": 2058
+        },
+        {
+          "current": "\t\t]) {\n\t\t\tawait saveLakeFile(consumer, path, source);\n\t\t\tawait saveLakeFile(output, `callers/${path}`, source);\n\t\t}\n",
+          "previous": "\t\t]) await saveLakeFile(consumer, path, source);\n",
+          "start": 10226
+        },
+        {
+          "current": "\t\t\t, callers: {\n\t\t\t\t\"index.mjs\": sha256(script), \"check.mjs\": sha256(corpus)\n\t\t\t\t, \"index.mts\": sha256(typescript)\n\t\t\t}\n",
+          "previous": "",
+          "start": 13195
+        },
+        {
+          "current": "\t\tif(browsers) await checkZeroPayloadBrowsers({\n\t\t\tdirectory: join(root, \"browsers\"), records: output, route\n\t\t\t, producerCommit, consumerCommit: producerCommit, runtime\n\t\t});\n",
+          "previous": "",
+          "start": 13753
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-npm-installed-tests.mjs",
+      "previousSha256": "4335af51d8fe3cf9f7a1c80ddeaf491911adaee0abfb2a5856c9898cb44a862c"
+    },
+    {
+      "currentSha256": "beb729c14e0dde5222cef90018fb01613db0d9284ef295c0af7284d72f7d1484",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 436
+        },
+        {
+          "current": "const historyCommit = \"f49d1344f5fc174f3ce53a816fac71f62144ac6a\";\n",
+          "previous": "",
+          "start": 978
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource\n\t\t);\n",
+          "start": 1792
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource\n\t\t);\n",
+          "start": 2439
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "start": 2676
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadNpmInstalledSource\n\t);\n",
+          "start": 3013
+        }
+      ],
+      "path": "tests/helpers/zero-payload-npm-installed-source-history-tests.mjs",
+      "previousSha256": "7e2865fc3f0891766413463522968c11f257930613a54deda0af1252f784da7c"
+    },
+    {
+      "currentSha256": "8e0b6f904696a24bf18618d6cbf4f78f6df47c05076dc8294875f0155c05182c",
+      "edits": [
+        {
+          "current": "import { pathToFileURL } from \"node:url\";\n",
+          "previous": "",
+          "start": 298
+        },
+        {
+          "current": "\t, zeroPayloadBrowserEngines\n\t, zeroPayloadBrowserName\n\t, zeroPayloadBrowserPhases\n\t, zeroPayloadBrowserProfiles\n",
+          "previous": "",
+          "start": 562
+        },
+        {
+          "current": "\t, validateZeroPayloadBrowserObservation\n\t, validateZeroPayloadBrowserPhases\n",
+          "previous": "",
+          "start": 734
+        },
+        {
+          "current": "test(\"zero-payload browser wrapper closes every engine and lifecycle\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-zero-payload-wrapper-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tawait cp(\"tests/fixtures/zero-payload-checked-record-browser/browser.mjs\"\n\t\t, join(root, \"browser.mjs\"));\n\tawait cp(\"tests/fixtures/zero-payload-checked-record-browser/javascript.mjs\"\n\t\t, join(root, \"check.mjs\"));\n\tconst { executeCorpus } = await import(pathToFileURL(join(root, \"browser.mjs\")).href);\n\tfor(const route of zeroPayloadBrowserRoutes)\n\t\tfor(const profile of zeroPayloadBrowserProfiles)\n\t\t{\n\t\t\tconst resultOnly = route.startsWith(\"result-only-\");\n\t\t\tconst results = executeCorpus({\n\t\t\t\tmodule: zeroPayloadBrowserName, profile, route, resultOnly\n\t\t\t}, mock(resultOnly));\n\t\t\tconst observation = {\n\t\t\t\tschemaVersion: 1, profile, module: zeroPayloadBrowserName\n\t\t\t\t, realm: profile === \"browser-worker\" ? \"dedicated-worker\" : \"window\"\n\t\t\t\t, results, hostVersion: \"fixture-browser\"\n\t\t\t};\n\t\t\tvalidateZeroPayloadBrowserObservation(observation, profile, route);\n\t\t\tconst variants = profile === \"browser-react\"\n\t\t\t\t? [\"production\", \"strict\"] : [\"production\"];\n\t\t\tconst phases = zeroPayloadBrowserEngines.flatMap(engine =>\n\t\t\t\tvariants.flatMap(variant =>\n\t\t\t\t\tzeroPayloadBrowserPhases(profile).map(\n\t\t\t\t\t\tphase => ({ engine, variant, phase, observation })\n\t\t\t\t\t)\n\t\t\t\t)\n\t\t\t);\n\t\t\tvalidateZeroPayloadBrowserPhases(\n\t\t\t\tphases, profile, zeroPayloadBrowserEngines, route);\n\t\t}\n\tfor(const request of [\n\t\t{}\n\t\t, { module: \"wrong\", profile: \"browser-javascript\"\n\t\t\t, route: \"ordinary-source\", resultOnly: false }\n\t\t, { module: zeroPayloadBrowserName, profile: \"wrong\"\n\t\t\t, route: \"ordinary-source\", resultOnly: false }\n\t\t, { module: zeroPayloadBrowserName, profile: \"browser-javascript\"\n\t\t\t, route: \"ordinary-source\", resultOnly: true }\n\t]) assert.throws(() => executeCorpus(request, mock(false)), /Wrong|Missing/u);\n});\n\n",
+          "previous": "",
+          "start": 2599
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "6dc1c9d5728ab299669285ff50540c829125c85823d69fcde9f63e962dde85d7"
+    }
+  ]
+}
