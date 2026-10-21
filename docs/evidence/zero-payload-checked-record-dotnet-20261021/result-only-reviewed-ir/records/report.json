@@ -1,0 +1,348 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Zeropayloadcheckedrecords.Api.1.0.0.nupkg": "093fd145927f14e8f92794e4d78d1eb816fbf529246c84a5dae721e0002a1191"
+      },
+      "authorInputsSha256": "7ec958a51204e356e6245602b43c61e59b745c6583a33db1566afa56bdcc5d1a",
+      "bindingIrSha256": "7d48d8d0b54575b07295419be54f80ff15c207d1f130d30230133ffd87bbf11b",
+      "modelSha256": "2071d5688c6b06b7fc00e8427f0510a0abc8c974c8dcc53dd2727e9ee5e2dfc5",
+      "receiptSha256": "1de20cbac163dcd3bf29e0a156249c30978c1ef7903fc014e27b398239bab874"
+    },
+    {
+      "archives": {
+        "archives/Zeropayloadcheckedrecords.Api.1.0.0.nupkg": "093fd145927f14e8f92794e4d78d1eb816fbf529246c84a5dae721e0002a1191"
+      },
+      "authorInputsSha256": "7ec958a51204e356e6245602b43c61e59b745c6583a33db1566afa56bdcc5d1a",
+      "bindingIrSha256": "7d48d8d0b54575b07295419be54f80ff15c207d1f130d30230133ffd87bbf11b",
+      "modelSha256": "2071d5688c6b06b7fc00e8427f0510a0abc8c974c8dcc53dd2727e9ee5e2dfc5",
+      "receiptSha256": "1de20cbac163dcd3bf29e0a156249c30978c1ef7903fc014e27b398239bab874"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumerCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No C# constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "103a7768ced18c23783194a7e1159413c634953fd548757c4ec2b453a0032373",
+  "independentBuilds": 2,
+  "mode": "result-only",
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "dde44470c2009b46cea57d6dd1452f6cba6ac5a5589d5b1d7da65830129ad39f",
+        "cacheFilesSha256": "60347f5c9e0d2102a0d67031cd0b300cac1417f19bf9e604061ed728e710fb08",
+        "deployedFilesSha256": "4bdd6d0dbef280f6b7899946e1f60344b9f1e30b857d13916ca4dd78d5913798",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "11614d86c70cc62482736ed9ea6df4c0b4dd5ef573aab35a83dea738383fdeff",
+        "receiptSha256": "ff7b5ed9965e14dccb1477d105e2194710e7dbbdd494f492ee690ac04b3b9043"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "dde44470c2009b46cea57d6dd1452f6cba6ac5a5589d5b1d7da65830129ad39f",
+        "cacheFilesSha256": "60347f5c9e0d2102a0d67031cd0b300cac1417f19bf9e604061ed728e710fb08",
+        "deployedFilesSha256": "4bdd6d0dbef280f6b7899946e1f60344b9f1e30b857d13916ca4dd78d5913798",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "11614d86c70cc62482736ed9ea6df4c0b4dd5ef573aab35a83dea738383fdeff",
+        "receiptSha256": "ff7b5ed9965e14dccb1477d105e2194710e7dbbdd494f492ee690ac04b3b9043"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "4bdd6d0dbef280f6b7899946e1f60344b9f1e30b857d13916ca4dd78d5913798"
+      },
+      "counts": {
+        "calls": 8,
+        "checks": 9,
+        "recoveries": 0,
+        "rejections": 0
+      },
+      "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":8,\"checks\":9,\"recoveries\":0,\"rejections\":0}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+  "receipt": {
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51373365,
+            "path": "archives/Zeropayloadcheckedrecords.Api.1.0.0.nupkg",
+            "sha256": "093fd145927f14e8f92794e4d78d1eb816fbf529246c84a5dae721e0002a1191"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Zeropayloadcheckedrecords.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "7d48d8d0b54575b07295419be54f80ff15c207d1f130d30230133ffd87bbf11b",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "1f1e5d257283c85b5384ea5e82e8095bf1781527375963f776a3ecbc042c7586"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 14976974848,
+          "freeBytes": 65016832000,
+          "load": 1.55
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 14987661312,
+          "freeBytes": 65016811520,
+          "load": 1.55
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15206916096,
+          "freeBytes": 64913911808,
+          "load": 1.37
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15362822144,
+          "freeBytes": 64913801216,
+          "load": 1.43
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "result-only-reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-zero-payload-dotnet-k1bzSf/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated"
+}

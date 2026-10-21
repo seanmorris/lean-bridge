@@ -1,0 +1,55 @@
+{
+  "closure": {
+    "buildInputsSha256": "ca91548f9751d0315459c2a15dfa8a5fccadf944f044cd7233ba25741f585332",
+    "cacheFilesSha256": "780a4889d603ec8b2f64b86bdb4b5413f0433975eb6dfbffde8237051066ed6a",
+    "deployedFilesSha256": "a04b44a13fe7eee331870ecc317493b4bb0bd4eb30556dbe64278cd9bf6fbf66",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "11614d86c70cc62482736ed9ea6df4c0b4dd5ef573aab35a83dea738383fdeff",
+    "receiptSha256": "e20209ef3e308a0f4eeea5e79b9fda90dae8b395be753d99da6364cf35232d8e"
+  },
+  "counts": {
+    "calls": 21,
+    "checks": 22,
+    "recoveries": 4,
+    "rejections": 4
+  },
+  "cwd": "/tmp/lean-bridge-zero-payload-dotnet-XulgWl/consumer-relocated",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+    "cwd": "/tmp/lean-bridge-zero-payload-dotnet-XulgWl/consumer-relocated",
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-zero-payload-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":21,\"checks\":22,\"recoveries\":4,\"rejections\":4}\n"
+  },
+  "stage": "relocated"
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51373365,
+          "path": "archives/Zeropayloadcheckedrecords.Api.1.0.0.nupkg",
+          "sha256": "093fd145927f14e8f92794e4d78d1eb816fbf529246c84a5dae721e0002a1191"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Zeropayloadcheckedrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7d48d8d0b54575b07295419be54f80ff15c207d1f130d30230133ffd87bbf11b",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "1f1e5d257283c85b5384ea5e82e8095bf1781527375963f776a3ecbc042c7586"
+  }
+}
