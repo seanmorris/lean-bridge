@@ -1,0 +1,123 @@
+{
+  "additions": [
+    {
+      "currentSha256": "04371a7b04049513683a1f624c526d6ecfb86d8272e37f208583d9cc55e72edf",
+      "path": "scripts/archive-zero-payload-checked-record-browser-evidence.mjs"
+    },
+    {
+      "currentSha256": "9e26d6c72ccb1c6c0eebd4ae824c88ebca45e2e6e37003d199e2d3ce5b7c69f7",
+      "path": "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "693156632183ca58600f4ca5fa57245b669bd9a1dc3c0f1f0d436888181c296f",
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "2261b93a1135b685d7e7388e78e43a67bab70d9d213f778577b90a81bb3a5ca0",
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
+    },
+    {
+      "currentSha256": "71eeb2e049c1e7b9cacad68c43b2208ff776f93d2ecbb8316cc5770901f93c78",
+      "path": "scripts/update-zero-payload-browser-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "d8ba8021dcf53aeb1caa27133c73acc7f2d923ff288c13d51016b1dd074ee536",
+      "path": "tests/helpers/zero-payload-browser-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "ff651d75dc8021880af16cff9b494beb5ef721243b34d015652e67bdc0868a72",
+      "path": "tests/helpers/zero-payload-browser-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "fc3dd94d5fad6da6030585cfe140dae9bb15abca",
+  "integrationUpdates": [
+    {
+      "currentSha256": "12ec7ce96af490b7204d85d038adbab9e4c106cdc601d99ed8046ee883323a0a",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadBrowserArchiveSource, zeroPayloadBrowserArchiveChangedPaths, zeroPayloadBrowserArchiveIntegrationPaths } from \"./zero-payload-browser-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadBrowserArchiveChangedPaths\n\t, ...zeroPayloadBrowserArchiveIntegrationPaths\n\t, ...zeroPayloadBrowserCiChangedPaths\n",
+          "previous": "\t...zeroPayloadBrowserCiChangedPaths\n",
+          "start": 111897
+        },
+        {
+          "current": "\tconst zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(\n",
+          "previous": "\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n",
+          "start": 133639
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadBrowserArchive) === expected)\n\t\treturn zeroPayloadBrowserArchive;\n\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n\t\tpath, zeroPayloadBrowserArchive, expected\n\t);\n",
+          "previous": "",
+          "start": 133740
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d8e60c22f3141c055ccee2684e32d2b514121cdb45e62d6cb55c43217f158513"
+    }
+  ],
+  "milestone": "zero-payload-browser-archive-source-v1",
+  "predecessorCommit": "5667a26826838580efaf9abec9947501610c90a4",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload browser evidence can be frozen only from authenticated successful API records and a byte-exact original artifact.",
+  "updates": [
+    {
+      "currentSha256": "c92501d9759ac011e2aed1f8858a3e827f12757213371844d7158df05945fdce",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 433
+        },
+        {
+          "current": "const historyCommit = \"5667a26826838580efaf9abec9947501610c90a4\";\n",
+          "previous": "",
+          "start": 951
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserCiSource\n\t\t);\n",
+          "start": 1744
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserCiSource\n\t\t);\n",
+          "start": 2373
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "start": 2604
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserCiSource\n\t);\n",
+          "start": 2935
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-ci-source-history-tests.mjs",
+      "previousSha256": "a9f3548d56ff3ac618c837e088237de0527dc5553932adf78431a095b1562ebb"
+    },
+    {
+      "currentSha256": "224697c87721fb0f5d6f91e79cc1e27d23754b7d4be12fb643483f6d5335d7d0",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-browser-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1194
+        },
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\";\n",
+          "previous": "",
+          "start": 1334
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "4d88b787c6d7aa9ef35c43b6037d569a9a23b84f8ee97ebe512a073fa9e65efa"
+    }
+  ]
+}

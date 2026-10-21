@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadBrowserArchiveSource, zeroPayloadBrowserArchiveChangedPaths, zeroPayloadBrowserArchiveIntegrationPaths } from "./zero-payload-browser-archive-source-history.mjs";
 import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from "./zero-payload-browser-ci-source-history.mjs";
 import { beforeZeroPayloadBrowserSource, zeroPayloadBrowserChangedPaths, zeroPayloadBrowserIntegrationPaths } from "./zero-payload-browser-source-history.mjs";
 import { beforeZeroPayloadNpmInstalledSource, zeroPayloadNpmInstalledChangedPaths, zeroPayloadNpmInstalledIntegrationPaths } from "./zero-payload-npm-installed-source-history.mjs";
@@ -1403,7 +1404,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadBrowserCiChangedPaths
+	...zeroPayloadBrowserArchiveChangedPaths
+	, ...zeroPayloadBrowserArchiveIntegrationPaths
+	, ...zeroPayloadBrowserCiChangedPaths
 	, ...zeroPayloadBrowserCiIntegrationPaths
 	, ...zeroPayloadBrowserChangedPaths
 	, ...zeroPayloadBrowserIntegrationPaths
@@ -1889,8 +1892,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(
+	const zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadBrowserArchive) === expected)
+		return zeroPayloadBrowserArchive;
+	const zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(
+		path, zeroPayloadBrowserArchive, expected
 	);
 	if(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;
 	const zeroPayloadBrowser = beforeZeroPayloadBrowserSource(
