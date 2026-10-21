@@ -469,6 +469,8 @@ The [hosted Java/Kotlin zero-payload archive](../evidence/zero-payload-checked-r
 
 The [hosted .NET zero-payload archive](../evidence/zero-payload-checked-record-dotnet-20261021.md) validates the same boundary in all four NuGet routes. C# emits a nominal non-null zero-component record for `Witness`; `Token` keeps its generated `Unit` property, and `Marker`, option presence, arrays and variant branches remain distinct.
 
+The [hosted Rust zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) validates all four Cargo routes. Rust emits `Witness` as a nominal empty struct, distinct from `()`, absence, `Marker` and `Token`; options, vectors and active variant branches retain the empty carrier.
+
 ### Export a checked Subtype
 
 For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:

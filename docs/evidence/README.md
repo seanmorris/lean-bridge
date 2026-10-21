@@ -18,6 +18,10 @@ zero-component or zero-property JVM representations.
 record the four hosted NuGet package selections and their nominal non-null
 zero-component C# record representation.
 
+[Zero-payload checked records in Rust](zero-payload-checked-record-rust-20261021.md)
+record the four hosted Cargo crate selections and their nominal empty Rust
+struct representation.
+
 [Rust closed value-index checked records](checked-record-value-index-rust-promotion-20261020.md)
 record four hosted Cargo crate selections for top-level copied checked-record
 parameter/result sites with closed Bool, String, and Nat indices.
@@ -117,6 +121,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Zero-payload checked records in C and C++, 21 October 2026](zero-payload-checked-record-native-20261021.md)
 - [Zero-payload checked records in Java and Kotlin, 21 October 2026](zero-payload-checked-record-jvm-20261021.md)
 - [Zero-payload checked records in .NET, 21 October 2026](zero-payload-checked-record-dotnet-20261021.md)
+- [Zero-payload checked records in Rust, 21 October 2026](zero-payload-checked-record-rust-20261021.md)
 - [Nested checked records in npm and browsers, 16 October 2026](nested-checked-record-browser-20261016/index.json)
 - [Nested checked records in C and C++, 16 October 2026](nested-checked-record-native-20261016.md)
 - [Nested checked records in .NET, 16 October 2026](nested-checked-record-dotnet-20261016.md)

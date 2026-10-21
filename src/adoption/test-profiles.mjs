@@ -371,6 +371,7 @@ const profileManifest = Object.freeze({
 		, "zero-payload-checked-record-ruby"
 		, "zero-payload-checked-record-rust"
 		, "zero-payload-checked-record-rust-evidence"
+		, "zero-payload-checked-record-rust-promotion"
 		, "zero-payload-checked-record-jvm-evidence"
 		, "zero-payload-checked-record-jvm-promotion"
 		, "zero-payload-checked-record-perl"
