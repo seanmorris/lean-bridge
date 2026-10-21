@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50098176,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "19c82a068ad9714da16347b03b4b3308e143b8c70294926fd90e2c1690b75935"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "55dad15362cf3b3e6070a222b14868d63c4a1872f58fa426b2125782e14e1dcb",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5e56c96867c959c3b7ec14601f231c1ea40a312b0a462afd2ec82a02cc7ca054"
+  }
+}
