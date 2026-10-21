@@ -51,6 +51,9 @@ test("every repository test receives exactly one named execution profile", async
 		, "zero-payload-checked-record-jvm-evidence"
 		, "zero-payload-checked-record-jvm-promotion"
 		, "zero-payload-checked-record-perl"
+		, "zero-payload-checked-record-php-evidence"
+		, "zero-payload-checked-record-python-evidence"
+		, "zero-payload-checked-record-ruby-evidence"
 		, "zero-payload-checked-record-rust-evidence"
 		, "zero-payload-checked-record-rust-promotion"])
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);

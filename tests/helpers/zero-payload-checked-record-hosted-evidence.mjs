@@ -126,8 +126,10 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	const retainedLogs = contract.retainedLogs ?? [{
 		path: "hosted/logs/toolchain.log", artifact: contract.artifactToolchainLog
 	}];
+	const retainedFiles = contract.retainedFiles ?? [];
 	assert.deepEqual(index.hostedRun.artifact.members.toSorted(), [
 		...expectedMembers, ...retainedLogs.map(log => log.artifact)
+		, ...retainedFiles.map(file => file.artifact)
 	].sort());
 	const archiveHash = createHash("sha256");
 	let archiveBytes = 0;
@@ -190,6 +192,16 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 		assert.ok(get(log.path).length > 0, log.path);
 		expectedPaths.push(log.path);
 	}
+	const hostedFiles = {};
+	for(const file of retainedFiles)
+	{
+		assert.deepEqual(Object.keys(file).sort(), ["artifact", "path"]);
+		const value = get(file.path);
+		assert.ok(value.length > 0, file.path);
+		hostedFiles[file.path] = value; expectedPaths.push(file.path);
+	}
+	if(contract.verifyRetainedFiles)
+		await contract.verifyRetainedFiles({ index, files: hostedFiles });
 	assert.deepEqual([...files.keys()].sort(), expectedPaths.sort());
 	return { index, accepted, files: index.files, hostedRun: index.hostedRun };
 };
