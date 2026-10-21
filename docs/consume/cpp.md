@@ -192,6 +192,20 @@ unchanged. The recovery completes Lean's failure path and is never returned as
 success. A returned Lean closure validates selected `Subtype` arguments before
 its body runs and remains usable after a rejected call.
 
+A checked record uses the same `with_recovery(callback, value)` wrapper when a
+host callback replies with one: the recovery is the generated value record
+with payload fields only, for example `Interval{lo, hi}`, and it is validated
+before Lean or the callback runs. Lean applies the selected record constructor
+to the actual reply, a checked payload field's own constructor first, and a
+reply that fails either constructor throws `Error` with
+`STATUS_INVALID_ARGUMENT` after exactly one callback invocation while leaving
+later calls usable. Records Lean produces for the host, as callback arguments
+or returned-closure results, are the same value records without proof fields.
+A returned Lean closure constructs its checked-record arguments before its
+body runs, and records inside `std::optional`, `std::vector` or the generated
+result type keep the direction of their site. The
+`callback-checked-record-native` workflow describes the installed acceptance.
+
 ### Checked records and fixed indices
 
 Use the generated value record with its payload fields: `Interval` has `lo` and `hi`, `Sized 3` has a `data` vector, and `Bounded 0 101` has `value`. Natural-number payloads use `boost::multiprecision::cpp_int`. Proof fields are absent from the host record; normal value ownership handles result cleanup.

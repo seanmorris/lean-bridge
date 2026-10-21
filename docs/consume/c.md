@@ -647,6 +647,23 @@ Rejected scalar, mixed or supported nested-container inputs preserve the output
 and the same closure remains callable. Ordinary and independently reviewed
 packages use the same exact constructor selections.
 
+A checked record follows the same two directions. When a host callback replies
+with a checked record such as `Interval`, the descriptor's typed `recovery`
+points at an initialized generated record carrying only payload fields; the
+wrapper validates and copies it before Lean or the callback runs, and Lean
+applies the selected record constructor to the actual reply, running a checked
+payload field's own constructor first (for `Weighted`, the `Positive` weight
+before `mkWeighted`). A reply that fails either constructor returns
+`INVALID_ARGUMENT`, counts the one callback invocation, preserves the output
+and leaves later calls usable. A checked record Lean produces for the host,
+whether a callback argument or a returned closure's result, crosses as the
+same generated record without proof fields. A returned Lean closure runs the
+selected constructors on its checked-record arguments before its body, and a
+record inside `Option`, `Array` or `Except` keeps the direction of its site.
+The generated README and the `callback-checked-record-native` workflow
+describe the installed C and C++ acceptance; other native hosts still refuse
+checked records in callbacks at projection time.
+
 ### Checked records and fixed indices
 
 A checked record crosses the C boundary as one generated record containing only its runtime fields. For example, `Interval` carries `lo` and `hi` as GMP integers; `Sized 3` carries a typed span named `data`; `Bounded 0 101` carries a GMP integer named `value`. Initialize records and outputs with the package's generated helpers, borrow input buffers for the call, and clear owning results afterward. Do not supply Lean proof fields.

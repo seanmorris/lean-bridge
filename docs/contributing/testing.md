@@ -3888,3 +3888,51 @@ that could narrow the matrix, force one build thread and the glibc 2.38 package
 floor, retain terminal TAP and the original report, and run an independent
 checker bound to the exact producer commit. Their workflows upload complete or
 partial output on every exit and then fail the job if acceptance did not pass.
+
+## Checked records in native callback packages
+
+Run the C and C++ callback checked-record acceptance on a Linux x64 host with
+the pinned Lean toolchain, a C11/C++20 compiler and the GMP development
+dependencies:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_PROFILES=c,cpp \
+  node --test --test-concurrency=1 tests/callback-checked-record-native-installed.test.mjs
+```
+
+The test builds ordinary-source and independently reviewed packages from the
+`CallbackCheckedRecords` fixture, verifies the package-set receipt, deletes each
+author root, installs from the copied handoff and runs independent C11/GMP and
+C++20 consumers. It checks typed record recovery for host replies, invalid
+recovery before callback entry, record and nested Subtype field constructor
+rejection after callback entry, mixed arguments, returned-closure record
+argument rejection, proof-free Lean-produced records in both directions,
+unchanged outputs, disposal and reuse after failure. The default record is
+`build/callback-checked-records/native.json`. The static generator checks in
+`tests/callback-checked-record-native.test.mjs` compile the generated C and
+C++ adapters and parse the generated XS without Lean headers.
+
+Run the complete CPAN matrix only after preparing all four pinned interpreters:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_TEST=1 \
+  node --test --test-concurrency=1 tests/callback-checked-record-perl-installed.test.mjs
+```
+
+This runs ordinary and reviewed packages on threaded and unthreaded Perl 5.36.3
+and 5.38.2, through both prebuilt-only and local XS installation. All sixteen
+cells delete author inputs, install offline, relocate the installed tree, remove
+the handoff, execute twice and verify every installed-file hash. The consumer
+adds `Except (Option Interval)` host replies and `Array (Option Interval)`
+closure inputs, exception identity and idempotent close, and reports exact
+check, call and rejection counts. The default record is
+`build/callback-checked-records/perl.json`.
+
+The hosted workflows run `scripts/run-callback-checked-record-native-ci.sh` and
+`scripts/run-callback-checked-record-perl-ci.sh`. They refuse environment
+variables that would narrow the matrix, pin the release glibc floor, keep the
+original TAP and report, and verify both with the closed checkers in
+`scripts/check-callback-checked-record-native-ci.mjs` and
+`scripts/check-callback-checked-record-perl-ci.mjs`.

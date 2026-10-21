@@ -172,3 +172,36 @@ export const structuredCallableDirectionalSubtypeIr = () => {
 	};
 	return { ir, host, closure };
 };
+
+/**
+ * Add one host-reply and one returned-closure argument checked record to the
+ * copied callback corpus. The interval carries only its payload fields across
+ * the boundary; its ordering proof is erased and re-established by the exact
+ * constructor at every host-produced site.
+ */
+export const structuredCallableDirectionalCheckedRecordIr = () => {
+	const ir = structuredCallableReviewedIr();
+	const nat = { kind: "primitive", name: "nat" }, interval = named("Interval");
+	const erased = { "lean-lang.org/erased-proofs": { fields: ["ordered"] } };
+	ir.types.push({ id: interval.id, name: "Interval", kind: "record"
+		, representation: "copied", mutability: "immutable"
+		, typeParameters: [], cases: [], target: null, resource: null
+		, callable: null, host: null
+		, fields: fields([["lo", nat], ["hi", nat]])
+		, documentation: documentation()
+		, source: { ...source("Structured.Interval"), extensions: erased }
+		, assurance: [] });
+	const callbacks = ir.types.filter(type => type.kind === "callback");
+	const host = callbacks.find(type => ir.declarations.some(item => item.parameters.some(parameter => parameter.type.id === type.id)));
+	const closure = callbacks.find(type => ir.declarations.some(item => item.result.type.id === type.id));
+	const payload = ["lo", "hi"].map(name => ({ name, refinement: null }));
+	const record = constructor => ({ kind: "checked-record"
+		, name: "Structured.Interval", constructor, fields: payload });
+	host.callable.parameters[0].type = interval;
+	host.callable.result.type = interval;
+	host.source.extensions["lean-lang.org/refinements"] = { parameters: [record(null)], result: record("Structured.mkInterval") };
+	closure.callable.parameters[1].type = interval;
+	closure.callable.result.type = nat;
+	closure.source.extensions["lean-lang.org/refinements"] = { parameters: [null, record("Structured.mkInterval")], result: null };
+	return { ir, host, closure };
+};

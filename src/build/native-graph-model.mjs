@@ -36,10 +36,12 @@ const containsGraph = value => value && typeof value === "object"
 	&& (value.kind === "graph" || Object.values(value).some(containsGraph));
 
 /**
- * Select the callable-graph carrier when an erased Subtype sits inside a
- * callback signature, even if every erased payload is otherwise acyclic.
- * The primitive native model predates directional callback constructors and
- * cannot represent their recovery protocol.
+ * Select the callable-graph carrier when an erased Subtype or a checked record
+ * sits inside a callback signature, even if every erased payload is otherwise
+ * acyclic. The primitive native model predates directional callback
+ * constructors and cannot represent their recovery protocol; a checked record
+ * crosses a callback only as the erased payload mirror that carrier generates,
+ * whether the site names its constructor or Lean produces the record bare.
  *
  * @param value - One compiler-projected declaration or nested type node.
  */
@@ -47,7 +49,8 @@ export const containsCallbackSubtype = value => {
 	const visit = (node, callback) => {
 		if(node === null || typeof node !== "object") return false;
 		const inside = callback || node.kind === "callback";
-		if(inside && node.kind === "refinement" && node.predicate?.kind === "subtype") return true;
+		if(inside && node.kind === "refinement" && ["subtype", "checked-record"].includes(node.predicate?.kind)) return true;
+		if(inside && node.kind === "record" && Array.isArray(node.erased)) return true;
 		return Object.values(node).some(child => visit(child, inside));
 	};
 	return visit(value, false);

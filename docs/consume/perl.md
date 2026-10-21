@@ -904,6 +904,20 @@ success. A returned Lean closure with checked `Subtype` arguments needs no
 recovery. Its `call` validates those arguments first, preserves rejected caller
 values and remains usable until `close`.
 
+A host callback that replies with a checked record uses the same
+`Runtime::Callback` wrapper with a generated record as its recovery, for
+example `Interval->new(lo => ..., hi => ...)` carrying payload fields only.
+The adapter validates and copies the recovery before Lean or the CODE
+reference runs; Lean then applies the selected record constructor to the
+actual reply, a checked payload field's own constructor first. A reply that
+fails either constructor dies after exactly one callback invocation and leaves
+later calls usable. Records Lean produces for the host, as callback arguments
+or returned-closure results, are the same generated objects without proof
+fields; a returned Lean closure constructs its checked-record arguments before
+its body runs, and records inside `Some`, array references or `Ok` keep the
+direction of their site. The `callback-checked-record-perl` workflow describes
+the installed acceptance on all four pinned interpreters.
+
 Float parameters accept integer or floating-point scalars. Native boolean scalars also carry integer values and are accepted in fixed-width integer parameters. Numeric text such as `'12'` is rejected. `Bool` parameters still require native booleans, not arbitrary numbers or strings.
 
 ## Ownership and failures

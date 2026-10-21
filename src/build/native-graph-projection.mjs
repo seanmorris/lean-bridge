@@ -23,6 +23,11 @@ import { compileCallablePerlGraphPackageModel } from "../backends/perl/callable-
 import { compileCallableWitGraphPackageModel } from "../backends/wit/callable-graph-package.mjs";
 import { callbackDefinitionRefinement, callbackSubtypeDirection } from "../abi/refinements.mjs";
 
+const containsCheckedRecord = tree => tree !== null && (tree.kind === "checked-record"
+	|| (tree.kind === "record" && tree.fields.some(field => containsCheckedRecord(field.refinement)))
+	|| (tree.kind === "variant" && tree.cases.some(branch => branch.fields.some(field => containsCheckedRecord(field.refinement))))
+	|| (["array", "list", "option", "tuple", "result"].includes(tree.kind) && tree.arguments.some(containsCheckedRecord)));
+
 /**
  * Validate all requested graph hosts without inventing an extra public C target.
  *
@@ -44,6 +49,14 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 		});
 		if(callbackSubtypes && targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target)))
 			throw Object.assign(new TypeError("Callback Subtypes currently require a native graph projection"), { code: "native-graph-projection-unavailable" });
+		// A checked record inside a callback crosses as its erased payload mirror with the
+		// callback's direction; only the hosts whose adapters carry that mirror admit it.
+		const callbackCheckedRecords = ir.types.filter(type => type.kind === "callback").some(type => {
+			const refinements = callbackDefinitionRefinement(type, ir.types);
+			return refinements !== null && [...refinements.parameters, refinements.result].some(containsCheckedRecord);
+		});
+		if(callbackCheckedRecords && targets.some(target => !["c", "cpp", "cpan"].includes(target)))
+			throw Object.assign(new TypeError("Callback checked records currently require C, C++ or CPAN projections"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
 		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
 		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;
