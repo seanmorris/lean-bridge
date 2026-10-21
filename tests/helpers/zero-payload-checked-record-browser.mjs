@@ -21,6 +21,7 @@ import {
 import {
 	validateZeroPayloadBrowserObservation
 	, validateZeroPayloadBrowserPhases
+	, zeroPayloadBrowserCaller
 	, zeroPayloadBrowserEngines
 	, zeroPayloadBrowserExpected
 	, zeroPayloadBrowserName
@@ -115,7 +116,7 @@ export const checkZeroPayloadBrowsers = async ({
 		await saveLakeFile(root, "javascript.mjs"
 			, await readFile(join(fixture, "browser.mjs")));
 		await saveLakeFile(root, "check.mjs"
-			, await readFile(join(fixture, "javascript.mjs")));
+			, await zeroPayloadBrowserCaller(route));
 		const observations = [], inputs = {};
 		const consumer = {
 			packageSource: zeroPayloadBrowserPackageSource

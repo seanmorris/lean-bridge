@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import {
 	zeroPayloadCheckedRecordContracts
 	, zeroPayloadCheckedRecordReview
@@ -31,6 +32,26 @@ export const zeroPayloadBrowserResultNames = Object.freeze([
 	"produceWitness", "produceToken", "witnesses", "maybeWitness", "produceMarker"
 	, "produceMark"
 ]);
+const callerPath
+	= "tests/fixtures/zero-payload-checked-record-browser/javascript.mjs";
+
+/**
+ * Load the immutable public caller with only the reviewed parameter label changed.
+ *
+ * @param route - Exact ordinary/reviewed and full/result-only selection.
+ * @param reader - Optional historical Git-backed source reader.
+ */
+export const zeroPayloadBrowserCaller = async (
+	route, reader = path => readFile(path, "utf8")
+) => {
+	assert.ok(zeroPayloadBrowserRoutes.includes(route));
+	const source = String(await reader(callerPath));
+	const reviewed = route.endsWith("reviewed-ir");
+	const current = "absentCount.arg0 was rejected";
+	assert.equal(source.split(current).length, 2);
+	return reviewed ? source.replace(current
+		, "absentCount.value0 was rejected") : source;
+};
 /**
  * Return exact independent-caller totals for one route.
  *

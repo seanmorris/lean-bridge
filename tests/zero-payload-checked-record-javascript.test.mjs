@@ -16,7 +16,8 @@ import {
 	, parseZeroPayloadBrowserCiArgs
 } from "./helpers/zero-payload-checked-record-browser-ci-report.mjs";
 import {
-	zeroPayloadBrowserExpected
+	zeroPayloadBrowserCaller
+	, zeroPayloadBrowserExpected
 	, zeroPayloadBrowserEngines
 	, zeroPayloadBrowserName
 	, zeroPayloadBrowserPhases
@@ -84,6 +85,17 @@ test("zero-payload caller distinguishes empty, Unit and Option values", () => {
 		assert.deepEqual(checkZeroPayloadRecords(mock(resultOnly), resultOnly)
 			, zeroPayloadBrowserExpected(route));
 	}
+});
+
+test("zero-payload caller binds the exact ordinary and reviewed diagnostics", async () => {
+	const ordinary = await zeroPayloadBrowserCaller("ordinary-source");
+	const reviewed = await zeroPayloadBrowserCaller("reviewed-ir");
+	assert.equal(reviewed, ordinary.replace(
+		"absentCount.arg0 was rejected", "absentCount.value0 was rejected"));
+	assert.equal(await zeroPayloadBrowserCaller("result-only-ordinary-source")
+		, ordinary);
+	assert.equal(await zeroPayloadBrowserCaller("result-only-reviewed-ir")
+		, reviewed);
 });
 
 test("zero-payload browser wrapper closes every engine and lifecycle", async t => {

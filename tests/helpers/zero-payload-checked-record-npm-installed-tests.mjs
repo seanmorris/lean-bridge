@@ -38,7 +38,8 @@ import {
 	, zeroPayloadCheckedRecordModule
 } from "./zero-payload-checked-record-fixture.mjs";
 import {
-	zeroPayloadBrowserExpected
+	zeroPayloadBrowserCaller
+	, zeroPayloadBrowserExpected
 	, zeroPayloadBrowserInputNames
 	, zeroPayloadBrowserName
 	, zeroPayloadBrowserResultNames
@@ -211,8 +212,7 @@ for(const route of routes) test(
 				, join(handoff, receipt.package.archive)
 		], consumer, clean(consumer));
 		await saveLakeFile(output, "install.json", canonicalJson(install));
-		const corpus = await readFile(
-			"tests/fixtures/zero-payload-checked-record-browser/javascript.mjs");
+		const corpus = Buffer.from(await zeroPayloadBrowserCaller(route));
 		const typescript = await readFile(join(
 			"tests/fixtures/zero-payload-checked-record-browser"
 			, selection.resultOnly ? "result-only.mts" : "full.mts"

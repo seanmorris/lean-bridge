@@ -11,6 +11,7 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	validateZeroPayloadBrowserObservation
 	, validateZeroPayloadBrowserPhases
+	, zeroPayloadBrowserCaller
 	, zeroPayloadBrowserEngines
 	, zeroPayloadBrowserExpected
 	, zeroPayloadBrowserName
@@ -171,6 +172,8 @@ export const checkZeroPayloadNpmReport = async (
 		, report.builds[0].runtimeArchiveSha256);
 	assert.equal(report.callers["check.mjs"]
 		, sha256(await read("callers/check.mjs")));
+	assert.equal((await read("callers/check.mjs")).toString()
+		, await zeroPayloadBrowserCaller(route));
 	assert.equal(report.callers["index.mjs"]
 		, sha256(await read("callers/index.mjs")));
 	assert.equal(report.callers["index.mts"]
@@ -218,6 +221,7 @@ export const checkZeroPayloadBrowserReport = async (
 	for(const [index, profile] of zeroPayloadBrowserProfiles.entries())
 	{
 		const item = report.reports[index];
+		const prefix = `browser/${profile}`;
 		assert.equal(item.profile, profile);
 		assert.equal(item.route, route);
 		assert.equal(item.producerCommit, producerCommit);
@@ -226,8 +230,9 @@ export const checkZeroPayloadBrowserReport = async (
 		assert.equal(item.compilerFreePath, true);
 		assert.equal(item.sourceRemovedBeforeInstallation, true);
 		assert.equal(item.corpusSha256, sha256(await read("callers/check.mjs")));
+		assert.equal((await read(`${prefix}/check.mjs`)).toString()
+			, await zeroPayloadBrowserCaller(route));
 		assert.equal(item.packageSourceSha256, sha256(zeroPayloadBrowserPackageSource));
-		const prefix = `browser/${profile}`;
 		const bindingBytes = await read(`${prefix}/installed-binding-ir.json`);
 		const binding = json(bindingBytes);
 		assert.equal(reviewedContractDifference(expectedBinding, binding), null);
