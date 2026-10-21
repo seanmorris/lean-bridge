@@ -41,7 +41,10 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	assert.equal(index.consumerCommit, contract.revisions.consumer);
 	assert.equal(index.checkerCommit, contract.revisions.checker);
 	assert.equal(index.archiveCommit, contract.revisions.archiver);
-	assert.ok(Array.isArray(index.limitations) && index.limitations.length === 6
+	const limitationCount = contract.limitationCount ?? 6;
+	assert.ok(Number.isSafeInteger(limitationCount) && limitationCount > 0);
+	assert.ok(Array.isArray(index.limitations)
+		&& index.limitations.length === limitationCount
 		&& index.limitations.every(item => typeof item === "string" && item));
 	await contract.verifyIndex(index);
 	let previous = "";
