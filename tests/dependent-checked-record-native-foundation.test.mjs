@@ -10,3 +10,6 @@ import "./helpers/dependent-checked-record-python-tests.mjs";
 import "./helpers/dependent-checked-record-python-installed-tests.mjs";
 import "./helpers/dependent-checked-record-ruby-tests.mjs";
 import "./helpers/dependent-checked-record-ruby-installed-tests.mjs";
+import "./helpers/dependent-checked-record-rust-fixture-tests.mjs";
+import "./helpers/dependent-checked-record-rust-ci-policy-tests.mjs";
+import "./helpers/dependent-checked-record-rust-installed-tests.mjs";
