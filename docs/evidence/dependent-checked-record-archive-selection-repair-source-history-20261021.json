@@ -1,0 +1,99 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2887b41566848d1b5554e1b01301d6977a726b911b758f052f26185b7f41d1d6",
+      "path": "scripts/update-dependent-checked-record-archive-selection-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "871f8c06bbe047f9453ee1ed8243e95972c866d91820415c29654c5011c05b6c",
+      "path": "tests/helpers/dependent-checked-record-archive-selection-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c1725afc86b1351145d1a113f4cd9232efc31c1be055fdbf0f1c64dfca1b74ae",
+      "path": "tests/helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9949ea979f9a3fd4ccf0db4d2fb0006c088cfc29",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2fe8dd0e1eac2f5dbd7a483ef9a851cbd7563c323a48b5715510a0956bf13f0c",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordArchiveSelectionRepairSource, dependentCheckedRecordArchiveSelectionRepairChangedPaths, dependentCheckedRecordArchiveSelectionRepairIntegrationPaths } from \"./dependent-checked-record-archive-selection-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordArchiveSelectionRepairChangedPaths\n\t, ...dependentCheckedRecordArchiveSelectionRepairIntegrationPaths\n\t, ...zeroPayloadNativeControlContractChangedPaths\n",
+          "previous": "\t...zeroPayloadNativeControlContractChangedPaths\n",
+          "start": 124620
+        },
+        {
+          "current": "\tconst dependentCheckedRecordArchiveSelectionRepair\n\t\t= beforeDependentCheckedRecordArchiveSelectionRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordArchiveSelectionRepair) === expected)\n\t\treturn dependentCheckedRecordArchiveSelectionRepair;\n",
+          "previous": "",
+          "start": 152512
+        },
+        {
+          "current": "\t\t= beforeZeroPayloadNativeControlContractSource(\n\t\t\tpath, dependentCheckedRecordArchiveSelectionRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeZeroPayloadNativeControlContractSource(path, text, expected);\n",
+          "start": 152821
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ac1bfd0eb49eaa271bfef164fbdb51dee7331e404f4645a8703a7e13eb147e8e"
+    },
+    {
+      "currentSha256": "8c9892d2d519363aeec3a2154af9124ee3585624f35767bb894d52252a98d8de",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-archive-selection-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3590
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "407d8cd73cf3ddc6925f0c00331e001dcba64491fb2f0e4ece5c0fe614b7ccdb"
+    }
+  ],
+  "milestone": "dependent-checked-record-archive-selection-repair-source-v1",
+  "predecessorCommit": "1560d6953429b5d0c143165ce55046af7629f7ef",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Ruby and Rust dependent checked-record archivers resolve the shared author-route selector before processing any retained evidence.",
+  "updates": [
+    {
+      "currentSha256": "3f469ba77fc0f0953b4ddbf55cfe8727b4514ebe3c87be5084865c64394d16e2",
+      "edits": [
+        {
+          "current": "\tdependentCheckedRecordSelection\n",
+          "previous": "\tdependentCheckedRecordBrowserSelection\n",
+          "start": 893
+        },
+        {
+          "current": "\t\tconst selection = dependentCheckedRecordSelection(route);\n",
+          "previous": "\t\tconst selection = dependentCheckedRecordBrowserSelection(route);\n",
+          "start": 5473
+        }
+      ],
+      "path": "scripts/archive-dependent-checked-record-ruby-evidence.mjs",
+      "previousSha256": "c559d76ffb4089740c50df245fa61fc2898d106736b526edbe9bf69c29838f48"
+    },
+    {
+      "currentSha256": "385c0ae7ae835bd10da9d3ed5b65c496c0818c5c2d13a327da4a591aba6fa098",
+      "edits": [
+        {
+          "current": "\tdependentCheckedRecordSelection\n",
+          "previous": "\tdependentCheckedRecordBrowserSelection\n",
+          "start": 969
+        },
+        {
+          "current": "\t\tconst selection = dependentCheckedRecordSelection(route);\n",
+          "previous": "\t\tconst selection = dependentCheckedRecordBrowserSelection(route);\n",
+          "start": 5406
+        }
+      ],
+      "path": "scripts/archive-dependent-checked-record-rust-evidence.mjs",
+      "previousSha256": "6b2de325994e57dde8b69fc4affc67e239144dfc0710e148060f9e3f3cf1aec4"
+    }
+  ]
+}
