@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadOrdinaryEvidenceExpectationSource, zeroPayloadOrdinaryEvidenceExpectationChangedPaths, zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths } from "./zero-payload-ordinary-evidence-expectation-source-history.mjs";
 import { beforeHistoryReaderBufferRepairSource, historyReaderBufferRepairChangedPaths, historyReaderBufferRepairIntegrationPaths } from "./history-reader-buffer-repair-source-history.mjs";
 import { beforeHubTransitionGapSource, hubTransitionGapChangedPaths, hubTransitionGapHistoricalPaths } from "./hub-transition-gap-source-history.mjs";
 import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from "./history-reader-hub-repair-source-history.mjs";
@@ -1440,7 +1441,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...historyReaderBufferRepairChangedPaths
+	...zeroPayloadOrdinaryEvidenceExpectationChangedPaths
+	, ...zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths
+	, ...historyReaderBufferRepairChangedPaths
 	, ...historyReaderBufferRepairIntegrationPaths
 	, ...hubTransitionGapChangedPaths
 	, ...hubTransitionGapHistoricalPaths
@@ -1998,7 +2001,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const bufferRepair = beforeHistoryReaderBufferRepairSource(path, text, expected);
+	const evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
+		path, text, expected
+	);
+	if(sha256(evidenceExpectation) === expected) return evidenceExpectation;
+	const bufferRepair = beforeHistoryReaderBufferRepairSource(
+		path, evidenceExpectation, expected
+	);
 	if(sha256(bufferRepair) === expected) return bufferRepair;
 	const hubGap = beforeHubTransitionGapSource(path, bufferRepair, expected);
 	if(sha256(hubGap) === expected) return hubGap;

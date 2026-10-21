@@ -1,0 +1,304 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0cea24d814a94e35b9b417d29dba011151ab94da22973d9794facbe4e999b508",
+      "path": "scripts/update-zero-payload-ordinary-evidence-expectation-source-history.mjs"
+    },
+    {
+      "currentSha256": "e50233de074f69deacfb382dc11d260e54b0dc5e1b30d4b65062ce3bc98519e9",
+      "path": "tests/helpers/zero-payload-ordinary-evidence-expectation-source-history.mjs"
+    },
+    {
+      "currentSha256": "9a4d5d55c738429259687ed830c203ce268b4c105e2f0ef96c2aea44f03b3f82",
+      "path": "tests/helpers/zero-payload-ordinary-evidence-expectation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "f29a3a93bc046d285ae59c94b0d48af81cfca140",
+  "integrationUpdates": [
+    {
+      "currentSha256": "46b787e8427b861b3b1f1699cdc8bc7af1a80e2d26135316b50dcbffa39bca15",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 29500
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 40480
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 51025
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 707849
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 721880
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 733255
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 747475
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 758929
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 771000
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 782288
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 790871
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 797329
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 805715
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 813692
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 836622
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1078215
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1084913
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1091916
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1099422
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1106376
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1114010
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1123248
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1132375
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1147310
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1155357
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1164329
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1173720
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1186743
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1219855
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1250099
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1283035
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1322338
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1348879
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1371259
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1391151
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1412604
+        },
+        {
+          "current": "          \"sha256\": \"d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c\"\n",
+          "previous": "          \"sha256\": \"db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658\"\n",
+          "start": 1425623
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1519350
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1523361
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1526867
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1530743
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1534222
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1537706
+        },
+        {
+          "current": "          \"sha256\": \"a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c\"\n",
+          "previous": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "start": 1541194
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "6b0921fcd74b5ea6b6d1f550c44614e8e708913ac8d328f8d5cd508da01524d6"
+    },
+    {
+      "currentSha256": "7bd30f8f9cf6dcbf1304529dcade360e705f9bd64666a1c0955020ebf1d72ec8",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadOrdinaryEvidenceExpectationSource, zeroPayloadOrdinaryEvidenceExpectationChangedPaths, zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths } from \"./zero-payload-ordinary-evidence-expectation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadOrdinaryEvidenceExpectationChangedPaths\n\t, ...zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths\n\t, ...historyReaderBufferRepairChangedPaths\n",
+          "previous": "\t...historyReaderBufferRepairChangedPaths\n",
+          "start": 118507
+        },
+        {
+          "current": "\tconst evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(evidenceExpectation) === expected) return evidenceExpectation;\n\tconst bufferRepair = beforeHistoryReaderBufferRepairSource(\n\t\tpath, evidenceExpectation, expected\n\t);\n",
+          "previous": "\tconst bufferRepair = beforeHistoryReaderBufferRepairSource(path, text, expected);\n",
+          "start": 143423
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "18745791b7f4b720b254d16083d570d3dd9dd2c2d181fa804b7e2dc4ef3afc8a"
+    },
+    {
+      "currentSha256": "a3714ca276cd6b2282ea7346530b95eac79353afd6e1518b52ae54c0f2943f9c",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-ordinary-evidence-expectation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2328
+        }
+      ],
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f"
+    }
+  ],
+  "milestone": "zero-payload-ordinary-evidence-expectation-source-v1",
+  "predecessorCommit": "cabf49560ab4849897cbebb2561611415f2a8eed",
+  "reconciledTypeSurfacePointers": 44,
+  "schemaVersion": 1,
+  "scope": "The ordinary copied checked-record expectations include only the exact hosted zero-payload Rust, .NET and JVM receipts already promoted for parameter and result cells.",
+  "updates": [
+    {
+      "currentSha256": "d0c6e5b6a76eabd34a4d87b25c57331be20c9c436af90ebaa8c93b14d9a8433c",
+      "edits": [
+        {
+          "current": "\t\t\t\t\tconst zeroPayloadLane = {\n\t\t\t\t\t\trust: \"rust\", dotnet: \"dotnet\", java: \"jvm\", kotlin: \"jvm\"\n\t\t\t\t\t}[profile];\n\t\t\t\t\tconst zeroPayload = !zeroPayloadLane || cell.position === \"field\" ? []\n\t\t\t\t\t\t: (cell.position === \"result\" ? [\"ordinary-source\", \"result-only-ordinary-source\"]\n\t\t\t\t\t\t\t: [\"ordinary-source\"]).map(route =>\n\t\t\t\t\t\t\t`zero-payload-${zeroPayloadLane}-${route}-hosted-installed`);\n",
+          "previous": "",
+          "start": 37942
+        },
+        {
+          "current": "\t\t\t\t\t\t, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed, ...zeroPayload]);\n",
+          "previous": "\t\t\t\t\t\t, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed]);\n",
+          "start": 38369
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "db7c612b734fed22f74308736f5d177c3041b49cdfe355d6cd1ef04838544658"
+    }
+  ]
+}
