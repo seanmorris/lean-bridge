@@ -11,6 +11,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { validateBindingIr } from "../../src/binding-ir/contract.mjs";
+import { generateJavaScriptPackage } from "../../src/backends/javascript/generate.mjs";
 import {
 	generateCompilerAdapters, validateCompilerAdapterPlan
 } from "../../src/build/compiler-adapters.mjs";
@@ -122,6 +123,31 @@ test("four dependent author selections retain the exact field relation", async (
 		assert.throws(() => dependentCheckedRecordSelection(route)
 			, /Unknown dependent checked-record route/u);
 });
+
+test("generated JavaScript validates Fin fields against their sibling bound"
+	, async () => {
+	const expected = dependentCheckedRecordSelection("ordinary-source").expected;
+	const generated = generateJavaScriptPackage(expected);
+	const validators = await import(`data:text/javascript,${encodeURIComponent(
+		generated["internal/validators.mjs"]
+	)}`);
+	const refinement = expected.declarations[0].source.extensions[
+		"lean-lang.org/refinements"
+	].parameters[0];
+	assert.doesNotThrow(() => validators.assertNestedFin({
+		bound: 3n, below: 2n
+	}, refinement, "value"));
+	assert.throws(() => validators.assertNestedFin({
+		bound: 3n, below: 3n
+	}, refinement, "value"), /value\.below must be bigint below 3/u);
+	assert.throws(() => validators.assertNestedFin({
+		bound: "3", below: 2n
+	}, refinement, "value"), /value\.bound must be bigint/u);
+	assert.throws(() => validators.assertNestedFin({
+		bound: 3n, below: -1n
+	}, refinement, "value"), /value\.below must be non-negative bigint/u);
+	}
+);
 
 const observation = (profile, route) => ({
 	schemaVersion: 1, profile, module: dependentCheckedRecordName

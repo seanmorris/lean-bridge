@@ -693,7 +693,13 @@ const emitValidators = (ir, typeMap) => {
 				, ...nominalSites ? [
 					"  if (refinement.kind === 'record' || refinement.kind === 'checked-record' || refinement.kind === 'variant') {"
 					, "    const fields = refinement.kind === 'variant' ? refinement.cases.find(branch => branch.name === value.kind).fields : refinement.fields;"
-					, "    for (const field of fields) assertNestedFin(value[field.name], field.refinement, path + '.' + field.name);"
+					, "    for (const field of fields) {"
+					, "      const fieldPath = path + '.' + field.name, fieldRefinement = field.refinement;"
+					, "      if (fieldRefinement?.kind === 'fin-field') {"
+					, "        const boundPath = path + '.' + fieldRefinement.field, bound = value[fieldRefinement.field];"
+					, "        assertNat(bound, boundPath); assertFin(value[field.name], bound, fieldPath);"
+					, "      } else assertNestedFin(value[field.name], fieldRefinement, fieldPath);"
+					, "    }"
 					, "    return;"
 					, "  }"
 				] : []
