@@ -543,6 +543,8 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 							`checked-record-value-index-${valueIndexLane}-${route}-hosted-installed`);
 					const zeroPayloadLane = {
 						rust: "rust", dotnet: "dotnet", java: "jvm", kotlin: "jvm"
+						, python: "python", ruby: "ruby", "php-native": "php"
+						, "wit-wasi": "wit"
 					}[profile];
 					const zeroPayload = !zeroPayloadLane || cell.position === "field" ? []
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]

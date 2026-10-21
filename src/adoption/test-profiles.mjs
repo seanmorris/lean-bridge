@@ -361,6 +361,7 @@ const profileManifest = Object.freeze({
 		, "checked-records"
 		, "zero-payload-checked-record-browser-evidence"
 		, "zero-payload-checked-record-browser-foundation"
+		, "zero-payload-checked-record-hosted-promotion"
 		, "zero-payload-checked-record-dotnet"
 		, "zero-payload-checked-record-dotnet-evidence"
 		, "zero-payload-checked-record-dotnet-promotion"
