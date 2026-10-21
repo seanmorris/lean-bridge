@@ -73,6 +73,15 @@ const putFile = async (path, source) => {
 		, sha256: await zeroPayloadHostedDigest(source), source
 	});
 };
+const stableTools = tools => ({
+	...tools, measurements: tools.measurements.map(measurement => {
+		assert.match(measurement.cwd
+			, /^\/tmp\/lean-bridge-zero-payload-dotnet-[^/]+\/toolchain$/u);
+		const stable = { ...measurement };
+		Reflect.deleteProperty(stable, "cwd");
+		return stable;
+	})
+});
 
 const extracted = await extractZeroPayloadHostedArtifact(
 	selected["artifact-zip"]);
@@ -103,15 +112,16 @@ try
 			originals.set(path, await readFile(join(recordsRoot, path)));
 		const report = JSON.parse(originals.get("report.json"));
 		runtime ??= report.runtime;
-		tools ??= report.tools;
+		const toolIdentity = stableTools(report.tools);
+		tools ??= toolIdentity;
 		assert.deepEqual(report.runtime, runtime, `${route} runtime identity`);
-		assert.deepEqual(report.tools, tools, `${route} toolchain identity`);
+		assert.deepEqual(toolIdentity, tools, `${route} toolchain identity`);
 		const ceilings = new Set(report.resourceChecks.map(item => item.maxLoad));
 		assert.equal(ceilings.size, 1, `${route} load ceiling`);
 		const routeCeiling = [...ceilings][0];
 		loadCeiling ??= routeCeiling;
 		assert.equal(routeCeiling, loadCeiling, `${route} shared load ceiling`);
-		const tap = await readFile(join(cell, "run.tap"));
+		const tap = await readFile(join(cell, "run.tap"), "utf8");
 		const options = {
 			route, producer: revision, consumer: revision
 			, directory: recordsRoot, tap: join(cell, "run.tap")
