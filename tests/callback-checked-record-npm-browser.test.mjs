@@ -22,6 +22,7 @@ import { callbackCheckedRecordConfiguration, callbackCheckedRecordFixture, callb
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
+import "./helpers/callback-checked-record-npm-browser-source-history-tests.mjs";
 
 const npmFlag = "LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NPM_TEST";
 const browserFlag = "LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_BROWSER_TEST";

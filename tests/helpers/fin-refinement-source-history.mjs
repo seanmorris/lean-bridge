@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
 import { beforeDependentCheckedRecordTypeSurfaceGapSource, dependentCheckedRecordTypeSurfaceGapHistoricalPaths, dependentCheckedRecordTypeSurfaceGapIntegrationPaths } from "./dependent-checked-record-type-surface-gap-source-history.mjs";
 import { beforeDependentCheckedRecordPhpWasmSource, dependentCheckedRecordPhpWasmChangedPaths, dependentCheckedRecordPhpWasmIntegrationPaths } from "./dependent-checked-record-php-wasm-source-history.mjs";
@@ -1478,7 +1479,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordFoundationChangedPaths
+	...callbackCheckedRecordNpmBrowserChangedPaths
+	, ...callbackCheckedRecordNpmBrowserIntegrationPaths
+	, ...callbackCheckedRecordFoundationChangedPaths
 	, ...callbackCheckedRecordFoundationIntegrationPaths
 	, ...dependentCheckedRecordTypeSurfaceGapHistoricalPaths
 	, ...dependentCheckedRecordTypeSurfaceGapIntegrationPaths
@@ -2111,7 +2114,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const callbackCheckedRecordFoundation = beforeCallbackCheckedRecordFoundationSource(path, text, expected);
+	const callbackCheckedRecordNpmBrowser = beforeCallbackCheckedRecordNpmBrowserSource(path, text, expected);
+	if(sha256(callbackCheckedRecordNpmBrowser) === expected) return callbackCheckedRecordNpmBrowser;
+	const callbackCheckedRecordFoundation = beforeCallbackCheckedRecordFoundationSource(path, callbackCheckedRecordNpmBrowser, expected);
 	if(sha256(callbackCheckedRecordFoundation) === expected) return callbackCheckedRecordFoundation;
 	const dependentCheckedRecordTypeSurfaceGap
 		= beforeDependentCheckedRecordTypeSurfaceGapSource(
