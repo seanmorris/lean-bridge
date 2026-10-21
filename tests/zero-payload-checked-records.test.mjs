@@ -129,7 +129,8 @@ test("fresh Lean admits proof-only and Unit-bearing checked records with exact e
 		, { parameters: [], result: { kind: "checked-record", definition: `${module}.Witness`, constructor: null, fields: [] } });
 	assert.deepEqual(exportNamed(model, "tokenTag").refinements
 		, { parameters: [{ kind: "checked-record", definition: `${module}.Token`, constructor: `${module}.mkToken`, fields: ["tag"] }], result: null });
-	assert.deepEqual(exportNamed(model, "markerCount").refinements, { parameters: [null], result: null });
+	// A plain empty record is unrefined, so its export carries no refinement metadata at all.
+	assert.equal(exportNamed(model, "markerCount").refinements, undefined);
 	// Mirrors exist for both checked records; the nullary constructor is applied with no payload.
 	const source = adapters.leanSource;
 	for(const name of ["Witness", "Token"])

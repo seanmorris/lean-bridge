@@ -1,16 +1,16 @@
 namespace ZeroPayloadCheckedRecords
 
 /-- A proof-only checked record: no runtime field, one erased proof. -/
-structure Witness where
+structure Witness : Type where
   positive : 0 < 1
 
 /-- A Unit-bearing checked record: one runtime `Unit` field beside an erased proof. -/
-structure Token where
+structure Token : Type where
   tag : Unit
   fresh : True
 
 /-- A plain empty record: no fields and no proofs, so it is never a checked record. -/
-structure Marker where
+structure Marker : Type where
 
 /-- Checked constructors: a nullary constructor is the only proof source for a `Witness`. -/
 @[noinline] def mkWitness : Option Witness := some ⟨Nat.zero_lt_one⟩

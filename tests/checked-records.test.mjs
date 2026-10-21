@@ -195,7 +195,10 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, [copied, componentSite]
 		, [copied, componentIndex("bool", "false")]
 		, [copied, componentIndex("string", "")]
-		, [copied, componentIndex("string", "λ🌱")]];
+		, [copied, componentIndex("string", "λ🌱")]
+		// Proof-only records carry erased proofs and no payload field.
+		, ["native-metadata-type", { ...native, fields: [] }]
+		, [copied, { ...component, fields: [] }]];
 	for(const [reference, value] of valid)
 		assert.equal(await jsonSchemaErrors(reference, value), null, `${reference} ${value.kind}`);
 	const malformed = [
@@ -220,9 +223,7 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, ["native-metadata-type", { ...nativeSite, base: nativeNat }, "a checked-record predicate over Nat"]
 		, ["native-metadata-type", { ...nativeSite, base: { ...native, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
 		, ["native-metadata-type", { kind: "refinement", base: { ...nativeNat, name: "string", lean: "String" }, predicate: { kind: "fin", bound: "10" }, abi }, "a Fin predicate over String"]
-		, ["native-metadata-type", { kind: "refinement", base: native, predicate: { kind: "subtype", constructor: `${module}.mkTriple` }, abi }, "a Subtype predicate over a record"]
-		, ["native-metadata-type", { ...native, fields: [] }, "erased proofs without a payload"]
-		, [copied, { ...component, fields: [] }, "erased proofs without a payload"]];
+		, ["native-metadata-type", { kind: "refinement", base: native, predicate: { kind: "subtype", constructor: `${module}.mkTriple` }, abi }, "a Subtype predicate over a record"]];
 	for(const [reference, value, label] of malformed) assert.notEqual(await jsonSchemaErrors(reference, JSON.parse(JSON.stringify(value))), null, `${reference}: ${label}`);
 });
 

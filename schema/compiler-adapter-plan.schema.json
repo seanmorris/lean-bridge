@@ -243,7 +243,7 @@
         } }
       },
       "allOf": [
-        { "if": { "required": ["erased"] }, "then": { "properties": { "kind": { "const": "record" }, "fields": { "minItems": 1 } } } }
+        { "if": { "required": ["erased"] }, "then": { "properties": { "kind": { "const": "record" } } } }
       ],
       "oneOf": [
         { "properties": { "kind": { "const": "record" } }, "required": ["fields"], "not": { "anyOf": [{ "required": ["cases"] }, { "required": ["target"] }] } },
