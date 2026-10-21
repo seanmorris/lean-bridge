@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadHostedArchivePreparationSource, zeroPayloadHostedArchivePreparationChangedPaths, zeroPayloadHostedArchivePreparationIntegrationPaths } from "./zero-payload-hosted-archive-preparation-source-history.mjs";
 import { beforeZeroPayloadBrowserEvidenceSource, zeroPayloadBrowserEvidenceChangedPaths, zeroPayloadBrowserEvidenceIntegrationPaths } from "./zero-payload-browser-evidence-source-history.mjs";
 import { beforeZeroPayloadOrdinaryEvidenceExpectationSource, zeroPayloadOrdinaryEvidenceExpectationChangedPaths, zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths } from "./zero-payload-ordinary-evidence-expectation-source-history.mjs";
 import { beforeHistoryReaderBufferRepairSource, historyReaderBufferRepairChangedPaths, historyReaderBufferRepairIntegrationPaths } from "./history-reader-buffer-repair-source-history.mjs";
@@ -1442,7 +1443,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadBrowserEvidenceChangedPaths
+	...zeroPayloadHostedArchivePreparationChangedPaths
+	, ...zeroPayloadHostedArchivePreparationIntegrationPaths
+	, ...zeroPayloadBrowserEvidenceChangedPaths
 	, ...zeroPayloadBrowserEvidenceIntegrationPaths
 	, ...zeroPayloadOrdinaryEvidenceExpectationChangedPaths
 	, ...zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths
@@ -2004,8 +2007,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const browserEvidence = beforeZeroPayloadBrowserEvidenceSource(
+	const archivePreparation = beforeZeroPayloadHostedArchivePreparationSource(
 		path, text, expected
+	);
+	if(sha256(archivePreparation) === expected) return archivePreparation;
+	const browserEvidence = beforeZeroPayloadBrowserEvidenceSource(
+		path, archivePreparation, expected
 	);
 	if(sha256(browserEvidence) === expected) return browserEvidence;
 	const evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
