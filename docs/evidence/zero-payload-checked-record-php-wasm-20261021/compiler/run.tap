@@ -1,0 +1,38 @@
+TAP version 13
+# Subtest: fresh Lean PHP-Wasm zero-payload checked-record ordinary-source
+ok 1 - fresh Lean PHP-Wasm zero-payload checked-record ordinary-source
+  ---
+  duration_ms: 29159.305674
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"ordinary-source","module":"ZeroPayloadCheckedRecords","pointerBits":32,"exports":11,"generatedCSha256":"31c9c0d16b5a5d5ab7c52248abbd293f54ea586f0bd2af4a53ec84dac6b0c5ea","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm zero-payload checked-record reviewed-ir
+ok 2 - fresh Lean PHP-Wasm zero-payload checked-record reviewed-ir
+  ---
+  duration_ms: 25125.127027
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"reviewed-ir","module":"ZeroPayloadCheckedRecords","pointerBits":32,"exports":11,"generatedCSha256":"31c9c0d16b5a5d5ab7c52248abbd293f54ea586f0bd2af4a53ec84dac6b0c5ea","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm zero-payload checked-record result-only-ordinary-source
+ok 3 - fresh Lean PHP-Wasm zero-payload checked-record result-only-ordinary-source
+  ---
+  duration_ms: 24543.834556
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"result-only-ordinary-source","module":"ZeroPayloadCheckedRecords","pointerBits":32,"exports":6,"generatedCSha256":"93cb825b0b8a6541c3b787722e3667f71613c342a37c35fb5dc783d8418c3375","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm zero-payload checked-record result-only-reviewed-ir
+ok 4 - fresh Lean PHP-Wasm zero-payload checked-record result-only-reviewed-ir
+  ---
+  duration_ms: 23939.143786
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"result-only-reviewed-ir","module":"ZeroPayloadCheckedRecords","pointerBits":32,"exports":6,"generatedCSha256":"93cb825b0b8a6541c3b787722e3667f71613c342a37c35fb5dc783d8418c3375","installedAcceptance":false}
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 103403.17174

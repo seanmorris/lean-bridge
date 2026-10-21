@@ -1,0 +1,106 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "b4598ce75bf3b59a71cee26d545dd4ff",
+    "packages": [
+        {
+            "name": "brick/math",
+            "version": "1.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-zero-payload-php-wasm-installed-mDEEsJ/consumer/project/feed/brick-math-1.0.0.zip",
+                "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Math\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Brick\\Math\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Arbitrary-precision arithmetic library",
+            "keywords": [
+                "Arbitrary-precision",
+                "Arithmetic",
+                "BigDecimal",
+                "BigInteger",
+                "BigNumber",
+                "BigRational",
+                "Bignum",
+                "Brick",
+                "Decimal",
+                "Integer",
+                "Math",
+                "Mathematics",
+                "Rational"
+            ]
+        },
+        {
+            "name": "lean-bridge-zeropayloadcheckedrecords/wasm",
+            "version": "1.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-zero-payload-php-wasm-installed-mDEEsJ/consumer/project/feed/api.zip",
+                "shasum": "4e8f0992aff7df738c2dcab942416c0d8600d186"
+            },
+            "require": {
+                "brick/math": "1.0.0",
+                "php": ">=8.4 <8.5"
+            },
+            "type": "library",
+            "extra": {
+                "lean-bridge": {
+                    "component": {
+                        "id": "zeropayloadcheckedrecords@1.0.0",
+                        "name": "zeropayloadcheckedrecords",
+                        "version": "1.0.0"
+                    },
+                    "componentIdentity": "b30c808da8e9b17a2f67ce1f39b0e7e9e7cd71026ee4306935836803a0dfaab9",
+                    "namespace": "LeanZeropayloadcheckedrecords",
+                    "npm": {
+                        "name": "lean-bridge-zeropayloadcheckedrecords-wasm",
+                        "version": "1.0.0"
+                    },
+                    "profile": "php-wasm-copied-loading-v1",
+                    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Api.php"
+                ]
+            },
+            "description": "Compiled Lean copied API for PHP-Wasm: zeropayloadcheckedrecords"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.4.1"
+    },
+    "plugin-api-version": "2.6.0"
+}

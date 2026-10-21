@@ -1,0 +1,273 @@
+{
+  "arrangement": "bundled",
+  "loading": "lazy",
+  "mode": "strict",
+  "observation": {
+    "calls": 30,
+    "checks": 81,
+    "php": "8.4.1",
+    "recoveries": 8,
+    "rejections": 8,
+    "snapshots": 30,
+    "word_bits": 32
+  },
+  "phases": [
+    {
+      "libraries": [],
+      "stage": "ready"
+    },
+    {
+      "libraries": [],
+      "stage": "autoload"
+    },
+    {
+      "libraries": [],
+      "stage": "invalid"
+    },
+    {
+      "libraries": [
+        "php8.4-lb_zeropayloadcheckedrecords_834ec6e6a2df33dc.so",
+        "liblean_bridge_php_wasm_copied_488de83b725bba40a9b4.so"
+      ],
+      "stage": "complete"
+    }
+  ],
+  "realm": "chromium",
+  "requests": [
+    {
+      "bytes": 659,
+      "path": "browser.mjs",
+      "sha256": "131bb94535ea817056a1218fd74a7a77ba21675e3e7abe4bd86ab75057cc4301"
+    },
+    {
+      "bytes": 6372,
+      "path": "bundled/assets/Api-DEceGyPD.php",
+      "sha256": "2030e9daa318093da6df5cd64fbc5e6a3b96c583ef2e526c69bec066f5ad7b2f"
+    },
+    {
+      "bytes": 526,
+      "path": "bundled/assets/autoload-LNWRhOxM.php",
+      "sha256": "f1d3416b09e0d9e4f6db55b6d64dc1c73b29f66c2f0babc98ae3c2bdeed1c123"
+    },
+    {
+      "bytes": 2078,
+      "path": "bundled/assets/BcMathCalculator-D1d3fsMs.php",
+      "sha256": "aaf790516424d97f2257bf6fdc7eee9a95fc5440abd11d2fbc4f09ba73549b6a"
+    },
+    {
+      "bytes": 38820,
+      "path": "bundled/assets/BigDecimal-U-4zv-DP.php",
+      "sha256": "ccf44c9e463182dd158190fd3b27b631ea7a58968505157e2bc715b61604515c"
+    },
+    {
+      "bytes": 47781,
+      "path": "bundled/assets/BigInteger-Drt0l9gV.php",
+      "sha256": "a6d7b7824a8399ece864332672800f13be4ef57609f868dd577de2cf586bc3a1"
+    },
+    {
+      "bytes": 31254,
+      "path": "bundled/assets/BigNumber-BOh00sJ1.php",
+      "sha256": "5a2a5ad1e73835fb200bbf1f959dbd36b8785b5e4a1c7c9ef505992130c08049"
+    },
+    {
+      "bytes": 18121,
+      "path": "bundled/assets/BigRational-DYh_yduf.php",
+      "sha256": "99d999ae1d4ccb9bbe231a2e5242f315b9483f317b8b5bd226277ced1a4ba2ab"
+    },
+    {
+      "bytes": 134,
+      "path": "bundled/assets/bootstrap-B1rAJNnz.php",
+      "sha256": "6e918326a787c7443d044f36a92fd4659e4d118ece57d37c33eaa47305f1f6d3"
+    },
+    {
+      "bytes": 20316,
+      "path": "bundled/assets/Calculator-B6DoI_Oc.php",
+      "sha256": "a92ba12d6e6487ef8ee6cf435ede5b2d4f4d4684b7bca14aa9c133b842724655"
+    },
+    {
+      "bytes": 1887,
+      "path": "bundled/assets/CalculatorRegistry-DQYgTV87.php",
+      "sha256": "7047026d82935de4736cb9f2f73915a75c2e9a776c68476b72bd430cab115088"
+    },
+    {
+      "bytes": 816,
+      "path": "bundled/assets/composer-Cw-cIu2D.json",
+      "sha256": "fe93d538393d24617d615b373389d8a8970d8be18a8928d17c5a5cd9381a6522"
+    },
+    {
+      "bytes": 4779,
+      "path": "bundled/assets/DecimalHelper-A-kJK6uv.php",
+      "sha256": "6884286a2dd2ebbba5d373140e2cca58d6efb8dd63b0868e517fb39eff4ad016"
+    },
+    {
+      "bytes": 1296,
+      "path": "bundled/assets/DivisionByZeroException-BEvbaNsf.php",
+      "sha256": "6dad71505461e21c56db4222659891b1a4efa8bf7737290418668aa881f6c3d3"
+    },
+    {
+      "bytes": 3668,
+      "path": "bundled/assets/GmpCalculator-C7z7pZea.php",
+      "sha256": "0351a740b49e88cf379319af9fccab8c8f437cd5d54b2d57b79c1ea72fcc0420"
+    },
+    {
+      "bytes": 1174,
+      "path": "bundled/assets/IntegerOverflowException-CrEnLE3H.php",
+      "sha256": "d4264eb4bc039baa7cb8a4aa62c8928c85ff947e9823532095e156d87392455b"
+    },
+    {
+      "bytes": 2957,
+      "path": "bundled/assets/InvalidArgumentException-BMyrxekd.php",
+      "sha256": "c25c58c48379436ce704ea28cc3c5cff5f853ed5e2b439e639d198ed7bdfddf9"
+    },
+    {
+      "bytes": 55,
+      "path": "bundled/assets/lazy-library-DZ3SsNJ1.txt",
+      "sha256": "477b3e11211799320f193ebe91ea5cc98a79472e58797d62330775c78a616d0a"
+    },
+    {
+      "bytes": 9045493,
+      "path": "bundled/assets/liblean_bridge_php_wasm_copied_488de83b725bba40a9b4-BA7s2W95.so",
+      "sha256": "fcbab3494667abe57f38fceff49d6c8a42a8f9b6de3c1fd824d19f021c532f73"
+    },
+    {
+      "bytes": 1089,
+      "path": "bundled/assets/LICENSE-D5f2tizp.",
+      "sha256": "d2625cc652e6ffa9f16827f1dba2d83ac12b050dc8150a38720420dbb810cae3"
+    },
+    {
+      "bytes": 179,
+      "path": "bundled/assets/MathException-TutKUxxq.php",
+      "sha256": "34033cc2b90fa897e9e79d05a589c8e6411b9a117a80765b58013eacad0b255e"
+    },
+    {
+      "bytes": 23566,
+      "path": "bundled/assets/Native-B9dSULED.php",
+      "sha256": "e372374b5bb87fb3c5fc28ffd2e938c891087300727e2dc46339af7ade25d49a"
+    },
+    {
+      "bytes": 14245,
+      "path": "bundled/assets/NativeCalculator-CJrniA0M.php",
+      "sha256": "4980f1a9b620a8de0588a018276044ed20c01293c2a0254613094e81e1cb6c1a"
+    },
+    {
+      "bytes": 1316,
+      "path": "bundled/assets/NegativeNumberException-oICiMV3W.php",
+      "sha256": "2c6a1c878e96bbb06d07fcd64ce06b66e5ac56f5ba51a2ba69cdd62b1f5dfd6d"
+    },
+    {
+      "bytes": 658,
+      "path": "bundled/assets/NoInverseException-DYHb7JYz.php",
+      "sha256": "1e072b6b8802ef678cd8aed6aab4f5534e83e514c67c10cfbd457aa9e67d77d2"
+    },
+    {
+      "bytes": 3718,
+      "path": "bundled/assets/NumberFormatException-BczxvGcb.php",
+      "sha256": "9513693ceea593b6686ca7ef9253c595c6502145382f9da9872c791b37b5a258"
+    },
+    {
+      "bytes": 1705,
+      "path": "bundled/assets/NumberSyntax-DdIKzaZ-.php",
+      "sha256": "f5ad04274721dd3bbc4572b90eb8e71fb47d052fd1ab6974e08aa013fef94b9e"
+    },
+    {
+      "bytes": 45376,
+      "path": "bundled/assets/php8.4-lb_zeropayloadcheckedrecords_834ec6e6a2df33dc-n9Y2cHDT.so",
+      "sha256": "8f9b0314faeaad5d08308a25c7b0ad5e601025af0515fefa4d3faecd3428b399"
+    },
+    {
+      "bytes": 1283,
+      "path": "bundled/assets/PlatformException-nKrPHxg9.php",
+      "sha256": "b2bc33189336bf6c8b3b145bd8c8397218e90588cca9ead140ef4a66d1c6be51"
+    },
+    {
+      "bytes": 1343,
+      "path": "bundled/assets/RandomSourceException-BXE4K5D6.php",
+      "sha256": "462eb152713684b4d5ac0efe2fa27f8b2fd0d877ceb3e7315516757c5640e67c"
+    },
+    {
+      "bytes": 5370,
+      "path": "bundled/assets/RoundingMode-C0ErGqbh.php",
+      "sha256": "1b7e6399d071d1ee922ec6ee928ae06bfa092b6d932af5faac8fbe65ef9b258d"
+    },
+    {
+      "bytes": 3878,
+      "path": "bundled/assets/RoundingNecessaryException-CkUeRH_k.php",
+      "sha256": "3f9e061a0eeda28fc35d6f70cd1625c74d3002891c2d063ed2bede16155c8549"
+    },
+    {
+      "bytes": 1645,
+      "path": "bundled/assets/Safe-6AZG9T6I.php",
+      "sha256": "26100429b186305ee9143f0b45c36168c1a7d039099dff13f5ab1a9ca2e32ccf"
+    },
+    {
+      "bytes": 9714,
+      "path": "bundled/consumer.mjs",
+      "sha256": "e175c5da1a90220ded44d0a54d6d22af21a07c6d094dd6f223b6911f5226d590"
+    },
+    {
+      "bytes": 2071,
+      "path": "driver.mjs",
+      "sha256": "e881e52e87a80cb844c6482670b36c98269d6fb79920f39b56b0ce8e2d1d7d78"
+    },
+    {
+      "bytes": 136,
+      "path": "index.html",
+      "sha256": "e7bdb05b23d600679676ce35d4b23336f53614b957ad9b2b0890086c2197fbcc"
+    },
+    {
+      "bytes": 432,
+      "path": "node_modules/php-wasm/_Event.mjs",
+      "sha256": "bbfd97aa6bfd6820733a2be211db73c8e7075ea5e2dbaa1ae29fba3d7a328d00"
+    },
+    {
+      "bytes": 13827389,
+      "path": "node_modules/php-wasm/e31ec3faf3e2323a2b4a448342b50307765b8217.wasm",
+      "sha256": "66b6a6f127e984215d792b676d12bcbb6dd5c3bd09409ca2599a929f77634df0"
+    },
+    {
+      "bytes": 4921,
+      "path": "node_modules/php-wasm/fsOps.mjs",
+      "sha256": "a60922a7d71121fe0dc870e669c8f89f6b5f2e7c0537ca04858d27bd68035d48"
+    },
+    {
+      "bytes": 1939,
+      "path": "node_modules/php-wasm/OutputBuffer.mjs",
+      "sha256": "fdf73a3e360c715bdc8f745b5aa148dbfdf2a9c5808c18cf2e422ecf97061785"
+    },
+    {
+      "bytes": 361124,
+      "path": "node_modules/php-wasm/php8.4-web.mjs",
+      "sha256": "32412e067b635aca6ef29f0a117dfd164736ebfdf5725c68bf92af9cd29ca0e7"
+    },
+    {
+      "bytes": 15298,
+      "path": "node_modules/php-wasm/PhpBase.mjs",
+      "sha256": "d748ee69b4828dc16dc9562b104a44b0eb0136c794c0f641d43bdc9d065e6101"
+    },
+    {
+      "bytes": 4071,
+      "path": "node_modules/php-wasm/PhpWeb.mjs",
+      "sha256": "b981eb4bf99fbd0d5842cc0834f1a505033e9d0a7f9e7e099ae110e18e5943c7"
+    },
+    {
+      "bytes": 3089,
+      "path": "node_modules/php-wasm/resolveDependencies.mjs",
+      "sha256": "f70c7f469d6d47ee268421e976e0f3e536f418f6b1bc8988b0c77d1c912ed08b"
+    },
+    {
+      "bytes": 2083,
+      "path": "node_modules/php-wasm/webTransactions.mjs",
+      "sha256": "16d33557bbb41203a4aecbed0f73e03eae063e1c379ebbf57123a55c87e1f92a"
+    },
+    {
+      "bytes": 159,
+      "path": "request-embedded.json",
+      "sha256": "8c15dfc51b46149dd9ee7cdad9319bda2089515dd7553cd00ba3e67f8a73b11a"
+    },
+    {
+      "bytes": 8264,
+      "path": "strict.php",
+      "sha256": "bded972793b57070b0d4c1f40a47707be3f36186ca5545107ca97ef21b507acb"
+    }
+  ]
+}

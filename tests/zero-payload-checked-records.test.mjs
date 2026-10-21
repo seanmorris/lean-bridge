@@ -29,6 +29,7 @@ import "./helpers/zero-payload-hosted-archive-preparation-source-history-tests.m
 import "./helpers/zero-payload-checked-record-native-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-native-installed-tests.mjs";
 import "./helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs";
+import "./helpers/zero-payload-checked-record-php-wasm-evidence-tests.mjs";
 import "./helpers/zero-payload-native-source-history-tests.mjs";
 import "./helpers/zero-payload-native-archive-source-history-tests.mjs";
 

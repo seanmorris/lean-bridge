@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: installed zero-payload checked records PHP-Wasm result-only-ordinary-source reproduce and relocate
+ok 1 - installed zero-payload checked records PHP-Wasm result-only-ordinary-source reproduce and relocate
+  ---
+  duration_ms: 92587.818366
+  type: 'test'
+  ...
+# Zero-payload PHP-Wasm result-only-ordinary-source: author 0
+# Zero-payload PHP-Wasm result-only-ordinary-source: author 1
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node embedded/startup/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node embedded/startup/strict
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node embedded/lazy/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node embedded/lazy/strict
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node composer/startup/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node composer/startup/strict
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node composer/lazy/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Node composer/lazy/strict
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Chromium bundled/startup/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Chromium bundled/startup/strict
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Chromium bundled/lazy/weak
+# zero-payload-checked-records-result-only-ordinary-source: PHP-Wasm Chromium bundled/lazy/strict
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93211.458932
