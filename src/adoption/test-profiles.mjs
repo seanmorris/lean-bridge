@@ -363,6 +363,7 @@ const profileManifest = Object.freeze({
 		, "zero-payload-checked-record-dotnet"
 		, "zero-payload-checked-record-jvm"
 		, "zero-payload-checked-record-javascript"
+		, "zero-payload-checked-record-rust"
 		, "zero-payload-checked-records"
 		, "closed-generic-checked-record-source-history"
 		, "mutual-checked-record-browser"
