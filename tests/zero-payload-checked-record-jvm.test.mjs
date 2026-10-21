@@ -10,3 +10,4 @@ import "./helpers/zero-payload-checked-record-jvm-ci-policy-tests.mjs";
 import "./helpers/zero-payload-checked-record-jvm-ci-shell-tests.mjs";
 import "./helpers/zero-payload-checked-record-jvm-ci-workflow-tests.mjs";
 import "./helpers/zero-payload-checked-record-jvm-installed-tests.mjs";
+import "./helpers/zero-payload-jvm-source-history-tests.mjs";

@@ -1,0 +1,145 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6d66855f9cabd65778bba401fa9986751deaef3a7f56976cb31c53731078061f",
+      "path": ".github/workflows/zero-payload-checked-record-jvm.yml"
+    },
+    {
+      "currentSha256": "c99f5de2880018571024ac0a61725fa61afc67db793e7227d8f9b122fcefe3a0",
+      "path": "scripts/check-zero-payload-checked-record-jvm-ci.mjs"
+    },
+    {
+      "currentSha256": "903a8a3b3608bd64c156b84683e93fd5a28c4ca028c27be3422158b6c3530472",
+      "path": "scripts/run-zero-payload-checked-record-jvm-ci.sh"
+    },
+    {
+      "currentSha256": "d68b466811e1119f7706085e3b2b1ecdf89a62ea5041fc045ed6b0bbbae7cd33",
+      "path": "tests/fixtures/zero-payload-checked-record-jvm/java.java"
+    },
+    {
+      "currentSha256": "4841c63fa6f43ea35709630a98ca5f4ad8e459d6da88a5fb598f20b9dc046bee",
+      "path": "tests/fixtures/zero-payload-checked-record-jvm/kotlin.kt"
+    },
+    {
+      "currentSha256": "4e30c9255b60c679c853c425200b7d06ecbdfbfb8ecd1b73fc441a8872e636f4",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-caller-tests.mjs"
+    },
+    {
+      "currentSha256": "e17b804484c603a9e5fd0d27a95a377e1c60993005bcb0e6ef7a8d0f87a99622",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-handoff.mjs"
+    },
+    {
+      "currentSha256": "3fd8a430665ca7bf5c559f7d8dc030bb6993537e6a516fbe933acb519134367c",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-policy-tests.mjs"
+    },
+    {
+      "currentSha256": "131e3c718159b9a5d3a0d96a6b76f7761361e2f367df42304482c657d96cb662",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-report.mjs"
+    },
+    {
+      "currentSha256": "d206dee3b7b984fd3a0922152e087f6eb344b65679b1bfbcbc8d5539e7ae5476",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-shell-tests.mjs"
+    },
+    {
+      "currentSha256": "7327578b8e693db64b8debf905aaebf15a9568a2b36f6f143195166628b47695",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-workflow-tests.mjs"
+    },
+    {
+      "currentSha256": "bfea56f01d2b31860cffdcc26c761003b9b5297b6aa730ff7a57c6fb35a313d3",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-ci-workflow.mjs"
+    },
+    {
+      "currentSha256": "08c62a482484a50d2bb65fddd477ad1817dfdac572e9c5a4bfea29326fdc559b",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "d69734a058c88605e54c3aec8de3450acdaa4d142229c78a56ccbdcddf03c03b",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-fixture.mjs"
+    },
+    {
+      "currentSha256": "bc7946084ece285525623ed610de555880e646d1a6ff37c9def76066e2f6edbb",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-installed-static-tests.mjs"
+    },
+    {
+      "currentSha256": "b0f2cc31a0d3a2d49dd55eaf5045e4e437ad34681d015a45bf13dd12cd083ee0",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "3ab87a4297f44b8d8475d1758503aa5780742fe14edf1a91435dcf9482f373b6",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-package.mjs"
+    },
+    {
+      "currentSha256": "59c6817f192dc3cc6baffe870fc8791f8df5eb3491a6b39d0ea9f2fd8d451b5c",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-probe.mjs"
+    },
+    {
+      "currentSha256": "576a91cc77060f407d484eb2f9e50ad6b4181da898758dab35a77535a7b08dc8",
+      "path": "tests/helpers/zero-payload-checked-record-jvm-report.mjs"
+    },
+    {
+      "currentSha256": "1048e188705a0a85ad510cf6bbb671ca02ddc1c0b6b6417236594a85046df200",
+      "path": "tests/zero-payload-checked-record-jvm.test.mjs"
+    },
+    {
+      "currentSha256": "61221957f311278ad80f885ded1336fc73463e6c6be8fb9686b2fce0d9ff5f8f",
+      "path": "scripts/update-zero-payload-jvm-source-history.mjs"
+    },
+    {
+      "currentSha256": "776d12c746e5e3f074fb22c93cfe724db54edb9514e94021ca0f269d9a26555c",
+      "path": "tests/helpers/zero-payload-jvm-source-history.mjs"
+    },
+    {
+      "currentSha256": "2ab951b9c5f2ae990c9a05a33518bfccd9dcfe1e383c873731c80a885aaba4ba",
+      "path": "tests/helpers/zero-payload-jvm-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "7f778e650ec308f8cca6c6fe9e6dcbfb864acd0b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6ed68fc245ae6478e6e535c4a89b329c6eabfb1a93f8da33387db099e61fac7d",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadJvmSource, zeroPayloadJvmChangedPaths, zeroPayloadJvmIntegrationPaths } from \"./zero-payload-jvm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadJvmChangedPaths\n\t, ...zeroPayloadJvmIntegrationPaths\n\t, ...zeroPayloadDotnetControlRepairChangedPaths\n",
+          "previous": "\t...zeroPayloadDotnetControlRepairChangedPaths\n",
+          "start": 113472
+        },
+        {
+          "current": "\tconst zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);\n\tif(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;\n",
+          "previous": "",
+          "start": 135980
+        },
+        {
+          "current": "\t\t= beforeZeroPayloadDotnetControlRepairSource(\n\t\t\tpath, zeroPayloadJvm, expected\n\t\t);\n",
+          "previous": "\t\t= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);\n",
+          "start": 136156
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ce376fbff0a169348e91beda32352e722641d9e49cf30c896d6d63455148f605"
+    }
+  ],
+  "milestone": "zero-payload-jvm-source-v1",
+  "predecessorCommit": "28ead008be53cf8d8ed53b6d5ee6afeb053c6514",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Generated Java and Kotlin keep proof-only, Unit-bearing and plain empty records nominally distinct across full and result-only Maven package routes.",
+  "updates": [
+    {
+      "currentSha256": "1048e188705a0a85ad510cf6bbb671ca02ddc1c0b6b6417236594a85046df200",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-jvm-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 598
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-jvm.test.mjs",
+      "previousSha256": "04d939a6e9a4a1f6c1d152459ea7df6b7a233f7c74f51c131ff5620ad0efae96"
+    }
+  ]
+}

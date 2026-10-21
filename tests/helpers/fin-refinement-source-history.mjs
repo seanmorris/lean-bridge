@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadJvmSource, zeroPayloadJvmChangedPaths, zeroPayloadJvmIntegrationPaths } from "./zero-payload-jvm-source-history.mjs";
 import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from "./zero-payload-dotnet-control-repair-source-history.mjs";
 import { beforeZeroPayloadDotnetArchiveSource, zeroPayloadDotnetArchiveChangedPaths, zeroPayloadDotnetArchiveIntegrationPaths } from "./zero-payload-dotnet-archive-source-history.mjs";
 import { beforeZeroPayloadVariantSource, zeroPayloadVariantChangedPaths, zeroPayloadVariantIntegrationPaths } from "./zero-payload-variant-source-history.mjs";
@@ -1412,7 +1413,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadDotnetControlRepairChangedPaths
+	...zeroPayloadJvmChangedPaths
+	, ...zeroPayloadJvmIntegrationPaths
+	, ...zeroPayloadDotnetControlRepairChangedPaths
 	, ...zeroPayloadDotnetControlRepairIntegrationPaths
 	, ...zeroPayloadDotnetArchiveChangedPaths
 	, ...zeroPayloadDotnetArchiveIntegrationPaths
@@ -1916,8 +1919,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadJvm = beforeZeroPayloadJvmSource(path, text, expected);
+	if(sha256(zeroPayloadJvm) === expected) return zeroPayloadJvm;
 	const zeroPayloadDotnetControlRepair
-		= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);
+		= beforeZeroPayloadDotnetControlRepairSource(
+			path, zeroPayloadJvm, expected
+		);
 	if(sha256(zeroPayloadDotnetControlRepair) === expected)
 		return zeroPayloadDotnetControlRepair;
 	const zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(
