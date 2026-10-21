@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNativeSource, zeroPayloadNativeChangedPaths, zeroPayloadNativeIntegrationPaths } from "./zero-payload-native-source-history.mjs";
 import { beforeZeroPayloadBrowserArchiveSource, zeroPayloadBrowserArchiveChangedPaths, zeroPayloadBrowserArchiveIntegrationPaths } from "./zero-payload-browser-archive-source-history.mjs";
 import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from "./zero-payload-browser-ci-source-history.mjs";
 import { beforeZeroPayloadBrowserSource, zeroPayloadBrowserChangedPaths, zeroPayloadBrowserIntegrationPaths } from "./zero-payload-browser-source-history.mjs";
@@ -1404,7 +1405,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadBrowserArchiveChangedPaths
+	...zeroPayloadNativeChangedPaths
+	, ...zeroPayloadNativeIntegrationPaths
+	, ...zeroPayloadBrowserArchiveChangedPaths
 	, ...zeroPayloadBrowserArchiveIntegrationPaths
 	, ...zeroPayloadBrowserCiChangedPaths
 	, ...zeroPayloadBrowserCiIntegrationPaths
@@ -1892,8 +1895,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);
+	if(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;
 	const zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(
-		path, text, expected
+		path, zeroPayloadNative, expected
 	);
 	if(sha256(zeroPayloadBrowserArchive) === expected)
 		return zeroPayloadBrowserArchive;

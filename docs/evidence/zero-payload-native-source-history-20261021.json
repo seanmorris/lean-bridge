@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "16c0146d0e7f17ec7382396994d42c2d8ff683ac8628e0bb2a22099de53c1535",
+      "path": ".github/workflows/zero-payload-checked-record-native.yml"
+    },
+    {
+      "currentSha256": "ec7010b4b9d3eb9fe4436df802fa50f41acd4aca802f54ecf998e601ec95571e",
+      "path": "scripts/check-zero-payload-checked-record-native-ci.mjs"
+    },
+    {
+      "currentSha256": "48626e2f58dc59c49bf2ae6c1613dad6a1f954eaae88fcdb2a407a4156aef0b6",
+      "path": "scripts/run-zero-payload-checked-record-native-ci.sh"
+    },
+    {
+      "currentSha256": "41970caaab713625663c89309914715137ede146fdc5168340d75f7b280ff5e1",
+      "path": "tests/fixtures/zero-payload-checked-record-native/c.c"
+    },
+    {
+      "currentSha256": "44c153060617ca59db45721ce158b675daa508fc6ad85e809f3ff766d9869327",
+      "path": "tests/fixtures/zero-payload-checked-record-native/cpp.cpp"
+    },
+    {
+      "currentSha256": "88eb4a117cbe8b652798a1fb24bd82f373df63663cfb2cfd019327440a5e01ec",
+      "path": "tests/fixtures/zero-payload-checked-record-native/result-only-c.c"
+    },
+    {
+      "currentSha256": "742756e222e34fd015d61cd80d68cc7c69122160617969525c5e76c747ede132",
+      "path": "tests/fixtures/zero-payload-checked-record-native/result-only-cpp.cpp"
+    },
+    {
+      "currentSha256": "a0cc4fcf5e95394531b61046dbb87ae5b2b72697752a3aa1ba64f6b360939d9e",
+      "path": "tests/helpers/zero-payload-checked-record-native-ci-report.mjs"
+    },
+    {
+      "currentSha256": "10ea8f7f54f22118a0bb300fd368f5e63930cfbd9c2abc6f5fc6d84c342dd6a4",
+      "path": "tests/helpers/zero-payload-checked-record-native-controls.mjs"
+    },
+    {
+      "currentSha256": "6d7406a3619f4688f514887d0ec9feefc179386578eb2208e5c93c2835b8e859",
+      "path": "tests/helpers/zero-payload-checked-record-native-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "c606285434b5f0c10da03870fa362e4661604ec41571b430910cbf374d435ff7",
+      "path": "tests/helpers/zero-payload-checked-record-native-fixture.mjs"
+    },
+    {
+      "currentSha256": "eaa45962486c59f601e38f4e73b1d411ae4bd9f7ec38ef95c62ecd8ad4f640a2",
+      "path": "tests/helpers/zero-payload-checked-record-native-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "e19ece6ab05bd94a6253e07e1e7a82bf95529f35f8f240122f1462fb8696a985",
+      "path": "tests/helpers/zero-payload-checked-record-native-report.mjs"
+    },
+    {
+      "currentSha256": "8498395bd13ca8d1a14ee5e86bfadcba5c2bb99a1c12451a46968df36897f9bf",
+      "path": "scripts/update-zero-payload-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "d3079ba6ee645275ea0ce4cb7fb62ee8f4d014c84978451f7361f5dd4cfadb98",
+      "path": "tests/helpers/zero-payload-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "1f131626ab4ee6254868872bd4b5ae970a9c64f1821fa5f1ff787bce98e2d5e2",
+      "path": "tests/helpers/zero-payload-native-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "15e9c40ccd8e42e1ebe8e2cdcf21049a92117a94",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e82e5a2fe22afa50c38ec6bf90bfcbd0335640b68d9e203853df4d977bd04f59",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNativeSource, zeroPayloadNativeChangedPaths, zeroPayloadNativeIntegrationPaths } from \"./zero-payload-native-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNativeChangedPaths\n\t, ...zeroPayloadNativeIntegrationPaths\n\t, ...zeroPayloadBrowserArchiveChangedPaths\n",
+          "previous": "\t...zeroPayloadBrowserArchiveChangedPaths\n",
+          "start": 112053
+        },
+        {
+          "current": "\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);\n\tif(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;\n",
+          "previous": "",
+          "start": 133871
+        },
+        {
+          "current": "\t\tpath, zeroPayloadNative, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 134095
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "12ec7ce96af490b7204d85d038adbab9e4c106cdc601d99ed8046ee883323a0a"
+    }
+  ],
+  "milestone": "zero-payload-native-source-v1",
+  "predecessorCommit": "88d5b78cb7c77328231f0a89e7d31ab6432c00df",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Zero-payload checked records install offline and retain their nominal identity without carrying proof payload through C or C++.",
+  "updates": [
+    {
+      "currentSha256": "188c366d663d2ab9d3402911a13d1137d4ac937401835294121549f806b34292",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-native-fixture-tests.mjs\";\nimport \"./helpers/zero-payload-checked-record-native-installed-tests.mjs\";\nimport \"./helpers/zero-payload-native-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1592
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "5c716960debb6e941152c678dfd836b9406fbd4041d2e262efe23bbc4655e1b2"
+    }
+  ]
+}
