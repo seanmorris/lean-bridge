@@ -298,3 +298,52 @@ export const dependentCheckedRecordDotnetEvidenceSources = value => {
 		}
 	]);
 };
+
+/**
+ * Select every source that explains the hosted dependent checked-record
+ * Maven artifact and its Java/Kotlin verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordJvmEvidenceSources = value => {
+	const selected = revisions(value);
+	const callers = [caller("java.java"), caller("kotlin.kt")];
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-jvm-installed-tests.mjs"
+				])
+				, ...commonData, ...callers
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-jvm-fixture.mjs"
+				])
+				, ...callers
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-jvm-ci.mjs"
+				])
+				, boundedApt, ".github/workflows/dependent-checked-record-jvm.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-dependent-checked-record-jvm-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-jvm-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};

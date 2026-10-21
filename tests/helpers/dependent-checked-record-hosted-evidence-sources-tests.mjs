@@ -11,6 +11,7 @@ import test from "node:test";
 import {
 	dependentCheckedRecordDotnetEvidenceSources
 	, dependentCheckedRecordHostedOriginal
+	, dependentCheckedRecordJvmEvidenceSources
 	, dependentCheckedRecordPerlEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
@@ -99,6 +100,18 @@ test("dependent .NET evidence closes NuGet production, consumption and checking 
 	, ["checker", ".github/workflows/dependent-checked-record-dotnet.yml"]
 	, ["checker", "scripts/check-dependent-checked-record-dotnet-ci.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-dotnet-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent JVM evidence closes Maven production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordJvmEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/java.java"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/kotlin.kt"]
+	, ["checker", ".github/workflows/dependent-checked-record-jvm.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-jvm-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-jvm-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 
