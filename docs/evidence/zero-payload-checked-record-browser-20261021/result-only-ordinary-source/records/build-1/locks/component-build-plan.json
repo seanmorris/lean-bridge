@@ -1,0 +1,74 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:ZeroPayloadCheckedRecords.maybeWitness",
+      "lean:ZeroPayloadCheckedRecords.produceMark",
+      "lean:ZeroPayloadCheckedRecords.produceMarker",
+      "lean:ZeroPayloadCheckedRecords.produceToken",
+      "lean:ZeroPayloadCheckedRecords.produceWitness",
+      "lean:ZeroPayloadCheckedRecords.witnesses"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "5f06dbec168e81ab085000c1bf77072f86f69a08263c6e7cea195720c52b56d2"
+  },
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 101,
+        "path": "lakefile.toml",
+        "sha256": "07651dcdf51e178b60d2b542b7534905bd760d4feeab3a43d771b7d5952bf50e"
+      },
+      {
+        "bytes": 1707,
+        "path": "lean-bridge.exports.json",
+        "sha256": "945a6aeaf3bf780c4eeeb18befa14ab045f1d2654271a96152a5c58e78136478"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 70,
+        "path": "package.json",
+        "sha256": "89f0ec9f02c9194c35e6ab735b61a7dbb9b0c78d0bf4ee981db38b93434846c2"
+      },
+      {
+        "bytes": 2323,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "sha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+      }
+    ],
+    "lakeSnapshotSha256": "73f7203356df107c3d631e96fbd258599e22b68939875be720d00ab99e3cd482",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "b7d87fe38f8fe612dc70bcb6672694c3c7ccfe61f8e9d93b41a120d9a2367cfb"
+  },
+  "targets": [
+    "npm"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "zeropayloadcheckedrecords",
+  "license": "MIT",
+  "description": "Compiler-checked exports for zeropayloadcheckedrecords.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.446d9ad743b2e3671888b7eefe4f53805b0fb4d42d0b0f9a0c8045696ece4b7f"
+  },
+  "leanBridge": {
+    "component": "zeropayloadcheckedrecords@1.0.0",
+    "componentBundleSha256": "e7311fbfa5f8d5c2aa2c90ace2fa2d1f0810e5c4b6f6e5eeed14fb596254d46d",
+    "componentIdentitySha256": "29ceb4f491d8a9cf7e9b3d752465c9368ad2f2a9eb142848ececdb2a6c8cee8c",
+    "bindingIrSha256": "5f06dbec168e81ab085000c1bf77072f86f69a08263c6e7cea195720c52b56d2",
+    "sharedRuntime": true
+  }
+}

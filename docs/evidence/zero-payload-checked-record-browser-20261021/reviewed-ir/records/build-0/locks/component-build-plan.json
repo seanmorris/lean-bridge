@@ -1,0 +1,84 @@
+{
+  "bindingIr": {
+    "declarations": [
+      "lean:ZeroPayloadCheckedRecords.absentCount",
+      "lean:ZeroPayloadCheckedRecords.markCount",
+      "lean:ZeroPayloadCheckedRecords.markerCount",
+      "lean:ZeroPayloadCheckedRecords.maybeWitness",
+      "lean:ZeroPayloadCheckedRecords.produceMark",
+      "lean:ZeroPayloadCheckedRecords.produceMarker",
+      "lean:ZeroPayloadCheckedRecords.produceToken",
+      "lean:ZeroPayloadCheckedRecords.produceWitness",
+      "lean:ZeroPayloadCheckedRecords.tokenTag",
+      "lean:ZeroPayloadCheckedRecords.witnessCount",
+      "lean:ZeroPayloadCheckedRecords.witnesses"
+    ],
+    "origin": "lean-elaborated",
+    "schemaVersion": 3,
+    "semanticSha256": "ff3debc404b0f2f2bcfeedb5ee08cce29f12df1a1c7cf35c33aa34fc5e51e9e5"
+  },
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "policies": {
+    "compileOnce": true,
+    "privateRuntime": false,
+    "sourceReadOnly": true,
+    "targetSpecificRebuild": false
+  },
+  "runtime": {
+    "abiVersion": 1,
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "profile": "side-lazy",
+    "shared": true
+  },
+  "schemaVersion": 2,
+  "source": {
+    "inputs": [
+      {
+        "bytes": 21362,
+        "path": "api.binding-ir.json",
+        "sha256": "5729dadf55bd74cd38c63e84aa3a0ff278282da2710430e75b835243736377d4"
+      },
+      {
+        "bytes": 101,
+        "path": "lakefile.toml",
+        "sha256": "07651dcdf51e178b60d2b542b7534905bd760d4feeab3a43d771b7d5952bf50e"
+      },
+      {
+        "bytes": 184,
+        "path": "lean-bridge.exports.json",
+        "sha256": "536dd4c38cef158b7cf6fa126e082bbbfb1400ebc25652d5a2b98ccf6a3a474f"
+      },
+      {
+        "bytes": 25,
+        "path": "lean-toolchain",
+        "sha256": "2bdc48adfa58d0017e538a0ad117c5d73d35deec879978f909406a80c8037273"
+      },
+      {
+        "bytes": 1093,
+        "path": "LICENSE",
+        "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+      },
+      {
+        "bytes": 70,
+        "path": "package.json",
+        "sha256": "89f0ec9f02c9194c35e6ab735b61a7dbb9b0c78d0bf4ee981db38b93434846c2"
+      },
+      {
+        "bytes": 2323,
+        "path": "ZeroPayloadCheckedRecords.lean",
+        "sha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+      }
+    ],
+    "lakeSnapshotSha256": "326f02e3befedebaeece7dd76b21ad40bcb819b3dddce51d2254901e9d52d9e1",
+    "toolchain": "leanprover/lean4:v4.32.2",
+    "treeSha256": "f196ee7beaad4c3d5f4a19311c8f7e0e632c9371ac5fca54def98f39640223cf"
+  },
+  "targets": [
+    "npm"
+  ]
+}

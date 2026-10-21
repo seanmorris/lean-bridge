@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: zero-payload browser CI history restores every source
+ok 1 - zero-payload browser CI history restores every source
+  ---
+  duration_ms: 161.76503
+  type: 'test'
+  ...
+# Subtest: zero-payload browser CI history rejects altered transitions
+ok 2 - zero-payload browser CI history rejects altered transitions
+  ---
+  duration_ms: 13.519683
+  type: 'test'
+  ...
+# Subtest: zero-payload browser CI writer refuses unrelated checkouts
+ok 3 - zero-payload browser CI writer refuses unrelated checkouts
+  ---
+  duration_ms: 44.507671
+  type: 'test'
+  ...
+# Subtest: zero-payload browser diagnostic history restores every source
+ok 4 - zero-payload browser diagnostic history restores every source
+  ---
+  duration_ms: 585.577035
+  type: 'test'
+  ...
+# Subtest: zero-payload browser diagnostic history rejects altered transitions
+ok 5 - zero-payload browser diagnostic history rejects altered transitions
+  ---
+  duration_ms: 1.075599
+  type: 'test'
+  ...
+# Subtest: zero-payload browser diagnostic writer refuses unrelated checkouts
+ok 6 - zero-payload browser diagnostic writer refuses unrelated checkouts
+  ---
+  duration_ms: 44.535495
+  type: 'test'
+  ...
+# Subtest: zero-payload browser archive history restores every source
+ok 7 - zero-payload browser archive history restores every source
+  ---
+  duration_ms: 54.695706
+  type: 'test'
+  ...
+# Subtest: zero-payload browser archive history rejects altered transitions
+ok 8 - zero-payload browser archive history rejects altered transitions
+  ---
+  duration_ms: 1.627675
+  type: 'test'
+  ...
+# Subtest: zero-payload browser archive writer refuses unrelated checkouts
+ok 9 - zero-payload browser archive writer refuses unrelated checkouts
+  ---
+  duration_ms: 43.746822
+  type: 'test'
+  ...
+# Subtest: zero-payload browser history restores every source
+ok 10 - zero-payload browser history restores every source
+  ---
+  duration_ms: 135.230821
+  type: 'test'
+  ...
+# Subtest: zero-payload browser history rejects altered transitions
+ok 11 - zero-payload browser history rejects altered transitions
+  ---
+  duration_ms: 14.071504
+  type: 'test'
+  ...
+# Subtest: zero-payload browser writer refuses unrelated checkouts
+ok 12 - zero-payload browser writer refuses unrelated checkouts
+  ---
+  duration_ms: 45.036398
+  type: 'test'
+  ...
+# Subtest: zero-payload JavaScript history restores every source
+ok 13 - zero-payload JavaScript history restores every source
+  ---
+  duration_ms: 124.237072
+  type: 'test'
+  ...
+# Subtest: zero-payload JavaScript history rejects altered transitions
+ok 14 - zero-payload JavaScript history rejects altered transitions
+  ---
+  duration_ms: 6.156476
+  type: 'test'
+  ...
+# Subtest: zero-payload JavaScript writer refuses unrelated checkouts
+ok 15 - zero-payload JavaScript writer refuses unrelated checkouts
+  ---
+  duration_ms: 44.007619
+  type: 'test'
+  ...
+# Subtest: zero-payload installed npm history restores every source
+ok 16 - zero-payload installed npm history restores every source
+  ---
+  duration_ms: 128.874593
+  type: 'test'
+  ...
+# Subtest: zero-payload installed npm history rejects altered transitions
+ok 17 - zero-payload installed npm history rejects altered transitions
+  ---
+  duration_ms: 5.669106
+  type: 'test'
+  ...
+# Subtest: zero-payload installed npm writer refuses unrelated checkouts
+ok 18 - zero-payload installed npm writer refuses unrelated checkouts
+  ---
+  duration_ms: 46.142238
+  type: 'test'
+  ...
+# Subtest: zero-payload browser evidence closes every hosted source role
+ok 19 - zero-payload browser evidence closes every hosted source role
+  ---
+  duration_ms: 6086.633086
+  type: 'test'
+  ...
+# Subtest: zero-payload native evidence closes every hosted source role
+ok 20 - zero-payload native evidence closes every hosted source role
+  ---
+  duration_ms: 902.196663
+  type: 'test'
+  ...
+# Subtest: zero-payload .NET evidence closes every hosted source role
+ok 21 - zero-payload .NET evidence closes every hosted source role
+  ---
+  duration_ms: 823.943581
+  type: 'test'
+  ...
+# Subtest: zero-payload JVM evidence closes every hosted source role
+ok 22 - zero-payload JVM evidence closes every hosted source role
+  ---
+  duration_ms: 882.495704
+  type: 'test'
+  ...
+# Subtest: zero-payload Rust evidence closes every hosted source role
+ok 23 - zero-payload Rust evidence closes every hosted source role
+  ---
+  duration_ms: 877.733828
+  type: 'test'
+  ...
+# Subtest: zero-payload Perl evidence closes every hosted source role
+ok 24 - zero-payload Perl evidence closes every hosted source role
+  ---
+  duration_ms: 879.869907
+  type: 'test'
+  ...
+# Subtest: zero-payload hosted evidence accepts only closed absolute selections
+ok 25 - zero-payload hosted evidence accepts only closed absolute selections
+  ---
+  duration_ms: 0.812363
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate for ordinary-source
+ok 26 - installed zero-payload records reproduce and relocate for ordinary-source # SKIP
+  ---
+  duration_ms: 0.088173
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate for reviewed-ir
+ok 27 - installed zero-payload records reproduce and relocate for reviewed-ir # SKIP
+  ---
+  duration_ms: 0.037036
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate for result-only-ordinary-source
+ok 28 - installed zero-payload records reproduce and relocate for result-only-ordinary-source # SKIP
+  ---
+  duration_ms: 0.09948
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate for result-only-reviewed-ir
+ok 29 - installed zero-payload records reproduce and relocate for result-only-reviewed-ir # SKIP
+  ---
+  duration_ms: 0.05288
+  type: 'test'
+  ...
+# Subtest: zero-payload caller distinguishes empty, Unit and Option values
+ok 30 - zero-payload caller distinguishes empty, Unit and Option values
+  ---
+  duration_ms: 2.085488
+  type: 'test'
+  ...
+# Subtest: zero-payload caller binds the exact ordinary and reviewed diagnostics
+ok 31 - zero-payload caller binds the exact ordinary and reviewed diagnostics
+  ---
+  duration_ms: 3.286666
+  type: 'test'
+  ...
+# Subtest: zero-payload browser wrapper closes every engine and lifecycle
+ok 32 - zero-payload browser wrapper closes every engine and lifecycle
+  ---
+  duration_ms: 7.837214
+  type: 'test'
+  ...
+# Subtest: zero-payload hosted selections require terminal TAP and exact identities
+ok 33 - zero-payload hosted selections require terminal TAP and exact identities
+  ---
+  duration_ms: 1.225014
+  type: 'test'
+  ...
+# Subtest: generated JavaScript packages expose exact empty TypeScript carriers
+ok 34 - generated JavaScript packages expose exact empty TypeScript carriers
+  ---
+  duration_ms: 686.960572
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 4
+# todo 0
+# duration_ms 13236.700402

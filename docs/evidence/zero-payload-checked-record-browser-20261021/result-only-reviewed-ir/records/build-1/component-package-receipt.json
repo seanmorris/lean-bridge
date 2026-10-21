@@ -1,0 +1,35 @@
+{
+  "bindingIrSha256": "57bd0af332c6ed6dd3f53859cce38bed912683b030a9cb896af12ac613040804",
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "componentArtifactSha256": "cc8cfb29e605521d448d5a9439a27f5b024832b7ec9931af5b794cd5efd2e99a",
+  "componentBundleSha256": "c19c94f70a4c0c2f9efc1a513dff5766dc95719249313f8237be839ecd62e82a",
+  "componentIdentitySha256": "1d756631b6d0120d5c6932db7aae729868db496d3d7c9caed30dc96c29ba4131",
+  "kind": "lean-bridge-component-package-receipt",
+  "package": {
+    "archive": "zeropayloadcheckedrecords-1.0.0.tgz",
+    "package": "zeropayloadcheckedrecords@1.0.0",
+    "sha256": "18ac13895fa66637896251ccba0af722dc9dd6ac53da3032ac202571c853ea96"
+  },
+  "policies": {
+    "componentCompiledOnce": true,
+    "nativeCallablesOnly": true,
+    "runtimeBinaryInComponent": false,
+    "runtimeShared": true
+  },
+  "provenanceSha256": "3c06d7ff5f769f18241309f9c5dd494a9ad656e6e0e587f910e843ec476784ef",
+  "runtime": {
+    "archive": "lean-bridge-runtime-0.0.0-abi2.446d9ad743b2e3671888b7eefe4f53805b0fb4d42d0b0f9a0c8045696ece4b7f.tgz",
+    "package": "@lean-bridge/runtime@0.0.0-abi2.446d9ad743b2e3671888b7eefe4f53805b0fb4d42d0b0f9a0c8045696ece4b7f",
+    "sha256": "7585d5f74f6eda97aca2e77bdb06c0abd6534225d577a0d6e5816971ff516df4"
+  },
+  "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "e63bfba0f625e469e2be4dc91a50afc63874a664f3d412c6acaafea5a62b1f54"
+  },
+  "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+}

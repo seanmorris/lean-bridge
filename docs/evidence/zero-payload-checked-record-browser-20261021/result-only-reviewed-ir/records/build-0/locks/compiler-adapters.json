@@ -1,0 +1,300 @@
+{
+  "component": "zeropayloadcheckedrecords@1.0.0",
+  "componentPlanSha256": "87bb4db068916c78cb2b196f709694ed5ef931a32d1a3c13b40534520cab9afd",
+  "exports": [
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Option ZeroPayloadCheckedRecords.Witness)",
+      "parameters": [
+        {
+          "leanType": "_root_.Bool",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "fields": [],
+              "kind": "checked-record",
+              "name": "ZeroPayloadCheckedRecords.Witness"
+            }
+          ],
+          "kind": "option"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.maybeWitness",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_ccab41fe38acd3ecbe8a9c7a",
+      "wrapper": "export_9ab5ab7ab142f38491e3"
+    },
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.produceMark",
+      "leanEffect": null,
+      "leanResultType": "ZeroPayloadCheckedRecords.Mark",
+      "parameters": [
+        {
+          "leanType": "_root_.Bool",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "cases": [
+            {
+              "fields": [],
+              "name": "blank"
+            },
+            {
+              "fields": [
+                {
+                  "name": "witness",
+                  "refinement": {
+                    "constructor": null,
+                    "fields": [],
+                    "kind": "checked-record",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  }
+                }
+              ],
+              "name": "marked"
+            }
+          ],
+          "kind": "variant",
+          "name": "ZeroPayloadCheckedRecords.Mark"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.produceMark",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_294fd0f9b92436401a5672d6",
+      "wrapper": "export_187a555c575daa054eb4"
+    },
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.produceMarker",
+      "leanEffect": null,
+      "leanResultType": "ZeroPayloadCheckedRecords.Marker",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.produceMarker",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_729b17abb5c013cf09ea1518",
+      "wrapper": "export_9f42c161da08e194f0b5"
+    },
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.produceToken",
+      "leanEffect": null,
+      "leanResultType": "ZeroPayloadCheckedRecords.Token",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.produceToken",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_40f8dedf18ce993e6f889de8",
+      "wrapper": "export_efbfe958188ddde3b38b"
+    },
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.produceWitness",
+      "leanEffect": null,
+      "leanResultType": "ZeroPayloadCheckedRecords.Witness",
+      "parameters": [],
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.produceWitness",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_a4b78cbf13e66dd492d9604e",
+      "wrapper": "export_8d68b967fa10290966a9"
+    },
+    {
+      "bindingId": "lean:ZeroPayloadCheckedRecords.witnesses",
+      "leanEffect": null,
+      "leanResultType": "(_root_.Array ZeroPayloadCheckedRecords.Witness)",
+      "parameters": [
+        {
+          "leanType": "_root_.Nat",
+          "name": "value0"
+        }
+      ],
+      "refinements": {
+        "parameters": [
+          null
+        ],
+        "result": {
+          "arguments": [
+            {
+              "constructor": null,
+              "fields": [],
+              "kind": "checked-record",
+              "name": "ZeroPayloadCheckedRecords.Witness"
+            }
+          ],
+          "kind": "array"
+        }
+      },
+      "resultMode": "value",
+      "sourceDeclaration": "ZeroPayloadCheckedRecords.witnesses",
+      "sourceModule": "ZeroPayloadCheckedRecords",
+      "symbol": "lean_bridge_e163676ec050ed541ef97ca1",
+      "wrapper": "export_21552638440aedd8c7cc"
+    }
+  ],
+  "imports": [
+    "ZeroPayloadCheckedRecords"
+  ],
+  "leanSourceSha256": "073d26f451db45c75c51648f4b143140e0a1b727d30c22560a427679b44421b7",
+  "module": "LeanBridgeGeneratedd43d7c5a9f170f3c",
+  "privateAbi": {
+    "dispatch": "copied-graph-frame-v1",
+    "exports": [
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "bool"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_ccab41fe38acd3ecbe8a9c7a"
+      },
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.produceMark",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "bool"
+          }
+        ],
+        "result": {
+          "id": "lean:ZeroPayloadCheckedRecords.Mark",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_294fd0f9b92436401a5672d6"
+      },
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.produceMarker",
+        "parameters": [],
+        "result": {
+          "id": "lean:ZeroPayloadCheckedRecords.Marker",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_729b17abb5c013cf09ea1518"
+      },
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.produceToken",
+        "parameters": [],
+        "result": {
+          "id": "lean:ZeroPayloadCheckedRecords.Token",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_40f8dedf18ce993e6f889de8"
+      },
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.produceWitness",
+        "parameters": [],
+        "result": {
+          "id": "lean:ZeroPayloadCheckedRecords.Witness",
+          "kind": "named"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_a4b78cbf13e66dd492d9604e"
+      },
+      {
+        "bindingId": "lean:ZeroPayloadCheckedRecords.witnesses",
+        "parameters": [
+          {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        ],
+        "result": {
+          "arguments": [
+            {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        },
+        "resultMode": "value",
+        "symbol": "lean_bridge_e163676ec050ed541ef97ca1"
+      }
+    ],
+    "types": [
+      {
+        "cases": [
+          {
+            "fields": [],
+            "name": "blank"
+          },
+          {
+            "fields": [
+              {
+                "name": "witness",
+                "type": {
+                  "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                  "kind": "named"
+                }
+              }
+            ],
+            "name": "marked"
+          }
+        ],
+        "id": "lean:ZeroPayloadCheckedRecords.Mark",
+        "kind": "variant"
+      },
+      {
+        "fields": [],
+        "id": "lean:ZeroPayloadCheckedRecords.Marker",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "fresh"
+        ],
+        "fields": [
+          {
+            "name": "tag",
+            "type": {
+              "kind": "primitive",
+              "name": "unit"
+            }
+          }
+        ],
+        "id": "lean:ZeroPayloadCheckedRecords.Token",
+        "kind": "record"
+      },
+      {
+        "erased": [
+          "positive"
+        ],
+        "fields": [],
+        "id": "lean:ZeroPayloadCheckedRecords.Witness",
+        "kind": "record"
+      }
+    ],
+    "version": 8
+  },
+  "schemaVersion": 1
+}

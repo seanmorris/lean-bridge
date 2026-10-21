@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs",
+      "default": "./index.mjs",
+      "browser": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "README.md",
+    "binding-manifest.json",
+    "internal",
+    "notices",
+    "LICENSE"
+  ],
+  "name": "zeropayloadcheckedrecords",
+  "license": "MIT",
+  "description": "Independent corpus contract.",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@lean-bridge/runtime": "0.0.0-abi2.446d9ad743b2e3671888b7eefe4f53805b0fb4d42d0b0f9a0c8045696ece4b7f"
+  },
+  "leanBridge": {
+    "component": "zeropayloadcheckedrecords@1.0.0",
+    "componentBundleSha256": "a392a56d08735f29f438bcb366bf947eec2ddf74d89ba9c198e092d1a3ebbfed",
+    "componentIdentitySha256": "c35bb05ab2d0d28c5b0c34df53fe2e4c531479e27f347998cd9801f6fb75c68a",
+    "bindingIrSha256": "ff3debc404b0f2f2bcfeedb5ee08cce29f12df1a1c7cf35c33aa34fc5e51e9e5",
+    "sharedRuntime": true
+  }
+}
