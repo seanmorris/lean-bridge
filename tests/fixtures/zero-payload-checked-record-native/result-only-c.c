@@ -32,12 +32,21 @@ int main(void) {
     && maybe.has_value == 0);
   zeropayloadcheckedrecords_marker marker = {.empty = 255};
   CHECK(OK(RUN(zeropayloadcheckedrecords_produce_marker(&marker, &error))));
-  CHECK(calls == 6);
+  zeropayloadcheckedrecords_mark mark;
+  zeropayloadcheckedrecords_mark_init(&mark);
+  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(false, &mark, &error)))
+    && mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);
+  zeropayloadcheckedrecords_mark_clear(&mark);
+  zeropayloadcheckedrecords_mark_init(&mark);
+  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(true, &mark, &error)))
+    && mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);
+  CHECK(calls == 8);
   zeropayloadcheckedrecords_witness_clear(&witness);
   zeropayloadcheckedrecords_token_clear(&token);
   zeropayloadcheckedrecords_array_lean_zero_payload_checked_records_witness_span_clear(&witnesses);
   zeropayloadcheckedrecords_option_lean_zero_payload_checked_records_witness_value_clear(&maybe);
   zeropayloadcheckedrecords_marker_clear(&marker);
+  zeropayloadcheckedrecords_mark_clear(&mark);
   mpz_clear(count);
   printf("{\"calls\":%u,\"checks\":%u,\"recoveries\":0,\"rejections\":0}\n",
     calls, checks);

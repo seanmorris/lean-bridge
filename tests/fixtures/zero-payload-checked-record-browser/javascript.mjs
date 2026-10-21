@@ -76,7 +76,7 @@ export const checkZeroPayloadRecords = (api, resultOnly = false) => {
 			failure = error;
 		}
 		const expected = shape
-			? failure instanceof TypeError && /declared copied fields|plain record/u.test(failure.message)
+			? failure instanceof TypeError && /declared copied fields|plain record|variant/u.test(failure.message)
 			: failure instanceof Error && !(failure instanceof TypeError)
 				&& failure.message === "absentCount.arg0 was rejected by ZeroPayloadCheckedRecords.mkAbsent";
 		check(expected, `${name} refusal`);
@@ -95,21 +95,28 @@ export const checkZeroPayloadRecords = (api, resultOnly = false) => {
 	const none = invoke("maybeWitness", [false], { tag: "none" });
 	const some = invoke("maybeWitness", [true], { tag: "some", value: {} });
 	const marker = invoke("produceMarker", [], {});
+	const blank = invoke("produceMark", [false], { kind: "blank" });
+	const marked = invoke("produceMark", [true], { kind: "marked", witness: {} });
 	check(Reflect.ownKeys(witness).length === 0, "Witness has an explicit empty carrier");
 	check(Reflect.ownKeys(token).join() === "tag", "Token preserves its Unit field");
 	check(values.length === 3, "Witness array preserves length");
 	check(new Set(values).size === 3, "Witness array contains independent values");
 	check(none.tag === "none" && some.tag === "some", "Option presence remains explicit");
 	check(Reflect.ownKeys(marker).length === 0, "plain Marker remains an empty carrier");
+	check(blank.kind === "blank" && marked.kind === "marked"
+		&& Reflect.ownKeys(marked.witness).length === 0
+	, "inactive and active variant branches remain distinct");
 	if(resultOnly)
 	{
-		for(const name of ["witnessCount", "absentCount", "tokenTag", "markerCount"])
+		for(const name of ["witnessCount", "absentCount", "tokenTag", "markerCount", "markCount"])
 			check(!Object.hasOwn(api, name), `result-only package omitted ${name}`);
 		return { checks, rejections, calls, snapshots, recoveries };
 	}
 	invoke("witnessCount", [{}], 1n);
 	invoke("tokenTag", [{ tag: undefined }], undefined);
 	invoke("markerCount", [{}], 0n);
+	invoke("markCount", [{ kind: "blank" }], 0n);
+	invoke("markCount", [{ kind: "marked", witness: {} }], 1n);
 	refused("absentCount", [{}], false); recover();
 	invalid("witnessCount", [{ positive: true }]);
 	invalid("witnessCount", [null]);
@@ -118,5 +125,7 @@ export const checkZeroPayloadRecords = (api, resultOnly = false) => {
 	invalid("tokenTag", [{ tag: undefined, fresh: true }]);
 	invalid("markerCount", [{ marker: true }]);
 	invalid("markerCount", [[]]);
+	invalid("markCount", [{ kind: "marked", witness: { positive: true } }]);
+	invalid("markCount", [{ kind: "blank", witness: {} }]);
 	return { checks, rejections, calls, snapshots, recoveries };
 };

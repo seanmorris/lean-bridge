@@ -48,6 +48,17 @@ int main(void) {
     && token.tag == 0);
   CHECK(OK(RUN(zeropayloadcheckedrecords_marker_count(&marker, out, &error)))
     && mpz_cmp_ui(out, 0) == 0 && marker.empty == 91);
+  zeropayloadcheckedrecords_mark blank, marked;
+  zeropayloadcheckedrecords_mark_init(&blank);
+  zeropayloadcheckedrecords_mark_init(&marked);
+  CHECK(zeropayloadcheckedrecords_mark_select(&blank,
+    ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK) == ZEROPAYLOADCHECKEDRECORDS_STATUS_OK
+    && OK(RUN(zeropayloadcheckedrecords_mark_count(&blank, out, &error)))
+    && mpz_cmp_ui(out, 0) == 0 && blank.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);
+  CHECK(zeropayloadcheckedrecords_mark_select(&marked,
+    ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED) == ZEROPAYLOADCHECKEDRECORDS_STATUS_OK
+    && OK(RUN(zeropayloadcheckedrecords_mark_count(&marked, out, &error)))
+    && mpz_cmp_ui(out, 1) == 0 && marked.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);
 
   zeropayloadcheckedrecords_witness made_witness = {.empty = 255};
   CHECK(OK(RUN(zeropayloadcheckedrecords_produce_witness(&made_witness, &error))));
@@ -64,13 +75,24 @@ int main(void) {
     && maybe.has_value == 0);
   zeropayloadcheckedrecords_marker made_marker = {.empty = 255};
   CHECK(OK(RUN(zeropayloadcheckedrecords_produce_marker(&made_marker, &error))));
+  zeropayloadcheckedrecords_mark made_mark;
+  zeropayloadcheckedrecords_mark_init(&made_mark);
+  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(false, &made_mark, &error)))
+    && made_mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_BLANK);
+  zeropayloadcheckedrecords_mark_clear(&made_mark);
+  zeropayloadcheckedrecords_mark_init(&made_mark);
+  CHECK(OK(RUN(zeropayloadcheckedrecords_produce_mark(true, &made_mark, &error)))
+    && made_mark.kind == ZEROPAYLOADCHECKEDRECORDS_MARK_KIND_MARKED);
 
-  CHECK(calls == 11 && rejections == 1 && recoveries == 1);
+  CHECK(calls == 15 && rejections == 1 && recoveries == 1);
   zeropayloadcheckedrecords_witness_clear(&made_witness);
   zeropayloadcheckedrecords_token_clear(&made_token);
   zeropayloadcheckedrecords_array_lean_zero_payload_checked_records_witness_span_clear(&witnesses);
   zeropayloadcheckedrecords_option_lean_zero_payload_checked_records_witness_value_clear(&maybe);
   zeropayloadcheckedrecords_marker_clear(&made_marker);
+  zeropayloadcheckedrecords_mark_clear(&blank);
+  zeropayloadcheckedrecords_mark_clear(&marked);
+  zeropayloadcheckedrecords_mark_clear(&made_mark);
   mpz_clear(count); mpz_clear(out);
   printf("{\"calls\":%u,\"checks\":%u,\"recoveries\":%u,\"rejections\":%u}\n",
     calls, checks, recoveries, rejections);

@@ -19,7 +19,9 @@ int main() {
   ++calls; CHECK(maybe_witness(true) == std::optional<Witness>{Witness{}});
   ++calls; CHECK(maybe_witness(false) == std::nullopt);
   ++calls; CHECK(produce_marker() == Marker{});
-  CHECK(calls == 6);
+  ++calls; CHECK(produce_mark(false) == Mark{MarkBlank{}});
+  ++calls; CHECK(produce_mark(true) == Mark{MarkMarked{Witness{}}});
+  CHECK(calls == 8);
   std::cout << "{\"calls\":" << calls << ",\"checks\":" << checks
     << ",\"recoveries\":0,\"rejections\":0}\n";
   return 0;

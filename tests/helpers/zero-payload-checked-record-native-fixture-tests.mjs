@@ -33,7 +33,7 @@ test("zero-payload native selections preserve all four author/API routes", () =>
 		assert.equal(selected.reviewed, route.endsWith("reviewed-ir"));
 		assert.equal(selected.resultOnly, route.startsWith("result-only-"));
 		assert.equal(selected.expected.declarations.length
-			, selected.resultOnly ? 5 : 9);
+			, selected.resultOnly ? 6 : 11);
 	}
 });
 
@@ -63,7 +63,7 @@ test("zero-payload native callers lock counts and reviewed diagnostics", async (
 		for(const profile of zeroPayloadNativeProfiles)
 		{
 			const caller = await zeroPayloadNativeCaller(profile, route);
-			assert.equal(caller.calls, route.startsWith("result-only-") ? 6 : 11);
+			assert.equal(caller.calls, route.startsWith("result-only-") ? 8 : 15);
 			assert.equal(caller.rejections
 				, route.startsWith("result-only-") ? 0 : 1);
 			assert.equal(caller.recoveries, caller.rejections);

@@ -50,6 +50,8 @@ const mock = resultOnly => {
 		, maybeWitness: present => present
 			? { tag: "some", value: {} } : { tag: "none" }
 		, produceMarker: () => ({})
+		, produceMark: active => active
+			? { kind: "marked", witness: {} } : { kind: "blank" }
 	};
 	if(!resultOnly) Object.assign(api, {
 		witnessCount: value => { exact(value, [], "Witness"); return 1n; }
@@ -61,6 +63,12 @@ const mock = resultOnly => {
 		}
 		, tokenTag: value => { exact(value, ["tag"], "Token"); return value.tag; }
 		, markerCount: value => { exact(value, [], "Marker"); return 0n; }
+		, markCount: value => {
+			exact(value, value?.kind === "blank" ? ["kind"] : ["kind", "witness"], "Mark variant");
+			if(value.kind === "blank") return 0n;
+			if(value.kind !== "marked") throw new TypeError("Mark must match a declared variant");
+			exact(value.witness, [], "Witness"); return 1n;
+		}
 	});
 	return api;
 };
@@ -158,6 +166,8 @@ test("generated JavaScript packages expose exact empty TypeScript carriers", asy
 			, /export type Witness = Readonly<Record<PropertyKey, never>>;/u);
 		assert.match(files["index.d.ts"]
 			, /export type Marker = Readonly<Record<PropertyKey, never>>;/u);
+		assert.match(files["index.d.ts"]
+			, /export type Mark = Readonly<\{ readonly kind: "blank" \}> \| Readonly<\{ readonly kind: "marked"; readonly witness: Witness \}>;/u);
 		assert.match(files["index.d.ts"], /export interface Token \{\n {2}readonly tag: void;/u);
 		const root = await mkdtemp(join(tmpdir(), "lean-bridge-zero-payload-types-"));
 		t.after(() => rm(root, { recursive: true, force: true }));

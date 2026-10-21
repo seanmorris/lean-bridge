@@ -118,6 +118,13 @@ static class Consumer
         var marker = Api.ProduceMarker();
         Check(marker.Equals(new Marker()) && marker.GetType() != witness.GetType()
             , "plain Marker stays nominally distinct from checked Witness");
+        ++calls;
+        var blank = Api.ProduceMark(false);
+        Check(blank.Equals(new MarkBlank()), "inactive variant branch remains blank");
+        ++calls;
+        var marked = Api.ProduceMark(true);
+        Check(marked.Equals(new MarkMarked(new Witness()))
+            , "active variant branch retains its empty Witness carrier");
 
 #if !RESULT_ONLY
         ++calls;
@@ -134,6 +141,13 @@ static class Consumer
         ++calls;
         Check(Api.MarkerCount(marker) == 0 && marker.Equals(new Marker())
             , "plain empty Marker input");
+        ++calls;
+        Check(Api.MarkCount(blank) == 0 && blank.Equals(new MarkBlank())
+            , "inactive variant input");
+        ++calls;
+        Check(Api.MarkCount(marked) == 1
+            && marked.Equals(new MarkMarked(new Witness()))
+            , "active variant input checks its nested Witness");
         Check(NullRefused(() => Api.WitnessCount(null!))
             , "null Witness is not an empty carrier");
         ++rejections;
@@ -142,10 +156,14 @@ static class Consumer
             , "null Marker is not a plain empty record");
         ++rejections;
         Check(Recover(), "recover after null Marker refusal");
-        Check(calls == 15 && rejections == 3 && recoveries == 3
+        Check(NullRefused(() => Api.MarkCount(new MarkMarked(null!)))
+            , "null nested Witness is not an empty carrier");
+        ++rejections;
+        Check(Recover(), "recover after null nested Witness refusal");
+        Check(calls == 21 && rejections == 4 && recoveries == 4
             , "full totals");
 #else
-        Check(calls == 6 && rejections == 0 && recoveries == 0
+        Check(calls == 8 && rejections == 0 && recoveries == 0
             , "result-only totals");
 #endif
     }

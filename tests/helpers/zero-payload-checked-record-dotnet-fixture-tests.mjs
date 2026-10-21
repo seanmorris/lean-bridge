@@ -48,13 +48,13 @@ test("zero-payload .NET configuration retains four independent routes", () => {
 		assert.deepEqual(selection.configuration.modules
 			, ["ZeroPayloadCheckedRecords"]);
 		assert.equal(selection.configuration.exports?.length
-			, selection.reviewed ? undefined : selection.resultOnly ? 5 : 9);
+			, selection.reviewed ? undefined : selection.resultOnly ? 6 : 11);
 		assert.equal(Object.hasOwn(selection.configuration, "contracts")
 			, !selection.reviewed);
 		assert.equal(selection.expected.declarations.length
-			, selection.resultOnly ? 5 : 9);
+			, selection.resultOnly ? 6 : 11);
 		assert.deepEqual(selection.expected.types.map(type => type.name)
-			, ["Witness", "Token", "Marker"]);
+			, ["Witness", "Token", "Marker", "Mark"]);
 	}
 });
 
@@ -65,25 +65,27 @@ test("zero-payload C# carriers preserve empty, Unit, Option and array identity",
 	assert.match(api, /public sealed record Witness\(\)/u);
 	assert.match(api, /public sealed record Token\(Unit Tag\)/u);
 	assert.match(api, /public sealed record Marker\(\)/u);
+	assert.match(api, /public sealed record MarkBlank\(\) : Mark/u);
+	assert.match(api, /public sealed record MarkMarked\(Witness Witness\) : Mark/u);
 	assert.match(api, /Equals\(Witness\? other\) => other is not null/u);
 	assert.match(api, /Witness\[\] Witnesses\(/u);
 	assert.match(api, /Option<Witness> MaybeWitness\(/u);
 	assert.doesNotMatch(api, /\b(?:Positive|Fresh)\b/u);
 	for(const method of [
-		"WitnessCount", "AbsentCount", "TokenTag", "MarkerCount"
+		"WitnessCount", "AbsentCount", "TokenTag", "MarkerCount", "MarkCount"
 		, "ProduceWitness", "ProduceToken", "Witnesses", "MaybeWitness"
-		, "ProduceMarker"
+		, "ProduceMarker", "ProduceMark"
 	]) assert.match(api, new RegExp(`\\b${method}\\(`, "u"));
 
 	const result = zeroPayloadDotnetSelection("result-only-reviewed-ir");
 	const resultApi = generateCopiedDotnetPackage(result.expected)[
 		"src/LeanBridge.Zeropayloadcheckedrecords/Api.cs"
 	];
-	for(const method of ["WitnessCount", "AbsentCount", "TokenTag", "MarkerCount"])
+	for(const method of ["WitnessCount", "AbsentCount", "TokenTag", "MarkerCount", "MarkCount"])
 		assert.doesNotMatch(resultApi, new RegExp(`\\b${method}\\(`, "u"));
 	for(const method of [
 		"ProduceWitness", "ProduceToken", "Witnesses", "MaybeWitness"
-		, "ProduceMarker"
+		, "ProduceMarker", "ProduceMark"
 	]) assert.match(resultApi, new RegExp(`\\b${method}\\(`, "u"));
 });
 
@@ -94,6 +96,9 @@ test("zero-payload C# caller is immutable and independently counted", async () =
 	assert.match(source, /new Witness\(\)/u);
 	assert.match(source, /new Token\(default\)/u);
 	assert.match(source, /new Marker\(\)/u);
+	assert.match(source, /new MarkBlank\(\)/u);
+	assert.match(source, /new MarkMarked\(new Witness\(\)\)/u);
+	assert.match(source, /new MarkMarked\(null!\)/u);
 	assert.match(source, /Api\.WitnessCount\(null!\)/u);
 	assert.match(source, /ArgumentNullException/u);
 	assert.match(source, /GetType\(\) != witness\.GetType\(\)/u);

@@ -83,7 +83,8 @@ test("npm adapters preserve nullary checked construction and empty result carrie
 	const { plan, files } = generateCompilerAdapters({ analysis, componentPlan });
 	await assertJsonSchema("compiler-adapter-plan", plan);
 	assert.deepEqual(plan.privateAbi.types.map(item => [item.id, item.erased]), [
-		[`lean:${zeroPayloadCheckedRecordModule}.Marker`, undefined]
+		[`lean:${zeroPayloadCheckedRecordModule}.Mark`, undefined]
+		, [`lean:${zeroPayloadCheckedRecordModule}.Marker`, undefined]
 		, [`lean:${zeroPayloadCheckedRecordModule}.Token`, ["fresh"]]
 		, [`lean:${zeroPayloadCheckedRecordModule}.Witness`, ["positive"]]
 	]);
@@ -92,6 +93,9 @@ test("npm adapters preserve nullary checked construction and empty result carrie
 	assert.match(source, /_root_\.ZeroPayloadCheckedRecords\.mkWitness\b/u);
 	assert.match(source, /_root_\.ZeroPayloadCheckedRecords\.mkAbsent\b/u);
 	assert.match(source, /LbErased\.ZeroPayloadCheckedRecords\.Witness\.erase/u);
+	assert.match(source, /inductive LbErased\.ZeroPayloadCheckedRecords\.Mark where/u);
+	assert.match(source, /def LbErased\.ZeroPayloadCheckedRecords\.Mark\.check/u);
+	assert.match(source, /def LbErased\.ZeroPayloadCheckedRecords\.Mark\.erase/u);
 	assert.doesNotMatch(source
 		, /_root_\.ZeroPayloadCheckedRecords\.Witness\.mk|⟨/u);
 	const fixture = await readFile(join(

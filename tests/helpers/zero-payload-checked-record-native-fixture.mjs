@@ -56,7 +56,7 @@ export const zeroPayloadNativeCaller = async (
 	const checks = (source.match(/\bCHECK\(/gu) ?? []).length - 1;
 	assert.ok(checks > 0, "Native caller must execute explicit assertions");
 	return {
-		source, checks, calls: selection.resultOnly ? 6 : 11
+		source, checks, calls: selection.resultOnly ? 8 : 15
 		, rejections: selection.resultOnly ? 0 : 1
 		, recoveries: selection.resultOnly ? 0 : 1
 	};

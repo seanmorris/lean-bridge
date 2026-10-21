@@ -14,9 +14,9 @@ export const zeroPayloadDotnetTarget = Object.freeze({
 	name: "Zeropayloadcheckedrecords.Api", version: "1.0.0"
 });
 export const zeroPayloadDotnetCounts = Object.freeze({
-	full: Object.freeze({ calls: 15, checks: 16, recoveries: 3, rejections: 3 })
+	full: Object.freeze({ calls: 21, checks: 22, recoveries: 4, rejections: 4 })
 	, "result-only": Object.freeze({
-		calls: 6, checks: 7, recoveries: 0, rejections: 0
+		calls: 8, checks: 9, recoveries: 0, rejections: 0
 	})
 });
 
