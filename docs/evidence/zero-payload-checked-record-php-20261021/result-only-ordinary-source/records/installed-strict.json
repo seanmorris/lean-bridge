@@ -1,0 +1,35 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php",
+    "--result-only"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "3cccd96adcc32e0409332f61211c05226f68517328fb4157d4e39b3be4d5587d",
+    "packageFileSetSha256": "7aa760952eecd002754302cc0247e3f1965fb6bee13adf3debfea56ab94a199e",
+    "receiptSha256": "82adfa4d4f0f0dcf2b3df49104de042e485c66817c01c34750c72e95469b7f57",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "bc7ee3913913c02db78311859a53e21afd2fa44727d442d5ed6d8b985f371481"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "calls": 9,
+    "checks": 39,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 9
+  },
+  "cwd": "/tmp/lean-bridge-zero-payload-php-46rOq1/consumer",
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":9,\"checks\":39,\"recoveries\":0,\"rejections\":0,\"snapshots\":9}\n"
+  },
+  "strictness": "strict"
+}

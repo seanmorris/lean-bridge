@@ -1,0 +1,43 @@
+{
+  "bindingIrSha256": "b5e8bc014609800ef65255023ce599d3354280b7c6923da87f97a82cb4771e27",
+  "component": "zeropayloadcheckedrecords@1.0.0",
+  "exports": [
+    "LeanZeropayloadcheckedrecords\\Bytes",
+    "LeanZeropayloadcheckedrecords\\LeanBridgeError",
+    "LeanZeropayloadcheckedrecords\\Some",
+    "LeanZeropayloadcheckedrecords\\Witness",
+    "LeanZeropayloadcheckedrecords\\Marker",
+    "LeanZeropayloadcheckedrecords\\Token",
+    "LeanZeropayloadcheckedrecords\\Mark",
+    "LeanZeropayloadcheckedrecords\\MarkBlank",
+    "LeanZeropayloadcheckedrecords\\MarkMarked",
+    "LeanZeropayloadcheckedrecords\\maybe_witness",
+    "LeanZeropayloadcheckedrecords\\produce_mark",
+    "LeanZeropayloadcheckedrecords\\produce_marker",
+    "LeanZeropayloadcheckedrecords\\produce_token",
+    "LeanZeropayloadcheckedrecords\\produce_witness",
+    "LeanZeropayloadcheckedrecords\\witnesses"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "af481985c09b8ec56d1400b5493e83f5cbe787496ebcc4db56a5faac5b55446f",
+    "src/Api.php": "aee37cf2b12c51eb5f0e75506d11c7474960e2c2445dc56e9f1a907cca4ed743",
+    "src/Internal/Native.php": "ac5bcad3ed9864948353cc7796d79f0b858b5e22d68ed8eba3e81c816297ca4e",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanZeropayloadcheckedrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}

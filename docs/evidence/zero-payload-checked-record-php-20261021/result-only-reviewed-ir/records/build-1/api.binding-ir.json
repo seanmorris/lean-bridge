@@ -1,0 +1,517 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.produceWitness",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceWitness",
+      "overloadKey": "ZeroPayloadCheckedRecords.produceWitness",
+      "owner": null,
+      "parameters": [],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:ZeroPayloadCheckedRecords.Witness",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.produceWitness",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.produceToken",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceToken",
+      "overloadKey": "ZeroPayloadCheckedRecords.produceToken",
+      "owner": null,
+      "parameters": [],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:ZeroPayloadCheckedRecords.Token",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.produceToken",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.witnesses",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "witnesses",
+      "overloadKey": "ZeroPayloadCheckedRecords.witnesses",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          ],
+          "constructor": "array",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.witnesses",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [],
+                  "kind": "checked-record",
+                  "name": "ZeroPayloadCheckedRecords.Witness"
+                }
+              ],
+              "kind": "array"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.maybeWitness",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "maybeWitness",
+      "overloadKey": "ZeroPayloadCheckedRecords.maybeWitness",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "bool"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "arguments": [
+            {
+              "id": "lean:ZeroPayloadCheckedRecords.Witness",
+              "kind": "named"
+            }
+          ],
+          "constructor": "option",
+          "kind": "apply"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.maybeWitness",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [],
+                  "kind": "checked-record",
+                  "name": "ZeroPayloadCheckedRecords.Witness"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.produceMarker",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceMarker",
+      "overloadKey": "ZeroPayloadCheckedRecords.produceMarker",
+      "owner": null,
+      "parameters": [],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:ZeroPayloadCheckedRecords.Marker",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.produceMarker",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ZeroPayloadCheckedRecords.produceMark",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "produceMark",
+      "overloadKey": "ZeroPayloadCheckedRecords.produceMark",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "value0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "bool"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:ZeroPayloadCheckedRecords.Mark",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.produceMark",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "cases": [
+                {
+                  "fields": [],
+                  "name": "blank"
+                },
+                {
+                  "fields": [
+                    {
+                      "name": "witness",
+                      "refinement": {
+                        "constructor": null,
+                        "fields": [],
+                        "kind": "checked-record",
+                        "name": "ZeroPayloadCheckedRecords.Witness"
+                      }
+                    }
+                  ],
+                  "name": "marked"
+                }
+              ],
+              "kind": "variant",
+              "name": "ZeroPayloadCheckedRecords.Mark"
+            }
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent corpus contract."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "independent-corpus-contract",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "corpusReview",
+      "tool": "Corpus contract review",
+      "toolVersion": "1"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:ZeroPayloadCheckedRecords.Witness",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Witness",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.Witness",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "positive"
+            ]
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent corpus contract."
+          },
+          "mutability": "immutable",
+          "name": "tag",
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:ZeroPayloadCheckedRecords.Token",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Token",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.Token",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "fresh"
+            ]
+          }
+        },
+        "producer": "corpusReview"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:ZeroPayloadCheckedRecords.Marker",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Marker",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.Marker",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent zero-payload contract."
+          },
+          "fields": [],
+          "name": "blank"
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "Independent zero-payload contract."
+          },
+          "fields": [
+            {
+              "documentation": {
+                "details": "",
+                "summary": "Independent zero-payload contract."
+              },
+              "mutability": "immutable",
+              "name": "witness",
+              "type": {
+                "id": "lean:ZeroPayloadCheckedRecords.Witness",
+                "kind": "named"
+              }
+            }
+          ],
+          "name": "marked"
+        }
+      ],
+      "documentation": {
+        "details": "",
+        "summary": "Independent corpus contract."
+      },
+      "fields": [],
+      "host": null,
+      "id": "lean:ZeroPayloadCheckedRecords.Mark",
+      "kind": "variant",
+      "mutability": "immutable",
+      "name": "Mark",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "ZeroPayloadCheckedRecords.Mark",
+        "extensions": {},
+        "producer": "corpusReview"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}
