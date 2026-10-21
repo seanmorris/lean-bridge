@@ -74,6 +74,10 @@ test("independent zero-payload Perl caller rejects model faults and preserves ex
 	const source = await zeroPayloadPerlCaller();
 	assert.match(source, /Independent Perl caller/u);
 	assert.match(source, /sub check_zero_payload_records/u);
+	assert.match(source, /my \$false = \$call->\('false'\);/u);
+	assert.match(source, /my \$true = \$call->\('true'\);/u);
+	assert.doesNotMatch(source
+		, /\$invoke->\('(maybe_witness|produce_mark)', \[[01]\]/u);
 	for(const probe of [
 		"'Witness'", "'Token'", "'Marker'", "'Mark::Blank'", "'Mark::Marked'"
 		, "'produce_witness'", "'produce_token'", "'witnesses'", "'maybe_witness'"

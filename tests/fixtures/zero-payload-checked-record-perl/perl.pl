@@ -53,6 +53,8 @@ sub check_zero_payload_records {
             or die "missing public function: $name\n";
         return $function->(@arguments);
     };
+    my $false = $call->('false');
+    my $true = $call->('true');
     my $invoke = sub {
         my ($name, $arguments, $expected, $label) = @_;
         my $before = zero_payload_snapshot($arguments);
@@ -124,8 +126,8 @@ sub check_zero_payload_records {
     $check->(ref($values) eq 'ARRAY' && @$values == 3
         && $same->($values->[0], $values->[2]), 'Witness array retains its length');
     $invoke->('witnesses', [$nat->(0)], [], 'empty Witness array');
-    $invoke->('maybe_witness', [0], undef, 'absent Witness option');
-    my $present = $invoke->('maybe_witness', [1], $some->($witness->())
+    $invoke->('maybe_witness', [$false], undef, 'absent Witness option');
+    my $present = $invoke->('maybe_witness', [$true], $some->($witness->())
         , 'present Witness option');
     $check->((blessed($present) // '') eq $class->('Some')
         && $same->($present->value, $witness->()), 'present empty Witness remains Some');
@@ -133,8 +135,8 @@ sub check_zero_payload_records {
     $check->((blessed($produced_marker) // '') eq $class->('Marker')
         && !$same->($produced_marker, $produced_witness)
         , 'plain Marker remains distinct from checked Witness');
-    my $produced_blank = $invoke->('produce_mark', [0], $blank->(), 'blank Mark');
-    my $produced_marked = $invoke->('produce_mark', [1], $marked->($witness->()), 'marked Mark');
+    my $produced_blank = $invoke->('produce_mark', [$false], $blank->(), 'blank Mark');
+    my $produced_marked = $invoke->('produce_mark', [$true], $marked->($witness->()), 'marked Mark');
     $check->((blessed($produced_blank) // '') eq $class->('Mark::Blank')
         && (blessed($produced_marked) // '') eq $class->('Mark::Marked')
         && $same->($produced_marked->witness, $witness->())

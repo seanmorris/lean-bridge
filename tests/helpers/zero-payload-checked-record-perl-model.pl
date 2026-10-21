@@ -84,6 +84,8 @@ sub build_zero_payload_api {
             && !defined($value);
         return exact_class($value, $classes{Witness});
     };
+    $function->('false', sub { 0 });
+    $function->('true', sub { 1 });
     $function->('produce_witness', sub {
         defined($fault) && $fault eq 'wrong-produced' ? $marker->() : $witness->();
     });
