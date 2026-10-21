@@ -1,0 +1,36 @@
+{
+  "args": [
+    "-n",
+    "-d",
+    "extension=/usr/lib/php/20230831/ffi.so",
+    "-d",
+    "ffi.enable=1",
+    "strict.php",
+    "--result-only",
+    "--reviewed"
+  ],
+  "closure": {
+    "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+    "generatedFilesSha256": "e6f1a685905ea279a52dad73dd5e8eada374b3da94402f2f4093b036b25837d1",
+    "packageFileSetSha256": "7aa760952eecd002754302cc0247e3f1965fb6bee13adf3debfea56ab94a199e",
+    "receiptSha256": "c66d30a06cf4f3eff3533c51fc289293d708277506bbc442ec8b74e7fc5db5fb",
+    "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+    "vendorFilesSha256": "1d9cce7f06c7d9965a850b836c85ae8e6b55a505516e5dd00c0959f74c26040c"
+  },
+  "command": "/usr/bin/php8.3",
+  "counts": {
+    "calls": 9,
+    "checks": 39,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 9
+  },
+  "cwd": "/tmp/lean-bridge-zero-payload-php-uL2kIf/consumer-relocated",
+  "relocated": true,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":9,\"checks\":39,\"recoveries\":0,\"rejections\":0,\"snapshots\":9}\n"
+  },
+  "strictness": "strict"
+}

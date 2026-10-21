@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51358954,
+          "path": "archives/example-zeropayloadcheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "68b1478d94bc31a76965ae953271e21d342afd92251f00cc19d9b8abb7ecf6df"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "b5e8bc014609800ef65255023ce599d3354280b7c6923da87f97a82cb4771e27",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f9339495c64a2cdc9000bfc3a833a666f41c52ac33bab055b2ebbdcdd9f55bd9"
+  }
+}
