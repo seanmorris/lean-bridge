@@ -20,6 +20,7 @@ import {
 	, reversePerlEngineOwnedRefinementClosureUpdate
 } from "./perl-engine-owned-refinement-closure-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
@@ -42,7 +43,9 @@ test("filtered Perl owned-refinement closure history restores every source", asy
 		, perlEngineOwnedRefinementClosureIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reversePerlEngineOwnedRefinementClosureUpdate(
 			current, update
@@ -61,7 +64,9 @@ test("filtered Perl owned-refinement closure history restores every source", asy
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reversePerlEngineOwnedRefinementClosureUpdate(
 			current, update
@@ -69,8 +74,9 @@ test("filtered Perl owned-refinement closure history restores every source", asy
 			, update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("filtered Perl owned-refinement closure history rejects altered transitions", async () => {
@@ -78,7 +84,9 @@ test("filtered Perl owned-refinement closure history rejects altered transitions
 		perlEngineOwnedRefinementClosureHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() =>
 		reversePerlEngineOwnedRefinementClosureUpdate(current, update));

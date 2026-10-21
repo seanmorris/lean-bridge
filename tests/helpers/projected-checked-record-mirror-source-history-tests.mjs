@@ -20,6 +20,7 @@ import {
 	, reverseProjectedCheckedRecordMirrorUpdate
 } from "./projected-checked-record-mirror-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
@@ -42,7 +43,9 @@ test("projected checked-record mirror history restores every source", async () =
 		, projectedCheckedRecordMirrorIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseProjectedCheckedRecordMirrorUpdate(
 			current, update
@@ -61,7 +64,9 @@ test("projected checked-record mirror history restores every source", async () =
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseProjectedCheckedRecordMirrorUpdate(
 			current, update
@@ -69,8 +74,9 @@ test("projected checked-record mirror history restores every source", async () =
 			, update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("projected checked-record mirror history rejects altered transitions", async () => {
@@ -78,7 +84,9 @@ test("projected checked-record mirror history rejects altered transitions", asyn
 		projectedCheckedRecordMirrorHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() =>
 		reverseProjectedCheckedRecordMirrorUpdate(current, update));

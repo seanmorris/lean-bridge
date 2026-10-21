@@ -21,6 +21,7 @@ import {
 	, reverseZeroPayloadPhpHistoryUpdate
 } from "./zero-payload-php-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
@@ -42,7 +43,9 @@ test("zero-payload native PHP history restores every source", async () => {
 		, zeroPayloadPhpHistoryIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeZeroPayloadPhpHistorySource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseZeroPayloadPhpHistoryUpdate(current, update);
 		assert.equal(previous, sourceAt(
@@ -59,7 +62,9 @@ test("zero-payload native PHP history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeZeroPayloadPhpHistorySource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseZeroPayloadPhpHistoryUpdate(current, update)
 			, sourceAt(zeroPayloadPhpHistoryImplementation, update.path));
@@ -68,8 +73,9 @@ test("zero-payload native PHP history restores every source", async () => {
 		, zeroPayloadPhpHistoryApplicationPaths.length).map(item => item.path)
 	, [...zeroPayloadPhpHistoryApplicationPaths]);
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("zero-payload native PHP history rejects altered transitions", async () => {
@@ -77,7 +83,9 @@ test("zero-payload native PHP history rejects altered transitions", async () => 
 		zeroPayloadPhpHistoryHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeZeroPayloadPhpHistorySource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadPhpHistoryUpdate(current, update));
 	update.currentSha256 = sha256(current);

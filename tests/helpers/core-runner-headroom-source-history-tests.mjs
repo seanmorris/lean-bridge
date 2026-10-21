@@ -19,6 +19,7 @@ import {
 	, reverseCoreRunnerHeadroomUpdate
 } from "./core-runner-headroom-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${coreRunnerHeadroomPredecessor}:${path}`]
@@ -37,7 +38,9 @@ test("Core runner-headroom history restores every source", async () => {
 		, coreRunnerHeadroomChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeCoreRunnerHeadroomSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseCoreRunnerHeadroomUpdate(current, update);
 		assert.equal(previous, original(update.path));
@@ -51,8 +54,9 @@ test("Core runner-headroom history restores every source", async () => {
 			update.path, `${current}unknown`), `${current}unknown`);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("Core runner-headroom history rejects altered transitions", async () => {
@@ -60,7 +64,9 @@ test("Core runner-headroom history rejects altered transitions", async () => {
 		coreRunnerHeadroomHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeCoreRunnerHeadroomSource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseCoreRunnerHeadroomUpdate(current, update));
 	update.currentSha256 = sha256(current);

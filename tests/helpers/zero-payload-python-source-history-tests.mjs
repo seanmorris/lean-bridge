@@ -21,6 +21,7 @@ import {
 	, reverseZeroPayloadPythonHistoryUpdate
 } from "./zero-payload-python-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
@@ -42,7 +43,9 @@ test("zero-payload Python history restores every source", async () => {
 		, zeroPayloadPythonHistoryIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeZeroPayloadPythonHistorySource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseZeroPayloadPythonHistoryUpdate(current, update);
 		assert.equal(previous, sourceAt(
@@ -59,7 +62,9 @@ test("zero-payload Python history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeZeroPayloadPythonHistorySource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseZeroPayloadPythonHistoryUpdate(current, update)
 			, sourceAt(zeroPayloadPythonHistoryImplementation, update.path));
@@ -68,8 +73,9 @@ test("zero-payload Python history restores every source", async () => {
 		, zeroPayloadPythonHistoryApplicationPaths.length).map(item => item.path)
 	, [...zeroPayloadPythonHistoryApplicationPaths]);
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("zero-payload Python history rejects altered transitions", async () => {
@@ -77,7 +83,9 @@ test("zero-payload Python history rejects altered transitions", async () => {
 		zeroPayloadPythonHistoryHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeZeroPayloadPythonHistorySource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadPythonHistoryUpdate(current, update));
 	update.currentSha256 = sha256(current);

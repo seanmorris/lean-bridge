@@ -18,6 +18,7 @@ import {
 	, reverseCallbackSubtypeBrowserArtifactUpdate
 } from "./callback-subtype-browser-artifact-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeBrowserArtifactPredecessor}:${path}`]
@@ -38,7 +39,9 @@ test("callback Subtype browser artifact history restores every source", async ()
 		, callbackSubtypeBrowserArtifactChangedPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeCallbackSubtypeBrowserArtifactSource
+		);
 		const previous = reverseCallbackSubtypeBrowserArtifactUpdate(
 			current, update
 		);
@@ -51,8 +54,9 @@ test("callback Subtype browser artifact history restores every source", async ()
 			update.path, current + "unknown"), current + "unknown");
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("callback Subtype browser artifact history writer refuses an unrelated checkout", async t => {

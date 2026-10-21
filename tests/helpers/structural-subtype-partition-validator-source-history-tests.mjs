@@ -20,6 +20,7 @@ import {
 	, structuralSubtypePartitionValidatorPredecessor
 } from "./structural-subtype-partition-validator-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${structuralSubtypePartitionValidatorPredecessor}:${path}`]
@@ -43,7 +44,9 @@ test("partition-aware structural validator history restores every source", async
 		, structuralSubtypePartitionValidatorIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseStructuralSubtypePartitionValidatorUpdate(
 			current, update
@@ -60,7 +63,9 @@ test("partition-aware structural validator history restores every source", async
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource
+		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseStructuralSubtypePartitionValidatorUpdate(
 			current, update
@@ -70,8 +75,9 @@ test("partition-aware structural validator history restores every source", async
 		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
-			, addition.currentSha256, addition.path);
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		)), addition.currentSha256, addition.path);
 });
 
 test("partition-aware structural validator history rejects altered transitions", async () => {
@@ -79,7 +85,9 @@ test("partition-aware structural validator history rejects altered transitions",
 		structuralSubtypePartitionValidatorHistoryPath, "utf8"
 	));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = await sourceAtFinHistoryMilestone(
+		update.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource
+	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() =>
 		reverseStructuralSubtypePartitionValidatorUpdate(current, update));
