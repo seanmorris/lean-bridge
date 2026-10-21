@@ -54,7 +54,7 @@ for(const route of routes) test(`installed zero-payload checked-record Rust pack
 	const selection = zeroPayloadBrowserSelection(route);
 	const mode = selection.resultOnly ? "result-only" : "full";
 	const expected = selection.expected, configuration = zeroPayloadRustConfiguration(route);
-	const output = resolve(process.env.LEAN_BRIDGE_VALUE_INDEX_RUST_OUTPUT
+	const output = resolve(process.env.LEAN_BRIDGE_ZERO_PAYLOAD_RUST_OUTPUT
 		?? "build/zero-payload-checked-record-rust", route);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const resourceChecks = [];
