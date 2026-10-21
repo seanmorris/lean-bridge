@@ -85,6 +85,13 @@ export const checkNominalNativeSource = async options => {
 		, `example : ((${n("echoGenericSecond")} ⟨40, 2⟩).map fun value => value.value) = some 42 := by decide`
 		, `example : ((${n("echoGenericFirst")} ⟨95, 2⟩).map fun value => value.value) = some 96 := by decide`
 		, `example : ${n("echoGenericSecond")} ⟨95, 2⟩ = none := by decide`
+		, `example : ((${n("echoIndexedOnFirst")} ⟨40, 7, 0, 2, 0⟩).map fun value => value.value) = some 41 := by decide`
+		, `example : ((${n("echoIndexedOnSecond")} ⟨40, 7, 0, 2, 0⟩).map fun value => value.value) = some 42 := by decide`
+		, `example : ${n("echoIndexedOnFirst")} ⟨40, 7, 1, 2, 0⟩ = none := by decide`
+		, `example : ${n("echoIndexedOnFirst")} ⟨40, 7, 0, 1, 0⟩ = none := by decide`
+		, `example : ${n("echoIndexedOnFirst")} ⟨40, 7, 0, 2, 1⟩ = none := by decide`
+		, `example : ((${n("echoIndexedOffWide")} ⟨40, 8, 1, 0, 340282366920938463463374607431768211457⟩).map fun value => value.value) = some 41 := by decide`
+		, `example : ((${n("echoIndexedUnicode")} ⟨40, 9, 1, 2, 0⟩).map fun value => value.value) = some 42 := by decide`
 		, `example : ${call("NominalSelection.plainFin")} 3 = none := by decide`
 	];
 	const adapter = generated.leanSource + "\n" + checks.join("\n") + "\n";

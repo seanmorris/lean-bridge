@@ -236,7 +236,7 @@ const checkReview = document => {
 		if(erased)
 		{
 			const generic = Object.hasOwn(definition.source.extensions, instantiationKey);
-			if(generic && (depth !== 0 || Object.hasOwn(tree ?? {}, "fields"))) return false;
+			if(generic && depth !== 0) return false;
 			if(tree === null || tree === undefined) return produced && depth === 0;
 			if(tree.kind !== "checked-record" || (produced ? tree.constructor !== null : typeof tree.constructor !== "string")) return false;
 			if(!Object.hasOwn(tree, "fields")) return !produced && depth === 0

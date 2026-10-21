@@ -64,6 +64,62 @@ def genericWrongName := genericUse
 def genericWrongField := genericUse
 def genericWrongConstructor := genericUse
 
+/-- A generic checked record with retained type and closed value indices. -/
+structure IndexedCarrier (α : Type) (flag : Bool) (label : String) (bound : Nat) where
+  value : Positive
+  marker : α
+  flagCount : Nat
+  labelSize : Nat
+  boundValue : Nat
+  flagMatches : (flagCount == 0) = flag
+  labelMatches : label.length = labelSize
+  boundMatches : bound = boundValue
+
+abbrev IndexedOnAbZero := IndexedCarrier Nat true "ab" 0
+abbrev IndexedOffEmptyWide :=
+  IndexedCarrier Nat false "" 340282366920938463463374607431768211457
+abbrev IndexedOffUnicodeZero := IndexedCarrier Nat false "λ🌱" 0
+
+def checkedIndexedCarrier {α : Type} {flag : Bool} {label : String} {bound : Nat}
+    (value : Positive) (marker : α) (flagCount labelSize boundValue : Nat) :
+    Option (IndexedCarrier α flag label bound) :=
+  if flagMatches : (flagCount == 0) = flag then
+    if labelMatches : label.length = labelSize then
+      if boundMatches : bound = boundValue then
+        some ⟨value, marker, flagCount, labelSize, boundValue,
+          flagMatches, labelMatches, boundMatches⟩
+      else none
+    else none
+  else none
+
+def mkIndexedOnAbZero (value : Positive) (marker flagCount labelSize boundValue : Nat) :
+    Option IndexedOnAbZero :=
+  checkedIndexedCarrier value marker flagCount labelSize boundValue
+
+def mkIndexedOffEmptyWide (value : Positive) (marker flagCount labelSize boundValue : Nat) :
+    Option IndexedOffEmptyWide :=
+  checkedIndexedCarrier value marker flagCount labelSize boundValue
+
+def mkIndexedOffUnicodeZero (value : Positive) (marker flagCount labelSize boundValue : Nat) :
+    Option IndexedOffUnicodeZero :=
+  checkedIndexedCarrier value marker flagCount labelSize boundValue
+
+class IndexStamp (α : Type u) where
+  stamp : Nat
+
+instance indexedOnAbZeroStamp : IndexStamp IndexedOnAbZero := ⟨1⟩
+instance indexedOffEmptyWideStamp : IndexStamp IndexedOffEmptyWide := ⟨2⟩
+instance indexedOffUnicodeZeroStamp : IndexStamp IndexedOffUnicodeZero := ⟨3⟩
+
+/-- Specializations retain synthesized dictionaries but expose only the payload. -/
+def dependentEcho {α : Type u} [IndexStamp α] (value : α) : α := value
+
+def indexedWrongName (value : IndexedOnAbZero) : Nat := value.marker
+def indexedWrongField (value : IndexedOnAbZero) : Nat := value.marker
+def indexedWrongConstructor (value : IndexedOnAbZero) : Nat := value.marker
+def indexedWrongSubtype (value : IndexedOnAbZero) : Nat := value.marker
+def indexedNested (values : Array IndexedOnAbZero) : Nat := values.size
+
 inductive Chain where
   | empty
   | node (value : Positive) (tail : Chain)

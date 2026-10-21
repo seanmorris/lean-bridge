@@ -704,8 +704,11 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           ("fields", toJson fields)] ++ (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++
           [("abi", ← abi e)])
         if erased.isEmpty then return reference
-        if copied || richCheckedRecordSelection checked then
-          reject e "nested and field-refined generic checked records require a reviewed projection"
+        -- A closed alias-named generic checked record may carry the exact rich
+        -- selection at its top-level site. Its value indices stay provenance,
+        -- while payload Subtypes keep their site-selected constructors.
+        if copied then
+          reject e "nested generic checked records require a reviewed projection"
         return ← checkedRecordSite request e reference payload depth copied structural
           (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply
   if let .const name _ := e then

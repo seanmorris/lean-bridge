@@ -77,6 +77,24 @@ export const selectedGroup = name => selectedTree("array", selectedTree("option"
 export const selectedGenericNat = name => selectedRecord("NominalSelection.GenericNat",
 	selectedField("value", selectedConstructor(name)), selectedField("marker", null));
 /**
+ * Select one top-level generic checked record and its nested Subtype field.
+ *
+ * @param name - Closed alias naming the generic checked record.
+ * @param constructor - Checked constructor for the complete record.
+ * @param subtype - Checked constructor for its Positive payload.
+ */
+export const selectedIndexedCarrier = (name, constructor, subtype) => ({
+	kind: "checked-record", name: `NominalSelection.${name}`
+	, constructor: `NominalSelection.${constructor}`
+	, fields: [
+		selectedField("value", selectedConstructor(subtype))
+		, selectedField("marker", null)
+		, selectedField("flagCount", null)
+		, selectedField("labelSize", null)
+		, selectedField("boundValue", null)
+	]
+});
+/**
  * Attach a choice to its copied contract site.
  *
  * @param selection - Optional constructor choice for one copied site.
@@ -106,13 +124,37 @@ export const nominalSelectionContracts = () => {
 		, "NominalSelection.genericUse": contract([selectedGenericNat("plusOne")])
 		, "NominalSelection.echoGenericFirst": contract([selectedGenericNat("plusOne")])
 		, "NominalSelection.echoGenericSecond": contract([selectedGenericNat("plusTwo")])
+		, "NominalSelection.echoIndexedOnFirst": contract([
+			selectedIndexedCarrier("IndexedOnAbZero", "mkIndexedOnAbZero", "plusOne")
+		])
+		, "NominalSelection.echoIndexedOnSecond": contract([
+			selectedIndexedCarrier("IndexedOnAbZero", "mkIndexedOnAbZero", "plusTwo")
+		])
+		, "NominalSelection.echoIndexedOffWide": contract([
+			selectedIndexedCarrier("IndexedOffEmptyWide", "mkIndexedOffEmptyWide", "plusOne")
+		])
+		, "NominalSelection.echoIndexedUnicode": contract([
+			selectedIndexedCarrier("IndexedOffUnicodeZero", "mkIndexedOffUnicodeZero", "plusTwo")
+		])
 		, "NominalSelection.plainFin": contract([null])
 	};
 };
 
-/** Two public specializations of one generic source keep independent constructor choices. */
-export const nominalSelectionSpecializations = () => ["First", "Second"].map(name => ({
-	name: `NominalSelection.echoGeneric${name}`
-	, declaration: "NominalSelection.genericEcho"
-	, types: ["NominalSelection.GenericNat"]
-}));
+/** Public specializations retain independent constructors and synthesized instances. */
+export const nominalSelectionSpecializations = () => [
+	...["First", "Second"].map(name => ({
+		name: `NominalSelection.echoGeneric${name}`
+		, declaration: "NominalSelection.genericEcho"
+		, types: ["NominalSelection.GenericNat"]
+	}))
+	, ...[
+		["OnFirst", "IndexedOnAbZero"]
+		, ["OnSecond", "IndexedOnAbZero"]
+		, ["OffWide", "IndexedOffEmptyWide"]
+		, ["Unicode", "IndexedOffUnicodeZero"]
+	].map(([name, type]) => ({
+		name: `NominalSelection.echoIndexed${name}`
+		, declaration: "NominalSelection.dependentEcho"
+		, types: [`NominalSelection.${type}`]
+	}))
+];

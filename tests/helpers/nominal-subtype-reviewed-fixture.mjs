@@ -6,7 +6,7 @@
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
-import { nominalSelectionContracts, nominalSelectionSpecializations, selectedEnvelope, selectedEvent, selectedGenericNat } from "./nominal-subtype-selection-fixture.mjs";
+import { nominalSelectionContracts, nominalSelectionSpecializations, selectedEnvelope, selectedEvent, selectedGenericNat, selectedIndexedCarrier } from "./nominal-subtype-selection-fixture.mjs";
 
 const envelope = { record: "NominalConversion.Envelope", fields: { payload: "nat", digit: "nat" } };
 const pair = { record: "NominalConversion.Pair", fields: { left: envelope, right: envelope } };
@@ -15,13 +15,28 @@ const alias = { record: "NominalSelection.EnvelopeAlias", fields: {} };
 const group = { array: { option: alias } };
 const aliasPair = { record: "NominalSelection.AliasPair", fields: { left: group, right: group } };
 const genericNat = { record: "NominalSelection.GenericNat", fields: { value: "nat", marker: "nat" } };
+const indexedFields = {
+	value: "nat", marker: "nat", flagCount: "nat"
+	, labelSize: "nat", boundValue: "nat"
+};
+const indexedOn = { record: "NominalSelection.IndexedOnAbZero", fields: indexedFields };
+const indexedOff = { record: "NominalSelection.IndexedOffEmptyWide", fields: indexedFields };
+const indexedUnicode = { record: "NominalSelection.IndexedOffUnicodeZero", fields: indexedFields };
 const nat = { kind: "primitive", name: "nat" };
+const primitive = name => ({ kind: "primitive", name });
+const valueIndex = (name, value) => ({ kind: "value", type: primitive(name), value });
 const apply = (constructor, ...arguments_) => ({ kind: "apply", constructor, arguments: arguments_ });
 const documentation = { summary: "Independent nominal review.", details: "" };
 const field = (name, type) => ({ name, type, mutability: "immutable", documentation });
 const fin = { kind: "fin", bound: "3" };
 const predicate = (selection, produced = false) => {
 	if(selection === null || selection === undefined) return null;
+	if(selection.kind === "checked-record") return {
+		...selection, constructor: produced ? null : selection.constructor
+		, fields: selection.fields.map(member => ({
+			name: member.name, refinement: predicate(member.refinement, produced)
+		}))
+	};
 	if(Object.hasOwn(selection, "constructor")) return { kind: "subtype", constructor: produced ? null : selection.constructor };
 	const fields = members => members.map(member => ({ name: member.name, refinement: member.name === "digit" ? { ...fin } : predicate(member.refinement, produced) }));
 	if(selection.kind === "record") return { ...selection, fields: fields(selection.fields) };
@@ -34,9 +49,32 @@ const producedResults = {
 	, "NominalConversion.produceEvent": selectedEvent("plusOne", "plusTwo")
 	, "NominalSelection.echoGenericFirst": selectedGenericNat("plusOne")
 	, "NominalSelection.echoGenericSecond": selectedGenericNat("plusTwo")
+	, "NominalSelection.echoIndexedOnFirst": selectedIndexedCarrier(
+		"IndexedOnAbZero", "mkIndexedOnAbZero", "plusOne")
+	, "NominalSelection.echoIndexedOnSecond": selectedIndexedCarrier(
+		"IndexedOnAbZero", "mkIndexedOnAbZero", "plusTwo")
+	, "NominalSelection.echoIndexedOffWide": selectedIndexedCarrier(
+		"IndexedOffEmptyWide", "mkIndexedOffEmptyWide", "plusOne")
+	, "NominalSelection.echoIndexedUnicode": selectedIndexedCarrier(
+		"IndexedOffUnicodeZero", "mkIndexedOffUnicodeZero", "plusTwo")
 };
+const indexedInstantiations = Object.freeze({
+	IndexedOnAbZero: [primitive("nat"), valueIndex("bool", "true")
+		, valueIndex("string", "ab"), valueIndex("nat", "0")]
+	, IndexedOffEmptyWide: [primitive("nat"), valueIndex("bool", "false")
+		, valueIndex("string", "")
+		, valueIndex("nat", "340282366920938463463374607431768211457")]
+	, IndexedOffUnicodeZero: [primitive("nat"), valueIndex("bool", "false")
+		, valueIndex("string", "λ🌱"), valueIndex("nat", "0")]
+});
+const dependentDictionaries = Object.freeze({
+	"NominalSelection.echoIndexedOnFirst": "NominalSelection.indexedOnAbZeroStamp"
+	, "NominalSelection.echoIndexedOnSecond": "NominalSelection.indexedOnAbZeroStamp"
+	, "NominalSelection.echoIndexedOffWide": "NominalSelection.indexedOffEmptyWideStamp"
+	, "NominalSelection.echoIndexedUnicode": "NominalSelection.indexedOffUnicodeZeroStamp"
+});
 
-/** Author the complete twelve-export review without reading or lowering a Lean report. */
+/** Author the complete export review without reading or lowering a Lean report. */
 export const nominalSubtypeReviewedFixture = () => {
 	const signatures = [
 		["NominalConversion.first", [envelope], "nat"]
@@ -53,6 +91,10 @@ export const nominalSubtypeReviewedFixture = () => {
 		, ["NominalSelection.genericUse", [genericNat], "nat"]
 		, ["NominalSelection.echoGenericFirst", [genericNat], genericNat]
 		, ["NominalSelection.echoGenericSecond", [genericNat], genericNat]
+		, ["NominalSelection.echoIndexedOnFirst", [indexedOn], indexedOn]
+		, ["NominalSelection.echoIndexedOnSecond", [indexedOn], indexedOn]
+		, ["NominalSelection.echoIndexedOffWide", [indexedOff], indexedOff]
+		, ["NominalSelection.echoIndexedUnicode", [indexedUnicode], indexedUnicode]
 		, ["NominalSelection.plainFin", ["nat"], "nat"]
 	].map(([name, parameters, result]) => ({ name, parameters, result }));
 	const document = corpusReviewedIr({ id: "nominal-subtypes" }, signatures);
@@ -71,6 +113,18 @@ export const nominalSubtypeReviewedFixture = () => {
 		structure: "NominalSelection.GenericCarrier"
 		, arguments: [structuredClone(nat)]
 	};
+	for(const [name, arguments_] of Object.entries(indexedInstantiations))
+	{
+		const indexed = document.types.find(type =>
+			type.id === `lean:NominalSelection.${name}`);
+		indexed.source.extensions["lean-lang.org/instantiation"] = {
+			structure: "NominalSelection.IndexedCarrier"
+			, arguments: structuredClone(arguments_)
+		};
+		indexed.source.extensions["lean-lang.org/erased-proofs"] = {
+			fields: ["flagMatches", "labelMatches", "boundMatches"]
+		};
+	}
 	document.types.find(type => type.id === "lean:NominalConversion.Envelope").source.extensions["lean-lang.org/nominal-refinements"] = { kind: "record", fields: [null, { ...fin }] };
 	const selections = nominalSelectionContracts();
 	const specializations = new Map(nominalSelectionSpecializations().map(value => [value.name, value]));
@@ -89,8 +143,12 @@ export const nominalSubtypeReviewedFixture = () => {
 		if(specialization)
 		{
 			item.source.declaration = specialization.declaration;
+			const dictionary = dependentDictionaries[publicName];
+			const application = dictionary
+				? `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}) (@_root_.${dictionary}))`
+				: `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}))`;
 			item.source.extensions["lean-lang.org/specialization"] = { ...specialization
-				, application: `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}))` };
+				, application };
 		}
 	}
 	return document;

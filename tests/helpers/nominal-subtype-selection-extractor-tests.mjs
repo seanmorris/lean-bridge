@@ -15,7 +15,7 @@ import { createMetadataRequest, identifyLeanInterface, validateElaboratedMetadat
 import { projectionCheckedSelection } from "../../src/analyze/checked-refinement-selection.mjs";
 import { exportContractProblem } from "../../src/analyze/export-configuration.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
-import { nominalSelectionContracts, nominalSelectionSpecializations, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedGenericNat, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
+import { nominalSelectionContracts, nominalSelectionSpecializations, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedGenericNat, selectedIndexedCarrier, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { nominalSubtypeReviewInput, nominalSubtypeReviewedFixture } from "./nominal-subtype-reviewed-fixture.mjs";
 import { checkNominalNativeSource } from "./nominal-subtype-native-source.mjs";
@@ -127,6 +127,23 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		assert.equal(first.parameters[0].type.fields[0].type.predicate.constructor, "NominalConversion.plusOne");
 		assert.equal(second.parameters[0].type.fields[0].type.predicate.constructor, "NominalConversion.plusTwo");
 		assert.equal(first.result.fields[0].type.predicate.constructor, null);
+		const indexedFirst = declarations.get("NominalSelection.echoIndexedOnFirst");
+		const indexedSecond = declarations.get("NominalSelection.echoIndexedOnSecond");
+		assert.equal(indexedFirst.specialization.declaration, "NominalSelection.dependentEcho");
+		assert.equal(indexedSecond.specialization.declaration, "NominalSelection.dependentEcho");
+		assert.match(indexedFirst.specialization.application
+			, /NominalSelection\.indexedOnAbZeroStamp/u);
+		assert.match(indexedSecond.specialization.application
+			, /NominalSelection\.indexedOnAbZeroStamp/u);
+		for(const name of ["echoIndexedOnFirst", "echoIndexedOnSecond"
+			, "echoIndexedOffWide", "echoIndexedUnicode"]) {
+			const projection = projections.get(`NominalSelection.${name}`);
+			assert.equal(projection.parameters[0].type.kind, "refinement");
+			assert.equal(projection.parameters[0].type.predicate.kind, "checked-record");
+			assert.equal(projection.result.kind, "record");
+			assert.ok(Object.hasOwn(projection.result, "provenance"));
+			assert.ok(Object.hasOwn(projection.result, "erased"));
+			}
 	};
 	const invalidContracts = () => {
 		const make = (parameters, result = null) => ({ parameters: parameters.map(selectedSite), result: selectedSite(result) });
@@ -134,6 +151,8 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		const changedConstructor = name => selectedRecord("NominalConversion.Envelope",
 			selectedField("payload", { constructor: name }), selectedField("digit", null));
 		const event = selectedEvent("plusOne", "plusTwo");
+		const indexed = selectedIndexedCarrier(
+			"IndexedOnAbZero", "mkIndexedOnAbZero", "plusOne");
 		let deep = selectedConstructor("plusOne");
 		for(let depth = 0; depth < 33; depth++) deep = selectedRecord("NominalConversion.Envelope", selectedField("payload", deep));
 		const wide = selectedRecord("Library.Wide", ...Array.from({ length: 1024 }, (_, index) => selectedField(`field${index}`, index ? null : selectedConstructor("plusOne"))));
@@ -164,6 +183,17 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			, genericWrongName: make([{ ...selectedGenericNat("plusOne"), name: "NominalSelection.GenericCarrier" }])
 			, genericWrongField: make([selectedRecord("NominalSelection.GenericNat", selectedField("other", selectedConstructor("plusOne")), selectedField("marker", null))])
 			, genericWrongConstructor: make([selectedGenericNat("wrongInput")])
+			, indexedWrongName: make([{ ...indexed
+				, name: "NominalSelection.IndexedCarrier" }])
+			, indexedWrongField: make([{ ...indexed
+				, fields: indexed.fields.with(1, selectedField("other", null)) }])
+			, indexedWrongConstructor: make([{ ...indexed
+				, constructor: "NominalConversion.plusOne" }])
+			, indexedWrongSubtype: make([{ ...indexed
+				, fields: indexed.fields.with(0
+					, selectedField("value"
+						, { constructor: "NominalSelection.wrongInput" })) }])
+			, indexedNested: make([selectedTree("array", indexed)])
 			, recursive: make([selectedVariant("NominalSelection.Chain", selectedCase("empty"),
 				selectedCase("node", selectedField("value", selectedConstructor("plusOne")), selectedField("tail", null)))])
 		}).map(([name, value]) => [`NominalSelection.${name}`, value]));
@@ -199,6 +229,13 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		assert.match(diagnostic("sorrySelection"), /depends on sorry/u);
 		assert.match(diagnostic("outsideSelection"), /selected module/u);
 		for(const name of ["tooDeep", "tooWide"]) assert.match(diagnostic(name), /depth or node limit/u);
+		assert.match(diagnostic("indexedWrongName"), /top-level or structural-container/u);
+		assert.match(diagnostic("indexedWrongField")
+			, /does not match the compiler-checked Subtype/u);
+		assert.match(diagnostic("indexedWrongConstructor")
+			, /take exactly the payload fields/u);
+		assert.match(diagnostic("indexedWrongSubtype"), /input must equal/u);
+		assert.match(diagnostic("indexedNested"), /nested generic checked records/u);
 		const accepted = await extract(profile, { "NominalSelection.recursive": recursive }, `${profile}-recursive-source-only`);
 		const projection = accepted.projections.get("NominalSelection.recursive");
 		assert.equal(projection.status, "supported", projection.expression);

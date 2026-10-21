@@ -75,7 +75,7 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 				return true;
 			}
 			closed(value, ["kind", "name", "constructor", "fields"]);
-			if(generic || value.name !== definition.source?.declaration || !Array.isArray(value.fields)
+			if((generic && level !== 0) || value.name !== definition.source?.declaration || !Array.isArray(value.fields)
 				|| value.fields.length !== definition.fields.length) fail();
 			if(subtypeResult ? value.constructor !== null
 				: typeof value.constructor !== "string"

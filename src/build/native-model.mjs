@@ -227,9 +227,11 @@ const nativeRefinements = (declaration, callbacks = false) => {
 				const base = checkedRecordBase(type.base);
 				if(base?.kind !== "record" || !Object.hasOwn(base, "erased"))
 					throw unsupported("checked record refinements require a record with erased proofs");
-				const arguments_ = base.fields.map(field => tree(field.type, false, undefined, true, false));
-				if(Object.hasOwn(base, "provenance") && (!top || arguments_.some(Boolean)))
-					throw unsupported("nested and field-refined generic checked records require another representation");
+				const generic = Object.hasOwn(base, "provenance");
+				const arguments_ = base.fields.map(field =>
+					tree(field.type, false, undefined, true, false, !generic));
+				if(generic && !top)
+					throw unsupported("nested generic checked records require another representation");
 				const value = {
 					kind: "checked-record", definition: base.lean
 					, constructor: type.predicate.constructor
@@ -261,9 +263,11 @@ const nativeRefinements = (declaration, callbacks = false) => {
 		if(type.kind === "record" && Object.hasOwn(type, "erased"))
 		{
 			if(!produced) throw unsupported("checked record inputs require their selected constructor");
-			const arguments_ = type.fields.map(field => tree(field.type, false, undefined, true, true));
-			if(Object.hasOwn(type, "provenance") && (!top || arguments_.some(Boolean)))
-				throw unsupported("nested and field-refined generic checked records require another representation");
+			const generic = Object.hasOwn(type, "provenance");
+			const arguments_ = type.fields.map(field =>
+				tree(field.type, false, undefined, true, true, !generic));
+			if(generic && !top)
+				throw unsupported("nested generic checked records require another representation");
 			const value = {
 				kind: "checked-record", definition: type.lean, constructor: null
 				, fields: type.fields.map(field => field.name)
