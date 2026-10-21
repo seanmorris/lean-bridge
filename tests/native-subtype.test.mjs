@@ -45,6 +45,7 @@ import "./helpers/nominal-subtype-selection-history-tests.mjs";
 import "./helpers/generic-subtype-composition-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-foundation-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-native-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-perl-source-history-tests.mjs";
 import "./helpers/dependent-generic-subtype-source-history-tests.mjs";
 import "./helpers/dependent-generic-subtype-ci-source-history-tests.mjs";
 

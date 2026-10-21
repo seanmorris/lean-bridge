@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5d001168954577175245df83b2901fcddd9bffd3a1babf4e7c3c51e87b39b57a",
+      "path": ".github/workflows/dependent-checked-record-perl.yml"
+    },
+    {
+      "currentSha256": "752b0520efba3207dd447943d7ce591fd0c2c9b32c36a6537160a9b129b9b7e1",
+      "path": "scripts/check-dependent-checked-record-perl-ci.mjs"
+    },
+    {
+      "currentSha256": "58fe2625c24a11e0b7b012ed0f6a26f07379d74063e84deae59e96a734790b39",
+      "path": "scripts/run-dependent-checked-record-perl-ci.sh"
+    },
+    {
+      "currentSha256": "0661b1d238b5318d897f80a6804fcad578d9eb67b5b875797c9d6a1d6cef1c3a",
+      "path": "tests/fixtures/dependent-checked-record-consumers/perl.pl"
+    },
+    {
+      "currentSha256": "dec0c4ed01e747549d31d291cc6a8a42bc5224122861be108a72761a0c5a3519",
+      "path": "tests/helpers/dependent-checked-record-perl-ci-report.mjs"
+    },
+    {
+      "currentSha256": "cb743da6881919d1ce8c5e1df49584164e0c351b5198ded881c8f042fd8cf307",
+      "path": "tests/helpers/dependent-checked-record-perl-fixture.mjs"
+    },
+    {
+      "currentSha256": "a19b8a436d7bb09704f812583155fe6a351522db42d158be8a6ee354008929ef",
+      "path": "tests/helpers/dependent-checked-record-perl-install.mjs"
+    },
+    {
+      "currentSha256": "30ea0b0e50306d21e812ccb3eb7b268c592b792e87a691db94532e13f7876afe",
+      "path": "tests/helpers/dependent-checked-record-perl-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "35793ae2c320d2fe38330305da1bfee385ee94bbaaef06ecb1b2569472ac82d9",
+      "path": "tests/helpers/dependent-checked-record-perl-records.mjs"
+    },
+    {
+      "currentSha256": "c1bba05b1d6a5d925673660cf0f0df5208cbf05c28375d982a54f83009bfdecf",
+      "path": "tests/helpers/dependent-checked-record-perl-tests.mjs"
+    },
+    {
+      "currentSha256": "eae9aeae6f8bcdb1a477c81561cc67896ac1c6ff0348ddae7fdea705f0ee89ad",
+      "path": "scripts/update-dependent-checked-record-perl-source-history.mjs"
+    },
+    {
+      "currentSha256": "4fc5aaf94697240855cb61f6431d2fa18482d20fda4e7cde7b518de2757d3240",
+      "path": "tests/helpers/dependent-checked-record-perl-source-history.mjs"
+    },
+    {
+      "currentSha256": "0a3bc88a1f22ab936a80cb55300c788f5e5ddfbf434a4703365c20b623225f93",
+      "path": "tests/helpers/dependent-checked-record-perl-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "000b80bb20529f668e42ae38468aaeba3166f1b5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "405551d49c096169662456b1da8d7076391bd8c6eef4d7e61a35fbb95d2e141f",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPerlSource, dependentCheckedRecordPerlChangedPaths, dependentCheckedRecordPerlIntegrationPaths } from \"./dependent-checked-record-perl-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPerlChangedPaths\n\t, ...dependentCheckedRecordPerlIntegrationPaths\n\t, ...dependentCheckedRecordNativeChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordNativeChangedPaths\n",
+          "start": 123273
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPerl\n\t\t= beforeDependentCheckedRecordPerlSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordPerl) === expected)\n\t\treturn dependentCheckedRecordPerl;\n",
+          "previous": "",
+          "start": 150509
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordNativeSource(\n\t\t\tpath, dependentCheckedRecordPerl, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordNativeSource(path, text, expected);\n",
+          "start": 150735
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0656ef7189fc91c7b2ca19a4ca9df6f5c742d4bc49611e1bf5868df62d524837"
+    },
+    {
+      "currentSha256": "a5a6eb56f1ebfee9ad2f91fcc88b7ff8ee8a5af34d59b306a2b80be2ce67ed9b",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-perl-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3109
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a8c34d0767ca3de64f41629e9367392e892a51237b7d216ab9955144af820ab5"
+    }
+  ],
+  "milestone": "dependent-checked-record-perl-source-v1",
+  "predecessorCommit": "39837f66b7634470b1fdcd47b9e375d3ee854ead",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline across four pinned Perl ABIs and both CPAN delivery modes in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "f82b3218abbb8e98fa425468a89216b6daba8405570184c1fbce4b07bc7a7b46",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-perl-tests.mjs\";\n",
+          "previous": "",
+          "start": 228
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "e9a4950f267026115773938b4288d7ca47d31bce947f1733c9bf5b1579a8cebd"
+    }
+  ]
+}
