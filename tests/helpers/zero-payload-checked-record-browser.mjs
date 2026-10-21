@@ -28,7 +28,6 @@ import {
 	, zeroPayloadBrowserProfiles
 	, zeroPayloadBrowserSelection
 } from "./zero-payload-checked-record-browser-fixture.mjs";
-import "./zero-payload-browser-source-history-tests.mjs";
 
 const clean = {
 	PATH: "/unavailable", CC: "/unavailable/compiler", CXX: "/unavailable/compiler"

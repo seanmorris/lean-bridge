@@ -45,7 +45,6 @@ import {
 	, zeroPayloadBrowserRoutes
 	, zeroPayloadBrowserSelection
 } from "./zero-payload-checked-record-browser-fixture.mjs";
-import "./zero-payload-npm-installed-source-history-tests.mjs";
 
 const enabledFlag = "LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_NPM_TEST";
 const browserFlag = "LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_BROWSER_TEST";

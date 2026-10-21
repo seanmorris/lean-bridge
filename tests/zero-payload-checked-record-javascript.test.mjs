@@ -12,6 +12,10 @@ import test from "node:test";
 import { generateJavaScriptPackage } from "../src/backends/javascript/generate.mjs";
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import {
+	assertZeroPayloadBrowserTap
+	, parseZeroPayloadBrowserCiArgs
+} from "./helpers/zero-payload-checked-record-browser-ci-report.mjs";
+import {
 	zeroPayloadBrowserExpected
 	, zeroPayloadBrowserEngines
 	, zeroPayloadBrowserName
@@ -23,7 +27,9 @@ import {
 	, validateZeroPayloadBrowserPhases
 } from "./helpers/zero-payload-checked-record-browser-fixture.mjs";
 import { checkZeroPayloadRecords } from "./fixtures/zero-payload-checked-record-browser/javascript.mjs";
+import "./helpers/zero-payload-browser-source-history-tests.mjs";
 import "./helpers/zero-payload-javascript-source-history-tests.mjs";
+import "./helpers/zero-payload-npm-installed-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-npm-installed-tests.mjs";
 
 const exact = (value, fields, path = "value") => {
@@ -55,6 +61,10 @@ const mock = resultOnly => {
 	});
 	return api;
 };
+const tap = (tests, skipped = 0) => `TAP version 13\n${Array.from({ length: tests }
+	, (_, index) => `# Subtest: accepted ${index}\n`
+		+ `ok ${index + 1} - accepted ${index}${index >= tests - skipped ? " # SKIP" : ""}\n`
+		+ "  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n").join("")}1..${tests}\n# tests ${tests}\n# suites 0\n# pass ${tests - skipped}\n# fail 0\n# cancelled 0\n# skipped ${skipped}\n# todo 0\n# duration_ms 2\n`;
 
 test("zero-payload caller distinguishes empty, Unit and Option values", () => {
 	for(const route of zeroPayloadBrowserRoutes)
@@ -107,6 +117,33 @@ test("zero-payload browser wrapper closes every engine and lifecycle", async t =
 		, { module: zeroPayloadBrowserName, profile: "browser-javascript"
 			, route: "ordinary-source", resultOnly: true }
 	]) assert.throws(() => executeCorpus(request, mock(false)), /Wrong|Missing/u);
+});
+
+test("zero-payload hosted selections require terminal TAP and exact identities", () => {
+	assert.doesNotThrow(() => assertZeroPayloadBrowserTap(tap(1), { tests: 1 }));
+	assert.doesNotThrow(() => assertZeroPayloadBrowserTap(
+		tap(16, 4), { skipped: 4, minimumPasses: 12 }
+	));
+	for(const source of [
+		tap(1).replace("# fail 0", "# fail 1")
+		, tap(16, 4).replace("# skipped 4", "# skipped 3")
+		, tap(16, 4).replace("ok 1", "not ok 1")
+	]) assert.throws(() => assertZeroPayloadBrowserTap(
+		source, { skipped: source.includes("1..16") ? 4 : 0 }
+	));
+	const selected = {
+		route: "ordinary-source", producer: "a".repeat(40)
+		, "npm-checker": "b".repeat(40), consumer: "c".repeat(40)
+		, checker: "d".repeat(40), directory: "records"
+		, "acceptance-tap": "acceptance.tap", "controls-tap": "controls.tap"
+		, runtime: "runtime.json"
+	};
+	const args = Object.entries(selected)
+		.flatMap(([key, value]) => [`--${key}`, value]);
+	assert.deepEqual(parseZeroPayloadBrowserCiArgs(args), selected);
+	for(const changed of [args.slice(1), [...args, "--route", "reviewed-ir"]
+		, args.map(value => value === selected.producer ? "not-a-commit" : value)])
+		assert.throws(() => parseZeroPayloadBrowserCiArgs(changed));
 });
 
 test("generated JavaScript packages expose exact empty TypeScript carriers", async t => {
