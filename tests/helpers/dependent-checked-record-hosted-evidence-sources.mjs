@@ -450,6 +450,59 @@ export const dependentCheckedRecordWitEvidenceSources = value => {
 };
 
 /**
+ * Select every source that explains the hosted dependent checked-record
+ * C/C++ packages and their independent native consumers.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordNativeEvidenceSources = value => {
+	const selected = revisions(value);
+	const consumers = ["c.c", "cpp.cpp", "result-only-c.c"
+		, "result-only-cpp.cpp"].map(path => caller(path));
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-native-installed-tests.mjs"
+				])
+				, ...commonData, ...consumers
+				, "src/backends/c/gmp.source.tar.xz"
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-native-fixture.mjs"
+				])
+				, ...consumers
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-native-ci.mjs"
+					, "tests/helpers/dependent-checked-record-native-ci-report-tests.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/dependent-checked-record-native.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-dependent-checked-record-native-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-native-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
  * Select every source that explains the hosted dependent checked-record npm
  * packages and Node/page/React/worker verification.
  *

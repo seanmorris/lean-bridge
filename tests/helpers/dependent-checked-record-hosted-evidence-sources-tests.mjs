@@ -13,6 +13,7 @@ import {
 	, dependentCheckedRecordDotnetEvidenceSources
 	, dependentCheckedRecordHostedOriginal
 	, dependentCheckedRecordJvmEvidenceSources
+	, dependentCheckedRecordNativeEvidenceSources
 	, dependentCheckedRecordPerlEvidenceSources
 	, dependentCheckedRecordPhpEvidenceSources
 	, dependentCheckedRecordPhpWasmEvidenceSources
@@ -153,6 +154,18 @@ test("dependent browser evidence closes npm production, consumption and checking
 	, ["checker", ".github/workflows/dependent-checked-record-browser.yml"]
 	, ["checker", "scripts/check-dependent-checked-record-browser-ci.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-browser-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent native evidence closes C/C++ production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordNativeEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/c.c"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/cpp.cpp"]
+	, ["checker", ".github/workflows/dependent-checked-record-native.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-native-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-native-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 
