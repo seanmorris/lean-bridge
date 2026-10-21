@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f9f8d87d87c777cf6639a2e26a69382986d7527bfc6a837c64790891c619699b",
+      "path": "scripts/update-zero-payload-perl-boolean-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "5e4d2ca2358d3ccfb0f1ef18961943df9bb30fdeda4deb6f2a51a284543d0610",
+      "path": "tests/helpers/zero-payload-perl-boolean-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1ed8499d66d400634c762d503d2596161045aeaa262f3c4e1990ac262b77f232",
+      "path": "tests/helpers/zero-payload-perl-boolean-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4b537cfd20f06874992fd2f88860717206eee04d",
+  "implementationPaths": [
+    "tests/fixtures/zero-payload-checked-record-perl/perl.pl",
+    "tests/helpers/zero-payload-checked-record-perl-fixture-tests.mjs",
+    "tests/helpers/zero-payload-checked-record-perl-model.pl"
+  ],
+  "milestone": "zero-payload-perl-boolean-repair-source-v1",
+  "predecessorCommit": "d6756d1895ea96497c84c23a5f18f5a9ca721620",
+  "schemaVersion": 1,
+  "scope": "The independent Perl consumer obtains canonical booleans from each installed generated package before calling Bool-parameter APIs; plain scalar 0 and 1 are not substituted for the public boolean carrier.",
+  "updates": [
+    {
+      "currentSha256": "aa7b8081c5b9a96ffd3b7505c3ba6da3ea5093342fbcd70e946c7a3fcef26177",
+      "edits": [
+        {
+          "current": "    my $false = $call->('false');\n    my $true = $call->('true');\n",
+          "previous": "",
+          "start": 2154
+        },
+        {
+          "current": "    $invoke->('maybe_witness', [$false], undef, 'absent Witness option');\n    my $present = $invoke->('maybe_witness', [$true], $some->($witness->())\n",
+          "previous": "    $invoke->('maybe_witness', [0], undef, 'absent Witness option');\n    my $present = $invoke->('maybe_witness', [1], $some->($witness->())\n",
+          "start": 5705
+        },
+        {
+          "current": "    my $produced_blank = $invoke->('produce_mark', [$false], $blank->(), 'blank Mark');\n    my $produced_marked = $invoke->('produce_mark', [$true], $marked->($witness->()), 'marked Mark');\n",
+          "previous": "    my $produced_blank = $invoke->('produce_mark', [0], $blank->(), 'blank Mark');\n    my $produced_marked = $invoke->('produce_mark', [1], $marked->($witness->()), 'marked Mark');\n",
+          "start": 6320
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-perl/perl.pl",
+      "previousSha256": "7cb29130aba1ad158cff7ec3f3c73d7dc843ea3ce995a972dc3e6c1944b33169"
+    },
+    {
+      "currentSha256": "87a55e9ad81da74e1e01d47a09a4c3ebd61c065f9cf62b28c61ac3e7591bfd62",
+      "edits": [
+        {
+          "current": "\tassert.match(source, /my \\$false = \\$call->\\('false'\\);/u);\n\tassert.match(source, /my \\$true = \\$call->\\('true'\\);/u);\n\tassert.doesNotMatch(source\n\t\t, /\\$invoke->\\('(maybe_witness|produce_mark)', \\[[01]\\]/u);\n",
+          "previous": "",
+          "start": 3551
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-perl-fixture-tests.mjs",
+      "previousSha256": "4e62bddf80566a716817eab95c0e04959773df2958c3de82437c143bbceeb9c1"
+    },
+    {
+      "currentSha256": "8a2da4cecf1e4ae898fe82a1a77dc7eb1a5e36d7d44c939b51ce855eccc32ac2",
+      "edits": [
+        {
+          "current": "    $function->('false', sub { 0 });\n    $function->('true', sub { 1 });\n",
+          "previous": "",
+          "start": 2828
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-perl-model.pl",
+      "previousSha256": "ca59bd6b6df3610060ba80d4259d7579087e540b003424e4ca4ad983214b46e8"
+    },
+    {
+      "currentSha256": "5a021097f0896d68416f08a55457785bec6bce000c3e5c3d56c5a1ae130df45a",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadPerlBooleanRepairSource, zeroPayloadPerlBooleanRepairChangedPaths } from \"./zero-payload-perl-boolean-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2598
+        },
+        {
+          "current": "\t, ...zeroPayloadPerlBooleanRepairChangedPaths\n",
+          "previous": "",
+          "start": 118054
+        },
+        {
+          "current": "\tconst zeroPayloadPerlBooleanRepair\n\t\t= beforeZeroPayloadPerlBooleanRepairSource(\n\t\t\tpath, zeroPayloadNativeEvidence, expected\n\t\t);\n\tif(sha256(zeroPayloadPerlBooleanRepair) === expected)\n\t\treturn zeroPayloadPerlBooleanRepair;\n",
+          "previous": "",
+          "start": 143623
+        },
+        {
+          "current": "\t\tpath, zeroPayloadPerlBooleanRepair, expected\n",
+          "previous": "\t\tpath, zeroPayloadNativeEvidence, expected\n",
+          "start": 143908
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "da6f3c4b5bfea7a42bc8ed542797072f3512c0ce80ddd4b4b9957db696a82e6c"
+    },
+    {
+      "currentSha256": "46c10cb7bc4b86b318a736e3eda10a212d81dc46f0d40942ca7527eeb06ba46e",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-perl-boolean-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 457
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-perl.test.mjs",
+      "previousSha256": "061ccc63b51d78270a2bf55f97c0f87c8d14aaeb39f244133771cf2c9b39a68a"
+    }
+  ]
+}

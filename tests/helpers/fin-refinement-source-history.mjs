@@ -19,6 +19,7 @@ import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticC
 import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from "./zero-payload-native-evidence-source-history.mjs";
 import { beforeZeroPayloadPhpHistorySource, zeroPayloadPhpHistoryChangedPaths, zeroPayloadPhpHistoryIntegrationPaths } from "./zero-payload-php-source-history.mjs";
 import { beforeZeroPayloadWitHistorySource, zeroPayloadWitHistoryChangedPaths, zeroPayloadWitHistoryIntegrationPaths } from "./zero-payload-wit-source-history.mjs";
+import { beforeZeroPayloadPerlBooleanRepairSource, zeroPayloadPerlBooleanRepairChangedPaths } from "./zero-payload-perl-boolean-repair-source-history.mjs";
 import { beforeZeroPayloadPerlArchiveSource, zeroPayloadPerlArchiveChangedPaths, zeroPayloadPerlArchiveIntegrationPaths } from "./zero-payload-perl-archive-source-history.mjs";
 import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from "./zero-payload-rust-archive-source-history.mjs";
 import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from "./zero-payload-rust-ci-source-history.mjs";
@@ -1453,6 +1454,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...zeroPayloadBrowserDiagnosticIntegrationPaths
 	, ...zeroPayloadNativeEvidenceChangedPaths
 	, ...zeroPayloadNativeEvidenceIntegrationPaths
+	, ...zeroPayloadPerlBooleanRepairChangedPaths
 	, ...zeroPayloadWitHistoryChangedPaths
 	, ...zeroPayloadWitHistoryIntegrationPaths
 	, ...zeroPayloadPhpHistoryChangedPaths
@@ -2031,8 +2033,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(zeroPayloadNativeEvidence) === expected)
 		return zeroPayloadNativeEvidence;
+	const zeroPayloadPerlBooleanRepair
+		= beforeZeroPayloadPerlBooleanRepairSource(
+			path, zeroPayloadNativeEvidence, expected
+		);
+	if(sha256(zeroPayloadPerlBooleanRepair) === expected)
+		return zeroPayloadPerlBooleanRepair;
 	const zeroPayloadWit = beforeZeroPayloadWitHistorySource(
-		path, zeroPayloadNativeEvidence, expected
+		path, zeroPayloadPerlBooleanRepair, expected
 	);
 	if(sha256(zeroPayloadWit) === expected) return zeroPayloadWit;
 	const zeroPayloadPhp = beforeZeroPayloadPhpHistorySource(

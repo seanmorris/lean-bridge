@@ -8,4 +8,5 @@ import "./helpers/zero-payload-checked-record-perl-ci-report-tests.mjs";
 import "./helpers/zero-payload-checked-record-perl-ci-shell-tests.mjs";
 import "./helpers/zero-payload-checked-record-perl-ci-workflow-tests.mjs";
 import "./helpers/zero-payload-checked-record-perl-installed-tests.mjs";
+import "./helpers/zero-payload-perl-boolean-repair-source-history-tests.mjs";
 import "./helpers/zero-payload-perl-archive-source-history-tests.mjs";
