@@ -13,3 +13,4 @@ import "./helpers/dependent-checked-record-ruby-installed-tests.mjs";
 import "./helpers/dependent-checked-record-rust-fixture-tests.mjs";
 import "./helpers/dependent-checked-record-rust-ci-policy-tests.mjs";
 import "./helpers/dependent-checked-record-rust-installed-tests.mjs";
+import "./helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs";
