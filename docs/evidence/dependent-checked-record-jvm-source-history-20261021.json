@@ -1,0 +1,165 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d9e9ae1fa2ed46bc86e04708e5a224bae4f928797ecec82bdd3d30605150fd29",
+      "path": ".github/workflows/dependent-checked-record-jvm.yml"
+    },
+    {
+      "currentSha256": "2ad62bccfd133fc67e2bc1f666beac4b39fdd2d6407f0b0374a75ee5dc034eb0",
+      "path": "scripts/check-dependent-checked-record-jvm-ci.mjs"
+    },
+    {
+      "currentSha256": "2556811bffc69faf27248b7a1bcd5b62a5bc238d729273c19f02c7fef51da69e",
+      "path": "scripts/run-dependent-checked-record-jvm-ci.sh"
+    },
+    {
+      "currentSha256": "f4e47d0166696d8d05f5eb589ec37c3dd27b3037c46816bd0daf074f68673d0f",
+      "path": "tests/fixtures/dependent-checked-record-consumers/java.java"
+    },
+    {
+      "currentSha256": "648b7b06b496d3a179d35931116d574b7ea4fb0a7d504bffb75876fe4b6162bd",
+      "path": "tests/fixtures/dependent-checked-record-consumers/kotlin.kt"
+    },
+    {
+      "currentSha256": "ae7cff49e8f0e2932fd53d919dc4b96534eb4474bffc22c0b7657258e709c8c9",
+      "path": "tests/helpers/dependent-checked-record-jvm-caller-tests.mjs"
+    },
+    {
+      "currentSha256": "9e750a285e6177c3ff4c056200c87b9bae4d94d11a4ec5ea6630d17c75c731d5",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-handoff.mjs"
+    },
+    {
+      "currentSha256": "276908c3de5b08d7a41ad6b5199cad2d814b4122745cd6758a6e0aa054164430",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-policy-tests.mjs"
+    },
+    {
+      "currentSha256": "4e36e2d6f49c7b4cafcfc51280549c19429934c7a385f648fe387d7fbb807f49",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-report.mjs"
+    },
+    {
+      "currentSha256": "ab21334cd9ac0af2829dda754459a4026816b0ad7a73c1abd0359d4dcc3945e1",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-shell-tests.mjs"
+    },
+    {
+      "currentSha256": "cf34b1bcc6fc977cbf6b2e85eb03b8ea85885892be970b77b16eb3a78df5cd74",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow-tests.mjs"
+    },
+    {
+      "currentSha256": "f390680ce92e03dd6422631265361875e5eb344d3dbd0fd1872268b727cacae5",
+      "path": "tests/helpers/dependent-checked-record-jvm-ci-workflow.mjs"
+    },
+    {
+      "currentSha256": "e2bd379921365ce3e8e57e106b59302fbfdef62d422e86c421106c84155ff8e8",
+      "path": "tests/helpers/dependent-checked-record-jvm-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "2ece5dd39d94f7a8f5f9ab11052e3336164bdf98a69187c9b27ad5ea53586e88",
+      "path": "tests/helpers/dependent-checked-record-jvm-fixture.mjs"
+    },
+    {
+      "currentSha256": "e2ac929b637664bb9970adac478f215350e5787cb9966881a6ac346c5c5ae5b4",
+      "path": "tests/helpers/dependent-checked-record-jvm-installed-static-tests.mjs"
+    },
+    {
+      "currentSha256": "4e55e57db979c1a809fe886d3adea19ea29c47ec551999f0afabc694e2b78635",
+      "path": "tests/helpers/dependent-checked-record-jvm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "0c731bf43aa563524af687ae5f4b05c5120ed8876260c2cbcca88213a02c952d",
+      "path": "tests/helpers/dependent-checked-record-jvm-model/Api.java"
+    },
+    {
+      "currentSha256": "94d39f943096a0455ba038966672a3b71c1c7a43ed41e349ac20929c87ab976c",
+      "path": "tests/helpers/dependent-checked-record-jvm-model/Dependent.java"
+    },
+    {
+      "currentSha256": "21e089b0fee79d2ad733bbbf3864b895d1b0fbc12edb49067958df65ccb86599",
+      "path": "tests/helpers/dependent-checked-record-jvm-model/LeanBridgeException.java"
+    },
+    {
+      "currentSha256": "fc649f1ea349c2637d372ab27261c9d940e6e8c26a5b1026581634845d744a36",
+      "path": "tests/helpers/dependent-checked-record-jvm-package.mjs"
+    },
+    {
+      "currentSha256": "b6fb7427da9fa1bc8de3b70eb0318c3b9d9b1544612b5f2250d86cdd5817634b",
+      "path": "tests/helpers/dependent-checked-record-jvm-probe.mjs"
+    },
+    {
+      "currentSha256": "f338114cc228a6d40e60b3935107aa746ea92ad59c96768292e84886cb934631",
+      "path": "tests/helpers/dependent-checked-record-jvm-report.mjs"
+    },
+    {
+      "currentSha256": "4f7094e4bd65b3c2a76b537ff0bf3031c8f9e40d96e39332555d688b53343f6c",
+      "path": "scripts/update-dependent-checked-record-jvm-source-history.mjs"
+    },
+    {
+      "currentSha256": "d8d1b4f6660d1a5b288fab2f8740da0c3ac6f70ad9cff23787f29c102f10178f",
+      "path": "tests/helpers/dependent-checked-record-jvm-source-history.mjs"
+    },
+    {
+      "currentSha256": "61ef70eccae8531531d6c96891b47c1937a19270d5c79263fbb949d7e18a48e4",
+      "path": "tests/helpers/dependent-checked-record-jvm-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "f87e675dbd798332b47cff49bdc8e7b9c948613c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "96ccf125617ed71df7e06349da3d463a68ad2078cc15775fe3ff76a6c29933d3",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordJvmSource, dependentCheckedRecordJvmChangedPaths, dependentCheckedRecordJvmIntegrationPaths } from \"./dependent-checked-record-jvm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordJvmChangedPaths\n\t, ...dependentCheckedRecordJvmIntegrationPaths\n\t, ...dependentCheckedRecordDotnetChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordDotnetChangedPaths\n",
+          "start": 125563
+        },
+        {
+          "current": "\tconst dependentCheckedRecordJvm\n\t\t= beforeDependentCheckedRecordJvmSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordJvm) === expected)\n\t\treturn dependentCheckedRecordJvm;\n",
+          "previous": "",
+          "start": 153885
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordDotnetSource(\n\t\t\tpath, dependentCheckedRecordJvm, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordDotnetSource(path, text, expected);\n",
+          "start": 154107
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6a079484b04f9b7e8fb7228d5942c42e492cf2d4c2512d7104ddf51de9e81442"
+    },
+    {
+      "currentSha256": "a055cac8a51a1e8eceeb86c56e036f26c6a2ce6a9d002d44cbf0e6327c7a9170",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-jvm-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "fd5ff32cfaa2397db3f33868dc8eba94c4d601ba754590f3536fba1d4fbf545f"
+    }
+  ],
+  "milestone": "dependent-checked-record-jvm-source-v1",
+  "predecessorCommit": "1a3c423089d21be2fe3a53f9011a25d6cd96b7c1",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline as Maven packages consumed by independent Java and Kotlin callers, in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "76bfb62ea53fa4fda7869b6bd2d4bbf23b4949bc6809725674abed58bda2e753",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-jvm-fixture-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-caller-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-installed-static-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-ci-policy-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-ci-shell-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-ci-workflow-tests.mjs\";\nimport \"./helpers/dependent-checked-record-jvm-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 1672
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "b7fb3e1dac147b2c0954ff649ae563a3dec91422e107c3513c276baf38e2db6f"
+    }
+  ]
+}
