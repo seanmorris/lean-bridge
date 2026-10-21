@@ -38,7 +38,10 @@ const mock = resultOnly => {
 	if(!resultOnly) Object.assign(api, {
 		witnessCount: value => { exact(value, [], "Witness"); return 1n; }
 		, absentCount: value => {
-			exact(value, [], "Witness"); throw new Error("Lean call failed (5)");
+			exact(value, [], "Witness");
+			throw new Error(
+				"absentCount.arg0 was rejected by ZeroPayloadCheckedRecords.mkAbsent"
+			);
 		}
 		, tokenTag: value => { exact(value, ["tag"], "Token"); return value.tag; }
 		, markerCount: value => { exact(value, [], "Marker"); return 0n; }

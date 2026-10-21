@@ -75,10 +75,11 @@ export const checkZeroPayloadRecords = (api, resultOnly = false) => {
 		{
 			failure = error;
 		}
-		check(shape
+		const expected = shape
 			? failure instanceof TypeError && /declared copied fields|plain record/u.test(failure.message)
 			: failure instanceof Error && !(failure instanceof TypeError)
-				&& /failed \(5\)/u.test(failure.message), `${name} refusal`);
+				&& failure.message === "absentCount.arg0 was rejected by ZeroPayloadCheckedRecords.mkAbsent";
+		check(expected, `${name} refusal`);
 		check(snapshot(args) === before, `${name} rejection preserved every input`);
 		rejections++; snapshots++;
 	};
