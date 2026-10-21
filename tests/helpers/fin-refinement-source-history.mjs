@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedSubtypeNativeTransferAcceptanceSource, ownedSubtypeNativeTransferAcceptanceChangedPaths, ownedSubtypeNativeTransferAcceptanceIntegrationPaths } from "./owned-subtype-native-transfer-acceptance-source-history.mjs";
 import { beforeHostedAcceptanceHandoffRepairSource, hostedAcceptanceHandoffRepairChangedPaths, hostedAcceptanceHandoffRepairIntegrationPaths } from "./hosted-acceptance-handoff-repair-source-history.mjs";
 import { beforeZeroPayloadPhpWasmPlainExportRepairSource, zeroPayloadPhpWasmPlainExportRepairChangedPaths, zeroPayloadPhpWasmPlainExportRepairIntegrationPaths } from "./zero-payload-php-wasm-plain-export-repair-source-history.mjs";
 import { beforeZeroPayloadHostedPromotionSource, zeroPayloadHostedPromotionChangedPaths, zeroPayloadHostedPromotionIntegrationPaths } from "./zero-payload-hosted-promotion-source-history.mjs";
@@ -1448,7 +1449,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostedAcceptanceHandoffRepairChangedPaths
+	...ownedSubtypeNativeTransferAcceptanceChangedPaths
+	, ...ownedSubtypeNativeTransferAcceptanceIntegrationPaths
+	, ...hostedAcceptanceHandoffRepairChangedPaths
 	, ...hostedAcceptanceHandoffRepairIntegrationPaths
 	, ...zeroPayloadPhpWasmPlainExportRepairChangedPaths
 	, ...zeroPayloadPhpWasmPlainExportRepairIntegrationPaths
@@ -2022,8 +2025,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const handoffRepair = beforeHostedAcceptanceHandoffRepairSource(
+	const nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(
 		path, text, expected
+	);
+	if(sha256(nativeTransferAcceptance) === expected) return nativeTransferAcceptance;
+	const handoffRepair = beforeHostedAcceptanceHandoffRepairSource(
+		path, nativeTransferAcceptance, expected
 	);
 	if(sha256(handoffRepair) === expected) return handoffRepair;
 	const plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(

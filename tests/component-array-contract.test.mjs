@@ -68,6 +68,7 @@ import "./helpers/core-runner-headroom-source-history-tests.mjs";
 import "./helpers/generic-subtype-npm-browser-source-history-tests.mjs";
 import "./helpers/structural-subtype-partition-validator-source-history-tests.mjs";
 import "./helpers/owned-subtype-core-registration-source-history-tests.mjs";
+import "./helpers/owned-subtype-native-transfer-acceptance-source-history-tests.mjs";
 import "./helpers/core-quality-budget-history-tests.mjs";
 import "./helpers/core-quality-sharding-source-history-tests.mjs";
 import "./helpers/core-first-run-repair-source-history-tests.mjs";

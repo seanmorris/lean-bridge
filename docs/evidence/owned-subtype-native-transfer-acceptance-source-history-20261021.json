@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a84f36a32d9d5e64e3d27a8a78b7b4282707b0d5fb1b506f7f34985dc4128d89",
+      "path": "scripts/update-owned-subtype-native-transfer-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "ca3b5fd76358f9c075d42a8cf1455676ee8e56202c8be15a05f861e6f5e7da67",
+      "path": "tests/helpers/owned-subtype-native-transfer-acceptance-source-history.mjs"
+    },
+    {
+      "currentSha256": "aa2aa9500912f4afe4a07fc21a2d97d0d17d1701bf75a160e7925f1e622820e2",
+      "path": "tests/helpers/owned-subtype-native-transfer-acceptance-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4b0639663021a03f70735a55ba5c027fff7ab348",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f15915bbcf2df8584a45e7c0ecebaf6947a7c9bf09a1dd2a051933d630f1f929",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-native-transfer-acceptance-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4570
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "859aa2f7f22abbdffb01d978229cc962f41861c3f6a62841f0a9648c0c0f31df"
+    },
+    {
+      "currentSha256": "f16c726becf68e00246323232a7a2648a611a30b9a4784e33abac047ab24282a",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeNativeTransferAcceptanceSource, ownedSubtypeNativeTransferAcceptanceChangedPaths, ownedSubtypeNativeTransferAcceptanceIntegrationPaths } from \"./owned-subtype-native-transfer-acceptance-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...ownedSubtypeNativeTransferAcceptanceChangedPaths\n\t, ...ownedSubtypeNativeTransferAcceptanceIntegrationPaths\n\t, ...hostedAcceptanceHandoffRepairChangedPaths\n",
+          "previous": "\t...hostedAcceptanceHandoffRepairChangedPaths\n",
+          "start": 120185
+        },
+        {
+          "current": "\tconst nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(\n",
+          "previous": "\tconst handoffRepair = beforeHostedAcceptanceHandoffRepairSource(\n",
+          "start": 145917
+        },
+        {
+          "current": "\tif(sha256(nativeTransferAcceptance) === expected) return nativeTransferAcceptance;\n\tconst handoffRepair = beforeHostedAcceptanceHandoffRepairSource(\n\t\tpath, nativeTransferAcceptance, expected\n\t);\n",
+          "previous": "",
+          "start": 146028
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "eca3f7518231441f29156e315e6c5544ed5fc926aae0d70ca84f0b9f2e826040"
+    }
+  ],
+  "milestone": "owned-subtype-native-transfer-acceptance-source-v1",
+  "predecessorCommit": "6d063783673068077fece2bcdd98009796ff67a9",
+  "schemaVersion": 1,
+  "scope": "Native owned-Subtype C++ acceptance proves that a successful transfer closes every ordinary alias sharing the transferred lease while an independently retained handle survives subsequent RAII cleanup.",
+  "updates": [
+    {
+      "currentSha256": "ba621b23af082413b349318f8d7467339abdcd9fb0fea3a0dbace1c6a82c244b",
+      "edits": [
+        {
+          "current": "    CHECK(moving.primary.is_closed() && retained.is_closed()\n      && api::serial(kept) == 41);\n",
+          "previous": "    CHECK(moving.primary.is_closed() && api::serial(kept) == 41);\n",
+          "start": 2472
+        },
+        {
+          "current": "    CHECK(api::serial(kept) == 41);\n",
+          "previous": "    CHECK(api::serial(retained) == 41);\n",
+          "start": 2949
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-subtype-installed.cpp",
+      "previousSha256": "95852e1adb610be2febdaf19389aef15f324e23ffb47b1f954800e542d177efb"
+    },
+    {
+      "currentSha256": "f87bcd31de57388781be0185de1a0eb3ad5dd9a6f96386da2203b98f72a9f8e7",
+      "edits": [
+        {
+          "current": "\t\tif(profile === \"cpp\")\n\t\t{\n\t\t\tconst transferred = source.indexOf(\"auto moved = api::transfer_record\");\n\t\t\tconst raiiClose = source.indexOf(\"raiiSurvivor.close()\", transferred);\n\t\t\tconst finalClose = source.indexOf(\"retained.close()\", raiiClose);\n\t\t\tassert.ok(transferred >= 0 && raiiClose > transferred && finalClose > raiiClose);\n\t\t\tassert.match(source.slice(transferred, raiiClose), /retained\\.is_closed\\(\\)/u);\n\t\t\tassert.match(source.slice(raiiClose, finalClose), /api::serial\\(kept\\) == 41/u);\n\t\t\tassert.doesNotMatch(source.slice(raiiClose, finalClose), /api::serial\\(retained\\)/u);\n\t\t}\n",
+          "previous": "",
+          "start": 2605
+        }
+      ],
+      "path": "tests/owned-subtype-native-packaging.test.mjs",
+      "previousSha256": "c4924abb73190e325898087f90e9bd329872d0a5d7aae314616b6dd334e388b8"
+    }
+  ]
+}
