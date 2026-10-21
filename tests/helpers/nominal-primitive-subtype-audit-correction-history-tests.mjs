@@ -23,7 +23,7 @@ import {
 
 const inventoryPath = "docs/type-surface.v1.json";
 const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeAuditCorrectionPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("primitive-base audit correction history authenticates every source transition", async t => {
 	const record = JSON.parse(await readFile(nominalPrimitiveSubtypeAuditCorrectionHistoryPath, "utf8"));

@@ -40,7 +40,7 @@ test("quality history reconstructs every exact pre-cleanup source", async () => 
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${nestedCheckedRecordQualityPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseNestedCheckedRecordQualityUpdate(current, update)
 			, previous);
 		assert.equal(beforeNestedCheckedRecordQualitySource(

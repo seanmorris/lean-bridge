@@ -38,7 +38,7 @@ test("Ruby graph keyword field history reconstructs every exact predecessor sour
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${rubyGraphKeywordFieldPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseRubyGraphKeywordFieldUpdate(current, update), previous);
 		assert.equal(beforeRubyGraphKeywordFieldSource(
 			update.path, current, update.currentSha256), current);

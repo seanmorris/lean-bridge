@@ -21,7 +21,7 @@ test("WIT workflow comparison repair preserves exact original sources and suppor
 	assert.deepEqual(record.updates.map(update => update.path), witHistoryCheckoutRepairChangedPaths);
 	const original = path => execFileSync("git", [
 		"show", `${witHistoryCheckoutRepairPredecessor}:${path}`
-	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

@@ -40,7 +40,7 @@ test("the recursive .NET history reconstructs every exact predecessor source", a
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${mutualCheckedRecordDotnetPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseMutualCheckedRecordDotnetUpdate(current, update), previous);
 		assert.equal(beforeMutualCheckedRecordDotnetSource(
 			update.path, current, update.currentSha256), current);

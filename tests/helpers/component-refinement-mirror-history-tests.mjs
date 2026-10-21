@@ -18,7 +18,7 @@ test("Component refinement mirror authenticates exact changes and restores the o
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "component-refinement-mirror-source-v1");
 	assert.equal(record.predecessorCommit, componentRefinementMirrorPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), componentRefinementMirrorChangedPaths);
-	const original = path => execFileSync("git", ["show", `${componentRefinementMirrorPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${componentRefinementMirrorPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

@@ -26,7 +26,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const original = path => execFileSync("git", ["show"
 	, `${genericSubtypeNpmBrowserPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("generic Subtype npm/browser history restores every source", async () => {
 	const record = JSON.parse(await readFile(
@@ -71,7 +71,7 @@ test("generic Subtype npm/browser history restores every source", async () => {
 		const previous = reverseGenericSubtypeNpmBrowserUpdate(current, update);
 		assert.equal(previous, execFileSync("git", ["show"
 			, `${genericSubtypeNpmBrowserHubBase}:${update.path}`]
-		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 	}
 	for(const addition of record.additions)
 		assert.equal(sha256(await sourceAtFinHistoryMilestone(

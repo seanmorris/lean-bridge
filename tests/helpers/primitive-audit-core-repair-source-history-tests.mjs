@@ -30,7 +30,7 @@ import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 
 const show = (commit, path) => execFileSync("git", ["show"
 	, `${commit}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("primitive audit Core repair authenticates every transition and pin", async t => {
 	const record = JSON.parse(await readFile(

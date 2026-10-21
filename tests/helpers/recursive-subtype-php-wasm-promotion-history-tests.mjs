@@ -38,7 +38,7 @@ test("recursive checked PHP-Wasm promotion history reconstructs every predecesso
 		recursiveSubtypePhpWasmPromotionChangedPaths);
 	const original = path => execFileSync("git", [
 		"show", `${recursiveSubtypePhpWasmPromotionPredecessor}:${path}`
-	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

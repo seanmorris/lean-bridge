@@ -48,7 +48,7 @@ test("nested Perl promotion history authenticates every source transition", asyn
 		, `${path === nestedCheckedRecordPerlGeneratorPath
 			? nestedCheckedRecordPerlGeneratorPredecessor
 			: nestedCheckedRecordPerlPromotionPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

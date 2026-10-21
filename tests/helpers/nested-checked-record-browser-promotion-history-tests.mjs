@@ -40,7 +40,7 @@ test("nested checked-record browser promotion history reconstructs every predece
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", ["show"
 			, `${nestedCheckedRecordBrowserPromotionPredecessor}:${update.path}`]
-			, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+			, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseNestedCheckedRecordBrowserPromotionUpdate(current, update)
 			, previous);
 		assert.equal(beforeNestedCheckedRecordBrowserPromotionSource(

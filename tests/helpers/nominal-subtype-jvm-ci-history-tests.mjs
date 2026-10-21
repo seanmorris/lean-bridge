@@ -19,7 +19,7 @@ test("nominal JVM CI preserves exact historical producers and every support obse
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-jvm-ci-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeJvmCiPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeJvmCiChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeJvmCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeJvmCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

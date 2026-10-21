@@ -27,7 +27,7 @@ import {
 } from "./helpers/source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args, {
-	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
 
 test("inherited checked-record Ruby support has one exact reversible lineage", async () => {

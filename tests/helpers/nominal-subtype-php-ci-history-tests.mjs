@@ -19,7 +19,7 @@ test("nominal native PHP CI preserves exact historical producers and every suppo
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-php-ci-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypePhpCiPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypePhpCiChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

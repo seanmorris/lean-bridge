@@ -39,7 +39,7 @@ test("late checked-record test registrations have one exact reversible lineage",
 		, lateCheckedRecordTestRegistrationChangedPaths);
 	const original = path => execFileSync("git", ["show"
 		, `${lateCheckedRecordTestRegistrationPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

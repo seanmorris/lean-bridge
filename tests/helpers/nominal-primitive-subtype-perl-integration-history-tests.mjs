@@ -19,7 +19,7 @@ test("primitive-base Native and Perl integration authenticates both merge parent
 	assert.equal(record.predecessorCommit, nominalPrimitiveSubtypePerlIntegrationPredecessor);
 	assert.equal(record.alternateCommit, nominalPrimitiveSubtypePerlIntegrationAlternate);
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypePerlIntegrationChangedPaths);
-	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

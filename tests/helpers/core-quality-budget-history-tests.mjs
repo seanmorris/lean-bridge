@@ -23,7 +23,7 @@ test("Core quality budget history authenticates the exact bounded workflow trans
 	assert.equal(record.predecessorCommit, coreQualityBudgetPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), coreQualityBudgetChangedPaths);
 	const original = path => execFileSync("git", ["show", `${coreQualityBudgetPredecessor}:${path}`]
-		, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

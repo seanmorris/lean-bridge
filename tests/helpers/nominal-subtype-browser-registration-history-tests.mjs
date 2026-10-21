@@ -19,7 +19,7 @@ test("nominal browser harness registration authenticates exact changes without a
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-browser-registration-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeBrowserRegistrationPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeBrowserRegistrationChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

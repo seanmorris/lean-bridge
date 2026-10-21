@@ -17,7 +17,7 @@ test("Checked-record browser archive repair authenticates exact test changes wit
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "checked-record-browser-archive-v1");
 	assert.equal(record.predecessorCommit, checkedRecordBrowserArchivePredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), checkedRecordBrowserArchiveChangedPaths);
-	const original = path => execFileSync("git", ["show", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

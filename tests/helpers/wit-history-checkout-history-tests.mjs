@@ -19,7 +19,7 @@ test("WIT history checkout authenticates exact changes without changing support 
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "wit-history-checkout-source-v1");
 	assert.equal(record.predecessorCommit, witHistoryCheckoutPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), witHistoryCheckoutChangedPaths);
-	const original = path => execFileSync("git", ["show", `${witHistoryCheckoutPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${witHistoryCheckoutPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

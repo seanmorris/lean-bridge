@@ -33,7 +33,7 @@ test("recursive checked PHP-Wasm history reconstructs every predecessor source",
 			update.path, await readFile(update.path, "utf8"), update.currentSha256
 		);
 		assert.equal(sha256(current), update.currentSha256, update.path);
-		const previous = execFileSync("git", ["show", `${recursiveSubtypePhpWasmPredecessor}:${update.path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+		const previous = execFileSync("git", ["show", `${recursiveSubtypePhpWasmPredecessor}:${update.path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseRecursiveSubtypePhpWasmUpdate(current, update), previous);
 		assert.equal(beforeRecursiveSubtypePhpWasmSource(update.path, current), previous);
 		assert.equal(beforeRecursiveSubtypePhpWasmSource(update.path, current, update.currentSha256), current);

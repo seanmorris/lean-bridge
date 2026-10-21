@@ -19,7 +19,7 @@ test("structural CI foundation history authenticates every source transition and
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "structural-subtype-ci-foundation-source-v1");
 	assert.equal(record.predecessorCommit, structuralSubtypeCiFoundationPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), structuralSubtypeCiFoundationChangedPaths);
-	const gitSource = path => execFileSync("git", ["show", `${structuralSubtypeCiFoundationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const gitSource = path => execFileSync("git", ["show", `${structuralSubtypeCiFoundationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	const inventory = gitSource("docs/type-surface.v1.json");
 	assert.equal(beforeFinRefinementSource("docs/type-surface.v1.json", await readFile("docs/type-surface.v1.json", "utf8"), sha256(inventory)), inventory);
 	for(const update of record.updates)

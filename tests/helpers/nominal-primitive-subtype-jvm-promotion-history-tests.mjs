@@ -30,7 +30,7 @@ test("primitive-base JVM history authenticates the support transition", async t 
 	assert.equal(record.predecessorCommit, nominalPrimitiveSubtypeJvmPromotionPredecessor);
 	assert.equal(record.draftParentCommit, nominalPrimitiveSubtypeJvmPromotionDraftParent);
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeJvmPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeJvmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeJvmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

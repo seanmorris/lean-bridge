@@ -19,7 +19,7 @@ test("nominal C# ceiling history authenticates the exact C# test transition and 
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-dotnet-ceiling-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeDotnetCeilingPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeDotnetCeilingChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeDotnetCeilingPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeDotnetCeilingPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

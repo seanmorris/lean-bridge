@@ -21,7 +21,7 @@ test("nominal native PHP promotion history authenticates exact changes and the s
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-php-promotion-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypePhpPromotionPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypePhpPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypePhpPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

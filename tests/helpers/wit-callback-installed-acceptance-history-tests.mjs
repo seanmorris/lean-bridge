@@ -16,7 +16,7 @@ import { assertWitCallbackInstalledHistory, beforeWitCallbackInstalledAcceptance
 	, witCallbackInstalledReaderPaths } from "./wit-callback-installed-acceptance-history.mjs";
 
 const at = (revision, path) => execFileSync("git", ["show", `${revision}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("installed WIT callback history closes implementation, receipt and readers", () => {
 	const record = readWitCallbackInstalledHistory(); assertWitCallbackInstalledHistory(record);

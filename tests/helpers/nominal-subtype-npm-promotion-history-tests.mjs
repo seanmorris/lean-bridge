@@ -27,7 +27,7 @@ test("Nominal npm promotion authenticates exact changes and the scoped Node supp
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-npm-promotion-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeNpmPromotionPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeNpmPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeNpmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeNpmPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

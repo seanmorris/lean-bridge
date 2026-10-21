@@ -25,7 +25,7 @@ import {
 
 const show = path => execFileSync("git", ["show"
 	, `${primitiveAuditIntegrationPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("primitive audit integration authenticates every current-line transition", async t => {
 	const record = JSON.parse(await readFile(

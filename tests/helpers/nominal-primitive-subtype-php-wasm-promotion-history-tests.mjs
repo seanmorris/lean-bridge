@@ -51,7 +51,7 @@ test("primitive-base PHP-Wasm history authenticates the support transition", asy
 		nominalPrimitiveSubtypePhpWasmPromotionChangedPaths);
 	const original = path => execFileSync("git", [
 		"show", `${nominalPrimitiveSubtypePhpWasmPromotionPredecessor}:${path}`
-	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

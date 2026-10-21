@@ -18,7 +18,7 @@ test("Nominal Subtype native integration authenticates exact changes and restore
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-native-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeNativePredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeNativeChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeNativePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeNativePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

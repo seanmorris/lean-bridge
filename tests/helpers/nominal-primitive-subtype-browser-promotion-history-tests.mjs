@@ -24,7 +24,7 @@ test("primitive-base browser promotion history authenticates the exact browser-o
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-primitive-subtype-browser-promotion-source-v1");
 	assert.equal(record.predecessorCommit, nominalPrimitiveSubtypeBrowserPromotionPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeBrowserPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

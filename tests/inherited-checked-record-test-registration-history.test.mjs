@@ -43,7 +43,7 @@ test("inherited checked-record test registrations have one exact reversible line
 		, inheritedCheckedRecordTestRegistrationChangedPaths);
 	const original = path => execFileSync("git", ["show"
 		, `${inheritedCheckedRecordTestRegistrationPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	const sourceAtMilestone = finHistoryMilestoneSource(
 		record.updates, beforeInheritedCheckedRecordTestRegistrationSource
 	);

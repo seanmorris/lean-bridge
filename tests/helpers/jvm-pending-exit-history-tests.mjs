@@ -17,7 +17,7 @@ test("JVM pending exit authenticates each exact source change", async () => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "jvm-pending-exit-source-v1");
 	assert.equal(record.predecessorCommit, jvmPendingExitPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), jvmPendingExitChangedPaths);
-	const original = path => execFileSync("git", ["show", `${jvmPendingExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${jvmPendingExitPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

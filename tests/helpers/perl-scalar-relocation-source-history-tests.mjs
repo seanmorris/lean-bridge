@@ -40,7 +40,7 @@ test("Perl scalar relocation history authenticates exact predecessors and refuse
 test("Perl scalar relocation preserves the inventory without refreshing pins or promoting support", async () => {
 	const path = "docs/type-surface.v1.json";
 	const text = execFileSync("git", ["show", `${perlScalarRelocationPredecessor}:${path}`]
-		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	assert.equal(sha256(text), "61a1e5cc72f8736bf7f26a2a4b6d729678956419b951e4013a1d3868269ac833", "the 0bc379f inventory is unchanged");
 	const current = JSON.parse(text), previous = JSON.parse(beforePerlScalarRelocationSource(path, text));
 	const record = JSON.parse(await readFile(perlScalarRelocationHistoryPath));

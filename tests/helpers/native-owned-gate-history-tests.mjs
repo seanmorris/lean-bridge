@@ -18,7 +18,7 @@ test("native owned CI repair preserves exact historical probes and the support i
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "native-owned-gate-source-v1");
 	assert.equal(record.predecessorCommit, nativeOwnedGatePredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nativeOwnedGateChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nativeOwnedGatePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nativeOwnedGatePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

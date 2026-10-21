@@ -19,7 +19,7 @@ test("native CI partition history authenticates every exact predecessor and pres
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "native-consumer-partition-source-v1");
 	assert.equal(record.predecessorCommit, nativeConsumerPartitionPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nativeConsumerPartitionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nativeConsumerPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nativeConsumerPartitionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const source = sourceAtHistoryMilestone(

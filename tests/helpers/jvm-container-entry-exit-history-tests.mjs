@@ -23,7 +23,7 @@ test("JVM container-entry exit observation preserves exact original sources and 
 	assert.deepEqual(record.updates.map(update => update.path), jvmContainerEntryExitChangedPaths);
 	const original = path => execFileSync("git", [
 		"show", `${jvmContainerEntryExitPredecessor}:${path}`
-	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

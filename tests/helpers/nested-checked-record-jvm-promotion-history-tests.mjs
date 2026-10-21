@@ -41,7 +41,7 @@ test("nested Java/Kotlin promotion history authenticates every source transition
 		, nestedCheckedRecordJvmPromotionChangedPaths);
 	const original = path => execFileSync("git", ["show"
 		, `${nestedCheckedRecordJvmPromotionPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

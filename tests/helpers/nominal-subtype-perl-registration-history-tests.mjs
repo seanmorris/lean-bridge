@@ -21,7 +21,7 @@ test("nominal Perl registration history authenticates exact changes without chan
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-perl-registration-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypePerlRegistrationPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypePerlRegistrationChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypePerlRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypePerlRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

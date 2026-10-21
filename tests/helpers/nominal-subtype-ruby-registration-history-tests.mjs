@@ -18,7 +18,7 @@ test("nominal Ruby harness registration authenticates exact changes without addi
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-ruby-registration-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeRubyRegistrationPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeRubyRegistrationChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

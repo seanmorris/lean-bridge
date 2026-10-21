@@ -18,7 +18,7 @@ test("nominal Python acceptance archive authenticates exact changes without addi
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-python-archive-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypePythonArchivePredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypePythonArchiveChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypePythonArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypePythonArchivePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

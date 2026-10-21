@@ -27,7 +27,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedSubtypeJavaScriptPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("installed JavaScript owned Subtype history restores every source", async () => {
 	const history = JSON.parse(await readFile(
@@ -59,21 +59,21 @@ test("installed JavaScript owned Subtype history restores every source", async (
 	]);
 	let corrected = execFileSync("git", ["show"
 		, "526e9642f0facd00a4b6dc49dedb585471cf8a38:docs/type-surface.v1.json"]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	corrected = beforeOwnedSubtypeJavaScriptHistoricalSource(
 		"docs/type-surface.v1.json", corrected
 	);
 	assert.equal(corrected, execFileSync("git", ["show"
 		, "bbefa9ea6fc15b86c1ea533ecedebc87f13a5eec:docs/type-surface.v1.json"]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 	const historicalFin = execFileSync("git", ["show"
 		, "f34d7fe555c63889f7344b6a88ebfc17140c8a32:tests/helpers/fin-refinement-source-history.mjs"]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	assert.equal(beforeOwnedSubtypeJavaScriptHistoricalSource(
 		"tests/helpers/fin-refinement-source-history.mjs", historicalFin
 	), execFileSync("git", ["show"
 		, "bbefa9ea6fc15b86c1ea533ecedebc87f13a5eec:tests/helpers/fin-refinement-source-history.mjs"]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 	for(const update of history.updates)
 	{
 		const registered = await sourceAtFinHistoryMilestone(

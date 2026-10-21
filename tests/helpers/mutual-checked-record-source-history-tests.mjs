@@ -38,7 +38,7 @@ test("mutual checked-record history reconstructs every exact predecessor source"
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${mutualCheckedRecordPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseMutualCheckedRecordUpdate(current, update), previous);
 		assert.equal(beforeMutualCheckedRecordSource(
 			update.path, current, update.currentSha256), current);

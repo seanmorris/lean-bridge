@@ -51,7 +51,7 @@ test("inherited checked-record foundation has one exact reversible lineage", asy
 	assert.equal(record.pinCount, 496);
 	const original = path => execFileSync("git", ["show"
 		, `${inheritedCheckedRecordFoundationPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtFinHistoryMilestone(
@@ -153,7 +153,7 @@ test("foundation verifier repair has one exact reversible lineage", async () => 
 	))], inheritedCheckedRecordFoundationVerifierHistoricalPaths);
 	const original = path => execFileSync("git", ["show"
 		, `${inheritedCheckedRecordFoundationVerifierPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtFinHistoryMilestone(

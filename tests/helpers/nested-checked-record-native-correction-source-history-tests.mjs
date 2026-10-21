@@ -48,7 +48,7 @@ test("nested native correction history reconstructs every exact source predecess
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${expectedCommit}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseNestedCheckedRecordNativeCorrectionUpdate(current, update),
 			previous);
 		assert.equal(beforeNestedCheckedRecordNativeCorrectionSource(

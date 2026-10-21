@@ -20,7 +20,7 @@ import {
 } from "./zero-payload-dotnet-source-history.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
-	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("zero-payload .NET history restores every source", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadDotnetHistoryPath, "utf8"));

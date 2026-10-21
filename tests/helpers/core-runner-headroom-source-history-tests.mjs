@@ -23,7 +23,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const original = path => execFileSync("git", ["show"
 	, `${coreRunnerHeadroomPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("Core runner-headroom history restores every source", async () => {
 	const record = JSON.parse(await readFile(

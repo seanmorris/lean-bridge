@@ -21,7 +21,7 @@ test("nominal WIT promotion history authenticates exact changes and the six obse
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "nominal-subtype-wit-promotion-source-v1");
 	assert.equal(record.predecessorCommit, nominalSubtypeWitPromotionPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), nominalSubtypeWitPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalSubtypeWitPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalSubtypeWitPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

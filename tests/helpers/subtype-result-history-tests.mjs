@@ -18,7 +18,7 @@ test("Native Subtype result projection authenticates exact changes and restores 
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "subtype-result-source-v1");
 	assert.equal(record.predecessorCommit, subtypeResultPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), subtypeResultChangedPaths);
-	const original = path => execFileSync("git", ["show", `${subtypeResultPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${subtypeResultPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

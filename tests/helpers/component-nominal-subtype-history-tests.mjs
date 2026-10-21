@@ -18,7 +18,7 @@ test("Component nominal Subtype authenticates exact changes and restores the ori
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "component-nominal-subtype-source-v1");
 	assert.equal(record.predecessorCommit, componentNominalSubtypePredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), componentNominalSubtypeChangedPaths);
-	const original = path => execFileSync("git", ["show", `${componentNominalSubtypePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${componentNominalSubtypePredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

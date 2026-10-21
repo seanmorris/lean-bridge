@@ -37,7 +37,7 @@ test("recursive WIT test registrations have one exact reversible lineage", async
 		, recursiveWitTestRegistrationChangedPaths);
 	const original = path => execFileSync("git", ["show"
 		, `${recursiveWitTestRegistrationPredecessor}:${path}`]
-	, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	const sourceAtMilestone = finHistoryMilestoneSource(
 		record.updates, beforeRecursiveWitTestRegistrationSource
 	);

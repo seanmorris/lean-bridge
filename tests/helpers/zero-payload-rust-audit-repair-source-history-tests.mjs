@@ -25,7 +25,7 @@ import {
 } from "./zero-payload-rust-audit-repair-source-history.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
-	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("zero-payload Rust audit repair restores every source", async () => {
 	const record = JSON.parse(await readFile(

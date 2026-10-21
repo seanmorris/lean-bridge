@@ -22,7 +22,7 @@ import {
 } from "./zero-payload-npm-installed-source-history.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
-	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 const historyCommit = "f49d1344f5fc174f3ce53a816fac71f62144ac6a";
 
 test("zero-payload installed npm history restores every source", async () => {

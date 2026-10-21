@@ -17,7 +17,7 @@ test("Perl container Subtype CI repair authenticates exact test changes without 
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "perl-container-subtype-ci-v1");
 	assert.equal(record.predecessorCommit, perlContainerSubtypeCiPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), perlContainerSubtypeCiChangedPaths);
-	const original = path => execFileSync("git", ["show", `${perlContainerSubtypeCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${perlContainerSubtypeCiPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

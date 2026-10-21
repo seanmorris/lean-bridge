@@ -24,7 +24,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const original = path => execFileSync("git", ["show"
 	, `${structuralSubtypePartitionValidatorPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("partition-aware structural validator history restores every source", async () => {
 	const record = JSON.parse(await readFile(
@@ -72,7 +72,7 @@ test("partition-aware structural validator history restores every source", async
 		);
 		assert.equal(previous, execFileSync("git", ["show"
 			, `${structuralSubtypePartitionValidatorPredecessor}:${update.path}`]
-		, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }));
+		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }));
 	}
 	for(const addition of record.additions)
 		assert.equal(sha256(await sourceAtFinHistoryMilestone(

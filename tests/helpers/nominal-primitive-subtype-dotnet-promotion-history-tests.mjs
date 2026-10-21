@@ -32,7 +32,7 @@ test("primitive-base C# promotion history authenticates the exact support transi
 		nominalPrimitiveSubtypeDotnetPromotionChangedPaths);
 	const original = path => execFileSync("git", [
 		"show", `${nominalPrimitiveSubtypeDotnetPromotionPredecessor}:${path}`
-	], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

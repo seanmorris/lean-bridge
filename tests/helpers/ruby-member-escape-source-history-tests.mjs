@@ -38,7 +38,7 @@ test("Ruby member escape history reconstructs every exact predecessor source", a
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${rubyMemberEscapePredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseRubyMemberEscapeUpdate(current, update), previous);
 		assert.equal(beforeRubyMemberEscapeSource(
 			update.path, current, update.currentSha256), current);

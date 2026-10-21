@@ -26,7 +26,7 @@ const expectedTests = [
 	, "inherited-checked-record-jvm-evidence"
 ];
 const git = args => execFileSync("git", args, {
-	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
 
 test("hosted inherited-record evidence has one exact reversible lineage", async () => {

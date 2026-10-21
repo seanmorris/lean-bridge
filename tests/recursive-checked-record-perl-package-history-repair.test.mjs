@@ -27,7 +27,7 @@ import {
 } from "./helpers/recursive-checked-record-perl-package-history-repair.mjs";
 
 const git = args => execFileSync("git", args, {
-	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
 
 test("recursive Perl package history repair authenticates its current integration", async () => {

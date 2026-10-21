@@ -22,7 +22,7 @@ import {
 } from "./zero-payload-javascript-source-history.mjs";
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
-	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 const historyCommit = "319891d4d6b9c693d443dfa4a899adab6418db1f";
 
 test("zero-payload JavaScript history restores every source", async () => {

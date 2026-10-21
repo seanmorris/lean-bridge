@@ -22,7 +22,7 @@ import {
 } from "./nested-checked-record-archive-gap-history.mjs";
 
 const show = (revision, path) => execFileSync("git", ["show", `${revision}:${path}`]
-	, { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 const sha256 = text => execFileSync("sha256sum", { input: text, encoding: "utf8" }).slice(0, 64);
 
 test("nested checked-record archive gap reproduces the unrecorded test epoch exactly", async () => {

@@ -25,7 +25,7 @@ import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.m
 
 const original = path => execFileSync("git", ["show"
 	, `${ownedSubtypeJavaScriptTransferPredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("retained and transferred JavaScript owned Subtype history restores every source", async () => {
 	const history = JSON.parse(await readFile(

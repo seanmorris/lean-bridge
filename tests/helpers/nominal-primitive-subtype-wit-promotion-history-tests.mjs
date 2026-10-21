@@ -31,7 +31,7 @@ test("primitive-base WIT history authenticates the support transition", async t 
 	assert.equal(record.predecessorCommit, nominalPrimitiveSubtypeWitPromotionPredecessor);
 	assert.equal(record.draftParentCommit, nominalPrimitiveSubtypeWitPromotionDraftParent);
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeWitPromotionChangedPaths);
-	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeWitPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const original = path => execFileSync("git", ["show", `${nominalPrimitiveSubtypeWitPromotionPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = await sourceAtHistoryMilestone(

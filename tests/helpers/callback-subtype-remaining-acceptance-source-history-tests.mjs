@@ -22,7 +22,7 @@ import { sha256 } from "./source-history-digest.mjs";
 
 const original = path => execFileSync("git", ["show"
 	, `${callbackSubtypeRemainingAcceptancePredecessor}:${path}`]
-, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("remaining callback Subtype acceptance history restores every source", async () => {
 	const record = JSON.parse(await readFile(

@@ -14,7 +14,7 @@ import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import { beforeNominalSubtypeEntryMeasurementSource, nominalSubtypeEntryMeasurementChangedPaths, nominalSubtypeEntryMeasurementHistoryPath, nominalSubtypeEntryMeasurementImplementation, nominalSubtypeEntryMeasurementPredecessor, reverseNominalSubtypeEntryMeasurementUpdate } from "./nominal-subtype-entry-measurement-source-history.mjs";
 
-const original = path => execFileSync("git", ["show", `${nominalSubtypeEntryMeasurementPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+const original = path => execFileSync("git", ["show", `${nominalSubtypeEntryMeasurementPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 
 test("nominal Subtype entry measurement history restores every changed source and pointer", async () => {
 	const record = JSON.parse(await readFile(nominalSubtypeEntryMeasurementHistoryPath, "utf8"));

@@ -40,7 +40,7 @@ test("Python graph diagnostic history reconstructs every exact predecessor sourc
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${pythonGraphDiagnosticPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reversePythonGraphDiagnosticUpdate(current, update), previous);
 		assert.equal(beforePythonGraphDiagnosticSource(
 			update.path, current, update.currentSha256), current);

@@ -18,7 +18,7 @@ test("checked-record browser foundation source history authenticates exact chang
 	assert.equal(record.schemaVersion, 1); assert.equal(record.milestone, "checked-record-browser-source-v1");
 	assert.equal(record.predecessorCommit, checkedRecordBrowserPredecessor);
 	assert.deepEqual(record.updates.map(update => update.path), checkedRecordBrowserChangedPaths);
-	const gitSource = path => execFileSync("git", ["show", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const gitSource = path => execFileSync("git", ["show", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

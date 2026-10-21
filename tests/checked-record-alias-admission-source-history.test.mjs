@@ -25,7 +25,7 @@ import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-mil
 
 const repairCommit = "a1b4f5c2246313cbe2905d3bc9c381b4f6af984f";
 const git = args => execFileSync("git", args, {
-	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
 
 test("checked-record alias admission has one exact reversible lineage", async () => {

@@ -36,7 +36,7 @@ test("nested checked-record history reconstructs every predecessor source", asyn
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = execFileSync("git", [
 			"show", `${nestedCheckedRecordPredecessor}:${update.path}`
-		], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+		], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 		assert.equal(reverseNestedCheckedRecordUpdate(current, update), previous);
 		assert.equal(beforeNestedCheckedRecordSource(update.path, current), previous);
 		assert.equal(beforeNestedCheckedRecordSource(

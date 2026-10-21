@@ -21,7 +21,7 @@ test("existing primitive-base and Ruby integration authenticates both merge pare
 	assert.equal(record.predecessorCommit, nominalPrimitiveSubtypeRubyIntegrationPredecessor);
 	assert.equal(record.alternateCommit, nominalPrimitiveSubtypeRubyIntegrationAlternate);
 	assert.deepEqual(record.updates.map(update => update.path), nominalPrimitiveSubtypeRubyIntegrationChangedPaths);
-	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+	const at = (commit, path) => execFileSync("git", ["show", `${commit}:${path}`], { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 	for(const update of record.updates)
 	{
 		const current = beforeFinRefinementSource(

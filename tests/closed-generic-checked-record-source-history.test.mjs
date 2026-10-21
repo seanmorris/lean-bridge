@@ -21,7 +21,7 @@ import { sha256 } from "./helpers/source-history-digest.mjs";
 import { beforeTestProfileBacklogRepairSource } from "./helpers/test-profile-backlog-repair-history.mjs";
 
 const git = args => execFileSync("git", args, {
-	encoding: "utf8", maxBuffer: 64 * 1024 * 1024
+	encoding: "utf8", maxBuffer: 512 * 1024 * 1024
 });
 
 test("closed generic checked-record correction has an exact reversible source transition", async () => {
