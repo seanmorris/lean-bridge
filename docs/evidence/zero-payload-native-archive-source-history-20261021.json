@@ -1,0 +1,132 @@
+{
+  "additions": [
+    {
+      "currentSha256": "5755656b164040b4da8399667f9dcceeb174a88fc2ab8461aee708f5daf77d1c",
+      "path": "scripts/archive-zero-payload-checked-record-native-evidence.mjs"
+    },
+    {
+      "currentSha256": "5c65a208cadc032bdbbf73dc0205c9290c7b74c8146263176223ced6d28aba36",
+      "path": "scripts/update-zero-payload-native-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "aea3ba9de638ebe3775dfff874a688b336d75f43d363e4770a4e93f0b01afe37",
+      "path": "tests/helpers/zero-payload-native-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "8121e9b047f7166eee99ec4fcde2d2e9782cf0c48e828484538ea87cdf5614d2",
+      "path": "tests/helpers/zero-payload-native-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9faeb2ff217aa9caee2a7e388fc050b546c8fe93",
+  "integrationUpdates": [
+    {
+      "currentSha256": "13a7f48eefd0593906106b6c54055d374606e5fe679369c451aee7a442d83398",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNativeArchiveSource, zeroPayloadNativeArchiveChangedPaths, zeroPayloadNativeArchiveIntegrationPaths } from \"./zero-payload-native-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNativeArchiveChangedPaths\n\t, ...zeroPayloadNativeArchiveIntegrationPaths\n\t, ...zeroPayloadNativeChangedPaths\n",
+          "previous": "\t...zeroPayloadNativeChangedPaths\n",
+          "start": 112238
+        },
+        {
+          "current": "\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadNativeArchive) === expected)\n\t\treturn zeroPayloadNativeArchive;\n\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(\n\t\tpath, zeroPayloadNativeArchive, expected\n\t);\n",
+          "previous": "\tconst zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);\n",
+          "start": 134146
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e82e5a2fe22afa50c38ec6bf90bfcbd0335640b68d9e203853df4d977bd04f59"
+    }
+  ],
+  "milestone": "zero-payload-native-archive-source-v1",
+  "predecessorCommit": "17de8ed392e65237636d4749e65247fa45d739be",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload C/C++ packages use the available canonical backend and can be frozen only from authenticated successful GitHub records.",
+  "updates": [
+    {
+      "currentSha256": "81a4aa7b0d0821b3d901f590468353871022d8b6ea24d5e1040024b1c95a8f6b",
+      "edits": [
+        {
+          "current": "const nativeCallers = [\n\t\"c.c\", \"cpp.cpp\", \"result-only-c.c\", \"result-only-cpp.cpp\"\n].map(path => `tests/fixtures/zero-payload-checked-record-native/${path}`);\n",
+          "previous": "",
+          "start": 2227
+        },
+        {
+          "current": "\n/**\n * Select every source whose bytes explain the hosted native artifact.\n *\n * @param revisions - Producer, consumer, checker and archiver revisions.\n */\nexport const zeroPayloadNativeEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-native-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, ...nativeCallers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: revisions.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.consumer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-native-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...nativeCallers, \"package-lock.json\", \"package.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.checker, [\n\t\t\t\t\t\"scripts/check-zero-payload-checked-record-native-ci.mjs\"\n\t\t\t\t\t, \"tests/zero-payload-checked-records.test.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-native.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-zero-payload-checked-record-native-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-zero-payload-checked-record-native-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 4747
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "693156632183ca58600f4ca5fa57245b669bd9a1dc3c0f1f0d436888181c296f"
+    },
+    {
+      "currentSha256": "2e94b189da7a7a60632f192ee182530dd64e2604c5c0748e09182129fc14c698",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadNativeEvidenceSources\n",
+          "previous": "",
+          "start": 328
+        },
+        {
+          "current": "\t\t, `${role}:${path}`);\n});\n\ntest(\"zero-payload native evidence closes every hosted source role\", {\n\ttimeout: 120_000\n}, () => {\n\tconst head = revision();\n\tconst sources = zeroPayloadNativeEvidenceSources({\n\t\tproducer: head, consumer: head, checker: head, archiver: head\n\t});\n\tassert.ok(sources.length > 80);\n\tassert.equal(new Set(sources.map(item =>\n\t\t`${item.role}:${item.path}`)).size, sources.length);\n\tassert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const item of sources)\n\t{\n\t\tassert.equal(item.revision, head);\n\t\tassert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0\n\t\t\t, `${item.role}:${item.path}`);\n\t}\n\tfor(const [role, path] of [\n\t\t[\"producer\", \"tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean\"]\n\t\t, [\"consumer\", \"tests/fixtures/zero-payload-checked-record-native/c.c\"]\n\t\t, [\"checker\", \".github/workflows/zero-payload-checked-record-native.yml\"]\n\t\t, [\"checker\", \"scripts/check-zero-payload-checked-record-native-ci.mjs\"]\n\t\t, [\"archiver\", \"scripts/archive-zero-payload-checked-record-native-evidence.mjs\"]\n\t\t, [\"archiver\", \"tests/helpers/zero-payload-checked-record-hosted-archive.mjs\"]\n\t]) assert.ok(sources.some(item => item.role === role && item.path === path)\n",
+          "previous": "",
+          "start": 2002
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "2261b93a1135b685d7e7388e78e43a67bab70d9d213f778577b90a81bb3a5ca0"
+    },
+    {
+      "currentSha256": "66d59c746cab7a73e412a482c35b9eb9ed1d8e2d0e6135822406a8b8471f1db3",
+      "edits": [
+        {
+          "current": "\tassertNativeTap(controlsTap, 25, 7);\n",
+          "previous": "\tassertNativeTap(controlsTap, 23, 7);\n",
+          "start": 2883
+        },
+        {
+          "current": "\t\t\tfastPasses: 18, skippedInstalledOrLeanTests: 7\n",
+          "previous": "\t\t\tfastPasses: 16, skippedInstalledOrLeanTests: 7\n",
+          "start": 4378
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-ci-report.mjs",
+      "previousSha256": "a0cc4fcf5e95394531b61046dbb87ae5b2b72697752a3aa1ba64f6b360939d9e"
+    },
+    {
+      "currentSha256": "684776dfea882d439dd0e14acce741748d9206b2af72582c25f0f0268b6a9250",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\t, LEAN_BRIDGE_BUILD_BACKEND: \"nix\"\n",
+          "start": 3846
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-installed-tests.mjs",
+      "previousSha256": "eaa45962486c59f601e38f4e73b1d411ae4bd9f7ec38ef95c62ecd8ad4f640a2"
+    },
+    {
+      "currentSha256": "ac514a2255c78126c12d6856c926ebc5b1f2f2575093621c18f13ecd4c7b450c",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\";\n",
+          "previous": "",
+          "start": 1740
+        },
+        {
+          "current": "import \"./helpers/zero-payload-native-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1887
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "188c366d663d2ab9d3402911a13d1137d4ac937401835294121549f806b34292"
+    }
+  ]
+}

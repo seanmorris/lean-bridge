@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNativeArchiveSource, zeroPayloadNativeArchiveChangedPaths, zeroPayloadNativeArchiveIntegrationPaths } from "./zero-payload-native-archive-source-history.mjs";
 import { beforeZeroPayloadNativeSource, zeroPayloadNativeChangedPaths, zeroPayloadNativeIntegrationPaths } from "./zero-payload-native-source-history.mjs";
 import { beforeZeroPayloadBrowserArchiveSource, zeroPayloadBrowserArchiveChangedPaths, zeroPayloadBrowserArchiveIntegrationPaths } from "./zero-payload-browser-archive-source-history.mjs";
 import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from "./zero-payload-browser-ci-source-history.mjs";
@@ -1405,7 +1406,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadNativeChangedPaths
+	...zeroPayloadNativeArchiveChangedPaths
+	, ...zeroPayloadNativeArchiveIntegrationPaths
+	, ...zeroPayloadNativeChangedPaths
 	, ...zeroPayloadNativeIntegrationPaths
 	, ...zeroPayloadBrowserArchiveChangedPaths
 	, ...zeroPayloadBrowserArchiveIntegrationPaths
@@ -1895,7 +1898,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadNative = beforeZeroPayloadNativeSource(path, text, expected);
+	const zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(
+		path, text, expected
+	);
+	if(sha256(zeroPayloadNativeArchive) === expected)
+		return zeroPayloadNativeArchive;
+	const zeroPayloadNative = beforeZeroPayloadNativeSource(
+		path, zeroPayloadNativeArchive, expected
+	);
 	if(sha256(zeroPayloadNative) === expected) return zeroPayloadNative;
 	const zeroPayloadBrowserArchive = beforeZeroPayloadBrowserArchiveSource(
 		path, zeroPayloadNative, expected
