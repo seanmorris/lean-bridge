@@ -352,6 +352,8 @@ const profileManifest = Object.freeze({
 		, "checked-record-value-index-perl"
 		, "checked-record-value-index-php"
 		, "checked-record-value-index-php-wasm"
+		, "checked-record-value-index-php-wasm-evidence"
+		, "dependent-checked-record-php-wasm"
 		, "checked-record-value-index-python"
 		, "checked-record-value-index-ruby"
 		, "checked-record-value-index-rust"

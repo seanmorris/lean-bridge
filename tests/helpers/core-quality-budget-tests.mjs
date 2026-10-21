@@ -156,6 +156,18 @@ const checkedRecordEvidencePartitions = Object.freeze({
 		, "checked-record-value-index-php-wasm-ci-shell-tests.mjs"
 		, "checked-record-value-index-php-wasm-ci-workflow-tests.mjs"
 	]
+	, "tests/checked-record-value-index-php-wasm-evidence.test.mjs": [
+		"checked-record-value-index-php-wasm-source-history-tests.mjs"
+		, "checked-record-value-index-php-wasm-evidence-tests.mjs"
+	]
+	, "tests/dependent-checked-record-php-wasm.test.mjs": [
+		"dependent-checked-record-php-wasm-fixture-tests.mjs"
+		, "dependent-checked-record-php-wasm-lean-tests.mjs"
+		, "dependent-checked-record-php-wasm-installed-tests.mjs"
+		, "dependent-checked-record-php-wasm-ci-report-tests.mjs"
+		, "dependent-checked-record-php-wasm-ci-shell-tests.mjs"
+		, "dependent-checked-record-php-wasm-ci-workflow-tests.mjs"
+	]
 	, "tests/checked-record-php-wasm-evidence-ci.test.mjs": [
 		"checked-record-php-wasm-history-tests.mjs"
 		, "checked-record-php-wasm-evidence-tests.mjs"
@@ -281,14 +293,14 @@ test("checked-record evidence runs in bounded process-isolated partitions", asyn
 	)) {
 		const source = await readFile(path, "utf8");
 		const imports = [...source.matchAll(
-			/^import "\.\/helpers\/(checked-record-[^"]+-tests\.mjs)";$/gmu
+				/^import "\.\/helpers\/((?:dependent-)?checked-record-[^"]+-tests\.mjs)";$/gmu
 		)].map(match => match[1]);
 		assert.deepEqual(imports, expected, path);
 		assert.ok(imports.length > 0 && imports.length <= 6, path);
 		observed.push(...imports);
 	}
 	assert.equal(new Set(observed).size, observed.length);
-	assert.equal(observed.length, 51);
+	assert.equal(observed.length, 59);
 });
 
 test("recursive checked-record whitespace rules stay inside each archive", async () => {
