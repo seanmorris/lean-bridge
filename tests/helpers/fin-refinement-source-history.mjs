@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentGenericSubtypeSource, dependentGenericSubtypeChangedPaths, dependentGenericSubtypeIntegrationPaths } from "./dependent-generic-subtype-source-history.mjs";
 import { beforeGenericSubtypeTestRegistrationSource, genericSubtypeTestRegistrationChangedPaths, genericSubtypeTestRegistrationIntegrationPaths } from "./generic-subtype-test-registration-source-history.mjs";
 import { beforeGenericSubtypeManagedWitSource, genericSubtypeManagedWitChangedPaths, genericSubtypeManagedWitIntegrationPaths } from "./generic-subtype-managed-wit-source-history.mjs";
 import { beforeGenericSubtypeLanguageSource, genericSubtypeLanguageChangedPaths, genericSubtypeLanguageIntegrationPaths } from "./generic-subtype-language-source-history.mjs";
@@ -1458,7 +1459,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeTestRegistrationChangedPaths
+	...dependentGenericSubtypeChangedPaths
+	, ...dependentGenericSubtypeIntegrationPaths
+	, ...genericSubtypeTestRegistrationChangedPaths
 	, ...genericSubtypeTestRegistrationIntegrationPaths
 	, ...genericSubtypeManagedWitChangedPaths
 	, ...genericSubtypeManagedWitIntegrationPaths
@@ -2052,8 +2055,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericTestRegistration = beforeGenericSubtypeTestRegistrationSource(
+	const dependentGenericSubtype = beforeDependentGenericSubtypeSource(
 		path, text, expected
+	);
+	if(sha256(dependentGenericSubtype) === expected)
+		return dependentGenericSubtype;
+	const genericTestRegistration = beforeGenericSubtypeTestRegistrationSource(
+		path, dependentGenericSubtype, expected
 	);
 	if(sha256(genericTestRegistration) === expected) return genericTestRegistration;
 	const genericManagedWit = beforeGenericSubtypeManagedWitSource(
