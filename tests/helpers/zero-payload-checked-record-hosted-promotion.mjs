@@ -1,6 +1,6 @@
 /**
  * Promote the independently archived zero-payload browser, PHP, Python, Ruby,
- * Perl and WIT lanes without inferring PHP-Wasm or any other host.
+ * Perl, WIT and PHP-Wasm lanes without inferring any other host.
  *
  * @file
  */
@@ -15,6 +15,10 @@ import {
 	checkZeroPayloadPhpEvidence, zeroPayloadPhpEvidence
 	, zeroPayloadPhpEvidenceSha256
 } from "./zero-payload-checked-record-php-evidence.mjs";
+import {
+	checkZeroPayloadPhpWasmEvidence, zeroPayloadPhpWasmEvidence
+	, zeroPayloadPhpWasmEvidenceSha256
+} from "./zero-payload-checked-record-php-wasm-evidence.mjs";
 import {
 	checkZeroPayloadPythonEvidence, zeroPayloadPythonEvidence
 	, zeroPayloadPythonEvidenceSha256
@@ -50,7 +54,7 @@ const hostTypes = (profiles, parameter, result = parameter) => {
 };
 
 const producer = "736ce9d03fc324ed6004aa77de534cd9885bfa83";
-const sharedLimitation = label => `Hosted zero-payload ${label} acceptance covers only the retained Witness, Token, Marker, Option, Array and Mark fixtures at copied parameter and result sites in four ordinary/reviewed full/result-only packages. It does not promote checked-record fields, callbacks, owned positions, other zero-payload shapes, PHP-Wasm or another host. External Lean, consumer-language, package-manager and operating-system toolchains remain trusted recorded inputs.`;
+const sharedLimitation = label => `Hosted zero-payload ${label} acceptance covers only the retained Witness, Token, Marker, Option, Array and Mark fixtures at copied parameter and result sites in four ordinary/reviewed full/result-only packages. It does not promote checked-record fields, callbacks, owned positions, other zero-payload shapes or another host. External Lean, consumer-language, package-manager and operating-system toolchains remain trusted recorded inputs.`;
 
 export const zeroPayloadHostedPromotionLanes = Object.freeze([
 	Object.freeze({
@@ -175,6 +179,36 @@ export const zeroPayloadHostedPromotionLanes = Object.freeze([
 			, route("result-only-reviewed-ir", 1839, "662c51a38a4b4687406fe20acf011c1335dd351ccceef33f848d55c0711661e0", [["handoff/archives/zeropayloadcheckedrecords-1.0.0-wit-wasi.tar.gz", "fdb0ae70713371c01d6c1e3b520dd3efa98befbd209c9eafa83efa73e7568412"]])
 		])
 	})
+	, Object.freeze({
+		key: "php-wasm", label: "PHP-Wasm"
+		, profiles: Object.freeze(["php-wasm"])
+		, root: zeroPayloadPhpWasmEvidence
+		, indexSha256: zeroPayloadPhpWasmEvidenceSha256
+		, check: checkZeroPayloadPhpWasmEvidence
+		, revisions: Object.freeze([
+			"6d063783673068077fece2bcdd98009796ff67a9"
+			, "6d063783673068077fece2bcdd98009796ff67a9"
+			, "6d063783673068077fece2bcdd98009796ff67a9"
+			, "0e8b0f36182a5ae90bf47da2439faae3e3a60b49"
+		])
+		, run: 39621064577, artifact: 12356309200
+		, command: "bash scripts/run-zero-payload-checked-record-php-wasm-ci.sh"
+		, validators: Object.freeze([
+			".github/workflows/zero-payload-checked-record-php-wasm.yml"
+			, "scripts/check-zero-payload-checked-record-php-wasm-ci.mjs"
+			, "scripts/run-zero-payload-checked-record-php-wasm-ci.sh"
+			, "tests/helpers/zero-payload-checked-record-php-wasm-evidence.mjs"
+		])
+		, conversion: "Proof-only Witness crosses as a guarded zero-argument readonly PHP class inside wasm32 PHP. Token retains its null Unit field, Marker remains a distinct readonly class, and Option presence, array length and both Mark branches remain distinct. Full Composer and component packages validate the nullary checked constructor, exact-class failures and recovery; result-only packages project Lean-produced proof-erased values without input-constructor metadata."
+		, limitation: sharedLimitation("PHP-Wasm")
+		, hostTypes: hostTypes(["php-wasm"], "Guarded zero-argument readonly PHP Witness object in wasm32 PHP; Token keeps its null Unit field and Marker remains a distinct readonly object")
+		, contracts: Object.freeze([
+			route("ordinary-source", 2767, "156dc072208021e41079236d1e1ead10c96e5864bfb8ecd6e282c112164c5eda", [["handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz", "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0-php-wasm.zip", "c0396e0cfd662f29ddb0759a086ffa036df54a49ff4454f7284b90d7b4bfc46c"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0.tgz", "68fde25be7874d8eace5eb776bb31eefef412ccb65084ab1cac54280d0623a85"]])
+			, route("reviewed-ir", 2769, "fc0e5ad0c16230e52556ecc1a483bec68bc0d2c773b11dc5405433744f16c4bb", [["handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz", "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0-php-wasm.zip", "3e994721b3b4c6708f8cc60693a478826f1e4dec83cc1e1334fdd6e94684cc58"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0.tgz", "88af63db68c2d0b1741da490695527ca4b91cb860eafe677719bc2424c0741b1"]])
+			, route("result-only-ordinary-source", 2767, "470d6be9689ebde0c4627e38865b01b00e19b5f6c2eb7dc5ef83ff5a37d57d3d", [["handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz", "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0-php-wasm.zip", "01d129024f832223409d91e2be2cd8b07d754af33121996a519aefdc22027fb1"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0.tgz", "179470739b13b6268181a07fbc61017b9d0394afb28c3296cca976a92040ddd9"]])
+			, route("result-only-reviewed-ir", 2769, "11993a4b6e8f2548ffe0c58d7e15a76c4195cc8da978d0fe7d4680c6aa014e44", [["handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.1312bcffe11918c477f79d6540b2438f73a39152ea82b7a258fd5b59e2cac04a.tgz", "6d47e099f40c8c0791634c83596a18fe8b06d87f43884163fa527644f3cdd780"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0-php-wasm.zip", "78a203f3429dfe1e41877a8bd99a61d9b65ac48da520d82733e7ed26c3ea53e1"], ["handoff/packages/php-wasm/archives/lean-bridge-zeropayloadcheckedrecords-wasm-1.0.0.tgz", "87c69ddfbd1e7f920a801d7514278f4241d1ba5aadb84fe5e2374234449f99a3"]])
+		])
+	})
 ]);
 
 export const zeroPayloadHostedPromotionProfiles = Object.freeze(
@@ -186,9 +220,15 @@ export const zeroPayloadHostedPromotionPinPaths = Object.freeze([
 	"docs/consume/perl.md", "docs/consume/python.md", "docs/consume/ruby.md"
 	, "docs/consume/wit-wasi.md", "docs/lean/existing-package.md", "docs/php.md"
 	, "docs/lean/export-decisions.md", "scripts/generate-type-docs.mjs"
+	, "src/backends/c/native-callable-graph-borrows.mjs"
+	, "src/backends/php/callable-graph-calls.mjs"
+	, "src/backends/php/callable-graph-model.mjs"
 	, "src/adoption/test-profiles.mjs", "src/analyze/NativeExports.lean"
 	, "src/analyze/semantic-model.mjs", "src/backends/rust/package-audit.mjs"
-	, "tests/native-fin-containers.test.mjs", "tests/type-surface.test.mjs"
+	, "tests/component-array-contract.test.mjs"
+	, "tests/native-fin-containers.test.mjs"
+	, "tests/native-recursive-callable-model.test.mjs"
+	, "tests/type-surface.test.mjs"
 ]);
 
 const parse = bytes => {
@@ -253,7 +293,7 @@ const referencesFromLane = async (lane, checked, read) => {
 let cachedReferences;
 
 /**
- * Authenticate all six retained hosted archives and derive 24 exact references.
+ * Authenticate all seven retained hosted archives and derive 28 exact references.
  *
  * @param read - Repository-relative evidence reader.
  */
@@ -293,7 +333,7 @@ export const reconcileZeroPayloadHostedPromotionPins = async original => {
 };
 
 /**
- * Promote exactly 40 copied parameter/result cells authenticated by six lanes.
+ * Promote exactly 44 copied parameter/result cells authenticated by seven lanes.
  *
  * @param original - Exact inventory before this promotion.
  * @param references - Twenty-four independently authenticated selections.
@@ -303,7 +343,18 @@ export const promoteZeroPayloadHosted = async (original, references) => {
 	assert.equal(sha256(canonicalJson(references))
 		, sha256(canonicalJson(authenticated)));
 	const inventory = await reconcileZeroPayloadHostedPromotionPins(original);
-	const promotedProfiles = new Set(zeroPayloadHostedPromotionProfiles);
+	const pendingLanes = zeroPayloadHostedPromotionLanes.filter(lane => {
+		const ids = routes.map(name =>
+			`zero-payload-${lane.key}-${name}-hosted-installed`);
+		const present = ids.filter(id =>
+			original.evidence.some(item => item.id === id));
+		assert.ok(present.length === 0 || present.length === ids.length
+			, `Partially promoted lane: ${lane.key}`);
+		return present.length === 0;
+	});
+	assert.ok(pendingLanes.length > 0, "Every hosted lane is already promoted");
+	const promotedProfiles = new Set(
+		pendingLanes.flatMap(lane => lane.profiles));
 	inventory.observations = original.observations.map(item => {
 		if(!promotedProfiles.has(item.profiles[0])
 			|| !["ordinary-source", "reviewed-ir"].includes(item.path)
@@ -322,7 +373,7 @@ export const promoteZeroPayloadHosted = async (original, references) => {
 			, limitations: [...item.limitations], stages
 		};
 	});
-	for(const lane of zeroPayloadHostedPromotionLanes)
+	for(const lane of pendingLanes)
 	{
 		const validatorFiles = [];
 		for(const path of lane.validators)
@@ -342,7 +393,7 @@ export const promoteZeroPayloadHosted = async (original, references) => {
 		}
 	}
 	let changed = 0;
-	for(const lane of zeroPayloadHostedPromotionLanes)
+	for(const lane of pendingLanes)
 		for(const profile of lane.profiles)
 			for(const path of ["ordinary-source", "reviewed-ir"])
 				for(const position of ["parameter", "result"])
@@ -373,6 +424,7 @@ export const promoteZeroPayloadHosted = async (original, references) => {
 					}
 					changed += 1;
 				}
-	assert.equal(changed, 40);
+	assert.equal(changed, pendingLanes.reduce(
+		(sum, lane) => sum + lane.profiles.length * 4, 0));
 	return inventory;
 };

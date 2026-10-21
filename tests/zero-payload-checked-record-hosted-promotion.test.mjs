@@ -20,10 +20,10 @@ const baseline = () => {
 	return JSON.parse(source);
 };
 
-test("six hosted zero-payload archives derive 24 exact references", async () => {
+test("seven hosted zero-payload archives derive 28 exact references", async () => {
 	const references = await zeroPayloadHostedPromotionReferences();
 	assert.deepEqual(references.map(item => item.id), zeroPayloadHostedPromotionIds);
-	assert.equal(references.length, 24);
+	assert.equal(references.length, 28);
 	const positions = [];
 	for(let index = 0; index < zeroPayloadHostedPromotionLanes.length; index += 1)
 		positions.push(["parameter", "result"], ["parameter", "result"]
@@ -31,14 +31,15 @@ test("six hosted zero-payload archives derive 24 exact references", async () => 
 	assert.deepEqual(references.map(item => item.positions), positions);
 	assert.deepEqual(references.map(item => item.artifacts.length)
 		, [2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1
-			, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1]);
+			, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1
+			, 3, 3, 3, 3]);
 });
 
-test("promotion changes exactly 40 copied checked-record cells", async () => {
+test("promotion changes exactly 44 copied checked-record cells", async () => {
 	const current = baseline();
 	const promoted = await promoteZeroPayloadHosted(current
 		, await zeroPayloadHostedPromotionReferences());
-	assert.equal(promoted.evidence.length, current.evidence.length + 24);
+	assert.equal(promoted.evidence.length, current.evidence.length + 28);
 	const changedIds = new Set();
 	for(const path of zeroPayloadHostedPromotionPinPaths)
 	{
@@ -71,7 +72,7 @@ test("promotion changes exactly 40 copied checked-record cells", async () => {
 						assert.ok(stage.evidence.some(id =>
 							id.startsWith(`zero-payload-${lane.key}-`)));
 				}
-	assert.equal(changedIds.size, 40);
+	assert.equal(changedIds.size, 44);
 	const changed = promoted.observations.filter(item => changedIds.has(item.id));
 	assert.ok(changed.every(item => item.profiles.length === 1
 		&& zeroPayloadHostedPromotionProfiles.includes(item.profiles[0])

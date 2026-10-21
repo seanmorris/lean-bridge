@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Materialize the six independently verified hosted zero-payload lanes.
+ * Materialize the seven independently verified hosted zero-payload lanes.
  *
  * @file
  */
