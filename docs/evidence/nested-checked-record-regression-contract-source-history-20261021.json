@@ -1,0 +1,97 @@
+{
+  "additions": [
+    {
+      "currentSha256": "38dc12e929e2a2d5b49a43fe13e1372e758ce4219135d4883c72b5596131dac4",
+      "path": "scripts/update-nested-checked-record-regression-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "27026be8280eb772f6a13749296da3b21590c8a920c8f279343495dac7796ba8",
+      "path": "tests/helpers/nested-checked-record-regression-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "b755fac991039c7d640e634f6cf04dd0ecf68cf52f401b8129ccfcce0e998cdd",
+      "path": "tests/helpers/nested-checked-record-regression-contract-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "65704924c3435a64d786af1487e8714f0e62a610",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b05bf33b34e7ddb9971f927ecac8f8481bd6519df2b3375c410a76801172d2b3",
+      "edits": [
+        {
+          "current": "import { beforeNestedCheckedRecordRegressionContractSource, nestedCheckedRecordRegressionContractChangedPaths, nestedCheckedRecordRegressionContractIntegrationPaths } from \"./nested-checked-record-regression-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...nestedCheckedRecordRegressionContractChangedPaths\n\t, ...nestedCheckedRecordRegressionContractIntegrationPaths\n\t, ...dependentCheckedRecordPythonArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordPythonArchiveImplementationPaths\n",
+          "start": 127195
+        },
+        {
+          "current": "\tconst nestedCheckedRecordRegressionContract\n\t\t= beforeNestedCheckedRecordRegressionContractSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(nestedCheckedRecordRegressionContract) === expected)\n\t\treturn nestedCheckedRecordRegressionContract;\n",
+          "previous": "",
+          "start": 156323
+        },
+        {
+          "current": "\t\t\tpath, nestedCheckedRecordRegressionContract, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 156660
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "72c15d73bca7dd5de9e067a597c96f9a97f59f30b5306e9699b570f2032b5742"
+    },
+    {
+      "currentSha256": "310cf2699cee4b223cd4c1402c0675194c1eca5b19be9f3b9be54e8429e79f08",
+      "edits": [
+        {
+          "current": "import \"./helpers/nested-checked-record-regression-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2951
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43"
+    }
+  ],
+  "milestone": "nested-checked-record-regression-contract-source-v1",
+  "predecessorCommit": "c2fb9c7b4423501cecea1c44f5ff00f24786df7a",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Nested checked-record regressions authenticate explicit Subtype erasure and the admitted top-level rich generic checked-record contract while retaining both nested generic refusals.",
+  "updates": [
+    {
+      "currentSha256": "f2e2a38ebab8788aa4fb4024ee78460156879239a44397f6ab8a66106ba99274",
+      "edits": [
+        {
+          "current": "\tassert.match(source, /Packet\\.mk \\(value\\.«digit»\\)\\.val \\(_root_\\.Subtype\\.val \\(value\\.«word»\\)\\)/u);\n",
+          "previous": "\tassert.match(source, /Packet\\.mk \\(value\\.«digit»\\)\\.val \\(value\\.«word»\\)\\.val/u);\n",
+          "start": 11682
+        },
+        {
+          "current": "test(\"legacy and rich generic checked records stay top-level while nested generic forms remain separate work\", () => {\n",
+          "previous": "test(\"legacy generic checked records stay top-level while rich and nested generic forms remain separate work\", () => {\n",
+          "start": 15782
+        },
+        {
+          "current": "\tassert.doesNotThrow(() => assertRefinement(rich, packet, 0, true, [definition]));\n",
+          "previous": "\tassert.throws(() => assertRefinement(rich, packet, 0, true, [definition]), /Refinement does not match its transport type/u);\n",
+          "start": 16815
+        },
+        {
+          "current": "\tassert.throws(() => assertRefinement(rich, packet, 1, true, [definition]), /Refinement does not match its transport type/u);\n",
+          "previous": "",
+          "start": 17026
+        },
+        {
+          "current": "\tassert.match(source, /Packet\\.mk \\(value\\.«digit»\\)\\.val \\(_root_\\.Subtype\\.val \\(value\\.«word»\\)\\)/u);\n",
+          "previous": "\tassert.match(source, /Packet\\.mk \\(value\\.«digit»\\)\\.val \\(value\\.«word»\\)\\.val/u);\n",
+          "start": 19515
+        }
+      ],
+      "path": "tests/nested-checked-record-foundation.test.mjs",
+      "previousSha256": "610ca0727aa99d3cf0d86964f24db7f96e61f86c190439ab4a449a1e93e2034c"
+    }
+  ]
+}
