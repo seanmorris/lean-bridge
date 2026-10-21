@@ -29,6 +29,7 @@ import {
 import { checkZeroPayloadRecords } from "./fixtures/zero-payload-checked-record-browser/javascript.mjs";
 import "./helpers/zero-payload-browser-ci-source-history-tests.mjs";
 import "./helpers/zero-payload-browser-source-history-tests.mjs";
+import "./helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs";
 import "./helpers/zero-payload-javascript-source-history-tests.mjs";
 import "./helpers/zero-payload-npm-installed-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-npm-installed-tests.mjs";

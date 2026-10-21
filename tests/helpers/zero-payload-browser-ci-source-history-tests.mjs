@@ -10,7 +10,6 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
 import { beforeFinRefinementSource } from "./fin-refinement-source-history.mjs";
-import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 import {
 	beforeZeroPayloadBrowserCiSource
@@ -24,6 +23,7 @@ import {
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+const historyCommit = "5667a26826838580efaf9abec9947501610c90a4";
 
 test("zero-payload browser CI history restores every source", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadBrowserCiHistoryPath, "utf8"));
@@ -38,9 +38,7 @@ test("zero-payload browser CI history restores every source", async () => {
 		, zeroPayloadBrowserCiIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadBrowserCiSource
-		);
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(reverseZeroPayloadBrowserCiUpdate(current, update)
 			, sourceAt(zeroPayloadBrowserCiPredecessor, update.path));
 		assert.equal(beforeZeroPayloadBrowserCiSource(update.path, current)
@@ -53,24 +51,19 @@ test("zero-payload browser CI history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadBrowserCiSource
-		);
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(reverseZeroPayloadBrowserCiUpdate(current, update)
 			, sourceAt(zeroPayloadBrowserCiImplementation, update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256
-		)), addition.currentSha256, addition.path);
+		assert.equal(sha256(sourceAt(historyCommit, addition.path))
+			, addition.currentSha256, addition.path);
 });
 
 test("zero-payload browser CI history rejects altered transitions", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadBrowserCiHistoryPath, "utf8"));
 	const update = structuredClone(record.updates[0]);
-	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256, beforeZeroPayloadBrowserCiSource
-	);
+	const current = sourceAt(historyCommit, update.path);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadBrowserCiUpdate(current, update));
 	update.currentSha256 = sha256(current);
