@@ -14,6 +14,7 @@ import { validateNativeType } from "../src/analyze/native-types.mjs";
 import { assertReviewedSubtypeCallback } from "../src/analyze/reviewed-refinements.mjs";
 import { reviewedSubtypeContracts } from "../src/analyze/reviewed-subtypes.mjs";
 import { callbackCheckedRecordInterval, callbackCheckedRecordWeighted } from "./helpers/callback-checked-record-fixture.mjs";
+import "./helpers/callback-checked-record-foundation-source-history-tests.mjs";
 
 const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: false };
 const boxed = { ...abi, heap: true };
