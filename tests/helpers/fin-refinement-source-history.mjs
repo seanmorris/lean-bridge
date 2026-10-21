@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeProjectedCheckedRecordMirrorSource, projectedCheckedRecordMirrorChangedPaths, projectedCheckedRecordMirrorIntegrationPaths } from "./projected-checked-record-mirror-source-history.mjs";
 import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from "./perl-engine-owned-refinement-closure-source-history.mjs";
 import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from "./structural-subtype-partition-validator-source-history.mjs";
 import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from "./generic-subtype-npm-browser-source-history.mjs";
@@ -1396,7 +1397,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...perlEngineOwnedRefinementClosureChangedPaths
+	...projectedCheckedRecordMirrorChangedPaths
+	, ...projectedCheckedRecordMirrorIntegrationPaths
+	, ...perlEngineOwnedRefinementClosureChangedPaths
 	, ...perlEngineOwnedRefinementClosureIntegrationPaths
 	, ...structuralSubtypePartitionValidatorChangedPaths
 	, ...structuralSubtypePartitionValidatorIntegrationPaths
@@ -1868,8 +1871,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(
+	const projectedMirror = beforeProjectedCheckedRecordMirrorSource(
 		path, text, expected
+	);
+	if(sha256(projectedMirror) === expected) return projectedMirror;
+	const perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(
+		path, projectedMirror, expected
 	);
 	if(sha256(perlEngineClosure) === expected) return perlEngineClosure;
 	const partitionValidator = beforeStructuralSubtypePartitionValidatorSource(

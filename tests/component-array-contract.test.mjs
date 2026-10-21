@@ -26,6 +26,7 @@ import { beforeRefinementClosureSource } from "./helpers/refinement-closure-sour
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/callback-compiler-identity-tests.mjs";
 import "./helpers/refinement-closure-source-history-tests.mjs";
+import "./helpers/projected-checked-record-mirror-source-history-tests.mjs";
 import "./helpers/nominal-fin-contract-tests.mjs";
 import "./helpers/nominal-fin-source-history-tests.mjs";
 import "./helpers/callback-fin-source-history-tests.mjs";
