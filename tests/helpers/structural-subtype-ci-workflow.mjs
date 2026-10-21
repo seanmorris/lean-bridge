@@ -4,7 +4,6 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { beforePhpWasmCorpusPartitionSource } from "./php-wasm-corpus-partition-history.mjs";
 import { nominalSubtypePerlCiBlock, withoutNominalSubtypePerlWorkflow } from "./nominal-subtype-perl-ci-workflow.mjs";
 
 const runner = "bash scripts/run-structural-subtype-ci.sh";
@@ -169,7 +168,6 @@ const requireUpload = source => {
  * @param name - Consumer workflow basename.
  */
 export const assertStructuralSubtypeWorkflow = (source, name) => {
-	source = beforePhpWasmCorpusPartitionSource(`.github/workflows/${name}`, source);
 	assert.equal(enableStructuralSubtypeWorkflow(disableStructuralSubtypeWorkflow(source, name), name), source);
 	assert.doesNotMatch(source, /LEAN_BRIDGE_(?:NATIVE|PERL)_TEST_GLIBC_FLOOR|LEAN_BRIDGE_STRUCTURAL_SUBTYPE_PERLS/u);
 	if(name === "perl-consumer.yml")
@@ -187,27 +185,41 @@ export const assertStructuralSubtypeWorkflow = (source, name) => {
 		requireUpload(stepAt(source, source.indexOf("          path: build/structural-subtype-ci/perl/\n")));
 		return;
 	}
+	let phpWasmProducerJob;
 	for(const group of structuralSubtypeWorkflowGroups)
 	{
 		const block = group.lanes.map(lane => `          ${structuralSubtypeWorkflowCommand(lane)}\n`).join("");
-		const index = source.indexOf(block), step = stepAt(source, index), job = jobBody(source, group.job);
-		assert.equal(jobAt(source, index), group.job);
-		assert.ok(step.includes(`\n        id: ${group.step}\n`));
+		const partitionedPhpWasm = group.lanes.length === 1
+			&& group.lanes[0] === "php-wasm"
+			&& jobBody(source, "php-wasm-corpus")?.includes(block);
+		const expectedJob = partitionedPhpWasm
+			? "php-wasm-corpus" : group.job;
+		const expectedEnforce = partitionedPhpWasm
+			? "Enforce PHP-Wasm corpus" : group.enforce;
+		const expectedStep = partitionedPhpWasm
+			? "refinements_php_wasm" : group.step;
+		const job = jobBody(source, expectedJob);
+		assert.equal(typeof job, "string", expectedJob);
+		const index = job.indexOf(block), step = stepAt(job, index);
+		assert.ok(step.includes(`\n        id: ${expectedStep}\n`));
 		assert.ok(step.includes(`          ${group.anchor}\n${block}`));
 		assert.doesNotMatch(step, /set \+e|\|\| true/u);
-		const profile = group.job === "native-consumers" ? ({ "c-cpp": "c-family", python311: "python", rust: "rust" })[group.lanes[0]]
-			: group.job === "managed-consumers" ? group.lanes[0] : null;
+		const profile = partitionedPhpWasm ? "refinements"
+			: group.job === "native-consumers"
+				? ({ "c-cpp": "c-family", python311: "python", rust: "rust" })[group.lanes[0]]
+				: group.job === "managed-consumers" ? group.lanes[0] : null;
 		const conditions = [...step.matchAll(/^ {8}if: (.*)$/gmu)].map(match => match[1]);
 		assert.deepEqual(conditions, profile ? [`matrix.profile == '${profile}'`] : []);
-		const enforce = job.split(`      - name: ${group.enforce}\n`)[1]?.split("      - name: ")[0];
-		assert.ok(enforce?.includes(`steps.${group.step}.outcome != 'success'`));
+		const enforce = job.split(`      - name: ${expectedEnforce}\n`)[1]?.split("      - name: ")[0];
+		assert.ok(enforce?.includes(`steps.${expectedStep}.outcome != 'success'`));
 		assert.match(enforce, /\n {8}run: exit 1(?:\n|$)/u);
 		assert.doesNotMatch(enforce, /continue-on-error:|set \+e|\|\| true/u);
 		for(const lane of group.lanes)
 		{
 			assert.equal(source.split(structuralSubtypeWorkflowCommand(lane)).length, 3);
-			requireUpload(stepAt(source, source.indexOf(structuralSubtypeWorkflowUpload(lane))));
+			requireUpload(stepAt(job, job.indexOf(structuralSubtypeWorkflowUpload(lane))));
 		}
+		if(group.lanes.includes("php-wasm")) phpWasmProducerJob = job;
 	}
 	const nodeIndex = source.indexOf(structuralSubtypeNodeBlock); assert.equal(jobAt(source, nodeIndex), "node-consumers");
 	const node = jobBody(source, "node-consumers");
@@ -218,7 +230,8 @@ export const assertStructuralSubtypeWorkflow = (source, name) => {
 	const enforce = node.split("      - name: Enforce Node support and the browser corpus\n")[1]?.split("      - name: ")[0];
 	assert.ok(enforce?.includes(structuralFailure)); assert.match(enforce, /\n {8}run: exit 1(?:\n|$)/u);
 	assert.doesNotMatch(enforce, /continue-on-error:/u);
-	const php = jobBody(source, "php-wasm-consumers");
-	assert.ok(php.includes("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs"));
-	assert.ok(php.indexOf("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs") < php.indexOf(structuralSubtypeWorkflowCommand("php-wasm")));
+	assert.equal(typeof phpWasmProducerJob, "string");
+	assert.ok(phpWasmProducerJob.includes("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs"));
+	assert.ok(phpWasmProducerJob.indexOf("node scripts/prepare-php-wasm-subtype-entry-runtime.mjs")
+		< phpWasmProducerJob.indexOf(structuralSubtypeWorkflowCommand("php-wasm")));
 };

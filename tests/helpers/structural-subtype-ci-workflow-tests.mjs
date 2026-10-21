@@ -8,8 +8,8 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { assertStructuralSubtypeWorkflow, disableStructuralSubtypeWorkflow, enableStructuralSubtypeWorkflow, structuralSubtypeWorkflowCommand, structuralSubtypeWorkflowGroups, structuralSubtypeWorkflowUpload, structuralSubtypeNodeBlock, structuralSubtypePerlBlock } from "./structural-subtype-ci-workflow.mjs";
-import { structuralSubtypeCiWorkflowPredecessor } from "./structural-subtype-ci-workflow-history.mjs";
-import { beforePerlHistoryCheckoutSource } from "./perl-history-checkout-history.mjs";
+import { structuralSubtypeCiWorkflowHistoryPath, structuralSubtypeCiWorkflowPredecessor } from "./structural-subtype-ci-workflow-history.mjs";
+import { sourceAtHistoryMilestone } from "./source-history-test-source.mjs";
 import { assertWorkflowRunBudget, workflowExpressionLength, workflowRunScalars } from "./native-observation-split.mjs";
 
 const runner = "bash scripts/run-structural-subtype-ci.sh";
@@ -22,7 +22,9 @@ test("structural workflow adds twelve enforced lanes and preserves every previou
 	for(const name of ["consumer-matrix.yml", "perl-consumer.yml"])
 	{
 		const path = `.github/workflows/${name}`, live = await readFile(path, "utf8");
-		const current = beforePerlHistoryCheckoutSource(path, live);
+		const current = sourceAtHistoryMilestone(
+			structuralSubtypeCiWorkflowHistoryPath, path
+		);
 		const previous = execFileSync("git", ["show", `${structuralSubtypeCiWorkflowPredecessor}:${path}`], { encoding: "utf8" });
 		assertStructuralSubtypeWorkflow(live, name);
 		assert.equal(disableStructuralSubtypeWorkflow(current, name), previous);
@@ -49,6 +51,14 @@ test("structural workflow rejects missing lanes, wrong hosts, skipped enforcemen
 	for(const group of structuralSubtypeWorkflowGroups) for(const lane of group.lanes)
 	{
 		const command = structuralSubtypeWorkflowCommand(lane), line = `          ${command}\n`, upload = structuralSubtypeWorkflowUpload(lane);
+		const partitionedPhpWasm = lane === "php-wasm"
+			&& source.split("\n  php-wasm-corpus:\n")[1]
+				?.split(/\n {2}[a-z][a-z0-9-]*:\n/u)[0].includes(line);
+		const expectedJob = partitionedPhpWasm ? "php-wasm-corpus" : group.job;
+		const expectedStep = partitionedPhpWasm
+			? "refinements_php_wasm" : group.step;
+		const expectedEnforce = partitionedPhpWasm
+			? "Enforce PHP-Wasm corpus" : group.enforce;
 		const mutations = [source.replace(line, "")
 			, source.replace(line, line + line)
 			, source.replace(line, "      - name: wrong step\n        run: |\n" + line)
@@ -57,13 +67,13 @@ test("structural workflow rejects missing lanes, wrong hosts, skipped enforcemen
 			, source.replace(line, line.replace("bash ", "true "))
 			, source.replace(upload, "")
 			, source.replace(upload, upload.replace("/\n", "/ordinary/records/report.json\n"))
-			, source.replace(`  ${group.job}:\n`, "  wrong-job:\n")
-			, source.replace(`        id: ${group.step}\n`, "        id: missing\n")
-			, source.replace(`        id: ${group.step}\n`, `        id: ${group.step}\n        if: false\n`)
-			, source.replaceAll(`steps.${group.step}.outcome != 'success'`, "false")
+			, source.replace(`  ${expectedJob}:\n`, "  wrong-job:\n")
+			, source.replace(`        id: ${expectedStep}\n`, "        id: missing\n")
+			, source.replace(`        id: ${expectedStep}\n`, `        id: ${expectedStep}\n        if: false\n`)
+			, source.replaceAll(`steps.${expectedStep}.outcome != 'success'`, "false")
 			, source.replace(" && " + command, "")
-			, source.replace(`      - name: ${group.enforce}\n`, "      - name: missing enforcement\n")
-			, source.replace(`      - name: ${group.enforce}\n`, `      - name: ${group.enforce}\n        continue-on-error: true\n`)
+			, source.replace(`      - name: ${expectedEnforce}\n`, "      - name: missing enforcement\n")
+			, source.replace(`      - name: ${expectedEnforce}\n`, `      - name: ${expectedEnforce}\n        continue-on-error: true\n`)
 			, source.replace(line, "          export LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36\n" + line)];
 		for(const changed of mutations)
 { checkMutation(source, changed, name, lane); controls++; }
@@ -79,6 +89,13 @@ test("structural workflow rejects missing lanes, wrong hosts, skipped enforcemen
 		for(const changed of [source.replace(command, command.replace(/collection_python\d+/u, "collection_python399"))
 			, source.replace(command, command.replace(/LEAN_BRIDGE_PYTHON='[^']+' /u, ""))]){ checkMutation(source, changed, name, lane); controls++; }
 	}
+	const phpWasm = `          ${structuralSubtypeWorkflowCommand("php-wasm")}\n`;
+	const observationAnchor = "          wasm_result=failed\n";
+	const receiptOnly = source.replace(phpWasm, "")
+		.replace(observationAnchor, observationAnchor + phpWasm);
+	checkMutation(source, receiptOnly, name
+		, "PHP-Wasm command moved from its producer into observation receipt work");
+	controls++;
 	t.diagnostic(`${controls} changed native/PHP-Wasm workflow controls rejected`);
 });
 
