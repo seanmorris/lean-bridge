@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "bf52a3a4cc6f9f016f146687af2f6c68e850ec66b83741d04a0b4d1bb4319fc2",
+      "path": "tests/helpers/zero-payload-checked-record-native-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "0f640dd5723618f5a8bc36695b8324268073b034ec1914a570566611e2ba350f",
+      "path": "scripts/update-zero-payload-native-control-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "acd05bfdddbe376d2ecc21dd9fbcf007b5f728c0f4b55ce88682f197995e5292",
+      "path": "tests/helpers/zero-payload-native-control-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "146206e6a362f693d83bbf7cad65e91fe954cf658073a326dc9226b69256e44f",
+      "path": "tests/helpers/zero-payload-native-control-contract-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9730864708aae82d60aa64f49f4fe4bdcd36ba05",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ac1bfd0eb49eaa271bfef164fbdb51dee7331e404f4645a8703a7e13eb147e8e",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNativeControlContractSource, zeroPayloadNativeControlContractChangedPaths, zeroPayloadNativeControlContractIntegrationPaths } from \"./zero-payload-native-control-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNativeControlContractChangedPaths\n\t, ...zeroPayloadNativeControlContractIntegrationPaths\n\t, ...dependentCheckedRecordHostedArchivePreparationChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordHostedArchivePreparationChangedPaths\n",
+          "start": 124353
+        },
+        {
+          "current": "\tconst zeroPayloadNativeControlContract\n\t\t= beforeZeroPayloadNativeControlContractSource(path, text, expected);\n\tif(sha256(zeroPayloadNativeControlContract) === expected)\n\t\treturn zeroPayloadNativeControlContract;\n",
+          "previous": "",
+          "start": 152115
+        },
+        {
+          "current": "\t\t\tpath, zeroPayloadNativeControlContract, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 152447
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f5d29c5526729eaccf1c4a7f15034bf7bc44c9a2b548c8c9f62a99fc89fbe442"
+    },
+    {
+      "currentSha256": "407d8cd73cf3ddc6925f0c00331e001dcba64491fb2f0e4ece5c0fe614b7ccdb",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-native-control-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3508
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "9f21e17c729ee97b722bc41c6b1239a88f12f5ce7f0094259c48918bdc917380"
+    }
+  ],
+  "milestone": "zero-payload-native-control-contract-source-v1",
+  "predecessorCommit": "9b31632a3d54e053897032686b030a3b8dd99115",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "The zero-payload C/C++ hosted checker requires every original semantic control and seven intentional skips while accepting additional authenticated history readers.",
+  "updates": [
+    {
+      "currentSha256": "c1ec1418cbd80469d26483191b3cc3d3b529be38e2e7e4e343cc865cfce9e859",
+      "edits": [
+        {
+          "current": "export const zeroPayloadNativeRequiredControlNames = Object.freeze({\n\tpassed: Object.freeze([\n\t\t\"zero-payload checked-record history restores every source\"\n\t\t, \"zero-payload checked-record history rejects altered transitions\"\n\t\t, \"zero-payload checked-record writer refuses unrelated checkouts\"\n\t\t, \"zero-payload native selections preserve all four author/API routes\"\n\t\t, \"generated C and C++ keep empty, Unit and Option carriers distinct\"\n\t\t, \"zero-payload native callers lock counts and reviewed diagnostics\"\n\t\t, \"zero-payload browser evidence closes every hosted source role\"\n\t\t, \"zero-payload native evidence closes every hosted source role\"\n\t\t, \"zero-payload .NET evidence closes every hosted source role\"\n\t\t, \"zero-payload hosted evidence accepts only closed absolute selections\"\n\t\t, \"zero-payload native history restores every source\"\n\t\t, \"zero-payload native history rejects altered transitions\"\n\t\t, \"zero-payload native history writer refuses unrelated checkouts\"\n\t\t, \"zero-payload native archive history restores every source\"\n\t\t, \"zero-payload native archive history rejects altered transitions\"\n\t\t, \"zero-payload native archive writer refuses unrelated checkouts\"\n\t\t, \"an independent zero-payload review is valid and selects the nullary constructor\"\n\t\t, \"native metadata admits zero-payload checked records only through a constructor or as a result\"\n\t\t, \"compiler plans retain empty checked-record input and result trees\"\n\t])\n\t, skipped: Object.freeze([\n\t\t...zeroPayloadNativeRoutes.map(route =>\n\t\t\t`installed zero-payload records reproduce and relocate in C/C++ for ${route}`)\n\t\t, \"fresh Lean admits proof-only and Unit-bearing checked records with exact erased proofs\"\n\t\t, \"every refused zero-payload site reports its own diagnostic\"\n\t\t, \"the independent zero-payload review reconciles exactly with fresh Lean\"\n\t])\n});\n\nconst escapeRegExp = source => source.replace(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\");\n\n/**\n * Require the stable semantic controls while accepting added authenticated readers.\n *\n * @param source - Complete node:test TAP stream.\n */\nexport const assertZeroPayloadNativeControlsTap = source => {\n\tassert.equal(typeof source, \"string\");\n\tassert.doesNotMatch(source, /^(?:not ok|Bail out!)/gmu);\n\tassert.doesNotMatch(source, /^[ \\t]+(?:not ok|Bail out!)/gmu);\n\tconst terminal = source.match(/\\n1\\.\\.(\\d+)\\n# tests (\\d+)\\n# suites 0\\n# pass (\\d+)\\n# fail 0\\n# cancelled 0\\n# skipped (\\d+)\\n# todo 0\\n# duration_ms [0-9]+(?:\\.[0-9]+)?\\n$/u);\n\tassert.ok(terminal, \"Complete zero-payload control TAP\");\n\tconst tests = Number(terminal[1]);\n\tconst declared = Number(terminal[2]);\n\tconst passed = Number(terminal[3]);\n\tconst skipped = Number(terminal[4]);\n\tassert.equal(declared, tests);\n\tassert.equal(skipped, zeroPayloadNativeRequiredControlNames.skipped.length);\n\tassert.equal(passed + skipped, tests);\n\tassert.ok(passed >= zeroPayloadNativeRequiredControlNames.passed.length);\n\tconst requireResult = (name, shouldSkip) => {\n\t\tassert.equal(source.split(`# Subtest: ${name}\\n`).length, 2, name);\n\t\tconst suffix = shouldSkip ? \" # SKIP(?: .*)?\" : \"\";\n\t\tconst result = new RegExp(\n\t\t\t`^ok [0-9]+ - ${escapeRegExp(name)}${suffix}$`, \"mu\"\n\t\t);\n\t\tassert.match(source, result, name);\n\t};\n\tfor(const name of zeroPayloadNativeRequiredControlNames.passed)\n\t\trequireResult(name, false);\n\tfor(const name of zeroPayloadNativeRequiredControlNames.skipped)\n\t\trequireResult(name, true);\n\treturn {\n\t\tfastPasses: passed, skippedInstalledOrLeanTests: skipped\n\t};\n};\n\n",
+          "previous": "",
+          "start": 797
+        },
+        {
+          "current": "\tconst controlCounts = assertZeroPayloadNativeControlsTap(controlsTap);\n",
+          "previous": "\tassertNativeTap(controlsTap, 26, 7);\n",
+          "start": 6351
+        },
+        {
+          "current": "\t\t\t...controlCounts\n",
+          "previous": "\t\t\tfastPasses: 19, skippedInstalledOrLeanTests: 7\n",
+          "start": 7880
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-ci-report.mjs",
+      "previousSha256": "ec10b97e9d263f41d5d8f85cd2af6f78012d15c9157c07e71bbc7873c3f9d3be"
+    },
+    {
+      "currentSha256": "5bb1cf4deb0bf350b05f3c189f3a4637288c87a4af11cc7721c598d2441db143",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-native-ci-report-tests.mjs\";\n",
+          "previous": "",
+          "start": 1903
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "108e3ac09451a83e6d1234078ee765c3271d70261ef8a136336cefe14d5f87fb"
+    }
+  ]
+}

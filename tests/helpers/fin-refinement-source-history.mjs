@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNativeControlContractSource, zeroPayloadNativeControlContractChangedPaths, zeroPayloadNativeControlContractIntegrationPaths } from "./zero-payload-native-control-contract-source-history.mjs";
 import { beforeDependentCheckedRecordHostedArchivePreparationSource, dependentCheckedRecordHostedArchivePreparationChangedPaths, dependentCheckedRecordHostedArchivePreparationIntegrationPaths } from "./dependent-checked-record-hosted-archive-preparation-source-history.mjs";
 import { beforeDependentCheckedRecordRustSource, dependentCheckedRecordRustChangedPaths, dependentCheckedRecordRustIntegrationPaths } from "./dependent-checked-record-rust-source-history.mjs";
 import { beforeDependentCheckedRecordRubySource, dependentCheckedRecordRubyChangedPaths, dependentCheckedRecordRubyIntegrationPaths } from "./dependent-checked-record-ruby-source-history.mjs";
@@ -1468,7 +1469,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordHostedArchivePreparationChangedPaths
+	...zeroPayloadNativeControlContractChangedPaths
+	, ...zeroPayloadNativeControlContractIntegrationPaths
+	, ...dependentCheckedRecordHostedArchivePreparationChangedPaths
 	, ...dependentCheckedRecordHostedArchivePreparationIntegrationPaths
 	, ...dependentCheckedRecordRustChangedPaths
 	, ...dependentCheckedRecordRustIntegrationPaths
@@ -2082,9 +2085,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadNativeControlContract
+		= beforeZeroPayloadNativeControlContractSource(path, text, expected);
+	if(sha256(zeroPayloadNativeControlContract) === expected)
+		return zeroPayloadNativeControlContract;
 	const dependentCheckedRecordHostedArchivePreparation
 		= beforeDependentCheckedRecordHostedArchivePreparationSource(
-			path, text, expected
+			path, zeroPayloadNativeControlContract, expected
 		);
 	if(sha256(dependentCheckedRecordHostedArchivePreparation) === expected)
 		return dependentCheckedRecordHostedArchivePreparation;
