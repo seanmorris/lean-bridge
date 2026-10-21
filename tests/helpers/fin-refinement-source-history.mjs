@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeGenericSubtypeTestRegistrationSource, genericSubtypeTestRegistrationChangedPaths, genericSubtypeTestRegistrationIntegrationPaths } from "./generic-subtype-test-registration-source-history.mjs";
 import { beforeGenericSubtypeManagedWitSource, genericSubtypeManagedWitChangedPaths, genericSubtypeManagedWitIntegrationPaths } from "./generic-subtype-managed-wit-source-history.mjs";
 import { beforeGenericSubtypeLanguageSource, genericSubtypeLanguageChangedPaths, genericSubtypeLanguageIntegrationPaths } from "./generic-subtype-language-source-history.mjs";
 import { beforeGenericSubtypeNativePerlSource, genericSubtypeNativePerlChangedPaths, genericSubtypeNativePerlIntegrationPaths } from "./generic-subtype-native-perl-source-history.mjs";
@@ -1457,7 +1458,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeManagedWitChangedPaths
+	...genericSubtypeTestRegistrationChangedPaths
+	, ...genericSubtypeTestRegistrationIntegrationPaths
+	, ...genericSubtypeManagedWitChangedPaths
 	, ...genericSubtypeManagedWitIntegrationPaths
 	, ...genericSubtypeLanguageChangedPaths
 	, ...genericSubtypeLanguageIntegrationPaths
@@ -2049,8 +2052,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericManagedWit = beforeGenericSubtypeManagedWitSource(
+	const genericTestRegistration = beforeGenericSubtypeTestRegistrationSource(
 		path, text, expected
+	);
+	if(sha256(genericTestRegistration) === expected) return genericTestRegistration;
+	const genericManagedWit = beforeGenericSubtypeManagedWitSource(
+		path, genericTestRegistration, expected
 	);
 	if(sha256(genericManagedWit) === expected) return genericManagedWit;
 	const genericLanguages = beforeGenericSubtypeLanguageSource(
