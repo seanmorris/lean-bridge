@@ -18,6 +18,7 @@ import { generateNativePrimitiveC } from "../../src/backends/c/native-primitives
 import { zeroPayloadCheckedRecordFixture, zeroPayloadCheckedRecordModule } from "./zero-payload-checked-record-fixture.mjs";
 import {
 	checkZeroPayloadPhpWasmModel
+	, zeroPayloadPhpWasmParameterRefinements
 	, zeroPayloadPhpWasmSelection
 } from "./zero-payload-checked-record-php-wasm-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
@@ -84,14 +85,15 @@ for(const route of zeroPayloadPhpRoutes)
 			initializer: `initialize_${observed.adapters.module}`
 		});
 		for(const item of observed.model.exports)
-			item.refinements.parameters.forEach((refinement, index) => {
+			zeroPayloadPhpWasmParameterRefinements(item)
+				.forEach((refinement, index) => {
 				if(refinement?.kind !== "checked-record") return;
 				assert.ok(provider.includes(`${item.symbol}_refinement_${index}(`));
 				assert.ok(provider.includes(`was rejected by ${refinement.constructor}`));
 				assert.ok(observed.adapters.leanSource.includes(
 					`@[export ${item.symbol}_refinement_${index}]`
 				));
-			});
+				});
 		await saveLakeFile(records, "model.json", canonicalJson(observed.model));
 		await saveLakeFile(records, "adapters.lean", observed.adapters.leanSource);
 		await saveLakeFile(records, "generated.c", observed.c);

@@ -16,6 +16,7 @@ import {
 import {
 	adaptZeroPayloadPhpWasm, zeroPayloadPhpWasmCaller
 	, checkZeroPayloadPhpWasmExecutions, checkZeroPayloadPhpWasmModel
+	, zeroPayloadPhpWasmParameterRefinements
 	, zeroPayloadPhpWasmRefinements
 	, zeroPayloadPhpWasmExpected, zeroPayloadPhpWasmRequest
 	, zeroPayloadPhpWasmSelection, zeroPayloadPhpWasmSettings
@@ -117,6 +118,16 @@ test("zero-payload PHP-Wasm model controls reject native, incomplete and diverge
 			assert.throws(() => checkZeroPayloadPhpWasmModel(changed, route));
 		}
 	}
+});
+
+test("plain PHP-Wasm exports contribute no checked parameter refinements", () => {
+	assert.deepEqual(zeroPayloadPhpWasmParameterRefinements({}), []);
+	const parameters = [null, {
+		kind: "checked-record", constructor: "ZeroPayloadCheckedRecords.mkWitness"
+	}];
+	assert.strictEqual(zeroPayloadPhpWasmParameterRefinements({
+		refinements: { parameters }
+	}), parameters);
 });
 
 test("zero-payload PHP-Wasm observations require every host context and lazy loading boundary", () => {

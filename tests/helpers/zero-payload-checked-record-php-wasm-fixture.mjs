@@ -170,6 +170,15 @@ export const checkZeroPayloadPhpWasmModel = (model, route) => {
 };
 
 /**
+ * Return only declared input refinements; plain exports intentionally omit the
+ * refinements object entirely.
+ *
+ * @param item - One compiled public export.
+ */
+export const zeroPayloadPhpWasmParameterRefinements = item =>
+	item.refinements?.parameters ?? [];
+
+/**
  * Require all Node/Chromium loading and strictness contexts.
  *
  * @param evidence - Installed PHP-Wasm execution evidence.
