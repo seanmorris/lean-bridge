@@ -338,6 +338,8 @@ const profileManifest = Object.freeze({
 		, "checked-record-browser-foundation"
 		, "checked-record-browser-ci"
 		, "checked-record-browser-promotion"
+		, "dependent-checked-record-browser-foundation"
+		, "dependent-checked-record-native-foundation"
 		, "checked-record-value-index-browser"
 		, "checked-record-value-index-dotnet"
 		, "checked-record-value-index-dotnet-evidence"

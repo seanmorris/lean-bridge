@@ -60,6 +60,10 @@ test("every repository test receives exactly one named execution profile", async
 		, "zero-payload-checked-record-rust-promotion"
 		, "zero-payload-checked-record-wit-evidence"])
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
+	for(const name of [
+		"dependent-checked-record-browser-foundation"
+		, "dependent-checked-record-native-foundation"
+	]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-results.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/wit-owned-callback-result-installed-acceptance.test.mjs"));
