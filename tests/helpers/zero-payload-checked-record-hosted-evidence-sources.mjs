@@ -72,6 +72,9 @@ const dotnetCallers = [
 const jvmCallers = ["java.java", "kotlin.kt"].map(
 	path => `tests/fixtures/zero-payload-checked-record-jvm/${path}`
 );
+const rustCallers = ["rust.rs"].map(
+	path => `tests/fixtures/zero-payload-checked-record-rust/${path}`
+);
 const commonData = [
 	...fixture, ...callers, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -302,6 +305,61 @@ export const zeroPayloadJvmEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-zero-payload-checked-record-jvm-evidence.mjs"
+				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted Rust crate artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const zeroPayloadRustEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/zero-payload-checked-record-rust-installed-tests.mjs"
+				])
+				, ...fixture, ...rustCallers, "src/analyze/NativeExports.lean"
+				, "lean-toolchain", "package-lock.json", "package.json"
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/zero-payload-checked-record-rust-fixture.mjs"
+				])
+				, ...rustCallers
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-zero-payload-checked-record-rust-ci.mjs"
+					, "tests/zero-payload-checked-record-rust.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/zero-payload-checked-record-rust.yml"
+				, "scripts/bootstrap-rust-ci.sh"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-zero-payload-checked-record-rust-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-zero-payload-checked-record-rust-evidence.mjs"
 				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
 			])
 		}
