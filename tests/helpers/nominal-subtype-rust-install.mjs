@@ -37,26 +37,37 @@ export const nominalSubtypeRustApiProbe = `#[allow(unused_imports)]
 use nominalsubtypes::{${nominalSubtypeRustInputNames.join(", ")}};
 fn main() {}
 `;
+export const genericSubtypeRustInputNames = Object.freeze([
+	"GenericNat", "generic_use", "echo_generic_first", "echo_generic_second"
+]);
+export const genericSubtypeRustApiProbe = `#[allow(unused_imports)]
+use nominalsubtypes::{${genericSubtypeRustInputNames.join(", ")}};
+fn main() {}
+`;
 
 /**
  * Distinguish a missing public API from an unrelated compiler or dependency failure.
  *
  * @param run - Complete Cargo JSON diagnostics and exit status.
  * @param mode - Full or result-only API selection.
+ * @param genericCompositions - Check the closed generic composition surface.
  */
-export const checkNominalSubtypeRustApiProbe = (run, mode) => {
+export const checkNominalSubtypeRustApiProbe = (run, mode, genericCompositions = false) => {
 	assert.ok(nominalSubtypeRustModes.includes(mode));
+	assert.equal(typeof genericCompositions, "boolean");
+	if(genericCompositions) assert.equal(mode, "full");
+	const names = genericCompositions ? genericSubtypeRustInputNames : nominalSubtypeRustInputNames;
 	const messages = run.stdout.trim().split("\n").map(line => JSON.parse(line));
 	assert.deepEqual(messages.filter(message => message.reason === "build-finished"), [{ reason: "build-finished", success: mode === "full" }]);
 	const errors = messages.filter(message => message.reason === "compiler-message" && message.message.level === "error").map(({ message }) => message);
 	if(mode === "full")
-	{ assert.equal(run.code, 0); assert.deepEqual(errors, []); return { absent: [], present: [...nominalSubtypeRustInputNames] }; }
+	{ assert.equal(run.code, 0); assert.deepEqual(errors, []); return { absent: [], present: [...names] }; }
 	assert.equal(run.code, 101); assert.equal(errors.length, 1);
 	const error = errors[0]; assert.equal(error.code?.code, "E0432");
 	const primary = error.spans.filter(span => span.is_primary); assert.ok(primary.length > 0);
 	assert.ok(primary.every(span => span.file_name === "src/bin/api-probe.rs"));
-	assert.deepEqual([...error.message.matchAll(/`nominalsubtypes::([A-Za-z_0-9]+)`/gu)].map(match => match[1]).sort(), [...nominalSubtypeRustInputNames].sort());
-	return { absent: [...nominalSubtypeRustInputNames], present: [] };
+	assert.deepEqual([...error.message.matchAll(/`nominalsubtypes::([A-Za-z_0-9]+)`/gu)].map(match => match[1]).sort(), [...names].sort());
+	return { absent: [...names], present: [] };
 };
 
 /**
@@ -98,9 +109,12 @@ export const verifyNominalSubtypeRustDependencies = async (root, dependencies) =
  * @param options.caller - Unchanged public Rust caller.
  * @param options.mode - Full or result-only package selection.
  * @param options.output - Fresh retained-record directory.
+ * @param options.genericCompositions - Exercise the closed generic composition surface.
  */
-export const installNominalSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output }) => {
+export const installNominalSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output, genericCompositions = false }) => {
 	assert.ok(nominalSubtypeRustModes.includes(mode));
+	assert.equal(typeof genericCompositions, "boolean");
+	if(genericCompositions) assert.equal(mode, "full");
 	const bin = join(root, "tools"), vendor = join(root, "vendor"), cargoHome = join(root, "cargo-home");
 	for(const directory of [bin, vendor, cargoHome]) await mkdir(directory, { recursive: true });
 	assert.deepEqual(await readdir(cargoHome), []);
@@ -141,7 +155,8 @@ export const installNominalSubtypeRust = async ({ root, handoff, dependencyHando
 	const config = '[source.crates-io]\nreplace-with = "nominal-vendor"\n[source.nominal-vendor]\ndirectory = "vendor/dependencies"\n';
 	const manifest = `[package]\nname = "nominal-consumer"\nversion = "0.0.0"\nedition = "2021"\n[features]\nresult-only = []\n[dependencies]\n${pkg.name} = { path = "vendor/${pkg.name}-${pkg.version}" }\n[profile.dev]\ndebug = 0\nincremental = false\n`;
 	await saveLakeFile(root, ".cargo/config.toml", config); await saveLakeFile(root, "Cargo.toml", manifest);
-	await saveLakeFile(root, "src/main.rs", caller); await saveLakeFile(root, "src/bin/api-probe.rs", nominalSubtypeRustApiProbe);
+	const apiProbeSource = genericCompositions ? genericSubtypeRustApiProbe : nominalSubtypeRustApiProbe;
+	await saveLakeFile(root, "src/main.rs", caller); await saveLakeFile(root, "src/bin/api-probe.rs", apiProbeSource);
 	const locked = await runCopied(cargo, ["generate-lockfile", "--offline"], root, compile);
 	const metadataRun = await runCopied(cargo, ["metadata", "--locked", "--offline", "--format-version", "1"], root, compile);
 	const metadata = JSON.parse(metadataRun.stdout), publicPackage = metadata.packages.find(item => item.name === pkg.name);
@@ -153,7 +168,7 @@ export const installNominalSubtypeRust = async ({ root, handoff, dependencyHando
 	const args = ["--locked", "--offline", "--target", nominalSubtypeRustTarget, ...mode === "result-only" ? ["--features", "result-only"] : []];
 	const build = await runCopied(cargo, ["build", ...args, "--bin", "nominal-consumer"], root, compile);
 	const apiProbe = await captureCorpusCompiler(cargo, ["check", ...args, "--bin", "api-probe", "--message-format=json"], root, compile);
-	const api = checkNominalSubtypeRustApiProbe(apiProbe, mode);
+	const api = checkNominalSubtypeRustApiProbe(apiProbe, mode, genericCompositions);
 	assert.deepEqual(await verifyFinContainerEdgeArchiveClosure({ profile: "rust"
 		, installed
 		, archive
@@ -169,7 +184,7 @@ export const installNominalSubtypeRust = async ({ root, handoff, dependencyHando
 		await saveLakeFile(output, path, canonicalJson(value));
 	for(const [path, source] of [["consumer.Cargo.toml", manifest]
 		, ["consumer.config.toml", config]
-		, ["api-probe.rs", nominalSubtypeRustApiProbe]
+		, ["api-probe.rs", apiProbeSource]
 		, ["link-only", nominalSubtypeRustLinker]
 		, ["consumer.Cargo.lock", await readFile(join(root, "Cargo.lock"))]]) await saveLakeFile(output, path, source);
 	const executable = `target/${nominalSubtypeRustTarget}/debug/nominal-consumer`;

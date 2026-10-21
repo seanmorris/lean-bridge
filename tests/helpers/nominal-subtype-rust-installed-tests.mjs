@@ -7,14 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, readdir, rename, rm, statfs } from "node:fs/promises";
 import { loadavg, tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeRustCaller, nominalSubtypeRustConfiguration, nominalSubtypeRustSelection, parseNominalSubtypeRustResult } from "./nominal-subtype-rust-fixture.mjs";
 import { installNominalSubtypeRust, verifyNominalSubtypeRustDependencies } from "./nominal-subtype-rust-install.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./fin-container-edge-closure.mjs";
@@ -22,8 +22,14 @@ import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./c
 import { prepareRustCorpusDependencies } from "./type-corpus-rust.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection, parseGenericSubtypeLanguageResult } from "./generic-subtype-languages.mjs";
 
-const { enabled, routes, modes } = nominalSubtypeRustSelection(process.env);
+const nominalSelection = nominalSubtypeRustSelection(process.env);
+const genericSelection = genericSubtypeLanguageSelection("rust", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic Rust installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 const resourceCheck = async root => {
 	const disk = await statfs(root), memory = await readFile("/proc/meminfo", "utf8");
 	const available = Number(memory.match(/^MemAvailable:\s+(\d+) kB$/mu)?.[1]) * 1024;
@@ -33,16 +39,24 @@ const resourceCheck = async root => {
 };
 const registryFiles = async () => (await readdir("/tmp")).filter(name => /^lean-bridge-rust-(?:v1|assets)-/u.test(name)).sort();
 
-for(const route of routes) for(const mode of modes) test(`installed nominal Rust packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype Rust compositions" : "nominal Rust packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const path of ["fixture.mjs", "package.mjs", "install.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-rust-${path}`]);
-	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/rust.rs"]);
+	const callerPath = genericCompositions
+		? "tests/fixtures/generic-subtype-consumers/rust.rs"
+		: "tests/fixtures/nominal-subtype-consumers/rust.rs";
+	execFileSync("git", ["ls-files", "--error-unmatch", callerPath]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const expected = nominalSubtypeInstalledReview(mode === "result-only"), configuration = nominalSubtypeRustConfiguration(route, mode);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_OUTPUT ?? "build/nominal-subtype-rust", route, mode);
+	const expected = nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions });
+	const configuration = genericCompositions
+		? genericSubtypeLanguageConfiguration("rust", route)
+		: nominalSubtypeRustConfiguration(route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_RUST_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-rust" : "build/nominal-subtype-rust";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const environment = { ...nativeFixtureEnvironment(["rust"]), CARGO_BUILD_JOBS: "1", LEAN_NUM_THREADS: "1" };
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
@@ -53,7 +67,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
-	const caller = await nominalSubtypeRustCaller(route); await saveLakeFile(output, "consumer.rs", caller);
+	const caller = genericCompositions
+		? await genericSubtypeLanguageCaller("rust", route)
+		: await nominalSubtypeRustCaller(route);
+	await saveLakeFile(output, "consumer.rs", caller);
 	await resourceCheck(output);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-rust-"));
 	let complete = false;
@@ -68,6 +85,12 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 		await resourceCheck(output);
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true });
+			await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -88,6 +111,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 		await saveLakeFile(record, "author-inputs.json", canonicalJson(sourceBefore));
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0)
 		{
@@ -108,7 +133,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 	const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json"))), pkg = receipt.packages[0];
 	const archive = join(handoff, pkg.artifacts[0].path), consumer = join(root, "consumer");
 	await resourceCheck(output);
-	const installation = await installNominalSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output });
+	const installation = await installNominalSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output, genericCompositions });
 	const observations = [], clean = { ...copiedCleanEnvironment, CARGO_HOME: "/unavailable", RUSTC: "/unavailable" };
 	for(const [index, location] of [consumer, consumer + "-relocated"].entries())
 	{
@@ -126,7 +151,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 		assert.equal(sha256(await readFile(join(location, installation.executable))), installation.executableSha256);
 		assert.equal(await readFile(join(location, "src/main.rs"), "utf8"), caller);
 		const run = await runCopied(join(location, installation.executable), [], location, clean);
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypeRustResult(run.stdout, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions
+			? parseGenericSubtypeLanguageResult(run.stdout)
+			: parseNominalSubtypeRustResult(run.stdout, mode);
 		assert.deepEqual(await verify(), closure); assert.deepEqual(await registryFiles(), before);
 		assert.equal(sha256(await readFile(join(location, installation.executable))), installation.executableSha256);
 		const observation = { stage: index ? "relocated" : "installed", cwd: location, run, counts, closure, normalExitCleanup: true };
@@ -138,7 +166,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 	await assert.rejects(access(consumer + "-relocated"), { code: "ENOENT" });
 	assert.deepEqual(await readdir(sourceFree), ["consumer"]);
 	const before = await registryFiles(), run = await runCopied(join(sourceFree, "consumer"), [], sourceFree, clean);
-	assert.equal(run.stderr, ""); const counts = parseNominalSubtypeRustResult(run.stdout, mode);
+	assert.equal(run.stderr, "");
+	const counts = genericCompositions
+		? parseGenericSubtypeLanguageResult(run.stdout)
+		: parseNominalSubtypeRustResult(run.stdout, mode);
 	assert.deepEqual(await registryFiles(), before);
 	assert.equal(sha256(await readFile(join(sourceFree, "consumer"))), installation.executableSha256);
 	const observation = { stage: "source-free", cwd: sourceFree, run, counts, sourcesRemoved: true, normalExitCleanup: true };
@@ -149,6 +180,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Rust
 		, route
 		, mode
 		, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, runtime
 		, builds
 		, receipt

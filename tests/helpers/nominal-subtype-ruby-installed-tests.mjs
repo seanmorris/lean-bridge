@@ -14,26 +14,40 @@ import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeRubyCaller, nominalSubtypeRubyConfiguration, nominalSubtypeRubySelection, parseNominalSubtypeRubyResult } from "./nominal-subtype-ruby-fixture.mjs";
 import { inspectNominalSubtypeRubyPackage } from "./nominal-subtype-ruby-package.mjs";
 import { installFinContainerEdgeRuby, runFinContainerEdgeRuby, verifyFinContainerEdgeRubyEnvironment } from "./fin-container-edge-ruby-closure.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection, parseGenericSubtypeLanguageResult } from "./generic-subtype-languages.mjs";
 
-const { enabled, routes, modes } = nominalSubtypeRubySelection(process.env);
+const nominalSelection = nominalSubtypeRubySelection(process.env);
+const genericSelection = genericSubtypeLanguageSelection("ruby", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic Ruby installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal Ruby packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype Ruby compositions" : "nominal Ruby packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const path of ["fixture.mjs", "package.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-ruby-${path}`]);
-	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/ruby.rb"]);
+	const callerPath = genericCompositions
+		? "tests/fixtures/generic-subtype-consumers/ruby.rb"
+		: "tests/fixtures/nominal-subtype-consumers/ruby.rb";
+	execFileSync("git", ["ls-files", "--error-unmatch", callerPath]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const expected = nominalSubtypeInstalledReview(mode === "result-only"), configuration = nominalSubtypeRubyConfiguration(route, mode);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_OUTPUT ?? "build/nominal-subtype-ruby", route, mode);
+	const expected = nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions });
+	const configuration = genericCompositions
+		? genericSubtypeLanguageConfiguration("ruby", route)
+		: nominalSubtypeRubyConfiguration(route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_RUBY_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-ruby" : "build/nominal-subtype-ruby";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const environment = nativeFixtureEnvironment(["ruby"]);
 	assert.ok(typeof environment.LEAN_BRIDGE_RUBY === "string" && isAbsolute(environment.LEAN_BRIDGE_RUBY), "Select an absolute Ruby 3.3 interpreter explicitly");
@@ -54,7 +68,9 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Ruby
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "interpreter.json": interpreter, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
-	const caller = await nominalSubtypeRubyCaller(route);
+	const caller = genericCompositions
+		? await genericSubtypeLanguageCaller("ruby", route)
+		: await nominalSubtypeRubyCaller(route);
 	await saveLakeFile(output, "consumer.rb", caller);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-ruby-"));
 	let complete = false;
@@ -67,6 +83,12 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Ruby
 	{
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true });
+			await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -87,6 +109,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Ruby
 		await saveLakeFile(record, "author-inputs.json", canonicalJson(sourceBefore));
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
 		builds.push({ bindingIrSha256: built.bindingIrSha256
@@ -111,10 +135,14 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Ruby
 	{
 		if(index)
 		{ await rename(consumer, location); await assert.rejects(access(consumer), { code: "ENOENT" }); }
-		const selected = { ...context, gems: join(location, "gems") }, args = ["consumer.rb", ...mode === "result-only" ? ["--result-only"] : []];
+		const selected = { ...context, gems: join(location, "gems") };
+		const args = ["consumer.rb", ...!genericCompositions && mode === "result-only" ? ["--result-only"] : []];
 		const before = await verifyFinContainerEdgeRubyEnvironment(selected);
 		const run = await runFinContainerEdgeRuby(selected, args, location);
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypeRubyResult(run.stdout, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions
+			? parseGenericSubtypeLanguageResult(run.stdout)
+			: parseNominalSubtypeRubyResult(run.stdout, mode);
 		assert.deepEqual(await verifyFinContainerEdgeRubyEnvironment(selected), before);
 		assert.equal(await readFile(join(location, "consumer.rb"), "utf8"), caller);
 		const observation = { relocated: Boolean(index), command, args, cwd: location, gems: selected.gems, run, counts, closure: before };
@@ -124,6 +152,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Ruby
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
 		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, runtime, interpreter, builds, receipt, observations
 		, declaredGlibcFloor: floor
 		, expectedBindingIrSha256: hashBindingIr(expected)

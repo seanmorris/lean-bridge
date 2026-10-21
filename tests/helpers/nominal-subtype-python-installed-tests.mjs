@@ -8,35 +8,50 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypePythonCaller, nominalSubtypePythonConfiguration, nominalSubtypePythonSelection, nominalSubtypePythonExecutables, nominalSubtypePythonMinors } from "./nominal-subtype-python-fixture.mjs";
 import { inspectNominalSubtypePythonWheel } from "./nominal-subtype-python-wheel.mjs";
 import { installNominalSubtypePython, probeNominalSubtypePython } from "./nominal-subtype-python-install.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection } from "./generic-subtype-languages.mjs";
 
-const { enabled, routes, modes } = nominalSubtypePythonSelection(process.env);
-const executables = enabled ? nominalSubtypePythonExecutables(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHONS) : null;
+const nominalSelection = nominalSubtypePythonSelection(process.env);
+const genericSelection = genericSubtypeLanguageSelection("python", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic Python installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
+const executableVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_PYTHONS" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHONS";
+const executables = enabled ? nominalSubtypePythonExecutables(process.env[executableVariable]) : null;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal Python packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype Python compositions" : "nominal Python packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	// A source-only dry run must never become installed evidence for another revision.
 	for(const path of ["fixture.mjs", "wheel.mjs", "install.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-python-${path}`]);
-	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/python.py"]);
+	const callerPath = genericCompositions
+		? "tests/fixtures/generic-subtype-consumers/python.py"
+		: "tests/fixtures/nominal-subtype-consumers/python.py";
+	execFileSync("git", ["ls-files", "--error-unmatch", callerPath]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const expected = nominalSubtypeInstalledReview(mode === "result-only"), configuration = nominalSubtypePythonConfiguration(route, mode);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHON_OUTPUT ?? "build/nominal-subtype-python", route, mode);
+	const expected = nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions });
+	const configuration = genericCompositions
+		? genericSubtypeLanguageConfiguration("python", route)
+		: nominalSubtypePythonConfiguration(route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_PYTHON_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHON_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-python" : "build/nominal-subtype-python";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const interpreters = [];
 	for(const minor of nominalSubtypePythonMinors)
@@ -51,7 +66,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Pyth
 	await saveLakeFile(output, "runtime.json", canonicalJson(runtime));
 	await saveLakeFile(output, "expected.binding-ir.json", canonicalJson(expected));
 	await saveLakeFile(output, "configuration.json", canonicalJson(configuration));
-	await saveLakeFile(output, "consumer.py", await nominalSubtypePythonCaller(route));
+	const caller = genericCompositions
+		? await genericSubtypeLanguageCaller("python", route)
+		: await nominalSubtypePythonCaller(route);
+	await saveLakeFile(output, "consumer.py", caller);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-python-"));
 	let complete = false;
 	t.after(async () => {
@@ -63,6 +81,12 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Pyth
 	{
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true });
+			await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -83,6 +107,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Pyth
 		await saveLakeFile(record, "author-inputs.json", canonicalJson(sourceBefore));
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
 		builds.push({ bindingIrSha256: built.bindingIrSha256
@@ -106,13 +132,15 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Pyth
 		const report = await installNominalSubtypePython({
 			minor, command: executables[minor], route, mode
 			, root: consumer, archive, artifact: pkg.artifacts[0]
-			, receiptBytes: wheel.receiptBytes, output: record });
+			, receiptBytes: wheel.receiptBytes, output: record
+			, genericCompositions });
 		assert.deepEqual(report.interpreter, interpreters.find(item => item.minor === minor)); reports.push(report);
 		await rm(consumer + "-relocated", { recursive: true });
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
 		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, minors: nominalSubtypePythonMinors, interpreters, builds, reports, runtime
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, wheelReceiptSha256: wheel.record.receiptSha256

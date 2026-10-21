@@ -12,6 +12,7 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
 import { createFinContainerEdgePythonEnvironment, attachFinContainerEdgePythonPackage, finContainerEdgePythonFlags, runFinContainerEdgePython, verifyFinContainerEdgePythonEnvironment } from "./fin-container-edge-python-closure.mjs";
 import { nominalSubtypePythonCaller, nominalSubtypePythonMinors, nominalSubtypePythonModes, parseNominalSubtypePythonResult } from "./nominal-subtype-python-fixture.mjs";
 import { nominalSubtypePythonReceipt } from "./nominal-subtype-python-wheel.mjs";
+import { genericSubtypeLanguageCaller, parseGenericSubtypeLanguageResult } from "./generic-subtype-languages.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 /**
@@ -46,12 +47,18 @@ export const probeNominalSubtypePython = async (minor, command, cwd) => {
  * @param options.artifact - Package-set wheel size and digest.
  * @param options.receiptBytes - Exact original wheel receipt bytes.
  * @param options.output - Original-record destination.
+ * @param options.genericCompositions - Exercise the closed generic composition surface.
  */
-export const installNominalSubtypePython = async ({ minor, command, route, mode, root, archive, artifact, receiptBytes, output }) => {
+export const installNominalSubtypePython = async ({ minor, command, route, mode, root, archive, artifact, receiptBytes, output, genericCompositions = false }) => {
 	assert.ok(nominalSubtypePythonModes.includes(mode));
+	assert.equal(typeof genericCompositions, "boolean");
+	if(genericCompositions) assert.equal(mode, "full");
 	await assert.rejects(access(root), { code: "ENOENT" }); await mkdir(root, { recursive: true });
 	const interpreter = await probeNominalSubtypePython(minor, command, root);
-	const source = await nominalSubtypePythonCaller(route), args = ["consumer.py", ...mode === "result-only" ? ["--result-only"] : []];
+	const source = genericCompositions
+		? await genericSubtypeLanguageCaller("python", route)
+		: await nominalSubtypePythonCaller(route);
+	const args = ["consumer.py", ...!genericCompositions && mode === "result-only" ? ["--result-only"] : []];
 	await saveLakeFile(root, "consumer.py", source);
 	const verifyArchive = async () => {
 		const bytes = await readFile(archive); assert.equal(bytes.length, artifact.bytes); assert.equal(sha256(bytes), artifact.sha256);
@@ -97,7 +104,10 @@ export const installNominalSubtypePython = async ({ minor, command, route, mode,
 		assert.equal(await readFile(join(location, "consumer.py"), "utf8"), source);
 		const run = await runFinContainerEdgePython(context, args, location);
 		await saveLakeFile(output, `${position ? "relocated" : "installed"}-process.json`, canonicalJson(run));
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypePythonResult(run.stdout, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions
+			? parseGenericSubtypeLanguageResult(run.stdout)
+			: parseNominalSubtypePythonResult(run.stdout, mode);
 		assert.deepEqual(await verifyFinContainerEdgePythonEnvironment(context), before);
 		assert.equal(await readFile(join(location, "consumer.py"), "utf8"), source);
 		const observation = { relocated: Boolean(position), arguments: args, environment: copiedCleanEnvironment, run, counts, closure: before };
@@ -106,6 +116,7 @@ export const installNominalSubtypePython = async ({ minor, command, route, mode,
 	}
 	await verifyArchive();
 	const report = { minor, route, mode, interpreter, arguments: args, observations
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, consumerSha256: sha256(source), archiveSha256: artifact.sha256
 		, baselineSha256: baseline.baselineSha256
 		, environmentSha256: installed.expectedSha256
