@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51339361,
+          "path": "archives/dependentrecords-1.0.0.crate",
+          "sha256": "932b528d1b9598ceb18a8c35b900c516b566aabf8adcb16a4f5e29b6624cf95f"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "02698a3e3a3c1ce2d3f6abcb590160165f524dca8dfc51c710945fe053961faa",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "03353c25b00f56397262c7b386647fdad9490b0f1f625a346e51f430c2aa1d86"
+  }
+}

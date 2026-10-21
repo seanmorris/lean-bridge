@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "dependent-record-vendor"
+[source.dependent-record-vendor]
+directory = "vendor/dependencies"

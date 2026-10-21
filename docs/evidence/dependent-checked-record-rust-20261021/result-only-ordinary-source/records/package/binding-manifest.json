@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/rust-copied",
+    "version": 1
+  },
+  "component": "dependentrecords@1.0.0",
+  "bindingIrSha256": "19c1617d97fd644a16e4d8f51252bc29bd7c28a9aa9cec157973ad14b5755dc0",
+  "publicModule": "src/lib.rs",
+  "internalModule": "src/__runtime.rs",
+  "exports": [
+    "Error",
+    "BigInt",
+    "BigUint",
+    "Dependent",
+    "dependent_result"
+  ],
+  "files": [
+    "src/lib.rs",
+    "src/__runtime.rs",
+    "src/assets.rs",
+    "Cargo.toml",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Cargo supports copied values and synchronous primitive callables; resources, compound callables and asynchronous operations remain outside this profile."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The native profile requires Rust 1.90+ on Linux x86-64 with glibc."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "bindingIrSha256": "02698a3e3a3c1ce2d3f6abcb590160165f524dca8dfc51c710945fe053961faa",
+  "evidence": {
+    "componentId": "dependentrecords@1.0.0",
+    "componentReceiptSha256": "847c68b0fd15c1ae40ca5d5588989448d402667b654ab311a9049f4f9ccf33fa",
+    "libraries": {
+      "libcomponent_ca8ca903379eb247d9eb.so": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94",
+      "libdependentrecords.so": "d27fed145516b259ff1a27709b57303fd0568da09efa8e7c85642ed0fb7bc312",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libdependentrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3305,
+      "sha256": "666d28ba70d10c04091018d60d33e79315cff822efa9129e77187011e1827d27"
+    },
+    "Cargo.toml": {
+      "bytes": 337,
+      "sha256": "d5c14c1f07c462a73a35a105330135b7523851a45edf9dd38192ee82f350904e"
+    },
+    "README.md": {
+      "bytes": 4156,
+      "sha256": "6279eefdec9249336a6eaa52d26ec8e204c8ed9efb823b75dad23c1236448902"
+    },
+    "binding-manifest.json": {
+      "bytes": 987,
+      "sha256": "de5c10f71cd9fffff79beb56242a2449d8a272b40b6a0a086c2ca952ce4c0db0"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so": {
+      "bytes": 26360,
+      "sha256": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94"
+    },
+    "native/linux-x64/libdependentrecords.so": {
+      "bytes": 26024,
+      "sha256": "d27fed145516b259ff1a27709b57303fd0568da09efa8e7c85642ed0fb7bc312"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/__runtime.rs": {
+      "bytes": 8163,
+      "sha256": "31f3bb4927efbfb24c697fc23ec5e35dcf37752da9e9437ec8d48c1a537c0433"
+    },
+    "src/assets.rs": {
+      "bytes": 8095,
+      "sha256": "3fd7616194d8855cc15ea0f715dab48eb9cc53494d2e06bac30e9498bac2a85e"
+    },
+    "src/lib.rs": {
+      "bytes": 2082,
+      "sha256": "30d9735299534496b38b3706daa3f87fec550c294c3b8b6738cb891fe211f6ff"
+    }
+  },
+  "name": "dependentrecords",
+  "profile": "native-library-v1",
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}

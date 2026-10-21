@@ -1,0 +1,89 @@
+{
+  "adaptersSha256": "5a7485eacae5569d1ddae8ebe5dfcef7b106520f52c01b19f6fd5bf2f94aa891",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "19c1617d97fd644a16e4d8f51252bc29bd7c28a9aa9cec157973ad14b5755dc0",
+  "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "exports": [
+    {
+      "declaration": "DependentRecords.dependentResult",
+      "symbol": "lb_e59e187300c993f56dccdfb9"
+    }
+  ],
+  "headerSha256": "24fac35628976a6ac4be2394de5f5ceb41af0b1791eef945cc4f7408e13d0bb7",
+  "initializer": "initialize_LeanBridgeNativeca8ca903379eb247",
+  "library": "libcomponent_ca8ca903379eb247d9eb.so",
+  "metadataSha256": "c331b8cd0a0d3f46fbd05a58fed36eca3289687a1889c33b0ac6b1388bfc1e15",
+  "modelSha256": "2631fe9a9d3d5cea619a82fe48973b6efd25ea77e2aa9732e7627bc8d0e6af69",
+  "nativeLibrary": {
+    "bytes": 21576,
+    "sha256": "a1ad6c9a7b43fec1831f22013f2c3b8f01c626d2743a86010fcf13b1fc7cd68d"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "ca5469c6d51ea981a7e886018c0cfa64b200f1a7775364572abdbffe7a554136",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"DependentRecords.dependentResult\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"DependentRecords.dependentResult\"\n  ],\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"dependentrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "c99146478525f029189f4dc23271729c0c4f80d5845b4ff0d85bc1adae3310ff",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 73384,
+          "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+          "sha256": "b82d6fc2af6019ea6418aa37a0277d0f2c799c02f46dcea177d16db7186130f4"
+        },
+        "module": "DependentRecords",
+        "source": {
+          "bytes": 930,
+          "path": "DependentRecords.lean",
+          "sha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "DependentRecords.dependentResult": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "DependentRecords"
+      ],
+      "exports": [
+        "DependentRecords.dependentResult"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "8cc6f8d80142cc720bb3dd27c6091aebb2535529b94596997eb695a6702a7c3e",
+        "modules": [
+          {
+            "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+            "name": "DependentRecords",
+            "sourcePath": "DependentRecords.lean",
+            "sourceSha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "DependentRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "5becf9b75c711c2ecbc552ae12daf74ec3c6ae4ed5269bf3fb40637a92e97b89",
+    "sourceTreeSha256": "435746f6f6b8e894ae6c2156be2bedd5f83c9f3f03c30885e9ff7823fe15dec1"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "adaptersSha256": "e73ff50eb68b575b11ba3d780ab2adad3bf359e1966bad1ec4aa5454112aeaac",
+  "allocationGuardSha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+  "bindingIrSha256": "d340602549604c74aad572360b43cfe7a2e19814b37cbed332a762357a0b5429",
+  "compiler": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "exports": [
+    {
+      "declaration": "DependentRecords.dependentResult",
+      "symbol": "lb_e59e187300c993f56dccdfb9"
+    },
+    {
+      "declaration": "DependentRecords.dependentRoundtrip",
+      "symbol": "lb_5c4342be8d065a841e1981ff"
+    },
+    {
+      "declaration": "DependentRecords.dependentTotal",
+      "symbol": "lb_6742bb14f123c11405a71a1d"
+    }
+  ],
+  "headerSha256": "7c2dc11ad05e0c21397d73aff334e955985d2fddcd63fdf83c9cd950be1d970d",
+  "initializer": "initialize_LeanBridgeNativeca8ca903379eb247",
+  "library": "libcomponent_ca8ca903379eb247d9eb.so",
+  "metadataSha256": "484b802d2a31b708161ba4e8aa62c2c17405d5f30a7c94fb3b6a9e09964678f0",
+  "modelSha256": "4f13ea96902cb0d3f6be2480e206c6d93cefab4cd273212229dd95685513f9fb",
+  "nativeLibrary": {
+    "bytes": 26360,
+    "sha256": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94"
+  },
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 2,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "bc0797c0c00f27eada5a35e8817709ae830a83a75faba35d7d87f3e2ca7bfd71",
+    "exportConfigurationSource": "{\n  \"contracts\": {\n    \"DependentRecords.dependentResult\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\"\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"DependentRecords.dependentRoundtrip\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"DependentRecords.mkDependent\",\n            \"fields\": [\n              {\n                \"name\": \"bound\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"below\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"DependentRecords.Dependent\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    },\n    \"DependentRecords.dependentTotal\": {\n      \"parameters\": [\n        {\n          \"lifetime\": null,\n          \"ownership\": \"copy\",\n          \"refinement\": {\n            \"constructor\": \"DependentRecords.mkDependent\",\n            \"fields\": [\n              {\n                \"name\": \"bound\",\n                \"refinement\": null\n              },\n              {\n                \"name\": \"below\",\n                \"refinement\": null\n              }\n            ],\n            \"kind\": \"checked-record\",\n            \"name\": \"DependentRecords.Dependent\"\n          }\n        }\n      ],\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\"\n      }\n    }\n  },\n  \"exports\": [\n    \"DependentRecords.dependentTotal\",\n    \"DependentRecords.dependentRoundtrip\",\n    \"DependentRecords.dependentResult\"\n  ],\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"dependentrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "c99146478525f029189f4dc23271729c0c4f80d5845b4ff0d85bc1adae3310ff",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 73384,
+          "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+          "sha256": "b82d6fc2af6019ea6418aa37a0277d0f2c799c02f46dcea177d16db7186130f4"
+        },
+        "module": "DependentRecords",
+        "source": {
+          "bytes": 930,
+          "path": "DependentRecords.lean",
+          "sha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "DependentRecords.dependentResult": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "DependentRecords.dependentRoundtrip": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "DependentRecords.mkDependent",
+                "fields": [
+                  {
+                    "name": "bound",
+                    "refinement": null
+                  },
+                  {
+                    "name": "below",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "DependentRecords.Dependent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "DependentRecords.dependentTotal": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "DependentRecords.mkDependent",
+                "fields": [
+                  {
+                    "name": "bound",
+                    "refinement": null
+                  },
+                  {
+                    "name": "below",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "DependentRecords.Dependent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "DependentRecords"
+      ],
+      "exports": [
+        "DependentRecords.dependentTotal",
+        "DependentRecords.dependentRoundtrip",
+        "DependentRecords.dependentResult"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "3006e383a71e3d05eacee68d1b35a024af83db406afa42f4b65d767b9e142b17",
+        "modules": [
+          {
+            "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+            "name": "DependentRecords",
+            "sourcePath": "DependentRecords.lean",
+            "sourceSha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "DependentRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "sourceNoticesSha256": "d21e5cbe178b551a164b8d77d0dc0ffd57b73cfcf3323e2f7e8399defe12580e",
+    "sourceTreeSha256": "df020ebd91844d3bec9535d1caef7629e5eea4aa74d3c870d8bd4d62bf764976"
+  }
+}

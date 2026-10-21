@@ -1,0 +1,242 @@
+{
+  "bindingIrSha256": "02698a3e3a3c1ce2d3f6abcb590160165f524dca8dfc51c710945fe053961faa",
+  "compiledProjectionSha256": "e5ceedcbb968c31883a7650da26c41bf1f1fb9ae95e2a3917eadd40209338a48",
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "ecosystem": "cargo",
+  "files": {
+    "Cargo.lock": {
+      "bytes": 3305,
+      "sha256": "666d28ba70d10c04091018d60d33e79315cff822efa9129e77187011e1827d27"
+    },
+    "Cargo.toml": {
+      "bytes": 337,
+      "sha256": "d5c14c1f07c462a73a35a105330135b7523851a45edf9dd38192ee82f350904e"
+    },
+    "README.md": {
+      "bytes": 4156,
+      "sha256": "6279eefdec9249336a6eaa52d26ec8e204c8ed9efb823b75dad23c1236448902"
+    },
+    "binding-manifest.json": {
+      "bytes": 987,
+      "sha256": "de5c10f71cd9fffff79beb56242a2449d8a272b40b6a0a086c2ca952ce4c0db0"
+    },
+    "lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean-bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "21e736e116eaa12901b03fd3882f853968f8422cd577bcb381d0a95b081b9b46"
+    },
+    "lean-bridge/component/binding-ir.json": {
+      "bytes": 11063,
+      "sha256": "3473b8336beb96bbdcfbbaddf5eeb0f076697904f42415e75d164541cce37c50"
+    },
+    "lean-bridge/component/component.h": {
+      "bytes": 787,
+      "sha256": "7c2dc11ad05e0c21397d73aff334e955985d2fddcd63fdf83c9cd950be1d970d"
+    },
+    "lean-bridge/component/generated.lean": {
+      "bytes": 3277,
+      "sha256": "e73ff50eb68b575b11ba3d780ab2adad3bf359e1966bad1ec4aa5454112aeaac"
+    },
+    "lean-bridge/component/metadata.json": {
+      "bytes": 18863,
+      "sha256": "6116fd4a067c3a328a1825a3a9b1e45cb947d8cc7d5d6865ca8e331046e7d96c"
+    },
+    "lean-bridge/component/model.json": {
+      "bytes": 36802,
+      "sha256": "e43fc4e68c4e5f324c60468d3921b6ddd8ca9a55399905e44036ab00afca0d7a"
+    },
+    "lean-bridge/component/native-component.json": {
+      "bytes": 14984,
+      "sha256": "847c68b0fd15c1ae40ca5d5588989448d402667b654ab311a9049f4f9ccf33fa"
+    },
+    "lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/licenses/source-notices.json": {
+      "bytes": 2092,
+      "sha256": "6825a01caab596ad73d101587ebfa5b0c5004c73fb4f118055b6efe48b55951e"
+    },
+    "lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "lean-bridge/native-c-adapter.json": {
+      "bytes": 1387,
+      "sha256": "adc7287e9f2090b79d1beb9cd4180b21ad85e5a0f37f1d94a946de3847975ed7"
+    },
+    "lean-bridge/native-rust.json": {
+      "bytes": 2749,
+      "sha256": "e5ceedcbb968c31883a7650da26c41bf1f1fb9ae95e2a3917eadd40209338a48"
+    },
+    "lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so": {
+      "bytes": 26360,
+      "sha256": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94"
+    },
+    "native/linux-x64/libdependentrecords.so": {
+      "bytes": 26024,
+      "sha256": "d27fed145516b259ff1a27709b57303fd0568da09efa8e7c85642ed0fb7bc312"
+    },
+    "native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "src/__runtime.rs": {
+      "bytes": 8163,
+      "sha256": "31f3bb4927efbfb24c697fc23ec5e35dcf37752da9e9437ec8d48c1a537c0433"
+    },
+    "src/assets.rs": {
+      "bytes": 8095,
+      "sha256": "3fd7616194d8855cc15ea0f715dab48eb9cc53494d2e06bac30e9498bac2a85e"
+    },
+    "src/lib.rs": {
+      "bytes": 2082,
+      "sha256": "30d9735299534496b38b3706daa3f87fec550c294c3b8b6738cb891fe211f6ff"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-ordinary-cargo-package",
+  "name": "dependentrecords",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "sourceIdentity": {
+    "exportConfigurationSha256": "085e95a175a83a040750e3bfcdf39c48ee1a0a6c916ad8e7a3321cd05316e216",
+    "exportConfigurationSource": "{\n  \"modules\": [\n    \"DependentRecords\"\n  ],\n  \"schemaVersion\": 1,\n  \"targets\": {\n    \"cargo\": {\n      \"name\": \"dependentrecords\",\n      \"version\": \"1.0.0\"\n    }\n  }\n}\n",
+    "extractorSha256": "c99146478525f029189f4dc23271729c0c4f80d5845b4ff0d85bc1adae3310ff",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "leanCompilerSha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "leanVersion": "4.32.2",
+    "modules": [
+      {
+        "interface": {
+          "bytes": 73384,
+          "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+          "sha256": "b82d6fc2af6019ea6418aa37a0277d0f2c799c02f46dcea177d16db7186130f4"
+        },
+        "module": "DependentRecords",
+        "source": {
+          "bytes": 930,
+          "path": "DependentRecords.lean",
+          "sha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+        }
+      }
+    ],
+    "request": {
+      "arities": [],
+      "contracts": {
+        "DependentRecords.dependentRoundtrip": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "DependentRecords.mkDependent",
+                "fields": [
+                  {
+                    "name": "bound",
+                    "refinement": null
+                  },
+                  {
+                    "name": "below",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "DependentRecords.Dependent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "DependentRecords.dependentTotal": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "DependentRecords.mkDependent",
+                "fields": [
+                  {
+                    "name": "bound",
+                    "refinement": null
+                  },
+                  {
+                    "name": "below",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "DependentRecords.Dependent"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        }
+      },
+      "exportModules": [
+        "DependentRecords"
+      ],
+      "exports": [
+        "DependentRecords.dependentResult",
+        "DependentRecords.dependentRoundtrip",
+        "DependentRecords.dependentTotal"
+      ],
+      "metadata": {
+        "invocationIdentitySha256": "714afeccfa67b26c2dab5f2d01224661b3a31701b37af48065b20a19a20430ba",
+        "modules": [
+          {
+            "interfaceSha256": "d62eeb04166065e8f4ba038f2c1e2db54aaa2b8109edbed3d68c5772374a86f8",
+            "name": "DependentRecords",
+            "sourcePath": "DependentRecords.lean",
+            "sourceSha256": "44eeadfa43d24e6a0a65d5b8be25809c22a5f29f217d57fb5dd462da9526782e"
+          }
+        ],
+        "toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "modules": [
+        "DependentRecords"
+      ],
+      "profile": "native-library-v1",
+      "resources": []
+    },
+    "reviewedBindingIr": {
+      "path": "api.binding-ir.json",
+      "schemaVersion": 1,
+      "semanticSha256": "7545422156ec73246f01154f09b0262990640f2f27649ae3b7ec7504f226c99f",
+      "source": "{\n  \"assurance\": [],\n  \"capabilities\": [],\n  \"component\": {\n    \"id\": \"dependentrecords@1.0.0\",\n    \"name\": \"dependentrecords\",\n    \"version\": \"1.0.0\"\n  },\n  \"declarations\": [\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:DependentRecords.dependentTotal\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"dependentTotal\",\n      \"overloadKey\": \"DependentRecords.dependentTotal\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:DependentRecords.Dependent\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"kind\": \"primitive\",\n          \"name\": \"nat\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"DependentRecords.dependentTotal\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"DependentRecords.mkDependent\",\n                \"fields\": [\n                  {\n                    \"name\": \"bound\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"below\",\n                    \"refinement\": {\n                      \"field\": \"bound\",\n                      \"kind\": \"fin-field\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"DependentRecords.Dependent\"\n              }\n            ],\n            \"result\": null\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:DependentRecords.dependentRoundtrip\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"dependentRoundtrip\",\n      \"overloadKey\": \"DependentRecords.dependentRoundtrip\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"id\": \"lean:DependentRecords.Dependent\",\n            \"kind\": \"named\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:DependentRecords.Dependent\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"DependentRecords.dependentRoundtrip\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              {\n                \"constructor\": \"DependentRecords.mkDependent\",\n                \"fields\": [\n                  {\n                    \"name\": \"bound\",\n                    \"refinement\": null\n                  },\n                  {\n                    \"name\": \"below\",\n                    \"refinement\": {\n                      \"field\": \"bound\",\n                      \"kind\": \"fin-field\"\n                    }\n                  }\n                ],\n                \"kind\": \"checked-record\",\n                \"name\": \"DependentRecords.Dependent\"\n              }\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"bound\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"below\",\n                  \"refinement\": {\n                    \"field\": \"bound\",\n                    \"kind\": \"fin-field\"\n                  }\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"DependentRecords.Dependent\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    },\n    {\n      \"assurance\": [],\n      \"capabilities\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"effects\": [],\n      \"failure\": {\n        \"errors\": [],\n        \"mode\": \"none\",\n        \"unexpected\": \"poison-runtime\"\n      },\n      \"id\": \"lean:DependentRecords.dependentResult\",\n      \"kind\": \"function\",\n      \"mutability\": \"immutable\",\n      \"name\": \"dependentResult\",\n      \"overloadKey\": \"DependentRecords.dependentResult\",\n      \"owner\": null,\n      \"parameters\": [\n        {\n          \"default\": null,\n          \"lifetime\": null,\n          \"mutability\": \"immutable\",\n          \"name\": \"value0\",\n          \"optional\": false,\n          \"ownership\": \"copy\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"receiver\": null,\n      \"result\": {\n        \"lifetime\": null,\n        \"ownership\": \"copy\",\n        \"type\": {\n          \"id\": \"lean:DependentRecords.Dependent\",\n          \"kind\": \"named\"\n        }\n      },\n      \"resultMode\": \"value\",\n      \"source\": {\n        \"declaration\": \"DependentRecords.dependentResult\",\n        \"extensions\": {\n          \"lean-lang.org/refinements\": {\n            \"parameters\": [\n              null\n            ],\n            \"result\": {\n              \"constructor\": null,\n              \"fields\": [\n                {\n                  \"name\": \"bound\",\n                  \"refinement\": null\n                },\n                {\n                  \"name\": \"below\",\n                  \"refinement\": {\n                    \"field\": \"bound\",\n                    \"kind\": \"fin-field\"\n                  }\n                }\n              ],\n              \"kind\": \"checked-record\",\n              \"name\": \"DependentRecords.Dependent\"\n            }\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"typeParameters\": []\n    }\n  ],\n  \"documentation\": {\n    \"details\": \"\",\n    \"summary\": \"Independent corpus contract.\"\n  },\n  \"errors\": [],\n  \"producers\": [\n    {\n      \"adapter\": \"independent-corpus-contract\",\n      \"adapterVersion\": 1,\n      \"extensions\": {},\n      \"id\": \"corpusReview\",\n      \"tool\": \"Corpus contract review\",\n      \"toolVersion\": \"1\"\n    }\n  ],\n  \"schemaVersion\": 3,\n  \"types\": [\n    {\n      \"assurance\": [],\n      \"callable\": null,\n      \"cases\": [],\n      \"documentation\": {\n        \"details\": \"\",\n        \"summary\": \"Independent corpus contract.\"\n      },\n      \"fields\": [\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"bound\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        },\n        {\n          \"documentation\": {\n            \"details\": \"\",\n            \"summary\": \"Independent corpus contract.\"\n          },\n          \"mutability\": \"immutable\",\n          \"name\": \"below\",\n          \"type\": {\n            \"kind\": \"primitive\",\n            \"name\": \"nat\"\n          }\n        }\n      ],\n      \"host\": null,\n      \"id\": \"lean:DependentRecords.Dependent\",\n      \"kind\": \"record\",\n      \"mutability\": \"immutable\",\n      \"name\": \"Dependent\",\n      \"representation\": \"copied\",\n      \"resource\": null,\n      \"source\": {\n        \"declaration\": \"DependentRecords.Dependent\",\n        \"extensions\": {\n          \"lean-lang.org/erased-proofs\": {\n            \"fields\": [\n              \"valid\"\n            ]\n          },\n          \"lean-lang.org/nominal-refinements\": {\n            \"fields\": [\n              null,\n              {\n                \"field\": \"bound\",\n                \"kind\": \"fin-field\"\n              }\n            ],\n            \"kind\": \"record\"\n          }\n        },\n        \"producer\": \"corpusReview\"\n      },\n      \"target\": null,\n      \"typeParameters\": []\n    }\n  ]\n}\n",
+      "sourceSha256": "9fd99c2ceb06047947b7d732b8fc52f4a54f7260d675f0a10d671b7bda6836d2"
+    },
+    "sourceNoticesSha256": "6825a01caab596ad73d101587ebfa5b0c5004c73fb4f118055b6efe48b55951e",
+    "sourceTreeSha256": "03353c25b00f56397262c7b386647fdad9490b0f1f625a346e51f430c2aa1d86"
+  },
+  "version": "1.0.0"
+}
