@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from "./history-reader-hub-repair-source-history.mjs";
 import { beforeLedgerTransitionGapSource, ledgerTransitionGapChangedPaths, ledgerTransitionGapHistoricalPaths } from "./ledger-transition-gap-source-history.mjs";
 import { beforeZeroPayloadRustPromotionSource, zeroPayloadRustPromotionChangedPaths, zeroPayloadRustPromotionIntegrationPaths } from "./zero-payload-rust-promotion-source-history.mjs";
 import { beforeZeroPayloadTypeSurfaceGapSource, zeroPayloadTypeSurfaceGapHistoricalPaths, zeroPayloadTypeSurfaceGapIntegrationPaths } from "./zero-payload-type-surface-gap-source-history.mjs";
@@ -1434,7 +1435,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ledgerTransitionGapChangedPaths
+	...historyReaderHubRepairChangedPaths
+	, ...historyReaderHubRepairIntegrationPaths
+	, ...ledgerTransitionGapChangedPaths
 	, ...ledgerTransitionGapHistoricalPaths
 	, ...zeroPayloadRustPromotionChangedPaths
 	, ...zeroPayloadRustPromotionIntegrationPaths
@@ -1982,7 +1985,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const ledgerGap = beforeLedgerTransitionGapSource(path, text, expected);
+	const readerRepair = beforeHistoryReaderHubRepairSource(path, text, expected);
+	if(sha256(readerRepair) === expected) return readerRepair;
+	const ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);
 	if(sha256(ledgerGap) === expected) return ledgerGap;
 	const zeroPayloadRustPromotion = beforeZeroPayloadRustPromotionSource(
 		path, ledgerGap, expected

@@ -1,0 +1,471 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2676db78725db36a6b0ac78ae8f67c94d42dbcafb93e6597bb76240c96e1c67a",
+      "path": "scripts/update-history-reader-hub-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "35d543be11446499b600d0f21fe91590d797d8f3a79c7cac76abc9bece64dd40",
+      "path": "tests/helpers/history-reader-hub-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3732e530328493bb2d74c6b858f8c7053550ce69b438fe4f1e0b95dfc37d4d9e",
+      "path": "tests/helpers/history-reader-hub-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "96212899ab063c05c9089e23a7f0a95198af4ce3",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b7674b4f01c49d713476572c07fb289dadfcb4ef4b372d022c6368e7ea47f71d",
+      "edits": [
+        {
+          "current": "import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from \"./history-reader-hub-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...historyReaderHubRepairChangedPaths\n\t, ...historyReaderHubRepairIntegrationPaths\n\t, ...ledgerTransitionGapChangedPaths\n",
+          "previous": "\t...ledgerTransitionGapChangedPaths\n",
+          "start": 117427
+        },
+        {
+          "current": "\tconst readerRepair = beforeHistoryReaderHubRepairSource(path, text, expected);\n\tif(sha256(readerRepair) === expected) return readerRepair;\n\tconst ledgerGap = beforeLedgerTransitionGapSource(path, readerRepair, expected);\n",
+          "previous": "\tconst ledgerGap = beforeLedgerTransitionGapSource(path, text, expected);\n",
+          "start": 141872
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "35c14cad959163ec70e6b1d6af44620d0185459640d72df083a8121b2179f935"
+    },
+    {
+      "currentSha256": "b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94",
+      "edits": [
+        {
+          "current": "import \"./helpers/history-reader-hub-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2328
+        }
+      ],
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd"
+    }
+  ],
+  "milestone": "history-reader-hub-repair-source-v1",
+  "predecessorCommit": "8294e36230b803df202ceb6233187028cc5b463f",
+  "reconciledTypeSurfacePointers": 9,
+  "schemaVersion": 1,
+  "scope": "Twelve source-history readers reach their recorded updates and additions through the Fin refinement hub at their own milestone stop instead of comparing live text against pins, so later layers touching the same files cannot break them.",
+  "updates": [
+    {
+      "currentSha256": "d64e86a29b4e92f9a93301c9fe788962aecf1749c98778ed9f87a62941d42170",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 29500
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 40480
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1519350
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1523361
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1526867
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1530743
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1534222
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1537706
+        },
+        {
+          "current": "          \"sha256\": \"b5b0b6f39d4f0c30ee70e2fe4e6d87f24189ea1232f0ee88b2323a3e05eb6a94\"\n",
+          "previous": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n",
+          "start": 1541194
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7c4118bcb70a03610c638cd79993528dc54cd94faef8be4b14dd6e91f525c156"
+    },
+    {
+      "currentSha256": "e9a57f582986df3d8cbf67c7ecadf20ce6b8e5734356bb5aa33e3c4b5923c5ac",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 787
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeCallbackSubtypeBrowserArtifactSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1674
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2326
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-artifact-source-history-tests.mjs",
+      "previousSha256": "ff8d02fefbcf68f3f94875e8671a217af385cba86ea1acecc72289c504229003"
+    },
+    {
+      "currentSha256": "20c99d44b1c21d0231ea1f6995d2311f14aa97bbc875cadacec01e7f5b0e6148",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 756
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeCoreRunnerHeadroomSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1602
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2357
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeCoreRunnerHeadroomSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2725
+        }
+      ],
+      "path": "tests/helpers/core-runner-headroom-source-history-tests.mjs",
+      "previousSha256": "539702e110648544cba91e5fb5516741d263329c79b594e8fc15a1ee8d339102"
+    },
+    {
+      "currentSha256": "43a0338cdddff732b6812ea87185d5b3bf18c9e9aa58dabe1b2998061e35fe72",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 805
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeGenericSubtypeCompositionSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1706
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2503
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeGenericSubtypeCompositionSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2885
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-composition-source-history-tests.mjs",
+      "previousSha256": "6291f39f196c85d759fa0015564d18b09619511d3a7db90c493b04b75a98f9a3"
+    },
+    {
+      "currentSha256": "7fe07fba985550f769ab94754fb40aeee0198cb6ff7696915cc61e06d27ed454",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 929
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeGenericSubtypeNpmBrowserSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2116
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeGenericSubtypeNpmBrowserSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2911
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3399
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeGenericSubtypeNpmBrowserSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3780
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-source-history-tests.mjs",
+      "previousSha256": "1d7aed1d376fed6d9d45c4a9a93c88f67cc63760ad06a3ba7c56fb528e6b83b6"
+    },
+    {
+      "currentSha256": "958b05dde4a50800ad7f16ad3bcd502ab133ff18dfc6f22f8c6a2edfcbbbe09f",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 872
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeCoreRegistrationSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1942
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2754
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeOwnedSubtypeCoreRegistrationSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3143
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-core-registration-source-history-tests.mjs",
+      "previousSha256": "752ab9b9ff1fd5157b7e38ca9cbfb5624fd20cd1af1c5ead2a90cb4ab0248d15"
+    },
+    {
+      "currentSha256": "48e6aeb7497c7c91a0891523dfcc19779109614f59dde516e2833535823b28d3",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 922
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1979
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2873
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3288
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforePerlEngineOwnedRefinementClosureSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3688
+        }
+      ],
+      "path": "tests/helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs",
+      "previousSha256": "8265e33f5ce8df571652500e7ff52297f8afd74a4c8e955e37c3a34aab87342a"
+    },
+    {
+      "currentSha256": "c748b21f05432a49e715d55d11533f2a07ee3062e6dadb91256625219fa89a31",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 875
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1900
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2770
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3173
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeProjectedCheckedRecordMirrorSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3562
+        }
+      ],
+      "path": "tests/helpers/projected-checked-record-mirror-source-history-tests.mjs",
+      "previousSha256": "83627a44c2581d257eab51f906ce02efc5349c52a6e6dac229c85626d4d2a0e2"
+    },
+    {
+      "currentSha256": "f9bcf093210aa0c18ffc66f40be8499274d4caf79c708c19f930f2e5fe42b3ef",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 944
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2043
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2900
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3432
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeStructuralSubtypePartitionValidatorSource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3833
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-partition-validator-source-history-tests.mjs",
+      "previousSha256": "e621f34fe898da1554c4c6006f34ae99db5e33a720227ea3d2129a60d95a4d4a"
+    },
+    {
+      "currentSha256": "caed0d581bd200c1b2b6608f3ae3eb2935b988e7fcd5936e8c0a75751f152f67",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 862
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadPhpHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1827
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadPhpHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2651
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3190
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadPhpHistorySource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3564
+        }
+      ],
+      "path": "tests/helpers/zero-payload-php-source-history-tests.mjs",
+      "previousSha256": "8d9a966a4668dd1924418598df403b1fea092b522e67e6de286f9a72fba2f3d9"
+    },
+    {
+      "currentSha256": "d0fe4e80b6195ab431833816338deccb5fcb28dab8ef27a1d9df8cf5544cf961",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 885
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadPythonHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1863
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadPythonHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2702
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3256
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadPythonHistorySource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3629
+        }
+      ],
+      "path": "tests/helpers/zero-payload-python-source-history-tests.mjs",
+      "previousSha256": "3355b333d895db6fb579fb25edd63e69c48df731ade63c575cf06c5589093c78"
+    },
+    {
+      "currentSha256": "a57b684943481c310069b48d6dbaca728b46b603f477d41c36273cc51d04e541",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 865
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadRubyHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1829
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadRubyHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2659
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3203
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadRubyHistorySource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3572
+        }
+      ],
+      "path": "tests/helpers/zero-payload-ruby-source-history-tests.mjs",
+      "previousSha256": "4a27cbbcddac14489482a1ec124f090f699ea52c7c885733f5464abdb018f982"
+    },
+    {
+      "currentSha256": "8027d1662e576331784e633d5e3331ef0dd701029a644eafd4fd208f751ab9ed",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 855
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadWitHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1813
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadWitHistorySource\n\t\t);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2637
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 3176
+        },
+        {
+          "current": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadWitHistorySource\n\t);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3543
+        }
+      ],
+      "path": "tests/helpers/zero-payload-wit-source-history-tests.mjs",
+      "previousSha256": "cbce22b91fbcb9ab2784e794d7439683d57f81df6a7c93d4a257c80338872151"
+    }
+  ]
+}
