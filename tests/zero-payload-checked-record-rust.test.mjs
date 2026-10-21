@@ -7,6 +7,7 @@ import "./helpers/zero-payload-checked-record-rust-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-rust-caller-tests.mjs";
 import "./helpers/zero-payload-checked-record-rust-ci-policy-tests.mjs";
 import "./helpers/zero-payload-checked-record-rust-installed-tests.mjs";
+import "./helpers/zero-payload-rust-ci-source-history-tests.mjs";
 import "./helpers/zero-payload-rust-audit-repair-source-history-tests.mjs";
 import "./helpers/zero-payload-rust-installed-source-history-tests.mjs";
 import "./helpers/zero-payload-rust-source-history-tests.mjs";

@@ -1,0 +1,102 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8d4206a9016c66269c34e42b5679da23534a873890930f8a0c1146e16e87962c",
+      "path": ".github/workflows/zero-payload-checked-record-rust.yml"
+    },
+    {
+      "currentSha256": "def6459d78b78f42507c8263c1f4cbdc0c738176d035549cd59dda3a63676a22",
+      "path": "scripts/check-zero-payload-checked-record-rust-ci.mjs"
+    },
+    {
+      "currentSha256": "f5746296aff48bdbd4940ad64a248ca883e49b9cc9980a0eaae33e58b0293ae7",
+      "path": "scripts/run-zero-payload-checked-record-rust-ci.sh"
+    },
+    {
+      "currentSha256": "9e3a7d094801b2d401f0cc3c0e06dcc61cf9a439abcdfb0834ebd2d96dd93b33",
+      "path": "tests/helpers/zero-payload-checked-record-rust-ci-policy-tests.mjs"
+    },
+    {
+      "currentSha256": "7aad7cc894c35ad97238f04a9a55725cd63694489664b6884e707584a2807734",
+      "path": "tests/helpers/zero-payload-checked-record-rust-ci-report.mjs"
+    },
+    {
+      "currentSha256": "20885d7eaba2d61dd6b295bc52356b3887210189f1e1d2ee2da0e6800bc95925",
+      "path": "scripts/update-zero-payload-rust-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "d6dc6c1c242f464f5835253fb4738167618922ba4cbfeec3309db9e0e951208b",
+      "path": "tests/helpers/zero-payload-rust-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "b11ba8e44deed978a1c1721fb7eb07fe9467d16d3a5ceacb384c6ff7312b248a",
+      "path": "tests/helpers/zero-payload-rust-ci-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "62232f6f012fe644590439a46dbc37af25550589",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7c138e2010bdb48d86085389403124425416cea9cf16998156d0ab97f6cb51e5",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from \"./zero-payload-rust-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRustCiChangedPaths\n\t, ...zeroPayloadRustCiIntegrationPaths\n\t, ...zeroPayloadRustAuditRepairChangedPaths\n",
+          "previous": "\t...zeroPayloadRustAuditRepairChangedPaths\n",
+          "start": 114329
+        },
+        {
+          "current": "\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n",
+          "previous": "\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n",
+          "start": 137253
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadRustCi) === expected) return zeroPayloadRustCi;\n\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n\t\tpath, zeroPayloadRustCi, expected\n\t);\n",
+          "previous": "",
+          "start": 137338
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "166b3d16421c9054b8b5e07a123592bc77e582f0a6085adabc626bad78621699"
+    }
+  ],
+  "milestone": "zero-payload-rust-ci-source-v1",
+  "predecessorCommit": "62359d47252ee76a6ad0b679e78c37f5e6a5f510",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted Rust acceptance runs all four zero-payload author and API routes on Ubuntu 24.04 with pinned Rust 1.90, authenticates each record set independently, and retains complete and partial artifacts.",
+  "updates": [
+    {
+      "currentSha256": "76dea7b4d66eb7d0161ea9e83bcf372d888ea4845178e3e0c3719e212760c019",
+      "edits": [
+        {
+          "current": "\tconst output = resolve(process.env.LEAN_BRIDGE_ZERO_PAYLOAD_RUST_OUTPUT\n",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_VALUE_INDEX_RUST_OUTPUT\n",
+          "start": 3162
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-rust-installed-tests.mjs",
+      "previousSha256": "43257e05cc1e3b98f649e51abd65399ab28dd8b9f381ebd8bc75a11b20397601"
+    },
+    {
+      "currentSha256": "15f6da240b0c2af60c5e0792ff2f6bc9bbd6b89014c545657f823e783a962efc",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-rust-ci-policy-tests.mjs\";\n",
+          "previous": "",
+          "start": 221
+        },
+        {
+          "current": "import \"./helpers/zero-payload-rust-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 367
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-rust.test.mjs",
+      "previousSha256": "b90c4863d8083f34f77c9255f796b20cc0a83660b6a4d89efc6a8380c3beac43"
+    }
+  ]
+}
