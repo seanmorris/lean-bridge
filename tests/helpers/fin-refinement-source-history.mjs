@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadCheckedRecordSource, zeroPayloadCheckedRecordChangedPaths, zeroPayloadCheckedRecordIntegrationPaths } from "./zero-payload-checked-record-source-history.mjs";
 import { beforeProjectedCheckedRecordMirrorSource, projectedCheckedRecordMirrorChangedPaths, projectedCheckedRecordMirrorIntegrationPaths } from "./projected-checked-record-mirror-source-history.mjs";
 import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from "./perl-engine-owned-refinement-closure-source-history.mjs";
 import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from "./structural-subtype-partition-validator-source-history.mjs";
@@ -1397,7 +1398,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...projectedCheckedRecordMirrorChangedPaths
+	...zeroPayloadCheckedRecordChangedPaths
+	, ...zeroPayloadCheckedRecordIntegrationPaths
+	, ...projectedCheckedRecordMirrorChangedPaths
 	, ...projectedCheckedRecordMirrorIntegrationPaths
 	, ...perlEngineOwnedRefinementClosureChangedPaths
 	, ...perlEngineOwnedRefinementClosureIntegrationPaths
@@ -1871,8 +1874,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const projectedMirror = beforeProjectedCheckedRecordMirrorSource(
+	const zeroPayload = beforeZeroPayloadCheckedRecordSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayload) === expected) return zeroPayload;
+	const projectedMirror = beforeProjectedCheckedRecordMirrorSource(
+		path, zeroPayload, expected
 	);
 	if(sha256(projectedMirror) === expected) return projectedMirror;
 	const perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(
