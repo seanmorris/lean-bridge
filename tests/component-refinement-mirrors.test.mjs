@@ -89,6 +89,54 @@ test("constructor-free component results emit projection without checked Subtype
 	assert.doesNotMatch(source, /\.via_|_root_\.null/u);
 });
 
+test("output-only variants erase constructorless checked-record children without synthesizing checks", () => {
+	const projectedWitness = {
+		kind: "checked-record", definition: "ProofOnly.Witness", constructor: null
+	};
+	const mark = witness => ({
+		kind: "variant", definition: "ProofOnly.Mark"
+		, cases: [
+			{ name: "blank", fields: [], arguments: [] }
+			, { name: "marked", fields: ["witness"], arguments: [witness] }
+		]
+	});
+	const types = [
+		{ kind: "record", lean: "ProofOnly.Witness", erased: [], fields: [] }
+		, { kind: "variant", lean: "ProofOnly.Mark"
+		, cases: [
+			{ name: "blank", constructor: "ProofOnly.Mark.blank", fields: [] }
+			, { name: "marked", constructor: "ProofOnly.Mark.marked"
+			, fields: [{ name: "witness", type: { kind: "named", id: "lean:ProofOnly.Witness" } }] }
+		] }
+	];
+	const renderType = type => {
+		assert.equal(type.kind, "named");
+		return `LbErased.${type.id.slice(5)}`;
+	};
+	const outputModel = {
+		types
+		, exports: [{ refinements: { parameters: [], result: mark(projectedWitness) } }]
+	};
+	const names = refinementMirrorNames(outputModel);
+	const output = renderRefinementMirrors(outputModel, names, renderType).join("\n");
+	assert.match(output, /def LbErased\.ProofOnly\.Witness\.erase/u);
+	assert.match(output, /def LbErased\.ProofOnly\.Mark\.erase/u);
+	assert.doesNotMatch(output, /def LbErased\.ProofOnly\.Mark\.check/u);
+
+	const selectedWitness = { ...projectedWitness, constructor: "ProofOnly.mkWitness" };
+	const inputModel = {
+		types
+		, exports: [{ refinements: {
+			parameters: [mark(selectedWitness)], result: mark(projectedWitness)
+		} }]
+	};
+	const input = renderRefinementMirrors(
+		inputModel, refinementMirrorNames(inputModel), renderType
+	).join("\n");
+	assert.match(input, /def LbErased\.ProofOnly\.Mark\.check/u);
+	assert.match(input, /ProofOnly\.mkWitness/u);
+});
+
 test("reordered exports retain stable component mirror definitions and constructor identities", () => {
 	const first = componentRefinementMirrorsFixture(), second = componentRefinementMirrorsFixture();
 	second.exports.reverse(); second.abi.exports.reverse();
@@ -204,7 +252,7 @@ test("the shared mirror emitter retains the native generator's exact source pref
 		};
 		const generated = generateNativeLeanAdapters(model), lines = renderRefinementMirrors(model, names, typeName);
 		assert.equal(sha256(canonicalJson(generated)), create === nominalSubtypeConversionFixture
-			? "446dd25e399a8ac099c1bce0433c7ba019be2c0abd1be997db28f75169df9459"
+			? "4422ddb7961b893aa552c2d2b9070ed83d0075f77e0269c6492928411432bec2"
 			: "6f3b7b42dbd0b1678e5a7cf73c6f812b33eca646b63f5ad827a89a0974eea26a");
 		const prefix = ["import NominalConversion", "", `namespace ${generated.module}`, "", ...lines].join("\n");
 		assert.ok(generated.leanSource.startsWith(prefix));
