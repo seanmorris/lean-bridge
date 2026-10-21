@@ -1,0 +1,43 @@
+{
+  "archiveSha256": "deeecd12cc5c9211133cda262ac72beabb2dbfda2ca4fb968f14545f010d3e41",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-dependent-checked-record-jvm-installed-Yww5UU/probes/nullability-false",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": false,
+  "outputs": {
+    "META-INF/main.kotlin_module": {
+      "bytes": 41,
+      "sha256": "14d9d137a46fc5f49ea00828cb3ad2d35b84c9918bbca55a496bdbdf5366c5f9"
+    },
+    "NullProbeKt.class": {
+      "bytes": 1735,
+      "sha256": "7c1e283ec7cd81a1bd704686c082837b5c9ddab3b600200745f802bfd4f3fb15"
+    }
+  },
+  "route": "ordinary-source",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.dependentrecords.kotlin.*\nfun dependentTotalNull() = Api.dependentTotal(Dependent(java.math.BigInteger.TWO, java.math.BigInteger.ONE))\nfun dependentRoundtripNull() = Api.dependentRoundtrip(Dependent(java.math.BigInteger.TWO, java.math.BigInteger.ONE))\nfun dependentResultNull() = Api.dependentResult(java.math.BigInteger.ZERO)\n",
+  "sourceSha256": "9e4fc1db015a6995d7ee0f264d33eda6146b1899f4dc934fad8faa55f3fbdaef"
+}

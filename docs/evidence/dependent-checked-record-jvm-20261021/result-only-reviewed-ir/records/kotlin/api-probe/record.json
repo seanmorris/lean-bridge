@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "c2b0164a262f6f9b49366bd0e175a8ec89ad02007ea4cb7a50a1c08d9b3c562a",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "probe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-dependent-checked-record-jvm-installed-sucshR/probes/kotlin",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "outputs": {},
+  "profile": "kotlin",
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "probe.kt:2:32: error: [UNRESOLVED_REFERENCE] Unresolved reference 'dependentTotal'.\nval probeDependentTotal = Api::dependentTotal\n                               ^^^^^^^^^^^^^^\nprobe.kt:3:36: error: [UNRESOLVED_REFERENCE] Unresolved reference 'dependentRoundtrip'.\nval probeDependentRoundtrip = Api::dependentRoundtrip\n                                   ^^^^^^^^^^^^^^^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.dependentrecords.kotlin.*\nval probeDependentTotal = Api::dependentTotal\nval probeDependentRoundtrip = Api::dependentRoundtrip\n",
+  "sourceSha256": "3d72a3a207c89bdf67575074bfa957945d3cfdf63b45548315791bf3657f2e3d"
+}
