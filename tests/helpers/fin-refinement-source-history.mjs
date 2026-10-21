@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeGenericSubtypeNativePerlSource, genericSubtypeNativePerlChangedPaths, genericSubtypeNativePerlIntegrationPaths } from "./generic-subtype-native-perl-source-history.mjs";
 import { beforeCallbackSubtypeHistoryPinReconciliationSource, callbackSubtypeHistoryPinReconciliationChangedPaths, callbackSubtypeHistoryPinReconciliationIntegrationPaths } from "./callback-subtype-history-pin-reconciliation-source-history.mjs";
 import { beforeCallbackSubtypeRemainingPhpRepairSource, callbackSubtypeRemainingPhpRepairChangedPaths, callbackSubtypeRemainingPhpRepairIntegrationPaths } from "./callback-subtype-remaining-php-repair-source-history.mjs";
 import { beforeZeroPayloadPhpWasmPromotionSource, zeroPayloadPhpWasmPromotionChangedPaths, zeroPayloadPhpWasmPromotionIntegrationPaths } from "./zero-payload-php-wasm-promotion-source-history.mjs";
@@ -1454,7 +1455,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeHistoryPinReconciliationChangedPaths
+	...genericSubtypeNativePerlChangedPaths
+	, ...genericSubtypeNativePerlIntegrationPaths
+	, ...callbackSubtypeHistoryPinReconciliationChangedPaths
 	, ...callbackSubtypeHistoryPinReconciliationIntegrationPaths
 	, ...callbackSubtypeRemainingPhpRepairChangedPaths
 	, ...callbackSubtypeRemainingPhpRepairIntegrationPaths
@@ -2040,8 +2043,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(
+	const genericNativePerl = beforeGenericSubtypeNativePerlSource(
 		path, text, expected
+	);
+	if(sha256(genericNativePerl) === expected) return genericNativePerl;
+	const pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(
+		path, genericNativePerl, expected
 	);
 	if(sha256(pinReconciliation) === expected) return pinReconciliation;
 	const phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(

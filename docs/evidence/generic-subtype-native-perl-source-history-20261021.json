@@ -1,0 +1,299 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d4af1c6108c1485c40d99b97891cce3f5a0318d78a5cfc5cdfc7917d4fafef19",
+      "path": ".github/workflows/generic-subtype-native-perl.yml"
+    },
+    {
+      "currentSha256": "5ec019f50841acf810abb5f930f50205add56823e4aa41dfd7c3fda341763ac1",
+      "path": "scripts/check-generic-subtype-native-perl-ci.mjs"
+    },
+    {
+      "currentSha256": "3eaaad9510a476c41bb3dbb33c1bf261b71222e174e91a768af3f99983fb648f",
+      "path": "scripts/run-generic-subtype-native-ci.sh"
+    },
+    {
+      "currentSha256": "2a6dc1c72a4e62bdf7f76f3cd3cc5782f49b669821f9699eda841a2ebc81b094",
+      "path": "scripts/run-generic-subtype-perl-ci.sh"
+    },
+    {
+      "currentSha256": "d25ec08ba834e31ae8d9320ec748de44375b5973543ad105a2263133424b7c36",
+      "path": "tests/fixtures/generic-subtype-consumers/c.c"
+    },
+    {
+      "currentSha256": "4bbc9d74a8b03b930b1d23af82eac07fece2d292bab2de9f093181ea89529996",
+      "path": "tests/fixtures/generic-subtype-consumers/cpp.cpp"
+    },
+    {
+      "currentSha256": "4cac982ebbda05a449c2e024a540cc4e26f7d8c2e7582bd766e90a0eb187577d",
+      "path": "tests/fixtures/generic-subtype-consumers/perl.pl"
+    },
+    {
+      "currentSha256": "2d2c05d787a97daffe5853ddf944ca1ec1858afafc31925f5dfc8e76da60eff6",
+      "path": "tests/generic-subtype-native-perl.test.mjs"
+    },
+    {
+      "currentSha256": "68fd6b2e00b730a7eefac0d249126e26db451d4af9de8f473db49c89e20de6aa",
+      "path": "tests/helpers/generic-subtype-native-perl-report.mjs"
+    },
+    {
+      "currentSha256": "3bf0094136df10ea53c03377ee0dcf96940ce4cc8a7ca96bc304e6585bb2dc87",
+      "path": "tests/helpers/generic-subtype-native-perl-tests.mjs"
+    },
+    {
+      "currentSha256": "877a2de2ed4564021656e389184c4aee45346f728f5411ec3f358d18663103c1",
+      "path": "tests/helpers/generic-subtype-native-perl.mjs"
+    },
+    {
+      "currentSha256": "baf1c3b63216ba50ec640ace5983992306c5b7e6fb3b1a5e86adacf140550215",
+      "path": "scripts/update-generic-subtype-native-perl-source-history.mjs"
+    },
+    {
+      "currentSha256": "55dab85b49a8ff87db04131d860137d2acbd89709dd89c9d94b1d6e97e9e6b4c",
+      "path": "tests/helpers/generic-subtype-native-perl-source-history.mjs"
+    },
+    {
+      "currentSha256": "230ab5af2f68fb152dfbd6c883c98957acbc21a3b672ff7f0b01819fb7217647",
+      "path": "tests/helpers/generic-subtype-native-perl-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "8368b2c2a9f587d617c1da90731ed99347bc52b8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2d2c05d787a97daffe5853ddf944ca1ec1858afafc31925f5dfc8e76da60eff6",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-native-perl-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 147
+        }
+      ],
+      "path": "tests/generic-subtype-native-perl.test.mjs",
+      "previousSha256": "b04c3b7dccf61a39d3bbbd0f8e91f08fe3108150c1e0e19d5ae440fc52baa430"
+    },
+    {
+      "currentSha256": "9dd35454a320f47d845f4cbb9ba684e79e11391584dfae77f930f6429a19804e",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeNativePerlSource, genericSubtypeNativePerlChangedPaths, genericSubtypeNativePerlIntegrationPaths } from \"./generic-subtype-native-perl-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...genericSubtypeNativePerlChangedPaths\n\t, ...genericSubtypeNativePerlIntegrationPaths\n\t, ...callbackSubtypeHistoryPinReconciliationChangedPaths\n",
+          "previous": "\t...callbackSubtypeHistoryPinReconciliationChangedPaths\n",
+          "start": 121464
+        },
+        {
+          "current": "\tconst genericNativePerl = beforeGenericSubtypeNativePerlSource(\n",
+          "previous": "\tconst pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(\n",
+          "start": 147818
+        },
+        {
+          "current": "\tif(sha256(genericNativePerl) === expected) return genericNativePerl;\n\tconst pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(\n\t\tpath, genericNativePerl, expected\n\t);\n",
+          "previous": "",
+          "start": 147910
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ca0f99716e6cea4dca0bac2f33f67dc6612d6890fabd6a237aa1095c1498b95d"
+    }
+  ],
+  "milestone": "generic-subtype-native-perl-source-v1",
+  "predecessorCommit": "dc42dd6383b051f65155bb1c9f99b233c056b92c",
+  "schemaVersion": 1,
+  "scope": "Closed generic-record Subtype compositions reproduced from ordinary and independently reviewed sources, installed offline and replayed after relocation in C, C++ and four Perl ABIs.",
+  "updates": [
+    {
+      "currentSha256": "cb48b119d8773bc8a05a182a6136bcf8c2aede9b95ad1d62dbd97c5c4bb27502",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 390
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 1202
+        },
+        {
+          "current": "import { genericSubtypeNativeCaller, genericSubtypeNativeExpected, genericSubtypeNativeSelection } from \"./generic-subtype-native-perl.mjs\";\n",
+          "previous": "",
+          "start": 1793
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeNativeSelection(process.env);\nconst genericSelection = genericSubtypeNativeSelection(process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic native installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, profiles, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, profiles, routes, modes } = nominalSubtypeNativeSelection(process.env);\n",
+          "start": 1935
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed native ${genericCompositions ? \"generic Subtype compositions\" : \"nominal Subtypes\"} reproduce and relocate ${route} ${mode}`, { skip: !enabled, timeout: 3_600_000 }, async t => {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed native nominal Subtypes reproduce and relocate ${route} ${mode}`, { skip: !enabled, timeout: 3_600_000 }, async t => {\n",
+          "start": 6107
+        },
+        {
+          "current": "\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_NATIVE_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_OUTPUT\";\n\tconst output = resolve(process.env[outputVariable] ?? (genericCompositions ? \"build/generic-subtype-native\" : \"build/nominal-subtype-native\"), route, mode);\n",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_OUTPUT ?? \"build/nominal-subtype-native\", route, mode);\n",
+          "start": 6398
+        },
+        {
+          "current": "\tconst options = { genericCompositions };\n\tconst expected = nominalSubtypeInstalledReview(resultOnly, options);\n\tconst configuration = nominalSubtypeInstalledConfiguration(route, profiles, resultOnly, options);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(resultOnly);\n\tconst configuration = nominalSubtypeInstalledConfiguration(route, profiles, resultOnly);\n",
+          "start": 7067
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true });\n\t\t\tawait cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 8549
+        },
+        {
+          "current": "\t\tif(genericCompositions) await saveLakeFile(output, `build-${attempt}/${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 10516
+        },
+        {
+          "current": "\t\tconst source = genericCompositions\n\t\t\t? await genericSubtypeNativeCaller(profile, route)\n\t\t\t: await nominalSubtypeNativeCaller(profile, route, mode);\n",
+          "previous": "\t\tconst source = await nominalSubtypeNativeCaller(profile, route, mode);\n",
+          "start": 11634
+        },
+        {
+          "current": "\t\tconst fixture = { source: () => source\n\t\t\t, success: genericCompositions ? \"generic-subtype-ok\" : \"nominal-subtype-ok\"\n\t\t\t, ...genericCompositions\n\t\t\t\t? { expectedChecks: genericSubtypeNativeExpected[profile] }\n\t\t\t\t: resultOnly ? { expectedChecks: 2042 } : {}\n",
+          "previous": "\t\tconst fixture = { source: () => source, success: \"nominal-subtype-ok\"\n\t\t\t, ...resultOnly ? { expectedChecks: 2042 } : {}\n",
+          "start": 11859
+        },
+        {
+          "current": "\t\t\tassert.equal(result.stderr, \"\"); assert.equal(result.stdout, `${genericCompositions ? \"generic-subtype-ok\" : \"nominal-subtype-ok\"}:${observation.checks}\\n`);\n",
+          "previous": "\t\t\tassert.equal(result.stderr, \"\"); assert.equal(result.stdout, `nominal-subtype-ok:${observation.checks}\\n`);\n",
+          "start": 13518
+        },
+        {
+          "current": "\t\tconst measured = dispatchEnabled && profile === \"c\" && !resultOnly && !genericCompositions;\n",
+          "previous": "\t\tconst measured = dispatchEnabled && profile === \"c\" && !resultOnly;\n",
+          "start": 14142
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 15262
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-installed-tests.mjs",
+      "previousSha256": "0c87a297e341d5cce8eeef0cffd06a91b67cceff7bef89bd0ef22b41e6b6cdf5"
+    },
+    {
+      "currentSha256": "e86994f76a5f0e0f8a68906c786dd2faa662c30db45981b956a4192a841cc529",
+      "edits": [
+        {
+          "current": "import { genericSubtypePerlCaller, genericSubtypePerlExpected, parseGenericSubtypePerlResult } from \"./generic-subtype-native-perl.mjs\";\n",
+          "previous": "",
+          "start": 1154
+        },
+        {
+          "current": " * @param options.genericCompositions - Exercise the closed generic composition surface.\n",
+          "previous": "",
+          "start": 3560
+        },
+        {
+          "current": "export const installNominalSubtypePerl = async ({ configuration, command, delivery, route, mode, consumer, handoff, packages, output, genericCompositions = false }) => {\n",
+          "previous": "export const installNominalSubtypePerl = async ({ configuration, command, delivery, route, mode, consumer, handoff, packages, output }) => {\n",
+          "start": 3653
+        },
+        {
+          "current": "\tassert.equal(typeof genericCompositions, \"boolean\");\n\tif(genericCompositions) assert.equal(mode, \"full\");\n\tconst source = genericCompositions ? await genericSubtypePerlCaller(route) : await nominalSubtypePerlCaller(route);\n",
+          "previous": "\tconst source = await nominalSubtypePerlCaller(route);\n",
+          "start": 4502
+        },
+        {
+          "current": "\tconst arguments_ = [\"consumer.pl\", ...!genericCompositions && mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "previous": "\tconst arguments_ = [\"consumer.pl\", ...mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "start": 8025
+        },
+        {
+          "current": "\tassert.equal(first.stderr, \"\");\n\tif(genericCompositions) parseGenericSubtypePerlResult(first.stdout); else parseNominalSubtypePerlResult(first.stdout, mode);\n",
+          "previous": "\tassert.equal(first.stderr, \"\"); parseNominalSubtypePerlResult(first.stdout, mode);\n",
+          "start": 8265
+        },
+        {
+          "current": "\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout, first.stdout);\n\tif(genericCompositions) parseGenericSubtypePerlResult(repeated.stdout); else parseNominalSubtypePerlResult(repeated.stdout, mode);\n",
+          "previous": "\tassert.equal(repeated.stderr, \"\"); assert.equal(repeated.stdout, first.stdout); parseNominalSubtypePerlResult(repeated.stdout, mode);\n",
+          "start": 9146
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n\t\t, ...(genericCompositions ? genericSubtypePerlExpected : nominalSubtypePerlCounts[mode])\n",
+          "previous": "\t\t, ...nominalSubtypePerlCounts[mode]\n",
+          "start": 9720
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-install.mjs",
+      "previousSha256": "004e3a142d8115af1f5e3a1ed4ca9d9476278a840b2d04c322bff811f721dd02"
+    },
+    {
+      "currentSha256": "37f88a4f59824045dd9399160648033bdfc005daceaaeecd93d704983c4bacf1",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 385
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 1061
+        },
+        {
+          "current": "import { genericSubtypePerlCaller, genericSubtypePerlConfiguration, genericSubtypePerlSelection } from \"./generic-subtype-native-perl.mjs\";\n",
+          "previous": "",
+          "start": 1623
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypePerlSelection(process.env);\nconst genericSelection = genericSubtypePerlSelection(process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic Perl installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypePerlSelection(process.env);\n",
+          "start": 1764
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype Perl compositions\" : \"nominal Perl packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal Perl packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2246
+        },
+        {
+          "current": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions });\n\tconst configuration = genericCompositions ? genericSubtypePerlConfiguration(route) : nominalSubtypePerlConfiguration(route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\"), configuration = nominalSubtypePerlConfiguration(route, mode);\n",
+          "start": 2497
+        },
+        {
+          "current": "\tconst executables = checkedRecordPerlExecutables(process.env[genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_PERLS\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_PERLS\"]);\n\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_PERL_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_PERL_OUTPUT\";\n\tconst output = resolve(process.env[outputVariable] ?? (genericCompositions ? \"build/generic-subtype-perl\" : \"build/nominal-subtype-perl\"), route, mode);\n",
+          "previous": "\tconst executables = checkedRecordPerlExecutables(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PERLS);\n\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PERL_OUTPUT ?? \"build/nominal-subtype-perl\", route, mode);\n",
+          "start": 2824
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true });\n\t\t\tawait cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 5105
+        },
+        {
+          "current": "\t\tif(genericCompositions) await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 7144
+        },
+        {
+          "current": "\tconst source = genericCompositions ? await genericSubtypePerlCaller(route) : await nominalSubtypePerlCaller(route), reports = [];\n",
+          "previous": "\tconst source = await nominalSubtypePerlCaller(route), reports = [];\n",
+          "start": 8147
+        },
+        {
+          "current": "\t\t\t, command: executables[name], packages: receipt.packages\n\t\t\t, genericCompositions });\n",
+          "previous": "\t\t\t, command: executables[name], packages: receipt.packages });\n",
+          "start": 8678
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 9197
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-installed-tests.mjs",
+      "previousSha256": "5f8fa5d4459b7a510a35de9960bb0cd9312d1c9244797d01b19c31822e693154"
+    }
+  ]
+}
