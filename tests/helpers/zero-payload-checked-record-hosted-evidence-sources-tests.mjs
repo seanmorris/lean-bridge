@@ -6,6 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
 	zeroPayloadBrowserEvidenceSources, zeroPayloadHostedOriginal
@@ -236,6 +237,18 @@ test("zero-payload native-PHP evidence closes every hosted source role", {
 		, `${role}:${path}`);
 });
 
+test("zero-payload native-PHP archiving replays every retained Composer record", () => {
+	const source = readFileSync(
+		"scripts/archive-zero-payload-checked-record-php-evidence.mjs", "utf8");
+	assert.equal(source.split("await checkZeroPayloadPhpCiRecords(args, {").length, 2);
+	for(const field of [
+		"tap: await readFile(tap, \"utf8\")"
+		, "read: path => readFile(join(records, path))"
+		, "runtime: observed.runtime, tools"
+		, "assert.deepEqual(paths, rechecked.records"
+	]) assert.ok(source.includes(field), field);
+});
+
 test("zero-payload WIT evidence closes every hosted source role", {
 	timeout: 120_000
 }, () => {
@@ -266,6 +279,21 @@ test("zero-payload WIT evidence closes every hosted source role", {
 		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
 	]) assert.ok(sources.some(item => item.role === role && item.path === path)
 		, `${role}:${path}`);
+});
+
+test("zero-payload WIT archiving authenticates the archive before replay", () => {
+	const source = readFileSync(
+		"scripts/archive-zero-payload-checked-record-wit-evidence.mjs", "utf8");
+	const marker = "const checked = await checkZeroPayloadWitCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\tassert.equal", 1)[0];
+	for(const field of [
+		"route, mode, producer: revision, directory: recordsRoot"
+		, "tap: join(cell, \"run.tap\"), glibc: observed.floor"
+		, "tap: tap.toString(), runtime: observed.runtime"
+		, "tools: observed.tools, archiveSha256: original.archiveSha256"
+	]) assert.ok(replay.includes(field), field);
+	assert.equal(source.split("await inspectZeroPayloadWitHandoff(read)").length, 2);
 });
 
 test("zero-payload hosted evidence accepts only closed absolute selections", () => {
