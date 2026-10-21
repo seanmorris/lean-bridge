@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
 import { beforeDependentCheckedRecordHostedArchiversSource, dependentCheckedRecordHostedArchiversChangedPaths, dependentCheckedRecordHostedArchiversIntegrationPaths } from "./dependent-checked-record-hosted-archivers-source-history.mjs";
 import { beforeNestedCheckedRecordRegressionContractSource, nestedCheckedRecordRegressionContractChangedPaths, nestedCheckedRecordRegressionContractIntegrationPaths } from "./nested-checked-record-regression-contract-source-history.mjs";
 import { beforeDependentCheckedRecordPythonArchiveSource, dependentCheckedRecordPythonArchiveImplementationPaths, dependentCheckedRecordPythonArchiveIntegrationPaths } from "./dependent-checked-record-python-archive-source-history.mjs";
@@ -1483,7 +1484,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordHostedArchiversChangedPaths
+	...dependentCheckedRecordJvmArchiveImplementationPaths
+	, ...dependentCheckedRecordJvmArchiveIntegrationPaths
+	, ...dependentCheckedRecordHostedArchiversChangedPaths
 	, ...dependentCheckedRecordHostedArchiversIntegrationPaths
 	, ...nestedCheckedRecordRegressionContractChangedPaths
 	, ...nestedCheckedRecordRegressionContractIntegrationPaths
@@ -2126,9 +2129,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordJvmArchive
+		= beforeDependentCheckedRecordJvmArchiveSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordJvmArchive) === expected)
+		return dependentCheckedRecordJvmArchive;
 	const dependentCheckedRecordHostedArchivers
 		= beforeDependentCheckedRecordHostedArchiversSource(
-			path, text, expected
+			path, dependentCheckedRecordJvmArchive, expected
 		);
 	if(sha256(dependentCheckedRecordHostedArchivers) === expected)
 		return dependentCheckedRecordHostedArchivers;

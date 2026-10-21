@@ -59,6 +59,7 @@ import "./helpers/dependent-checked-record-type-surface-gap-source-history-tests
 import "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-evidence-tests.mjs";
+import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-source-history-tests.mjs";
