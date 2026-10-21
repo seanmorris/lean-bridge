@@ -398,3 +398,53 @@ export const dependentCheckedRecordPhpEvidenceSources = value => {
 		}
 	]);
 };
+
+/**
+ * Select every source that explains the hosted dependent checked-record WIT
+ * component artifact and native Wasmtime verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordWitEvidenceSources = value => {
+	const selected = revisions(value);
+	const callers = [caller("wit-values.h"), caller("wit-wasi.c")];
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-wit-installed-tests.mjs"
+				])
+				, ...commonData, ...callers
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-wit-fixture.mjs"
+				])
+				, ...callers
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-wit-ci.mjs"
+				])
+				, boundedApt, ".github/workflows/dependent-checked-record-wit.yml"
+				, "flake.lock", "flake.nix", "scripts/bootstrap-toolchains.sh"
+				, "scripts/env.sh", "scripts/run-dependent-checked-record-wit-ci.sh"
+				, "scripts/select-nominal-subtype-wit-ci-tools.mjs"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-wit-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};

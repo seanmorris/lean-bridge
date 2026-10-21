@@ -17,6 +17,7 @@ import {
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
 	, dependentCheckedRecordRustEvidenceSources
+	, dependentCheckedRecordWitEvidenceSources
 } from "./dependent-checked-record-hosted-evidence-sources.mjs";
 import {
 	dependentCheckedRecordHostedSafeZipPath
@@ -125,6 +126,19 @@ test("dependent native-PHP evidence closes Composer production, consumption and 
 	, ["checker", "scripts/check-dependent-checked-record-php-ci.mjs"]
 	, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-php-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent WIT evidence closes component production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordWitEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/wit-wasi.c"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/wit-values.h"]
+	, ["checker", ".github/workflows/dependent-checked-record-wit.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-wit-ci.mjs"]
+	, ["checker", "scripts/select-nominal-subtype-wit-ci-tools.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-wit-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 
