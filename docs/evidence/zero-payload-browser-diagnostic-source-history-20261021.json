@@ -1,0 +1,158 @@
+{
+  "additions": [
+    {
+      "currentSha256": "31589c48be0ea43714a312619fdd1edcf18043241471083b4d6973f9f2bdf34e",
+      "path": "scripts/update-zero-payload-browser-diagnostic-source-history.mjs"
+    },
+    {
+      "currentSha256": "cd5803797a23fa7b9f2f6b9351829e108a7f300cb745ac3e5a53313ab9fbc507",
+      "path": "tests/helpers/zero-payload-browser-diagnostic-source-history.mjs"
+    },
+    {
+      "currentSha256": "9f75f481767ae287cd38c9c321b2a71351474d51c51d53cd1e8fac1a38bb5a59",
+      "path": "tests/helpers/zero-payload-browser-diagnostic-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "8aaeb0ea8be7be141d9a633d0518275b4ad0f234",
+  "integrationUpdates": [
+    {
+      "currentSha256": "21a49612cdebaffa3f983a81cc9bc1ef1f2e510c36822caffb96343f32ca8631",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from \"./zero-payload-browser-diagnostic-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadBrowserDiagnosticChangedPaths\n\t, ...zeroPayloadBrowserDiagnosticIntegrationPaths\n\t, ...zeroPayloadNativeEvidenceChangedPaths\n",
+          "previous": "\t...zeroPayloadNativeEvidenceChangedPaths\n",
+          "start": 114896
+        },
+        {
+          "current": "\tconst zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(\n",
+          "previous": "\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n",
+          "start": 138096
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadBrowserDiagnostic) === expected)\n\t\treturn zeroPayloadBrowserDiagnostic;\n\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n\t\tpath, zeroPayloadBrowserDiagnostic, expected\n\t);\n",
+          "previous": "",
+          "start": 138203
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b61706e470e9958bc23bea9a1ce44395656092b5a61154ac86af29542483a522"
+    }
+  ],
+  "milestone": "zero-payload-browser-diagnostic-source-v1",
+  "predecessorCommit": "25c5e950cc5bbb033c508620e76642655625d09c",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "The independently retained JavaScript caller binds the checked-constructor rejection to the exact ordinary or reviewed public parameter label while preserving every other caller byte and assertion.",
+  "updates": [
+    {
+      "currentSha256": "ccb434b41302e682e34313081cd181927bcf3937e0d3d492e4dc046f7695ca71",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 140
+        },
+        {
+          "current": "const callerPath\n\t= \"tests/fixtures/zero-payload-checked-record-browser/javascript.mjs\";\n\n/**\n * Load the immutable public caller with only the reviewed parameter label changed.\n *\n * @param route - Exact ordinary/reviewed and full/result-only selection.\n * @param reader - Optional historical Git-backed source reader.\n */\nexport const zeroPayloadBrowserCaller = async (\n\troute, reader = path => readFile(path, \"utf8\")\n) => {\n\tassert.ok(zeroPayloadBrowserRoutes.includes(route));\n\tconst source = String(await reader(callerPath));\n\tconst reviewed = route.endsWith(\"reviewed-ir\");\n\tconst current = \"absentCount.arg0 was rejected\";\n\tassert.equal(source.split(current).length, 2);\n\treturn reviewed ? source.replace(current\n\t\t, \"absentCount.value0 was rejected\") : source;\n};\n",
+          "previous": "",
+          "start": 1055
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser-fixture.mjs",
+      "previousSha256": "088c1846ef7e037573dc5bdd04d765e5850d7033c19f50d813cb37374d5a3dbc"
+    },
+    {
+      "currentSha256": "037e6156c7ffc8c2b11f37f4f7e87912e5aac03e27e4fdbfcdf3e2530c6e8b5f",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadBrowserCaller\n",
+          "previous": "",
+          "start": 490
+        },
+        {
+          "current": "\tassert.equal((await read(\"callers/check.mjs\")).toString()\n\t\t, await zeroPayloadBrowserCaller(route));\n",
+          "previous": "",
+          "start": 7590
+        },
+        {
+          "current": "\t\tconst prefix = `browser/${profile}`;\n",
+          "previous": "",
+          "start": 9727
+        },
+        {
+          "current": "\t\tassert.equal((await read(`${prefix}/check.mjs`)).toString()\n\t\t\t, await zeroPayloadBrowserCaller(route));\n",
+          "previous": "",
+          "start": 10170
+        },
+        {
+          "current": "",
+          "previous": "\t\tconst prefix = `browser/${profile}`;\n",
+          "start": 10360
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser-report.mjs",
+      "previousSha256": "af9758ed4ed98c17fa24ee6fe8e6df347950f5f08519b9c1218e80d48ab697fe"
+    },
+    {
+      "currentSha256": "935d337c6dbe70a81dd3eeea1d88dc84a5e80fa40458cde1d676906db1edb9c8",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadBrowserCaller\n",
+          "previous": "",
+          "start": 926
+        },
+        {
+          "current": "\t\t\t, await zeroPayloadBrowserCaller(route));\n",
+          "previous": "\t\t\t, await readFile(join(fixture, \"javascript.mjs\")));\n",
+          "start": 5011
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser.mjs",
+      "previousSha256": "8cde87a586022c186dae30cc0af4e95c88108458e8ad2e9ef98e844cac2ab047"
+    },
+    {
+      "currentSha256": "c191b8c1fa26452c624cd0931ebbb39cd538a7a65fe465e373aba3723d15cd65",
+      "edits": [
+        {
+          "current": "\tzeroPayloadBrowserCaller\n\t, zeroPayloadBrowserExpected\n",
+          "previous": "\tzeroPayloadBrowserExpected\n",
+          "start": 1700
+        },
+        {
+          "current": "\t\tconst corpus = Buffer.from(await zeroPayloadBrowserCaller(route));\n",
+          "previous": "\t\tconst corpus = await readFile(\n\t\t\t\"tests/fixtures/zero-payload-checked-record-browser/javascript.mjs\");\n",
+          "start": 9883
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-npm-installed-tests.mjs",
+      "previousSha256": "0053d0059e16a87680c66f20ff9c01cf76996f8fd77bdb8497c0969f4221437f"
+    },
+    {
+      "currentSha256": "96905f96821e7f5a2ba5363543987e9c6457a5d185e07cbc17ba9de356931fa3",
+      "edits": [
+        {
+          "current": "\tzeroPayloadBrowserCaller\n\t, zeroPayloadBrowserExpected\n",
+          "previous": "\tzeroPayloadBrowserExpected\n",
+          "start": 675
+        },
+        {
+          "current": "import \"./helpers/zero-payload-browser-diagnostic-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1222
+        },
+        {
+          "current": "test(\"zero-payload caller binds the exact ordinary and reviewed diagnostics\", async () => {\n\tconst ordinary = await zeroPayloadBrowserCaller(\"ordinary-source\");\n\tconst reviewed = await zeroPayloadBrowserCaller(\"reviewed-ir\");\n\tassert.equal(reviewed, ordinary.replace(\n\t\t\"absentCount.arg0 was rejected\", \"absentCount.value0 was rejected\"));\n\tassert.equal(await zeroPayloadBrowserCaller(\"result-only-ordinary-source\")\n\t\t, ordinary);\n\tassert.equal(await zeroPayloadBrowserCaller(\"result-only-reviewed-ir\")\n\t\t, reviewed);\n});\n\n",
+          "previous": "",
+          "start": 4036
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "c3e3e584453cc8b5e10c5cbdc0fcb2600508f197c17d805d6ae436efcd4633a9"
+    }
+  ]
+}

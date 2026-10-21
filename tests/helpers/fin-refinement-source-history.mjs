@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from "./zero-payload-browser-diagnostic-source-history.mjs";
 import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from "./zero-payload-native-evidence-source-history.mjs";
 import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from "./zero-payload-rust-archive-source-history.mjs";
 import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from "./zero-payload-rust-ci-source-history.mjs";
@@ -1420,7 +1421,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadNativeEvidenceChangedPaths
+	...zeroPayloadBrowserDiagnosticChangedPaths
+	, ...zeroPayloadBrowserDiagnosticIntegrationPaths
+	, ...zeroPayloadNativeEvidenceChangedPaths
 	, ...zeroPayloadNativeEvidenceIntegrationPaths
 	, ...zeroPayloadRustArchiveChangedPaths
 	, ...zeroPayloadRustArchiveIntegrationPaths
@@ -1940,8 +1943,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(
+	const zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadBrowserDiagnostic) === expected)
+		return zeroPayloadBrowserDiagnostic;
+	const zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(
+		path, zeroPayloadBrowserDiagnostic, expected
 	);
 	if(sha256(zeroPayloadNativeEvidence) === expected)
 		return zeroPayloadNativeEvidence;
