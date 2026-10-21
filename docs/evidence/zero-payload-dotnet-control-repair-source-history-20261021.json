@@ -1,0 +1,77 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b4796e4f2c2f97bd54a97ab82fcf25f56789ac63f4cbaaf01622155a04c57397",
+      "path": "scripts/update-zero-payload-dotnet-control-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ff9b650c368041847a43212aabf72ba7d7c4805ef9c34841eef11160942213a4",
+      "path": "tests/helpers/zero-payload-dotnet-control-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "e9ebf941f595a6fa4dacf0e7c7710fe6783aca90fe70b0dba0472504e2a8483d",
+      "path": "tests/helpers/zero-payload-dotnet-control-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "dc4eec50968994140aeed524cbcbe13a76327bec",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ce376fbff0a169348e91beda32352e722641d9e49cf30c896d6d63455148f605",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from \"./zero-payload-dotnet-control-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadDotnetControlRepairChangedPaths\n\t, ...zeroPayloadDotnetControlRepairIntegrationPaths\n\t, ...zeroPayloadDotnetArchiveChangedPaths\n",
+          "previous": "\t...zeroPayloadDotnetArchiveChangedPaths\n",
+          "start": 113328
+        },
+        {
+          "current": "\tconst zeroPayloadDotnetControlRepair\n\t\t= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);\n\tif(sha256(zeroPayloadDotnetControlRepair) === expected)\n\t\treturn zeroPayloadDotnetControlRepair;\n",
+          "previous": "",
+          "start": 135766
+        },
+        {
+          "current": "\t\tpath, zeroPayloadDotnetControlRepair, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 136044
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "654e8a0f9bb4e0f7366222609080efdd9436c78c2ed769f75bb440426669d02c"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-control-repair-v1",
+  "predecessorCommit": "e2971f3094a4d3b82d253c0d01082e26334beae6",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "The destructive NuGet package control requires rejection without coupling evidence validity to incidental assertion prose.",
+  "updates": [
+    {
+      "currentSha256": "4690c204218ab6dc61ba6cdfbb50c23042c84fed767f08014eacf12f0258c68d",
+      "edits": [
+        {
+          "current": "\tawait assert.rejects(verify(archive), undefined\n",
+          "previous": "\tawait assert.rejects(verify(archive), new RegExp(archiveName, \"u\")\n",
+          "start": 3192
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-controls.mjs",
+      "previousSha256": "31e2eb67735146c411e71b8fc4c0a8078ec95e0629200e9adc5690880ad14474"
+    },
+    {
+      "currentSha256": "4e7a8119fc89165980e869f85a0d54f684e0c5151438b6b2451279b9b16ed3ec",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-dotnet-control-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 688
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs",
+      "previousSha256": "cd169bfac09796ba59bd2661e2d30bee5e163476b6bb7d9516de6da39a0b22b0"
+    }
+  ]
+}

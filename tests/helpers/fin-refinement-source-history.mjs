@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from "./zero-payload-dotnet-control-repair-source-history.mjs";
 import { beforeZeroPayloadDotnetArchiveSource, zeroPayloadDotnetArchiveChangedPaths, zeroPayloadDotnetArchiveIntegrationPaths } from "./zero-payload-dotnet-archive-source-history.mjs";
 import { beforeZeroPayloadVariantSource, zeroPayloadVariantChangedPaths, zeroPayloadVariantIntegrationPaths } from "./zero-payload-variant-source-history.mjs";
 import { beforeZeroPayloadDotnetVerifierRepairSource, zeroPayloadDotnetVerifierRepairChangedPaths, zeroPayloadDotnetVerifierRepairIntegrationPaths } from "./zero-payload-dotnet-verifier-repair-source-history.mjs";
@@ -1411,7 +1412,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadDotnetArchiveChangedPaths
+	...zeroPayloadDotnetControlRepairChangedPaths
+	, ...zeroPayloadDotnetControlRepairIntegrationPaths
+	, ...zeroPayloadDotnetArchiveChangedPaths
 	, ...zeroPayloadDotnetArchiveIntegrationPaths
 	, ...zeroPayloadVariantChangedPaths
 	, ...zeroPayloadVariantIntegrationPaths
@@ -1913,8 +1916,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadDotnetControlRepair
+		= beforeZeroPayloadDotnetControlRepairSource(path, text, expected);
+	if(sha256(zeroPayloadDotnetControlRepair) === expected)
+		return zeroPayloadDotnetControlRepair;
 	const zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(
-		path, text, expected
+		path, zeroPayloadDotnetControlRepair, expected
 	);
 	if(sha256(zeroPayloadDotnetArchive) === expected)
 		return zeroPayloadDotnetArchive;
