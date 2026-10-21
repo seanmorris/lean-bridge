@@ -32,6 +32,24 @@ const fail = (code, message, details = {}) => {
 };
 
 /**
+ * A copied nominal value may legitimately use a machinery-adjacent name such
+ * as Token. Admit that name only when the Binding IR declares the exact public
+ * Python class as a copied, non-resource record.
+ *
+ * @param ir - Binding IR document.
+ * @param declaration - Python declaration keyword.
+ * @param name - Exact public identifier.
+ */
+const explicitCopiedValue = (ir, declaration, name) =>
+	declaration.toLowerCase() === "class"
+	&& ir.types.some(type =>
+		type.name === name
+		&& type.kind === "record"
+		&& type.representation === "copied"
+		&& type.resource === null
+	);
+
+/**
  * Checks python package and returns structured evidence instead of relying on prose diagnostics in the generated native-language binding pipeline.
  *
  * @param ir - Binding IR document that defines the source types and operations.
@@ -70,13 +88,30 @@ export const auditPythonPackage = (ir, files) => {
 	{
 		fail("private-abi-leak", "the Python package exposes private bridge machinery");
 	}
-	if(/^\s*(?:def|class)\s+(?:invoke|dispatch|handle|token)\b/im.test(source))
+	const generic = [...source.matchAll(
+		/^\s*(def|class)\s+(invoke|dispatch|handle|token)\b/gimu
+	)].find(match => !explicitCopiedValue(ir, match[1], match[2]));
+	if(generic)
 	{
-		fail("generic-dispatch", "the Python package exposes a dispatcher or identity token");
+		fail("generic-dispatch"
+			, "the Python package exposes a dispatcher or identity token"
+			, { declaration: generic[0].trim() });
 	}
-	if(/\bAny\b|\b(?:handle|token)\s*:/i.test(stub))
+	if(/\bAny\b/u.test(stub))
 	{
 		fail("untyped-public-api", "the Python stub exposes Any or a raw identity value");
+	}
+	const rawIdentity = [...stub.matchAll(/\b(handle|token)\s*:/giu)].find(match => {
+		const lineStart = stub.lastIndexOf("\n", match.index) + 1;
+		const prefix = stub.slice(lineStart, match.index);
+		return !(/^\s*class\s+$/u.test(prefix)
+			&& explicitCopiedValue(ir, "class", match[1]));
+	});
+	if(rawIdentity)
+	{
+		fail("untyped-public-api"
+			, "the Python stub exposes Any or a raw identity value"
+			, { declaration: rawIdentity[0] });
 	}
 	const allMatch = source.match(/__all__ = \(([^]*?)\)\n/);
 	const exported = allMatch

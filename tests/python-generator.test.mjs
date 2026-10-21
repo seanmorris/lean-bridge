@@ -83,7 +83,38 @@ test("the Python backend emits dataclasses, classes, exceptions, callables, and 
   leaked["lean_alpha/__init__.py"] += "\ndef dispatch(): pass\n";
   assert.throws(
     () => auditPythonPackage(alpha.bindingIr, leaked),
-    error => error.code === "generic-dispatch",
+    error => error.code === "generic-dispatch" && error.details.declaration === "def dispatch",
+  );
+
+  // A manifest cannot bless a machinery-adjacent name absent from Binding IR.
+  const undeclared = { ...files };
+  const undeclaredManifest = JSON.parse(undeclared["binding-manifest.json"]);
+  undeclaredManifest.exports = [...undeclaredManifest.exports, "Token"];
+  undeclared["binding-manifest.json"] = JSON.stringify(undeclaredManifest);
+  undeclared["lean_alpha/__init__.py"] = undeclared["lean_alpha/__init__.py"]
+    .replace("\"make_adder\",", "\"make_adder\", \"Token\",") + "\nclass Token: pass\n";
+  undeclared["lean_alpha/__init__.pyi"] += "\nclass Token: ...\n";
+  assert.throws(
+    () => auditPythonPackage(alpha.bindingIr, undeclared),
+    error => error.code === "generic-dispatch" && error.details.declaration === "class Token",
+  );
+
+  // An actual copied Token record is public API, not an identity-token leak.
+  const declaredIr = structuredClone(alpha.bindingIr);
+  const token = structuredClone(declaredIr.types.find(type => type.name === "Payload"));
+  token.id = "lean:Alpha.Token";
+  token.name = "Token";
+  token.source.declaration = "Alpha.Token";
+  declaredIr.types.push(token);
+  const declared = generatePythonBindingPackage(declaredIr);
+  assert.doesNotThrow(() => auditPythonPackage(declaredIr, declared));
+
+  // A raw identity slot in the public stub remains forbidden.
+  const rawStub = { ...files };
+  rawStub["lean_alpha/__init__.pyi"] += "\ntoken: int\n";
+  assert.throws(
+    () => auditPythonPackage(alpha.bindingIr, rawStub),
+    error => error.code === "untyped-public-api",
   );
 });
 
