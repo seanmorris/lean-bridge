@@ -13,6 +13,7 @@ import {
 	, dependentCheckedRecordHostedOriginal
 	, dependentCheckedRecordJvmEvidenceSources
 	, dependentCheckedRecordPerlEvidenceSources
+	, dependentCheckedRecordPhpEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
 	, dependentCheckedRecordRustEvidenceSources
@@ -112,6 +113,18 @@ test("dependent JVM evidence closes Maven production, consumption and checking s
 	, ["checker", ".github/workflows/dependent-checked-record-jvm.yml"]
 	, ["checker", "scripts/check-dependent-checked-record-jvm-ci.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-jvm-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent native-PHP evidence closes Composer production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPhpEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/php.php"]
+	, ["checker", ".github/workflows/dependent-checked-record-php.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-php-ci.mjs"]
+	, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-php-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

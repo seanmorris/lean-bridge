@@ -347,3 +347,54 @@ export const dependentCheckedRecordJvmEvidenceSources = value => {
 		}
 	]);
 };
+
+/**
+ * Select every source that explains the hosted dependent checked-record
+ * Composer artifact and native-PHP verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordPhpEvidenceSources = value => {
+	const selected = revisions(value);
+	const consumerCaller = caller("php.php");
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-php-installed-tests.mjs"
+				])
+				, ...commonData, consumerCaller
+				, "src/backends/php/brick-math.source.json"
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-php-fixture.mjs"
+				])
+				, consumerCaller
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-php-ci.mjs"
+				])
+				, boundedApt, ".github/workflows/dependent-checked-record-php.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-dependent-checked-record-php-ci.sh"
+				, "scripts/select-nominal-subtype-php-ci-tools.mjs"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-php-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
