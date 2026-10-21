@@ -1,0 +1,109 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fbb9d6a154c1640714220a4b02940520e93eb4f4fea55fe6e511ca9b122dcad7",
+      "path": "scripts/update-zero-payload-rust-audit-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6c6c1c8ef8037940433503f4f076a3573c04d3041fc1275dcc2d3447b1413325",
+      "path": "tests/helpers/zero-payload-rust-audit-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "3d7e0d0d218de0d9e8465ee1410a9f235aefc12a39b440664db7efbfda5d21ff",
+      "path": "tests/helpers/zero-payload-rust-audit-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "27868ac2d28c646f913e001c404e40a3c5674560",
+  "integrationUpdates": [
+    {
+      "currentSha256": "166b3d16421c9054b8b5e07a123592bc77e582f0a6085adabc626bad78621699",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustAuditRepairSource, zeroPayloadRustAuditRepairChangedPaths, zeroPayloadRustAuditRepairIntegrationPaths } from \"./zero-payload-rust-audit-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRustAuditRepairChangedPaths\n\t, ...zeroPayloadRustAuditRepairIntegrationPaths\n\t, ...zeroPayloadRustInstalledChangedPaths\n",
+          "previous": "\t...zeroPayloadRustInstalledChangedPaths\n",
+          "start": 114172
+        },
+        {
+          "current": "\tconst zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(\n",
+          "previous": "\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n",
+          "start": 137020
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadRustAuditRepair) === expected)\n\t\treturn zeroPayloadRustAuditRepair;\n\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n\t\tpath, zeroPayloadRustAuditRepair, expected\n\t);\n",
+          "previous": "",
+          "start": 137123
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4a9f659512c61ef0c8dd14f8fbc28afbb4d9d812dfe4a39ffc7faf4bfd23c963"
+    },
+    {
+      "currentSha256": "b90c4863d8083f34f77c9255f796b20cc0a83660b6a4d89efc6a8380c3beac43",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-rust-audit-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 294
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-rust.test.mjs",
+      "previousSha256": "a5d25fd56bff6000bb6b9d86e032b82d35063a46300b9b6944ba6f7ce08f67f0"
+    }
+  ],
+  "milestone": "zero-payload-rust-audit-repair-v1",
+  "predecessorCommit": "55c5ea683fe94c50bf8d8d77def76c89cb89c110",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "The Rust audit admits only exact copied Binding IR value declarations whose domain names resemble identity machinery, while retaining the generic-dispatch rejection for undeclared handles, tokens and dispatchers.",
+  "updates": [
+    {
+      "currentSha256": "b606b07de538d3a230f1606ef3ceb1cf2f110c15fec8a8d23793d2fce8089fa5",
+      "edits": [
+        {
+          "current": "/**\n * A copied nominal value can legitimately use a word such as Token without\n * exposing a runtime identity token. Require the exact Binding IR type and\n * Rust declaration kind before granting that narrow exemption.\n *\n * @param ir - Binding IR document.\n * @param declaration - Rust declaration keyword.\n * @param name - Exact public identifier.\n */\nconst explicitCopiedValue = (ir, declaration, name) => {\n\tconst kind = { struct: \"record\", type: \"alias\" }[declaration];\n\treturn kind !== undefined && ir.types.some(type =>\n\t\ttype.name === name\n\t\t&& type.kind === kind\n\t\t&& type.representation === \"copied\"\n\t\t&& type.resource === null\n\t);\n};\n\n",
+          "previous": "",
+          "start": 972
+        },
+        {
+          "current": "\tconst generic = [...source.matchAll(\n\t\t/pub\\s+(fn|struct|type|trait)\\s+(invoke|dispatch|handle|token)\\b/giu\n\t)].find(match => !explicitCopiedValue(ir, match[1], match[2]));\n\tif(generic)\n",
+          "previous": "\tif(/pub\\s+(?:fn|struct|type|trait)\\s+(?:invoke|dispatch|handle|token)\\b/i.test(source))\n",
+          "start": 2906
+        },
+        {
+          "current": "\t\tfail(\"generic-dispatch\"\n\t\t\t, \"the Rust public surface exposes a dispatcher or identity token\"\n\t\t\t, { declaration: generic[0] });\n",
+          "previous": "\t\tfail(\"generic-dispatch\", \"the Rust public surface exposes a dispatcher or identity token\");\n",
+          "start": 3096
+        }
+      ],
+      "path": "src/backends/rust/package-audit.mjs",
+      "previousSha256": "3894184d830b9cdc4c3f9f4f89eb910db6d0cce3021ce99848ff31f950295950"
+    },
+    {
+      "currentSha256": "4a0f93f29e45340df6881f9ccc424acce8a26f23a6435b49832eb85fd8d7bfc3",
+      "edits": [
+        {
+          "current": "import {\n\tauditRustPackage\n} from \"../../src/backends/rust/package-audit.mjs\";\n",
+          "previous": "",
+          "start": 245
+        },
+        {
+          "current": "\t\tassert.doesNotThrow(() => auditRustPackage(selection.expected, files));\n",
+          "previous": "",
+          "start": 2796
+        },
+        {
+          "current": "\t\tconst leaked = { ...files\n\t\t\t, \"src/lib.rs\": source + \"\\npub struct Handle {}\\n\" };\n\t\tassert.throws(() => auditRustPackage(selection.expected, leaked)\n\t\t\t, error => error.code === \"generic-dispatch\"\n\t\t\t\t&& error.details.declaration === \"pub struct Handle\");\n",
+          "previous": "",
+          "start": 3513
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-rust-fixture-tests.mjs",
+      "previousSha256": "7901014897397077a667195448ec984aa6eb9d991452dc038029629effdd3dff"
+    }
+  ]
+}
