@@ -15,6 +15,7 @@ import {
 	, zeroPayloadNativeEvidenceSources
 	, zeroPayloadPerlEvidenceSources
 	, zeroPayloadPhpEvidenceSources
+	, zeroPayloadPhpWasmEvidenceSources
 	, zeroPayloadPythonEvidenceSources
 	, zeroPayloadRubyEvidenceSources
 	, zeroPayloadRustEvidenceSources
@@ -382,6 +383,51 @@ test("zero-payload WIT archiving authenticates the archive before replay", () =>
 		, "tools: observed.tools, archiveSha256: original.archiveSha256"
 	]) assert.ok(replay.includes(field), field);
 	assert.equal(source.split("await inspectZeroPayloadWitHandoff(read)").length, 2);
+});
+
+test("zero-payload PHP-Wasm evidence closes package production and checking sources", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadPhpWasmEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/helpers/zero-payload-checked-record-php-wasm-installed-tests.mjs"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-php/php.php"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-php-wasm.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-php-wasm-ci.mjs"]
+		, ["checker", "scripts/bootstrap-php-wasm-ci.sh"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-php-wasm-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload PHP-Wasm archiving replays compiler and package records", () => {
+	const source = readFileSync(
+		"scripts/archive-zero-payload-checked-record-php-wasm-evidence.mjs", "utf8");
+	const marker = "const checked = await checkZeroPayloadPhpWasmCiRecords({";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\tassert.equal", 1)[0];
+	for(const field of [
+		"route, producer: revision, directory: recordsRoot"
+		, "tap: join(cell, \"run.tap\")"
+		, "tap: tap.toString(), read"
+	]) assert.ok(replay.includes(field), field);
+	assert.equal(source.split("assertZeroPayloadPhpWasmCompilerTap").length, 3);
 });
 
 test("zero-payload hosted evidence accepts only closed absolute selections", () => {

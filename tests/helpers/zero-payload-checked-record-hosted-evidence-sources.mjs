@@ -655,3 +655,62 @@ export const zeroPayloadWitEvidenceSources = revisions => {
 		}
 	]);
 };
+
+/**
+ * Select every source whose bytes explain the hosted PHP-Wasm artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const zeroPayloadPhpWasmEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/zero-payload-checked-record-php-wasm-installed-tests.mjs"
+					, "tests/helpers/zero-payload-checked-record-php-wasm-lean-tests.mjs"
+				])
+				, ...fixture, ...phpCallers, "src/analyze/NativeExports.lean"
+				, "lean-toolchain", "package-lock.json", "package.json"
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/zero-payload-checked-record-php-wasm-fixture.mjs"
+				])
+				, ...phpCallers
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-zero-payload-checked-record-php-wasm-ci.mjs"
+					, "scripts/check-zero-payload-checked-record-php-wasm-compiler-ci.mjs"
+					, "tests/zero-payload-checked-record-php-wasm.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/zero-payload-checked-record-php-wasm.yml"
+				, "flake.lock", "flake.nix"
+				, "scripts/bootstrap-php-wasm-ci.sh"
+				, "scripts/bootstrap-toolchains.sh", "scripts/build-lean-runtime.sh"
+				, "scripts/env.sh", "scripts/install-playwright-browsers.sh"
+				, "scripts/run-zero-payload-checked-record-php-wasm-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-zero-payload-checked-record-php-wasm-evidence.mjs"
+				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
