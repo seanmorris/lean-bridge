@@ -1,0 +1,166 @@
+TAP version 13
+# Subtest: zero-payload checked-record history restores every source
+ok 1 - zero-payload checked-record history restores every source
+  ---
+  duration_ms: 4221.256974
+  type: 'test'
+  ...
+# Subtest: zero-payload checked-record history rejects altered transitions
+ok 2 - zero-payload checked-record history rejects altered transitions
+  ---
+  duration_ms: 10.423102
+  type: 'test'
+  ...
+# Subtest: zero-payload checked-record writer refuses unrelated checkouts
+ok 3 - zero-payload checked-record writer refuses unrelated checkouts
+  ---
+  duration_ms: 55.07444
+  type: 'test'
+  ...
+# Subtest: zero-payload native selections preserve all four author/API routes
+ok 4 - zero-payload native selections preserve all four author/API routes
+  ---
+  duration_ms: 2.925121
+  type: 'test'
+  ...
+# Subtest: generated C and C++ keep empty, Unit and Option carriers distinct
+ok 5 - generated C and C++ keep empty, Unit and Option carriers distinct
+  ---
+  duration_ms: 34.638254
+  type: 'test'
+  ...
+# Subtest: zero-payload native callers lock counts and reviewed diagnostics
+ok 6 - zero-payload native callers lock counts and reviewed diagnostics
+  ---
+  duration_ms: 4.726315
+  type: 'test'
+  ...
+# Subtest: zero-payload native history restores every source
+ok 7 - zero-payload native history restores every source
+  ---
+  duration_ms: 31.935175
+  type: 'test'
+  ...
+# Subtest: zero-payload native history rejects altered transitions
+ok 8 - zero-payload native history rejects altered transitions
+  ---
+  duration_ms: 2.074949
+  type: 'test'
+  ...
+# Subtest: zero-payload native history writer refuses unrelated checkouts
+ok 9 - zero-payload native history writer refuses unrelated checkouts
+  ---
+  duration_ms: 53.688874
+  type: 'test'
+  ...
+# Subtest: zero-payload native archive history restores every source
+ok 10 - zero-payload native archive history restores every source
+  ---
+  duration_ms: 78.577626
+  type: 'test'
+  ...
+# Subtest: zero-payload native archive history rejects altered transitions
+ok 11 - zero-payload native archive history rejects altered transitions
+  ---
+  duration_ms: 1.404498
+  type: 'test'
+  ...
+# Subtest: zero-payload native archive writer refuses unrelated checkouts
+ok 12 - zero-payload native archive writer refuses unrelated checkouts
+  ---
+  duration_ms: 55.954919
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate in C/C++ for ordinary-source
+ok 13 - installed zero-payload records reproduce and relocate in C/C++ for ordinary-source # SKIP
+  ---
+  duration_ms: 0.31756
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate in C/C++ for reviewed-ir
+ok 14 - installed zero-payload records reproduce and relocate in C/C++ for reviewed-ir # SKIP
+  ---
+  duration_ms: 0.102665
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate in C/C++ for result-only-ordinary-source
+ok 15 - installed zero-payload records reproduce and relocate in C/C++ for result-only-ordinary-source # SKIP
+  ---
+  duration_ms: 0.076353
+  type: 'test'
+  ...
+# Subtest: installed zero-payload records reproduce and relocate in C/C++ for result-only-reviewed-ir
+ok 16 - installed zero-payload records reproduce and relocate in C/C++ for result-only-reviewed-ir # SKIP
+  ---
+  duration_ms: 0.069686
+  type: 'test'
+  ...
+# Subtest: zero-payload browser evidence closes every hosted source role
+ok 17 - zero-payload browser evidence closes every hosted source role
+  ---
+  duration_ms: 6607.231499
+  type: 'test'
+  ...
+# Subtest: zero-payload native evidence closes every hosted source role
+ok 18 - zero-payload native evidence closes every hosted source role
+  ---
+  duration_ms: 1289.26508
+  type: 'test'
+  ...
+# Subtest: zero-payload .NET evidence closes every hosted source role
+ok 19 - zero-payload .NET evidence closes every hosted source role
+  ---
+  duration_ms: 1167.359451
+  type: 'test'
+  ...
+# Subtest: zero-payload hosted evidence accepts only closed absolute selections
+ok 20 - zero-payload hosted evidence accepts only closed absolute selections
+  ---
+  duration_ms: 1.027912
+  type: 'test'
+  ...
+# Subtest: an independent zero-payload review is valid and selects the nullary constructor
+ok 21 - an independent zero-payload review is valid and selects the nullary constructor
+  ---
+  duration_ms: 26.857862
+  type: 'test'
+  ...
+# Subtest: native metadata admits zero-payload checked records only through a constructor or as a result
+ok 22 - native metadata admits zero-payload checked records only through a constructor or as a result
+  ---
+  duration_ms: 1.956393
+  type: 'test'
+  ...
+# Subtest: compiler plans retain empty checked-record input and result trees
+ok 23 - compiler plans retain empty checked-record input and result trees
+  ---
+  duration_ms: 313.404294
+  type: 'test'
+  ...
+# Subtest: fresh Lean admits proof-only and Unit-bearing checked records with exact erased proofs
+ok 24 - fresh Lean admits proof-only and Unit-bearing checked records with exact erased proofs # SKIP
+  ---
+  duration_ms: 0.166647
+  type: 'test'
+  ...
+# Subtest: every refused zero-payload site reports its own diagnostic
+ok 25 - every refused zero-payload site reports its own diagnostic # SKIP
+  ---
+  duration_ms: 0.147411
+  type: 'test'
+  ...
+# Subtest: the independent zero-payload review reconciles exactly with fresh Lean
+ok 26 - the independent zero-payload review reconciles exactly with fresh Lean # SKIP
+  ---
+  duration_ms: 0.065092
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 7
+# todo 0
+# duration_ms 14698.539971

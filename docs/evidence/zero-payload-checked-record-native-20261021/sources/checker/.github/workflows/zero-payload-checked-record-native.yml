@@ -1,0 +1,69 @@
+name: Zero-payload checked records in C and C++
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zero-payload-checked-record-native-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  zero-payload-checked-record-native:
+    name: Four zero-payload routes in C11/GMP and C++20/Boost
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out exact revision and full source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/zero-payload-checked-record-native-toolchain.log
+      - name: Require every author route and API mode in C and C++
+        id: acceptance
+        timeout-minutes: 180
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-zero-payload-checked-record-native-ci.sh
+      - name: Preserve complete and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zero-payload-checked-record-native-${{ github.sha }}
+          path: |
+            build/zero-payload-checked-record-native-ci/
+            build/zero-payload-checked-record-native-toolchain.log
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce zero-payload native acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

@@ -1,0 +1,78 @@
+{
+  "calls": 16,
+  "controls": {
+    "destructiveMutations": 8,
+    "fastPasses": 19,
+    "skippedInstalledOrLeanTests": 7
+  },
+  "profiles": [
+    "c",
+    "cpp"
+  ],
+  "receipt": {
+    "component": {
+      "id": "zeropayloadcheckedrecords@1.0.0",
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 53834039,
+            "path": "archives/zeropayloadcheckedrecords-1.0.0-c.tar.gz",
+            "sha256": "a188544f4392bce91fbe62672a896e239a3a7a2fa57bfd5cfbb6dd6b0b29792d"
+          }
+        ],
+        "ecosystem": "c",
+        "name": "zeropayloadcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "c",
+        "version": "1.0.0"
+      },
+      {
+        "artifacts": [
+          {
+            "bytes": 51762592,
+            "path": "archives/zeropayloadcheckedrecords-1.0.0-cpp.tar.gz",
+            "sha256": "33da230e8efa00042561e6c15fd088a99a1080f6c3823389bec92e84e44c6733"
+          }
+        ],
+        "ecosystem": "cpp",
+        "name": "zeropayloadcheckedrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "cpp",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "1b9d0b51d83a45c5bc4b7fe20435bec821f11ba365a42604aee7fac66ca4fb92",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "64fc0d93668f01714b4ec4ad92fac312282ae2e46ddc9a90f158c6ca1185e29f"
+    }
+  },
+  "recoveries": 0,
+  "rejections": 0,
+  "reportSha256": "b7d089c35dc9073911caacc0ae9931b876ccadd10c5966a0b1bcdf5952b35769",
+  "route": "result-only-reviewed-ir",
+  "sourceIdentities": {
+    "checker": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+    "consumer": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+    "producer": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9"
+  }
+}

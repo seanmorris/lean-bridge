@@ -1,0 +1,83 @@
+{
+  "contracts": {
+    "ZeroPayloadCheckedRecords.maybeWitness": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "ZeroPayloadCheckedRecords.produceMark": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "ZeroPayloadCheckedRecords.produceMarker": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "ZeroPayloadCheckedRecords.produceToken": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "ZeroPayloadCheckedRecords.produceWitness": {
+      "parameters": [],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "ZeroPayloadCheckedRecords.witnesses": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "ZeroPayloadCheckedRecords.produceWitness",
+    "ZeroPayloadCheckedRecords.produceToken",
+    "ZeroPayloadCheckedRecords.witnesses",
+    "ZeroPayloadCheckedRecords.maybeWitness",
+    "ZeroPayloadCheckedRecords.produceMarker",
+    "ZeroPayloadCheckedRecords.produceMark"
+  ],
+  "modules": [
+    "ZeroPayloadCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "zeropayloadcheckedrecords",
+      "version": "1.0.0"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "accepted": {
+    "calls": 30,
+    "profiles": [
+      "c",
+      "cpp"
+    ],
+    "receipt": {
+      "component": {
+        "id": "zeropayloadcheckedrecords@1.0.0",
+        "name": "zeropayloadcheckedrecords",
+        "version": "1.0.0"
+      },
+      "kind": "lean-bridge-package-set-receipt",
+      "packages": [
+        {
+          "artifacts": [
+            {
+              "bytes": 53849302,
+              "path": "archives/zeropayloadcheckedrecords-1.0.0-c.tar.gz",
+              "sha256": "de818306113453dc2757360a431d41b92e3b62a90420ae2a2b57123b3975ffbb"
+            }
+          ],
+          "ecosystem": "c",
+          "name": "zeropayloadcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "c",
+          "version": "1.0.0"
+        },
+        {
+          "artifacts": [
+            {
+              "bytes": 51775304,
+              "path": "archives/zeropayloadcheckedrecords-1.0.0-cpp.tar.gz",
+              "sha256": "895e4115e99b9659fdb0fe7d749abf274c069ea351d00a18b7bc0a616a05460a"
+            }
+          ],
+          "ecosystem": "cpp",
+          "name": "zeropayloadcheckedrecords",
+          "profile": "native-library-v1",
+          "requires": [],
+          "role": "component",
+          "runtimeDelivery": "embedded",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+          "target": "cpp",
+          "version": "1.0.0"
+        }
+      ],
+      "profiles": [
+        {
+          "bindingIrSha256": "b9d3de3140694914aa0012e390ea682bdefff9e44e26a985246f522c61c32b70",
+          "id": "native-library-v1",
+          "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+        }
+      ],
+      "schemaVersion": 1,
+      "source": {
+        "treeSha256": "39d569dff8111f21a51b98251d637a2acfeee4c90d8fb4de374507b042862092"
+      }
+    },
+    "recoveries": 2,
+    "rejections": 2,
+    "reportSha256": "90ebf77a126f48b97c1fc8edfdf55c906630b0709f9f542b37ce62de74ff38ae",
+    "route": "reviewed-ir"
+  },
+  "callerControls": 1,
+  "checkerCommit": "ecbec51d2a49e3146b996b0369e7dbe74e2d6db9",
+  "executionRecordControls": 1,
+  "gitBindingControls": 1,
+  "installedIrControls": 1,
+  "observationControls": 1,
+  "packageControls": 1,
+  "runtimeControls": 1,
+  "schemaVersion": 1,
+  "semanticControls": 1
+}

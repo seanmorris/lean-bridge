@@ -1,0 +1,90 @@
+{
+  "calls": 15,
+  "checks": 16,
+  "closure": {
+    "packageFileSetSha256": "da2aa4bec61318b26f9a02b86122ae293bc2c04340a4b52de4bd3622ae0d914d",
+    "receiptSha256": "b5413eae67fedb76339d172f88de7106dcd0c3179cd0e05198263440b5e3c1ac"
+  },
+  "compilerFreePath": true,
+  "consumerSha256": "aa016f7956a52f871c8fd0841338c324e9bce4f694c77f85779cafa551b8b213",
+  "immutableCallerAssertions": true,
+  "installed": {
+    "calls": 15,
+    "checks": 16,
+    "recoveries": 1,
+    "rejections": 1
+  },
+  "installedTree": {
+    "README.md": "7001c013df39ff7955bdabe18f69dd8c2c23132abe1dc9a30539896928a3826d",
+    "include/detail/zeropayloadcheckedrecords_gmp.h": "9f647b4795cb48225835a9d7f05f048d7c36bac9138f86650ddcf0197ed39645",
+    "include/gmp.h": "855212f29a6a159f63a90925f445e5d89a6775fd8aa09fd275a4f92b921fcbde",
+    "include/zeropayloadcheckedrecords.h": "23450a0dacb49f9b0033298827c85bec84effa6919bb7c979115d5ae9852ecb7",
+    "lean-bridge-package.json": "b5413eae67fedb76339d172f88de7106dcd0c3179cd0e05198263440b5e3c1ac",
+    "lib/cmake/LeanBridgeZeropayloadcheckedrecords/LeanBridgeZeropayloadcheckedrecordsConfig.cmake": "95f5f4a545778e2b09682c3fdfadbd27bbf230533df2ab22239266fd711b853a",
+    "lib/cmake/LeanBridgeZeropayloadcheckedrecords/LeanBridgeZeropayloadcheckedrecordsConfigVersion.cmake": "08b61a3f510f333a5bbc6a15c8942bf58af57d7f43044fbc2201de061ad97584",
+    "lib/libcomponent_d43d7c5a9f170f3ce127.so": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a",
+    "lib/libgmp.so.10": "1980c7331f830ab5291a3ec606e03fdc4d00ce7b8a93da6c64da10806ea36cd7",
+    "lib/liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+    "lib/libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+    "lib/libzeropayloadcheckedrecords.so": "f81999426c33fda6d74424e826ca9b96c38f405deb6132425183d4930dd23ea7",
+    "lib/libzeropayloadcheckedrecords_gmp.so": "32313bca1bad180ee23f2c6a4df6f8da211f7c6fbfaba372d85579bcb2079ff7",
+    "lib/pkgconfig/zeropayloadcheckedrecords.pc": "810398f467b6b2a951617bcdabf7d45cb796aea4c5cad36d4d6f7ded6d1eb6f9",
+    "package-metadata.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "share/lean-bridge/component/allocation-guard.h": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83",
+    "share/lean-bridge/component/artifacts.json": "f040d93366e890412261d3027e06d6676523be2143488ce54185c0050bd909c4",
+    "share/lean-bridge/component/binding-ir.json": "9b26cde888befe2e8c429bc364188a5b86cc8ae14d235a077f8112e196c0cb57",
+    "share/lean-bridge/component/component.h": "07e17b6f343960bd817d7e6a5bb2bf5b428f0852c2009f78f4f765a7fc3952e0",
+    "share/lean-bridge/component/generated.lean": "12e0a46617d1a872bf3834995eb678fe2a22b5d688796356d682f44b6078044e",
+    "share/lean-bridge/component/metadata.json": "219d43d644c8679dc2e8592adfa16b142276d8ab7f5068211fb2f6c4359029c7",
+    "share/lean-bridge/component/model.json": "5a2d0f2390a9bacc2eba3c8eee9bb1a324ad30fa86640bde28e0f53ee3b4371e",
+    "share/lean-bridge/component/native-component.json": "38b65a0d612ffb52bbea5450e7746a7524cb0bdd847aba12a43d4e0e2bde8d40",
+    "share/lean-bridge/gmp.json": "66ce284ea8fa49c5e2066f31444d843531d04254af6341c62cde5017e9ce971b",
+    "share/lean-bridge/licenses/GMP-COPYING": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "share/lean-bridge/licenses/GMP-COPYING.LESSERv3": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c",
+    "share/lean-bridge/licenses/GMP-COPYINGv2": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+    "share/lean-bridge/licenses/GMP-COPYINGv3": "e6037104443f9a7829b2aa7c5370d0789a7bda3ca65a0b904cdc0c2e285d9195",
+    "share/lean-bridge/licenses/Lean-LICENSE": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e",
+    "share/lean-bridge/licenses/Lean-LICENSES": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce",
+    "share/lean-bridge/licenses/LeanBridge-LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+    "share/lean-bridge/licenses/source-notices.json": "f0f24b90b57693811257729594df05456fcffbf162377e665e6f4bb5befc2ed6",
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+    "share/lean-bridge/native-c-adapter.json": "c34231c60e09d4c914a3c6a1ca2d815594373f6bb0d1a63c36a4878c976ae8ff",
+    "share/lean-bridge/runtime.json": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+    "share/lean-bridge/sources/gmp-6.3.0.tar.xz": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898"
+  },
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53846185,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "6df86b6a8633797bd81a34a019dd0c18f36275a137bf6924e8c55a50151b5d85"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "recoveries": 1,
+  "rejections": 1,
+  "relocated": {
+    "calls": 15,
+    "checks": 16,
+    "recoveries": 1,
+    "rejections": 1
+  },
+  "relocatedInstallation": true,
+  "repeatExecution": true,
+  "route": "ordinary-source",
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true
+}

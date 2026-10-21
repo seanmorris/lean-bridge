@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53833428,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-c.tar.gz",
+          "sha256": "10a2538c7a7dad925880dbb6fc8b3841009575c9e6b4a600d6290eee3a028d46"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51761829,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-cpp.tar.gz",
+          "sha256": "65f76d18eff71e706e425d81cf28c77c4575c3aa9b6d76e9be17ee63569602bb"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "7f1ae5d8b4369c9a315a93c942487268de2caf615ff8349becca447bb34dfc6d",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "9bac5b571b5851141a63ff10d720e53c7d237d283a69b8e25d3444f481723556"
+  }
+}
