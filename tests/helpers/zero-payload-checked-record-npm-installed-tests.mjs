@@ -25,6 +25,11 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { checkZeroPayloadBrowsers } from "./zero-payload-checked-record-browser.mjs";
 import {
+	checkZeroPayloadBrowserReport
+	, checkZeroPayloadNpmReport
+	, zeroPayloadBrowserPositions
+} from "./zero-payload-checked-record-browser-report.mjs";
+import {
 	zeroPayloadCheckedRecordFixture
 	, zeroPayloadCheckedRecordModule
 } from "./zero-payload-checked-record-fixture.mjs";
@@ -276,9 +281,14 @@ for(const route of routes) test(
 			, observations
 			, expectedBindingIrSha256: hashBindingIr(selection.expected), expected
 			, consumerProfiles: ["node-javascript", "node-typescript"]
+			, positions: zeroPayloadBrowserPositions
 			, callers: {
 				"index.mjs": sha256(script), "check.mjs": sha256(corpus)
 				, "index.mts": sha256(typescript)
+			}
+			, typescript: {
+				strict: true, skipLibCheck: false, sourceSha256: sha256(typescript)
+				, declarationsSha256: sha256(declarations)
 			}
 			, independentBuilds: 2, reproducible: true
 			, authorInputsUnchanged: true, sourceCommitClean: true
@@ -289,10 +299,18 @@ for(const route of routes) test(
 				? { checkedRefusals: 0, shapeRefusals: 0, recoveries: 0 }
 				: { checkedRefusals: 1, shapeRefusals: 7, recoveries: 8 }
 		}));
-		if(browsers) await checkZeroPayloadBrowsers({
-			directory: join(root, "browsers"), records: output, route
-			, producerCommit, consumerCommit: producerCommit, runtime
-		});
+		const read = path => readFile(join(output, path));
+		await checkZeroPayloadNpmReport(read, { route, producerCommit, runtime });
+		if(browsers)
+		{
+			await checkZeroPayloadBrowsers({
+				directory: join(root, "browsers"), records: output, route
+				, producerCommit, consumerCommit: producerCommit, runtime
+			});
+			await checkZeroPayloadBrowserReport(read, {
+				route, producerCommit, consumerCommit: producerCommit
+			});
+		}
 		complete = true;
 	}
 );
