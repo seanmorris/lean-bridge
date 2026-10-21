@@ -5,6 +5,7 @@
  *
  * @file
  */
+import "./helpers/zero-payload-php-wasm-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-php-wasm-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-php-wasm-lean-tests.mjs";
 import "./helpers/zero-payload-checked-record-php-wasm-installed-tests.mjs";
