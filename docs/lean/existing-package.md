@@ -467,6 +467,8 @@ The [hosted C/C++ zero-payload archive](../evidence/zero-payload-checked-record-
 
 The [hosted Java/Kotlin zero-payload archive](../evidence/zero-payload-checked-record-jvm-20261021.md) validates the same four package routes through independently compiled JVM callers. Java emits a zero-component record and Kotlin a zero-property class. Both remain non-null nominal values; `Token` keeps its generated `Unit` member, and option presence, arrays and variant branches stay distinct.
 
+The [hosted .NET zero-payload archive](../evidence/zero-payload-checked-record-dotnet-20261021.md) validates the same boundary in all four NuGet routes. C# emits a nominal non-null zero-component record for `Witness`; `Token` keeps its generated `Unit` property, and `Marker`, option presence, arrays and variant branches remain distinct.
+
 ### Export a checked Subtype
 
 For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:
