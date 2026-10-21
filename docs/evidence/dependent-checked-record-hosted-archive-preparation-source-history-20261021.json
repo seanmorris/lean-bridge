@@ -1,0 +1,101 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d65adf81b513e95edab3e2c110e8aef856e258b9ff3109405149e8a5f1b6d285",
+      "path": "scripts/archive-dependent-checked-record-python-evidence.mjs"
+    },
+    {
+      "currentSha256": "c559d76ffb4089740c50df245fa61fc2898d106736b526edbe9bf69c29838f48",
+      "path": "scripts/archive-dependent-checked-record-ruby-evidence.mjs"
+    },
+    {
+      "currentSha256": "6b2de325994e57dde8b69fc4affc67e239144dfc0710e148060f9e3f3cf1aec4",
+      "path": "scripts/archive-dependent-checked-record-rust-evidence.mjs"
+    },
+    {
+      "currentSha256": "fa3f128354232adb4a6769bfbd8d584d51ca20e3180b4723500cbad4935f6a60",
+      "path": "tests/helpers/dependent-checked-record-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "a963217fd0a7039ad26cf3e9be1e9e29acb3a7d53eda8198afe699ba4b242cbd",
+      "path": "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+    },
+    {
+      "currentSha256": "a4fcc01c9eee59f4dd49e618972f788624a5b0ef99103832253473b5264a3449",
+      "path": "tests/helpers/dependent-checked-record-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "b998b0dce32ba07426488857d256396683031de1ba394cb8f0b65315a2c484b6",
+      "path": "scripts/update-dependent-checked-record-hosted-archive-preparation-source-history.mjs"
+    },
+    {
+      "currentSha256": "06347f6ae302afe1d508eeca98854798bfc3dec6adc46dfa46d9af1ab627ec67",
+      "path": "tests/helpers/dependent-checked-record-hosted-archive-preparation-source-history.mjs"
+    },
+    {
+      "currentSha256": "ea4f2e024b1a1f7ba51d3bb7167e6f29b70a445274e62f6f81b9d164cab03891",
+      "path": "tests/helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9d593fefce53daabbade9372df208579efb905e5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f5d29c5526729eaccf1c4a7f15034bf7bc44c9a2b548c8c9f62a99fc89fbe442",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordHostedArchivePreparationSource, dependentCheckedRecordHostedArchivePreparationChangedPaths, dependentCheckedRecordHostedArchivePreparationIntegrationPaths } from \"./dependent-checked-record-hosted-archive-preparation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordHostedArchivePreparationChangedPaths\n\t, ...dependentCheckedRecordHostedArchivePreparationIntegrationPaths\n\t, ...dependentCheckedRecordRustChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordRustChangedPaths\n",
+          "start": 124135
+        },
+        {
+          "current": "\tconst dependentCheckedRecordHostedArchivePreparation\n\t\t= beforeDependentCheckedRecordHostedArchivePreparationSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordHostedArchivePreparation) === expected)\n\t\treturn dependentCheckedRecordHostedArchivePreparation;\n",
+          "previous": "",
+          "start": 151791
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordRustSource(\n\t\t\tpath, dependentCheckedRecordHostedArchivePreparation, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordRustSource(path, text, expected);\n",
+          "start": 152102
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "94d069052aa5173a9bcb56951a2f68c9ee3a48dd64a8a0af5ec4537c0ced3de3"
+    },
+    {
+      "currentSha256": "9f21e17c729ee97b722bc41c6b1239a88f12f5ce7f0094259c48918bdc917380",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-hosted-archive-preparation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3411
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "de30b431f2947540e647133bd29d58f92b79598309123e4f7f892c2faefd8c0a"
+    }
+  ],
+  "milestone": "dependent-checked-record-hosted-archive-preparation-source-v1",
+  "predecessorCommit": "d2f3e5c869d84b77c228b2efebe18d86172d81b1",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable Python, Ruby and Rust dependent checked-record archivers bind hosted artifacts, exact source closures and independent retained-record replay before support promotion.",
+  "updates": [
+    {
+      "currentSha256": "0e7e32b3a1f1660447e104e4cba6d588dea6d1b9b7232613c266b58afb884654",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\";\n",
+          "previous": "",
+          "start": 760
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "76c2d2f8b31004fb69c1a0dad4f2d26e3f69011f1952cf8b00d49bc521bba5a0"
+    }
+  ]
+}
