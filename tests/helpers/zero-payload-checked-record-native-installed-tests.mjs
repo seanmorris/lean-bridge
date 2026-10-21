@@ -38,6 +38,12 @@ import {
 import {
 	observeCheckedRecordValueIndexNativeRuntime
 } from "./checked-record-value-index-native-runtime.mjs";
+import {
+	checkZeroPayloadNativeReport, zeroPayloadNativeRecordPaths
+} from "./zero-payload-checked-record-native-report.mjs";
+import {
+	zeroPayloadNativeNegativeControls
+} from "./zero-payload-checked-record-native-controls.mjs";
 
 const flag = "LEAN_BRIDGE_ZERO_PAYLOAD_NATIVE_TEST";
 if(process.env[flag] !== undefined)
@@ -262,6 +268,23 @@ for(const route of routes) test(
 			assert.equal(item.compilerFreePath, true);
 			assert.equal(item.relocatedInstallation, true);
 		}
+		const options = {
+			route, producerCommit, consumerCommit, runtime, floor
+		};
+		const read = path => readFile(join(output, path));
+		const accepted = await checkZeroPayloadNativeReport(read, options);
+		const expectedPaths = zeroPayloadNativeRecordPaths(route, receipt);
+		assert.deepEqual(await nativeArtifactPaths(output), expectedPaths);
+		const originals = new Map(await Promise.all(expectedPaths.map(async path => [
+			path, await read(path)
+		])));
+		const controls = await zeroPayloadNativeNegativeControls(originals, options);
+		assert.deepEqual(controls.accepted, accepted);
+		await saveLakeFile(output, "controls.json", canonicalJson({
+			schemaVersion: 1, checkerCommit: producerCommit, ...controls
+		}));
+		assert.deepEqual(await nativeArtifactPaths(output)
+			, [...expectedPaths, "controls.json"].sort());
 		complete = true;
 	}
 );
