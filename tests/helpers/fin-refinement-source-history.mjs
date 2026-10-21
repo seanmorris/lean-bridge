@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPythonSource, dependentCheckedRecordPythonChangedPaths, dependentCheckedRecordPythonIntegrationPaths } from "./dependent-checked-record-python-source-history.mjs";
 import { beforeDependentCheckedRecordPerlSource, dependentCheckedRecordPerlChangedPaths, dependentCheckedRecordPerlIntegrationPaths } from "./dependent-checked-record-perl-source-history.mjs";
 import { beforeDependentCheckedRecordNativeSource, dependentCheckedRecordNativeChangedPaths, dependentCheckedRecordNativeIntegrationPaths } from "./dependent-checked-record-native-source-history.mjs";
 import { beforeDependentCheckedRecordFoundationSource, dependentCheckedRecordFoundationChangedPaths, dependentCheckedRecordFoundationIntegrationPaths } from "./dependent-checked-record-foundation-source-history.mjs";
@@ -1464,7 +1465,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPerlChangedPaths
+	...dependentCheckedRecordPythonChangedPaths
+	, ...dependentCheckedRecordPythonIntegrationPaths
+	, ...dependentCheckedRecordPerlChangedPaths
 	, ...dependentCheckedRecordPerlIntegrationPaths
 	, ...dependentCheckedRecordNativeChangedPaths
 	, ...dependentCheckedRecordNativeIntegrationPaths
@@ -2070,8 +2073,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordPython
+		= beforeDependentCheckedRecordPythonSource(path, text, expected);
+	if(sha256(dependentCheckedRecordPython) === expected)
+		return dependentCheckedRecordPython;
 	const dependentCheckedRecordPerl
-		= beforeDependentCheckedRecordPerlSource(path, text, expected);
+		= beforeDependentCheckedRecordPerlSource(
+			path, dependentCheckedRecordPython, expected
+		);
 	if(sha256(dependentCheckedRecordPerl) === expected)
 		return dependentCheckedRecordPerl;
 	const dependentCheckedRecordNative

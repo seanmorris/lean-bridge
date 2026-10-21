@@ -1,0 +1,121 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8479e2024675fb30291eec23100d3ba627f6e95197e9834f53a14578f3968517",
+      "path": ".github/workflows/dependent-checked-record-python.yml"
+    },
+    {
+      "currentSha256": "bf75e49689a310d4c7f557b409da7cf7309a8715700d0e490a1afa4abb2e60a1",
+      "path": "scripts/check-dependent-checked-record-python-ci.mjs"
+    },
+    {
+      "currentSha256": "b3b2691885e55810f12f2a8d847c537cd1c00ea0cbfbb91e2465900a1293b567",
+      "path": "scripts/run-dependent-checked-record-python-ci.sh"
+    },
+    {
+      "currentSha256": "63e1eaf33538a01875d03db009d80e5a4ebc72cda9ddc4a3a9c862685342be17",
+      "path": "tests/fixtures/dependent-checked-record-consumers/python.py"
+    },
+    {
+      "currentSha256": "4348a84dcab8f67e32ea60edf9e9d2f92abfe7e34b843c6dfcc40b5fa88529c8",
+      "path": "tests/helpers/dependent-checked-record-python-ci-report.mjs"
+    },
+    {
+      "currentSha256": "ba02c18e331c337240a109b53f6a21a6aae946eb31ab776af0dafc86faf27b52",
+      "path": "tests/helpers/dependent-checked-record-python-fixture.mjs"
+    },
+    {
+      "currentSha256": "3f7492b4b6cfd92b4ecee0023e9f57384ef840e0b465ea60fca67dda58b3b83f",
+      "path": "tests/helpers/dependent-checked-record-python-install.mjs"
+    },
+    {
+      "currentSha256": "70074bea156a2b9db02204c86673d621aceb51051dffe2f5b942e934b61ab0b0",
+      "path": "tests/helpers/dependent-checked-record-python-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "18421da45c88546e6be171ef41c87866d2fa98ee95ca16626af8d99db3faa674",
+      "path": "tests/helpers/dependent-checked-record-python-model.py"
+    },
+    {
+      "currentSha256": "cc3e92d26c01c3dd5b5bbda2f1a35662ed6aa373336c706aaa32e256e67a1166",
+      "path": "tests/helpers/dependent-checked-record-python-tests.mjs"
+    },
+    {
+      "currentSha256": "26d1309bf61f8d9b59fb83724b95007efcf961e0556040fc32c8ec8aad56bb79",
+      "path": "tests/helpers/dependent-checked-record-python-wheel.mjs"
+    },
+    {
+      "currentSha256": "4d64b15a8778e5fa2745ec0052e0301c183cffb818f1baeeb8cea3d06bd29985",
+      "path": "scripts/update-dependent-checked-record-python-source-history.mjs"
+    },
+    {
+      "currentSha256": "6e9d6ce3781c1945e7a8f5df88efb2adac153eb614a191528904cbdaf439e195",
+      "path": "tests/helpers/dependent-checked-record-python-source-history.mjs"
+    },
+    {
+      "currentSha256": "44357e51f9d5be279c5f5270ec2f939b4a077af3691db9dce2cf4ce0e61dae9e",
+      "path": "tests/helpers/dependent-checked-record-python-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "d425c218f55797036d4d40aa55381c59668cabe5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "bea916287e9bcb1d523df38816329eba77fbd2f44230fa671677091c585955eb",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPythonSource, dependentCheckedRecordPythonChangedPaths, dependentCheckedRecordPythonIntegrationPaths } from \"./dependent-checked-record-python-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPythonChangedPaths\n\t, ...dependentCheckedRecordPythonIntegrationPaths\n\t, ...dependentCheckedRecordPerlChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPerlChangedPaths\n",
+          "start": 123474
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPython\n\t\t= beforeDependentCheckedRecordPythonSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordPython) === expected)\n\t\treturn dependentCheckedRecordPython;\n",
+          "previous": "",
+          "start": 150808
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordPerlSource(\n\t\t\tpath, dependentCheckedRecordPython, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordPerlSource(path, text, expected);\n",
+          "start": 151040
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "405551d49c096169662456b1da8d7076391bd8c6eef4d7e61a35fbb95d2e141f"
+    },
+    {
+      "currentSha256": "8b9644a715aa0a26790c1142d742a847da99c8ec4ebede74a41aa4ffa2091bab",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-python-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3184
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a5a6eb56f1ebfee9ad2f91fcc88b7ff8ee8a5af34d59b306a2b80be2ce67ed9b"
+    }
+  ],
+  "milestone": "dependent-checked-record-python-source-v1",
+  "predecessorCommit": "5221f8851e8d5dd5d675d87f7bfd454f7a131781",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline on both CPython floors in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "bf401dac099d1126ec9b631f9c2d22c0b1674ae7ee8a1021cb4b96c13b6930ae",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-python-tests.mjs\";\nimport \"./helpers/dependent-checked-record-python-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 288
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "f82b3218abbb8e98fa425468a89216b6daba8405570184c1fbce4b07bc7a7b46"
+    }
+  ]
+}
