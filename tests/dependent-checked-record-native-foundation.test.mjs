@@ -23,3 +23,6 @@ import "./helpers/dependent-checked-record-wit-ci-shell-tests.mjs";
 import "./helpers/dependent-checked-record-wit-ci-workflow-tests.mjs";
 import "./helpers/dependent-checked-record-wit-ci-handoff-tests.mjs";
 import "./helpers/dependent-checked-record-wit-installed-tests.mjs";
+import "./helpers/dependent-checked-record-dotnet-fixture-tests.mjs";
+import "./helpers/dependent-checked-record-dotnet-ci-report-tests.mjs";
+import "./helpers/dependent-checked-record-dotnet-installed-tests.mjs";
