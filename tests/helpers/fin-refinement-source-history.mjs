@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPhpSource, dependentCheckedRecordPhpChangedPaths, dependentCheckedRecordPhpIntegrationPaths } from "./dependent-checked-record-php-source-history.mjs";
 import { beforeDependentCheckedRecordRustArchiveSource, dependentCheckedRecordRustArchiveIntegrationPaths } from "./dependent-checked-record-rust-archive-source-history.mjs";
 import { beforeDependentCheckedRecordArchiveSelectionRepairSource, dependentCheckedRecordArchiveSelectionRepairChangedPaths, dependentCheckedRecordArchiveSelectionRepairIntegrationPaths } from "./dependent-checked-record-archive-selection-repair-source-history.mjs";
 import { beforeZeroPayloadNativeControlContractSource, zeroPayloadNativeControlContractChangedPaths, zeroPayloadNativeControlContractIntegrationPaths } from "./zero-payload-native-control-contract-source-history.mjs";
@@ -1471,7 +1472,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordRustArchiveIntegrationPaths
+	...dependentCheckedRecordPhpChangedPaths
+	, ...dependentCheckedRecordPhpIntegrationPaths
+	, ...dependentCheckedRecordRustArchiveIntegrationPaths
 	, ...dependentCheckedRecordArchiveSelectionRepairChangedPaths
 	, ...dependentCheckedRecordArchiveSelectionRepairIntegrationPaths
 	, ...zeroPayloadNativeControlContractChangedPaths
@@ -2090,8 +2093,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordPhp
+		= beforeDependentCheckedRecordPhpSource(path, text, expected);
+	if(sha256(dependentCheckedRecordPhp) === expected)
+		return dependentCheckedRecordPhp;
 	const dependentCheckedRecordRustArchive
-		= beforeDependentCheckedRecordRustArchiveSource(path, text, expected);
+		= beforeDependentCheckedRecordRustArchiveSource(
+			path, dependentCheckedRecordPhp, expected
+		);
 	if(sha256(dependentCheckedRecordRustArchive) === expected)
 		return dependentCheckedRecordRustArchive;
 	const dependentCheckedRecordArchiveSelectionRepair

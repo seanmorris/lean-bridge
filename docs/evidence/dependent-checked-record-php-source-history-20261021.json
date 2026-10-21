@@ -1,0 +1,121 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4039d29632fafff3e6cb9717d0bf5742a131b755381e2d654a12084cdce6ebeb",
+      "path": ".github/workflows/dependent-checked-record-php.yml"
+    },
+    {
+      "currentSha256": "7bbac87776b3f0818464e9dc87f7de27dd378f279221bd4d943b62c1f57c58fb",
+      "path": "scripts/check-dependent-checked-record-php-ci.mjs"
+    },
+    {
+      "currentSha256": "95a1641434591956832d92c83feddaa4293b9c7d86f40749e1fdcca52e8bb94a",
+      "path": "scripts/run-dependent-checked-record-php-ci.sh"
+    },
+    {
+      "currentSha256": "f721655fc3644f7647a024881119cb1eff3062ee5ca1055a17cc18816b511ebb",
+      "path": "tests/fixtures/dependent-checked-record-consumers/php.php"
+    },
+    {
+      "currentSha256": "c36c86bdf5021a9ff04d74eded980b67a819a48e5415fd473efe9176d8eaa620",
+      "path": "tests/helpers/dependent-checked-record-php-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "c7564561235b435bfc2b9ef9a5a91af485a797313c078eb88f77c2466229ad61",
+      "path": "tests/helpers/dependent-checked-record-php-ci-report.mjs"
+    },
+    {
+      "currentSha256": "071712be3c297a41a801193a9ee4a2ce7f1d18549b49d39b06403249d200a191",
+      "path": "tests/helpers/dependent-checked-record-php-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "c6e45db8b19d4e380da61e8ab47dbcdc3edd063b4926ae409521e0e0a3ad52d8",
+      "path": "tests/helpers/dependent-checked-record-php-fixture.mjs"
+    },
+    {
+      "currentSha256": "f06bd061e63fee0d7f6af4f4a96f448121ddf5602516e2cf525569cb5ec32437",
+      "path": "tests/helpers/dependent-checked-record-php-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "453bc343df9a818982e926ee6d1da254036eead5f02f1d9d8ae3d5c4a390d039",
+      "path": "tests/helpers/dependent-checked-record-php-model.php"
+    },
+    {
+      "currentSha256": "3bba8bed18136003cd75ac12988786567a9b394344e25fc83cdd0b8879a841b6",
+      "path": "tests/helpers/dependent-checked-record-php-package.mjs"
+    },
+    {
+      "currentSha256": "132e42280ced3f4aba747e9a8a61c9cef1e4d174a2aa786c36b0b5d8598c3b74",
+      "path": "scripts/update-dependent-checked-record-php-source-history.mjs"
+    },
+    {
+      "currentSha256": "2dd28fad67292b58ac48d58235545207f623a529f23b8a8cbb043c35d538ed1e",
+      "path": "tests/helpers/dependent-checked-record-php-source-history.mjs"
+    },
+    {
+      "currentSha256": "ef2999f9d9abd89c847ce9a4041919e65f4376278140eefbd4f68ebc4ba5050d",
+      "path": "tests/helpers/dependent-checked-record-php-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "e4d0dd347197f3b306c628ac6b9082e719c56039",
+  "integrationUpdates": [
+    {
+      "currentSha256": "64b35f937dbaef063dc4c6734c9512b3af5091035334755b531b35a73af7c53c",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPhpSource, dependentCheckedRecordPhpChangedPaths, dependentCheckedRecordPhpIntegrationPaths } from \"./dependent-checked-record-php-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPhpChangedPaths\n\t, ...dependentCheckedRecordPhpIntegrationPaths\n\t, ...dependentCheckedRecordRustArchiveIntegrationPaths\n",
+          "previous": "\t...dependentCheckedRecordRustArchiveIntegrationPaths\n",
+          "start": 124984
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPhp\n\t\t= beforeDependentCheckedRecordPhpSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordPhp) === expected)\n\t\treturn dependentCheckedRecordPhp;\n",
+          "previous": "",
+          "start": 153024
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordRustArchiveSource(\n\t\t\tpath, dependentCheckedRecordPhp, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordRustArchiveSource(path, text, expected);\n",
+          "start": 153251
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "766e100f7d9694f60420013db16383113dba918be7dee6482172bb035f83e408"
+    },
+    {
+      "currentSha256": "bf620abea207442957ddf63dae946694b6261d7b5b185b0b5ebc5c4a5713fd4e",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a5f6b1f2164a3a403ec75ca01d171aad43c1c17fbb54654cc88f3ad249afedbb"
+    }
+  ],
+  "milestone": "dependent-checked-record-php-source-v1",
+  "predecessorCommit": "c915d5d5e97df8435742359d2305dd5413638511",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline in native PHP Composer packages, in weak and strict mode, in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "c28947ceeffb24b4c3db14b18789d3c0b9524825bb5f941b8849631e82198379",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-fixture-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-ci-report-tests.mjs\";\nimport \"./helpers/dependent-checked-record-php-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 839
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "0e7e32b3a1f1660447e104e4cba6d588dea6d1b9b7232613c266b58afb884654"
+    }
+  ]
+}
