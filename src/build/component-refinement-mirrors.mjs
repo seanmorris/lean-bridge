@@ -64,9 +64,11 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 	const merge = (tree, shared) => {
 		if(shared === null || shared === undefined) return tree;
 		if(tree === null) return shared;
-		if(tree.kind !== shared.kind || (tree.kind === "fin" && tree.bound !== shared.bound))
+		if(tree.kind !== shared.kind || (tree.kind === "fin" && tree.bound !== shared.bound)
+			|| (tree.kind === "fin-field" && tree.field !== shared.field))
 			fail("per-use refinements conflict with shared Fin bounds");
-		return tree.kind === "fin" ? tree : { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };
+		return ["fin", "fin-field"].includes(tree.kind) ? tree
+			: { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };
 	};
 	const normalize = (root, selected, produced, projections = new Map()) => {
 		let nodes = 0;

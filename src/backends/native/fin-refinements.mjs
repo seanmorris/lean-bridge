@@ -25,7 +25,7 @@ export const nativeFinRefinements = (declaration, types = []) => {
 	assertRefinement(value.result, declaration.result.type, 0, true, types, true);
 	// Nominal Subtypes and checked records keep their per-use constructor decisions
 	// separate from shared Fin bounds.
-	const supported = refinement => refinement === null || ["fin", "subtype"].includes(refinement.kind)
+	const supported = refinement => refinement === null || ["fin", "fin-field", "subtype"].includes(refinement.kind)
 		|| (refinement.kind === "checked-record" && (!Object.hasOwn(refinement, "fields")
 			|| refinement.fields.every(field => supported(field.refinement))))
 		|| (refinement.kind === "record" && refinement.fields.every(field => supported(field.refinement, false)))
@@ -69,9 +69,11 @@ const nativeFinExpansion = (declaration, types) => {
 	const merge = (tree, shared) => {
 		if(shared === null || shared === undefined) return tree;
 		if(tree === null) return shared;
-		if(tree.kind !== shared.kind || (tree.kind === "fin" && tree.bound !== shared.bound))
+		if(tree.kind !== shared.kind || (tree.kind === "fin" && tree.bound !== shared.bound)
+			|| (tree.kind === "fin-field" && tree.field !== shared.field))
 			throw new TypeError("Per-use refinement conflicts with shared nominal bounds");
-		return tree.kind === "fin" ? tree : { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };
+		return ["fin", "fin-field"].includes(tree.kind) ? tree
+			: { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };
 	};
 	const expand = (type, tree, seen = new Set(), produced = false, depth = 0) => {
 		if(type?.kind === "named")
@@ -148,6 +150,7 @@ export const nativeFinBoundPaths = (refinement, path, produced = false) => {
 	if(refinement.kind === "subtype") return [produced || refinement.constructor === null
 		? `${path} projects the Subtype base value` : `${path} checked by ${refinement.constructor}`];
 	if(refinement.kind === "fin") return [`${path} < ${refinement.bound}`];
+	if(refinement.kind === "fin-field") return [`${path} < ${path.slice(0, path.lastIndexOf(".") + 1)}${refinement.field}`];
 	if(refinement.kind === "tuple") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index}`, produced));
 	if(refinement.kind === "result") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${index ? "error" : "ok"}`, produced));
 	if(refinement.kind === "record") return refinement.arguments.flatMap((child, index) => nativeFinBoundPaths(child, `${path}.${refinement.fields[index]}`, produced));

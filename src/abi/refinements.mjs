@@ -33,6 +33,14 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 		for(let index = 0; index < count; index++)
 			if(!Object.hasOwn(Object.getOwnPropertyDescriptor(values, index) ?? {}, "value")) fail();
 	};
+	const dependentField = (value, transport, definition, index) => {
+		closed(value, ["kind", "field"]);
+		const dependency = definition?.fields?.findIndex((field, position) => position < index && field.name === value.field);
+		if(value.kind !== "fin-field" || typeof value.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(value.field)
+			|| transport?.kind !== "primitive" || transport.name !== "nat" || !Number.isInteger(dependency) || dependency < 0
+			|| definition.fields[dependency].type?.kind !== "primitive" || definition.fields[dependency].type.name !== "nat") fail();
+		return true;
+	};
 	const visit = (value, transport, level, seen) => {
 		if(++nodes > 4096 || level > 32) fail();
 		if(value === null) return false;
@@ -84,7 +92,9 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 			{
 				closed(field, ["name", "refinement"]);
 				if(field.name !== definition.fields[index].name) fail();
-				visit(field.refinement, definition.fields[index].type, level + 1, seen);
+				if(field.refinement?.kind === "fin-field")
+					dependentField(field.refinement, definition.fields[index].type, definition, index);
+				else visit(field.refinement, definition.fields[index].type, level + 1, seen);
 			}
 			return true;
 		}
@@ -152,7 +162,7 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 export const declarationRefinements = (declaration, value, types = [], { ownedStructural = false } = {}) => {
 	const fail = () => { throw new TypeError("Invalid declaration refinement metadata"); };
 	const direction = (tree, produced) => {
-		if(tree === null || tree.kind === "fin") return;
+		if(tree === null || ["fin", "fin-field"].includes(tree.kind)) return;
 		if(["subtype", "checked-record"].includes(tree.kind))
 		{
 			if(produced ? tree.constructor !== null : typeof tree.constructor !== "string") fail();
@@ -192,12 +202,25 @@ export const nominalRefinement = (definition, value = definition.source?.extensi
 	if(!field || !value || typeof value !== "object" || Array.isArray(value)
 		|| value.kind !== definition.kind || Object.keys(value).length !== 2
 		|| !Object.hasOwn(value, "kind") || !Object.hasOwn(value, field)) fail();
-	const check = (values, fields) => {
+	const check = (values, fields, dependent = false) => {
 		if(!Array.isArray(values) || values.length !== fields.length) fail();
-		for(const [index, refinement] of values.entries()) assertRefinement(refinement, fields[index].type, 1);
+		for(const [index, refinement] of values.entries())
+		{
+			if(refinement?.kind !== "fin-field") assertRefinement(refinement, fields[index].type, 1);
+			else
+			{
+				if(!dependent || !refinement || Object.keys(refinement).sort().join(",") !== "field,kind"
+					|| typeof refinement.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(refinement.field)
+					|| fields[index].type?.kind !== "primitive" || fields[index].type.name !== "nat") fail();
+				const dependency = fields.findIndex((candidate, position) => position < index && candidate.name === refinement.field);
+				if(dependency < 0 || fields[dependency].type?.kind !== "primitive" || fields[dependency].type.name !== "nat") fail();
+			}
+		}
 	};
 	if(field === "target") assertRefinement(value.target, definition.target, 1);
-	else if(field === "fields") check(value.fields, definition.fields);
+	else if(field === "fields") check(value.fields, definition.fields,
+		definition.source?.extensions?.["lean-lang.org/erased-proofs"] !== undefined
+			|| Array.isArray(definition.erased) && definition.erased.length > 0);
 	else
 	{
 		if(!Array.isArray(value.cases) || value.cases.length !== definition.cases.length) fail();
@@ -229,7 +252,7 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
  * @returns {boolean} Whether the tree contains a Subtype leaf.
  */
 export const assertCallbackRefinementDirection = (refinement, produced) => {
-	if(refinement === null || refinement.kind === "fin") return false;
+	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return false;
 	if(refinement.kind === "subtype")
 	{
 		if(produced ? refinement.constructor !== null : typeof refinement.constructor !== "string")

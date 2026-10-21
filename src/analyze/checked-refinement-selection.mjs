@@ -105,6 +105,12 @@ export const checkedRefinementSelection = refinement => {
 			if(typeof value.bound !== "string" || !/^(?:0|[1-9][0-9]*)$(?![\s\S])/.test(value.bound)) fail();
 			return null;
 		}
+		if(value?.kind === "fin-field")
+		{
+			closed(value, ["kind", "field"]);
+			if(typeof value.field !== "string" || !memberName.test(value.field)) fail();
+			return null;
+		}
 		if(value?.kind === "checked-record" && Object.hasOwn(value, "fields"))
 		{
 			closed(value, ["kind", "name", "constructor", "fields"]);
@@ -179,6 +185,21 @@ export const checkedRefinementSelection = refinement => {
  */
 export const projectionCheckedSelection = type => {
 	let nodes = 0;
+	const containsRefinement = (value, definitions, seen = new Set()) => {
+		if(!value || typeof value !== "object") return false;
+		if(value.kind === "refinement") return true;
+		if(value.kind === "reference")
+		{
+			if(seen.has(value.name) || !definitions.has(value.name)) return false;
+			return containsRefinement(definitions.get(value.name), definitions, new Set([...seen, value.name]));
+		}
+		if(value.kind === "alias") return containsRefinement(value.target, definitions, seen);
+		if(["array", "list", "option"].includes(value.kind)) return containsRefinement(value.element, definitions, seen);
+		if(["tuple", "result"].includes(value.kind)) return value.arguments.some(child => containsRefinement(child, definitions, seen));
+		if(value.kind === "record") return value.fields.some(field => containsRefinement(field.type, definitions, seen));
+		if(value.kind === "variant") return value.cases.some(branch => branch.fields.some(field => containsRefinement(field.type, definitions, seen)));
+		return false;
+	};
 	const resolveCheckedRecord = (value, definitions) => {
 		const names = new Set();
 		for(let depth = 0; depth <= 1024; depth++)
@@ -232,7 +253,8 @@ export const projectionCheckedSelection = type => {
 				selected ||= refinement !== null;
 				return { name: field.name, refinement };
 			});
-			if(depth > 0 || reference !== null || selected)
+			const constrained = base.fields.some(field => containsRefinement(field.type, definitions, inner));
+			if(depth > 0 || reference !== null || selected || constrained)
 			{
 				return {
 					kind: "checked-record", name: base.name

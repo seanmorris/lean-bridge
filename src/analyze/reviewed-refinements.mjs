@@ -7,7 +7,7 @@ import { assertRefinement, callbackDefinitionRefinement, callbackSubtypeDirectio
 
 // Run only after the shared validator has checked tree shape and depth.
 const finOnly = refinement => {
-	if(refinement === null || refinement.kind === "fin") return;
+	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return;
 	if(refinement.kind === "subtype") throw new TypeError("Reviewed Subtype decisions require a checked constructor selection");
 	if(refinement.kind === "checked-record") throw new TypeError("Reviewed checked records cross only at top-level sites");
 	if(refinement.kind === "record") return refinement.fields.forEach(field => finOnly(field.refinement));

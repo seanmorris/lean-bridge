@@ -235,7 +235,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				|| type.erased.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
 				|| type.fields.some(field => type.erased.includes(field.name))) fail("invalid erased proof fields");
 		}
-		for(const field of type.fields)
+		for(const [index, field] of type.fields.entries())
 		{
 			closed(field, ["name", "projection", "type"], "record field");
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
@@ -245,7 +245,25 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			const refinable = !Object.hasOwn(type, "erased")
 				|| site === "checked-record" || subtypeResult || erasedTransport;
 			const generic = Object.hasOwn(type, "provenance");
-			recurse(field.type, true, !generic, subtypeStructural && refinable
+			// A dependent Fin payload is transported as Nat and may name only an earlier
+			// retained Nat field of this proof-backed record. Its enclosing checked-record
+			// constructor, rather than a standalone static bound, validates the relationship.
+			if(field.type?.kind === "refinement" && field.type.predicate?.kind === "fin-field")
+			{
+				if(!Object.hasOwn(type, "erased") || !refinable || generic) fail("dependent Fin fields require a checked record");
+				closed(field.type, ["kind", "base", "predicate", "abi"], "native type");
+				representation(field.type);
+				closed(field.type.predicate, ["kind", "field"], "refinement predicate");
+				const dependency = type.fields.findIndex((candidate, position) => position < index && candidate.name === field.type.predicate.field);
+				if(typeof field.type.predicate.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.type.predicate.field)
+					|| dependency < 0 || type.fields[dependency].type?.kind !== "primitive" || type.fields[dependency].type.name !== "nat")
+					fail("dependent Fin field must reference an earlier retained Nat field");
+				recurse(field.type.base, true, true, false, false);
+				if(field.type.base.kind !== "primitive" || field.type.base.name !== "nat"
+					|| ["cType", "box", "unbox", "heap"].some(name => field.type.abi[name] !== field.type.base.abi[name]))
+					fail("dependent Fin fields require a Nat transport");
+			}
+			else recurse(field.type, true, !generic, subtypeStructural && refinable
 				, subtypeResult && refinable);
 		}
 	} else if(type.kind === "variant")

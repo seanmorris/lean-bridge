@@ -85,6 +85,7 @@
         { "type": "null" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"], "properties": { "kind": { "enum": ["array", "list", "option", "tuple", "result"] }, "arguments": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/$defs/refinement" } } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "bound"], "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "field"], "properties": { "kind": { "const": "fin-field" }, "field": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"], "properties": { "kind": { "const": "subtype" }, "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"], "properties": { "kind": { "const": "checked-record" }, "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "constructor", "fields"], "properties": { "kind": { "const": "checked-record" }, "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }, "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }, "fields": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/refinementField" } } } },
@@ -109,6 +110,7 @@
         { "type": "null" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"], "properties": { "kind": { "enum": ["array", "list", "option", "tuple", "result"] }, "arguments": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/$defs/resultRefinement" } } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "bound"], "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "field"], "properties": { "kind": { "const": "fin-field" }, "field": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"], "properties": { "kind": { "const": "subtype" }, "constructor": { "type": ["string", "null"], "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "constructor"], "properties": { "kind": { "const": "checked-record" }, "constructor": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "name", "constructor", "fields"], "properties": { "kind": { "const": "checked-record" }, "name": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)*$" }, "constructor": { "type": "null" }, "fields": { "type": "array", "maxItems": 1024, "items": { "$ref": "#/$defs/resultRefinementField" } } } },
@@ -133,6 +135,7 @@
         { "type": "null" },
         { "type": "object", "additionalProperties": false, "required": ["kind", "arguments"], "properties": { "kind": { "enum": ["array", "list", "option", "tuple", "result"] }, "arguments": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "$ref": "#/$defs/finRefinement" } } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "bound"], "properties": { "kind": { "const": "fin" }, "bound": { "type": "string", "pattern": "^(0|[1-9][0-9]*)$" } } }
+        , { "type": "object", "additionalProperties": false, "required": ["kind", "field"], "properties": { "kind": { "const": "fin-field" }, "field": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" } } }
       ]
     },
     "callbackFinRefinement": {

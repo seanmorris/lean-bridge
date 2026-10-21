@@ -294,6 +294,17 @@
       "required": ["kind", "base", "predicate", "abi"],
       "properties": {
         "kind": { "const": "refinement" },
+        "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" }, "name": { "const": "nat" } } }] },
+        "predicate": { "type": "object", "additionalProperties": false, "required": ["kind", "field"],
+          "properties": { "kind": { "const": "fin-field" }, "field": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" } } },
+        "abi": { "$ref": "#/$defs/abi" }
+      }
+    },
+    {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "base", "predicate", "abi"],
+      "properties": {
+        "kind": { "const": "refinement" },
         "base": { "allOf": [{ "$ref": "#" }, { "properties": { "kind": { "const": "primitive" } } }] },
         "predicate": {
           "type": "object", "additionalProperties": false, "required": ["kind", "constructor"],

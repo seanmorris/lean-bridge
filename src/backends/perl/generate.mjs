@@ -315,7 +315,7 @@ const finGuard = (type, refinement, value, name, depth = 0, path = { format: "",
 };
 // Prune only constructor leaves, retaining every Fin in mixed structural/nominal trees.
 const finOnly = refinement => {
-	if(refinement === null || refinement.kind === "subtype") return null;
+	if(refinement === null || ["subtype", "fin-field"].includes(refinement.kind)) return null;
 	if(refinement.kind === "fin") return refinement;
 	if(refinement.kind === "checked-record")
 	{

@@ -57,7 +57,7 @@ const finBelow = `static inline int lb_fin_below(const uint32_t *data, size_t le
 export const finRefinementWalk = ({ refinement, type: root, value: argument, constant, label, copy, bounds, reject }) => {
 	let sites = 0;
 	const check = (site, type, value, indent, path) => {
-		if(site === null || site.kind === "subtype") return [];
+		if(site === null || ["subtype", "fin-field"].includes(site.kind)) return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path);
 		if(site.kind === "checked-record")
 		{
@@ -119,7 +119,7 @@ export const finRefinementWalk = ({ refinement, type: root, value: argument, con
  */
 export const constructorRefinementWalk = ({ refinement, type: root, value: argument, symbol, label, copy, input, reject }) => {
 	const check = (site, type, value, indent, path, suffix) => {
-		if(site === null || site.kind === "fin") return [];
+		if(site === null || ["fin", "fin-field"].includes(site.kind)) return [];
 		if(type.kind === "alias") return check(site, type.target, value, indent, path, suffix);
 		if(site.kind === "subtype")
 		{

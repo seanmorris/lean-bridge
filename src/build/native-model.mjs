@@ -245,7 +245,9 @@ const nativeRefinements = (declaration, callbacks = false) => {
 				return { kind: "subtype", constructor: type.predicate.constructor };
 			}
 			if(!allowFin) throw unsupported("checked Fin refinements inside instantiated generic record fields are not supported by native packages");
-			return { kind: type.predicate.kind, bound: type.predicate.bound };
+			return type.predicate.kind === "fin-field"
+				? { kind: "fin-field", field: type.predicate.field }
+				: { kind: type.predicate.kind, bound: type.predicate.bound };
 		}
 		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural, produced, allowFin);
 		if(["array", "list", "option"].includes(type.kind))

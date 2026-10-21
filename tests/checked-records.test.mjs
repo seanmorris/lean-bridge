@@ -20,7 +20,7 @@ import { reviewedContractDifference, reviewedSourceSelection, validateReviewedSo
 import { inspectLeanProject } from "../src/analyze/lean-project.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { createComponentBuildPlan } from "../src/build/component-plan.mjs";
-import { generateCompilerAdapters } from "../src/build/compiler-adapters.mjs";
+import { generateCompilerAdapters, validateCompilerAdapterPlan } from "../src/build/compiler-adapters.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import { prepareLakeEntryIntent } from "../src/build/lake-entry-intent.mjs";
 import { resolveLakeBuildWorkspace } from "../src/build/lake-build-workspace.mjs";
@@ -38,7 +38,7 @@ import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment
 import { refinementEngineTransport } from "./helpers/refinement-engine.mjs";
 import { assertCheckedRecordReport, checkCheckedRecordNpmPackages, checkedRecordNativeCaller, checkedRecordNativeReport, checkedRecordNodeConsumer, checkedRecordResultOnlyConsumer, checkedRecordTypescript } from "./helpers/checked-record-packages.mjs";
 import { checkedRecordDispatchColumns, checkedRecordDispatchExpected, checkedRecordDispatchInterposer, checkedRecordDispatchProbe } from "./helpers/checked-record-dispatch.mjs";
-import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, checkedRecordValueIndexContracts, checkedRecordValueIndexReview, checkedRecordValueIndexSource, erasedProofsKey, instantiationKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
+import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, checkedRecordValueIndexContracts, checkedRecordValueIndexReview, checkedRecordValueIndexSource, dependentCheckedRecordContracts, dependentCheckedRecordReview, dependentCheckedRecordSource, erasedProofsKey, instantiationKey, nominalRefinementsKey, refinementsKey } from "./helpers/checked-record-fixture.mjs";
 
 const lean = process.env.LEAN_BRIDGE_CHECKED_RECORD_LEAN_TEST === "1";
 const module = "CheckedRecords";
@@ -89,6 +89,79 @@ test("malformed checked-record reviews are refused before Lean runs", () => {
 	assert.throws(() => assertRefinement({ kind: "checked-record", constructor: `${module}.mkTriple` }, named("Triple"), 1), TypeError);
 	assert.throws(() => assertRefinement({ kind: "checked-record", constructor: `${module}.mkTriple` }, { kind: "primitive", name: "nat" }), TypeError);
 	assert.throws(() => assertRefinement({ kind: "checked-record", constructor: `${module}.mkTriple`, bound: "3" }, named("Triple")), TypeError);
+});
+
+test("dependent checked-record reviews retain the exact earlier-field relation", () => {
+	const review = dependentCheckedRecordReview();
+	validateReviewedSource(reviewInput(review));
+	const selection = reviewedSourceSelection(reviewInput(review));
+	const expected = dependentCheckedRecordContracts();
+	delete expected[`${module}.dependentResult`];
+	assert.equal(canonicalJson(selection.contracts), canonicalJson(expected));
+	const definition = review.types.find(item => item.name === "Dependent");
+	assert.deepEqual(definition.source.extensions[nominalRefinementsKey], {
+		kind: "record", fields: [null, { kind: "fin-field", field: "bound" }]
+	});
+	const mutate = edit => {
+		const changed = dependentCheckedRecordReview();
+		edit(changed);
+		return changed;
+	};
+	for(const [label, changed] of [
+		["a missing dependency", mutate(ir => { ir.types[0].source.extensions[nominalRefinementsKey].fields[1].field = "missing"; })]
+		, ["a self dependency", mutate(ir => { ir.types[0].source.extensions[nominalRefinementsKey].fields[1].field = "below"; })]
+		, ["a dropped erased proof", mutate(ir => { delete ir.types[0].source.extensions[erasedProofsKey]; })]])
+		assert.throws(() => validateReviewedSource(reviewInput(changed)), { code: "reviewed-ir-build-unsupported" }, label);
+});
+
+test("dependent Fin metadata is contextual to an earlier retained Nat field", () => {
+	const fieldType = field => ({ kind: "refinement", base: nat
+		, predicate: { kind: "fin-field", field }, abi: nat.abi });
+	const field = (name, type) => ({ name, projection: `${module}.Dependent.${name}`, type });
+	const record = { kind: "record"
+		, name: `${module}.Dependent`
+		, lean: `${module}.Dependent`
+		, constructor: `${module}.Dependent.mk`
+		, fields: [field("bound", nat), field("below", fieldType("bound"))]
+		, erased: ["valid"], abi: nat.abi };
+	const checked = { kind: "refinement", base: record
+		, predicate: { kind: "checked-record", constructor: `${module}.mkDependent` }
+		, abi: nat.abi };
+	validateNativeType(checked, 0, false, "parameter");
+	validateNativeType(record, 0, false, "result");
+	for(const [label, value] of [
+		["a missing field", { ...record, fields: [field("bound", nat), field("below", fieldType("missing"))] }]
+		, ["a self reference", { ...record, fields: [field("bound", nat), field("below", fieldType("below"))] }]
+		, ["a forward reference", { ...record, fields: [field("below", fieldType("bound")), field("bound", nat)] }]
+		, ["a non-Nat dependency", { ...record, fields: [field("bound", { ...nat, name: "string", lean: "String" }), field("below", fieldType("bound"))] }]
+		, ["an unproved record", { ...record, erased: undefined }]])
+		assert.throws(() => validateNativeType(value, 0, false, "result"), TypeError, label);
+	assert.throws(() => validateNativeType(fieldType("bound"), 0, false, "result"), TypeError, "the relation is not a standalone refinement");
+});
+
+test("component plans retain dependent checked-record relationships", async () => {
+	const review = dependentCheckedRecordReview();
+	const semanticSha256 = "1".repeat(64);
+	const generated = generateCompilerAdapters({ analysis: {
+		bindingIr: { origin: "lean-elaborated", document: review, semanticSha256 }
+		, exportCandidates: review.declarations.map(declaration => ({
+			declaration: declaration.source.declaration
+			, sourceModule: module
+			, status: "exportable"
+		}))
+	}
+	, componentPlan: { sha256: "2".repeat(64), document: { bindingIr: { semanticSha256 } } } });
+	assert.equal(validateCompilerAdapterPlan(generated.plan), true);
+	await assertJsonSchema("compiler-adapter-plan", generated.plan);
+	assert.deepEqual(generated.plan.nominalRefinements, [{
+		id: `lean:${module}.Dependent`
+		, refinement: { kind: "record", fields: [null, { kind: "fin-field", field: "bound" }] }
+	}]);
+	assert.match(generated.files["LeanBridgeGenerated.lean"], /\.mkDependent/u);
+	const changed = structuredClone(generated.plan);
+	changed.exports.find(item => item.sourceDeclaration.endsWith("dependentTotal"))
+		.refinements.parameters[0].fields[1].refinement.field = "below";
+	assert.throws(() => validateCompilerAdapterPlan(changed), { code: "invalid-compiler-adapter-plan" });
 });
 
 test("reviewed value-index provenance admits only canonical Nat, Bool and String literals", () => {
@@ -174,6 +247,33 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, fields: [{ name: "data", type: { kind: "array", element: nat } }]
 		, erased: ["sized"] };
 	const componentSite = { kind: "refinement", base: component, predicate: { kind: "checked-record", constructor: `${module}.mkTriple` } };
+	const nativeDependent = { ...native
+		, name: `${module}.Dependent`
+		, lean: `${module}.Dependent`
+		, constructor: `${module}.Dependent.mk`, erased: ["valid"]
+		, fields: [
+			{ name: "bound", projection: `${module}.Dependent.bound`, type: nativeNat }
+			, {
+				name: "below"
+				, projection: `${module}.Dependent.below`
+				, type: { kind: "refinement", base: nativeNat
+					, predicate: { kind: "fin-field", field: "bound" }, abi }
+			}
+		]
+	};
+	delete nativeDependent.provenance;
+	const componentDependent = { kind: "record"
+		, name: `${module}.Dependent`
+		, erased: ["valid"]
+		, fields: [
+			{ name: "bound", type: nat }
+			, {
+				name: "below"
+				, type: { kind: "refinement", base: nat
+					, predicate: { kind: "fin-field", field: "bound" } }
+			}
+		]
+	};
 	const nativeIndex = (name, lean, value) => ({ ...native, provenance: { ...native.provenance
 		, arguments: [{ kind: "value", type: { ...nativeNat, name, lean }, value }] } });
 	const componentIndex = (name, value) => ({ ...component, provenance: { ...component.provenance
@@ -186,6 +286,7 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, ["native-metadata-type", nativeSite]
 		, ["native-metadata-type", finSite]
 		, ["native-metadata-type", subtypeSite]
+		, ["native-metadata-type", nativeDependent]
 		, ["native-metadata-type", nativeIndex("nat", "Nat", "340282366920938463463374607431768211457")]
 		, ["native-metadata-type", nativeIndex("bool", "Bool", "false")]
 		, ["native-metadata-type", nativeIndex("bool", "Bool", "true")]
@@ -193,6 +294,7 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, ["native-metadata-type", nativeIndex("string", "String", "λ🌱")]
 		, [copied, component]
 		, [copied, componentSite]
+		, [copied, componentDependent]
 		, [copied, componentIndex("bool", "false")]
 		, [copied, componentIndex("string", "")]
 		, [copied, componentIndex("string", "λ🌱")]
@@ -223,7 +325,24 @@ test("published metadata schemas admit erased proofs, value indices and checked-
 		, ["native-metadata-type", { ...nativeSite, base: nativeNat }, "a checked-record predicate over Nat"]
 		, ["native-metadata-type", { ...nativeSite, base: { ...native, erased: undefined } }, "a checked-record predicate over a record without erased proofs"]
 		, ["native-metadata-type", { kind: "refinement", base: { ...nativeNat, name: "string", lean: "String" }, predicate: { kind: "fin", bound: "10" }, abi }, "a Fin predicate over String"]
-		, ["native-metadata-type", { kind: "refinement", base: native, predicate: { kind: "subtype", constructor: `${module}.mkTriple` }, abi }, "a Subtype predicate over a record"]];
+		, ["native-metadata-type", { kind: "refinement", base: native, predicate: { kind: "subtype", constructor: `${module}.mkTriple` }, abi }, "a Subtype predicate over a record"]
+		, [
+			"native-metadata-type"
+			, { ...nativeDependent
+				, fields: [nativeDependent.fields[0], { ...nativeDependent.fields[1]
+					, type: { ...nativeDependent.fields[1].type
+						, predicate: { kind: "fin-field", field: "not-valid", bound: "3" } } }] }
+			, "an extra dependent predicate key"
+		]
+		, [
+			copied
+			, { ...componentDependent
+				, fields: [componentDependent.fields[0], { ...componentDependent.fields[1]
+					, type: { ...componentDependent.fields[1].type
+						, predicate: { kind: "fin-field", field: "1bound" } } }] }
+			, "an invalid dependent field identifier"
+		]
+	];
 	for(const [reference, value, label] of malformed) assert.notEqual(await jsonSchemaErrors(reference, JSON.parse(JSON.stringify(value))), null, `${reference}: ${label}`);
 });
 
@@ -427,6 +546,51 @@ const nativeModel = async (t, { extra = "", contracts = checkedRecordContracts()
 	return captured;
 };
 const exportNamed = (model, name) => model.exports.find(item => item.name === `${module}.${name}`);
+
+test("fresh Lean preserves dependent checked-record fields without fabricating proofs", { skip: !lean, timeout: 1_200_000 }, async t => {
+	const contracts = dependentCheckedRecordContracts();
+	const { model, adapters, metadata } = await nativeModel(t, { extra: dependentCheckedRecordSource, contracts });
+	await assertJsonSchema("elaborated-export-metadata", metadata);
+	const definition = model.bindingIr.types.find(item => item.name === "Dependent");
+	assert.deepEqual(definition.source.extensions[nominalRefinementsKey], {
+		kind: "record", fields: [null, { kind: "fin-field", field: "bound" }]
+	});
+	const parameter = { kind: "checked-record", definition: `${module}.Dependent`
+		, constructor: `${module}.mkDependent`, fields: ["bound", "below"]
+		, arguments: [null, { kind: "fin-field", field: "bound" }] };
+	assert.deepEqual(exportNamed(model, "dependentTotal").refinements, { parameters: [parameter], result: null });
+	assert.deepEqual(exportNamed(model, "dependentRoundtrip").refinements, { parameters: [parameter]
+		, result: { ...parameter, constructor: null } });
+	assert.deepEqual(exportNamed(model, "dependentResult").refinements, { parameters: [null]
+		, result: { ...parameter, constructor: null } });
+	assert.match(adapters.leanSource, /structure LbErased\.CheckedRecords\.Dependent where\s+«bound» : _root_\.Nat\s+«below» : _root_\.Nat/u);
+	assert.match(adapters.leanSource, /_root_\.CheckedRecords\.mkDependent a0 a1/u);
+	assert.match(adapters.leanSource, /\(value\.«below»\)\.val/u);
+	assert.doesNotMatch(adapters.leanSource, /sorry|by exact|Fin\.mk/u);
+	const call = name => `${adapters.module}.f_${exportNamed(model, name).symbol}`;
+	const evaluations = [
+		[`[${call("dependentTotal")} ⟨3, 2⟩, ${call("dependentTotal")} ⟨2, 2⟩, ${call("dependentTotal")} ⟨0, 0⟩]`, "[some 5, none, none]"]
+		, [`((${call("dependentRoundtrip")} ⟨4, 3⟩).map (fun value => (value.bound, value.below)), (${call("dependentRoundtrip")} ⟨3, 4⟩).map (fun value => (value.bound, value.below)))`, "(some (4, 3), none)"]
+		, [`((${call("dependentResult")} 7).bound, (${call("dependentResult")} 7).below)`, "(8, 7)"]];
+	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-dependent-checked-record-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const fixture = await readFile(join(checkedRecordFixture, "CheckedRecords.lean"), "utf8");
+	const source = fixture.replace("end CheckedRecords", `${dependentCheckedRecordSource}\nend CheckedRecords`);
+	await writeFile(join(directory, "Dependent.lean"), [source
+		, adapters.leanSource.replace(/^import CheckedRecords$/mu, "")
+		, ...evaluations.map(([expression]) => `#eval ${expression}`)].join("\n"));
+	const run = await processBuildRunner.capture({ command: join(leanPrefix, "bin/lean")
+		, args: ["Dependent.lean"]
+		, cwd: directory, timeoutMs: 600_000 });
+	assert.deepEqual(run.stdout.trim().split("\n"), evaluations.map(([, expected]) => expected));
+	const reviewed = await nativeModel(t, { extra: dependentCheckedRecordSource, review: dependentCheckedRecordReview() });
+	assert.equal(reviewedContractDifference(dependentCheckedRecordReview(), reviewed.model.bindingIr), null);
+	const changed = dependentCheckedRecordReview();
+	changed.types.find(item => item.name === "Dependent").source.extensions[nominalRefinementsKey].fields[1]
+		= { kind: "fin", bound: "3" };
+	assert.notEqual(reviewedContractDifference(changed, reviewed.model.bindingIr), null
+		, "a static literal cannot replace the field dependency");
+});
 
 test("fresh Lean compiles native C and C++ mirror adapters for checked records", { skip: !lean, timeout: 900_000 }, async t => {
 	const { model, adapters, metadata } = await nativeModel(t);

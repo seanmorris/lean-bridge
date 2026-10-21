@@ -181,9 +181,10 @@ def rememberRecursiveSelection (name : Name) (seen : List Name) : ShapeM Unit :=
   modify fun state => { state with recursiveSelections := cycle ++ state.recursiveSelections }
 
 /-- A record with proof fields crosses only at a top-level site. A parameter is built by the
-configured checked constructor alone, whose explicit binders are the payload fields by name and
-type, in Lean order, and whose result is `Option` of the exact record. A result is produced by Lean,
-which already holds the proofs, so it takes no constructor. -/
+configured checked constructor alone, whose explicit binders are the transported payload fields
+by name and type, in Lean order, and whose result is `Option` of the exact record. A dependent
+`Fin earlierField` payload is transported as `Nat`; the checked constructor owns its bound proof.
+A result is produced by Lean, which already holds the proofs, so it takes no constructor. -/
 def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
     (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)
     (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
@@ -760,6 +761,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       -- Proof fields are erased: they never cross, and only a checked constructor builds them.
       let mut erased : Array Name := #[]
       let mut payload : Array (Name × Expr) := #[]
+      let mut payloadProjections : Array (Name × Name) := #[]
+      let mut dependentPayload := false
       for field in info.fieldNames, position in [0:info.fieldNames.size] do
         let some projection := info.getProjFn? position | reject e "missing record projection"
         if !nativeIdentifier field.toString || (field.toString.splitOn ".").length != 1 ||
@@ -771,16 +774,49 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         if proof then
           erased := erased.push field
           continue
-        -- A payload field that depends on another field stays refused as a dependent type.
-        payload := payload.push (field, fieldType)
+        -- A retained `Fin earlierField` is the one dependent payload relation whose erased
+        -- transport is closed: the host carries Nat and this site's checked constructor rebuilds
+        -- the Fin proof. The bound must be exactly an earlier retained Nat projection, never an
+        -- arbitrary expression, a later field, or an erased proof.
+        let mut transportType := fieldType
+        let mut dependentField : Option Name := none
+        if fieldType.hasLooseBVars then
+          dependentField ← withLocalDecl `value .default e fun receiver => do
+            let instantiated := fieldType.instantiate1 receiver
+            unless instantiated.isAppOfArity ``Fin 1 do
+              reject e "dependent or unresolved native type"
+            let bound := instantiated.appArg!
+            let mut found : Option Name := none
+            for (previousField, previousProjection) in payloadProjections do
+              let projection := mkApp (← mkConstWithFreshMVarLevels previousProjection) receiver
+              if ← isDefEq (← inferType projection) (mkConst ``Nat) then
+                if ← isDefEq bound projection then
+                  found := some previousField
+            if found.isNone then
+              reject e "dependent Fin payload bound must be an earlier retained Nat field"
+            return found
+          transportType := mkConst ``Nat
+          dependentPayload := true
+        payload := payload.push (field, transportType)
+        payloadProjections := payloadProjections.push (field, projection)
         -- Fin bounds stay type-owned; Subtype constructor choices follow this use's named fields.
+        let fieldShape ← match dependentField with
+          | some boundField => pure <| obj [
+              ("kind", str "refinement"),
+              ("base", ← shapeTree request (mkConst ``Nat)),
+              ("predicate", obj [("kind", str "fin-field"),
+                ("field", str boundField.toString)]),
+              ("abi", ← abi (mkConst ``Nat))]
+          | none =>
+            let fieldSelection := selectedField checked "record" name field.toString
+            shapeTree request fieldType (name :: seen) 0 true fieldSelection containerFin true
+              (callbackSite := callbackSite) (hostReply := hostReply)
+              (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
+              (subtypeResult := subtypeResult)
         fields := fields.push (obj [("name", str field.toString),
-          ("projection", str projection.toString),
-          ("type", ← shapeTree request fieldType (name :: seen) 0 true
-            (selectedField checked "record" name field.toString) containerFin true
-            (callbackSite := callbackSite) (hostReply := hostReply)
-            (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
-            (subtypeResult := subtypeResult))])
+          ("projection", str projection.toString), ("type", fieldShape)])
+      if dependentPayload && erased.isEmpty then
+        reject e "dependent or unresolved native type"
       let types := (← get).types
       if !erased.isEmpty && fields.any (fun field => containsKind types ((field.getObjVal? "type").toOption.getD Json.null) "refinement") &&
           !richCheckedRecordSelection checked && !subtypeResult then
@@ -1330,10 +1366,12 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
           ("refinement", projectionCheckedSelectionWith
             ((field.getObjVal? "type").toOption.getD Json.null) types innerSeen (depth + 1))]
       let selected := fields.any fun field => (field.getObjVal? "refinement").toOption != some Json.null
-      -- A graph reference forces the exact field form even when this node has no
-      -- nested constructor choice. The finite nominal cycle means the same site
-      -- constructor owns every reachable occurrence of the checked record.
-      if depth > 0 || referenceName.isSome || selected then
+      let constrained := ((definition.getObjValAs? (Array Json) "fields").toOption.getD #[]).any fun field =>
+        containsRefinement ((field.getObjVal? "type").toOption.getD Json.null)
+      -- A graph reference or compiler-owned field predicate forces the exact field
+      -- form even when this node has no nested constructor choice. The constructor
+      -- then owns every dependent relation without turning it into author metadata.
+      if depth > 0 || referenceName.isSome || selected || constrained then
         return obj [("kind", str "checked-record"),
           ("name", (definition.getObjVal? "name").toOption.getD Json.null),
           ("constructor", constructor), ("fields", toJson fields)]

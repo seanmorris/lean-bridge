@@ -107,7 +107,7 @@ const validateParameter = (parameter, path) => {
 	if(typeof parameter.leanType !== "string" || parameter.leanType === "") fail("invalid-compiler-adapter-plan", `${path} has no Lean type`);
 };
 
-const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }) => {
+const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }, dependent = false) => {
 	if(++budget.nodes > 4096) fail("invalid-compiler-adapter-plan", `${path} exceeds the refinement node budget`);
 	if(value === null) return;
 	if(!value || typeof value !== "object" || depth > 32) fail("invalid-compiler-adapter-plan", `${path} has an invalid refinement tree`);
@@ -154,6 +154,14 @@ const validateRefinement = (value, path, leanType, depth = 0, produced = false, 
 			fail("invalid-compiler-adapter-plan", `${path} must be a canonical Fin bound over Nat`);
 		return;
 	}
+	if(value.kind === "fin-field")
+	{
+		exactKeys(value, ["kind", "field"], path);
+		if(!(dependent instanceof Set) || typeof value.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(value.field)
+			|| !dependent.has(value.field))
+			fail("invalid-compiler-adapter-plan", `${path} must name an earlier checked-record Nat field`);
+		return;
+	}
 	if(value.kind === "checked-record" && Object.hasOwn(value, "fields"))
 	{
 		exactKeys(value, ["kind", "name", "constructor", "fields"], path);
@@ -170,8 +178,8 @@ const validateRefinement = (value, path, leanType, depth = 0, produced = false, 
 			exactKeys(field, ["name", "refinement"], path);
 			if(typeof field.name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(field.name) || names.has(field.name))
 				fail("invalid-compiler-adapter-plan", `${path} has an invalid checked-record field`);
+			validateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget, new Set(names));
 			names.add(field.name);
-			validateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget);
 		}
 		return;
 	}

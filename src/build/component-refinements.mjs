@@ -25,7 +25,7 @@ export const checkedRecordVia = (constructor, refinement = null) =>
  * @param suffix - Exported validator suffix, empty for an existing scalar site.
  */
 export const constructorRefinementLeaves = (refinement, type, suffix = "") => {
-	if(refinement === null || refinement.kind === "fin") return [];
+	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return [];
 	if(type.kind === "alias") return constructorRefinementLeaves(refinement, type.target, suffix);
 	if(refinement.kind === "subtype") return [{ refinement, type, suffix }];
 	if(refinement.kind === "checked-record")
@@ -75,7 +75,7 @@ export const componentRecursiveRefinementLeaves = (refinement, type, definitions
 		return resolve(definition.target, new Set([...aliases, reference.id]));
 	};
 	const visit = (tree, reference, active = new Set()) => {
-		if(tree === null || tree === undefined || tree.kind === "fin") return;
+		if(tree === null || tree === undefined || ["fin", "fin-field"].includes(tree.kind)) return;
 		const concrete = resolve(reference);
 		if(tree.kind === "subtype")
 		{
@@ -175,6 +175,11 @@ export const componentRefinementConversion = (refinement, value, checked = true,
 	}
 	if(refinement.kind === "fin") return checked
 		? `(if proof : ${input} < ${refinement.bound} then _root_.Option.some (⟨${input}, proof⟩ : _root_.Fin ${refinement.bound}) else _root_.Option.none)`
+		: `${input}.val`;
+	// The surrounding checked-record constructor validates the relationship between
+	// sibling fields. This leaf only transports the dependent Fin as its Nat value.
+	if(refinement.kind === "fin-field") return checked
+		? `(_root_.Option.some ${input})`
 		: `${input}.val`;
 	if(refinement.kind === "subtype")
 	{

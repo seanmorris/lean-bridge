@@ -301,12 +301,24 @@ export const validateElaboratedMetadata = (report, request) => {
 							}
 						}
 						const names = new Set();
-						for(const field of type.fields)
+						for(const [index, field] of type.fields.entries())
 						{
 							closed(field, ["name", "type"]);
 							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
 							names.add(field.name);
-							copied(field.type, depth + 1, references, refinements,
+							if(field.type?.kind === "refinement" && field.type.predicate?.kind === "fin-field")
+							{
+								closed(field.type, ["kind", "base", "predicate"]);
+								closed(field.type.predicate, ["kind", "field"]);
+								const dependency = type.fields.findIndex((candidate, position) => position < index && candidate.name === field.type.predicate.field);
+								if(!Object.hasOwn(type, "erased") || (!checkedRecord && !produced)
+									|| typeof field.type.predicate.field !== "string" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.type.predicate.field)
+									|| dependency < 0 || type.fields[dependency].type?.kind !== "primitive" || type.fields[dependency].type.name !== "nat")
+									fail("Invalid dependent Fin field");
+								scalar(field.type.base);
+								if(field.type.base.name !== "nat") fail("Invalid dependent Fin transport");
+							}
+							else copied(field.type, depth + 1, references, refinements,
 								subtypeStructural && (!Object.hasOwn(type, "erased") || checkedRecord || produced), produced);
 						}
 						return;

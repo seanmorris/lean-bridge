@@ -11,6 +11,7 @@ export const checkedRecordFixture = "tests/fixtures/onboarding/checked-records";
 export const erasedProofsKey = "lean-lang.org/erased-proofs";
 export const instantiationKey = "lean-lang.org/instantiation";
 export const refinementsKey = "lean-lang.org/refinements";
+export const nominalRefinementsKey = "lean-lang.org/nominal-refinements";
 const nat = { kind: "primitive", name: "nat" };
 const value = index => ({ kind: "value", type: nat, value: index });
 
@@ -182,6 +183,93 @@ export const checkedRecordValueIndexReview = ({ module = "CheckedRecords", compo
 	{
 		const [, constructor] = valueIndexExports[declaration.name];
 		declaration.source.extensions[refinementsKey] = { parameters: [{ kind: "checked-record", constructor: `${module}.${constructor}` }], result: null };
+	}
+	return ir;
+};
+
+/** A checked record whose retained Fin payload is bounded by an earlier retained field. */
+export const dependentCheckedRecordSource = `
+structure Dependent where
+  bound : Nat
+  below : Fin bound
+  valid : below.val < bound
+def mkDependent (bound below : Nat) : Option Dependent :=
+  if h : below < bound then some ⟨bound, ⟨below, h⟩, h⟩ else none
+def dependentTotal (value : Dependent) : Nat := value.bound + value.below.val
+def dependentRoundtrip (value : Dependent) : Dependent := value
+def dependentResult (seed : Nat) : Dependent :=
+  ⟨seed + 1, ⟨seed, Nat.lt_succ_self seed⟩, Nat.lt_succ_self seed⟩
+`;
+
+const dependentFin = Object.freeze({ kind: "fin-field", field: "bound" });
+const dependentSelection = module => ({
+	kind: "checked-record"
+	, name: `${module}.Dependent`
+	, constructor: `${module}.mkDependent`
+	, fields: [
+		{ name: "bound", refinement: null }
+		, { name: "below", refinement: null }
+	]
+});
+const dependentParameter = (module, constructor = `${module}.mkDependent`) => ({
+	kind: "checked-record", name: `${module}.Dependent`, constructor
+	, fields: [
+		{ name: "bound", refinement: null }
+		, { name: "below", refinement: structuredClone(dependentFin) }
+	]
+});
+const dependentResult = module => ({
+	...dependentParameter(module, null), constructor: null
+});
+
+/**
+ * Exact export contracts for the dependent checked-record fixture.
+ *
+ * @param module - Lean module and namespace name.
+ */
+export const dependentCheckedRecordContracts = (module = "CheckedRecords") => ({
+	[`${module}.dependentTotal`]: {
+		parameters: [{ ...plain, refinement: dependentSelection(module) }]
+		, result: plain
+	}
+	, [`${module}.dependentRoundtrip`]: {
+		parameters: [{ ...plain, refinement: dependentSelection(module) }]
+		, result: plain
+	}
+	, [`${module}.dependentResult`]: {
+		parameters: [plain], result: plain
+	}
+});
+
+/**
+ * Independently authored Binding IR for retained dependent runtime fields.
+ *
+ * @param root0 - Fixture identity.
+ * @param root0.module - Lean module and namespace name.
+ * @param root0.component - Component name.
+ */
+export const dependentCheckedRecordReview = ({ module = "CheckedRecords", component = "checkedrecords" } = {}) => {
+	const signatures = [
+		{ name: `${module}.dependentTotal`, parameters: [{ record: `${module}.Dependent`, fields: { bound: "nat", below: "nat" } }], result: "nat" }
+		, { name: `${module}.dependentRoundtrip`, parameters: [{ record: `${module}.Dependent`, fields: { bound: "nat", below: "nat" } }], result: { record: `${module}.Dependent`, fields: { bound: "nat", below: "nat" } } }
+		, { name: `${module}.dependentResult`, parameters: ["nat"], result: { record: `${module}.Dependent`, fields: { bound: "nat", below: "nat" } } }
+	];
+	const ir = corpusReviewedIr({ id: component }, signatures);
+	const record = ir.types.find(item => item.name === "Dependent");
+	record.source.extensions[erasedProofsKey] = { fields: ["valid"] };
+	record.source.extensions[nominalRefinementsKey] = {
+		kind: "record", fields: [null, structuredClone(dependentFin)]
+	};
+	for(const declaration of ir.declarations)
+	{
+		const input = declaration.name === "dependentResult"
+			? null : dependentParameter(module);
+		const output = declaration.name === "dependentTotal"
+			? null : dependentResult(module);
+		declaration.source.extensions[refinementsKey] = {
+			parameters: declaration.parameters.map((_, index) => index === 0 ? input : null)
+			, result: output
+		};
 	}
 	return ir;
 };
