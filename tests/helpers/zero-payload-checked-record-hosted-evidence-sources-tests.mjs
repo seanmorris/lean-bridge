@@ -15,6 +15,8 @@ import {
 	, zeroPayloadNativeEvidenceSources
 	, zeroPayloadPerlEvidenceSources
 	, zeroPayloadPhpEvidenceSources
+	, zeroPayloadPythonEvidenceSources
+	, zeroPayloadRubyEvidenceSources
 	, zeroPayloadRustEvidenceSources
 	, zeroPayloadWitEvidenceSources
 } from "./zero-payload-checked-record-hosted-evidence-sources.mjs";
@@ -247,6 +249,92 @@ test("zero-payload native-PHP archiving replays every retained Composer record",
 		, "runtime: observed.runtime, tools"
 		, "assert.deepEqual(paths, rechecked.records"
 	]) assert.ok(source.includes(field), field);
+});
+
+test("zero-payload Python evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadPythonEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-python/python.py"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-python.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-python-ci.mjs"]
+		, ["checker", "flake.lock"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-python-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload Python archiving replays retained wheel records", () => {
+	const source = readFileSync(
+		"scripts/archive-zero-payload-checked-record-python-evidence.mjs", "utf8");
+	assert.equal(source.split("await checkZeroPayloadPythonCiRecords(args, {").length, 2);
+	for(const field of [
+		"tap: await readFile(tap, \"utf8\")"
+		, "read: path => readFile(join(records, path))"
+		, "runtime: observed.runtime"
+		, "assert.ok(paths.length >= rechecked.records"
+	]) assert.ok(source.includes(field), field);
+});
+
+test("zero-payload Ruby evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadRubyEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-ruby/ruby.rb"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-ruby.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-ruby-ci.mjs"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-ruby-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload Ruby archiving replays retained gem records", () => {
+	const source = readFileSync(
+		"scripts/archive-zero-payload-checked-record-ruby-evidence.mjs", "utf8");
+	const marker = "const checked = await checkZeroPayloadRubyCiRecords(args, {";
+	assert.equal(source.split(marker).length, 2);
+	const replay = source.split(marker)[1].split("\n\t\tassert.equal", 1)[0];
+	for(const field of [
+		"tap: tap.toString()"
+		, "read: path => readFile(join(recordsRoot, path))"
+		, "runtime, interpreter"
+	]) assert.ok(replay.includes(field), field);
 });
 
 test("zero-payload WIT evidence closes every hosted source role", {
