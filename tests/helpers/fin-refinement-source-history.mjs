@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from "./zero-payload-native-promotion-source-history.mjs";
 import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from "./zero-payload-browser-diagnostic-source-history.mjs";
 import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from "./zero-payload-native-evidence-source-history.mjs";
 import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from "./zero-payload-rust-archive-source-history.mjs";
@@ -1421,7 +1422,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadBrowserDiagnosticChangedPaths
+	...zeroPayloadNativePromotionChangedPaths
+	, ...zeroPayloadNativePromotionIntegrationPaths
+	, ...zeroPayloadBrowserDiagnosticChangedPaths
 	, ...zeroPayloadBrowserDiagnosticIntegrationPaths
 	, ...zeroPayloadNativeEvidenceChangedPaths
 	, ...zeroPayloadNativeEvidenceIntegrationPaths
@@ -1943,8 +1946,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(
+	const zeroPayloadNativePromotion = beforeZeroPayloadNativePromotionSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadNativePromotion) === expected)
+		return zeroPayloadNativePromotion;
+	const zeroPayloadBrowserDiagnostic = beforeZeroPayloadBrowserDiagnosticSource(
+		path, zeroPayloadNativePromotion, expected
 	);
 	if(sha256(zeroPayloadBrowserDiagnostic) === expected)
 		return zeroPayloadBrowserDiagnostic;
