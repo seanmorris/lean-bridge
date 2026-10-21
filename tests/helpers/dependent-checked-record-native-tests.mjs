@@ -41,6 +41,15 @@ test("dependent native selections cover four routes and both profiles", async ()
 			assert.match(caller.source, selection.resultOnly
 				? /dependent_result/u : /dependent_total/u);
 			assert.doesNotMatch(caller.source, /[.>]valid/u);
+			if(!selection.resultOnly)
+			{
+				assert.match(caller.source, selection.reviewed
+					? /"value0 was rejected by DependentRecords\.mkDependent/u
+					: /"arg0 was rejected by DependentRecords\.mkDependent/u);
+				assert.doesNotMatch(caller.source, selection.reviewed
+					? /"arg0 was rejected by DependentRecords\.mkDependent/u
+					: /"value0 was rejected by DependentRecords\.mkDependent/u);
+			}
 		}
 	}
 });
