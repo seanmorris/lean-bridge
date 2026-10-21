@@ -161,7 +161,7 @@ const validateRefinement = (value, path, leanType, depth = 0, produced = false, 
 			: typeof value.constructor !== "string"
 				|| !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.constructor);
 		if(typeof value.name !== "string" || !/^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$/.test(value.name)
-			|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024
+			|| !Array.isArray(value.fields) || value.fields.length > 1024
 			|| invalidConstructor)
 			fail("invalid-compiler-adapter-plan", `${path} has an invalid checked-record refinement`);
 		const names = new Set();

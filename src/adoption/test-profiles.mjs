@@ -359,6 +359,7 @@ const profileManifest = Object.freeze({
 		, "checked-record-php-wasm-evidence-ci"
 		, "checked-record-php-wasm-promotion"
 		, "checked-records"
+		, "zero-payload-checked-record-browser-foundation"
 		, "zero-payload-checked-records"
 		, "closed-generic-checked-record-source-history"
 		, "mutual-checked-record-browser"

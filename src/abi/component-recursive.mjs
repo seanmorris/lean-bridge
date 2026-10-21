@@ -98,7 +98,7 @@ export const snapshotComponentCopiedGraph = descriptor => {
 			// Erased proof fields are named once, never carried, and disjoint from the payload.
 			dense(value.erased, 1024);
 			const payload = fields(value.fields);
-			if(!value.erased.length || !payload.length || new Set(value.erased).size !== value.erased.length
+			if(!value.erased.length || new Set(value.erased).size !== value.erased.length
 				|| value.erased.some(item => typeof item !== "string" || !name.test(item) || payload.some(field => field.name === item))) invalid("invalid erased proof fields");
 			return Object.freeze({ kind, id: value.id, fields: payload, erased: Object.freeze([...value.erased]) });
 		}
