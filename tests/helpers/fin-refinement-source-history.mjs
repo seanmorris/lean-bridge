@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from "./perl-engine-owned-refinement-closure-source-history.mjs";
 import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from "./structural-subtype-partition-validator-source-history.mjs";
 import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from "./generic-subtype-npm-browser-source-history.mjs";
 import { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from "./owned-subtype-core-registration-source-history.mjs";
@@ -1395,7 +1396,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...structuralSubtypePartitionValidatorChangedPaths
+	...perlEngineOwnedRefinementClosureChangedPaths
+	, ...perlEngineOwnedRefinementClosureIntegrationPaths
+	, ...structuralSubtypePartitionValidatorChangedPaths
 	, ...structuralSubtypePartitionValidatorIntegrationPaths
 	, ...genericSubtypeNpmBrowserChangedPaths
 	, ...genericSubtypeNpmBrowserIntegrationPaths
@@ -1865,8 +1868,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const partitionValidator = beforeStructuralSubtypePartitionValidatorSource(
+	const perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(
 		path, text, expected
+	);
+	if(sha256(perlEngineClosure) === expected) return perlEngineClosure;
+	const partitionValidator = beforeStructuralSubtypePartitionValidatorSource(
+		path, perlEngineClosure, expected
 	);
 	if(sha256(partitionValidator) === expected) return partitionValidator;
 	const genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(

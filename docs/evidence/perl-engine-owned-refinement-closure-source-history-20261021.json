@@ -1,0 +1,82 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ba110c2959a72a2aafee6fc2df0b0403b2eb20c6a601962912da449f795ba499",
+      "path": "scripts/update-perl-engine-owned-refinement-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "9c44462f860cdfd2ec162bc79dd8b6e1bc84e0c0939fcbfccd6b4ce56ae05bf2",
+      "path": "tests/helpers/perl-engine-owned-refinement-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "8265e33f5ce8df571652500e7ff52297f8afd74a4c8e955e37c3a34aab87342a",
+      "path": "tests/helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "ee6a6221e8decedafab1e3a95cb65745089892b6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "edb014e4e4b76641f4dc1be433ccfb27d7a729aa3287b42db55b33dc3b161b26",
+      "edits": [
+        {
+          "current": "import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from \"./perl-engine-owned-refinement-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...perlEngineOwnedRefinementClosureChangedPaths\n\t, ...perlEngineOwnedRefinementClosureIntegrationPaths\n\t, ...structuralSubtypePartitionValidatorChangedPaths\n",
+          "previous": "\t...structuralSubtypePartitionValidatorChangedPaths\n",
+          "start": 110455
+        },
+        {
+          "current": "\tconst perlEngineClosure = beforePerlEngineOwnedRefinementClosureSource(\n",
+          "previous": "\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n",
+          "start": 131495
+        },
+        {
+          "current": "\tif(sha256(perlEngineClosure) === expected) return perlEngineClosure;\n\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n\t\tpath, perlEngineClosure, expected\n\t);\n",
+          "previous": "",
+          "start": 131595
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cf025b86a717cfb5e10be5e5f204ea6240384d1b2f3876448bfc11d9ef6786b1"
+    },
+    {
+      "currentSha256": "03d25c01368722363e5743b182ffa002f3fe4bac4a4d96bfa07d373534b8ba55",
+      "edits": [
+        {
+          "current": "import \"./helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2328
+        }
+      ],
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "1e5d74e43c7b74d1db9f735ee2485c9b24e1ee1a7c050a5449fdf65e9b6cd1d5"
+    }
+  ],
+  "milestone": "perl-engine-owned-refinement-closure-source-v1",
+  "predecessorCommit": "b103cdc1751d57b0ae5621f43a25a11cec80e9e3",
+  "reconciledTypeSurfacePointers": 27,
+  "schemaVersion": 1,
+  "scope": "The filtered pinned Perl engine carries the complete owned-refinement model and carrier import closure before any package build begins.",
+  "updates": [
+    {
+      "currentSha256": "e3dcd311160e51de064ec8eaf938cce845c6430e826bc29d71c606bed013337b",
+      "edits": [
+        {
+          "current": "    \"src/abi/owned-refinement-model.mjs\",\n",
+          "previous": "",
+          "start": 562
+        },
+        {
+          "current": "    \"src/build/owned-refinement-carriers.mjs\",\n",
+          "previous": "",
+          "start": 17584
+        }
+      ],
+      "path": "nix/perl-engine-source-boundary.json",
+      "previousSha256": "dc80824eaa127dadd02eeb91593a163a034528c7b8ddd086d0bb4597c99b86d9"
+    }
+  ]
+}
