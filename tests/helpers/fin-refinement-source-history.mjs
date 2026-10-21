@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadHostedPromotionSource, zeroPayloadHostedPromotionChangedPaths, zeroPayloadHostedPromotionIntegrationPaths } from "./zero-payload-hosted-promotion-source-history.mjs";
 import { beforeZeroPayloadPerlWitEvidenceSource, zeroPayloadPerlWitEvidenceChangedPaths, zeroPayloadPerlWitEvidenceIntegrationPaths } from "./zero-payload-perl-wit-evidence-source-history.mjs";
 import { beforeZeroPayloadLanguageEvidenceSource, zeroPayloadLanguageEvidenceChangedPaths, zeroPayloadLanguageEvidenceIntegrationPaths } from "./zero-payload-language-evidence-source-history.mjs";
 import { beforeZeroPayloadHostedArchivePreparationSource, zeroPayloadHostedArchivePreparationChangedPaths, zeroPayloadHostedArchivePreparationIntegrationPaths } from "./zero-payload-hosted-archive-preparation-source-history.mjs";
@@ -1445,7 +1446,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadPerlWitEvidenceChangedPaths
+	...zeroPayloadHostedPromotionChangedPaths
+	, ...zeroPayloadHostedPromotionIntegrationPaths
+	, ...zeroPayloadPerlWitEvidenceChangedPaths
 	, ...zeroPayloadPerlWitEvidenceIntegrationPaths
 	, ...zeroPayloadLanguageEvidenceChangedPaths
 	, ...zeroPayloadLanguageEvidenceIntegrationPaths
@@ -2013,8 +2016,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(
+	const hostedPromotion = beforeZeroPayloadHostedPromotionSource(
 		path, text, expected
+	);
+	if(sha256(hostedPromotion) === expected) return hostedPromotion;
+	const perlWitEvidence = beforeZeroPayloadPerlWitEvidenceSource(
+		path, hostedPromotion, expected
 	);
 	if(sha256(perlWitEvidence) === expected) return perlWitEvidence;
 	const languageEvidence = beforeZeroPayloadLanguageEvidenceSource(
