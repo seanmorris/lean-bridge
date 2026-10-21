@@ -23,6 +23,7 @@ import {
 
 const sourceAt = (revision, path) => execFileSync("git", ["show"
 	, `${revision}:${path}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+const historyCommit = "556bddd612d8562654904920a39b44dc1e569742";
 
 test("zero-payload npm foundation history restores every source", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadNpmFoundationHistoryPath, "utf8"));
@@ -36,7 +37,7 @@ test("zero-payload npm foundation history restores every source", async () => {
 		, zeroPayloadNpmFoundationIntegrationPaths);
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		const previous = reverseZeroPayloadNpmFoundationUpdate(current, update);
 		assert.equal(previous, sourceAt(zeroPayloadNpmFoundationPredecessor, update.path));
@@ -48,19 +49,20 @@ test("zero-payload npm foundation history restores every source", async () => {
 	}
 	for(const update of record.integrationUpdates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = sourceAt(historyCommit, update.path);
 		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseZeroPayloadNpmFoundationUpdate(current, update)
 			, sourceAt(zeroPayloadNpmFoundationImplementation, update.path));
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);
+		assert.equal(sha256(sourceAt(historyCommit, addition.path))
+			, addition.currentSha256, addition.path);
 });
 
 test("zero-payload npm foundation history rejects altered transitions", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadNpmFoundationHistoryPath, "utf8"));
 	const update = structuredClone(record.updates[0]);
-	const current = await readFile(update.path, "utf8");
+	const current = sourceAt(historyCommit, update.path);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadNpmFoundationUpdate(current, update));
 	update.currentSha256 = sha256(current);

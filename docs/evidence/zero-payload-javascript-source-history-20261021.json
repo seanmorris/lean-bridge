@@ -1,0 +1,173 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b1fbffc01e2c2098758568d86b064e1d98e2c05873d9927dc59ea04c60e8a184",
+      "path": "tests/fixtures/zero-payload-checked-record-browser/full.mts"
+    },
+    {
+      "currentSha256": "ec4d7b69d15b3342202d4f26c0b41b1f77d651a63793d438b2f387ad20c313fe",
+      "path": "tests/fixtures/zero-payload-checked-record-browser/javascript.mjs"
+    },
+    {
+      "currentSha256": "eb42bf7b5f3eb90fc0347d3ea3426fbf415ac317babe302fd3a2cb62f2911dd0",
+      "path": "tests/fixtures/zero-payload-checked-record-browser/result-only.mts"
+    },
+    {
+      "currentSha256": "2729f54ec26cf183e5ece6f56597947c91c78b57a02d198fb8aa301dcc69dc8f",
+      "path": "tests/helpers/zero-payload-checked-record-browser-fixture.mjs"
+    },
+    {
+      "currentSha256": "f47ad8c07dde050c07bf99f0c4ce4f406ce6e939b051b1419b95ead2f3b24872",
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs"
+    },
+    {
+      "currentSha256": "76349058bcf3fedcca37cbb4a833dfb77f6c8eadaa3a3e725062644700e6a31e",
+      "path": "scripts/update-zero-payload-javascript-source-history.mjs"
+    },
+    {
+      "currentSha256": "d2c777ae81e6f4e95890d37804a0db00f3b69ad165a77bef7b49927a887f3a7b",
+      "path": "tests/helpers/zero-payload-javascript-source-history.mjs"
+    },
+    {
+      "currentSha256": "a98c44681b960ff9d3405a37b458943d4d12084e4b5debc473b4deda88f37762",
+      "path": "tests/helpers/zero-payload-javascript-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "5035456fe465a774eaf6597e8659997024c6c7ca",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3f5ba9fffc2d466e411b4363d431eaa2a26f1fe1081de54d5f78b76046994238",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadJavaScriptSource, zeroPayloadJavaScriptChangedPaths, zeroPayloadJavaScriptIntegrationPaths } from \"./zero-payload-javascript-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadJavaScriptChangedPaths\n\t, ...zeroPayloadJavaScriptIntegrationPaths\n\t, ...zeroPayloadNpmFoundationChangedPaths\n",
+          "previous": "\t...zeroPayloadNpmFoundationChangedPaths\n",
+          "start": 111198
+        },
+        {
+          "current": "\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n",
+          "previous": "\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n",
+          "start": 132600
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;\n\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n\t\tpath, zeroPayloadJavaScript, expected\n\t);\n",
+          "previous": "",
+          "start": 132693
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7675159d6529981e10237e70a597d52264f713359b9fc678622c8e1689b4b612"
+    },
+    {
+      "currentSha256": "d26f0d6fd54ad8b9c24e26d130b56e3eca5b55b59388e3785c6a53cc5a524cd1",
+      "edits": [
+        {
+          "current": "const historyCommit = \"a9968c5e1b0710091880409280d8047ce001fc4f\";\n",
+          "previous": "",
+          "start": 987
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1803
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2554
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "start": 2861
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3200
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-source-history-tests.mjs",
+      "previousSha256": "3850545e8bedf954b447a7b2e29f47fd23dbe2978833f7122262de928b551899"
+    },
+    {
+      "currentSha256": "6c9903789d41bc65a81a8b10629baadf7784cd637dcf1397e78e4ddefdeded15",
+      "edits": [
+        {
+          "current": "const historyCommit = \"556bddd612d8562654904920a39b44dc1e569742\";\n",
+          "previous": "",
+          "start": 985
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1801
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 2439
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path)), addition.currentSha256, addition.path);\n",
+          "start": 2746
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 3085
+        }
+      ],
+      "path": "tests/helpers/zero-payload-npm-foundation-source-history-tests.mjs",
+      "previousSha256": "ea66b74d3e83465583f67c910e2f044f9e8dd17d9fb7787119703173fdc0d2f1"
+    },
+    {
+      "currentSha256": "f47ad8c07dde050c07bf99f0c4ce4f406ce6e939b051b1419b95ead2f3b24872",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-javascript-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 752
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "2f143f1812590631fb7874b2223711f217e456dce73bb34ecdc03b1869c2b32c"
+    }
+  ],
+  "milestone": "zero-payload-javascript-source-v1",
+  "predecessorCommit": "556bddd612d8562654904920a39b44dc1e569742",
+  "reconciledTypeSurfacePointers": 110,
+  "schemaVersion": 1,
+  "scope": "JavaScript and strict TypeScript preserve exact proof-only empty records across full and result-only packages.",
+  "updates": [
+    {
+      "currentSha256": "c5a9f7fa6980fda8660cd6c15d995ff2b5ca6c8d6925935e0424cbbebd30dbe3",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-javascript\"\n",
+          "previous": "",
+          "start": 13772
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "d4044b9755e917befa8639d939f08221913368ceeb354dec86b7cad249aa1b09"
+    },
+    {
+      "currentSha256": "8529cac82dff79f22c12564f338ec679788248c0b3416547b8f01a6e98833543",
+      "edits": [
+        {
+          "current": "\t\t\tif(type.fields.length === 0)\n\t\t\t{\n\t\t\t\toutput.push(`export type ${type.name}${parameters} = Readonly<Record<PropertyKey, never>>;`, \"\");\n\t\t\t\tcontinue;\n\t\t\t}\n",
+          "previous": "",
+          "start": 6243
+        }
+      ],
+      "path": "src/backends/javascript/generate.mjs",
+      "previousSha256": "46c3a7f82ef7bef955bec494ed3c9c13db08e8863391b758a233b2e9cd19dc00"
+    }
+  ]
+}

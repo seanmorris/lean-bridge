@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadJavaScriptSource, zeroPayloadJavaScriptChangedPaths, zeroPayloadJavaScriptIntegrationPaths } from "./zero-payload-javascript-source-history.mjs";
 import { beforeZeroPayloadNpmFoundationSource, zeroPayloadNpmFoundationChangedPaths, zeroPayloadNpmFoundationIntegrationPaths } from "./zero-payload-npm-foundation-source-history.mjs";
 import { beforeZeroPayloadCheckedRecordSource, zeroPayloadCheckedRecordChangedPaths, zeroPayloadCheckedRecordIntegrationPaths } from "./zero-payload-checked-record-source-history.mjs";
 import { beforeProjectedCheckedRecordMirrorSource, projectedCheckedRecordMirrorChangedPaths, projectedCheckedRecordMirrorIntegrationPaths } from "./projected-checked-record-mirror-source-history.mjs";
@@ -1399,7 +1400,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadNpmFoundationChangedPaths
+	...zeroPayloadJavaScriptChangedPaths
+	, ...zeroPayloadJavaScriptIntegrationPaths
+	, ...zeroPayloadNpmFoundationChangedPaths
 	, ...zeroPayloadNpmFoundationIntegrationPaths
 	, ...zeroPayloadCheckedRecordChangedPaths
 	, ...zeroPayloadCheckedRecordIntegrationPaths
@@ -1877,8 +1880,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(
+	const zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;
+	const zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(
+		path, zeroPayloadJavaScript, expected
 	);
 	if(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;
 	const zeroPayload = beforeZeroPayloadCheckedRecordSource(
