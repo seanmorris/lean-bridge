@@ -233,7 +233,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 				fail("nested generic checked records require another representation");
 			if(!Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024 || new Set(type.erased).size !== type.erased.length
 				|| type.erased.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
-				|| !type.fields.length || type.fields.some(field => type.erased.includes(field.name))) fail("invalid erased proof fields");
+				|| type.fields.some(field => type.erased.includes(field.name))) fail("invalid erased proof fields");
 		}
 		for(const field of type.fields)
 		{

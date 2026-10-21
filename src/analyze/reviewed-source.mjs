@@ -206,7 +206,7 @@ const checkReview = document => {
 			reject(!erased || typeof erased !== "object" || Array.isArray(erased) || Object.keys(erased).join() !== "fields"
 				|| !Array.isArray(erased.fields) || !erased.fields.length || erased.fields.length > 1024 || new Set(erased.fields).size !== erased.fields.length
 				|| erased.fields.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name) || definition.fields.some(field => field.name === name))
-				|| !definition.fields.length, `${definition.id}.source.extensions.${erasedProofsKey}`);
+			, `${definition.id}.source.extensions.${erasedProofsKey}`);
 		}
 	}
 	// Every checked-record input occurrence names its constructor. Results name no constructor,

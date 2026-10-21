@@ -316,7 +316,8 @@ const refusals = {
 	, functionIndex: [[null], /generic record value arguments cannot be functions/u]
 	, joinedStringIndex: [[null], /generic record String value arguments must be closed literals/u]
 	, dependent: [[null], /dependent or unresolved native type/u]
-	, witnessed: [[null], /checked records need at least one payload field/u]
+	// A proof-only record is admitted; without a configured constructor its site still fails closed.
+	, witnessed: [[null], /checked records require a configured checked constructor/u]
 	, digitOf: [["mkDigit"], /checked record payload fields cannot carry refinements yet/u]
 	, inArray: [[null], /nested checked records require an exact checked-record selection/u]
 	, inOption: [[null], /nested checked records require an exact checked-record selection/u]

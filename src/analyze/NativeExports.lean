@@ -187,7 +187,8 @@ which already holds the proofs, so it takes no constructor. -/
 def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
     (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)
     (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
-  if payload.isEmpty then reject e "checked records need at least one payload field"
+  -- A record reaches this site only when it carries erased proofs, so an empty payload is a
+  -- proof-only checked record: its nullary constructor is the sole proof source.
   unless structural && callbackSite.isSome && !hostReply do
     reject e "checked records currently require a top-level parameter or result"
   if callbackSite == some false && (depth != 0 || copied) && !rich then
