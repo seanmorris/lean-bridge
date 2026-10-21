@@ -1,0 +1,133 @@
+{
+  "additions": [
+    {
+      "currentSha256": "96a5ce3f61295732eb932e10c98b9c6f737913d59764005a4773983c051e9367",
+      "path": ".github/workflows/dependent-checked-record-native.yml"
+    },
+    {
+      "currentSha256": "1e61da6f391505d8ee9f23a42d1f798e03a276ceebf1330270feac29f8d311f2",
+      "path": "scripts/run-dependent-checked-record-native-ci.sh"
+    },
+    {
+      "currentSha256": "e9a4950f267026115773938b4288d7ca47d31bce947f1733c9bf5b1579a8cebd",
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs"
+    },
+    {
+      "currentSha256": "fc9008f49b5b98aa80a7d97592fbec3af3c484fc0057fd32d252fe9edd53bdc9",
+      "path": "tests/fixtures/dependent-checked-record-consumers/c.c"
+    },
+    {
+      "currentSha256": "97abd78e9904ae69c51e19f8721506ae7278a1d1384c1c5a32bbcd956b104b2a",
+      "path": "tests/fixtures/dependent-checked-record-consumers/cpp.cpp"
+    },
+    {
+      "currentSha256": "42f64219c897b7235ebf82f5f90c20c71aa5e0647d6c1bbbd1a1484823ad99f5",
+      "path": "tests/fixtures/dependent-checked-record-consumers/result-only-c.c"
+    },
+    {
+      "currentSha256": "f90c09b6b4ef872beebf487f571989f465bdd2de4faa410db23ccf6c7a32b4b6",
+      "path": "tests/fixtures/dependent-checked-record-consumers/result-only-cpp.cpp"
+    },
+    {
+      "currentSha256": "d1cad836254c7fb0b1a7c670e2456eed6f6cf609004f842263c62a666b99a64b",
+      "path": "tests/helpers/dependent-checked-record-native-fixture.mjs"
+    },
+    {
+      "currentSha256": "f8e713c0f389e6b9f0d7e480c7e34f66ecd17842a385c13661be1bc058ed22ea",
+      "path": "tests/helpers/dependent-checked-record-native-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "ed1ebb2c908cb8835a7acf5d71856d8c3c22dab96b49d6397ca3aea5faba59dd",
+      "path": "tests/helpers/dependent-checked-record-native-tests.mjs"
+    },
+    {
+      "currentSha256": "cde633271ba4fbc621c5c8c1b22ede21cbd691b615795eb62b8c74d4d3cde82c",
+      "path": "scripts/update-dependent-checked-record-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "4d5c214088a96378e28b0848274c6da9865911a3e9699a0b89b17bd3b67eb6be",
+      "path": "tests/helpers/dependent-checked-record-native-source-history.mjs"
+    },
+    {
+      "currentSha256": "80cf68e0ba488764b2278398401e5b5be6252f6b0072d056edfa9152b5f0058f",
+      "path": "tests/helpers/dependent-checked-record-native-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4f071ae1fd72dabc22840cc8803d7661380ab66c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0656ef7189fc91c7b2ca19a4ca9df6f5c742d4bc49611e1bf5868df62d524837",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordNativeSource, dependentCheckedRecordNativeChangedPaths, dependentCheckedRecordNativeIntegrationPaths } from \"./dependent-checked-record-native-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordNativeChangedPaths\n\t, ...dependentCheckedRecordNativeIntegrationPaths\n\t, ...dependentCheckedRecordFoundationChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordFoundationChangedPaths\n",
+          "start": 123080
+        },
+        {
+          "current": "\tconst dependentCheckedRecordNative\n\t\t= beforeDependentCheckedRecordNativeSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordNative) === expected)\n\t\treturn dependentCheckedRecordNative;\n",
+          "previous": "",
+          "start": 150222
+        },
+        {
+          "current": "\t\tpath, dependentCheckedRecordNative, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 150498
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b83aa21b8e47019e575f0c0a6dd3cdd882e5fe8dea9b3045b8d063aae400862f"
+    },
+    {
+      "currentSha256": "a8c34d0767ca3de64f41629e9367392e892a51237b7d216ab9955144af820ab5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-native-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3032
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "f1c665dd1896632631116441469bf5ce0403f82370c3b335548a602e64163f3a"
+    }
+  ],
+  "milestone": "dependent-checked-record-native-source-v1",
+  "predecessorCommit": "bcf2120e9772b7d642d4bc91cf45fd41e50cec9d",
+  "reconciledTypeSurfacePointers": 863,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline through independent C11/GMP and C++20/Boost packages in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "addedTests": [
+        "dependent-checked-record-browser-foundation",
+        "dependent-checked-record-native-foundation"
+      ],
+      "currentSha256": "3f51a415baa5f72e24698b3e88368222a9c3cc2a8066aa9ebfb75a7101b30874",
+      "edits": [
+        {
+          "current": "\t\t, \"dependent-checked-record-browser-foundation\"\n\t\t, \"dependent-checked-record-native-foundation\"\n",
+          "previous": "",
+          "start": 12860
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "10278fb42017aa053cf75920fcf22df230cac8fc9a62021e3836aa1ec54f5d2c"
+    },
+    {
+      "currentSha256": "c6b7be76f05d15739945a761dfed08771ae811b224cf986735be6902b0f09ddf",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\n\t\t\"dependent-checked-record-browser-foundation\"\n\t\t, \"dependent-checked-record-native-foundation\"\n\t]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);\n",
+          "previous": "",
+          "start": 3018
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "7a86a1da637aee2dff9635526dc44b79eef2ccca57715b2d07cf9d9b82616aa1"
+    }
+  ]
+}

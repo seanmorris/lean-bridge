@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordNativeSource, dependentCheckedRecordNativeChangedPaths, dependentCheckedRecordNativeIntegrationPaths } from "./dependent-checked-record-native-source-history.mjs";
 import { beforeDependentCheckedRecordFoundationSource, dependentCheckedRecordFoundationChangedPaths, dependentCheckedRecordFoundationIntegrationPaths } from "./dependent-checked-record-foundation-source-history.mjs";
 import { beforeDependentGenericSubtypeCiPinReconciliationSource, dependentGenericSubtypeCiPinReconciliationChangedPaths, dependentGenericSubtypeCiPinReconciliationIntegrationPaths } from "./dependent-generic-subtype-ci-pin-reconciliation-source-history.mjs";
 import { beforeDependentGenericSubtypeCiSource, dependentGenericSubtypeCiChangedPaths, dependentGenericSubtypeCiIntegrationPaths } from "./dependent-generic-subtype-ci-source-history.mjs";
@@ -1462,7 +1463,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordFoundationChangedPaths
+	...dependentCheckedRecordNativeChangedPaths
+	, ...dependentCheckedRecordNativeIntegrationPaths
+	, ...dependentCheckedRecordFoundationChangedPaths
 	, ...dependentCheckedRecordFoundationIntegrationPaths
 	, ...dependentGenericSubtypeCiPinReconciliationChangedPaths
 	, ...dependentGenericSubtypeCiPinReconciliationIntegrationPaths
@@ -2064,8 +2067,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordNative
+		= beforeDependentCheckedRecordNativeSource(path, text, expected);
+	if(sha256(dependentCheckedRecordNative) === expected)
+		return dependentCheckedRecordNative;
 	const dependentCheckedRecord = beforeDependentCheckedRecordFoundationSource(
-		path, text, expected
+		path, dependentCheckedRecordNative, expected
 	);
 	if(sha256(dependentCheckedRecord) === expected)
 		return dependentCheckedRecord;
