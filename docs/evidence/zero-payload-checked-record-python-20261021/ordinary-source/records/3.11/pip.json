@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "-X",
+    "pycache_prefix=/home/runner/work/_temp/lean-bridge-zero-payload-python-Ghk4G2/python-3.11/.zero-payload-python-pip-bytecode-N5VaI9",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--no-index",
+    "--no-deps",
+    "--no-cache-dir",
+    "--no-compile",
+    "/home/runner/work/_temp/lean-bridge-zero-payload-python-Ghk4G2/handoff/archives/zeropayloadcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "Processing /home/runner/work/_temp/lean-bridge-zero-payload-python-Ghk4G2/handoff/archives/zeropayloadcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl\nInstalling collected packages: zeropayloadcheckedrecords\nSuccessfully installed zeropayloadcheckedrecords-1.0.0\n"
+  }
+}

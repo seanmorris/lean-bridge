@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "generator": {
+    "id": "lean-wasm/python-copied",
+    "version": 1
+  },
+  "component": "zeropayloadcheckedrecords@1.0.0",
+  "bindingIrSha256": "87bc831e036f8880f6fe3d4ca966868de6cefac33d4f35fb7f46558f470eb254",
+  "publicModule": "lean_zeropayloadcheckedrecords/__init__.py",
+  "typeStub": "lean_zeropayloadcheckedrecords/__init__.pyi",
+  "internalModule": "lean_zeropayloadcheckedrecords/_native.py",
+  "exports": [
+    "LeanBridgeError",
+    "Some",
+    "Option",
+    "Witness",
+    "Mark",
+    "MarkBlank",
+    "MarkMarked",
+    "Marker",
+    "Token",
+    "maybe_witness",
+    "produce_mark",
+    "produce_marker",
+    "produce_token",
+    "produce_witness",
+    "witnesses"
+  ],
+  "files": [
+    "lean_zeropayloadcheckedrecords/__init__.py",
+    "lean_zeropayloadcheckedrecords/__init__.pyi",
+    "lean_zeropayloadcheckedrecords/_native.py",
+    "lean_zeropayloadcheckedrecords/py.typed",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "additional-identity-and-effects",
+      "reason": "Ordinary PyPI packages admit copied values and synchronous primitive callables; other identity and effect shapes remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The accepted native profile is GIL-enabled Python 3.11+ on Linux x86-64."
+    }
+  ]
+}

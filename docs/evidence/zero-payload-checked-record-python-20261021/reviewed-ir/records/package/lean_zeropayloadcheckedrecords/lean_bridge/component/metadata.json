@@ -1,0 +1,969 @@
+{
+  "diagnostics": [],
+  "kind": "lean-bridge-elaborated-exports",
+  "modules": [
+    {
+      "declarations": [
+        {
+          "documentation": "The same input site under the refusing constructor. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.absentCount",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "ZeroPayloadCheckedRecords.Witness"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                    "erased": [
+                      "positive"
+                    ],
+                    "fields": [],
+                    "kind": "record",
+                    "lean": "ZeroPayloadCheckedRecords.Witness",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkAbsent",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 56,
+            "endLine": 29,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 28
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Witness → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Both variant branches remain distinct after the nested proof has been erased. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.markCount",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "ZeroPayloadCheckedRecords.Mark"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "cases": [
+                    {
+                      "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+                      "fields": [],
+                      "name": "blank"
+                    },
+                    {
+                      "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+                      "fields": [
+                        {
+                          "name": "witness",
+                          "type": {
+                            "abi": {
+                              "box": "lean_box",
+                              "cType": "lean_object*",
+                              "heap": false,
+                              "unbox": "lean_unbox"
+                            },
+                            "base": {
+                              "abi": {
+                                "box": "lean_box",
+                                "cType": "lean_object*",
+                                "heap": false,
+                                "unbox": "lean_unbox"
+                              },
+                              "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                              "erased": [
+                                "positive"
+                              ],
+                              "fields": [],
+                              "kind": "record",
+                              "lean": "ZeroPayloadCheckedRecords.Witness",
+                              "name": "ZeroPayloadCheckedRecords.Witness"
+                            },
+                            "kind": "refinement",
+                            "predicate": {
+                              "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                              "kind": "checked-record"
+                            }
+                          }
+                        }
+                      ],
+                      "name": "marked"
+                    }
+                  ],
+                  "kind": "variant",
+                  "lean": "ZeroPayloadCheckedRecords.Mark",
+                  "name": "ZeroPayloadCheckedRecords.Mark"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 18,
+            "endLine": 47,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 43
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Mark → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A plain empty record crosses as an ordinary copied record in both directions. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.markerCount",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "ZeroPayloadCheckedRecords.Marker"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+                  "fields": [],
+                  "kind": "record",
+                  "lean": "ZeroPayloadCheckedRecords.Marker",
+                  "name": "ZeroPayloadCheckedRecords.Marker"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 55,
+            "endLine": 41,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 40
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Marker → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.maybeWitness",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "present",
+              "typeExpression": "Bool"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "present",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "uint8_t",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Bool",
+                  "name": "bool"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "selected": true,
+          "source": {
+            "endColumn": 50,
+            "endLine": 39,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 38
+          },
+          "theoremReferences": [],
+          "typeExpression": "Bool → Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "visibility": "public"
+        },
+        {
+          "documentation": "A refusing nullary constructor: the host's empty carrier is rejected at the boundary. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.mkAbsent",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "selected": false,
+          "source": {
+            "endColumn": 49,
+            "endLine": 24,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 23
+          },
+          "theoremReferences": [],
+          "typeExpression": "Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.mkToken",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "tag",
+              "typeExpression": "Unit"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "tag",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Unit",
+                  "name": "unit"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+                "erased": [
+                  "fresh"
+                ],
+                "fields": [
+                  {
+                    "name": "tag",
+                    "projection": "ZeroPayloadCheckedRecords.Token.tag",
+                    "type": {
+                      "abi": {
+                        "box": "lean_box",
+                        "cType": "lean_object*",
+                        "heap": false,
+                        "unbox": "lean_unbox"
+                      },
+                      "kind": "primitive",
+                      "lean": "Unit",
+                      "name": "unit"
+                    }
+                  }
+                ],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Token",
+                "name": "ZeroPayloadCheckedRecords.Token"
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} ZeroPayloadCheckedRecords.Token",
+          "selected": false,
+          "source": {
+            "endColumn": 74,
+            "endLine": 22,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 22
+          },
+          "theoremReferences": [],
+          "typeExpression": "Unit → Option.{0} ZeroPayloadCheckedRecords.Token",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Checked constructors: a nullary constructor is the only proof source for a `Witness`. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.mkWitness",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              },
+              "kind": "option"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "selected": false,
+          "source": {
+            "endColumn": 68,
+            "endLine": 21,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 20
+          },
+          "theoremReferences": [],
+          "typeExpression": "Option.{0} ZeroPayloadCheckedRecords.Witness",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.produceMark",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "active",
+              "typeExpression": "Bool"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "active",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "uint8_t",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Bool",
+                  "name": "bool"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "cases": [
+                {
+                  "constructor": "ZeroPayloadCheckedRecords.Mark.blank",
+                  "fields": [],
+                  "name": "blank"
+                },
+                {
+                  "constructor": "ZeroPayloadCheckedRecords.Mark.marked",
+                  "fields": [
+                    {
+                      "name": "witness",
+                      "type": {
+                        "abi": {
+                          "box": "lean_box",
+                          "cType": "lean_object*",
+                          "heap": false,
+                          "unbox": "lean_unbox"
+                        },
+                        "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                        "erased": [
+                          "positive"
+                        ],
+                        "fields": [],
+                        "kind": "record",
+                        "lean": "ZeroPayloadCheckedRecords.Witness",
+                        "name": "ZeroPayloadCheckedRecords.Witness"
+                      }
+                    }
+                  ],
+                  "name": "marked"
+                }
+              ],
+              "kind": "variant",
+              "lean": "ZeroPayloadCheckedRecords.Mark",
+              "name": "ZeroPayloadCheckedRecords.Mark"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "ZeroPayloadCheckedRecords.Mark",
+          "selected": true,
+          "source": {
+            "endColumn": 54,
+            "endLine": 49,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 48
+          },
+          "theoremReferences": [],
+          "typeExpression": "Bool → ZeroPayloadCheckedRecords.Mark",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.produceMarker",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "ZeroPayloadCheckedRecords.Marker.mk",
+              "fields": [],
+              "kind": "record",
+              "lean": "ZeroPayloadCheckedRecords.Marker",
+              "name": "ZeroPayloadCheckedRecords.Marker"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "ZeroPayloadCheckedRecords.Marker",
+          "selected": true,
+          "source": {
+            "endColumn": 51,
+            "endLine": 42,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 42
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Marker",
+          "visibility": "public"
+        },
+        {
+          "documentation": null,
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.produceToken",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+              "erased": [
+                "fresh"
+              ],
+              "fields": [
+                {
+                  "name": "tag",
+                  "projection": "ZeroPayloadCheckedRecords.Token.tag",
+                  "type": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "kind": "primitive",
+                    "lean": "Unit",
+                    "name": "unit"
+                  }
+                }
+              ],
+              "kind": "record",
+              "lean": "ZeroPayloadCheckedRecords.Token",
+              "name": "ZeroPayloadCheckedRecords.Token"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "ZeroPayloadCheckedRecords.Token",
+          "selected": true,
+          "source": {
+            "endColumn": 53,
+            "endLine": 34,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 34
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Token",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Lean produces the proof; the host receives the empty carrier. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.produceWitness",
+          "kind": "definition",
+          "parameters": [],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+              "erased": [
+                "positive"
+              ],
+              "fields": [],
+              "kind": "record",
+              "lean": "ZeroPayloadCheckedRecords.Witness",
+              "name": "ZeroPayloadCheckedRecords.Witness"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "ZeroPayloadCheckedRecords.Witness",
+          "selected": true,
+          "source": {
+            "endColumn": 61,
+            "endLine": 33,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 32
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Witness",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Read the unit tag of a checked token input. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.tokenTag",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "ZeroPayloadCheckedRecords.Token"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "ZeroPayloadCheckedRecords.Token.mk",
+                    "erased": [
+                      "fresh"
+                    ],
+                    "fields": [
+                      {
+                        "name": "tag",
+                        "projection": "ZeroPayloadCheckedRecords.Token.tag",
+                        "type": {
+                          "abi": {
+                            "box": "lean_box",
+                            "cType": "lean_object*",
+                            "heap": false,
+                            "unbox": "lean_unbox"
+                          },
+                          "kind": "primitive",
+                          "lean": "Unit",
+                          "name": "unit"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "lean": "ZeroPayloadCheckedRecords.Token",
+                    "name": "ZeroPayloadCheckedRecords.Token"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkToken",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Unit",
+              "name": "unit"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Unit",
+          "selected": true,
+          "source": {
+            "endColumn": 60,
+            "endLine": 31,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 30
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Token → Unit",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Count a checked proof-only input. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.witnessCount",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "value",
+              "typeExpression": "ZeroPayloadCheckedRecords.Witness"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "value",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "base": {
+                    "abi": {
+                      "box": "lean_box",
+                      "cType": "lean_object*",
+                      "heap": false,
+                      "unbox": "lean_unbox"
+                    },
+                    "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                    "erased": [
+                      "positive"
+                    ],
+                    "fields": [],
+                    "kind": "record",
+                    "lean": "ZeroPayloadCheckedRecords.Witness",
+                    "name": "ZeroPayloadCheckedRecords.Witness"
+                  },
+                  "kind": "refinement",
+                  "predicate": {
+                    "constructor": "ZeroPayloadCheckedRecords.mkWitness",
+                    "kind": "checked-record"
+                  }
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": false,
+                "unbox": "lean_unbox"
+              },
+              "kind": "primitive",
+              "lean": "Nat",
+              "name": "nat"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Nat",
+          "selected": true,
+          "source": {
+            "endColumn": 57,
+            "endLine": 27,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 26
+          },
+          "theoremReferences": [],
+          "typeExpression": "ZeroPayloadCheckedRecords.Witness → Nat",
+          "visibility": "public"
+        },
+        {
+          "documentation": "Containers of zero-payload results keep their length and presence. ",
+          "effects": [],
+          "identity": "ZeroPayloadCheckedRecords.witnesses",
+          "kind": "definition",
+          "parameters": [
+            {
+              "binderInfo": "explicit",
+              "name": "count",
+              "typeExpression": "Nat"
+            }
+          ],
+          "projection": {
+            "bindingShape": "native-function",
+            "parameters": [
+              {
+                "name": "count",
+                "type": {
+                  "abi": {
+                    "box": "lean_box",
+                    "cType": "lean_object*",
+                    "heap": false,
+                    "unbox": "lean_unbox"
+                  },
+                  "kind": "primitive",
+                  "lean": "Nat",
+                  "name": "nat"
+                }
+              }
+            ],
+            "result": {
+              "abi": {
+                "box": "lean_box",
+                "cType": "lean_object*",
+                "heap": true,
+                "unbox": "lean_unbox"
+              },
+              "element": {
+                "abi": {
+                  "box": "lean_box",
+                  "cType": "lean_object*",
+                  "heap": false,
+                  "unbox": "lean_unbox"
+                },
+                "constructor": "ZeroPayloadCheckedRecords.Witness.mk",
+                "erased": [
+                  "positive"
+                ],
+                "fields": [],
+                "kind": "record",
+                "lean": "ZeroPayloadCheckedRecords.Witness",
+                "name": "ZeroPayloadCheckedRecords.Witness"
+              },
+              "kind": "array"
+            },
+            "status": "supported"
+          },
+          "resultExpression": "Array.{0} ZeroPayloadCheckedRecords.Witness",
+          "selected": true,
+          "source": {
+            "endColumn": 62,
+            "endLine": 37,
+            "path": "ZeroPayloadCheckedRecords.lean",
+            "startColumn": 0,
+            "startLine": 35
+          },
+          "theoremReferences": [],
+          "typeExpression": "Nat → Array.{0} ZeroPayloadCheckedRecords.Witness",
+          "visibility": "public"
+        }
+      ],
+      "directImports": [
+        "Init"
+      ],
+      "interfaceSha256": "bad1597cda0767d9f0da4d8f9b10f8d1dd82aae603ca471ac422a342d4ab36cb",
+      "name": "ZeroPayloadCheckedRecords",
+      "sourcePath": "ZeroPayloadCheckedRecords.lean",
+      "sourceSha256": "ec380a8846fdb502045f3a17e7593b95554a54a1045fa83a165af9dd4f7de1d8"
+    }
+  ],
+  "producer": {
+    "adapter": "lean-bridge-elaborator",
+    "adapterVersion": 2,
+    "invocationIdentitySha256": "63c97118105d42a9f201b0d166d575d2f5700be2e66bae2b9b2bd22dd2bc1c5e",
+    "tool": "Lean",
+    "toolVersion": "4.32.2",
+    "toolchain": "leanprover/lean4:v4.32.2"
+  },
+  "profile": "native-library-v1",
+  "schemaVersion": 2
+}
