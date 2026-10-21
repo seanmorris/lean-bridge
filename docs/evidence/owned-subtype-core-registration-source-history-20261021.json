@@ -1,0 +1,56 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9567432453acb0d1630cfe634bcdc654c403e395929ef84c05bf073db6d111c5",
+      "path": "scripts/update-owned-subtype-core-registration-source-history.mjs"
+    },
+    {
+      "currentSha256": "b938867a341dfc735f6493c490faf26355c7cf2ce2c436f0ad502cdf007799c4",
+      "path": "tests/helpers/owned-subtype-core-registration-source-history.mjs"
+    },
+    {
+      "currentSha256": "752ab9b9ff1fd5157b7e38ca9cbfb5624fd20cd1af1c5ead2a90cb4ab0248d15",
+      "path": "tests/helpers/owned-subtype-core-registration-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "7eeaa3f6072981b5db29e86605bbb0612ede45fc",
+  "milestone": "owned-subtype-core-registration-source-v1",
+  "predecessorCommit": "b63c176128abed85f895dd9056e72ac4d7e78ec5",
+  "reconciledTypeSurfacePointers": 97,
+  "schemaVersion": 1,
+  "scope": "Closed Core profile registration for every owned-Subtype package and registration-history root test.",
+  "updates": [
+    {
+      "addedTests": [
+        "owned-subtype-host-registration-history",
+        "owned-subtype-javascript-packaging",
+        "owned-subtype-language-packaging",
+        "owned-subtype-native-packaging",
+        "owned-subtype-perl-packaging",
+        "owned-subtype-remaining-packaging"
+      ],
+      "currentSha256": "752a1a0f1d05bf23d2291387af270e42fbba693f94c25f732a46c902d48be469",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-host-registration-history\"\n\t\t, \"owned-subtype-javascript-packaging\"\n\t\t, \"owned-subtype-language-packaging\"\n\t\t, \"owned-subtype-native-packaging\"\n\t\t, \"owned-subtype-perl-packaging\"\n\t\t, \"owned-subtype-remaining-packaging\"\n",
+          "previous": "",
+          "start": 1111
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c5fe5e94ede4891cf0ed265a6e8e43335793c0e9a7887d01cbd53deeecb92311"
+    },
+    {
+      "currentSha256": "e487b2364228128731c5474810f7f09b77e41f2dc139d70461cdd2e9cf638700",
+      "edits": [
+        {
+          "current": "\tfor(const name of [\n\t\t\"owned-subtype-host-registration-history\"\n\t\t, \"owned-subtype-javascript-packaging\"\n\t\t, \"owned-subtype-language-packaging\"\n\t\t, \"owned-subtype-native-packaging\"\n\t\t, \"owned-subtype-perl-packaging\"\n\t\t, \"owned-subtype-remaining-packaging\"\n\t]) assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);\n",
+          "previous": "",
+          "start": 2447
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "db10766ff884b52990f3afa15b4e102e42448bf57f3f38b8a5865810e74f2ebd"
+    }
+  ]
+}
