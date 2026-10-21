@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from "./zero-payload-rust-archive-source-history.mjs";
 import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from "./zero-payload-rust-ci-source-history.mjs";
 import { beforeZeroPayloadRustAuditRepairSource, zeroPayloadRustAuditRepairChangedPaths, zeroPayloadRustAuditRepairIntegrationPaths } from "./zero-payload-rust-audit-repair-source-history.mjs";
 import { beforeZeroPayloadRustInstalledSource, zeroPayloadRustInstalledChangedPaths, zeroPayloadRustInstalledIntegrationPaths } from "./zero-payload-rust-installed-source-history.mjs";
@@ -1418,7 +1419,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadRustCiChangedPaths
+	...zeroPayloadRustArchiveChangedPaths
+	, ...zeroPayloadRustArchiveIntegrationPaths
+	, ...zeroPayloadRustCiChangedPaths
 	, ...zeroPayloadRustCiIntegrationPaths
 	, ...zeroPayloadRustAuditRepairChangedPaths
 	, ...zeroPayloadRustAuditRepairIntegrationPaths
@@ -1934,8 +1937,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadRustCi = beforeZeroPayloadRustCiSource(
+	const zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadRustArchive) === expected)
+		return zeroPayloadRustArchive;
+	const zeroPayloadRustCi = beforeZeroPayloadRustCiSource(
+		path, zeroPayloadRustArchive, expected
 	);
 	if(sha256(zeroPayloadRustCi) === expected) return zeroPayloadRustCi;
 	const zeroPayloadRustAuditRepair = beforeZeroPayloadRustAuditRepairSource(

@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3fc92741992a42eca09595c136a1dd143064d15d4223e024dcc98262a5f90499",
+      "path": "scripts/archive-zero-payload-checked-record-rust-evidence.mjs"
+    },
+    {
+      "currentSha256": "923f6ed4878dfcebe615404d9143f31f9fc6a9cc3c71c6f9bd795f1ee38d5750",
+      "path": "scripts/update-zero-payload-rust-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "a9cd04199dd12867e9f5d62c68f8ae32dca1b7c7a48aabd65045d099a35e42d8",
+      "path": "tests/helpers/zero-payload-rust-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "24f8d6340ef821bd00b40aba395c6ce49ecb99827caaf60dfc4dc45993a6bb38",
+      "path": "tests/helpers/zero-payload-rust-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "fb9040cc51face2caa0d32179b95942420db6e27",
+  "integrationUpdates": [
+    {
+      "currentSha256": "339893d73f4a4df190fa79948cae3df2b25fd45a209b07340859ee5149ae3b12",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from \"./zero-payload-rust-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRustArchiveChangedPaths\n\t, ...zeroPayloadRustArchiveIntegrationPaths\n\t, ...zeroPayloadRustCiChangedPaths\n",
+          "previous": "\t...zeroPayloadRustCiChangedPaths\n",
+          "start": 114506
+        },
+        {
+          "current": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n",
+          "previous": "\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n",
+          "start": 137516
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadRustArchive) === expected)\n\t\treturn zeroPayloadRustArchive;\n\tconst zeroPayloadRustCi = beforeZeroPayloadRustCiSource(\n\t\tpath, zeroPayloadRustArchive, expected\n\t);\n",
+          "previous": "",
+          "start": 137611
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7c138e2010bdb48d86085389403124425416cea9cf16998156d0ab97f6cb51e5"
+    }
+  ],
+  "milestone": "zero-payload-rust-archive-source-v1",
+  "predecessorCommit": "073f490bdb039ae62368e639ea14e3728cec12cb",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload Cargo evidence binds both author routes, the independent Rust caller, offline dependency closure and checker to Git and can be frozen only from authenticated successful GitHub records.",
+  "updates": [
+    {
+      "currentSha256": "c5936e5f5e0acb9f710ed65d3bd8527db2e6a1fa8fda1daea0bff9f3b2afa161",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadRustEvidenceSources\n",
+          "previous": "",
+          "start": 433
+        },
+        {
+          "current": "\t\t, `${role}:${path}`);\n});\n\ntest(\"zero-payload Rust evidence closes every hosted source role\", {\n\ttimeout: 120_000\n}, () => {\n\tconst head = revision();\n\tconst sources = zeroPayloadRustEvidenceSources({\n\t\tproducer: head, consumer: head, checker: head, archiver: head\n\t});\n\tassert.ok(sources.length > 80);\n\tassert.equal(new Set(sources.map(item =>\n\t\t`${item.role}:${item.path}`)).size, sources.length);\n\tassert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const item of sources)\n\t{\n\t\tassert.equal(item.revision, head);\n\t\tassert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0\n\t\t\t, `${item.role}:${item.path}`);\n\t}\n\tfor(const [role, path] of [\n\t\t[\"producer\", \"tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean\"]\n\t\t, [\"consumer\", \"tests/fixtures/zero-payload-checked-record-rust/rust.rs\"]\n\t\t, [\"checker\", \".github/workflows/zero-payload-checked-record-rust.yml\"]\n\t\t, [\"checker\", \"scripts/check-zero-payload-checked-record-rust-ci.mjs\"]\n\t\t, [\"archiver\", \"scripts/archive-zero-payload-checked-record-rust-evidence.mjs\"]\n\t\t, [\"archiver\", \"tests/helpers/zero-payload-checked-record-hosted-archive.mjs\"]\n\t]) assert.ok(sources.some(item => item.role === role && item.path === path)\n",
+          "previous": "",
+          "start": 6036
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "f537c69a8346ded5376e07b281dd1636146ef0b92f37c81141653516d0e0a663"
+    },
+    {
+      "currentSha256": "07263f1bf43d1c656e843e43f8a48deeda712d2a0c9503947b65a58054eeb2a7",
+      "edits": [
+        {
+          "current": "const rustCallers = [\"rust.rs\"].map(\n\tpath => `tests/fixtures/zero-payload-checked-record-rust/${path}`\n);\n",
+          "previous": "",
+          "start": 2620
+        },
+        {
+          "current": "\n/**\n * Select every source whose bytes explain the hosted Rust crate artifact.\n *\n * @param revisions - Producer, consumer, checker and archiver revisions.\n */\nexport const zeroPayloadRustEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-rust-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...fixture, ...rustCallers, \"src/analyze/NativeExports.lean\"\n\t\t\t\t, \"lean-toolchain\", \"package-lock.json\", \"package.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: revisions.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.consumer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-rust-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...rustCallers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.checker, [\n\t\t\t\t\t\"scripts/check-zero-payload-checked-record-rust-ci.mjs\"\n\t\t\t\t\t, \"tests/zero-payload-checked-record-rust.test.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-rust.yml\"\n\t\t\t\t, \"scripts/bootstrap-rust-ci.sh\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-zero-payload-checked-record-rust-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-zero-payload-checked-record-rust-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 10279
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "f725eb49afe934e7ad48fc8b1d3484b7035936defd0592342c224320ec9fd554"
+    },
+    {
+      "currentSha256": "d5336692e042ba85f9be1029200f4832fa77c24d4630a6fd7459aed4ce701a25",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-rust-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 367
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-rust.test.mjs",
+      "previousSha256": "15f6da240b0c2af60c5e0792ff2f6bc9bbd6b89014c545657f823e783a962efc"
+    }
+  ]
+}
