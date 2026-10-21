@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from "./zero-payload-browser-ci-source-history.mjs";
 import { beforeZeroPayloadBrowserSource, zeroPayloadBrowserChangedPaths, zeroPayloadBrowserIntegrationPaths } from "./zero-payload-browser-source-history.mjs";
 import { beforeZeroPayloadNpmInstalledSource, zeroPayloadNpmInstalledChangedPaths, zeroPayloadNpmInstalledIntegrationPaths } from "./zero-payload-npm-installed-source-history.mjs";
 import { beforeZeroPayloadJavaScriptSource, zeroPayloadJavaScriptChangedPaths, zeroPayloadJavaScriptIntegrationPaths } from "./zero-payload-javascript-source-history.mjs";
@@ -1402,7 +1403,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadBrowserChangedPaths
+	...zeroPayloadBrowserCiChangedPaths
+	, ...zeroPayloadBrowserCiIntegrationPaths
+	, ...zeroPayloadBrowserChangedPaths
 	, ...zeroPayloadBrowserIntegrationPaths
 	, ...zeroPayloadNpmInstalledChangedPaths
 	, ...zeroPayloadNpmInstalledIntegrationPaths
@@ -1886,7 +1889,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadBrowser = beforeZeroPayloadBrowserSource(path, text, expected);
+	const zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(
+		path, text, expected
+	);
+	if(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;
+	const zeroPayloadBrowser = beforeZeroPayloadBrowserSource(
+		path, zeroPayloadBrowserCi, expected
+	);
 	if(sha256(zeroPayloadBrowser) === expected) return zeroPayloadBrowser;
 	const zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(
 		path, zeroPayloadBrowser, expected

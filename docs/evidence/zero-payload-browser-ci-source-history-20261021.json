@@ -1,0 +1,185 @@
+{
+  "additions": [
+    {
+      "currentSha256": "40a2c97b7364069112a291849823ed2a73fb261b07ecf7432551a596c686f86d",
+      "path": ".github/workflows/zero-payload-checked-record-browser.yml"
+    },
+    {
+      "currentSha256": "303c3e5fd6821349b896a8c81cb72b5a5ef41530f4e7e3254838b0e7070f4549",
+      "path": "scripts/check-zero-payload-checked-record-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "1d03aebaf8ab40859b6e2cd0b08635324aeec7ae928230735f00d08d95cce36c",
+      "path": "scripts/run-zero-payload-checked-record-browser-ci.sh"
+    },
+    {
+      "currentSha256": "842fde802e8227c19ef1e273d5cb9008a7f124f97a9ac6124219b6ba0d30b93b",
+      "path": "tests/helpers/zero-payload-checked-record-browser-ci-report.mjs"
+    },
+    {
+      "currentSha256": "fcefdfae53ce7f8cfea58963352e50ad24ce9b2678cd99abaf949e1baee18d2d",
+      "path": "tests/helpers/zero-payload-checked-record-browser-controls.mjs"
+    },
+    {
+      "currentSha256": "af9758ed4ed98c17fa24ee6fe8e6df347950f5f08519b9c1218e80d48ab697fe",
+      "path": "tests/helpers/zero-payload-checked-record-browser-report.mjs"
+    },
+    {
+      "currentSha256": "36175693342793f35fa1fdf28e46cef5eb06e28cd60965736666736ba3443aec",
+      "path": "scripts/update-zero-payload-browser-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "f0cfe69a243c569e2f64955c177d1118e076852fc18d7aaa48cbd237f2335358",
+      "path": "tests/helpers/zero-payload-browser-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "a9f3548d56ff3ac618c837e088237de0527dc5553932adf78431a095b1562ebb",
+      "path": "tests/helpers/zero-payload-browser-ci-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "a19641e30017405cc13b0ee0b46a89fac762faa2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d8e60c22f3141c055ccee2684e32d2b514121cdb45e62d6cb55c43217f158513",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadBrowserCiSource, zeroPayloadBrowserCiChangedPaths, zeroPayloadBrowserCiIntegrationPaths } from \"./zero-payload-browser-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadBrowserCiChangedPaths\n\t, ...zeroPayloadBrowserCiIntegrationPaths\n\t, ...zeroPayloadBrowserChangedPaths\n",
+          "previous": "\t...zeroPayloadBrowserChangedPaths\n",
+          "start": 111708
+        },
+        {
+          "current": "\tconst zeroPayloadBrowserCi = beforeZeroPayloadBrowserCiSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadBrowserCi) === expected) return zeroPayloadBrowserCi;\n\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(\n\t\tpath, zeroPayloadBrowserCi, expected\n\t);\n",
+          "previous": "\tconst zeroPayloadBrowser = beforeZeroPayloadBrowserSource(path, text, expected);\n",
+          "start": 133358
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "63e965a7a4dc1e7f6ac0d554b4a96fa841d03f9ff66101a8a7a6dceb2654b1b7"
+    }
+  ],
+  "milestone": "zero-payload-browser-ci-source-v1",
+  "predecessorCommit": "2b17ad4ca92335e96207f6b7284aa593da1b5cc3",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted CI retains and independently verifies all zero-payload npm/browser routes and their negative controls.",
+  "updates": [
+    {
+      "currentSha256": "af7923a5fb5ce6190d7b7d688a13f3cb1d5a49aaf141bc42dfcc7a2a47f1e6b8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 440
+        },
+        {
+          "current": "const historyCommit = \"2b17ad4ca92335e96207f6b7284aa593da1b5cc3\";\n",
+          "previous": "",
+          "start": 941
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserSource\n\t\t);\n",
+          "start": 1715
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserSource\n\t\t);\n",
+          "start": 2332
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "start": 2559
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadBrowserSource\n\t);\n",
+          "start": 2885
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-source-history-tests.mjs",
+      "previousSha256": "99991a1adccd4e6f05858f3f9b7258c5df703ec0f73e91852a1f3b62944806a6"
+    },
+    {
+      "currentSha256": "8cde87a586022c186dae30cc0af4e95c88108458e8ad2e9ef98e844cac2ab047",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./zero-payload-browser-source-history-tests.mjs\";\n",
+          "start": 1167
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser.mjs",
+      "previousSha256": "346220b199d4bfea080db7fd2d86cf028436fc04704716e19d6a2524ec50b664"
+    },
+    {
+      "currentSha256": "0053d0059e16a87680c66f20ff9c01cf76996f8fd77bdb8497c0969f4221437f",
+      "edits": [
+        {
+          "current": "import {\n\tzeroPayloadBrowserNegativeControls\n} from \"./zero-payload-checked-record-browser-controls.mjs\";\nimport {\n\tcheckZeroPayloadBrowserReport\n\t, checkZeroPayloadNpmReport\n\t, zeroPayloadBrowserPositions\n\t, zeroPayloadBrowserRecordPaths\n} from \"./zero-payload-checked-record-browser-report.mjs\";\n",
+          "previous": "",
+          "start": 1265
+        },
+        {
+          "current": "",
+          "previous": "import \"./zero-payload-npm-installed-source-history-tests.mjs\";\n",
+          "start": 1938
+        },
+        {
+          "current": "\t\t\t, positions: zeroPayloadBrowserPositions\n",
+          "previous": "",
+          "start": 13429
+        },
+        {
+          "current": "\t\t\t, typescript: {\n\t\t\t\tstrict: true, skipLibCheck: false, sourceSha256: sha256(typescript)\n\t\t\t\t, declarationsSha256: sha256(declarations)\n\t\t\t}\n",
+          "previous": "",
+          "start": 13593
+        },
+        {
+          "current": "\t\tconst read = path => readFile(join(output, path));\n\t\tawait checkZeroPayloadNpmReport(read, { route, producerCommit, runtime });\n\t\tif(browsers)\n\t\t{\n\t\t\tawait checkZeroPayloadBrowsers({\n\t\t\t\tdirectory: join(root, \"browsers\"), records: output, route\n\t\t\t\t, producerCommit, consumerCommit: producerCommit, runtime\n\t\t\t});\n\t\t\tawait checkZeroPayloadBrowserReport(read, {\n\t\t\t\troute, producerCommit, consumerCommit: producerCommit\n\t\t\t});\n\t\t\tconst expectedPaths = zeroPayloadBrowserRecordPaths(receipt)\n\t\t\t\t.filter(path => path !== \"controls.json\");\n\t\t\tassert.deepEqual(await nativeArtifactPaths(output), expectedPaths);\n\t\t\tconst originals = new Map(await Promise.all(expectedPaths.map(async path => [\n\t\t\t\tpath, await read(path)\n\t\t\t])));\n\t\t\tconst controls = await zeroPayloadBrowserNegativeControls(originals, {\n\t\t\t\troute, producerCommit, consumerCommit: producerCommit, runtime\n\t\t\t});\n\t\t\tawait saveLakeFile(output, \"controls.json\", canonicalJson({\n\t\t\t\tschemaVersion: 1, checkerCommit: producerCommit, ...controls\n\t\t\t}));\n\t\t\tassert.deepEqual(await nativeArtifactPaths(output)\n\t\t\t\t, zeroPayloadBrowserRecordPaths(receipt));\n\t\t}\n",
+          "previous": "\t\tif(browsers) await checkZeroPayloadBrowsers({\n\t\t\tdirectory: join(root, \"browsers\"), records: output, route\n\t\t\t, producerCommit, consumerCommit: producerCommit, runtime\n\t\t});\n",
+          "start": 14174
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-npm-installed-tests.mjs",
+      "previousSha256": "6a1a0f01dcb9822ccaa7aa5e9b949ae21e2080d4aac89557b73c07df65415917"
+    },
+    {
+      "currentSha256": "4d88b787c6d7aa9ef35c43b6037d569a9a23b84f8ee97ebe512a073fa9e65efa",
+      "edits": [
+        {
+          "current": "import {\n\tassertZeroPayloadBrowserTap\n\t, parseZeroPayloadBrowserCiArgs\n} from \"./helpers/zero-payload-checked-record-browser-ci-report.mjs\";\n",
+          "previous": "",
+          "start": 525
+        },
+        {
+          "current": "import \"./helpers/zero-payload-browser-ci-source-history-tests.mjs\";\nimport \"./helpers/zero-payload-browser-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1125
+        },
+        {
+          "current": "import \"./helpers/zero-payload-npm-installed-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1329
+        },
+        {
+          "current": "const tap = (tests, skipped = 0) => `TAP version 13\\n${Array.from({ length: tests }\n\t, (_, index) => `# Subtest: accepted ${index}\\n`\n\t\t+ `ok ${index + 1} - accepted ${index}${index >= tests - skipped ? \" # SKIP\" : \"\"}\\n`\n\t\t+ \"  ---\\n  duration_ms: 1\\n  type: 'test'\\n  ...\\n\").join(\"\")}1..${tests}\\n# tests ${tests}\\n# suites 0\\n# pass ${tests - skipped}\\n# fail 0\\n# cancelled 0\\n# skipped ${skipped}\\n# todo 0\\n# duration_ms 2\\n`;\n",
+          "previous": "",
+          "start": 2640
+        },
+        {
+          "current": "test(\"zero-payload hosted selections require terminal TAP and exact identities\", () => {\n\tassert.doesNotThrow(() => assertZeroPayloadBrowserTap(tap(1), { tests: 1 }));\n\tassert.doesNotThrow(() => assertZeroPayloadBrowserTap(\n\t\ttap(16, 4), { skipped: 4, minimumPasses: 12 }\n\t));\n\tfor(const source of [\n\t\ttap(1).replace(\"# fail 0\", \"# fail 1\")\n\t\t, tap(16, 4).replace(\"# skipped 4\", \"# skipped 3\")\n\t\t, tap(16, 4).replace(\"ok 1\", \"not ok 1\")\n\t]) assert.throws(() => assertZeroPayloadBrowserTap(\n\t\tsource, { skipped: source.includes(\"1..16\") ? 4 : 0 }\n\t));\n\tconst selected = {\n\t\troute: \"ordinary-source\", producer: \"a\".repeat(40)\n\t\t, \"npm-checker\": \"b\".repeat(40), consumer: \"c\".repeat(40)\n\t\t, checker: \"d\".repeat(40), directory: \"records\"\n\t\t, \"acceptance-tap\": \"acceptance.tap\", \"controls-tap\": \"controls.tap\"\n\t\t, runtime: \"runtime.json\"\n\t};\n\tconst args = Object.entries(selected)\n\t\t.flatMap(([key, value]) => [`--${key}`, value]);\n\tassert.deepEqual(parseZeroPayloadBrowserCiArgs(args), selected);\n\tfor(const changed of [args.slice(1), [...args, \"--route\", \"reviewed-ir\"]\n\t\t, args.map(value => value === selected.producer ? \"not-a-commit\" : value)])\n\t\tassert.throws(() => parseZeroPayloadBrowserCiArgs(changed));\n});\n\n",
+          "previous": "",
+          "start": 5324
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "8e0b6f904696a24bf18618d6cbf4f78f6df47c05076dc8294875f0155c05182c"
+    }
+  ]
+}
