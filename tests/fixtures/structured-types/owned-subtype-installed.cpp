@@ -55,7 +55,8 @@ int main(void) {
 
     auto moving = bundle(retained, 9); auto kept = moving.primary.retain();
     auto moved = api::transfer_record(std::move(moving));
-    CHECK(moving.primary.is_closed() && api::serial(kept) == 41);
+    CHECK(moving.primary.is_closed() && retained.is_closed()
+      && api::serial(kept) == 41);
     CHECK(moved.payload.count == 9 && api::serial(moved.primary) == 41);
 
     auto raiiSurvivor = [] {
@@ -66,7 +67,7 @@ int main(void) {
     }();
     CHECK(api::serial(raiiSurvivor) == 61);
     raiiSurvivor.close(); CHECK(raiiSurvivor.is_closed());
-    CHECK(api::serial(retained) == 41);
+    CHECK(api::serial(kept) == 41);
 
     rejectionLease.close(); kept.close(); moved.primary.close(); retained.close();
     CHECK(rejectionLease.is_closed() && kept.is_closed() && retained.is_closed());

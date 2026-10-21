@@ -46,6 +46,16 @@ test("owned Subtype and callback native consumers match generated headers", asyn
 		["c", "/usr/bin/cc", "c11"], ["cpp", "/usr/bin/c++", "c++20"]
 	]) {
 		const source = await readFile(`tests/fixtures/structured-types/owned-subtype-installed.${profile}`, "utf8");
+		if(profile === "cpp")
+		{
+			const transferred = source.indexOf("auto moved = api::transfer_record");
+			const raiiClose = source.indexOf("raiiSurvivor.close()", transferred);
+			const finalClose = source.indexOf("retained.close()", raiiClose);
+			assert.ok(transferred >= 0 && raiiClose > transferred && finalClose > raiiClose);
+			assert.match(source.slice(transferred, raiiClose), /retained\.is_closed\(\)/u);
+			assert.match(source.slice(raiiClose, finalClose), /api::serial\(kept\) == 41/u);
+			assert.doesNotMatch(source.slice(raiiClose, finalClose), /api::serial\(retained\)/u);
+		}
 		await saveLakeFile(directory, `consumer.${profile}`, source);
 		await runCopied(compiler, [`-std=${standard}`, "-Wall", "-Wextra", "-Werror"
 			, "-I", "include", "-fsyntax-only", `consumer.${profile}`], directory
