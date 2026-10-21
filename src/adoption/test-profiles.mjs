@@ -375,6 +375,7 @@ const profileManifest = Object.freeze({
 		, "zero-payload-checked-record-jvm-evidence"
 		, "zero-payload-checked-record-jvm-promotion"
 		, "zero-payload-checked-record-perl"
+		, "zero-payload-checked-record-php"
 		, "zero-payload-checked-records"
 		, "closed-generic-checked-record-source-history"
 		, "mutual-checked-record-browser"

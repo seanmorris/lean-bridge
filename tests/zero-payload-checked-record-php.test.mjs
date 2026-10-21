@@ -7,3 +7,4 @@
 import "./helpers/zero-payload-checked-record-php-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-php-ci-report-tests.mjs";
 import "./helpers/zero-payload-checked-record-php-installed-tests.mjs";
+import "./helpers/zero-payload-php-source-history-tests.mjs";
