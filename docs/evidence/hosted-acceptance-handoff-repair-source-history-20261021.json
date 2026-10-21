@@ -1,0 +1,174 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ca7be67ad5592efbfad28631a30d9bca2083a3dc33c09ef5310a9415f761c698",
+      "path": "docs/evidence/zero-payload-checked-record-browser-20261021/hosted/logs/engine.log"
+    },
+    {
+      "currentSha256": "07fe041ea9845bd97f711e359c531d67a7aa108aab5f38e336dee040f255d2b7",
+      "path": "docs/evidence/zero-payload-checked-record-browser-20261021/hosted/logs/runtime.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/zero-payload-checked-record-native-20261021/hosted/logs/toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/zero-payload-checked-record-perl-20261021/hosted/logs/toolchain.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/zero-payload-checked-record-php-20261021/hosted/logs/toolchain.log"
+    },
+    {
+      "currentSha256": "43da05e6cffe1bef59d245b917481705dae48c2bb337a121e21cb9c3861b716d",
+      "path": "docs/evidence/zero-payload-checked-record-python-20261021/hosted/logs/engine.log"
+    },
+    {
+      "currentSha256": "7926b41a9740600f0a09dd86fc8c25997da414d88981a2fe93d35c2d5e65efe9",
+      "path": "docs/evidence/zero-payload-checked-record-ruby-20261021/hosted/logs/toolchain.log"
+    },
+    {
+      "currentSha256": "8ad2e4dd97d31c887c28fc590e080011c2ec83c06d5a447606eb0e62488f3851",
+      "path": "docs/evidence/zero-payload-checked-record-wit-20261021/hosted/logs/toolchain.log"
+    },
+    {
+      "currentSha256": "55b269684da584ddc296b844e7fd77dd9fde80a375d75e94c3ac31f216155bea",
+      "path": "scripts/update-hosted-acceptance-handoff-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6d31f7aedb2d03177725eed280152216d90bd290ea8cbdb7296b4d887daa434c",
+      "path": "tests/helpers/hosted-acceptance-handoff-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "039a84757b7ac7886907c8df71d757a23ea60ff3f6388cb32e0a309083d06a9f",
+      "path": "tests/helpers/hosted-acceptance-handoff-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "217d43f0382aeb0c924ad33c8bafa2ea538f308a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "eca3f7518231441f29156e315e6c5544ed5fc926aae0d70ca84f0b9f2e826040",
+      "edits": [
+        {
+          "current": "import { beforeHostedAcceptanceHandoffRepairSource, hostedAcceptanceHandoffRepairChangedPaths, hostedAcceptanceHandoffRepairIntegrationPaths } from \"./hosted-acceptance-handoff-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...hostedAcceptanceHandoffRepairChangedPaths\n\t, ...hostedAcceptanceHandoffRepairIntegrationPaths\n\t, ...zeroPayloadPhpWasmPlainExportRepairChangedPaths\n",
+          "previous": "\t...zeroPayloadPhpWasmPlainExportRepairChangedPaths\n",
+          "start": 119951
+        },
+        {
+          "current": "\tconst handoffRepair = beforeHostedAcceptanceHandoffRepairSource(\n",
+          "previous": "\tconst plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(\n",
+          "start": 145569
+        },
+        {
+          "current": "\tif(sha256(handoffRepair) === expected) return handoffRepair;\n\tconst plainExportRepair = beforeZeroPayloadPhpWasmPlainExportRepairSource(\n\t\tpath, handoffRepair, expected\n\t);\n",
+          "previous": "",
+          "start": 145662
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6f9e766905450864616839921e525da56f7d17bc010bed181d6ba0ea8be28751"
+    },
+    {
+      "currentSha256": "2b64a3b81c0322bac36dc7ffb664d6372c920f16a4086aa1e2ee7a407ae6092b",
+      "edits": [
+        {
+          "current": "import \"./helpers/hosted-acceptance-handoff-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1519
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "65dd368860f2f27b8930a36b668b9c87fd7872d9fbd0a0b38c72861c667ffa00"
+    }
+  ],
+  "milestone": "hosted-acceptance-handoff-repair-source-v1",
+  "predecessorCommit": "81c43306ba2305ed3254198c73f11a9808c38a9e",
+  "schemaVersion": 1,
+  "scope": "Hosted acceptance uses an arity-sensitive PHP-Wasm result-only probe, reconstructs each Perl consumer from authenticated archive bytes after deleting the shared handoff, and retains every hosted log named by an immutable evidence index in Git.",
+  "updates": [
+    {
+      "currentSha256": "3f87d057a2e3112559e68a284450694450965a715e4667fbf36853e4188dcfc7",
+      "edits": [
+        {
+          "current": "import { readFileSync, readdirSync } from \"node:fs\";\n",
+          "previous": "import { readFileSync } from \"node:fs\";\n",
+          "start": 227
+        },
+        {
+          "current": "test(\"every retained zero-payload hosted log is tracked by Git\", () => {\n\tconst roots = readdirSync(\"docs/evidence\", { withFileTypes: true })\n\t\t.filter(entry => entry.isDirectory()\n\t\t\t&& /^zero-payload-checked-record-.+-20261021$/u.test(entry.name))\n\t\t.map(entry => `docs/evidence/${entry.name}`);\n\tconst paths = roots.flatMap(root => {\n\t\tconst index = JSON.parse(readFileSync(`${root}/index.json`, \"utf8\"));\n\t\treturn index.files.filter(file => file.path.startsWith(\"hosted/logs/\"))\n\t\t\t.map(file => `${root}/${file.path}`);\n\t});\n\tassert.ok(paths.length >= 11, `expected all hosted logs, found ${paths.length}`);\n\tconst tracked = new Set(execFileSync(\"git\", [\"ls-files\", \"--\", ...paths], {\n\t\tencoding: \"utf8\"\n\t}).trim().split(\"\\n\").filter(Boolean));\n\tassert.deepEqual([...paths].sort(), [...tracked].sort());\n});\n\n",
+          "previous": "",
+          "start": 1027
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "bb5faa2ffde28247b1e1fc77f20e5b512773ab49eb0f9cb8b04c06767849d562"
+    },
+    {
+      "currentSha256": "62f652363cd590e1f879fabc95a608a4aa18a354e596726d90fd3f0a3a809400",
+      "edits": [
+        {
+          "current": "\t\t\t, operations: { probe: route.startsWith(\"result-only-\") ? \"witnesses\" : \"witness_count\" }\n",
+          "previous": "\t\t\t, operations: { probe: route.startsWith(\"result-only-\") ? \"produce_witness\" : \"witness_count\" }\n",
+          "start": 3901
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-fixture-tests.mjs",
+      "previousSha256": "0649565c64df2f015ac1ccfaf6fe95cb1b697f0651188f53f9f61f32c93db52f"
+    },
+    {
+      "currentSha256": "80f40578a34300ad5d0929ecf65ca93befee8af8dff138f498deaf898fbd6cdd",
+      "edits": [
+        {
+          "current": "\t\t, operations: { probe: resultOnly ? \"witnesses\" : \"witness_count\" }\n",
+          "previous": "\t\t, operations: { probe: resultOnly ? \"produce_witness\" : \"witness_count\" }\n",
+          "start": 4292
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-fixture.mjs",
+      "previousSha256": "4d1a2bb8824c9c081e53b0597a04dc8ccba0c7368e838bbddf98c260c2c07da0"
+    },
+    {
+      "currentSha256": "c18342c09ba29b49a1e6dc610222460d1e1c7cc61d9bf34d2d030034ed184ace",
+      "edits": [
+        {
+          "current": "\tconst archives = await Promise.all(built.packages.map(async pkg => ({\n\t\t...pkg, bytes: await readFile(join(handoff, \"archives\", pkg.archive))\n\t})));\n\tawait rm(handoff, { recursive: true, force: true });\n\tawait assert.rejects(access(handoff), { code: \"ENOENT\" });\n",
+          "previous": "",
+          "start": 7598
+        },
+        {
+          "current": "\t\tconst staging = join(consumer, \"handoff\");\n",
+          "previous": "",
+          "start": 8381
+        },
+        {
+          "current": "\t\tfor(const archive of archives)\n",
+          "previous": "\t\tfor(const pkg of receipt.packages)\n",
+          "start": 8956
+        },
+        {
+          "current": "\t\t\tassert.equal(sha256(archive.bytes), archive.sha256);\n\t\t\tawait saveLakeFile(staging, archive.archive, archive.bytes);\n\t\t\tawait installCpanArchive({ archive: join(staging, archive.archive)\n\t\t\t\t, workingRoot: consumer, prefix, perl\n",
+          "previous": "\t\t\tconst archive = join(handoff, \"archives\", pkg.archive);\n\t\t\tassert.equal(sha256(await readFile(archive)), pkg.sha256);\n\t\t\tawait installCpanArchive({ archive, workingRoot: consumer, prefix, perl\n",
+          "start": 8993
+        },
+        {
+          "current": "\t\tawait rm(staging, { recursive: true, force: true });\n\t\tawait assert.rejects(access(staging), { code: \"ENOENT\" });\n",
+          "previous": "",
+          "start": 9292
+        },
+        {
+          "current": "",
+          "previous": "\tawait rm(handoff, { recursive: true, force: true });\n\tawait assert.rejects(access(handoff), { code: \"ENOENT\" });\n",
+          "start": 10704
+        }
+      ],
+      "path": "tests/owned-subtype-perl-packaging.test.mjs",
+      "previousSha256": "3f0f01001de4b54816807e3d9462174acaed21a2e05b106ce92f5ca1e8ae97d8"
+    }
+  ]
+}

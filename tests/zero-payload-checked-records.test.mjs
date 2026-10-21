@@ -23,6 +23,7 @@ import {
 	, zeroPayloadCheckedRecordModule, zeroPayloadCheckedRecordRefusalSource, zeroPayloadCheckedRecordRefusals
 	, zeroPayloadCheckedRecordReview
 } from "./helpers/zero-payload-checked-record-fixture.mjs";
+import "./helpers/hosted-acceptance-handoff-repair-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-source-history-tests.mjs";
 import "./helpers/zero-payload-hosted-archive-preparation-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-native-fixture-tests.mjs";
