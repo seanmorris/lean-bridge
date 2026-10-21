@@ -74,7 +74,7 @@ test("zero-payload PHP-Wasm probes a selected public export in both installed ar
 		const request = JSON.parse(zeroPayloadPhpWasmRequest(route, arrangement));
 		assert.deepEqual(request, {
 			module: "LeanZeropayloadcheckedrecords"
-			, operations: { probe: route.startsWith("result-only-") ? "produce_witness" : "witness_count" }
+			, operations: { probe: route.startsWith("result-only-") ? "witnesses" : "witness_count" }
 			, autoload: arrangement === "composer" ? "vendor/autoload.php" : "vendor/lean-bridge-zeropayloadcheckedrecords/wasm/bootstrap.php"
 		});
 	}

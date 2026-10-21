@@ -137,6 +137,11 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		, args: [cli, "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"]
 		, cwd: scratch, env: copiedCleanEnvironment }).catch(explain);
 	assert.equal(JSON.parse(verification.stdout).result.verificationType, "local-package-set");
+	const archives = await Promise.all(built.packages.map(async pkg => ({
+		...pkg, bytes: await readFile(join(handoff, "archives", pkg.archive))
+	})));
+	await rm(handoff, { recursive: true, force: true });
+	await assert.rejects(access(handoff), { code: "ENOENT" });
 	await rm(author, { recursive: true, force: true });
 	await rm(producer, { recursive: true, force: true });
 	await assert.rejects(access(author), { code: "ENOENT" });
@@ -146,6 +151,7 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 	for(const [index, perl] of perls.entries()) for(const mode of ["prebuilt-only", "build-xs"])
 	{
 		const consumer = join(scratch, `consumer-${index}-${mode}`);
+		const staging = join(consumer, "handoff");
 		const prefix = join(consumer, "installed"), tools = join(consumer, "tools");
 		await mkdir(tools, { recursive: true });
 		for(const command of ["make", "tar", "gzip", "sh", "cp", "mv", "rm"
@@ -154,13 +160,16 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 			await symlink(`/usr/bin/${command}`, join(tools, command));
 		const installEnvironment = { ...copiedCleanEnvironment, PATH: tools
 			, ...mode === "build-xs" ? { CC: "/usr/bin/cc", LD: "/usr/bin/cc" } : {} };
-		for(const pkg of receipt.packages)
+		for(const archive of archives)
 		{
-			const archive = join(handoff, "archives", pkg.archive);
-			assert.equal(sha256(await readFile(archive)), pkg.sha256);
-			await installCpanArchive({ archive, workingRoot: consumer, prefix, perl
+			assert.equal(sha256(archive.bytes), archive.sha256);
+			await saveLakeFile(staging, archive.archive, archive.bytes);
+			await installCpanArchive({ archive: join(staging, archive.archive)
+				, workingRoot: consumer, prefix, perl
 				, mode, environment: installEnvironment }).catch(explain);
 		}
+		await rm(staging, { recursive: true, force: true });
+		await assert.rejects(access(staging), { code: "ENOENT" });
 		await rm(tools, { recursive: true, force: true });
 		const relocated = join(consumer, "relocated"); await rename(prefix, relocated);
 		await saveLakeFile(consumer, "consumer.pl", consumerSource);
@@ -185,8 +194,6 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 			, assetChecks: assets.observations.length }));
 		await rm(consumer, { recursive: true, force: true });
 	}
-	await rm(handoff, { recursive: true, force: true });
-	await assert.rejects(access(handoff), { code: "ENOENT" });
 	reports.push({
 		reviewed, sourceUnchanged: true, sourceFreeInstallation: true
 		, relocatedInstallation: true, deterministicReassembly: true

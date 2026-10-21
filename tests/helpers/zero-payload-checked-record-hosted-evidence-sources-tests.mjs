@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import {
 	zeroPayloadBrowserEvidenceSources, zeroPayloadHostedOriginal
@@ -28,6 +28,23 @@ import {
 const revision = () => execFileSync("git", ["rev-parse", "HEAD"], {
 	encoding: "utf8"
 }).trim();
+
+test("every retained zero-payload hosted log is tracked by Git", () => {
+	const roots = readdirSync("docs/evidence", { withFileTypes: true })
+		.filter(entry => entry.isDirectory()
+			&& /^zero-payload-checked-record-.+-20261021$/u.test(entry.name))
+		.map(entry => `docs/evidence/${entry.name}`);
+	const paths = roots.flatMap(root => {
+		const index = JSON.parse(readFileSync(`${root}/index.json`, "utf8"));
+		return index.files.filter(file => file.path.startsWith("hosted/logs/"))
+			.map(file => `${root}/${file.path}`);
+	});
+	assert.ok(paths.length >= 11, `expected all hosted logs, found ${paths.length}`);
+	const tracked = new Set(execFileSync("git", ["ls-files", "--", ...paths], {
+		encoding: "utf8"
+	}).trim().split("\n").filter(Boolean));
+	assert.deepEqual([...paths].sort(), [...tracked].sort());
+});
 
 test("zero-payload browser evidence closes every hosted source role", {
 	timeout: 120_000

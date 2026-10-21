@@ -89,7 +89,7 @@ export const zeroPayloadPhpWasmRequest = (route, arrangement) => {
 		: `vendor/${zeroPayloadPhpWasmSettings.composer.name}/bootstrap.php`;
 	return JSON.stringify({
 		module: "LeanZeropayloadcheckedrecords"
-		, operations: { probe: resultOnly ? "produce_witness" : "witness_count" }
+		, operations: { probe: resultOnly ? "witnesses" : "witness_count" }
 		, autoload
 	}) + "\n";
 };
