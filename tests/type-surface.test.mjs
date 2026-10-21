@@ -541,8 +541,15 @@ for(const [profile, evidence] of [["php-native", "native-php-installed-copied"],
 						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
 							: ["ordinary-source"]).map(route =>
 							`checked-record-value-index-${valueIndexLane}-${route}-hosted-installed`);
+					const zeroPayloadLane = {
+						rust: "rust", dotnet: "dotnet", java: "jvm", kotlin: "jvm"
+					}[profile];
+					const zeroPayload = !zeroPayloadLane || cell.position === "field" ? []
+						: (cell.position === "result" ? ["ordinary-source", "result-only-ordinary-source"]
+							: ["ordinary-source"]).map(route =>
+							`zero-payload-${zeroPayloadLane}-${route}-hosted-installed`);
 					assert.deepEqual(stage.evidence
-						, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed]);
+						, [...baseline, ...nested, ...inherited, ...recursiveChecked, ...valueIndexed, ...zeroPayload]);
 				continue;
 			}
 			// Structural Fin keeps existing scalar/container evidence; fields cite only the new record runs.
