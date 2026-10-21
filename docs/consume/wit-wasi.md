@@ -990,6 +990,11 @@ only runtime payload fields. Pass those fields without proofs. Lean runs the
 constructor selected for each parameter; it can reject or normalize the input.
 A rejected call leaves your record unchanged and names the parameter and
 constructor. Results contain copied payloads with proofs erased.
+A checked record with no runtime fields is rendered as a single-case enum, for
+example `enum witness { empty }`, and a `Unit` field as `enum { unit }`. That is
+the generator's WIT representation of an empty carrier, not a distinction in the
+Lean type; such a value stays distinct from `option<witness>` and from any
+absent or default value.
 
 The [installed checked-record tests](../evidence/checked-record-native-promotion-20261011.md)
 cover ordinary-source and independently reviewed packages, including packages

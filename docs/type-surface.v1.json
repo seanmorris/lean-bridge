@@ -534,7 +534,7 @@
       "lean": "Checked records and closed Nat indices",
       "family": "checked-value",
       "ir": null,
-      "meaning": "A structure with runtime payload fields and erased proofs, optionally specialized at closed Nat literal indices.",
+      "meaning": "A structure with zero or more runtime payload fields and erased proofs, optionally specialized at closed Nat literal indices. A proof-only record crosses as an empty carrier and a Unit-bearing record keeps its unit field; neither is an absent, null or default value.",
       "bounds": "Construct inputs only through the selected safe Lean constructor over the exact payload fields. Preserve closed indices and per-site choices; project proof-backed results without fabricating proofs."
     },
     {
