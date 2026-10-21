@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from "./structural-subtype-partition-validator-source-history.mjs";
 import { beforeGenericSubtypeNpmBrowserSource, genericSubtypeNpmBrowserChangedPaths, genericSubtypeNpmBrowserIntegrationPaths } from "./generic-subtype-npm-browser-source-history.mjs";
 import { beforeOwnedSubtypeCoreRegistrationSource, ownedSubtypeCoreRegistrationChangedPaths } from "./owned-subtype-core-registration-source-history.mjs";
 import { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from "./core-runner-headroom-source-history.mjs";
@@ -1394,7 +1395,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeNpmBrowserChangedPaths
+	...structuralSubtypePartitionValidatorChangedPaths
+	, ...structuralSubtypePartitionValidatorIntegrationPaths
+	, ...genericSubtypeNpmBrowserChangedPaths
 	, ...genericSubtypeNpmBrowserIntegrationPaths
 	, ...ownedSubtypeCoreRegistrationChangedPaths
 	, ...coreRunnerHeadroomChangedPaths
@@ -1862,8 +1865,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(
+	const partitionValidator = beforeStructuralSubtypePartitionValidatorSource(
 		path, text, expected
+	);
+	if(sha256(partitionValidator) === expected) return partitionValidator;
+	const genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(
+		path, partitionValidator, expected
 	);
 	if(sha256(genericSubtypeNpm) === expected) return genericSubtypeNpm;
 	const ownedSubtypeRegistration = beforeOwnedSubtypeCoreRegistrationSource(

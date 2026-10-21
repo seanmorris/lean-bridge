@@ -1,0 +1,142 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3fb406ae456571782200287c6afb069cc705f8bcc1736acf842e9d6a8ffa57a4",
+      "path": "scripts/update-structural-subtype-partition-validator-source-history.mjs"
+    },
+    {
+      "currentSha256": "12c284acb7101734f561ccfdf2c0363c4e03f27688261a3a878dfd14fc05b42c",
+      "path": "tests/helpers/structural-subtype-partition-validator-source-history.mjs"
+    },
+    {
+      "currentSha256": "e621f34fe898da1554c4c6006f34ae99db5e33a720227ea3d2129a60d95a4d4a",
+      "path": "tests/helpers/structural-subtype-partition-validator-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "be5ec0b8392124da608b35cffae8b76570a9edb7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "cf025b86a717cfb5e10be5e5f204ea6240384d1b2f3876448bfc11d9ef6786b1",
+      "edits": [
+        {
+          "current": "import { beforeStructuralSubtypePartitionValidatorSource, structuralSubtypePartitionValidatorChangedPaths, structuralSubtypePartitionValidatorIntegrationPaths } from \"./structural-subtype-partition-validator-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...structuralSubtypePartitionValidatorChangedPaths\n\t, ...structuralSubtypePartitionValidatorIntegrationPaths\n\t, ...genericSubtypeNpmBrowserChangedPaths\n",
+          "previous": "\t...genericSubtypeNpmBrowserChangedPaths\n",
+          "start": 110237
+        },
+        {
+          "current": "\tconst partitionValidator = beforeStructuralSubtypePartitionValidatorSource(\n",
+          "previous": "\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n",
+          "start": 131171
+        },
+        {
+          "current": "\tif(sha256(partitionValidator) === expected) return partitionValidator;\n\tconst genericSubtypeNpm = beforeGenericSubtypeNpmBrowserSource(\n\t\tpath, partitionValidator, expected\n\t);\n",
+          "previous": "",
+          "start": 131275
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a0253500a39481b1f664c53f547bad91634736a7787f259ca88c5e8ce9be0abc"
+    }
+  ],
+  "milestone": "structural-subtype-partition-validator-source-v1",
+  "predecessorCommit": "0bcbfabc708b746de492d55409ce1845c081e24b",
+  "reconciledTypeSurfacePointers": 3,
+  "schemaVersion": 1,
+  "scope": "The structural Subtype validator authenticates the executing PHP-Wasm refinement producer after corpus partitioning and cannot mistake copied receipt text for execution.",
+  "updates": [
+    {
+      "currentSha256": "705e9d447cb23fdd5f339328323db89227049e73d9a743c6c42e9f92a4639b53",
+      "edits": [
+        {
+          "current": "import { structuralSubtypeCiWorkflowHistoryPath, structuralSubtypeCiWorkflowPredecessor } from \"./structural-subtype-ci-workflow-history.mjs\";\nimport { sourceAtHistoryMilestone } from \"./source-history-test-source.mjs\";\n",
+          "previous": "import { structuralSubtypeCiWorkflowPredecessor } from \"./structural-subtype-ci-workflow-history.mjs\";\nimport { beforePerlHistoryCheckoutSource } from \"./perl-history-checkout-history.mjs\";\n",
+          "start": 594
+        },
+        {
+          "current": "\t\tconst current = sourceAtHistoryMilestone(\n\t\t\tstructuralSubtypeCiWorkflowHistoryPath, path\n\t\t);\n",
+          "previous": "\t\tconst current = beforePerlHistoryCheckoutSource(path, live);\n",
+          "start": 1464
+        },
+        {
+          "current": "\t\tconst partitionedPhpWasm = lane === \"php-wasm\"\n\t\t\t&& source.split(\"\\n  php-wasm-corpus:\\n\")[1]\n\t\t\t\t?.split(/\\n {2}[a-z][a-z0-9-]*:\\n/u)[0].includes(line);\n\t\tconst expectedJob = partitionedPhpWasm ? \"php-wasm-corpus\" : group.job;\n\t\tconst expectedStep = partitionedPhpWasm\n\t\t\t? \"refinements_php_wasm\" : group.step;\n\t\tconst expectedEnforce = partitionedPhpWasm\n\t\t\t? \"Enforce PHP-Wasm corpus\" : group.enforce;\n",
+          "previous": "",
+          "start": 3717
+        },
+        {
+          "current": "\t\t\t, source.replace(`  ${expectedJob}:\\n`, \"  wrong-job:\\n\")\n\t\t\t, source.replace(`        id: ${expectedStep}\\n`, \"        id: missing\\n\")\n\t\t\t, source.replace(`        id: ${expectedStep}\\n`, `        id: ${expectedStep}\\n        if: false\\n`)\n\t\t\t, source.replaceAll(`steps.${expectedStep}.outcome != 'success'`, \"false\")\n",
+          "previous": "\t\t\t, source.replace(`  ${group.job}:\\n`, \"  wrong-job:\\n\")\n\t\t\t, source.replace(`        id: ${group.step}\\n`, \"        id: missing\\n\")\n\t\t\t, source.replace(`        id: ${group.step}\\n`, `        id: ${group.step}\\n        if: false\\n`)\n\t\t\t, source.replaceAll(`steps.${group.step}.outcome != 'success'`, \"false\")\n",
+          "start": 4577
+        },
+        {
+          "current": "\t\t\t, source.replace(`      - name: ${expectedEnforce}\\n`, \"      - name: missing enforcement\\n\")\n\t\t\t, source.replace(`      - name: ${expectedEnforce}\\n`, `      - name: ${expectedEnforce}\\n        continue-on-error: true\\n`)\n",
+          "previous": "\t\t\t, source.replace(`      - name: ${group.enforce}\\n`, \"      - name: missing enforcement\\n\")\n\t\t\t, source.replace(`      - name: ${group.enforce}\\n`, `      - name: ${group.enforce}\\n        continue-on-error: true\\n`)\n",
+          "start": 4941
+        },
+        {
+          "current": "\tconst phpWasm = `          ${structuralSubtypeWorkflowCommand(\"php-wasm\")}\\n`;\n\tconst observationAnchor = \"          wasm_result=failed\\n\";\n\tconst receiptOnly = source.replace(phpWasm, \"\")\n\t\t.replace(observationAnchor, observationAnchor + phpWasm);\n\tcheckMutation(source, receiptOnly, name\n\t\t, \"PHP-Wasm command moved from its producer into observation receipt work\");\n\tcontrols++;\n",
+          "previous": "",
+          "start": 6256
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-ci-workflow-tests.mjs",
+      "previousSha256": "b4cf079ee375b06d5ac04a05c67b175203abcb7e06d970541f36f70f019c7b71"
+    },
+    {
+      "currentSha256": "6ae8a787418829455fb676911d8971c5dbfb249fe9f0eb752f88afee80e52938",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { beforePhpWasmCorpusPartitionSource } from \"./php-wasm-corpus-partition-history.mjs\";\n",
+          "start": 158
+        },
+        {
+          "current": "",
+          "previous": "\tsource = beforePhpWasmCorpusPartitionSource(`.github/workflows/${name}`, source);\n",
+          "start": 9631
+        },
+        {
+          "current": "\tlet phpWasmProducerJob;\n",
+          "previous": "",
+          "start": 10833
+        },
+        {
+          "current": "\t\tconst partitionedPhpWasm = group.lanes.length === 1\n\t\t\t&& group.lanes[0] === \"php-wasm\"\n\t\t\t&& jobBody(source, \"php-wasm-corpus\")?.includes(block);\n\t\tconst expectedJob = partitionedPhpWasm\n\t\t\t? \"php-wasm-corpus\" : group.job;\n\t\tconst expectedEnforce = partitionedPhpWasm\n\t\t\t? \"Enforce PHP-Wasm corpus\" : group.enforce;\n\t\tconst expectedStep = partitionedPhpWasm\n\t\t\t? \"refinements_php_wasm\" : group.step;\n\t\tconst job = jobBody(source, expectedJob);\n\t\tassert.equal(typeof job, \"string\", expectedJob);\n\t\tconst index = job.indexOf(block), step = stepAt(job, index);\n\t\tassert.ok(step.includes(`\\n        id: ${expectedStep}\\n`));\n",
+          "previous": "\t\tconst index = source.indexOf(block), step = stepAt(source, index), job = jobBody(source, group.job);\n\t\tassert.equal(jobAt(source, index), group.job);\n\t\tassert.ok(step.includes(`\\n        id: ${group.step}\\n`));\n",
+          "start": 11021
+        },
+        {
+          "current": "\t\tconst profile = partitionedPhpWasm ? \"refinements\"\n\t\t\t: group.job === \"native-consumers\"\n\t\t\t\t? ({ \"c-cpp\": \"c-family\", python311: \"python\", rust: \"rust\" })[group.lanes[0]]\n\t\t\t\t: group.job === \"managed-consumers\" ? group.lanes[0] : null;\n",
+          "previous": "\t\tconst profile = group.job === \"native-consumers\" ? ({ \"c-cpp\": \"c-family\", python311: \"python\", rust: \"rust\" })[group.lanes[0]]\n\t\t\t: group.job === \"managed-consumers\" ? group.lanes[0] : null;\n",
+          "start": 11763
+        },
+        {
+          "current": "\t\tconst enforce = job.split(`      - name: ${expectedEnforce}\\n`)[1]?.split(\"      - name: \")[0];\n\t\tassert.ok(enforce?.includes(`steps.${expectedStep}.outcome != 'success'`));\n",
+          "previous": "\t\tconst enforce = job.split(`      - name: ${group.enforce}\\n`)[1]?.split(\"      - name: \")[0];\n\t\tassert.ok(enforce?.includes(`steps.${group.step}.outcome != 'success'`));\n",
+          "start": 12170
+        },
+        {
+          "current": "\t\t\trequireUpload(stepAt(job, job.indexOf(structuralSubtypeWorkflowUpload(lane))));\n",
+          "previous": "\t\t\trequireUpload(stepAt(source, source.indexOf(structuralSubtypeWorkflowUpload(lane))));\n",
+          "start": 12592
+        },
+        {
+          "current": "\t\tif(group.lanes.includes(\"php-wasm\")) phpWasmProducerJob = job;\n",
+          "previous": "",
+          "start": 12679
+        },
+        {
+          "current": "\tassert.equal(typeof phpWasmProducerJob, \"string\");\n\tassert.ok(phpWasmProducerJob.includes(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs\"));\n\tassert.ok(phpWasmProducerJob.indexOf(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs\")\n\t\t< phpWasmProducerJob.indexOf(structuralSubtypeWorkflowCommand(\"php-wasm\")));\n",
+          "previous": "\tconst php = jobBody(source, \"php-wasm-consumers\");\n\tassert.ok(php.includes(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs\"));\n\tassert.ok(php.indexOf(\"node scripts/prepare-php-wasm-subtype-entry-runtime.mjs\") < php.indexOf(structuralSubtypeWorkflowCommand(\"php-wasm\")));\n",
+          "start": 13617
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-ci-workflow.mjs",
+      "previousSha256": "040c7af63bc045546b343769bf6fb989108a0405f46f24c44407142e574e9c21"
+    }
+  ]
+}
