@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51359187,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "e829564918134e1a67925dd74c649fc56eaf44c8e93c618a5b7a6656dcdcc878"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "87bc831e036f8880f6fe3d4ca966868de6cefac33d4f35fb7f46558f470eb254",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "d450442900a8edef4b65fd81afbbaedf645e0afe70b3d11d9b0c79c532d2b2f5"
+  }
+}

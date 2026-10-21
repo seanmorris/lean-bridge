@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51374189,
+    "path": "archives/zeropayloadcheckedrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+    "sha256": "4d280bae75af89624192ccb7fc24f7ba297b31286cef4f50a3b1e85ba67e465b"
+  },
+  "evidence": {
+    "componentId": "zeropayloadcheckedrecords@1.0.0",
+    "componentReceiptSha256": "ba4420290a37a3783780f60f3ac28a6a124f226b3ab03fb52eb84df9b01efc56",
+    "libraries": {
+      "libcomponent_d43d7c5a9f170f3ce127.so": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4",
+      "libzeropayloadcheckedrecords.so": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+    },
+    "library": "libzeropayloadcheckedrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "lean_zeropayloadcheckedrecords/__init__.py": {
+      "bytes": 3026,
+      "sha256": "ddfdf444523e725851892850aa06fe209b3cac55f55ac0f548dd760f0af72fa9"
+    },
+    "lean_zeropayloadcheckedrecords/__init__.pyi": {
+      "bytes": 2684,
+      "sha256": "e5d877a7360d2eb93fa1bdbfbe95e64b0f82bf55f6a1cef66c74bfcb8bbcd7f6"
+    },
+    "lean_zeropayloadcheckedrecords/_native.py": {
+      "bytes": 16932,
+      "sha256": "bdfdaa0e27f7ff4d6a1831b81eee74fb48431e5938986f9c09486f865a6dda6c"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/README.md": {
+      "bytes": 6234,
+      "sha256": "330fec24699ceeb9a63c02c4e85b9534ece4c9998793826d95bd11262f10c86e"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/binding-manifest.json": {
+      "bytes": 1454,
+      "sha256": "7477fcfca64bf07dcb6f041b4bb43296541e1c5695b445ab1fd7b4a1e6d5047d"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/artifacts.json": {
+      "bytes": 1532,
+      "sha256": "ab85348aa31438174f37880ea3ef2b1744242997a59e5a36187cde0e0f11fa2b"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/binding-ir.json": {
+      "bytes": 26847,
+      "sha256": "f18280bc8a947b3c15d2ddacbe83bd0ac9c7ff24589b79438060423988146e16"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/component.h": {
+      "bytes": 1982,
+      "sha256": "07e17b6f343960bd817d7e6a5bb2bf5b428f0852c2009f78f4f765a7fc3952e0"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/generated.lean": {
+      "bytes": 10087,
+      "sha256": "12e0a46617d1a872bf3834995eb678fe2a22b5d688796356d682f44b6078044e"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/metadata.json": {
+      "bytes": 32653,
+      "sha256": "d623616582d8c1594eb596ddfd4d7ab920d71491f6feaf4e670b699a9bc05b5d"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/model.json": {
+      "bytes": 83412,
+      "sha256": "064058103ca2ee0b1c6b9bd2541a1b872c9a987c1bd1f98f8e9495b663847b86"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/native-component.json": {
+      "bytes": 31704,
+      "sha256": "ba4420290a37a3783780f60f3ac28a6a124f226b3ab03fb52eb84df9b01efc56"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/include/zeropayloadcheckedrecords.h": {
+      "bytes": 6533,
+      "sha256": "083fd2bb5c9b2b5f8479c91e5fd0ff3a6e39af42635ddc9313f074397f23c3d4"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/native-c-adapter.json": {
+      "bytes": 1434,
+      "sha256": "bde748690bc10d56fff14a6018ec203f3e6527f4f7ceae94b66cd43fe96a3841"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/package-receipt.json": {
+      "bytes": 35367,
+      "sha256": "11d82b92494e9cd8fd9dd46699f27c6fd5d2b07d3eb4841ff63e11f6b1b7e2a0"
+    },
+    "lean_zeropayloadcheckedrecords/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lean_zeropayloadcheckedrecords/native/linux-x64/libcomponent_d43d7c5a9f170f3ce127.so": {
+      "bytes": 44776,
+      "sha256": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a"
+    },
+    "lean_zeropayloadcheckedrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lean_zeropayloadcheckedrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_zeropayloadcheckedrecords/native/linux-x64/libzeropayloadcheckedrecords.so": {
+      "bytes": 41008,
+      "sha256": "0e5597b960e36703438c54db29b3c2a99aeadfbfeefc0b5ca86b386c5e465e07"
+    },
+    "lean_zeropayloadcheckedrecords/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/METADATA": {
+      "bytes": 6662,
+      "sha256": "96402908269d0ed1c1060adb0dc8869cbed0ebe12d5c2bd7703a37d95f184335"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/RECORD": {
+      "bytes": 3703,
+      "sha256": "d1197caa81a23ae2e8f8d05280e2ae06dca3731a42e1f32186bec40c4d933dd6"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "d391ca575dc1597f0e33751f6fe2ac710b8e64f41336cf49410762d2762c5f44"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2130,
+      "sha256": "6dd798f3c5fe6c4b9f80b96e694d08d273981a4a400ccc04e6d79da9c9af584f"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "zeropayloadcheckedrecords-1.0.0.dist-info/top_level.txt": {
+      "bytes": 31,
+      "sha256": "614d9b513d1bd0353028c71489f8fac711770e9a4b28b7b2905c6746ef669b70"
+    }
+  },
+  "receiptSha256": "11d82b92494e9cd8fd9dd46699f27c6fd5d2b07d3eb4841ff63e11f6b1b7e2a0",
+  "retained": [
+    "lean_zeropayloadcheckedrecords/__init__.py",
+    "lean_zeropayloadcheckedrecords/__init__.pyi",
+    "lean_zeropayloadcheckedrecords/_native.py",
+    "lean_zeropayloadcheckedrecords/lean_bridge/README.md",
+    "lean_zeropayloadcheckedrecords/lean_bridge/binding-manifest.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/allocation-guard.h",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/artifacts.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/binding-ir.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/component.h",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/generated.lean",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/metadata.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/model.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/component/native-component.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/include/zeropayloadcheckedrecords.h",
+    "lean_zeropayloadcheckedrecords/lean_bridge/native-c-adapter.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/package-receipt.json",
+    "lean_zeropayloadcheckedrecords/lean_bridge/runtime.json",
+    "lean_zeropayloadcheckedrecords/py.typed",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/METADATA",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/RECORD",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/WHEEL",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/source-notices.json",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "zeropayloadcheckedrecords-1.0.0.dist-info/top_level.txt"
+  ]
+}
