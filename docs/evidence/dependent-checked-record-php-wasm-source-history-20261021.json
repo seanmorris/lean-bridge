@@ -1,0 +1,180 @@
+{
+  "additions": [
+    {
+      "currentSha256": "83e5ee8d302ed01ebefde63760a785d53007979f62e77e653e434a3e71124070",
+      "path": ".github/workflows/dependent-checked-record-php-wasm.yml"
+    },
+    {
+      "currentSha256": "277b5dfb0c779cec68ec469a6e683ff1d58367e958fd97e532ccde6c5338c059",
+      "path": "scripts/check-dependent-checked-record-php-wasm-ci.mjs"
+    },
+    {
+      "currentSha256": "659b3b283a04aaec4d2cf15ba5824a57e86910873ba04082acc01aae1ee032c7",
+      "path": "scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs"
+    },
+    {
+      "currentSha256": "838830d8e5e60cfc6788be34c98dbdb6e3bc2355fd0c0b3b4e8644bd962a4481",
+      "path": "scripts/run-dependent-checked-record-php-wasm-ci.sh"
+    },
+    {
+      "currentSha256": "bf7f7a17b3e052128cef8af231dc5b943a55230eac03793ece61542da58182a6",
+      "path": "tests/checked-record-value-index-php-wasm-evidence.test.mjs"
+    },
+    {
+      "currentSha256": "44b2a2c8da6b656c762ca4f45bb7e400705044de1f69cdfcf48750d0157dfcc3",
+      "path": "tests/dependent-checked-record-php-wasm.test.mjs"
+    },
+    {
+      "currentSha256": "23cf6aba00461dbdd9896fb5ee51eb8332828da6d4fb54df488382a89a680176",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "42062a5c61ed72458cb5a36dd47bb9f63b1e4fa4e2426c6109a4bec3b022b0ef",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-report.mjs"
+    },
+    {
+      "currentSha256": "8904b01a670c4469af224683b5e4e1a3c08e9c0f203ca3e13b087517b2e1f92b",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-shell-tests.mjs"
+    },
+    {
+      "currentSha256": "7c71e8db668727487ac31b76e28dfe8ac8c9ad7363d32a7044dab83df01f906b",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-workflow-tests.mjs"
+    },
+    {
+      "currentSha256": "d19de4c81f92beb4e1186843fb40d95668a9412f2534efd0742da9e7dda216e9",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-ci-workflow.mjs"
+    },
+    {
+      "currentSha256": "9137de24185b2daf9cedfb16a0d257b86d7c7c9e8758ec6c350bd5798bf724a4",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "66e3fad4c9b69789fd452bace4388fbad8e8df22d8b31278d5f7239b28dafb1a",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-fixture.mjs"
+    },
+    {
+      "currentSha256": "a001682340085ad8b1a16b89038b8e4567d31334dae7dc56637ba6443bc0e5a6",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "293ec1debae7879a07bb2914f7b7b1c39546e2e2af17912a613221ea8b676ab2",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-lean-tests.mjs"
+    },
+    {
+      "currentSha256": "b697551a2f4235d1cb64306ac7d39dafe8db23e2586cd6dd803b18e7039a9303",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-report.mjs"
+    },
+    {
+      "currentSha256": "ffcb9954009ef529cf1faad2fa8062a8abdf3d3dd099a1ce27af9b1dc377ed51",
+      "path": "scripts/update-dependent-checked-record-php-wasm-source-history.mjs"
+    },
+    {
+      "currentSha256": "3af711bc608707e2fa54d1619aa409b5e4a36895a0f759e49d2850b326561c6e",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-source-history.mjs"
+    },
+    {
+      "currentSha256": "c428b0d48559a7b3eab197dcdec7cf7d1085180d869903159b530b3ed4591364",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4286d8499cecb2dd3d17f4600adda72218b51408",
+  "integrationUpdates": [
+    {
+      "currentSha256": "0db9836f57d7bac8083d244d83b3d03cdc4bb72bfc32525a91e83445b394caaf",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPhpWasmSource, dependentCheckedRecordPhpWasmChangedPaths, dependentCheckedRecordPhpWasmIntegrationPaths } from \"./dependent-checked-record-php-wasm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPhpWasmChangedPaths\n\t, ...dependentCheckedRecordPhpWasmIntegrationPaths\n\t, ...dependentCheckedRecordJvmChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordJvmChangedPaths\n",
+          "start": 125769
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPhpWasm\n\t\t= beforeDependentCheckedRecordPhpWasmSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordPhpWasm) === expected)\n\t\treturn dependentCheckedRecordPhpWasm;\n",
+          "previous": "",
+          "start": 154191
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordJvmSource(\n\t\t\tpath, dependentCheckedRecordPhpWasm, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordJvmSource(path, text, expected);\n",
+          "start": 154426
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "96ccf125617ed71df7e06349da3d463a68ad2078cc15775fe3ff76a6c29933d3"
+    },
+    {
+      "currentSha256": "cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a055cac8a51a1e8eceeb86c56e036f26c6a2ce6a9d002d44cbf0e6327c7a9170"
+    }
+  ],
+  "milestone": "dependent-checked-record-php-wasm-source-v1",
+  "predecessorCommit": "2cb47d228d63a9db8c2eb5a51c62e275e9536462",
+  "reconciledTypeSurfacePointers": 102,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline in PHP-Wasm Composer packages, in weak and strict mode, in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "99a923168527bcc7f6a3ba2be68358dda499abd0c89993937db8f9abbfad1b12",
+      "edits": [
+        {
+          "current": "\t\t, \"checked-record-value-index-php-wasm-evidence\"\n\t\t, \"dependent-checked-record-php-wasm\"\n",
+          "previous": "",
+          "start": 13468
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "3f51a415baa5f72e24698b3e88368222a9c3cc2a8066aa9ebfb75a7101b30874"
+    },
+    {
+      "currentSha256": "8e76f557f9e8ff15c75e9c64d33fa65bf26cba67b81ca7a1d8de22d5e4b99015",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/checked-record-value-index-php-wasm-source-history-tests.mjs\";\n",
+          "start": 161
+        },
+        {
+          "current": "",
+          "previous": "import \"./helpers/checked-record-value-index-php-wasm-evidence-tests.mjs\";\n",
+          "start": 611
+        }
+      ],
+      "path": "tests/checked-record-value-index-php-wasm.test.mjs",
+      "previousSha256": "2015d4719f3ce528d6025f3d6b8dc459430cb2d9540523061189f9c3c4747506"
+    },
+    {
+      "currentSha256": "66bc3acd96b6e00ec01ad0d7016f551cae0f9d2a2d5a2cd020a216efacd1d734",
+      "edits": [
+        {
+          "current": "\t, \"tests/checked-record-value-index-php-wasm-evidence.test.mjs\": [\n\t\t\"checked-record-value-index-php-wasm-source-history-tests.mjs\"\n\t\t, \"checked-record-value-index-php-wasm-evidence-tests.mjs\"\n\t]\n\t, \"tests/dependent-checked-record-php-wasm.test.mjs\": [\n\t\t\"dependent-checked-record-php-wasm-fixture-tests.mjs\"\n\t\t, \"dependent-checked-record-php-wasm-lean-tests.mjs\"\n\t\t, \"dependent-checked-record-php-wasm-installed-tests.mjs\"\n\t\t, \"dependent-checked-record-php-wasm-ci-report-tests.mjs\"\n\t\t, \"dependent-checked-record-php-wasm-ci-shell-tests.mjs\"\n\t\t, \"dependent-checked-record-php-wasm-ci-workflow-tests.mjs\"\n\t]\n",
+          "previous": "",
+          "start": 9642
+        },
+        {
+          "current": "\t\t\t\t/^import \"\\.\\/helpers\\/((?:dependent-)?checked-record-[^\"]+-tests\\.mjs)\";$/gmu\n",
+          "previous": "\t\t\t/^import \"\\.\\/helpers\\/(checked-record-[^\"]+-tests\\.mjs)\";$/gmu\n",
+          "start": 16430
+        },
+        {
+          "current": "\tassert.equal(observed.length, 59);\n",
+          "previous": "\tassert.equal(observed.length, 51);\n",
+          "start": 16737
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "230a327cff707b29e0cc7d0c5b546144ecba9671da4d5b28a744e2d8b09fc912"
+    }
+  ]
+}

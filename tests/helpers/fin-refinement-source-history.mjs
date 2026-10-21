@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPhpWasmSource, dependentCheckedRecordPhpWasmChangedPaths, dependentCheckedRecordPhpWasmIntegrationPaths } from "./dependent-checked-record-php-wasm-source-history.mjs";
 import { beforeDependentCheckedRecordJvmSource, dependentCheckedRecordJvmChangedPaths, dependentCheckedRecordJvmIntegrationPaths } from "./dependent-checked-record-jvm-source-history.mjs";
 import { beforeDependentCheckedRecordDotnetSource, dependentCheckedRecordDotnetChangedPaths, dependentCheckedRecordDotnetIntegrationPaths } from "./dependent-checked-record-dotnet-source-history.mjs";
 import { beforeDependentCheckedRecordWitSource, dependentCheckedRecordWitChangedPaths, dependentCheckedRecordWitIntegrationPaths } from "./dependent-checked-record-wit-source-history.mjs";
@@ -1475,7 +1476,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordJvmChangedPaths
+	...dependentCheckedRecordPhpWasmChangedPaths
+	, ...dependentCheckedRecordPhpWasmIntegrationPaths
+	, ...dependentCheckedRecordJvmChangedPaths
 	, ...dependentCheckedRecordJvmIntegrationPaths
 	, ...dependentCheckedRecordDotnetChangedPaths
 	, ...dependentCheckedRecordDotnetIntegrationPaths
@@ -2102,8 +2105,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordPhpWasm
+		= beforeDependentCheckedRecordPhpWasmSource(path, text, expected);
+	if(sha256(dependentCheckedRecordPhpWasm) === expected)
+		return dependentCheckedRecordPhpWasm;
 	const dependentCheckedRecordJvm
-		= beforeDependentCheckedRecordJvmSource(path, text, expected);
+		= beforeDependentCheckedRecordJvmSource(
+			path, dependentCheckedRecordPhpWasm, expected
+		);
 	if(sha256(dependentCheckedRecordJvm) === expected)
 		return dependentCheckedRecordJvm;
 	const dependentCheckedRecordDotnet

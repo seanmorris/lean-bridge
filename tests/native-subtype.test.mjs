@@ -48,6 +48,7 @@ import "./helpers/dependent-checked-record-native-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-perl-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-python-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-ruby-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
