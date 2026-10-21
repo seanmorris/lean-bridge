@@ -1,0 +1,63 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 62539,
+          "path": "archives/LeanBridge-DependentRecords-1.000.tar.gz",
+          "sha256": "8a8890d59a3cd4b95a85d64d3843c6344f22e9d08bb5cc68395a4b516892b055"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-DependentRecords",
+      "profile": "native-library-v1",
+      "requires": [
+        {
+          "ecosystem": "cpan",
+          "name": "LeanBridge-Runtime",
+          "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+        }
+      ],
+      "role": "component",
+      "runtimeDelivery": "dependency",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpan",
+      "version": "1.000"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51397607,
+          "path": "archives/LeanBridge-Runtime-0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031.tar.gz",
+          "sha256": "c228af9110ba0b81d73a1fdf58d4435a68ab6c6ab0913382435ce0a2ee22de80"
+        }
+      ],
+      "ecosystem": "cpan",
+      "name": "LeanBridge-Runtime",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "runtime",
+      "runtimeDelivery": "provided",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpan",
+      "version": "0.0020130180835253351074425099676719723942806298898514237203907626409680523998624031"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "4b161a5276416adeeb2e3f7f7ae5846c7f9182c07bb4630fea69163d9fa5dbfd",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "4e2f07cd5a3015339724ed6689cee4b543cc30efbf6985a014b09f1d62a823cd"
+  }
+}

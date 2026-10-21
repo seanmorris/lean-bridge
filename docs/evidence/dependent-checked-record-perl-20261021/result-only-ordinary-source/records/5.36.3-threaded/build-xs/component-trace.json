@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/DependentRecords.pm",
+      "sha256": "21df442e48bf8f4a334fcd397403d8d01417dc3715468dcff51aea1ef39e44d2"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/DependentRecords/native/libcomponent_ca8ca903379eb247d9eb.so",
+      "sha256": "a1ad6c9a7b43fec1831f22013f2c3b8f01c626d2743a86010fcf13b1fc7cd68d"
+    },
+    {
+      "origin": "generated-xs-only",
+      "path": "auto/LeanBridge/DependentRecords/DependentRecords.so",
+      "sha256": "401ead61d24c2aed69bdcaf8e6e6d2eb9245d1ca1852870c8c22d67d662b390b"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "generated-xs-only",
+  "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+  "schemaVersion": 1
+}
