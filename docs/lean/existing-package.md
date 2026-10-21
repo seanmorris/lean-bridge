@@ -465,6 +465,8 @@ A proof-only record is a real nominal value, not `Unit`, null or absence. Declar
 
 The [hosted C/C++ zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) validates proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, arrays and variant branches through ordinary and reviewed full/result-only packages. C uses a single non-semantic byte to give the nominal structure legal storage; C++ uses an empty structure. Neither carrier contains a proof.
 
+The [hosted Java/Kotlin zero-payload archive](../evidence/zero-payload-checked-record-jvm-20261021.md) validates the same four package routes through independently compiled JVM callers. Java emits a zero-component record and Kotlin a zero-property class. Both remain non-null nominal values; `Token` keeps its generated `Unit` member, and option presence, arrays and variant branches stay distinct.
+
 ### Export a checked Subtype
 
 For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:

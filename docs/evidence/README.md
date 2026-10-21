@@ -10,6 +10,10 @@ hosted packages across all 17 consumer profiles and both author routes.
 record four hosted native package selections for proof-only `Witness`,
 Unit-bearing `Token`, plain empty `Marker`, Option, Array and variant values.
 
+[Zero-payload checked records in Java and Kotlin](zero-payload-checked-record-jvm-20261021.md)
+record the four hosted Maven package selections and their nominal non-null
+zero-component or zero-property JVM representations.
+
 [Rust closed value-index checked records](checked-record-value-index-rust-promotion-20261020.md)
 record four hosted Cargo crate selections for top-level copied checked-record
 parameter/result sites with closed Bool, String, and Nat indices.
@@ -107,6 +111,7 @@ The [production-hardening review from 14 August 2026](production-hardening-revie
 - [Recursive checked Subtypes in PHP-Wasm, 15 October 2026](recursive-subtype-php-wasm-20261015.md)
 - [Hosted checked-record value indices in npm and browsers, 19 October 2026](checked-record-value-index-browser-promotion-20261019.md)
 - [Zero-payload checked records in C and C++, 21 October 2026](zero-payload-checked-record-native-20261021.md)
+- [Zero-payload checked records in Java and Kotlin, 21 October 2026](zero-payload-checked-record-jvm-20261021.md)
 - [Nested checked records in npm and browsers, 16 October 2026](nested-checked-record-browser-20261016/index.json)
 - [Nested checked records in C and C++, 16 October 2026](nested-checked-record-native-20261016.md)
 - [Nested checked records in .NET, 16 October 2026](nested-checked-record-dotnet-20261016.md)
