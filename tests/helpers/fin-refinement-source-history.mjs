@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from "./zero-payload-ruby-source-history.mjs";
 import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from "./zero-payload-python-source-history.mjs";
 import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChangedPaths, zeroPayloadJvmNullBoundaryHistoricalPaths, zeroPayloadJvmNullBoundaryIntegrationPaths } from "./zero-payload-jvm-null-boundary-source-history.mjs";
 import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from "./zero-payload-native-promotion-source-history.mjs";
@@ -1424,7 +1425,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadPythonHistoryChangedPaths
+	...zeroPayloadRubyHistoryChangedPaths
+	, ...zeroPayloadRubyHistoryIntegrationPaths
+	, ...zeroPayloadPythonHistoryChangedPaths
 	, ...zeroPayloadPythonHistoryIntegrationPaths
 	, ...zeroPayloadJvmNullBoundaryChangedPaths
 	, ...zeroPayloadJvmNullBoundaryHistoricalPaths
@@ -1953,8 +1956,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
+	const zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;
+	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
+		path, zeroPayloadRuby, expected
 	);
 	if(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;
 	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(

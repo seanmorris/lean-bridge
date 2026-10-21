@@ -1,0 +1,117 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1ed8841cf10d5e51b4184755e3618e435e37905e0658cebecececa6c760e4be4",
+      "path": ".github/workflows/zero-payload-checked-record-ruby.yml"
+    },
+    {
+      "currentSha256": "be818b5ee99f2158d837fead6f119e3d121e9f39fd63915205afe8abe2e838b7",
+      "path": "scripts/check-zero-payload-checked-record-ruby-ci.mjs"
+    },
+    {
+      "currentSha256": "a6b298d7759d8f7a567a43898f08f326e8b9698375ea988e25fb78ade4814e96",
+      "path": "scripts/run-zero-payload-checked-record-ruby-ci.sh"
+    },
+    {
+      "currentSha256": "d58b6e579219b872fff557a55e60e677fab53fb11e040dae7a08a02c7ea71f62",
+      "path": "tests/fixtures/zero-payload-checked-record-ruby/ruby.rb"
+    },
+    {
+      "currentSha256": "f70c2ea4c50fcfe01ac0cb2da530d19740ec6ef4178cf2eaf86346947e349ea9",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-ci-report.mjs"
+    },
+    {
+      "currentSha256": "d9daa228c493e625256fe0528a8cf7bd25d08cb81ca277151ed0d408c6e4e4fb",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "4283c16efba4fe4537a53c74915683c0c5d89cb06e74c311545ed89cfe0b88ec",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-fixture.mjs"
+    },
+    {
+      "currentSha256": "0a4662ed2550b02cba1f632d8305456bfb1b514564819f26e10be2c2e4981930",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "912879f9f2979a5885a78bac59052d4d8baf43bff37611d23e34a3dff1c79d91",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-model.rb"
+    },
+    {
+      "currentSha256": "2219c4ed3cd374aea739be8de5bc06776b3cf4c99e28ee1f41a1d8f130b49dc7",
+      "path": "tests/helpers/zero-payload-checked-record-ruby-package.mjs"
+    },
+    {
+      "currentSha256": "f5ef5dc178de086c1320388b7302bd1e50ac4c98e2092956125b7317a6c2c4bc",
+      "path": "scripts/update-zero-payload-ruby-source-history.mjs"
+    },
+    {
+      "currentSha256": "618da974dcc68a371adb4eb6b9f73687159b1ad4abc2518e9927e25045a31c67",
+      "path": "tests/helpers/zero-payload-ruby-source-history.mjs"
+    },
+    {
+      "currentSha256": "4a27cbbcddac14489482a1ec124f090f699ea52c7c885733f5464abdb018f982",
+      "path": "tests/helpers/zero-payload-ruby-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "b539a4249f2a8af61d72e6ccfc7ac7ceeb1b8590",
+  "integrationUpdates": [
+    {
+      "currentSha256": "80360782caf3f3bc099c12db7a2f2d17cc2a48e62973190058318557ec074a28",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from \"./zero-payload-ruby-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRubyHistoryChangedPaths\n\t, ...zeroPayloadRubyHistoryIntegrationPaths\n\t, ...zeroPayloadPythonHistoryChangedPaths\n",
+          "previous": "\t...zeroPayloadPythonHistoryChangedPaths\n",
+          "start": 115672
+        },
+        {
+          "current": "\tconst zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(\n",
+          "previous": "\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n",
+          "start": 139284
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;\n\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n\t\tpath, zeroPayloadRuby, expected\n\t);\n",
+          "previous": "",
+          "start": 139372
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "759bf3fcd95f3aa3a0686e411108b9321d4d87ddac29a5c13d747f9657573d22"
+    }
+  ],
+  "milestone": "zero-payload-ruby-source-v1",
+  "predecessorCommit": "0d420c0dda5953f0167f55421887838a646b6296",
+  "reconciledTypeSurfacePointers": 94,
+  "schemaVersion": 1,
+  "scope": "Generated Ruby keeps proof-only, UNIT-bearing and plain empty records, Option, arrays and both variant branches nominally distinct across full and result-only gem routes on the declared MRI 3.3 floor.",
+  "updates": [
+    {
+      "currentSha256": "d6419931f03823e3f41c007e4194c9b0ca11a569936902bc457fc3baa933ca61",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-ruby\"\n",
+          "previous": "",
+          "start": 14038
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "584cf89bb98a0415e00f73d8b99b8547fdf055adb84519bba12c7a7321ce82b1"
+    },
+    {
+      "currentSha256": "a01885c01e280c3186047706dd2436dc445e9594b7a493f38f5430fb2773662b",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-ruby-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 280
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-ruby.test.mjs",
+      "previousSha256": "093c1b7cd0a5ea9c86f5a4ec19e33ff867135678b0eea1b3ae5aacd2b784257d"
+    }
+  ]
+}
