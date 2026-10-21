@@ -17,6 +17,7 @@ import { generateJavaScriptPackage } from "../../src/backends/javascript/generat
 import { nominalSubtypeInstalledReview, nominalSubtypeInstalledConfiguration, nominalSubtypeName } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeCallerModel } from "./nominal-subtype-caller-model.mjs";
 import { checkNominalSubtypes } from "../fixtures/nominal-subtype-consumers/javascript.mjs";
+import { checkGenericSubtypeCompositions } from "../fixtures/generic-subtype-consumers/javascript.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { runCopied } from "./copied-fixture-install.mjs";
 import "./nominal-subtype-native-caller-tests.mjs";
@@ -107,14 +108,14 @@ test("nominal package review independently matches ordinary choices and retains 
 		assert.throws(() => nominalSubtypeInstalledConfiguration(route, profiles));
 });
 
-const mockedPackage = async (t, resultOnly) => {
+const mockedPackage = async (t, resultOnly, genericCompositions = false) => {
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-caller-unit-"));
 	t.after(() => rm(directory, { recursive: true }));
-	const files = generateJavaScriptPackage(nominalSubtypeInstalledReview(resultOnly));
+	const files = generateJavaScriptPackage(nominalSubtypeInstalledReview(resultOnly, { genericCompositions }));
 	for(const path of ["index.mjs", "internal/validators.mjs"]) await saveLakeFile(directory, path, files[path]);
 	await saveLakeFile(directory, "internal/runtime.mjs", "export const control = { api: null, calls: 0 }; export const runtime = { call(id, args) { control.calls++; return control.api[id.split('.').at(-1)](...args); } };\n");
 	const { control } = await import(pathToFileURL(join(directory, "internal/runtime.mjs")));
-	control.api = nominalSubtypeCallerModel();
+	control.api = nominalSubtypeCallerModel({ genericCompositions });
 	return { api: await import(pathToFileURL(join(directory, "index.mjs"))), control };
 };
 
@@ -126,6 +127,35 @@ test("nominal npm caller covers both generated selections with an explicit runti
 		assert.deepEqual(result, resultOnly ? { checks: 2078, rejections: 0 } : { checks: 3172, rejections: 1032 });
 		t.diagnostic(JSON.stringify({ resultOnly, ...result, execution: "generated-api-with-explicit-double" }));
 	}
+});
+
+test("generic Subtype compositions retain their record origin and independent specialization choices", async t => {
+	const options = { genericCompositions: true };
+	const document = nominalSubtypeInstalledReview(false, options), configuration = nominalSubtypeInstalledConfiguration("ordinary", ["npm"], false, options);
+	validateBindingIr(document); validateExportConfiguration(configuration);
+	assert.equal(document.declarations.length, 29);
+	assert.deepEqual(reviewedSubtypeContracts(document), configuration.contracts);
+	assert.deepEqual(configuration.modules, ["NominalSubtypes", "NominalSubtypes.GenericCompositions"]);
+	assert.deepEqual(configuration.specializations.map(({ name, declaration }) => ({ name, declaration })), [
+		{ name: "NominalSubtypes.GenericCompositions.echoGenericFirst", declaration: "NominalSubtypes.GenericCompositions.genericEcho" }
+		, { name: "NominalSubtypes.GenericCompositions.echoGenericSecond", declaration: "NominalSubtypes.GenericCompositions.genericEcho" }
+	]);
+	const record = document.types.find(type => type.id === "lean:NominalSubtypes.GenericCompositions.GenericNat");
+	assert.deepEqual(record.source.extensions["lean-lang.org/instantiation"], {
+		structure: "NominalSubtypes.GenericCompositions.GenericCarrier"
+		, arguments: [{ kind: "primitive", name: "nat" }]
+	});
+	const declarations = new Map(document.declarations.map(item => [item.id, item]));
+	for(const [name, constructor] of [["echoGenericFirst", "plusOne"], ["echoGenericSecond", "plusTwo"]])
+	{
+		const item = declarations.get(`lean:NominalSubtypes.GenericCompositions.${name}`);
+		assert.equal(item.source.declaration, "NominalSubtypes.GenericCompositions.genericEcho");
+		assert.equal(item.source.extensions["lean-lang.org/refinements"].parameters[0].fields[0].refinement.constructor, `NominalSubtypes.${constructor}`);
+		assert.equal(item.source.extensions["lean-lang.org/refinements"].result.fields[0].refinement.constructor, null);
+		assert.match(item.source.extensions["lean-lang.org/specialization"].application, /genericEcho/u);
+	}
+	const { api } = await mockedPackage(t, false, true);
+	assert.deepEqual(checkGenericSubtypeCompositions(api), { checks: 611, rejections: 5 });
 });
 
 test("the nominal caller rejects wrong per-use constructors, lossy results and altered caller data", async t => {

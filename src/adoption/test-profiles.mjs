@@ -409,6 +409,7 @@ const profileManifest = Object.freeze({
 		, "fin-python-ruby-evidence"
 		, "generic-inheritance-installed"
 		, "generic-records-browser"
+		, "generic-subtype-npm-browser"
 		, "browser-callback-fin"
 		, "browser-callback-fin-evidence"
 		, "callback-fin-evidence"

@@ -19,8 +19,13 @@ const groupSum = values => values.reduce((sum, item) => sum + (item.tag === "non
 const envelope = value => ({ payload: value + 1n, digit: 2n });
 const producedGroup = value => [{ tag: "none" }, { tag: "some", value: envelope(value) }];
 
-/** Independent source/constructor behavior used only in oracle mutation tests. */
-export const nominalSubtypeCallerModel = () => ({
+/**
+ * Independent source/constructor behavior used only in oracle mutation tests.
+ *
+ * @param options - Optional model surface.
+ * @param options.genericCompositions - Include generic record specializations.
+ */
+export const nominalSubtypeCallerModel = ({ genericCompositions = false } = {}) => ({
 	first: value => first(value.payload)
 	, second: value => second(value.payload)
 	, combine: (left, right) => first(left.payload) * 100n + second(right.payload)
@@ -47,4 +52,9 @@ export const nominalSubtypeCallerModel = () => ({
 	, eventEmpty: () => ({ kind: "empty" })
 	, eventChoices: value => ({ kind: "choices", values: [{ tag: "none" }, { tag: "some", value: { ok: value + 1n } }, { tag: "some", value: { error: value + 2n } }] })
 	, noItems: () => []
+	, ...genericCompositions ? {
+		genericUse: value => first(value.value) + value.marker
+		, echoGenericFirst: value => ({ value: first(value.value), marker: value.marker })
+		, echoGenericSecond: value => ({ value: second(value.value), marker: value.marker })
+	} : {}
 });
