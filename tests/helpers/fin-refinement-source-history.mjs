@@ -17,6 +17,7 @@ import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChang
 import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from "./zero-payload-native-promotion-source-history.mjs";
 import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from "./zero-payload-browser-diagnostic-source-history.mjs";
 import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from "./zero-payload-native-evidence-source-history.mjs";
+import { beforeZeroPayloadPerlArchiveSource, zeroPayloadPerlArchiveChangedPaths, zeroPayloadPerlArchiveIntegrationPaths } from "./zero-payload-perl-archive-source-history.mjs";
 import { beforeZeroPayloadRustArchiveSource, zeroPayloadRustArchiveChangedPaths, zeroPayloadRustArchiveIntegrationPaths } from "./zero-payload-rust-archive-source-history.mjs";
 import { beforeZeroPayloadRustCiSource, zeroPayloadRustCiChangedPaths, zeroPayloadRustCiIntegrationPaths } from "./zero-payload-rust-ci-source-history.mjs";
 import { beforeZeroPayloadRustAuditRepairSource, zeroPayloadRustAuditRepairChangedPaths, zeroPayloadRustAuditRepairIntegrationPaths } from "./zero-payload-rust-audit-repair-source-history.mjs";
@@ -1450,6 +1451,8 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...zeroPayloadBrowserDiagnosticIntegrationPaths
 	, ...zeroPayloadNativeEvidenceChangedPaths
 	, ...zeroPayloadNativeEvidenceIntegrationPaths
+	, ...zeroPayloadPerlArchiveChangedPaths
+	, ...zeroPayloadPerlArchiveIntegrationPaths
 	, ...zeroPayloadRustArchiveChangedPaths
 	, ...zeroPayloadRustArchiveIntegrationPaths
 	, ...zeroPayloadRustCiChangedPaths
@@ -2022,8 +2025,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	);
 	if(sha256(zeroPayloadNativeEvidence) === expected)
 		return zeroPayloadNativeEvidence;
-	const zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(
+	const zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(
 		path, zeroPayloadNativeEvidence, expected
+	);
+	if(sha256(zeroPayloadPerlArchive) === expected)
+		return zeroPayloadPerlArchive;
+	const zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(
+		path, zeroPayloadPerlArchive, expected
 	);
 	if(sha256(zeroPayloadRustArchive) === expected)
 		return zeroPayloadRustArchive;

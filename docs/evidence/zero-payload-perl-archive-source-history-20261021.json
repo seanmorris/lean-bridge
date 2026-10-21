@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "44724654e2cebb3846af798558c589153987ddba0d55a941fbe837ba7ab87591",
+      "path": "scripts/archive-zero-payload-checked-record-perl-evidence.mjs"
+    },
+    {
+      "currentSha256": "cf7329dd33085b523aa3ba5aa3a94e693d3b19b5aa8d03c409568013def667ee",
+      "path": "scripts/update-zero-payload-perl-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "b774a1d392cbb7d1bd4a70ea000d7bdcb82b2f4ee370a967a99f97b8b8e8daea",
+      "path": "tests/helpers/zero-payload-perl-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "d3fe0abcdc711c7c29f2ace9e76941bee5157e1fcfe549674adbdf6963d03264",
+      "path": "tests/helpers/zero-payload-perl-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "58e67660dcc3050d969fdf67a689698d83577ec8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "98d60adbee944f085a2be63b50bac40c5b1aea21abfa539df98097970f358dcf",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadPerlArchiveSource, zeroPayloadPerlArchiveChangedPaths, zeroPayloadPerlArchiveIntegrationPaths } from \"./zero-payload-perl-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 2268
+        },
+        {
+          "current": "\t, ...zeroPayloadPerlArchiveChangedPaths\n\t, ...zeroPayloadPerlArchiveIntegrationPaths\n",
+          "previous": "",
+          "start": 117568
+        },
+        {
+          "current": "\tconst zeroPayloadPerlArchive = beforeZeroPayloadPerlArchiveSource(\n",
+          "previous": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n",
+          "start": 142922
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadPerlArchive) === expected)\n\t\treturn zeroPayloadPerlArchive;\n\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n\t\tpath, zeroPayloadPerlArchive, expected\n\t);\n",
+          "previous": "",
+          "start": 143038
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b474f61527b48d48a22f9bd85b0ffaddfa3bc770e11f360dcef645086124fee9"
+    }
+  ],
+  "milestone": "zero-payload-perl-archive-source-v1",
+  "predecessorCommit": "e44ddd16e9c1f05b7cff795c80dc679de1aeae00",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload CPAN evidence binds both author routes, the independent Perl caller, four ABI identities, both offline installation modes and the checker to Git, and can be frozen only from authenticated successful GitHub records.",
+  "updates": [
+    {
+      "currentSha256": "aae3af1f3a59e176d83bc7e0e251ed41951fcd76de3ecb5e30ababf3b1733f47",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadPerlEvidenceSources\n",
+          "previous": "",
+          "start": 433
+        },
+        {
+          "current": "\t\t, `${role}:${path}`);\n});\n\ntest(\"zero-payload Perl evidence closes every hosted source role\", {\n\ttimeout: 120_000\n}, () => {\n\tconst head = revision();\n\tconst sources = zeroPayloadPerlEvidenceSources({\n\t\tproducer: head, consumer: head, checker: head, archiver: head\n\t});\n\tassert.ok(sources.length > 80);\n\tassert.equal(new Set(sources.map(item =>\n\t\t`${item.role}:${item.path}`)).size, sources.length);\n\tassert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const item of sources)\n\t{\n\t\tassert.equal(item.revision, head);\n\t\tassert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0\n\t\t\t, `${item.role}:${item.path}`);\n\t}\n\tfor(const [role, path] of [\n\t\t[\"producer\", \"tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean\"]\n\t\t, [\"consumer\", \"tests/fixtures/zero-payload-checked-record-perl/perl.pl\"]\n\t\t, [\"checker\", \".github/workflows/zero-payload-checked-record-perl.yml\"]\n\t\t, [\"checker\", \"scripts/check-zero-payload-checked-record-perl-ci.mjs\"]\n\t\t, [\"archiver\", \"scripts/archive-zero-payload-checked-record-perl-evidence.mjs\"]\n\t\t, [\"archiver\", \"tests/helpers/zero-payload-checked-record-hosted-archive.mjs\"]\n\t]) assert.ok(sources.some(item => item.role === role && item.path === path)\n",
+          "previous": "",
+          "start": 7375
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "c5936e5f5e0acb9f710ed65d3bd8527db2e6a1fa8fda1daea0bff9f3b2afa161"
+    },
+    {
+      "currentSha256": "9e5576c7ed16cbccf2b39cc0b30886870db8eb7b6ed8e06f8a1b0666b177f440",
+      "edits": [
+        {
+          "current": "const perlCallers = [\"perl.pl\"].map(\n\tpath => `tests/fixtures/zero-payload-checked-record-perl/${path}`\n);\n",
+          "previous": "",
+          "start": 2727
+        },
+        {
+          "current": "\n/**\n * Select every source whose bytes explain the hosted Perl CPAN artifact.\n *\n * @param revisions - Producer, consumer, checker and archiver revisions.\n */\nexport const zeroPayloadPerlEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-perl-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...fixture, ...perlCallers, \"src/analyze/NativeExports.lean\"\n\t\t\t\t, \"lean-toolchain\", \"package-lock.json\", \"package.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: revisions.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.consumer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-perl-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...perlCallers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.checker, [\n\t\t\t\t\t\"scripts/check-zero-payload-checked-record-perl-ci.mjs\"\n\t\t\t\t\t, \"tests/zero-payload-checked-record-perl.test.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-perl.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/build-perl-toolchains.mjs\"\n\t\t\t\t, \"scripts/env.sh\", \"scripts/run-zero-payload-checked-record-perl-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-zero-payload-checked-record-perl-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 12095
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "07263f1bf43d1c656e843e43f8a48deeda712d2a0c9503947b65a58054eeb2a7"
+    },
+    {
+      "currentSha256": "061ccc63b51d78270a2bf55f97c0f87c8d14aaeb39f244133771cf2c9b39a68a",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-perl-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 457
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-perl.test.mjs",
+      "previousSha256": "4b9a860b72912df523270805490a0e4f5377bb97e03b03aae691a71eeff3ffc1"
+    }
+  ]
+}
