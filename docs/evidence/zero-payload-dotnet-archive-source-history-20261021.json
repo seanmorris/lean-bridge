@@ -1,0 +1,193 @@
+{
+  "additions": [
+    {
+      "currentSha256": "22b432dc979543f4c8485164d67239a3d1d92641c4599e4d717bcbba1230169c",
+      "path": "scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs"
+    },
+    {
+      "currentSha256": "31e2eb67735146c411e71b8fc4c0a8078ec95e0629200e9adc5690880ad14474",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-controls.mjs"
+    },
+    {
+      "currentSha256": "f7f3ad81354cecb86f6cb7e3be332a2f36a7efdeb005c70e22cacebe5ff32571",
+      "path": "scripts/update-zero-payload-dotnet-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "d6b3f940a39e65c2147cf9d8d65aadb9a1d0836051aa228d93ad223781a5261b",
+      "path": "tests/helpers/zero-payload-dotnet-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "a5ce0cd04a85d2aa341fd9367f67d3f4828b61d1e37afe1b725f7a4c115dc827",
+      "path": "tests/helpers/zero-payload-dotnet-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "79e7614713184f82fcb90f25d6d9a702e0ed0c0b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "654e8a0f9bb4e0f7366222609080efdd9436c78c2ed769f75bb440426669d02c",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadDotnetArchiveSource, zeroPayloadDotnetArchiveChangedPaths, zeroPayloadDotnetArchiveIntegrationPaths } from \"./zero-payload-dotnet-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadDotnetArchiveChangedPaths\n\t, ...zeroPayloadDotnetArchiveIntegrationPaths\n\t, ...zeroPayloadVariantChangedPaths\n",
+          "previous": "\t...zeroPayloadVariantChangedPaths\n",
+          "start": 113118
+        },
+        {
+          "current": "\tconst zeroPayloadDotnetArchive = beforeZeroPayloadDotnetArchiveSource(\n",
+          "previous": "\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n",
+          "start": 135454
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadDotnetArchive) === expected)\n\t\treturn zeroPayloadDotnetArchive;\n\tconst zeroPayloadVariant = beforeZeroPayloadVariantSource(\n\t\tpath, zeroPayloadDotnetArchive, expected\n\t);\n",
+          "previous": "",
+          "start": 135553
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b4529fbc0e5e9e5493cd13b5c430aa7da5c07bd16801ca521a8ed1131ed453b8"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-archive-source-v1",
+  "predecessorCommit": "e71b69bed3a79b0c3131ee27fd71212f99841bae",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload NuGet evidence binds author inputs to Git, runs destructive controls and can be frozen only from authenticated successful GitHub records.",
+  "updates": [
+    {
+      "currentSha256": "943f8a1a7228d26710beab63b705a9c932bfc1a55e0d5b19c02af4f0980b2846",
+      "edits": [
+        {
+          "current": "\tparseZeroPayloadDotnetCiArgs\n",
+          "previous": "\tcheckZeroPayloadDotnetCiRecords, parseZeroPayloadDotnetCiArgs\n",
+          "start": 370
+        },
+        {
+          "current": "import {\n\tzeroPayloadDotnetNegativeControls\n} from \"../tests/helpers/zero-payload-checked-record-dotnet-controls.mjs\";\n",
+          "previous": "",
+          "start": 476
+        },
+        {
+          "current": "const paths = await nativeArtifactPaths(directory);\nconst originals = new Map();\nfor(const path of paths) originals.set(path, await read(path));\nconst controlled = await zeroPayloadDotnetNegativeControls(originals, {\n\t...selected, tapSource: tap\n}, { bytes: dotnet.length, sha256: sha256(dotnet) });\nconst { accepted, ...controls } = controlled;\nprocess.stdout.write(canonicalJson({ ...accepted, controls }));\n",
+          "previous": "const accepted = await checkZeroPayloadDotnetCiRecords(selected, {\n\ttap, read, paths: await nativeArtifactPaths(directory)\n\t, dotnetIdentity: { bytes: dotnet.length, sha256: sha256(dotnet) }\n});\nprocess.stdout.write(canonicalJson(accepted));\n",
+          "start": 1144
+        }
+      ],
+      "path": "scripts/check-zero-payload-checked-record-dotnet-ci.mjs",
+      "previousSha256": "8e49c0af65e30e3dc639e7c8528579cb7bf5e089f4e6dd5508704de642ac6792"
+    },
+    {
+      "currentSha256": "17d427fd1be7d8993ae15d4a57b105c840fe466476fbcb209201e4d36e14cace",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 127
+        },
+        {
+          "current": "import {\n\tzeroPayloadCheckedRecordFixture\n} from \"./zero-payload-checked-record-fixture.mjs\";\n",
+          "previous": "",
+          "start": 525
+        },
+        {
+          "current": "const fixturePaths = Object.freeze([\n\t\"LICENSE\", \"ZeroPayloadCheckedRecords.lean\", \"lakefile.toml\"\n\t, \"lean-toolchain\", \"package.json\"\n]);\nconst original = (commit, path) => execFileSync(\"git\", [\n\t\"show\", `${commit}:${zeroPayloadCheckedRecordFixture}/${path}`\n], { maxBuffer: 16 * 1024 * 1024 });\n\n",
+          "previous": "",
+          "start": 798
+        },
+        {
+          "current": "\t\tassert.deepEqual(inputs.value.map(item => item.path).sort(), [\n\t\t\t...fixturePaths, \"lean-bridge.exports.json\"\n\t\t\t, ...selection.reviewed ? [\"api.binding-ir.json\"] : []\n\t\t].sort());\n\t\tassert.ok(inputs.value.every(item => item.mode === 33188));\n",
+          "previous": "",
+          "start": 9404
+        },
+        {
+          "current": "\t\tfor(const path of fixturePaths)\n\t\t\tassert.equal(inputs.value.find(item => item.path === path).sha256\n\t\t\t\t, sha256(original(selected.producer, path)), path);\n\t\tassert.equal(inputs.value.find(item =>\n\t\t\titem.path === \"lean-bridge.exports.json\").sha256\n\t\t, sha256(canonicalJson(selection.configuration)));\n\t\tif(selection.reviewed)\n\t\t\tassert.equal(inputs.value.find(item =>\n\t\t\t\titem.path === \"api.binding-ir.json\").sha256, sha256(expected));\n",
+          "previous": "",
+          "start": 9848
+        },
+        {
+          "current": "\t\tassert.deepEqual(await read(\n",
+          "previous": "\t\tassert.equal((await read(\n",
+          "start": 10419
+        },
+        {
+          "current": "\t\t), original(selected.producer, \"ZeroPayloadCheckedRecords.lean\"));\n",
+          "previous": "\t\t)).toString(), (await read(\n\t\t\t\"build-0/ZeroPayloadCheckedRecords.lean\"\n\t\t)).toString());\n",
+          "start": 10501
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-ci-report.mjs",
+      "previousSha256": "aa20a0496cda14638f365cb7592bf5ed2cdd09e2d289b47e053ac32a7fef9f32"
+    },
+    {
+      "currentSha256": "eb70e8f56876c3da226fdd0b9e7cab56549df2492609755bc5e5b40c3e62dfc8",
+      "edits": [
+        {
+          "current": "\t, zeroPayloadDotnetEvidenceSources\n",
+          "previous": "",
+          "start": 328
+        },
+        {
+          "current": "\t\t, `${role}:${path}`);\n});\n\ntest(\"zero-payload .NET evidence closes every hosted source role\", {\n\ttimeout: 120_000\n}, () => {\n\tconst head = revision();\n\tconst sources = zeroPayloadDotnetEvidenceSources({\n\t\tproducer: head, consumer: head, checker: head, archiver: head\n\t});\n\tassert.ok(sources.length > 80);\n\tassert.equal(new Set(sources.map(item =>\n\t\t`${item.role}:${item.path}`)).size, sources.length);\n\tassert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const item of sources)\n\t{\n\t\tassert.equal(item.revision, head);\n\t\tassert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0\n\t\t\t, `${item.role}:${item.path}`);\n\t}\n\tfor(const [role, path] of [\n\t\t[\"producer\", \"tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean\"]\n\t\t, [\"consumer\", \"tests/fixtures/zero-payload-checked-record-dotnet/dotnet.cs\"]\n\t\t, [\"checker\", \".github/workflows/zero-payload-checked-record-dotnet.yml\"]\n\t\t, [\"checker\", \"scripts/check-zero-payload-checked-record-dotnet-ci.mjs\"]\n\t\t, [\"archiver\", \"scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs\"]\n\t\t, [\"archiver\", \"tests/helpers/zero-payload-checked-record-hosted-archive.mjs\"]\n\t]) assert.ok(sources.some(item => item.role === role && item.path === path)\n",
+          "previous": "",
+          "start": 3351
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "2e94b189da7a7a60632f192ee182530dd64e2604c5c0748e09182129fc14c698"
+    },
+    {
+      "currentSha256": "93289cf8a365ce17621d6c0d32a395f4c897b7bccff70f0160b2e8bad60ce5bb",
+      "edits": [
+        {
+          "current": "const dotnetCallers = [\n\t\"dotnet.cs\"\n].map(path => `tests/fixtures/zero-payload-checked-record-dotnet/${path}`);\n",
+          "previous": "",
+          "start": 2387
+        },
+        {
+          "current": "\n/**\n * Select every source whose bytes explain the hosted .NET artifact.\n *\n * @param revisions - Producer, consumer, checker and archiver revisions.\n */\nexport const zeroPayloadDotnetEvidenceSources = revisions => {\n\tassert.deepEqual(Object.keys(revisions).sort(), [\n\t\t\"archiver\", \"checker\", \"consumer\", \"producer\"\n\t]);\n\tfor(const revision of Object.values(revisions))\n\t\tassert.match(revision, /^[a-f0-9]{40}$/u);\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: revisions.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.producer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-dotnet-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...fixture, ...dotnetCallers, \"src/analyze/NativeExports.lean\"\n\t\t\t\t, \"lean-toolchain\", \"package-lock.json\", \"package.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: revisions.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.consumer, [\n\t\t\t\t\t\"tests/helpers/zero-payload-checked-record-dotnet-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...dotnetCallers, \"package-lock.json\", \"package.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: revisions.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(revisions.checker, [\n\t\t\t\t\t\"scripts/check-zero-payload-checked-record-dotnet-ci.mjs\"\n\t\t\t\t\t, \"tests/zero-payload-checked-record-dotnet.test.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/zero-payload-checked-record-dotnet.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-zero-payload-checked-record-dotnet-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: revisions.archiver\n\t\t\t, paths: closure(revisions.archiver, [\n\t\t\t\t\"scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 6488
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "81a4aa7b0d0821b3d901f590468353871022d8b6ea24d5e1040024b1c95a8f6b"
+    },
+    {
+      "currentSha256": "ec10b97e9d263f41d5d8f85cd2af6f78012d15c9157c07e71bbc7873c3f9d3be",
+      "edits": [
+        {
+          "current": "\tassertNativeTap(controlsTap, 26, 7);\n",
+          "previous": "\tassertNativeTap(controlsTap, 25, 7);\n",
+          "start": 2883
+        },
+        {
+          "current": "\t\t\tfastPasses: 19, skippedInstalledOrLeanTests: 7\n",
+          "previous": "\t\t\tfastPasses: 18, skippedInstalledOrLeanTests: 7\n",
+          "start": 4378
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-native-ci-report.mjs",
+      "previousSha256": "66d59c746cab7a73e412a482c35b9eb9ed1d8e2d0e6135822406a8b8471f1db3"
+    },
+    {
+      "currentSha256": "cd169bfac09796ba59bd2661e2d30bee5e163476b6bb7d9516de6da39a0b22b0",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs\";\n",
+          "previous": "",
+          "start": 319
+        },
+        {
+          "current": "import \"./helpers/zero-payload-dotnet-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 615
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs",
+      "previousSha256": "41454dd6319a8320be73e4df21254ff59b1ba19383c66e0a3d255c5d63b0fccf"
+    }
+  ]
+}
