@@ -6,4 +6,5 @@
 import "./helpers/zero-payload-checked-record-dotnet-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-dotnet-installed-tests.mjs";
 import "./helpers/zero-payload-checked-record-dotnet-ci-report-tests.mjs";
+import "./helpers/zero-payload-dotnet-ci-source-history-tests.mjs";
 import "./helpers/zero-payload-dotnet-source-history-tests.mjs";

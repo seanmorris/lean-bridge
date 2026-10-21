@@ -36,7 +36,7 @@ test("zero-payload .NET history restores every source", async () => {
 	for(const update of record.updates)
 	{
 		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadDotnetSource
+			update.path, update.currentSha256, beforeFinRefinementSource
 		);
 		assert.equal(reverseZeroPayloadDotnetUpdate(current, update)
 			, sourceAt(zeroPayloadDotnetImplementation, update.path));
@@ -51,14 +51,14 @@ test("zero-payload .NET history restores every source", async () => {
 	for(const update of record.integrationUpdates)
 	{
 		const current = await sourceAtFinHistoryMilestone(
-			update.path, update.currentSha256, beforeZeroPayloadDotnetSource
+			update.path, update.currentSha256, beforeFinRefinementSource
 		);
 		assert.equal(reverseZeroPayloadDotnetUpdate(current, update)
 			, sourceAt(zeroPayloadDotnetImplementation, update.path));
 	}
 	for(const addition of record.additions)
 		assert.equal(sha256(await sourceAtFinHistoryMilestone(
-			addition.path, addition.currentSha256
+			addition.path, addition.currentSha256, beforeFinRefinementSource
 		)), addition.currentSha256, addition.path);
 });
 
@@ -66,7 +66,7 @@ test("zero-payload .NET history rejects altered transitions", async () => {
 	const record = JSON.parse(await readFile(zeroPayloadDotnetHistoryPath, "utf8"));
 	const update = structuredClone(record.updates[0]);
 	const current = await sourceAtFinHistoryMilestone(
-		update.path, update.currentSha256, beforeZeroPayloadDotnetSource
+		update.path, update.currentSha256, beforeFinRefinementSource
 	);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() => reverseZeroPayloadDotnetUpdate(current, update));

@@ -1,0 +1,112 @@
+{
+  "additions": [
+    {
+      "currentSha256": "da1e5b1087be3f3b0d8e4a3c0adae575597063f6a5090fa55448132d6b68c96e",
+      "path": ".github/workflows/zero-payload-checked-record-dotnet.yml"
+    },
+    {
+      "currentSha256": "8e49c0af65e30e3dc639e7c8528579cb7bf5e089f4e6dd5508704de642ac6792",
+      "path": "scripts/check-zero-payload-checked-record-dotnet-ci.mjs"
+    },
+    {
+      "currentSha256": "933676bc6017cec0e255ebc1efeceede10336c1edce403d299f1295e401cc47d",
+      "path": "scripts/run-zero-payload-checked-record-dotnet-ci.sh"
+    },
+    {
+      "currentSha256": "385bda4dcc22d55bef6dd6ba082b5982043e1bb9ca040c876a0d82d84ba3f6c6",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "9d26e617169f20e461110e1c7e6eff28f33c4c435e01c4a7714e8744dcff590d",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-ci-report.mjs"
+    },
+    {
+      "currentSha256": "0a408f61d6610d49043dfe809bf8c1ff782d31ba8b2a567e061bd36f71830e9e",
+      "path": "scripts/update-zero-payload-dotnet-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "a1241a6b493e73067bbd347394aba08d54510f9f9058d157769a545817e2ccf5",
+      "path": "tests/helpers/zero-payload-dotnet-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "ab30ec98402e7af300e03ac62e294c3ca0f7f3049630cf0a94c4a4e560f6f869",
+      "path": "tests/helpers/zero-payload-dotnet-ci-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "d91da29e99f0eb2708273ddb4a6f181102a46e10",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7de717fb4bc7ce2a23d4ecadb72373dc5dea603376b25cbdf7c87e5ac3b50bfb",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadDotnetCiSource, zeroPayloadDotnetCiChangedPaths, zeroPayloadDotnetCiIntegrationPaths } from \"./zero-payload-dotnet-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadDotnetCiChangedPaths\n\t, ...zeroPayloadDotnetCiIntegrationPaths\n\t, ...zeroPayloadDotnetChangedPaths\n",
+          "previous": "\t...zeroPayloadDotnetChangedPaths\n",
+          "start": 112559
+        },
+        {
+          "current": "\tconst zeroPayloadDotnetCi = beforeZeroPayloadDotnetCiSource(\n",
+          "previous": "\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n",
+          "start": 134623
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadDotnetCi) === expected) return zeroPayloadDotnetCi;\n\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n\t\tpath, zeroPayloadDotnetCi, expected\n\t);\n",
+          "previous": "",
+          "start": 134712
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "df09f7f7b3e238fd1fb80d41578550207b87633dc6cf80d32d357a686f614a04"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-ci-source-v1",
+  "predecessorCommit": "9d47c4c31dc77023126596cca276af05bbe02ddd",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload NuGet acceptance retains all four author/API routes and independently reconciles their package, execution and source identities.",
+  "updates": [
+    {
+      "currentSha256": "39ba48ca926b086dec277387b866bc0fdb4f4a98b5c06dc37f147980c399709c",
+      "edits": [
+        {
+          "current": "\t\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetSource\n",
+          "start": 1769
+        },
+        {
+          "current": "\t\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetSource\n",
+          "start": 2455
+        },
+        {
+          "current": "\t\t\taddition.path, addition.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\taddition.path, addition.currentSha256\n",
+          "start": 2750
+        },
+        {
+          "current": "\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetSource\n",
+          "start": 3131
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-source-history-tests.mjs",
+      "previousSha256": "ab3ed56078c4dd227263e83925b06ad3e02620d3e5686c7f3f3fcf264bb48490"
+    },
+    {
+      "currentSha256": "03652bdfbaa8005aba3b29cd8d6a062a76a7c4bfc6b58c067f7fd2fc1397347f",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-dotnet-ci-report-tests.mjs\";\nimport \"./helpers/zero-payload-dotnet-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 244
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs",
+      "previousSha256": "dc3bf1869226ac50a7bf667ded36680f3b78af7ff1568ad1534237c5305edd3f"
+    }
+  ]
+}
