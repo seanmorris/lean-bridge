@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadTypeSurfaceGapSource, zeroPayloadTypeSurfaceGapHistoricalPaths, zeroPayloadTypeSurfaceGapIntegrationPaths } from "./zero-payload-type-surface-gap-source-history.mjs";
 import { beforeZeroPayloadDotnetPromotionSource, zeroPayloadDotnetPromotionChangedPaths, zeroPayloadDotnetPromotionIntegrationPaths } from "./zero-payload-dotnet-promotion-source-history.mjs";
 import { beforeZeroPayloadJvmPromotionSource, zeroPayloadJvmPromotionChangedPaths, zeroPayloadJvmPromotionIntegrationPaths } from "./zero-payload-jvm-promotion-source-history.mjs";
 import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from "./zero-payload-ruby-source-history.mjs";
@@ -1427,7 +1428,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadDotnetPromotionChangedPaths
+	...zeroPayloadTypeSurfaceGapHistoricalPaths
+	, ...zeroPayloadTypeSurfaceGapIntegrationPaths
+	, ...zeroPayloadDotnetPromotionChangedPaths
 	, ...zeroPayloadDotnetPromotionIntegrationPaths
 	, ...zeroPayloadJvmPromotionChangedPaths
 	, ...zeroPayloadJvmPromotionIntegrationPaths
@@ -1962,8 +1965,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadTypeSurfaceGapPrelude
+		= beforeZeroPayloadTypeSurfaceGapSource(path, text, expected);
+	if(sha256(zeroPayloadTypeSurfaceGapPrelude) === expected)
+		return zeroPayloadTypeSurfaceGapPrelude;
 	const zeroPayloadDotnetPromotion = beforeZeroPayloadDotnetPromotionSource(
-		path, text, expected
+		path, zeroPayloadTypeSurfaceGapPrelude, expected
 	);
 	if(sha256(zeroPayloadDotnetPromotion) === expected)
 		return zeroPayloadDotnetPromotion;
@@ -1976,8 +1983,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		path, zeroPayloadJvmPromotion, expected
 	);
 	if(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;
-	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
+	const zeroPayloadTypeSurfaceGap = beforeZeroPayloadTypeSurfaceGapSource(
 		path, zeroPayloadRuby, expected
+	);
+	if(sha256(zeroPayloadTypeSurfaceGap) === expected)
+		return zeroPayloadTypeSurfaceGap;
+	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
+		path, zeroPayloadTypeSurfaceGap, expected
 	);
 	if(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;
 	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(
@@ -2399,5 +2411,8 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	previous = beforeCoreTerminalReachabilitySource(
 		path, previous, expected
 	);
-	return previous === text ? source : previous;
+	if(previous === text) return source;
+	return expected !== undefined && sha256(previous) !== expected
+		? beforeFinRefinementSource(path, previous, expected)
+		: previous;
 };
