@@ -6,3 +6,4 @@
  */
 import "./helpers/zero-payload-checked-record-python-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-python-installed-tests.mjs";
+import "./helpers/zero-payload-python-source-history-tests.mjs";

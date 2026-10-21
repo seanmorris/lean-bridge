@@ -1,0 +1,165 @@
+{
+  "additions": [
+    {
+      "currentSha256": "1aec3c22fb5fdc253677dde229644eee0e3cc4fb5376f3da02ad7840410e2aab",
+      "path": ".github/workflows/zero-payload-checked-record-python.yml"
+    },
+    {
+      "currentSha256": "ff69d1a5719510fd422ff1df78930b1ea813ed43c77e558bad3e0295199cfc9b",
+      "path": "scripts/check-zero-payload-checked-record-python-ci.mjs"
+    },
+    {
+      "currentSha256": "a9f806dec845f44ac13da1792cedd006657b0951b9360fc0070b27805e731c13",
+      "path": "scripts/run-zero-payload-checked-record-python-ci.sh"
+    },
+    {
+      "currentSha256": "ca71f7d44d7901d24f5b7ae9f27e58f2fbee372c78bf23efb1d77ea1807fa2be",
+      "path": "tests/fixtures/zero-payload-checked-record-python/python.py"
+    },
+    {
+      "currentSha256": "abb88a49fcd179f747ddf6e549862da80cd2789a61ced9bde5e7703917d685fe",
+      "path": "tests/helpers/zero-payload-checked-record-python-ci-report.mjs"
+    },
+    {
+      "currentSha256": "1f0c816ea16a3581f5faf38c4cd9e0e33efc23da66aa56e95397cb41322af054",
+      "path": "tests/helpers/zero-payload-checked-record-python-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "807132570d8c18dce767323f6cdcae7b8b0f32a108e237265517e4fb87e36536",
+      "path": "tests/helpers/zero-payload-checked-record-python-fixture.mjs"
+    },
+    {
+      "currentSha256": "f40adc897828132b55acd8f08defc4fcefe2d48df20eb36ca4c69f03087cb922",
+      "path": "tests/helpers/zero-payload-checked-record-python-install.mjs"
+    },
+    {
+      "currentSha256": "3fcde10d29718a9c603dd80876d0e2804716af8df5a41f2cdd0845ba34afe9cc",
+      "path": "tests/helpers/zero-payload-checked-record-python-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "c3ef06884c9f8b1ae8efa85eb7b4007edd334f9e7b4cc7716322b027ffbeaf6a",
+      "path": "tests/helpers/zero-payload-checked-record-python-model.py"
+    },
+    {
+      "currentSha256": "6533621d2fb6e4bf371969a2c0574b396df95d9c397cbe1771e617235a421381",
+      "path": "tests/helpers/zero-payload-checked-record-python-wheel.mjs"
+    },
+    {
+      "currentSha256": "8ccc93ccbb85cab0e95840a0d1eabce03235ca3a617556b32d6722f5dc1b5fb2",
+      "path": "scripts/update-zero-payload-python-source-history.mjs"
+    },
+    {
+      "currentSha256": "ef78502f19a5d3ed99dfd98fef051ba1f4435be5929aaf144504a16f6d7553bd",
+      "path": "tests/helpers/zero-payload-python-source-history.mjs"
+    },
+    {
+      "currentSha256": "3355b333d895db6fb579fb25edd63e69c48df731ade63c575cf06c5589093c78",
+      "path": "tests/helpers/zero-payload-python-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "432bfd0772342630df9176017a5c9c2f6a1f4c40",
+  "integrationUpdates": [
+    {
+      "currentSha256": "584cf89bb98a0415e00f73d8b99b8547fdf055adb84519bba12c7a7321ce82b1",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-python\"\n",
+          "previous": "",
+          "start": 13896
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c3c2ef60e7c0eac949d5cea58dcf3324abec136c59caf962d94222395c596de0"
+    },
+    {
+      "currentSha256": "759bf3fcd95f3aa3a0686e411108b9321d4d87ddac29a5c13d747f9657573d22",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from \"./zero-payload-python-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadPythonHistoryChangedPaths\n\t, ...zeroPayloadPythonHistoryIntegrationPaths\n\t, ...zeroPayloadJvmNullBoundaryChangedPaths\n",
+          "previous": "\t...zeroPayloadJvmNullBoundaryChangedPaths\n",
+          "start": 115503
+        },
+        {
+          "current": "\tconst zeroPayloadPython = beforeZeroPayloadPythonHistorySource(\n",
+          "previous": "\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n",
+          "start": 139029
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;\n\tconst zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(\n\t\tpath, zeroPayloadPython, expected\n\t);\n",
+          "previous": "",
+          "start": 139121
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "81f7e98585091305b56ecf73298df25608b8bc14e441600d94d882f7e2296b38"
+    },
+    {
+      "currentSha256": "54d1559b2f4d05ab7df615065bc7e5374a1ef64658929ca03a0a264f20481a05",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-python-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 290
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-python.test.mjs",
+      "previousSha256": "f3218115546d1033d484fc99e4dad3d9a586fcdd6881d6126e191050cbc7690f"
+    }
+  ],
+  "milestone": "zero-payload-python-source-v1",
+  "predecessorCommit": "a6173cade3bbe158baa1a5695e3e93e1037359b0",
+  "reconciledTypeSurfacePointers": 98,
+  "schemaVersion": 1,
+  "scope": "Generated Python admits an exact copied Token record without admitting undeclared dispatcher or identity-token machinery, and keeps proof-only, Unit-bearing and plain empty records, Option, arrays and both variant branches nominally distinct across full and result-only wheel routes on both declared CPython floors.",
+  "updates": [
+    {
+      "currentSha256": "60fc70fd60f464872c15dcac1efe2395b5bd064b266d4bfbe9dec50c6895aad8",
+      "edits": [
+        {
+          "current": "/**\n * A copied nominal value may legitimately use a machinery-adjacent name such\n * as Token. Admit that name only when the Binding IR declares the exact public\n * Python class as a copied, non-resource record.\n *\n * @param ir - Binding IR document.\n * @param declaration - Python declaration keyword.\n * @param name - Exact public identifier.\n */\nconst explicitCopiedValue = (ir, declaration, name) =>\n\tdeclaration.toLowerCase() === \"class\"\n\t&& ir.types.some(type =>\n\t\ttype.name === name\n\t\t&& type.kind === \"record\"\n\t\t&& type.representation === \"copied\"\n\t\t&& type.resource === null\n\t);\n\n",
+          "previous": "",
+          "start": 984
+        },
+        {
+          "current": "\tconst generic = [...source.matchAll(\n\t\t/^\\s*(def|class)\\s+(invoke|dispatch|handle|token)\\b/gimu\n\t)].find(match => !explicitCopiedValue(ir, match[1], match[2]));\n\tif(generic)\n",
+          "previous": "\tif(/^\\s*(?:def|class)\\s+(?:invoke|dispatch|handle|token)\\b/im.test(source))\n",
+          "start": 2979
+        },
+        {
+          "current": "\t\tfail(\"generic-dispatch\"\n\t\t\t, \"the Python package exposes a dispatcher or identity token\"\n\t\t\t, { declaration: generic[0].trim() });\n",
+          "previous": "\t\tfail(\"generic-dispatch\", \"the Python package exposes a dispatcher or identity token\");\n",
+          "start": 3157
+        },
+        {
+          "current": "\tif(/\\bAny\\b/u.test(stub))\n",
+          "previous": "\tif(/\\bAny\\b|\\b(?:handle|token)\\s*:/i.test(stub))\n",
+          "start": 3293
+        },
+        {
+          "current": "\tconst rawIdentity = [...stub.matchAll(/^\\s*(handle|token)\\s*:/gimu)][0];\n\tif(rawIdentity)\n\t{\n\t\tfail(\"untyped-public-api\"\n\t\t\t, \"the Python stub exposes Any or a raw identity value\"\n\t\t\t, { declaration: rawIdentity[0] });\n\t}\n",
+          "previous": "",
+          "start": 3411
+        }
+      ],
+      "path": "src/backends/python/package-audit.mjs",
+      "previousSha256": "99d4d9344c2b248e98d1f5be26348456a3c94c0c021177e622c3f3e29695b2d9"
+    },
+    {
+      "currentSha256": "d85f292dc6464267093f3f6af2cc582a9422c7c1d2ab968d5e6d1bd05be55475",
+      "edits": [
+        {
+          "current": "    error => error.code === \"generic-dispatch\" && error.details.declaration === \"def dispatch\",\n  );\n\n  // A manifest cannot bless a machinery-adjacent name absent from Binding IR.\n  const undeclared = { ...files };\n  const undeclaredManifest = JSON.parse(undeclared[\"binding-manifest.json\"]);\n  undeclaredManifest.exports = [...undeclaredManifest.exports, \"Token\"];\n  undeclared[\"binding-manifest.json\"] = JSON.stringify(undeclaredManifest);\n  undeclared[\"lean_alpha/__init__.py\"] = undeclared[\"lean_alpha/__init__.py\"]\n    .replace(\"\\\"make_adder\\\",\", \"\\\"make_adder\\\", \\\"Token\\\",\") + \"\\nclass Token: pass\\n\";\n  undeclared[\"lean_alpha/__init__.pyi\"] += \"\\nclass Token: ...\\n\";\n  assert.throws(\n    () => auditPythonPackage(alpha.bindingIr, undeclared),\n    error => error.code === \"generic-dispatch\" && error.details.declaration === \"class Token\",\n  );\n\n  // An actual copied Token record is public API, not an identity-token leak.\n  const declaredIr = structuredClone(alpha.bindingIr);\n  const token = structuredClone(declaredIr.types.find(type => type.name === \"Payload\"));\n  token.id = \"lean:Alpha.Token\";\n  token.name = \"Token\";\n  token.source.declaration = \"Alpha.Token\";\n  declaredIr.types.push(token);\n  const declared = generatePythonBindingPackage(declaredIr);\n  assert.doesNotThrow(() => auditPythonPackage(declaredIr, declared));\n\n  // A raw identity slot in the public stub remains forbidden.\n  const rawStub = { ...files };\n  rawStub[\"lean_alpha/__init__.pyi\"] += \"\\ntoken: int\\n\";\n  assert.throws(\n    () => auditPythonPackage(alpha.bindingIr, rawStub),\n    error => error.code === \"untyped-public-api\",\n",
+          "previous": "    error => error.code === \"generic-dispatch\",\n",
+          "start": 3113
+        }
+      ],
+      "path": "tests/python-generator.test.mjs",
+      "previousSha256": "229603794dbf5e2a68695703ae6f79436b95fcc8ed8942f39a5a2a8f6176cf14"
+    }
+  ]
+}

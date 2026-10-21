@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from "./zero-payload-python-source-history.mjs";
 import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChangedPaths, zeroPayloadJvmNullBoundaryHistoricalPaths, zeroPayloadJvmNullBoundaryIntegrationPaths } from "./zero-payload-jvm-null-boundary-source-history.mjs";
 import { beforeZeroPayloadNativePromotionSource, zeroPayloadNativePromotionChangedPaths, zeroPayloadNativePromotionIntegrationPaths } from "./zero-payload-native-promotion-source-history.mjs";
 import { beforeZeroPayloadBrowserDiagnosticSource, zeroPayloadBrowserDiagnosticChangedPaths, zeroPayloadBrowserDiagnosticIntegrationPaths } from "./zero-payload-browser-diagnostic-source-history.mjs";
@@ -1423,7 +1424,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadJvmNullBoundaryChangedPaths
+	...zeroPayloadPythonHistoryChangedPaths
+	, ...zeroPayloadPythonHistoryIntegrationPaths
+	, ...zeroPayloadJvmNullBoundaryChangedPaths
 	, ...zeroPayloadJvmNullBoundaryHistoricalPaths
 	, ...zeroPayloadJvmNullBoundaryIntegrationPaths
 	, ...zeroPayloadNativePromotionChangedPaths
@@ -1950,8 +1953,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(
+	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadPython) === expected) return zeroPayloadPython;
+	const zeroPayloadJvmNullBoundary = beforeZeroPayloadJvmNullBoundarySource(
+		path, zeroPayloadPython, expected
 	);
 	if(sha256(zeroPayloadJvmNullBoundary) === expected)
 		return zeroPayloadJvmNullBoundary;
