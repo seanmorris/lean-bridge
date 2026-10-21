@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "104d3a38f051e6c97066b642720e0bcb896bab8ecc86ec18b658429615e89d3e",
+      "path": "tests/helpers/dependent-checked-record-perl-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "f3218176879a149d72b38dd2dd119e3029d83c4f06d86d7c6dea15931f9d9a3c",
+      "path": "tests/helpers/dependent-checked-record-perl-evidence.mjs"
+    },
+    {
+      "currentSha256": "aab96ca89a26fa9492ea8ce3232a896b44669d1b3feaed647a618b1f67ccf745",
+      "path": "scripts/update-dependent-checked-record-perl-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "5d080bc85ca377c7af4297005932535f04d817c496c92c505240e5b2deb88f01",
+      "path": "tests/helpers/dependent-checked-record-perl-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "226ed55b5b8042eb30b926e0f4f6242feaaac4cad44ba599c25654dd13c1e238",
+      "path": "tests/helpers/dependent-checked-record-perl-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1496,
+    "archiveFileCount": 1494,
+    "indexSha256": "53bdc2212215d7f569b5158c436a002d6a16f9903be033c378ed7ef31f17d95f",
+    "indexedFileCount": 1493,
+    "root": "docs/evidence/dependent-checked-record-perl-20261021"
+  },
+  "implementationCommit": "02bb4fcbb25a71687b221d1cf9bb2196dace8165",
+  "implementationUpdates": [
+    {
+      "currentSha256": "dde6a6dc390f6a8b8c96fd4fc3845a83ea46dfc8c3f173f12fdd132b43dd0e0a",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-perl-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 3276
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "ce200ebdf824ba7132f063671d6408a4755329a080656442f87f56714a7807de"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "1edfc58f811b9493522b37679f2595746c33583fd757844126766dd911343150",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "previous": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e43b354597b007c6d59bbd7898ca3198110df69e1edc20459a51d5e34cc0f12d"
+    },
+    {
+      "currentSha256": "12aba8d99e4c033e206d13a3a0e3e6586608b3fca2f53c55e653135fa563fe05",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPerlArchiveSource, dependentCheckedRecordPerlArchiveImplementationPaths, dependentCheckedRecordPerlArchiveIntegrationPaths } from \"./dependent-checked-record-perl-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPerlArchiveImplementationPaths\n\t, ...dependentCheckedRecordPerlArchiveIntegrationPaths\n\t, ...dependentCheckedRecordHostedFailureRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordHostedFailureRepairChangedPaths\n",
+          "start": 126720
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPerlArchive\n\t\t= beforeDependentCheckedRecordPerlArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPerlArchive) === expected)\n\t\treturn dependentCheckedRecordPerlArchive;\n",
+          "previous": "",
+          "start": 155613
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPerlArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 155946
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "36e3db8853e8328350e9282aeececc6a147a36e21ca8f3ed235c6ad04c02d68d"
+    },
+    {
+      "currentSha256": "a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3345
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "dde6a6dc390f6a8b8c96fd4fc3845a83ea46dfc8c3f173f12fdd132b43dd0e0a"
+    }
+  ],
+  "milestone": "dependent-checked-record-perl-archive-source-v1",
+  "predecessorCommit": "bde83efb0f81e0a7b74bf58c8c1886dbaa5784de",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted Perl dependent checked-record evidence retains all four routes, four ABI configurations, exact source roles, independent replay and the original GitHub artifact bytes."
+}

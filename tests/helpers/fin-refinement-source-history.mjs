@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPerlArchiveSource, dependentCheckedRecordPerlArchiveImplementationPaths, dependentCheckedRecordPerlArchiveIntegrationPaths } from "./dependent-checked-record-perl-archive-source-history.mjs";
 import { beforeDependentCheckedRecordHostedFailureRepairSource, dependentCheckedRecordHostedFailureRepairChangedPaths, dependentCheckedRecordHostedFailureRepairIntegrationPaths } from "./dependent-checked-record-hosted-failure-repair-source-history.mjs";
 import { beforeDependentCheckedRecordRubyArchiveSource, dependentCheckedRecordRubyArchiveImplementationPaths, dependentCheckedRecordRubyArchiveIntegrationPaths } from "./dependent-checked-record-ruby-archive-source-history.mjs";
 import { beforeDependentCheckedRecordTypeSurfaceGapSource, dependentCheckedRecordTypeSurfaceGapHistoricalPaths, dependentCheckedRecordTypeSurfaceGapIntegrationPaths } from "./dependent-checked-record-type-surface-gap-source-history.mjs";
@@ -1479,7 +1480,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordHostedFailureRepairChangedPaths
+	...dependentCheckedRecordPerlArchiveImplementationPaths
+	, ...dependentCheckedRecordPerlArchiveIntegrationPaths
+	, ...dependentCheckedRecordHostedFailureRepairChangedPaths
 	, ...dependentCheckedRecordHostedFailureRepairIntegrationPaths
 	, ...dependentCheckedRecordRubyArchiveImplementationPaths
 	, ...dependentCheckedRecordRubyArchiveIntegrationPaths
@@ -2114,9 +2117,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordPerlArchive
+		= beforeDependentCheckedRecordPerlArchiveSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordPerlArchive) === expected)
+		return dependentCheckedRecordPerlArchive;
 	const dependentCheckedRecordHostedFailureRepair
 		= beforeDependentCheckedRecordHostedFailureRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordPerlArchive, expected
 		);
 	if(sha256(dependentCheckedRecordHostedFailureRepair) === expected)
 		return dependentCheckedRecordHostedFailureRepair;
