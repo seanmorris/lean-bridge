@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeGenericSubtypeManagedWitSource, genericSubtypeManagedWitChangedPaths, genericSubtypeManagedWitIntegrationPaths } from "./generic-subtype-managed-wit-source-history.mjs";
 import { beforeGenericSubtypeLanguageSource, genericSubtypeLanguageChangedPaths, genericSubtypeLanguageIntegrationPaths } from "./generic-subtype-language-source-history.mjs";
 import { beforeGenericSubtypeNativePerlSource, genericSubtypeNativePerlChangedPaths, genericSubtypeNativePerlIntegrationPaths } from "./generic-subtype-native-perl-source-history.mjs";
 import { beforeCallbackSubtypeHistoryPinReconciliationSource, callbackSubtypeHistoryPinReconciliationChangedPaths, callbackSubtypeHistoryPinReconciliationIntegrationPaths } from "./callback-subtype-history-pin-reconciliation-source-history.mjs";
@@ -1456,7 +1457,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeLanguageChangedPaths
+	...genericSubtypeManagedWitChangedPaths
+	, ...genericSubtypeManagedWitIntegrationPaths
+	, ...genericSubtypeLanguageChangedPaths
 	, ...genericSubtypeLanguageIntegrationPaths
 	, ...genericSubtypeNativePerlChangedPaths
 	, ...genericSubtypeNativePerlIntegrationPaths
@@ -2046,8 +2049,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericLanguages = beforeGenericSubtypeLanguageSource(
+	const genericManagedWit = beforeGenericSubtypeManagedWitSource(
 		path, text, expected
+	);
+	if(sha256(genericManagedWit) === expected) return genericManagedWit;
+	const genericLanguages = beforeGenericSubtypeLanguageSource(
+		path, genericManagedWit, expected
 	);
 	if(sha256(genericLanguages) === expected) return genericLanguages;
 	const genericNativePerl = beforeGenericSubtypeNativePerlSource(

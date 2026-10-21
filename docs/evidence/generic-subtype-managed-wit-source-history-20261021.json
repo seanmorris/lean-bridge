@@ -1,0 +1,506 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d885adf8c5acf76e8f982ccf0797b9db47db6f984d5b39dea99a58976d961c25",
+      "path": ".github/workflows/generic-subtype-managed-wit.yml"
+    },
+    {
+      "currentSha256": "ea4584fc7115d46078c9b9f9280a41737e1c85a395e5d95b03fba66a67296167",
+      "path": "scripts/check-generic-subtype-managed-wit-ci.mjs"
+    },
+    {
+      "currentSha256": "26c43749cb981ae27940c270d013d585c2c831906f5def9304ff69dc5e8c4bbf",
+      "path": "scripts/run-generic-subtype-dotnet-ci.sh"
+    },
+    {
+      "currentSha256": "cd452c3feaed61a4df2b1d885928770e5410cc7d2d4415803bb20d651d909f64",
+      "path": "scripts/run-generic-subtype-jvm-ci.sh"
+    },
+    {
+      "currentSha256": "308b3df63ab492a3c4da0485ac47798b3aae64b996d8a4bee0c27bbe6cb95706",
+      "path": "scripts/run-generic-subtype-php-ci.sh"
+    },
+    {
+      "currentSha256": "f83ca96d89462b2b73238d2117b6bd020f4c0b35ca18f8d25b23539f0d21792d",
+      "path": "scripts/run-generic-subtype-wit-ci.sh"
+    },
+    {
+      "currentSha256": "435203bc8f91bc841fbc7b25ffa2ee5e51f609618c726b114d8723aea955c440",
+      "path": "tests/fixtures/generic-subtype-consumers/dotnet.cs"
+    },
+    {
+      "currentSha256": "f29f3cfac1f71da24c4dd0d828ad6af6b79730b4aabd6c8cd33829334e65055d",
+      "path": "tests/fixtures/generic-subtype-consumers/java.java"
+    },
+    {
+      "currentSha256": "589d7844501fc8d48f7cb63b84d2a9abd874491e06242c0df98c69d4b2241ac2",
+      "path": "tests/fixtures/generic-subtype-consumers/kotlin.kt"
+    },
+    {
+      "currentSha256": "1c4fdb2925a232b0198462653f9313b627d159aa772a9cfd7c8bbe90061d6ee2",
+      "path": "tests/fixtures/generic-subtype-consumers/php-native.php"
+    },
+    {
+      "currentSha256": "105e3ab4f365b82dd8ffeef3692e0daa9d5b37b96aa55fa8ae4e428d2e3e57b6",
+      "path": "tests/fixtures/generic-subtype-consumers/wit-wasi.c"
+    },
+    {
+      "currentSha256": "56c20965e6e9d2eecd5e554a09a2aa341644bb6febd915b779ada06809dde056",
+      "path": "tests/generic-subtype-managed-wit.test.mjs"
+    },
+    {
+      "currentSha256": "ef5c740cc4e8a4333ae989d59a786076e44dd64e09ce8198f745bfe6095800cd",
+      "path": "tests/helpers/generic-subtype-managed-wit-report.mjs"
+    },
+    {
+      "currentSha256": "bb2f39f9fe09fc75c7237d22c88fd97f79207e5834bcfbe49d0f7497989f8a45",
+      "path": "tests/helpers/generic-subtype-managed-wit-tests.mjs"
+    },
+    {
+      "currentSha256": "a2de5ca79427e9145cf960f223a1e3b94a02e29bf870ded3e2b7f1f0fa03cccc",
+      "path": "tests/helpers/generic-subtype-managed-wit.mjs"
+    },
+    {
+      "currentSha256": "d5a514228a0d00a2e97cb866ebd5a5a5b886b9bd9a42c8b8f73e6198e1a0c93d",
+      "path": "scripts/update-generic-subtype-managed-wit-source-history.mjs"
+    },
+    {
+      "currentSha256": "2557b30d9f946744b47fbec1757ba80fbbf9aff5b7e1354f695e313905f04ee6",
+      "path": "tests/helpers/generic-subtype-managed-wit-source-history.mjs"
+    },
+    {
+      "currentSha256": "166e38d85395e5d0b33fda7c7c96df0aaeacc8a58f4721a83f2d5583187b3ed5",
+      "path": "tests/helpers/generic-subtype-managed-wit-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "71076147b95eb9e2f1a613c4f04a8bf2fd7694d5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "56c20965e6e9d2eecd5e554a09a2aa341644bb6febd915b779ada06809dde056",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-managed-wit-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 141
+        }
+      ],
+      "path": "tests/generic-subtype-managed-wit.test.mjs",
+      "previousSha256": "59995ad27b64fe602a656376d8eb0fcd9904242d9cf567352db45a21351fd462"
+    },
+    {
+      "currentSha256": "675a3133227b6ca516ecdb57590402d9bc20e3f630b5313ef12041bd927c61cc",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeManagedWitSource, genericSubtypeManagedWitChangedPaths, genericSubtypeManagedWitIntegrationPaths } from \"./generic-subtype-managed-wit-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...genericSubtypeManagedWitChangedPaths\n\t, ...genericSubtypeManagedWitIntegrationPaths\n\t, ...genericSubtypeLanguageChangedPaths\n",
+          "previous": "\t...genericSubtypeLanguageChangedPaths\n",
+          "start": 121825
+        },
+        {
+          "current": "\tconst genericManagedWit = beforeGenericSubtypeManagedWitSource(\n",
+          "previous": "\tconst genericLanguages = beforeGenericSubtypeLanguageSource(\n",
+          "start": 148355
+        },
+        {
+          "current": "\tif(sha256(genericManagedWit) === expected) return genericManagedWit;\n\tconst genericLanguages = beforeGenericSubtypeLanguageSource(\n\t\tpath, genericManagedWit, expected\n\t);\n",
+          "previous": "",
+          "start": 148447
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5f56e1f78a52928667aa0d3c844b834ad3ce0537b02e9051b8c95d8eb20f5918"
+    }
+  ],
+  "milestone": "generic-subtype-managed-wit-source-v1",
+  "predecessorCommit": "ca31df407ada98a80446ce7facb97a9bee10d984",
+  "schemaVersion": 1,
+  "scope": "Closed generic-record Subtype compositions reproduced from ordinary and independently reviewed sources, installed offline and replayed after relocation in .NET, Java/Kotlin, native PHP and WIT/WASI.",
+  "updates": [
+    {
+      "currentSha256": "2c5be922478a939a2487c7c99b86de26dbeb19a03fd106bdc162bf17f02f20d6",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 320
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 784
+        },
+        {
+          "current": "import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from \"./generic-subtype-managed-wit.mjs\";\n",
+          "previous": "",
+          "start": 2002
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeDotnetSelection(process.env);\nconst genericSelection = genericSubtypeManagedWitSelection(\"dotnet\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic C# installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypeDotnetSelection(process.env);\n",
+          "start": 2198
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype C# compositions\" : \"nominal C# packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal C# packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2696
+        },
+        {
+          "current": "\tconst callerPath = `tests/fixtures/${genericCompositions ? \"generic\" : \"nominal\"}-subtype-consumers/dotnet.cs`;\n\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", callerPath]);\n",
+          "previous": "\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/dotnet.cs\"]);\n",
+          "start": 3261
+        },
+        {
+          "current": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions });\n\tconst configuration = genericCompositions\n\t\t? genericSubtypeManagedWitConfiguration(\"dotnet\", route)\n\t\t: nominalSubtypeDotnetConfiguration(route, mode);\n\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_DOTNET_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-dotnet\" : \"build/nominal-subtype-dotnet\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\"), configuration = nominalSubtypeDotnetConfiguration(route, mode);\n\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_OUTPUT ?? \"build/nominal-subtype-dotnet\", route, mode);\n",
+          "start": 3525
+        },
+        {
+          "current": "\tconst caller = genericCompositions\n\t\t? await genericSubtypeManagedWitCaller(\"dotnet\", route)\n\t\t: await nominalSubtypeDotnetCaller(route, mode);\n\tawait saveLakeFile(output, \"consumer.cs\", caller);\n",
+          "previous": "\tconst caller = await nominalSubtypeDotnetCaller(route, mode); await saveLakeFile(output, \"consumer.cs\", caller);\n",
+          "start": 5099
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6433
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8386
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeDotnetResult(run.stdout, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeDotnetResult(run.stdout, mode);\n",
+          "start": 10690
+        },
+        {
+          "current": "\tassert.equal(run.stderr, \"\");\n\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeDotnetResult(run.stdout, mode);\n",
+          "previous": "\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeDotnetResult(run.stdout, mode);\n",
+          "start": 11795
+        },
+        {
+          "current": "\t\tschemaVersion: 1, route, mode, producerCommit\n\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n\t\t, runtime, tools, builds\n",
+          "previous": "\t\tschemaVersion: 1, route, mode, producerCommit, runtime, tools, builds\n",
+          "start": 12664
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-installed-tests.mjs",
+      "previousSha256": "d08eae07b25e76f61b1deb91c1318c671025932e615f82cd6d5ffcc22d8908f6"
+    },
+    {
+      "currentSha256": "003f6c595d54475e98894fb290526efb3db74ea90905e5ce495b08e69cc53a9c",
+      "edits": [
+        {
+          "current": " * @param options - Optional generic-composition selection.\n * @param options.genericCompositions - Include the closed generic surface.\n",
+          "previous": "",
+          "start": 3405
+        },
+        {
+          "current": "export const nominalSubtypeJvmReview = (mode, { genericCompositions = false } = {}) => {\n",
+          "previous": "export const nominalSubtypeJvmReview = mode => {\n",
+          "start": 3545
+        },
+        {
+          "current": "\treturn renamed(nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions }));\n",
+          "previous": "\treturn renamed(nominalSubtypeInstalledReview(mode === \"result-only\"));\n",
+          "start": 3685
+        },
+        {
+          "current": " * @param options - Optional generic-composition selection.\n * @param options.genericCompositions - Include the closed generic surface.\n",
+          "previous": "",
+          "start": 3989
+        },
+        {
+          "current": "export const nominalSubtypeJvmConfiguration = (route, mode, { genericCompositions = false } = {}) => {\n",
+          "previous": "export const nominalSubtypeJvmConfiguration = (route, mode) => {\n",
+          "start": 4129
+        },
+        {
+          "current": "\treturn { ...renamed(nominalSubtypeInstalledConfiguration(route, [\"c\"], mode === \"result-only\", { genericCompositions }))\n",
+          "previous": "\treturn { ...renamed(nominalSubtypeInstalledConfiguration(route, [\"c\"], mode === \"result-only\"))\n",
+          "start": 4283
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-fixture.mjs",
+      "previousSha256": "b1b0136120fbdc5b9712ece443311052eb3490ffd5e7619bbb4a769c5cfdec54"
+    },
+    {
+      "currentSha256": "68f1b98ed0dd9c0b740edde5a2b477eae0bb2f9153988c32e962a0353de41296",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 318
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 782
+        },
+        {
+          "current": "import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from \"./generic-subtype-managed-wit.mjs\";\n",
+          "previous": "",
+          "start": 1945
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeJvmSelection(process.env);\nconst genericSelection = genericSubtypeManagedWitSelection(\"jvm\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic JVM installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypeJvmSelection(process.env);\n",
+          "start": 2173
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype JVM compositions\" : \"nominal JVM packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal JVM packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2666
+        },
+        {
+          "current": "\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", `tests/fixtures/${genericCompositions ? \"generic\" : \"nominal\"}-subtype-consumers/` + path]);\n",
+          "previous": "\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/\" + path]);\n",
+          "start": 3250
+        },
+        {
+          "current": "\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_JVM_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-jvm\" : \"build/nominal-subtype-jvm\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_OUTPUT ?? \"build/nominal-subtype-jvm\", route, mode);\n",
+          "start": 3481
+        },
+        {
+          "current": "\tconst expected = genericCompositions ? genericSubtypeManagedWitReview(\"jvm\") : nominalSubtypeJvmReview(mode);\n\tconst configuration = genericCompositions ? genericSubtypeManagedWitConfiguration(\"jvm\", route) : nominalSubtypeJvmConfiguration(route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeJvmReview(mode), configuration = nominalSubtypeJvmConfiguration(route, mode);\n",
+          "start": 4570
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6051
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8123
+        },
+        {
+          "current": "\t\tconst extension = profile === \"java\" ? \"java\" : \"kt\";\n\t\tconst caller = genericCompositions\n\t\t\t? await genericSubtypeManagedWitCaller(\"jvm\", route, profile)\n\t\t\t: await nominalSubtypeJvmCaller(profile, route, mode);\n\t\tconst consumer = join(root, profile);\n",
+          "previous": "\t\tconst extension = profile === \"java\" ? \"java\" : \"kt\", caller = await nominalSubtypeJvmCaller(profile, route, mode), consumer = join(root, profile);\n",
+          "start": 9671
+        },
+        {
+          "current": "\t\t\tassert.equal(run.stderr, \"\");\n\t\t\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeJvmResult(run.stdout, profile, mode);\n",
+          "previous": "\t\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeJvmResult(run.stdout, profile, mode);\n",
+          "start": 11445
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeJvmResult(run.stdout, profile, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeJvmResult(run.stdout, profile, mode);\n",
+          "start": 12922
+        },
+        {
+          "current": "\t\tschemaVersion: 1, route, mode, producerCommit\n\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n\t\t, runtime, builds, receipt\n",
+          "previous": "\t\tschemaVersion: 1, route, mode, producerCommit, runtime, builds, receipt\n",
+          "start": 13582
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-installed-tests.mjs",
+      "previousSha256": "1f76256e46dd31160e22bd4d92c7300ec518291a5c46789619ded3cec60f6229"
+    },
+    {
+      "currentSha256": "58c2e4330f0a408a7420b647f6bb47d4f7de51fa2eb45ea1157480ff6913b011",
+      "edits": [
+        {
+          "current": " * @param options - Optional generic-composition selection.\n * @param options.genericCompositions - Include the closed generic surface.\n",
+          "previous": "",
+          "start": 2534
+        },
+        {
+          "current": "export const nominalSubtypePhpReview = (mode, { genericCompositions = false } = {}) => {\n",
+          "previous": "export const nominalSubtypePhpReview = mode => {\n",
+          "start": 2674
+        },
+        {
+          "current": "\treturn renamed(nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions }));\n",
+          "previous": "\treturn renamed(nominalSubtypeInstalledReview(mode === \"result-only\"));\n",
+          "start": 2814
+        },
+        {
+          "current": " * @param options - Optional generic-composition selection.\n * @param options.genericCompositions - Include the closed generic surface.\n",
+          "previous": "",
+          "start": 3128
+        },
+        {
+          "current": "export const nominalSubtypePhpConfiguration = (route, mode, { genericCompositions = false } = {}) => {\n",
+          "previous": "export const nominalSubtypePhpConfiguration = (route, mode) => {\n",
+          "start": 3268
+        },
+        {
+          "current": "\treturn { ...renamed(nominalSubtypeInstalledConfiguration(route, [\"c\"], mode === \"result-only\", { genericCompositions }))\n",
+          "previous": "\treturn { ...renamed(nominalSubtypeInstalledConfiguration(route, [\"c\"], mode === \"result-only\"))\n",
+          "start": 3422
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-fixture.mjs",
+      "previousSha256": "e6412708fe8027ada8527c9db738c97aeebcafd6aeec0cd21d3ac3f723a6523e"
+    },
+    {
+      "currentSha256": "903ef87e47cae6af1353336585aa8f9dbce831bdd289a660443b3512d6f16018",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 318
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 782
+        },
+        {
+          "current": "import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from \"./generic-subtype-managed-wit.mjs\";\n",
+          "previous": "",
+          "start": 1797
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypePhpSelection(process.env);\nconst genericSelection = genericSubtypeManagedWitSelection(\"php\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic PHP installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypePhpSelection(process.env);\n",
+          "start": 2025
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype PHP compositions\" : \"nominal PHP packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal PHP packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2518
+        },
+        {
+          "current": "\tconst callerPath = `tests/fixtures/${genericCompositions ? \"generic\" : \"nominal\"}-subtype-consumers/php-native.php`;\n\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", callerPath]);\n",
+          "previous": "\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/php-native.php\"]);\n",
+          "start": 3040
+        },
+        {
+          "current": "\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-php\" : \"build/nominal-subtype-php\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_OUTPUT ?? \"build/nominal-subtype-php\", route, mode);\n",
+          "start": 3309
+        },
+        {
+          "current": "\tconst toolEnvironment = genericCompositions ? { ...environment\n\t\t, LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_VERSION: environment.LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_VERSION\n\t\t, LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_COMPOSER_VERSION: environment.LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_COMPOSER_VERSION } : environment;\n\tconst selected = nominalSubtypePhpToolSelection(toolEnvironment), tools = await inspectNominalSubtypePhpTools(selected, output);\n",
+          "previous": "\tconst selected = nominalSubtypePhpToolSelection(environment), tools = await inspectNominalSubtypePhpTools(selected, output);\n",
+          "start": 4146
+        },
+        {
+          "current": "\tconst expected = genericCompositions ? genericSubtypeManagedWitReview(\"php\") : nominalSubtypePhpReview(mode);\n\tconst configuration = genericCompositions ? genericSubtypeManagedWitConfiguration(\"php\", route) : nominalSubtypePhpConfiguration(route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypePhpReview(mode), configuration = nominalSubtypePhpConfiguration(route, mode);\n",
+          "start": 5237
+        },
+        {
+          "current": "\tconst source = await nominalSubtypePhpLeanSource();\n\tconst caller = genericCompositions\n\t\t? await genericSubtypeManagedWitCaller(\"php\", route)\n\t\t: await nominalSubtypePhpCaller(route, mode);\n",
+          "previous": "\tconst source = await nominalSubtypePhpLeanSource(), caller = await nominalSubtypePhpCaller(route, mode);\n",
+          "start": 5719
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6654
+        },
+        {
+          "current": "\t\tassert.equal(model.exports.length, genericCompositions ? 29 : mode === \"full\" ? 26 : 13);\n",
+          "previous": "\t\tassert.equal(model.exports.length, mode === \"full\" ? 26 : 13);\n",
+          "start": 7711
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8669
+        },
+        {
+          "current": "\t\t\tassert.equal(run.stderr, \"\");\n\t\t\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypePhpResult(run.stdout, mode);\n",
+          "previous": "\t\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypePhpResult(run.stdout, mode);\n",
+          "start": 10999
+        },
+        {
+          "current": "\t\tschemaVersion: 1, route, mode, producerCommit\n\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n\t\t, runtime, tools\n",
+          "previous": "\t\tschemaVersion: 1, route, mode, producerCommit, runtime, tools\n",
+          "start": 11999
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-installed-tests.mjs",
+      "previousSha256": "5c507d81e0ce6dc889eab1d7bbbe8371d30bdaee220a37e2eaa07a55ee38417c"
+    },
+    {
+      "currentSha256": "e16be59ad5408800d71f7f3841e404dcc6e7cf38223f0ebccb27173e30502101",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 313
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 777
+        },
+        {
+          "current": "import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from \"./generic-subtype-managed-wit.mjs\";\n",
+          "previous": "",
+          "start": 1671
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeWitSelection(process.env);\nconst genericSelection = genericSubtypeManagedWitSelection(\"wit\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic WIT installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypeWitSelection(process.env);\n",
+          "start": 1899
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype WIT compositions\" : \"nominal WIT packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal WIT packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2392
+        },
+        {
+          "current": "\tfor(const path of genericCompositions\n\t\t? [\"tests/fixtures/generic-subtype-consumers/wit-wasi.c\", \"tests/fixtures/nominal-subtype-consumers/wit-values.h\"]\n\t\t: [\"wit-wasi.c\", \"wit-values.h\", \"wit-inputs.h\"].map(name => `tests/fixtures/nominal-subtype-consumers/${name}`))\n\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", path]);\n",
+          "previous": "\tfor(const name of [\"wit-wasi.c\", \"wit-values.h\", \"wit-inputs.h\"])\n\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", `tests/fixtures/nominal-subtype-consumers/${name}`]);\n",
+          "start": 2925
+        },
+        {
+          "current": "\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_WIT_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-wit\" : \"build/nominal-subtype-wit\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_OUTPUT ?? \"build/nominal-subtype-wit\", route, mode);\n",
+          "start": 3343
+        },
+        {
+          "current": "\tconst expected = genericCompositions ? genericSubtypeManagedWitReview(\"wit\") : nominalSubtypeWitReview(mode);\n\tconst configuration = genericCompositions ? genericSubtypeManagedWitConfiguration(\"wit\", route) : nominalSubtypeWitConfiguration(route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeWitReview(mode), configuration = nominalSubtypeWitConfiguration(route, mode);\n",
+          "start": 5069
+        },
+        {
+          "current": "\tconst caller = genericCompositions\n\t\t? await genericSubtypeManagedWitCaller(\"wit\", route)\n\t\t: await nominalSubtypeWitCaller(route, mode);\n\tawait saveLakeFile(output, \"consumer.c\", caller);\n",
+          "previous": "\tconst caller = await nominalSubtypeWitCaller(route, mode); await saveLakeFile(output, \"consumer.c\", caller);\n",
+          "start": 5652
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6553
+        },
+        {
+          "current": "\t\tassert.equal(model.exports.length, genericCompositions ? 29 : mode === \"full\" ? 26 : 13);\n",
+          "previous": "\t\tassert.equal(model.exports.length, mode === \"full\" ? 26 : 13);\n",
+          "start": 7603
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8517
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeWitResult(run.stdout, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeWitResult(run.stdout, mode);\n",
+          "start": 10262
+        },
+        {
+          "current": "\t\tschemaVersion: 1, route, mode, producerCommit\n\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n\t\t, runtime, tools\n",
+          "previous": "\t\tschemaVersion: 1, route, mode, producerCommit, runtime, tools\n",
+          "start": 11147
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-installed-tests.mjs",
+      "previousSha256": "7dcfe0faeb0654aa29519ab59069a7c0878c924a6b84591cfdd786a1d4a9a0d4"
+    }
+  ]
+}
