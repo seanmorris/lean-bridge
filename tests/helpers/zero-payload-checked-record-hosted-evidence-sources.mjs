@@ -66,6 +66,9 @@ const callers = [
 const nativeCallers = [
 	"c.c", "cpp.cpp", "result-only-c.c", "result-only-cpp.cpp"
 ].map(path => `tests/fixtures/zero-payload-checked-record-native/${path}`);
+const dotnetCallers = [
+	"dotnet.cs"
+].map(path => `tests/fixtures/zero-payload-checked-record-dotnet/${path}`);
 const commonData = [
 	...fixture, ...callers, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -185,6 +188,60 @@ export const zeroPayloadNativeEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-zero-payload-checked-record-native-evidence.mjs"
+				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted .NET artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const zeroPayloadDotnetEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/zero-payload-checked-record-dotnet-installed-tests.mjs"
+				])
+				, ...fixture, ...dotnetCallers, "src/analyze/NativeExports.lean"
+				, "lean-toolchain", "package-lock.json", "package.json"
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/zero-payload-checked-record-dotnet-fixture.mjs"
+				])
+				, ...dotnetCallers, "package-lock.json", "package.json"
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-zero-payload-checked-record-dotnet-ci.mjs"
+					, "tests/zero-payload-checked-record-dotnet.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/zero-payload-checked-record-dotnet.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-zero-payload-checked-record-dotnet-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-zero-payload-checked-record-dotnet-evidence.mjs"
 				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
 			])
 		}

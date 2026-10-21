@@ -10,8 +10,11 @@ import { join } from "node:path";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
-	checkZeroPayloadDotnetCiRecords, parseZeroPayloadDotnetCiArgs
+	parseZeroPayloadDotnetCiArgs
 } from "../tests/helpers/zero-payload-checked-record-dotnet-ci-report.mjs";
+import {
+	zeroPayloadDotnetNegativeControls
+} from "../tests/helpers/zero-payload-checked-record-dotnet-controls.mjs";
 
 const selected = parseZeroPayloadDotnetCiArgs(process.argv.slice(2));
 const directory = await realpath(selected.directory);
@@ -26,8 +29,11 @@ const read = async path => {
 const tap = await readFile(selected.tap, "utf8");
 selected.dotnet = await realpath(selected.dotnet);
 const dotnet = await readFile(selected.dotnet);
-const accepted = await checkZeroPayloadDotnetCiRecords(selected, {
-	tap, read, paths: await nativeArtifactPaths(directory)
-	, dotnetIdentity: { bytes: dotnet.length, sha256: sha256(dotnet) }
-});
-process.stdout.write(canonicalJson(accepted));
+const paths = await nativeArtifactPaths(directory);
+const originals = new Map();
+for(const path of paths) originals.set(path, await read(path));
+const controlled = await zeroPayloadDotnetNegativeControls(originals, {
+	...selected, tapSource: tap
+}, { bytes: dotnet.length, sha256: sha256(dotnet) });
+const { accepted, ...controls } = controlled;
+process.stdout.write(canonicalJson({ ...accepted, controls }));

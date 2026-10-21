@@ -4,15 +4,27 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { isAbsolute } from "node:path";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import {
+	zeroPayloadCheckedRecordFixture
+} from "./zero-payload-checked-record-fixture.mjs";
+import {
 	parseZeroPayloadDotnetResult, zeroPayloadDotnetCaller
 	, zeroPayloadDotnetRoutes, zeroPayloadDotnetSelection
 } from "./zero-payload-checked-record-dotnet-fixture.mjs";
+
+const fixturePaths = Object.freeze([
+	"LICENSE", "ZeroPayloadCheckedRecords.lean", "lakefile.toml"
+	, "lean-toolchain", "package.json"
+]);
+const original = (commit, path) => execFileSync("git", [
+	"show", `${commit}:${zeroPayloadCheckedRecordFixture}/${path}`
+], { maxBuffer: 16 * 1024 * 1024 });
 
 /**
  * Name the only producer test admitted by one route selection.
@@ -211,19 +223,31 @@ export const checkZeroPayloadDotnetCiRecords = async (
 		assert.equal(sha256(receipt.bytes), build.receiptSha256);
 		assert.deepEqual(receipt.value, report.receipt);
 		const inputs = await json(read, `build-${index}/author-inputs.json`);
+		assert.deepEqual(inputs.value.map(item => item.path).sort(), [
+			...fixturePaths, "lean-bridge.exports.json"
+			, ...selection.reviewed ? ["api.binding-ir.json"] : []
+		].sort());
+		assert.ok(inputs.value.every(item => item.mode === 33188));
 		const stableInputs = inputs.value.map(({
 			path, mode, sha256: digest
 		}) => ({ path, mode, sha256: digest }));
 		assert.equal(sha256(canonicalJson(stableInputs))
 			, build.authorInputsSha256);
+		for(const path of fixturePaths)
+			assert.equal(inputs.value.find(item => item.path === path).sha256
+				, sha256(original(selected.producer, path)), path);
+		assert.equal(inputs.value.find(item =>
+			item.path === "lean-bridge.exports.json").sha256
+		, sha256(canonicalJson(selection.configuration)));
+		if(selection.reviewed)
+			assert.equal(inputs.value.find(item =>
+				item.path === "api.binding-ir.json").sha256, sha256(expected));
 		assert.equal((await read(
 			`build-${index}/lean-bridge.exports.json`
 		)).toString(), canonicalJson(selection.configuration));
-		assert.equal((await read(
+		assert.deepEqual(await read(
 			`build-${index}/ZeroPayloadCheckedRecords.lean`
-		)).toString(), (await read(
-			"build-0/ZeroPayloadCheckedRecords.lean"
-		)).toString());
+		), original(selected.producer, "ZeroPayloadCheckedRecords.lean"));
 		if(selection.reviewed)
 			assert.equal((await read(
 				`build-${index}/api.binding-ir.json`

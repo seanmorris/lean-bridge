@@ -63,7 +63,7 @@ export const checkZeroPayloadNativeCiRecords = async (options, original) => {
 		Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]));
 	assertNativeTap(acceptanceTap, 1, 0
 		, `installed zero-payload records reproduce and relocate in C/C++ for ${selected.route}`);
-	assertNativeTap(controlsTap, 25, 7);
+	assertNativeTap(controlsTap, 26, 7);
 	assert.deepEqual(Object.keys(runtime).sort()
 		, ["arch", "cc", "cpp", "glibc", "platform"]);
 	const report = JSON.parse(await read("report.json"));
@@ -98,7 +98,7 @@ export const checkZeroPayloadNativeCiRecords = async (options, original) => {
 			, checker: selected.checker
 		}
 		, controls: {
-			fastPasses: 18, skippedInstalledOrLeanTests: 7
+			fastPasses: 19, skippedInstalledOrLeanTests: 7
 			, destructiveMutations: 8
 		}
 	};
