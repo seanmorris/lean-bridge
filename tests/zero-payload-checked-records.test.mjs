@@ -13,10 +13,11 @@ import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { hashBindingIr } from "../src/binding-ir/canonical.mjs";
 import { validateNativeType } from "../src/analyze/native-types.mjs";
+import { validateCheckedRefinementSelection } from "../src/analyze/checked-refinement-selection.mjs";
 import { reviewedContractDifference, reviewedSourceSelection, validateReviewedSource } from "../src/analyze/reviewed-source.mjs";
 import { buildElaboratedComponent } from "../src/build/elaborated-component.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../src/build/native-graph-model.mjs";
-import { assertJsonSchema } from "./helpers/json-schema.mjs";
+import { assertJsonSchema, jsonSchemaErrors } from "./helpers/json-schema.mjs";
 import {
 	erasedProofsKey, refinementsKey, zeroPayloadCheckedRecordContracts, zeroPayloadCheckedRecordFixture
 	, zeroPayloadCheckedRecordModule, zeroPayloadCheckedRecordRefusalSource, zeroPayloadCheckedRecordRefusals
@@ -83,6 +84,14 @@ test("native metadata admits zero-payload checked records only through a constru
 		, ["an empty erased list", () => validateNativeType({ ...witness, erased: [] }, 0, false, "result")]
 		, ["a proof-only record inside a parameter array", () => validateNativeType({ kind: "array", element: witness, abi }, 0, false, "parameter")]];
 	for(const [label, check] of refused) assert.throws(check, TypeError, label);
+});
+
+test("compiler plans retain empty checked-record input and result trees", async () => {
+	const input = { kind: "checked-record", name: `${module}.Witness`, constructor: `${module}.mkWitness`, fields: [] };
+	const result = { ...input, constructor: null };
+	assert.deepEqual(validateCheckedRefinementSelection(input), input);
+	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/refinement", input), null);
+	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/resultRefinement", result), null);
 });
 
 const nativeModel = async (t, { extra = "", contracts = zeroPayloadCheckedRecordContracts(), review } = {}) => {

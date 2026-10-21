@@ -273,7 +273,7 @@ export const validateElaboratedMetadata = (report, request) => {
 								|| (Object.hasOwn(type, "provenance") && depth !== 0)
 								|| !Array.isArray(type.erased) || !type.erased.length || type.erased.length > 1024
 								|| new Set(type.erased).size !== type.erased.length || type.erased.some(name => !text(name) || !/^[A-Za-z_][A-Za-z0-9_']*$/.test(name))
-							|| !Array.isArray(type.fields) || !type.fields.length || type.fields.some(field => type.erased.includes(field?.name)))) fail("Invalid checked record");
+							|| !Array.isArray(type.fields) || type.fields.some(field => type.erased.includes(field?.name)))) fail("Invalid checked record");
 						if(!text(type.name) || !/^[A-Za-z_][A-Za-z0-9_']*(\.[A-Za-z_][A-Za-z0-9_']*)*$/.test(type.name)
 							|| !Array.isArray(type.fields) || type.fields.length > 1024) fail("Invalid component record");
 						// An instantiated generic record names its structure and the resolved type arguments.

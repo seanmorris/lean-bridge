@@ -31,7 +31,7 @@ export const validateCheckedRefinementSelection = selection => {
 				closed(value, ["kind", "name", "constructor", "fields"]);
 				if(typeof value.name !== "string" || !leanName.test(value.name)
 					|| typeof value.constructor !== "string" || !leanName.test(value.constructor)
-					|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024) fail();
+					|| !Array.isArray(value.fields) || value.fields.length > 1024) fail();
 				const names = new Set();
 				for(const field of value.fields)
 				{
