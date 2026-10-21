@@ -9,6 +9,7 @@ import test from "node:test";
 import {
 	checkZeroPayloadPhpEvidence, zeroPayloadPhpEvidence
 } from "./helpers/zero-payload-checked-record-php-evidence.mjs";
+import "./helpers/zero-payload-language-evidence-source-history-tests.mjs";
 
 test("hosted zero-payload PHP archive authenticates every retained route", {
 	timeout: 120_000
