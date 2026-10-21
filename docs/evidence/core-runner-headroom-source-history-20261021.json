@@ -1,0 +1,63 @@
+{
+  "additions": [
+    {
+      "currentSha256": "362f39760c6bde142dc9cc2f6c04c779dd7f73ebd28a2ac34e7b12eb1cc043a7",
+      "path": "scripts/update-core-runner-headroom-source-history.mjs"
+    },
+    {
+      "currentSha256": "83af0d3f4355c39e3686af315e0e1c7c7f02d6af420489f2c7a7a38c885ee656",
+      "path": "tests/helpers/core-runner-headroom-source-history.mjs"
+    },
+    {
+      "currentSha256": "539702e110648544cba91e5fb5516741d263329c79b594e8fc15a1ee8d339102",
+      "path": "tests/helpers/core-runner-headroom-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "17716f7162e8607cffb484699cfbec7121d06194",
+  "milestone": "core-runner-headroom-source-v1",
+  "predecessorCommit": "fce86f9eb299073eca8dc0ab4ebeafabdb01381f",
+  "reconciledTypeSurfacePointers": 4,
+  "schemaVersion": 1,
+  "scope": "Hosted Core contract runner disk reclamation and failure diagnostics before and after full-history archive-heavy shards.",
+  "updates": [
+    {
+      "currentSha256": "d35f122c03c600842f4cfcbf167d9fbd33a143dd2005635234ea623f4af7fda1",
+      "edits": [
+        {
+          "current": "      # The full-history evidence checkout needs about 18 GB; hosted runners start\n      # with roughly 20 GB free, and archive-copying tests then exhaust the disk.\n      - name: Free hosted runner disk for the evidence checkout\n        run: |\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n",
+          "previous": "",
+          "start": 1687
+        },
+        {
+          "current": "      - name: Report disk after the evidence checkout\n        run: df -h / \"$GITHUB_WORKSPACE\"\n",
+          "previous": "",
+          "start": 2327
+        },
+        {
+          "current": "      - name: Report disk and memory after the shard\n        if: always()\n        run: |\n          df -h / \"$RUNNER_TEMP\" \"$GITHUB_WORKSPACE\"\n          free -m\n",
+          "previous": "",
+          "start": 3793
+        }
+      ],
+      "path": ".github/workflows/quality.yml",
+      "previousSha256": "3942b96d9e63fba321413fbd34509dffe9581330980d16de67a19cdc6df12f18"
+    },
+    {
+      "currentSha256": "230a327cff707b29e0cc7d0c5b546144ecba9671da4d5b28a744e2d8b09fc912",
+      "edits": [
+        {
+          "current": "\tassert.equal([...source.matchAll(/^\\s+- name: Free hosted runner disk for the evidence checkout\\s*$/gmu)].length, 1\n\t\t, \"Only the archive-heavy contract matrix must remove unused hosted SDKs\");\n\tassert.match(source, /- name: Free hosted runner disk for the evidence checkout\\n {8}run: \\|\\n {10}df -h \\/\\n {10}sudo rm -rf \\/usr\\/share\\/dotnet \\/usr\\/local\\/lib\\/android \\/opt\\/ghc \\/usr\\/local\\/\\.ghcup \\/opt\\/hostedtoolcache\\/CodeQL\\n {10}df -h \\/\\n {6}- name: Check out the exact revision/u\n\t\t, \"Core must reclaim only reviewed preinstalled SDK roots before its full-history checkout\");\n\tassert.equal([...source.matchAll(/^\\s+- name: Report disk after the evidence checkout\\s*$/gmu)].length, 1);\n\tassert.match(source, /- name: Report disk after the evidence checkout\\n {8}run: df -h \\/ \"\\$GITHUB_WORKSPACE\"/u);\n\tassert.equal([...source.matchAll(/^\\s+- name: Report disk and memory after the shard\\s*$/gmu)].length, 1);\n\tassert.match(source, /- name: Report disk and memory after the shard\\n {8}if: always\\(\\)\\n {8}run: \\|\\n {10}df -h \\/ \"\\$RUNNER_TEMP\" \"\\$GITHUB_WORKSPACE\"\\n {10}free -m/u\n\t\t, \"Core must retain terminal disk and memory diagnostics even when a shard fails\");\n",
+          "previous": "",
+          "start": 2434
+        },
+        {
+          "current": "\t\t, source.replace(\"/opt/hostedtoolcache/CodeQL\", \"/opt/hostedtoolcache\")\n\t\t, source.replace('df -h / \"$GITHUB_WORKSPACE\"', \"true\")\n\t\t, source.replace(\"Report disk and memory after the shard\\n        if: always()\"\n\t\t\t, \"Report disk and memory after the shard\\n        if: success()\")\n",
+          "previous": "",
+          "start": 11151
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-tests.mjs",
+      "previousSha256": "20366e76c9bd867a28d606815e0411db23ad26cae500792951c9de0b7d4fb0f7"
+    }
+  ]
+}

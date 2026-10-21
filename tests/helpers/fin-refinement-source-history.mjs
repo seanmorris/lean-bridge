@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCoreRunnerHeadroomSource, coreRunnerHeadroomChangedPaths } from "./core-runner-headroom-source-history.mjs";
 import { beforeGenericSubtypeCompositionSource, genericSubtypeCompositionChangedPaths } from "./generic-subtype-composition-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptTransferSource, ownedSubtypeJavaScriptTransferChangedPaths } from "./owned-subtype-javascript-transfer-source-history.mjs";
 import { beforeOwnedSubtypeJavaScriptHistoricalSource, beforeOwnedSubtypeJavaScriptSource, ownedSubtypeJavaScriptChangedPaths } from "./owned-subtype-javascript-source-history.mjs";
@@ -1391,7 +1392,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeCompositionChangedPaths
+	...coreRunnerHeadroomChangedPaths
+	, ...genericSubtypeCompositionChangedPaths
 	, ...ownedSubtypeJavaScriptTransferChangedPaths
 	, ...ownedSubtypeJavaScriptChangedPaths
 	, ...ownedRefinementCarriersChangedPaths
@@ -1855,8 +1857,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericSubtype = beforeGenericSubtypeCompositionSource(
+	const runnerHeadroom = beforeCoreRunnerHeadroomSource(
 		path, text, expected
+	);
+	if(sha256(runnerHeadroom) === expected) return runnerHeadroom;
+	const genericSubtype = beforeGenericSubtypeCompositionSource(
+		path, runnerHeadroom, expected
 	);
 	if(sha256(genericSubtype) === expected) return genericSubtype;
 	const ownedJavaScriptTransfer = beforeOwnedSubtypeJavaScriptTransferSource(
