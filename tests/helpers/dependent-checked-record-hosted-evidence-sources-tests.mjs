@@ -10,6 +10,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
 	dependentCheckedRecordHostedOriginal
+	, dependentCheckedRecordPerlEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
 	, dependentCheckedRecordRustEvidenceSources
@@ -74,6 +75,18 @@ test("dependent Rust evidence closes crate production, consumption and checking 
 	, ["checker", "scripts/check-dependent-checked-record-rust-ci.mjs"]
 	, ["checker", "scripts/bootstrap-rust-ci.sh"]
 	, ["archiver", "scripts/archive-dependent-checked-record-rust-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent Perl evidence closes CPAN production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPerlEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/perl.pl"]
+	, ["checker", ".github/workflows/dependent-checked-record-perl.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-perl-ci.mjs"]
+	, ["checker", "scripts/build-perl-toolchains.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-perl-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

@@ -1,6 +1,6 @@
 /**
  * Reconstruct the exact source closures behind hosted dependent checked-record
- * Python, Ruby and Rust production, consumption, checking and archiving.
+ * Python, Ruby, Rust and Perl production, consumption, checking and archiving.
  *
  * @file
  */
@@ -194,6 +194,55 @@ export const dependentCheckedRecordRustEvidenceSources = value => {
 			role: "archiver", revision: selected.archiver
 			, paths: closure(selected.archiver, [
 				"scripts/archive-dependent-checked-record-rust-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source that explains the hosted four-ABI Perl CPAN artifact.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordPerlEvidenceSources = value => {
+	const selected = revisions(value);
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-perl-installed-tests.mjs"
+				])
+				, ...commonData, caller("perl.pl")
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-perl-fixture.mjs"
+				])
+				, caller("perl.pl")
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-perl-ci.mjs"
+					, "tests/helpers/dependent-checked-record-perl-tests.mjs"
+				])
+				, boundedApt, ".github/workflows/dependent-checked-record-perl.yml"
+				, "scripts/bootstrap-toolchains.sh"
+				, "scripts/build-perl-toolchains.mjs", "scripts/env.sh"
+				, "scripts/run-dependent-checked-record-perl-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-perl-evidence.mjs"
 				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
 			])
 		}
