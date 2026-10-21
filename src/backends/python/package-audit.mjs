@@ -101,12 +101,7 @@ export const auditPythonPackage = (ir, files) => {
 	{
 		fail("untyped-public-api", "the Python stub exposes Any or a raw identity value");
 	}
-	const rawIdentity = [...stub.matchAll(/\b(handle|token)\s*:/giu)].find(match => {
-		const lineStart = stub.lastIndexOf("\n", match.index) + 1;
-		const prefix = stub.slice(lineStart, match.index);
-		return !(/^\s*class\s+$/u.test(prefix)
-			&& explicitCopiedValue(ir, "class", match[1]));
-	});
+	const rawIdentity = [...stub.matchAll(/^\s*(handle|token)\s*:/gimu)][0];
 	if(rawIdentity)
 	{
 		fail("untyped-public-api"

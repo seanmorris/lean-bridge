@@ -130,7 +130,7 @@ test("zero-payload Python carriers preserve empty, Unit, Option, array and varia
 		const leaked = { ...files };
 		leaked[`${zeroPayloadPythonPackage}/__init__.py`] += "\ndef token(): pass\n";
 		assert.throws(() => auditPythonPackage(expected, leaked), error =>
-			error.code === "generic-dispatch" && error.details.name === "token");
+			error.code === "generic-dispatch" && error.details.declaration === "def token");
 	}
 });
 
