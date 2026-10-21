@@ -1,0 +1,125 @@
+{
+  "additions": [
+    {
+      "currentSha256": "72756326a5401a18d7df7b1836df4ca768370bc4829b1491960dc0a504b3a38d",
+      "path": ".github/workflows/dependent-checked-record-dotnet.yml"
+    },
+    {
+      "currentSha256": "a01068a2c15946298558f3ecfd3b663de967aedd536c38326d3f7c848fb50be5",
+      "path": "scripts/check-dependent-checked-record-dotnet-ci.mjs"
+    },
+    {
+      "currentSha256": "1ae19c69b476f74be6da1188291b89bf6e4f51693081520cac6d637b12bdbc2d",
+      "path": "scripts/run-dependent-checked-record-dotnet-ci.sh"
+    },
+    {
+      "currentSha256": "8318a5236174f964f35fac3395121b56700b8a9665211e1f5b908e949b9f9211",
+      "path": "tests/fixtures/dependent-checked-record-consumers/dotnet.cs"
+    },
+    {
+      "currentSha256": "f0c4d7588ecac8c66b84cae8ba0780c9a5545105fad206cf9f3794620a6e8ea1",
+      "path": "tests/helpers/dependent-checked-record-dotnet-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "92dff1383c3925baffad3e7ae44fb1ed5c56848c8f803a12363c55fbc55634cb",
+      "path": "tests/helpers/dependent-checked-record-dotnet-ci-report.mjs"
+    },
+    {
+      "currentSha256": "2f79000b0a7586709fd6b8262163e373462f38cc158093a0008ca988b1e61989",
+      "path": "tests/helpers/dependent-checked-record-dotnet-controls.mjs"
+    },
+    {
+      "currentSha256": "53edfecabc175d7ee381edbdac5a5e2640b88e3e7c65dbb5a1ba33574a821177",
+      "path": "tests/helpers/dependent-checked-record-dotnet-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "302d678cfa796de3833e18ecc9f2e16b4bf87dad8e7b478c0947604d509d81dc",
+      "path": "tests/helpers/dependent-checked-record-dotnet-fixture.mjs"
+    },
+    {
+      "currentSha256": "d66b7759abdceac78eca6483de186376dc621bf6a595d4b8bf4452442ff0005c",
+      "path": "tests/helpers/dependent-checked-record-dotnet-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "27d59a55cb2ba810606fb75f166d9fedfe5933fc8866831f0986a1556bdb4349",
+      "path": "tests/helpers/dependent-checked-record-dotnet-model/Model.cs"
+    },
+    {
+      "currentSha256": "734c9a4eee468cb723713c68a9e43702c796b71126e7eda08e4b0dc15dc39474",
+      "path": "tests/helpers/dependent-checked-record-dotnet-model/model.csproj"
+    },
+    {
+      "currentSha256": "9b5995af71da8d85e7a0f343ff897ba0f4e69314743a376e62ba0c9cf89f39a4",
+      "path": "scripts/update-dependent-checked-record-dotnet-source-history.mjs"
+    },
+    {
+      "currentSha256": "8b7a83ba6ddae3a97f8ce1b7200780caf069f7a2b298af7accf5ccc9b07800fd",
+      "path": "tests/helpers/dependent-checked-record-dotnet-source-history.mjs"
+    },
+    {
+      "currentSha256": "21af47ea7f8bb6e6e9c693ca8cb2662ae2bab4e5ff54b079047db405dd899182",
+      "path": "tests/helpers/dependent-checked-record-dotnet-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "2901f265b6c647c0a05324485e8bd3e3c06ee74b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6a079484b04f9b7e8fb7228d5942c42e492cf2d4c2512d7104ddf51de9e81442",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordDotnetSource, dependentCheckedRecordDotnetChangedPaths, dependentCheckedRecordDotnetIntegrationPaths } from \"./dependent-checked-record-dotnet-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordDotnetChangedPaths\n\t, ...dependentCheckedRecordDotnetIntegrationPaths\n\t, ...dependentCheckedRecordWitChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordWitChangedPaths\n",
+          "start": 125374
+        },
+        {
+          "current": "\tconst dependentCheckedRecordDotnet\n\t\t= beforeDependentCheckedRecordDotnetSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordDotnet) === expected)\n\t\treturn dependentCheckedRecordDotnet;\n",
+          "previous": "",
+          "start": 153604
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordWitSource(\n\t\t\tpath, dependentCheckedRecordDotnet, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordWitSource(path, text, expected);\n",
+          "start": 153835
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "65e7b8270a601cfa64bf16e651dfbdac9dd619f607576f46bb8696989cd21267"
+    },
+    {
+      "currentSha256": "fd5ff32cfaa2397db3f33868dc8eba94c4d601ba754590f3536fba1d4fbf545f",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-dotnet-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "4bc924ff706bb3e3d4efae17fb52469b0e21c8e35f9eb5d323429c5637dd0bac"
+    }
+  ],
+  "milestone": "dependent-checked-record-dotnet-source-v1",
+  "predecessorCommit": "91424a1013a084985384f064e7eb8d53c348f112",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline as NuGet packages consumed by an independent C# caller, in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "b7fb3e1dac147b2c0954ff649ae563a3dec91422e107c3513c276baf38e2db6f",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-dotnet-fixture-tests.mjs\";\nimport \"./helpers/dependent-checked-record-dotnet-ci-report-tests.mjs\";\nimport \"./helpers/dependent-checked-record-dotnet-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 1458
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "6348ffa4b02e561e514c9fa479aa4adca006931378972a86e808c938f4f968e1"
+    }
+  ]
+}

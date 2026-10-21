@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordDotnetSource, dependentCheckedRecordDotnetChangedPaths, dependentCheckedRecordDotnetIntegrationPaths } from "./dependent-checked-record-dotnet-source-history.mjs";
 import { beforeDependentCheckedRecordWitSource, dependentCheckedRecordWitChangedPaths, dependentCheckedRecordWitIntegrationPaths } from "./dependent-checked-record-wit-source-history.mjs";
 import { beforeDependentCheckedRecordPhpSource, dependentCheckedRecordPhpChangedPaths, dependentCheckedRecordPhpIntegrationPaths } from "./dependent-checked-record-php-source-history.mjs";
 import { beforeDependentCheckedRecordRustArchiveSource, dependentCheckedRecordRustArchiveIntegrationPaths } from "./dependent-checked-record-rust-archive-source-history.mjs";
@@ -1473,7 +1474,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordWitChangedPaths
+	...dependentCheckedRecordDotnetChangedPaths
+	, ...dependentCheckedRecordDotnetIntegrationPaths
+	, ...dependentCheckedRecordWitChangedPaths
 	, ...dependentCheckedRecordWitIntegrationPaths
 	, ...dependentCheckedRecordPhpChangedPaths
 	, ...dependentCheckedRecordPhpIntegrationPaths
@@ -2096,8 +2099,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordDotnet
+		= beforeDependentCheckedRecordDotnetSource(path, text, expected);
+	if(sha256(dependentCheckedRecordDotnet) === expected)
+		return dependentCheckedRecordDotnet;
 	const dependentCheckedRecordWit
-		= beforeDependentCheckedRecordWitSource(path, text, expected);
+		= beforeDependentCheckedRecordWitSource(
+			path, dependentCheckedRecordDotnet, expected
+		);
 	if(sha256(dependentCheckedRecordWit) === expected)
 		return dependentCheckedRecordWit;
 	const dependentCheckedRecordPhp
