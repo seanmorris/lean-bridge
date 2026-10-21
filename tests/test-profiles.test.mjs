@@ -43,6 +43,7 @@ test("every repository test receives exactly one named execution profile", async
 		, "checked-record-value-index-native-evidence"
 		, "checked-record-value-index-php"
 		, "checked-record-value-index-python"
+		, "zero-payload-checked-record-browser-evidence"
 		, "zero-payload-checked-record-native-evidence"
 		, "zero-payload-checked-record-native-promotion"
 		, "zero-payload-checked-record-dotnet-evidence"
