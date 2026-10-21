@@ -31,6 +31,16 @@ export const zeroPayloadPerlCounts = Object.freeze({
 });
 
 /**
+ * Return the compact independent-caller receipt for one route.
+ *
+ * @param route - Closed author/API route.
+ */
+export const zeroPayloadPerlExpected = route => {
+	const { resultOnly } = zeroPayloadPerlSelection(route);
+	return zeroPayloadPerlCounts[resultOnly ? "result-only" : "full"];
+};
+
+/**
  * Select one exact ordinary/reviewed and full/result-only CPAN package.
  *
  * @param route - Closed author/API route.
@@ -74,9 +84,8 @@ export const zeroPayloadPerlCaller = () => readFile(
 export const parseZeroPayloadPerlResult = (stdout, route) => {
 	assert.equal(typeof stdout, "string");
 	assert.ok(stdout.endsWith("\n"));
-	const mode = zeroPayloadPerlSelection(route).resultOnly ? "result-only" : "full";
 	const result = JSON.parse(stdout);
-	assert.deepEqual(result, zeroPayloadPerlCounts[mode]);
+	assert.deepEqual(result, zeroPayloadPerlExpected(route));
 	return result;
 };
 

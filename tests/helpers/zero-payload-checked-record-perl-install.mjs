@@ -28,6 +28,7 @@ import {
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 export const zeroPayloadPerlExecutables = checkedRecordPerlExecutables;
+export { zeroPayloadPerlConfigurations, zeroPayloadPerlInstallModes };
 
 /**
  * Bind the component package and shared runtime to the prepared receipt.
