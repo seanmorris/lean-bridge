@@ -1,0 +1,76 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a146c7bcf83acb98a9bff7a36acd486055b41f5518aa1404f570de122194cafd",
+      "path": "scripts/update-dependent-generic-subtype-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "291e570b4bec3ab4e5a24e290ed67f748060e648108b9ec7067b86d246cc2f4d",
+      "path": "tests/helpers/dependent-generic-subtype-ci-source-history.mjs"
+    },
+    {
+      "currentSha256": "31a42ec0c895827ce1bd24c708f0e696ee1b4b17ae674253603404e93c485bc3",
+      "path": "tests/helpers/dependent-generic-subtype-ci-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "01aad0d0f089e3a255a9d6d74227815538a4d14f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f375bdda1b0a04a47e7cc795195df301918790550f84c733d34e5689b8348403",
+      "edits": [
+        {
+          "current": "import { beforeDependentGenericSubtypeCiSource, dependentGenericSubtypeCiChangedPaths, dependentGenericSubtypeCiIntegrationPaths } from \"./dependent-generic-subtype-ci-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentGenericSubtypeCiChangedPaths\n\t, ...dependentGenericSubtypeCiIntegrationPaths\n\t, ...dependentGenericSubtypeChangedPaths\n",
+          "previous": "\t...dependentGenericSubtypeChangedPaths\n",
+          "start": 122403
+        },
+        {
+          "current": "\tconst dependentGenericSubtypeCi = beforeDependentGenericSubtypeCiSource(\n",
+          "previous": "\tconst dependentGenericSubtype = beforeDependentGenericSubtypeSource(\n",
+          "start": 149215
+        },
+        {
+          "current": "\tif(sha256(dependentGenericSubtypeCi) === expected)\n\t\treturn dependentGenericSubtypeCi;\n\tconst dependentGenericSubtype = beforeDependentGenericSubtypeSource(\n\t\tpath, dependentGenericSubtypeCi, expected\n\t);\n",
+          "previous": "",
+          "start": 149316
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "6f91225e459bf1fd2a73574b76b184fafd545c61b0eef2d765afe3f681f88a08"
+    },
+    {
+      "currentSha256": "dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-generic-subtype-ci-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3022
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a416a03c55fb4bbc23eeeccef2cf359d82d934a1db045440fb54f6a25dc37c4d"
+    }
+  ],
+  "milestone": "dependent-generic-subtype-ci-source-v1",
+  "predecessorCommit": "67178c2c8c24323bd5cdb305da630b6f2e0a5c61",
+  "schemaVersion": 1,
+  "scope": "Recurring exact-revision fresh-Lean extraction, independent-review reconciliation, native adapter compilation, static contracts, reversible history and JavaScript typechecking for dependent generic checked Subtypes.",
+  "updates": [
+    {
+      "currentSha256": "0b1cc586c533b3a1a3a1be6b8b5022db0395fb694cb9bc056a8af699a67d060e",
+      "edits": [
+        {
+          "current": "  dependent-foundation:\n    name: Dependent generic checked Subtype compiler and review contract\n    runs-on: ubuntu-24.04\n    timeout-minutes: 50\n    steps:\n      - name: Free hosted runner disk before checkout\n        shell: bash\n        run: |\n          set -euo pipefail\n          df -h /\n          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL\n          df -h /\n      - name: Check out the exact revision\n        uses: actions/checkout@v6\n        with:\n          fetch-depth: 0\n          persist-credentials: false\n      - name: Install Node.js\n        uses: actions/setup-node@v6\n        with:\n          node-version: \"22\"\n          cache: npm\n      - name: Bound apt network waits\n        uses: ./.github/actions/bounded-apt\n        timeout-minutes: 1\n      - name: Install compiler dependencies\n        timeout-minutes: 20\n        run: |\n          sudo apt-get update\n          sudo apt-get install -y build-essential cmake git libgmp-dev libuv1-dev m4 pkg-config\n      - name: Install dependencies and the pinned Lean compiler\n        timeout-minutes: 30\n        shell: bash\n        run: |\n          set -euo pipefail\n          npm ci --ignore-scripts --no-audit --no-fund\n          mkdir -p build\n          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/dependent-generic-subtype-toolchain.log\n      - name: Verify dependent generic checked Subtypes\n        id: acceptance\n        timeout-minutes: 20\n        shell: bash\n        run: |\n          set -euo pipefail\n          source scripts/env.sh\n          {\n            node --test \\\n              tests/helpers/nominal-subtype-selection-tests.mjs \\\n              tests/helpers/nominal-subtype-native-tests.mjs \\\n              tests/helpers/dependent-generic-subtype-source-history-tests.mjs\n            LEAN_BRIDGE_NOMINAL_SUBTYPE_SELECTION_TEST=1 \\\n              node --test --test-concurrency=1 \\\n              tests/helpers/nominal-subtype-selection-extractor-tests.mjs\n            npm run typecheck\n          } 2>&1 | tee build/dependent-generic-subtype.tap\n      - name: Preserve complete and partial foundation records\n        if: always()\n        uses: actions/upload-artifact@v7\n        with:\n          name: dependent-generic-subtype-${{ github.sha }}\n          path: |\n            build/dependent-generic-subtype.tap\n            build/dependent-generic-subtype-toolchain.log\n          if-no-files-found: error\n          retention-days: 30\n      - name: Enforce dependent generic checked Subtype acceptance\n        if: always() && steps.acceptance.outcome != 'success'\n        run: exit 1\n\n",
+          "previous": "",
+          "start": 226
+        }
+      ],
+      "path": ".github/workflows/generic-subtype-native-perl.yml",
+      "previousSha256": "d4af1c6108c1485c40d99b97891cce3f5a0318d78a5cfc5cdfc7917d4fafef19"
+    }
+  ]
+}

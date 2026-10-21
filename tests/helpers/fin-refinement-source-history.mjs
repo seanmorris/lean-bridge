@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentGenericSubtypeCiSource, dependentGenericSubtypeCiChangedPaths, dependentGenericSubtypeCiIntegrationPaths } from "./dependent-generic-subtype-ci-source-history.mjs";
 import { beforeDependentGenericSubtypeSource, dependentGenericSubtypeChangedPaths, dependentGenericSubtypeIntegrationPaths } from "./dependent-generic-subtype-source-history.mjs";
 import { beforeGenericSubtypeTestRegistrationSource, genericSubtypeTestRegistrationChangedPaths, genericSubtypeTestRegistrationIntegrationPaths } from "./generic-subtype-test-registration-source-history.mjs";
 import { beforeGenericSubtypeManagedWitSource, genericSubtypeManagedWitChangedPaths, genericSubtypeManagedWitIntegrationPaths } from "./generic-subtype-managed-wit-source-history.mjs";
@@ -1459,7 +1460,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentGenericSubtypeChangedPaths
+	...dependentGenericSubtypeCiChangedPaths
+	, ...dependentGenericSubtypeCiIntegrationPaths
+	, ...dependentGenericSubtypeChangedPaths
 	, ...dependentGenericSubtypeIntegrationPaths
 	, ...genericSubtypeTestRegistrationChangedPaths
 	, ...genericSubtypeTestRegistrationIntegrationPaths
@@ -2055,8 +2058,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const dependentGenericSubtype = beforeDependentGenericSubtypeSource(
+	const dependentGenericSubtypeCi = beforeDependentGenericSubtypeCiSource(
 		path, text, expected
+	);
+	if(sha256(dependentGenericSubtypeCi) === expected)
+		return dependentGenericSubtypeCi;
+	const dependentGenericSubtype = beforeDependentGenericSubtypeSource(
+		path, dependentGenericSubtypeCi, expected
 	);
 	if(sha256(dependentGenericSubtype) === expected)
 		return dependentGenericSubtype;
