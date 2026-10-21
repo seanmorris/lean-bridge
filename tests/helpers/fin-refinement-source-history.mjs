@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeHistoryPinReconciliationSource, callbackSubtypeHistoryPinReconciliationChangedPaths, callbackSubtypeHistoryPinReconciliationIntegrationPaths } from "./callback-subtype-history-pin-reconciliation-source-history.mjs";
 import { beforeCallbackSubtypeRemainingPhpRepairSource, callbackSubtypeRemainingPhpRepairChangedPaths, callbackSubtypeRemainingPhpRepairIntegrationPaths } from "./callback-subtype-remaining-php-repair-source-history.mjs";
 import { beforeZeroPayloadPhpWasmPromotionSource, zeroPayloadPhpWasmPromotionChangedPaths, zeroPayloadPhpWasmPromotionIntegrationPaths } from "./zero-payload-php-wasm-promotion-source-history.mjs";
 import { beforeZeroPayloadPhpWasmArchiveSource, zeroPayloadPhpWasmArchiveChangedPaths, zeroPayloadPhpWasmArchiveIntegrationPaths } from "./zero-payload-php-wasm-archive-source-history.mjs";
@@ -1453,7 +1454,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeRemainingPhpRepairChangedPaths
+	...callbackSubtypeHistoryPinReconciliationChangedPaths
+	, ...callbackSubtypeHistoryPinReconciliationIntegrationPaths
+	, ...callbackSubtypeRemainingPhpRepairChangedPaths
 	, ...callbackSubtypeRemainingPhpRepairIntegrationPaths
 	, ...zeroPayloadPhpWasmPromotionChangedPaths
 	, ...zeroPayloadPhpWasmPromotionIntegrationPaths
@@ -2037,8 +2040,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(
+	const pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(
 		path, text, expected
+	);
+	if(sha256(pinReconciliation) === expected) return pinReconciliation;
+	const phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(
+		path, pinReconciliation, expected
 	);
 	if(sha256(phpCallbackRepair) === expected) return phpCallbackRepair;
 	const phpWasmPromotion = beforeZeroPayloadPhpWasmPromotionSource(

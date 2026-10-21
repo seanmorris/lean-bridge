@@ -1,0 +1,87 @@
+{
+  "additions": [
+    {
+      "currentSha256": "636f4740007956947480d49d9d6703ce1f914b1a60bd88bc00a7dfa7f202b8da",
+      "path": "scripts/update-callback-subtype-history-pin-reconciliation-source-history.mjs"
+    },
+    {
+      "currentSha256": "19b677ac7e6b5a2dee0ccd687b0b045b920caa66e9c9a379698d80f9c516e5ce",
+      "path": "tests/helpers/callback-subtype-history-pin-reconciliation-source-history.mjs"
+    },
+    {
+      "currentSha256": "2333bfa0a8d97b212cdff43bd14a5f3d0cd516ce865ce77388809b04725e58ca",
+      "path": "tests/helpers/callback-subtype-history-pin-reconciliation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "2b33749ca85b3ce37a8fcb68fa9beb4db47b2098",
+  "integrationUpdates": [
+    {
+      "currentSha256": "ca0f99716e6cea4dca0bac2f33f67dc6612d6890fabd6a237aa1095c1498b95d",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeHistoryPinReconciliationSource, callbackSubtypeHistoryPinReconciliationChangedPaths, callbackSubtypeHistoryPinReconciliationIntegrationPaths } from \"./callback-subtype-history-pin-reconciliation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeHistoryPinReconciliationChangedPaths\n\t, ...callbackSubtypeHistoryPinReconciliationIntegrationPaths\n\t, ...callbackSubtypeRemainingPhpRepairChangedPaths\n",
+          "previous": "\t...callbackSubtypeRemainingPhpRepairChangedPaths\n",
+          "start": 121279
+        },
+        {
+          "current": "\tconst pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(\n",
+          "previous": "\tconst phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(\n",
+          "start": 147543
+        },
+        {
+          "current": "\tif(sha256(pinReconciliation) === expected) return pinReconciliation;\n\tconst phpCallbackRepair = beforeCallbackSubtypeRemainingPhpRepairSource(\n\t\tpath, pinReconciliation, expected\n\t);\n",
+          "previous": "",
+          "start": 147650
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "00ee4be5bf7fa53a8bbcb5028e7ab4bb3ba743e773c1f1e6fd1ab164d9125879"
+    },
+    {
+      "currentSha256": "7aab777e2e408545f5fd1d33cddb2de52ee0759eddfaf77f7b86b54524ef2fb1",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-history-pin-reconciliation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 206
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-hosted-promotion.test.mjs",
+      "previousSha256": "ac7486d7c5c06988b1957ef64a263b652a853978887b59ce9f879c14eb4daff3"
+    }
+  ],
+  "milestone": "callback-subtype-history-pin-reconciliation-source-v1",
+  "predecessorCommit": "c04388551bfc4ada383540b90eba4a169fff9e8a",
+  "reconciledTypeSurfacePointers": 3,
+  "schemaVersion": 1,
+  "scope": "Three older npm evidence references advance to the registered native-PHP callback repair history test without changing their recorded commands, artifacts or accepted behavior.",
+  "updates": [
+    {
+      "currentSha256": "49e2debaa618195751c8644e2011124bc336bef30647b717b36727c13d2456dd",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6d8be3fe28aa940499afc9762c7d6c621b4fd64452e38b93bad1d67996312576\"\n",
+          "previous": "          \"sha256\": \"1623fbb3ffed99598d69a1e653db835a5309e63fcadf1412d848dd62a5e18460\"\n",
+          "start": 685394
+        },
+        {
+          "current": "          \"sha256\": \"6d8be3fe28aa940499afc9762c7d6c621b4fd64452e38b93bad1d67996312576\"\n",
+          "previous": "          \"sha256\": \"1623fbb3ffed99598d69a1e653db835a5309e63fcadf1412d848dd62a5e18460\"\n",
+          "start": 1440962
+        },
+        {
+          "current": "          \"sha256\": \"6d8be3fe28aa940499afc9762c7d6c621b4fd64452e38b93bad1d67996312576\"\n",
+          "previous": "          \"sha256\": \"1623fbb3ffed99598d69a1e653db835a5309e63fcadf1412d848dd62a5e18460\"\n",
+          "start": 1447496
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "d912923f70b02e9fd49e16b0e17851e7319d81d046a5848ab5b4808660826090"
+    }
+  ]
+}
