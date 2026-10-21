@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadDotnetPromotionSource, zeroPayloadDotnetPromotionChangedPaths, zeroPayloadDotnetPromotionIntegrationPaths } from "./zero-payload-dotnet-promotion-source-history.mjs";
 import { beforeZeroPayloadJvmPromotionSource, zeroPayloadJvmPromotionChangedPaths, zeroPayloadJvmPromotionIntegrationPaths } from "./zero-payload-jvm-promotion-source-history.mjs";
 import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from "./zero-payload-ruby-source-history.mjs";
 import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from "./zero-payload-python-source-history.mjs";
@@ -1426,7 +1427,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadJvmPromotionChangedPaths
+	...zeroPayloadDotnetPromotionChangedPaths
+	, ...zeroPayloadDotnetPromotionIntegrationPaths
+	, ...zeroPayloadJvmPromotionChangedPaths
 	, ...zeroPayloadJvmPromotionIntegrationPaths
 	, ...zeroPayloadRubyHistoryChangedPaths
 	, ...zeroPayloadRubyHistoryIntegrationPaths
@@ -1959,8 +1962,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(
+	const zeroPayloadDotnetPromotion = beforeZeroPayloadDotnetPromotionSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadDotnetPromotion) === expected)
+		return zeroPayloadDotnetPromotion;
+	const zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(
+		path, zeroPayloadDotnetPromotion, expected
 	);
 	if(sha256(zeroPayloadJvmPromotion) === expected)
 		return zeroPayloadJvmPromotion;
