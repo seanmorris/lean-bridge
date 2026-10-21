@@ -9,6 +9,9 @@ import {
 	generateCopiedRustPackage
 } from "../../src/backends/rust/copied-values.mjs";
 import {
+	auditRustPackage
+} from "../../src/backends/rust/package-audit.mjs";
+import {
 	zeroPayloadBrowserInputNames, zeroPayloadBrowserResultNames
 	, zeroPayloadBrowserSelection
 } from "./zero-payload-checked-record-browser-fixture.mjs";
@@ -67,6 +70,7 @@ test("Rust bindings preserve empty, Unit, Option, array and variant identity", (
 		const files = generateCopiedRustPackage(
 			selection.expected, null, zeroPayloadRustTarget
 		);
+		assert.doesNotThrow(() => auditRustPackage(selection.expected, files));
 		const source = files["src/lib.rs"];
 		assert.match(source, /pub struct Witness \{\n\n\}/u);
 		assert.match(source, /pub struct Token \{\n {4}pub tag: \(\),\n\}/u);
@@ -79,6 +83,11 @@ test("Rust bindings preserve empty, Unit, Option, array and variant identity", (
 		for(const name of zeroPayloadBrowserResultNames)
 			assert.ok(source.includes(`pub fn ${name.replace(
 				/([A-Z])/gu, "_$1").toLowerCase()}(`));
+		const leaked = { ...files
+			, "src/lib.rs": source + "\npub struct Handle {}\n" };
+		assert.throws(() => auditRustPackage(selection.expected, leaked)
+			, error => error.code === "generic-dispatch"
+				&& error.details.declaration === "pub struct Handle");
 	}
 });
 

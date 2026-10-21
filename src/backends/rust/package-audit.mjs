@@ -32,6 +32,25 @@ const fail = (code, message, details = {}) => {
 };
 
 /**
+ * A copied nominal value can legitimately use a word such as Token without
+ * exposing a runtime identity token. Require the exact Binding IR type and
+ * Rust declaration kind before granting that narrow exemption.
+ *
+ * @param ir - Binding IR document.
+ * @param declaration - Rust declaration keyword.
+ * @param name - Exact public identifier.
+ */
+const explicitCopiedValue = (ir, declaration, name) => {
+	const kind = { struct: "record", type: "alias" }[declaration];
+	return kind !== undefined && ir.types.some(type =>
+		type.name === name
+		&& type.kind === kind
+		&& type.representation === "copied"
+		&& type.resource === null
+	);
+};
+
+/**
  * Checks rust package and returns structured evidence instead of relying on prose diagnostics in the generated native-language binding pipeline.
  *
  * @param ir - Binding IR document that defines the source types and operations.
@@ -66,9 +85,14 @@ export const auditRustPackage = (ir, files) => {
 	{
 		fail("private-abi-leak", "the Rust module exposes private bridge machinery");
 	}
-	if(/pub\s+(?:fn|struct|type|trait)\s+(?:invoke|dispatch|handle|token)\b/i.test(source))
+	const generic = [...source.matchAll(
+		/pub\s+(fn|struct|type|trait)\s+(invoke|dispatch|handle|token)\b/giu
+	)].find(match => !explicitCopiedValue(ir, match[1], match[2]));
+	if(generic)
 	{
-		fail("generic-dispatch", "the Rust public surface exposes a dispatcher or identity token");
+		fail("generic-dispatch"
+			, "the Rust public surface exposes a dispatcher or identity token"
+			, { declaration: generic[0] });
 	}
 	if(!Array.isArray(manifest.capabilityGaps))
 	{
