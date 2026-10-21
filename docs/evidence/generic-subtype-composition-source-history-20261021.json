@@ -1,0 +1,413 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c0035e6cacacc888b96c4b5f4f3a08f94b94f0b2186b25a5195aecb3b7839183",
+      "path": "scripts/update-generic-subtype-composition-source-history.mjs"
+    },
+    {
+      "currentSha256": "2502524f0cd2b06309d7b34da44fadd2ad73b3db1a74d5e6e54063f51bf5ba5d",
+      "path": "tests/helpers/generic-subtype-composition-source-history.mjs"
+    },
+    {
+      "currentSha256": "6291f39f196c85d759fa0015564d18b09619511d3a7db90c493b04b75a98f9a3",
+      "path": "tests/helpers/generic-subtype-composition-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "132e365aba4e6d5b3a993fc81ed36f69fd3dc385",
+  "milestone": "generic-subtype-composition-source-v1",
+  "predecessorCommit": "4b5ff6743e18a7f8ebbff68741fd13f63c357eec",
+  "reconciledTypeSurfacePointers": 526,
+  "schemaVersion": 1,
+  "scope": "Compiler, reviewed IR and generated-adapter history for per-use checked Subtype fields in alias-named generic records. Installed host acceptance and dependent generic fields remain pending.",
+  "updates": [
+    {
+      "currentSha256": "e6a259721e674fefec9653e4fd9aa66d0578f7b8c26782eac95691300b9b3e28",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\t\t\t\t|| definition.source?.extensions?.[\"lean-lang.org/instantiation\"] !== undefined\n",
+          "start": 5071
+        }
+      ],
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "28177dcb925140ef5488e4b7a3e7b5f82051614d7d3c190ac1a6ec039e8b4013"
+    },
+    {
+      "currentSha256": "5863c48a1b7cf4d6fd48276f9234a4c85e5243f5630fb31adc4414bbaf080632",
+      "edits": [
+        {
+          "current": "          let fieldSelection := selectedField checked \"record\" aliasName field.toString\n",
+          "previous": "",
+          "start": 42636
+        },
+        {
+          "current": "            else\n              shapeTree request fieldType (aliasName :: seen) 0 true fieldSelection containerFin false\n                (callbackSite := callbackSite) (hostReply := hostReply)\n                (subtypeStructural := subtypeStructural && nominalSelection checked \"record\" aliasName)\n                (subtypeResult := subtypeResult)\n",
+          "previous": "            else shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false\n",
+          "start": 42944
+        }
+      ],
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "11207f3090a770880fd3f1e56b31ab4779e2a2c828aa5858d64d1c03d3e9a25a"
+    },
+    {
+      "currentSha256": "a49268a4609bbaef94d4ab04ac56d126e2ea60b46e7b540287f659ed3c93f426",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t\t\t\tsubtypeStructural && (!Object.hasOwn(type, \"erased\") || checkedRecord || produced), produced);\n",
+          "previous": "\t\t\t\t\t\t\t\tsubtypeStructural && !Object.hasOwn(type, \"provenance\")\n\t\t\t\t\t\t\t\t\t\t&& (!Object.hasOwn(type, \"erased\") || checkedRecord || produced), produced);\n",
+          "start": 19582
+        }
+      ],
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "b9686bda40ff4e7e3b89b0cd6d05fbc10974f6f4e0ea26c638e41307935b4b05"
+    },
+    {
+      "currentSha256": "0dda0ee2f11b33a6b215af485575b517941892a83f09ef77d734f37f43d1b5bd",
+      "edits": [
+        {
+          "current": "\t\tif(!structural && !(type.predicate?.kind === \"subtype\" && subtypeStructural)) fail(type.predicate?.kind === \"subtype\"\n",
+          "previous": "\t\tif(!structural) fail(type.predicate?.kind === \"subtype\"\n",
+          "start": 8607
+        },
+        {
+          "current": "\t\t\tif(!subtypeStructural) fail(\"Subtype refinements require a top-level or structural-container native parameter or result, including copied plain and generic records and variants but excluding callbacks\");\n",
+          "previous": "\t\t\tif(!subtypeStructural) fail(\"Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks and generic records\");\n",
+          "start": 9980
+        },
+        {
+          "current": "\t\t\t// Generic fields may carry a per-use Subtype constructor, but remain\n\t\t\t// non-structural for Fin and every other nested refinement.\n\t\t\tconst refinable = !Object.hasOwn(type, \"erased\")\n\t\t\t\t|| site === \"checked-record\" || subtypeResult || erasedTransport;\n\t\t\tconst generic = Object.hasOwn(type, \"provenance\");\n\t\t\trecurse(field.type, true, !generic, subtypeStructural && refinable\n\t\t\t\t, subtypeResult && refinable);\n",
+          "previous": "\t\t\t// Plain record fields are structural; an instantiated generic structure's fields are not.\n\t\t\tconst plain = !Object.hasOwn(type, \"provenance\")\n\t\t\t\t&& (!Object.hasOwn(type, \"erased\") || site === \"checked-record\" || subtypeResult || erasedTransport);\n\t\t\trecurse(field.type, true, !Object.hasOwn(type, \"provenance\"), subtypeStructural && plain, subtypeResult && plain);\n",
+          "start": 15553
+        }
+      ],
+      "path": "src/analyze/native-types.mjs",
+      "previousSha256": "40ca415117f5a633e077f0c21a3a802874f4de919f8ebebf487dfffe26df8e95"
+    },
+    {
+      "currentSha256": "fd187d7a6cefa4937e4f9dbf10832eec3617e5c3d85d92ef98f1370e3dbdf06d",
+      "edits": [
+        {
+          "current": "\tconst tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === \"result\", allowFin = true) => {\n",
+          "previous": "\tconst tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === \"result\") => {\n",
+          "start": 11812
+        },
+        {
+          "current": "\t\t\t\tif(!subtypeStructural) throw unsupported(\"checked Subtype refinements require a top-level or structural-container parameter or result, including copied plain and generic records and variants but excluding callbacks and recursive graphs\");\n",
+          "previous": "\t\t\t\tif(!subtypeStructural) throw unsupported(\"checked Subtype refinements require a top-level or structural-container parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records\");\n",
+          "start": 13878
+        },
+        {
+          "current": "\t\t\tif(!allowFin) throw unsupported(\"checked Fin refinements inside instantiated generic record fields are not supported by native packages\");\n",
+          "previous": "",
+          "start": 14199
+        },
+        {
+          "current": "\t\tif(type.kind === \"alias\") return tree(type.target, top, site, subtypeStructural, produced, allowFin);\n",
+          "previous": "\t\tif(type.kind === \"alias\") return tree(type.target, top, site, subtypeStructural, produced);\n",
+          "start": 14415
+        },
+        {
+          "current": "\t\t\tconst element = tree(type.element, false, undefined, subtypeStructural, produced, allowFin);\n",
+          "previous": "\t\t\tconst element = tree(type.element, false, undefined, subtypeStructural, produced);\n",
+          "start": 14577
+        },
+        {
+          "current": "\t\t\tconst children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced, allowFin));\n",
+          "previous": "\t\t\tconst children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced));\n",
+          "start": 14891
+        },
+        {
+          "current": "\t\t// An instantiated plain record retains its nominal alias and exact provenance.\n\t\t// Its fields may carry per-use Subtype choices, while Fin remains outside this\n\t\t// representation until generic field bounds can be authenticated separately.\n\t\tif(type.kind === \"record\" && Object.hasOwn(type, \"provenance\") && !containsGraph(type, \"callback\"))\n\t\t{\n\t\t\tconst fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced, false));\n\t\t\treturn fields.every(child => child === null) ? null\n\t\t\t\t: { kind: \"record\", definition: type.lean, fields: type.fields.map(field => field.name), arguments: fields };\n\t\t}\n",
+          "previous": "",
+          "start": 15901
+        }
+      ],
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "1adc35468cda3adb5f2bc531d0cdb833cc0be0c193abea24521b380a6b52e73f"
+    },
+    {
+      "currentSha256": "a4addd03f32134102b254c0c17746ae686460f99c6ca5154a7c194fbd5ba982c",
+      "edits": [
+        {
+          "current": "test(\"component nominal Subtypes and Fin cross generic fields independently\", () => {\n",
+          "previous": "test(\"component nominal Subtypes do not discard generic or erased-proof restrictions\", () => {\n",
+          "start": 13509
+        },
+        {
+          "current": "\t\tassert.equal(validateElaboratedMetadata(report, request), true);\n",
+          "previous": "\t\tassert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);\n",
+          "start": 14261
+        },
+        {
+          "current": "\tconst { request, report } = sample();\n\treport.modules[0].declarations[0].projection.parameters[0].type = {\n\t\tkind: \"record\", name: \"Sample.Record\"\n\t\t, ...extension\n\t\t, fields: [{ name: \"value\", type: { kind: \"refinement\", base: { kind: \"primitive\", name: \"nat\" }, predicate: { kind: \"fin\", bound: \"5\" } } }]\n\t};\n\tassert.equal(validateElaboratedMetadata(report, request), true);\n",
+          "previous": "",
+          "start": 14331
+        }
+      ],
+      "path": "tests/elaborated-metadata.test.mjs",
+      "previousSha256": "23e56e15e22e44be61211966314bb033fb33c569c8a2c370f516ed704d37cbf9"
+    },
+    {
+      "currentSha256": "b9e25be16ae3a20042693c0e47deb6997e0db7f53c370c09faa7e6d475571637",
+      "edits": [
+        {
+          "current": "/-- A closed generic record whose fixed field is refined independently at each use. -/\nstructure GenericCarrier (α : Type) where\n  value : Positive\n  marker : α\nabbrev GenericNat := GenericCarrier Nat\n\ndef genericUse (value : GenericNat) : Nat := value.value.val + value.marker\ndef genericEcho {α : Type u} (value : α) : α := value\n\ndef genericWrongName := genericUse\ndef genericWrongField := genericUse\ndef genericWrongConstructor := genericUse\n\n",
+          "previous": "",
+          "start": 1743
+        }
+      ],
+      "path": "tests/fixtures/nominal-subtype-selection/NominalSelection.lean",
+      "previousSha256": "53382a1018c5b12256f90a51309a234ced059088cca89a78d45f5058b98824e3"
+    },
+    {
+      "currentSha256": "d51e09841020749e4a7336eff5aba58c16ceb7212771a17fa4adf63e5b4ccb7a",
+      "edits": [
+        {
+          "current": "\t\tconst item = generated.plan.exports.find(item => item.bindingId === `lean:${name}`)\n\t\t\t?? generated.plan.exports.find(item => item.sourceDeclaration === name);\n",
+          "previous": "\t\tconst item = generated.plan.exports.find(item => item.sourceDeclaration === name);\n",
+          "start": 3480
+        },
+        {
+          "current": "\tconst n = name => call(`NominalSelection.${name}`);\n",
+          "previous": "",
+          "start": 13089
+        },
+        {
+          "current": "\t\t, `example : ${n(\"genericUse\")} #[⟨40, 2⟩] = #[43] := by decide`\n\t\t, `example : ${n(\"genericUse\")} #[⟨100, 2⟩] = #[] := by decide`\n\t\t, `example : (${n(\"echoGenericFirst\")} #[⟨40, 2⟩]).map (fun value => value.value) = #[41] := by native_decide`\n\t\t, `example : (${n(\"echoGenericSecond\")} #[⟨40, 2⟩]).map (fun value => value.value) = #[42] := by native_decide`\n\t\t, `example : (${n(\"echoGenericFirst\")} #[⟨95, 2⟩]).map (fun value => value.value) = #[96] := by native_decide`\n\t\t, `example : ${n(\"echoGenericSecond\")} #[⟨95, 2⟩] = #[] := by decide`\n",
+          "previous": "",
+          "start": 15214
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-source.mjs",
+      "previousSha256": "bae39a41e1d87c6623880a9ac5b6699329cfd0e34e49e5ce3f88380b9126c8e8"
+    },
+    {
+      "currentSha256": "e68280eea72f4b3e9fbb7062c14b0fe0e955a3b64342f38a6dc103db00b2b0a9",
+      "edits": [
+        {
+          "current": "\t\t, item(\"echo\", [envelope], [envelopeTree(\"plusOne\")], envelope, envelopeTree(null))\n",
+          "previous": "\t\t, item(\"echo\", [envelope], [envelopeTree(\"plusOne\")], envelope, envelopeTree(\"plusTwo\"))\n",
+          "start": 3242
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-conversion-fixture.mjs",
+      "previousSha256": "cde1c1e409d3ad6cc17877b63e7df1053505128f80f0c377c5ad0693bde28e32"
+    },
+    {
+      "currentSha256": "722eff9234c9853440f90c75e31eeee33388751304cf9e0be95099d300f7a8e6",
+      "edits": [
+        {
+          "current": "\t\t\t, predicate: refinement.kind === \"subtype\" ? { ...refinement } : refinement\n",
+          "previous": "\t\t\t, predicate: refinement.kind === \"subtype\" ? { ...refinement, constructor: refinement.constructor ?? \"NominalConversion.plusOne\" } : refinement\n",
+          "start": 595
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-fixture.mjs",
+      "previousSha256": "eecd45294d159edd06c6a07b2a6e5bc767e4dd43362583f954df26e0b55a1874"
+    },
+    {
+      "currentSha256": "fd7bed7601eabda0598054a3c37ab1a202cabc04402f6fc210588c396946a223",
+      "edits": [
+        {
+          "current": "\tconst n = name => call(`NominalSelection.${name}`);\n",
+          "previous": "",
+          "start": 3414
+        },
+        {
+          "current": "\t\t, `example : ${n(\"genericUse\")} ⟨40, 2⟩ = some 43 := by decide`\n\t\t, `example : ${n(\"genericUse\")} ⟨100, 2⟩ = none := by decide`\n\t\t, `example : ((${n(\"echoGenericFirst\")} ⟨40, 2⟩).map fun value => value.value) = some 41 := by decide`\n\t\t, `example : ((${n(\"echoGenericSecond\")} ⟨40, 2⟩).map fun value => value.value) = some 42 := by decide`\n\t\t, `example : ((${n(\"echoGenericFirst\")} ⟨95, 2⟩).map fun value => value.value) = some 96 := by decide`\n\t\t, `example : ${n(\"echoGenericSecond\")} ⟨95, 2⟩ = none := by decide`\n",
+          "previous": "",
+          "start": 5312
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-source.mjs",
+      "previousSha256": "4119846d65d29a8d31dd1167d9e58a4dcb8fea55b07b4b70de9c4ded77fc82a4"
+    },
+    {
+      "currentSha256": "a113a108ee294b94099055d520c06ec69d205d427e66d43c57fbfa9f68c35e91",
+      "edits": [
+        {
+          "current": "\tconst genericTypes = structuredClone(document.types);\n\tconst generic = genericTypes.find(type =>\n\t\ttype.id === item.parameters[0].type.id);\n\tgeneric.source.extensions[\"lean-lang.org/instantiation\"] = {\n\t\tstructure: \"NominalConversion.GenericEnvelope\"\n\t\t, arguments: [{ kind: \"primitive\", name: \"nat\" }]\n\t};\n\tcheck(original, genericTypes);\n\tconst checkedTypes = structuredClone(document.types);\n\tcheckedTypes.find(type => type.id === item.parameters[0].type.id).source.extensions[\"lean-lang.org/erased-proofs\"] = {};\n\tassert.throws(() => check(original, checkedTypes), /Refinement does not match/u);\n",
+          "previous": "\tfor(const extension of [\"lean-lang.org/instantiation\", \"lean-lang.org/erased-proofs\"])\n\t{\n\t\tconst types = structuredClone(document.types); types.find(type => type.id === item.parameters[0].type.id).source.extensions[extension] = {};\n\t\tassert.throws(() => check(original, types), /Refinement does not match/u);\n\t}\n",
+          "start": 4215
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-tests.mjs",
+      "previousSha256": "aa2a3cb6a37f0068047fe5d5f0bfa83bc8262ace8add179f071a8b421f1799b4"
+    },
+    {
+      "currentSha256": "e60b91e7f99dca48779f4cb82221cb7c6c24caf49d164eafa5ea9f2321f52943",
+      "edits": [
+        {
+          "current": "import { nominalSelectionContracts, nominalSelectionSpecializations, selectedEnvelope, selectedEvent, selectedGenericNat } from \"./nominal-subtype-selection-fixture.mjs\";\n",
+          "previous": "import { nominalSelectionContracts } from \"./nominal-subtype-selection-fixture.mjs\";\n",
+          "start": 315
+        },
+        {
+          "current": "const genericNat = { record: \"NominalSelection.GenericNat\", fields: { value: \"nat\", marker: \"nat\" } };\n",
+          "previous": "",
+          "start": 964
+        },
+        {
+          "current": "const predicate = (selection, produced = false) => {\n",
+          "previous": "const predicate = selection => {\n",
+          "start": 1426
+        },
+        {
+          "current": "\tif(Object.hasOwn(selection, \"constructor\")) return { kind: \"subtype\", constructor: produced ? null : selection.constructor };\n\tconst fields = members => members.map(member => ({ name: member.name, refinement: member.name === \"digit\" ? { ...fin } : predicate(member.refinement, produced) }));\n",
+          "previous": "\tif(Object.hasOwn(selection, \"constructor\")) return { kind: \"subtype\", constructor: selection.constructor };\n\tconst fields = members => members.map(member => ({ name: member.name, refinement: member.name === \"digit\" ? { ...fin } : predicate(member.refinement) }));\n",
+          "start": 1543
+        },
+        {
+          "current": "\treturn { kind: selection.kind, arguments: selection.arguments.map(value => predicate(value, produced)) };\n};\nconst producedResults = {\n\t\"NominalConversion.echo\": selectedEnvelope(\"plusOne\")\n\t, \"NominalConversion.produce\": selectedEnvelope(\"plusOne\")\n\t, \"NominalConversion.produceEvent\": selectedEvent(\"plusOne\", \"plusTwo\")\n\t, \"NominalSelection.echoGenericFirst\": selectedGenericNat(\"plusOne\")\n\t, \"NominalSelection.echoGenericSecond\": selectedGenericNat(\"plusTwo\")\n",
+          "previous": "\treturn { kind: selection.kind, arguments: selection.arguments.map(predicate) };\n",
+          "start": 2081
+        },
+        {
+          "current": "\t\t, [\"NominalSelection.genericUse\", [genericNat], \"nat\"]\n\t\t, [\"NominalSelection.echoGenericFirst\", [genericNat], genericNat]\n\t\t, [\"NominalSelection.echoGenericSecond\", [genericNat], genericNat]\n",
+          "previous": "",
+          "start": 3314
+        },
+        {
+          "current": "\tconst generic = document.types.find(type =>\n\t\ttype.id === \"lean:NominalSelection.GenericNat\");\n\tgeneric.source.extensions[\"lean-lang.org/instantiation\"] = {\n\t\tstructure: \"NominalSelection.GenericCarrier\"\n\t\t, arguments: [structuredClone(nat)]\n\t};\n",
+          "previous": "",
+          "start": 4344
+        },
+        {
+          "current": "\tconst specializations = new Map(nominalSelectionSpecializations().map(value => [value.name, value]));\n",
+          "previous": "",
+          "start": 4821
+        },
+        {
+          "current": "\t\tconst publicName = item.source.declaration;\n\t\tconst specialization = specializations.get(publicName);\n\t\tconst contract = selections[publicName];\n\t\titem.source.extensions[\"lean-lang.org/refinements\"] = {\n\t\t\tparameters: contract.parameters.map(site => predicate(site.refinement))\n\t\t\t// The review records the result's proof-erased shape, but never invents\n\t\t\t// an output-side constructor invocation.\n\t\t\t, result: predicate(producedResults[publicName], true)\n\t\t};\n\t\tif(publicName === \"NominalSelection.plainFin\") item.source.extensions[\"lean-lang.org/refinements\"].parameters[0] = { ...fin };\n\t\tif(specialization)\n\t\t{\n\t\t\titem.source.declaration = specialization.declaration;\n\t\t\titem.source.extensions[\"lean-lang.org/specialization\"] = { ...specialization\n\t\t\t\t, application: `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}))` };\n\t\t}\n",
+          "previous": "\t\tconst contract = selections[item.source.declaration];\n\t\titem.source.extensions[\"lean-lang.org/refinements\"] = { parameters: contract.parameters.map(site => predicate(site.refinement)), result: predicate(contract.result.refinement) };\n\t\tif(item.source.declaration === \"NominalSelection.plainFin\") item.source.extensions[\"lean-lang.org/refinements\"].parameters[0] = { ...fin };\n",
+          "start": 4969
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-reviewed-fixture.mjs",
+      "previousSha256": "3a1f4ee93c94d27438d872f83e7773e4133852e61959497516c6b43410d89646"
+    },
+    {
+      "currentSha256": "56a79b9f69ee3db85a827456d15c8ca8ee5ba2ab2e0c44f5fa4cf461cf2b086e",
+      "edits": [
+        {
+          "current": "import { nominalSelectionContracts, nominalSelectionSpecializations, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedGenericNat, selectedRecord, selectedSite, selectedTree, selectedVariant } from \"./nominal-subtype-selection-fixture.mjs\";\n",
+          "previous": "import { nominalSelectionContracts, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedRecord, selectedSite, selectedTree, selectedVariant } from \"./nominal-subtype-selection-fixture.mjs\";\n",
+          "start": 879
+        },
+        {
+          "current": "\t\t\t, specializations: nominalSelectionSpecializations().filter(item => Object.hasOwn(contracts, item.name))\n",
+          "previous": "",
+          "start": 4583
+        },
+        {
+          "current": "\t\tconst declarations = new Map(report.modules.flatMap(module => module.declarations.filter(item => item.selected)\n\t\t\t.map(item => [item.identity, item])));\n\t\tconst projections = new Map([...declarations].map(([name, item]) => [name, item.projection]));\n",
+          "previous": "\t\tconst projections = new Map(report.modules.flatMap(module => module.declarations.filter(item => item.selected)\n\t\t\t.map(item => [item.identity, item.projection])));\n",
+          "start": 5468
+        },
+        {
+          "current": "\t\treturn { report, request, declarations, projections };\n",
+          "previous": "\t\treturn { report, request, projections };\n",
+          "start": 6522
+        },
+        {
+          "current": "\tconst checkPositive = ({ declarations, projections }, contracts) => {\n",
+          "previous": "\tconst checkPositive = ({ projections }, contracts) => {\n",
+          "start": 6583
+        },
+        {
+          "current": "\t\tconst first = projections.get(\"NominalSelection.echoGenericFirst\");\n\t\tconst second = projections.get(\"NominalSelection.echoGenericSecond\");\n\t\tassert.equal(declarations.get(\"NominalSelection.echoGenericFirst\").specialization.declaration, \"NominalSelection.genericEcho\");\n\t\tassert.equal(first.parameters[0].type.fields[0].type.predicate.constructor, \"NominalConversion.plusOne\");\n\t\tassert.equal(second.parameters[0].type.fields[0].type.predicate.constructor, \"NominalConversion.plusTwo\");\n\t\tassert.equal(first.result.fields[0].type.predicate.constructor, null);\n",
+          "previous": "",
+          "start": 7638
+        },
+        {
+          "current": "\t\t\t, genericWrongName: make([{ ...selectedGenericNat(\"plusOne\"), name: \"NominalSelection.GenericCarrier\" }])\n\t\t\t, genericWrongField: make([selectedRecord(\"NominalSelection.GenericNat\", selectedField(\"other\", selectedConstructor(\"plusOne\")), selectedField(\"marker\", null))])\n\t\t\t, genericWrongConstructor: make([selectedGenericNat(\"wrongInput\")])\n",
+          "previous": "",
+          "start": 10953
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-selection-extractor-tests.mjs",
+      "previousSha256": "d12d773325d5a9e47410d0f0d32ff4bf965173c7e8ee00ef4ffc9ade97c7f3aa"
+    },
+    {
+      "currentSha256": "ded01c9291bf08cde0c97092b5c2a2333b032157c989e2264afb36c4f9bb23fc",
+      "edits": [
+        {
+          "current": "/**\n * Select the fixed refined field of an alias-named generic record.\n *\n * @param name - Checked constructor for the fixed field.\n */\nexport const selectedGenericNat = name => selectedRecord(\"NominalSelection.GenericNat\",\n\tselectedField(\"value\", selectedConstructor(name)), selectedField(\"marker\", null));\n",
+          "previous": "",
+          "start": 2633
+        },
+        {
+          "current": "\t\t// Results are compiler-owned projections. Constructor choices apply only to\n\t\t// values entering Lean; a Lean-produced Subtype already carries its proof.\n\t\t, \"NominalConversion.echo\": contract([first])\n\t\t, \"NominalConversion.produce\": contract([null])\n\t\t, \"NominalConversion.produceEvent\": contract([null])\n",
+          "previous": "\t\t, \"NominalConversion.echo\": contract([first], second)\n\t\t, \"NominalConversion.produce\": contract([null], first)\n\t\t, \"NominalConversion.produceEvent\": contract([null], selectedEvent(\"plusOne\", \"plusTwo\"))\n",
+          "start": 4039
+        },
+        {
+          "current": "\t\t, \"NominalSelection.genericUse\": contract([selectedGenericNat(\"plusOne\")])\n\t\t, \"NominalSelection.echoGenericFirst\": contract([selectedGenericNat(\"plusOne\")])\n\t\t, \"NominalSelection.echoGenericSecond\": contract([selectedGenericNat(\"plusTwo\")])\n",
+          "previous": "",
+          "start": 4644
+        },
+        {
+          "current": "\n/** Two public specializations of one generic source keep independent constructor choices. */\nexport const nominalSelectionSpecializations = () => [\"First\", \"Second\"].map(name => ({\n\tname: `NominalSelection.echoGeneric${name}`\n\t, declaration: \"NominalSelection.genericEcho\"\n\t, types: [\"NominalSelection.GenericNat\"]\n}));\n",
+          "previous": "",
+          "start": 4945
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-selection-fixture.mjs",
+      "previousSha256": "522b3714f46d30d094f724876e2e3b2989ba958bba162f0bac5d1bd4960ebfd4"
+    },
+    {
+      "currentSha256": "78ba8e0d8da0eab07d3214b738e0951b6dc198274fb73955954bc4081ea36a4e",
+      "edits": [
+        {
+          "current": "test(\"nominal native admission preserves callback direction, generic Fin and nested-site gates\", () => {\n",
+          "previous": "test(\"nominal native admission preserves callback, generic and nested-site refusal gates\", () => {\n",
+          "start": 7037
+        },
+        {
+          "current": "\tassert.throws(() => validateNativeType({ kind: \"callback\", parameters: [type], result: type.fields[0].type.base, abi }, 0, false, \"parameter\"), /invalid Subtype refinement/u);\n\tconst produced = structuredClone(type);\n\tproduced.fields[0].type.predicate.constructor = null;\n\tvalidateNativeType({ kind: \"callback\", parameters: [produced], result: type.fields[0].type.base, abi }, 0, false, \"parameter\");\n",
+          "previous": "\tassert.throws(() => validateNativeType({ kind: \"callback\", parameters: [type], result: type.fields[0].type.base, abi }, 0, false, \"parameter\"), /Subtype refinements require/u);\n",
+          "start": 7851
+        },
+        {
+          "current": "\tvalidateNativeType(generic, 0, false, \"parameter\");\n\tconst fin = structuredClone(generic);\n\tfin.fields[0].type.predicate = { kind: \"fin\", bound: \"3\" };\n\tassert.throws(() => validateNativeType(fin, 0, false, \"parameter\"), /Fin refinements require/u);\n",
+          "previous": "\tassert.throws(() => validateNativeType(generic, 0, false, \"parameter\"), /refinements require/u);\n",
+          "start": 8464
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-selection-tests.mjs",
+      "previousSha256": "9ee5b440134cac391f116fa256615fe72c56661ae5ac4c03649f47ae4d389161"
+    },
+    {
+      "currentSha256": "7992a67a347da141933fce0baabf527b34ba40a4e6ffcb0387c6633167703731",
+      "edits": [
+        {
+          "current": "\tconst invented = fixture();\n\tfind(invented, \"produce\").projection.result.fields[0].type.predicate.constructor = \"NominalConversion.plusOne\";\n\tassert.throws(() => createNativeModel(invented, { refinements: true }), /invalid Subtype refinement/u);\n",
+          "previous": "",
+          "start": 2302
+        },
+        {
+          "current": "\tassert.throws(() => validateNativeType(callback, 0, false, \"result\"), /invalid Subtype refinement/u);\n",
+          "previous": "\tassert.throws(() => validateNativeType(callback, 0, false, \"result\"), /Subtype refinements require/u);\n",
+          "start": 2954
+        },
+        {
+          "current": "\tvalidateNativeType(returnedCallback, 0, false, \"result\");\n",
+          "previous": "\tassert.throws(() => validateNativeType(returnedCallback, 0, false, \"result\"), /Subtype refinements require/u);\n",
+          "start": 3139
+        },
+        {
+          "current": "\tassert.throws(() => validateNativeType(generic, 0, false, \"result\"), /Fin refinements require/u);\n",
+          "previous": "\tassert.throws(() => validateNativeType(generic, 0, false, \"result\"), /refinements require/u);\n",
+          "start": 3568
+        },
+        {
+          "current": "\tassert.equal(reviewedContractDifference(selected.bindingIr, value.bindingIr), null);\n",
+          "previous": "\tassert.notEqual(reviewedContractDifference(selected.bindingIr, value.bindingIr), null);\n",
+          "start": 4798
+        }
+      ],
+      "path": "tests/helpers/subtype-result-tests.mjs",
+      "previousSha256": "33baa0b69c2116a9261ff1a4ba8f77d943db4e7e6c55818217a8310a7b523141"
+    }
+  ]
+}

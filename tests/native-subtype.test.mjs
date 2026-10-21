@@ -42,6 +42,7 @@ import "./helpers/nominal-subtype-author-history-tests.mjs";
 import "./helpers/component-refinement-mirror-history-tests.mjs";
 import "./helpers/nominal-subtype-author-tests.mjs";
 import "./helpers/nominal-subtype-selection-history-tests.mjs";
+import "./helpers/generic-subtype-composition-source-history-tests.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_SUBTYPE_PROFILES?.split(",").sort() ?? [];
 assert.equal(new Set(profiles).size, profiles.length, "Duplicate Subtype profile");
