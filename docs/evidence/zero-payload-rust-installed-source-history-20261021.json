@@ -1,0 +1,84 @@
+{
+  "additions": [
+    {
+      "currentSha256": "21e42d6d1038b75ba1485edce2bc23985ed0890dc880739e98d18a8b470427b2",
+      "path": "tests/helpers/zero-payload-checked-record-rust-dependency-records.mjs"
+    },
+    {
+      "currentSha256": "e3c2da3350a27bdc150d284c4ca448e019f5de5ac6fd897180ec22e7c2108afb",
+      "path": "tests/helpers/zero-payload-checked-record-rust-install.mjs"
+    },
+    {
+      "currentSha256": "43257e05cc1e3b98f649e51abd65399ab28dd8b9f381ebd8bc75a11b20397601",
+      "path": "tests/helpers/zero-payload-checked-record-rust-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "77e75a6140a94692681c51540d2504f138850f9bade952bc3546d512c57beccf",
+      "path": "tests/helpers/zero-payload-checked-record-rust-package.mjs"
+    },
+    {
+      "currentSha256": "925b72eb657fc67f0b4ceeba42aa49fda87643cd73bf032ebad15b56232f8764",
+      "path": "tests/helpers/zero-payload-checked-record-rust-report.mjs"
+    },
+    {
+      "currentSha256": "0aef13b23789f6173eb09efe279e1801ddb1889e0fbbeabb89fe4b819a7bd43d",
+      "path": "tests/helpers/zero-payload-checked-record-rust-resources.mjs"
+    },
+    {
+      "currentSha256": "5bfda621bc391cc0d7495d24ba70491dc22405023e5ae27d08d975759ac63cba",
+      "path": "scripts/update-zero-payload-rust-installed-source-history.mjs"
+    },
+    {
+      "currentSha256": "4540d5ea67f0fb31ea56643e7be9e7548bf62a5cf19f9d6b1ee3d5c0fdc0e50c",
+      "path": "tests/helpers/zero-payload-rust-installed-source-history.mjs"
+    },
+    {
+      "currentSha256": "e59c076c50a86a5c8d033c3400ce18cd49cfba6b571b725bfdfa75bea556b069",
+      "path": "tests/helpers/zero-payload-rust-installed-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "b76cc501ff5c3242f7f3fa2ebfe9a07cd633af7b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4a9f659512c61ef0c8dd14f8fbc28afbb4d9d812dfe4a39ffc7faf4bfd23c963",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustInstalledSource, zeroPayloadRustInstalledChangedPaths, zeroPayloadRustInstalledIntegrationPaths } from \"./zero-payload-rust-installed-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRustInstalledChangedPaths\n\t, ...zeroPayloadRustInstalledIntegrationPaths\n\t, ...zeroPayloadRustChangedPaths\n",
+          "previous": "\t...zeroPayloadRustChangedPaths\n",
+          "start": 113978
+        },
+        {
+          "current": "\tconst zeroPayloadRustInstalled = beforeZeroPayloadRustInstalledSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(zeroPayloadRustInstalled) === expected)\n\t\treturn zeroPayloadRustInstalled;\n\tconst zeroPayloadRust = beforeZeroPayloadRustSource(\n\t\tpath, zeroPayloadRustInstalled, expected\n\t);\n",
+          "previous": "\tconst zeroPayloadRust = beforeZeroPayloadRustSource(path, text, expected);\n",
+          "start": 136732
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "42a807cffff2c6d412b9fe8d25dd503115dfed2f9d7b5080bb4632bf447c8d0d"
+    }
+  ],
+  "milestone": "zero-payload-rust-installed-source-v1",
+  "predecessorCommit": "870b23d4306bf9a5c105f6c199d5cb9dd157c865",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Zero-payload Cargo packages reproduce across ordinary and reviewed authors, install offline from a complete vendored closure, reject removed input APIs, and replay after relocation and source removal.",
+  "updates": [
+    {
+      "currentSha256": "a5d25fd56bff6000bb6b9d86e032b82d35063a46300b9b6944ba6f7ce08f67f0",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-rust-installed-tests.mjs\";\nimport \"./helpers/zero-payload-rust-installed-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 221
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-rust.test.mjs",
+      "previousSha256": "735bc07d343620a6b7dc26855ee83df58a5a2b9505ab05b685e92b800e664ecd"
+    }
+  ]
+}
