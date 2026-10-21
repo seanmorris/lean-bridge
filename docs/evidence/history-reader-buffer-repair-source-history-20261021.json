@@ -1,0 +1,3063 @@
+{
+  "additions": [
+    {
+      "currentSha256": "02eb14303b663a80c32d08b741d6108b0d0a573499d1f67b7a998dabc718f7e8",
+      "path": "scripts/update-history-reader-buffer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "50d5e4b491f66518d22208efe9b7864ec891798b1ed3716b825c9ece580b6701",
+      "path": "tests/helpers/history-reader-buffer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2c6ab8c2fe661f85bf8f6f94407852e03f39da5600f80fe6bae4360124a04bcf",
+      "path": "tests/helpers/history-reader-buffer-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "0177cc9e34177538ca72df6e8c08d18936d7c15c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "dc013c6fdfa1410787ea60e90a861444a0852c0fc2bb89ee30bd00bc09728d86",
+      "edits": [
+        {
+          "current": "import { beforeHistoryReaderBufferRepairSource, historyReaderBufferRepairChangedPaths, historyReaderBufferRepairIntegrationPaths } from \"./history-reader-buffer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...historyReaderBufferRepairChangedPaths\n\t, ...historyReaderBufferRepairIntegrationPaths\n\t, ...hubTransitionGapChangedPaths\n",
+          "previous": "\t...hubTransitionGapChangedPaths\n",
+          "start": 118083
+        },
+        {
+          "current": "\tconst bufferRepair = beforeHistoryReaderBufferRepairSource(path, text, expected);\n\tif(sha256(bufferRepair) === expected) return bufferRepair;\n\tconst hubGap = beforeHubTransitionGapSource(path, bufferRepair, expected);\n",
+          "previous": "\tconst hubGap = beforeHubTransitionGapSource(path, text, expected);\n",
+          "start": 142789
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0d6587fa19c55d66103386b5ff3a1560917355f2483ca835aa15068c88d5f964"
+    },
+    {
+      "currentSha256": "6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f",
+      "edits": [
+        {
+          "current": "import \"./helpers/history-reader-buffer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2328
+        }
+      ],
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e"
+    }
+  ],
+  "milestone": "history-reader-buffer-repair-source-v1",
+  "predecessorCommit": "9cc6767cc1c69df89f8e9554bc2c88c8d939c690",
+  "reconciledTypeSurfacePointers": 117,
+  "schemaVersion": 1,
+  "scope": "docs/type-surface.v1.json outgrew the 64 MiB git buffers of the source-history readers that reproduce recorded milestones with git show, so those readers now use 512 MiB buffers; the records they verify are unchanged.",
+  "updates": [
+    {
+      "currentSha256": "0b5a7ef9f5bb8500366be225b2ac4111ae166466ad19984bee077a613b1ce7a0",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 29500
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 40480
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1519350
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1523361
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1526867
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1530743
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1534222
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1537706
+        },
+        {
+          "current": "          \"sha256\": \"6df00b75486e2c6376134ddd93d09bbb931dbe136b75d51cc583d3ee8715142f\"\n",
+          "previous": "          \"sha256\": \"52e9a94af9933441d6234e01e1864f848b44143dfd453940c5cf36e952fca47e\"\n",
+          "start": 1541194
+        },
+        {
+          "current": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "previous": "          \"sha256\": \"7a740b5c73254fd324e58a38ffc6ed9711393658580ae375c0cf0a0ece2d8740\"\n",
+          "start": 12638490
+        },
+        {
+          "current": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "previous": "          \"sha256\": \"7a740b5c73254fd324e58a38ffc6ed9711393658580ae375c0cf0a0ece2d8740\"\n",
+          "start": 12793851
+        },
+        {
+          "current": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "previous": "          \"sha256\": \"7a740b5c73254fd324e58a38ffc6ed9711393658580ae375c0cf0a0ece2d8740\"\n",
+          "start": 12950101
+        },
+        {
+          "current": "          \"sha256\": \"16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d\"\n",
+          "previous": "          \"sha256\": \"7a740b5c73254fd324e58a38ffc6ed9711393658580ae375c0cf0a0ece2d8740\"\n",
+          "start": 13105920
+        },
+        {
+          "current": "          \"sha256\": \"74ed1a8916bcd3031e9e6fe33b8c93caec7a228cebdd94e5bcfa192ab310b898\"\n",
+          "previous": "          \"sha256\": \"94f4b84e6e6fcc1bbe0a375476206c2e9b3d90626635f25d2d400ba78df94055\"\n",
+          "start": 13262840
+        },
+        {
+          "current": "          \"sha256\": \"74ed1a8916bcd3031e9e6fe33b8c93caec7a228cebdd94e5bcfa192ab310b898\"\n",
+          "previous": "          \"sha256\": \"94f4b84e6e6fcc1bbe0a375476206c2e9b3d90626635f25d2d400ba78df94055\"\n",
+          "start": 13432243
+        },
+        {
+          "current": "          \"sha256\": \"74ed1a8916bcd3031e9e6fe33b8c93caec7a228cebdd94e5bcfa192ab310b898\"\n",
+          "previous": "          \"sha256\": \"94f4b84e6e6fcc1bbe0a375476206c2e9b3d90626635f25d2d400ba78df94055\"\n",
+          "start": 13602247
+        },
+        {
+          "current": "          \"sha256\": \"74ed1a8916bcd3031e9e6fe33b8c93caec7a228cebdd94e5bcfa192ab310b898\"\n",
+          "previous": "          \"sha256\": \"94f4b84e6e6fcc1bbe0a375476206c2e9b3d90626635f25d2d400ba78df94055\"\n",
+          "start": 13772106
+        },
+        {
+          "current": "          \"sha256\": \"81b6ed346f3cb75c82844a611cfdb18578c36ac26c819325f868b7d1ccbb8600\"\n",
+          "previous": "          \"sha256\": \"6baeef1e130adb37c34c65d698e942502e303673a9357077b0e6628513fc28c4\"\n",
+          "start": 13942626
+        },
+        {
+          "current": "          \"sha256\": \"81b6ed346f3cb75c82844a611cfdb18578c36ac26c819325f868b7d1ccbb8600\"\n",
+          "previous": "          \"sha256\": \"6baeef1e130adb37c34c65d698e942502e303673a9357077b0e6628513fc28c4\"\n",
+          "start": 14115773
+        },
+        {
+          "current": "          \"sha256\": \"81b6ed346f3cb75c82844a611cfdb18578c36ac26c819325f868b7d1ccbb8600\"\n",
+          "previous": "          \"sha256\": \"6baeef1e130adb37c34c65d698e942502e303673a9357077b0e6628513fc28c4\"\n",
+          "start": 14289514
+        },
+        {
+          "current": "          \"sha256\": \"81b6ed346f3cb75c82844a611cfdb18578c36ac26c819325f868b7d1ccbb8600\"\n",
+          "previous": "          \"sha256\": \"6baeef1e130adb37c34c65d698e942502e303673a9357077b0e6628513fc28c4\"\n",
+          "start": 14463123
+        },
+        {
+          "current": "          \"sha256\": \"06c1eb45ab97c7e42cd502a154d4b8a2bfe1bd81a82358965de6c98223c9db4a\"\n",
+          "previous": "          \"sha256\": \"c3863756c0318fb2e1c5fffffaf9cff3af2bca8f7fb34cab7df86a4832baa2cc\"\n",
+          "start": 14637247
+        },
+        {
+          "current": "          \"sha256\": \"06c1eb45ab97c7e42cd502a154d4b8a2bfe1bd81a82358965de6c98223c9db4a\"\n",
+          "previous": "          \"sha256\": \"c3863756c0318fb2e1c5fffffaf9cff3af2bca8f7fb34cab7df86a4832baa2cc\"\n",
+          "start": 14806087
+        },
+        {
+          "current": "          \"sha256\": \"06c1eb45ab97c7e42cd502a154d4b8a2bfe1bd81a82358965de6c98223c9db4a\"\n",
+          "previous": "          \"sha256\": \"c3863756c0318fb2e1c5fffffaf9cff3af2bca8f7fb34cab7df86a4832baa2cc\"\n",
+          "start": 14975397
+        },
+        {
+          "current": "          \"sha256\": \"06c1eb45ab97c7e42cd502a154d4b8a2bfe1bd81a82358965de6c98223c9db4a\"\n",
+          "previous": "          \"sha256\": \"c3863756c0318fb2e1c5fffffaf9cff3af2bca8f7fb34cab7df86a4832baa2cc\"\n",
+          "start": 15144695
+        },
+        {
+          "current": "          \"sha256\": \"940c2d405ffb6c47ee5221ffb53a7ddf1b492a405803d0e3b1d6efa467f9ba80\"\n",
+          "previous": "          \"sha256\": \"08a1b24fd520eb2732cbccb6dafab1694999f234c3a808976866a770b6c4e2d1\"\n",
+          "start": 15314833
+        },
+        {
+          "current": "          \"sha256\": \"940c2d405ffb6c47ee5221ffb53a7ddf1b492a405803d0e3b1d6efa467f9ba80\"\n",
+          "previous": "          \"sha256\": \"08a1b24fd520eb2732cbccb6dafab1694999f234c3a808976866a770b6c4e2d1\"\n",
+          "start": 15499864
+        },
+        {
+          "current": "          \"sha256\": \"940c2d405ffb6c47ee5221ffb53a7ddf1b492a405803d0e3b1d6efa467f9ba80\"\n",
+          "previous": "          \"sha256\": \"08a1b24fd520eb2732cbccb6dafab1694999f234c3a808976866a770b6c4e2d1\"\n",
+          "start": 15685665
+        },
+        {
+          "current": "          \"sha256\": \"940c2d405ffb6c47ee5221ffb53a7ddf1b492a405803d0e3b1d6efa467f9ba80\"\n",
+          "previous": "          \"sha256\": \"08a1b24fd520eb2732cbccb6dafab1694999f234c3a808976866a770b6c4e2d1\"\n",
+          "start": 15871152
+        },
+        {
+          "current": "          \"sha256\": \"8caf47ea52b44be5bfe256ce6681f52d64be46d9a1dd700f8ddee7d8adc474e9\"\n",
+          "previous": "          \"sha256\": \"0d0a78da1a0d999f0f293ecf2ec2739827aa5ab00244ce56ca2a3b40016d18dd\"\n",
+          "start": 16057280
+        },
+        {
+          "current": "          \"sha256\": \"8caf47ea52b44be5bfe256ce6681f52d64be46d9a1dd700f8ddee7d8adc474e9\"\n",
+          "previous": "          \"sha256\": \"0d0a78da1a0d999f0f293ecf2ec2739827aa5ab00244ce56ca2a3b40016d18dd\"\n",
+          "start": 16211962
+        },
+        {
+          "current": "          \"sha256\": \"8caf47ea52b44be5bfe256ce6681f52d64be46d9a1dd700f8ddee7d8adc474e9\"\n",
+          "previous": "          \"sha256\": \"0d0a78da1a0d999f0f293ecf2ec2739827aa5ab00244ce56ca2a3b40016d18dd\"\n",
+          "start": 16367168
+        },
+        {
+          "current": "          \"sha256\": \"8caf47ea52b44be5bfe256ce6681f52d64be46d9a1dd700f8ddee7d8adc474e9\"\n",
+          "previous": "          \"sha256\": \"0d0a78da1a0d999f0f293ecf2ec2739827aa5ab00244ce56ca2a3b40016d18dd\"\n",
+          "start": 16522316
+        },
+        {
+          "current": "          \"sha256\": \"42ae201c8bc0adfb4f9fdd86955bb891627ea9152a35ae81f4e557630cc4cd20\"\n",
+          "previous": "          \"sha256\": \"b800d59e83cd9d471ad5850121ea8587dfc0e30de9e2444b0c6119e6e9a0872d\"\n",
+          "start": 16678064
+        },
+        {
+          "current": "          \"sha256\": \"42ae201c8bc0adfb4f9fdd86955bb891627ea9152a35ae81f4e557630cc4cd20\"\n",
+          "previous": "          \"sha256\": \"b800d59e83cd9d471ad5850121ea8587dfc0e30de9e2444b0c6119e6e9a0872d\"\n",
+          "start": 16833256
+        },
+        {
+          "current": "          \"sha256\": \"42ae201c8bc0adfb4f9fdd86955bb891627ea9152a35ae81f4e557630cc4cd20\"\n",
+          "previous": "          \"sha256\": \"b800d59e83cd9d471ad5850121ea8587dfc0e30de9e2444b0c6119e6e9a0872d\"\n",
+          "start": 16989105
+        },
+        {
+          "current": "          \"sha256\": \"42ae201c8bc0adfb4f9fdd86955bb891627ea9152a35ae81f4e557630cc4cd20\"\n",
+          "previous": "          \"sha256\": \"b800d59e83cd9d471ad5850121ea8587dfc0e30de9e2444b0c6119e6e9a0872d\"\n",
+          "start": 17144755
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 17300233
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 17592304
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 17884685
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 18177224
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 18470374
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 18845256
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 19220861
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 19595743
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 19971095
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 20173205
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 20373402
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 20575974
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 20776593
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 21096791
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 21417370
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 21738036
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 22059189
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 22267779
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 22476903
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 22685961
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 22895529
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 23099294
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 23303467
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 23507696
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 23712358
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 23953381
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 24195428
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 24436915
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 24679435
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 24885822
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 25092750
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 25299599
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 25506980
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 25931934
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 26357373
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 26782799
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 27208685
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 27419282
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 27630490
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 27841551
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 28053233
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 28279149
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 28505767
+        },
+        {
+          "current": "          \"sha256\": \"0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74\"\n",
+          "previous": "          \"sha256\": \"c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865\"\n",
+          "start": 28732145
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 28959509
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29129114
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29298700
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29351015
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29404060
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29572131
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29740447
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 29896908
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30053033
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30236866
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30420372
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30604683
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30788738
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 30968059
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 31147203
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 31326998
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 31507707
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 31681646
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 31855174
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32029587
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32202771
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32366979
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32530941
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32695621
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 32860044
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 33152487
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 33444732
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 33737657
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34030475
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34197879
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34365040
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34532918
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34700437
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 34900211
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 35099670
+        },
+        {
+          "current": "          \"sha256\": \"2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee\"\n",
+          "previous": "          \"sha256\": \"57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8\"\n",
+          "start": 35299916
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "9d83c0ced00fdc03d1420fdec7576e0849b7febf1c12e24adb8e38eb1fe55733"
+    },
+    {
+      "currentSha256": "f07bfd3584cc8f9f53f5a57528e80d0fb1fcf09ee5f2ad93016981bd4160f16b",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1194
+        }
+      ],
+      "path": "tests/checked-record-alias-admission-source-history.test.mjs",
+      "previousSha256": "eca7ec8004d83d7dd191370c2f82a5a502e2b0bc4593bebe4a624056039972d1"
+    },
+    {
+      "currentSha256": "0d9ff4e7c651af3a9a6aa9561aae8b96c8b2af3b342ceb1e3b03b751e2079714",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 970
+        }
+      ],
+      "path": "tests/closed-generic-checked-record-source-history.test.mjs",
+      "previousSha256": "176c2ecb5bde2ea82033520ccdfd2e2e041fc9fb9a0b39dd8717865c3cc50f80"
+    },
+    {
+      "currentSha256": "a9d9e4998f37d45f5df4791c9a8d8c5bd8e2267d37559de6f65f6534e81d35dc",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 985
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-browser-artifact-source-history-tests.mjs",
+      "previousSha256": "e9a57f582986df3d8cbf67c7ecadf20ce6b8e5734356bb5aa33e3c4b5923c5ac"
+    },
+    {
+      "currentSha256": "de7f59015ac2791363c76ecc2ddac2333720328efeac6caee3aae560b48e000e",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1178
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-foundation-source-history-tests.mjs",
+      "previousSha256": "17f4c0cd9a48463faa8deecbc012dd1959db416cc35febeb06033614b7f6c116"
+    },
+    {
+      "currentSha256": "2fc7893cf3aaf439d2671ad86c4732c4981b29ec4c19fb71e6171835935a08e8",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 908
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-language-source-history-tests.mjs",
+      "previousSha256": "8d34e8bec5c0d6ca72d064a1846dad24c772c708cdbdb36b6bce6715e3a8037d"
+    },
+    {
+      "currentSha256": "081c868ea6c9e59e2d2307031ffc639bb39ff9c49cd082bbd52e309562a67990",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 902
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-native-source-history-tests.mjs",
+      "previousSha256": "5e21a776f2f844f460e9d7afcbaeeda246f095b88221fb50abfef9467144b951"
+    },
+    {
+      "currentSha256": "309ea313d9e3b1adb89a6f8ee2b11e92ff8dd0e9c01ae0d567fea29bc11a59cc",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1074
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-npm-acceptance-source-history-tests.mjs",
+      "previousSha256": "2c0a522fcb829fa19c2c546c5400824994f32175bab38bcfb39864388f6fcd02"
+    },
+    {
+      "currentSha256": "c994027999627495f90301d22faf69df09451b979fc8911c8a339c291ce96263",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1112
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-npm-browser-source-history-tests.mjs",
+      "previousSha256": "1a220682c8e164d7ca5967aa51d3b9241f0b5000cd38b8191b38c63891236a58"
+    },
+    {
+      "currentSha256": "a62cb2c89542c0cad58ea120a366b4f235d74741366fa86bffb5bd1857da368f",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1001
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-remaining-acceptance-source-history-tests.mjs",
+      "previousSha256": "a4e4f5c6d29dce64be030fbe888f084d58a498bdcafa5bf044d2a207d38fd3aa"
+    },
+    {
+      "currentSha256": "43a6d9adbfeee984276bf3e79515552c6dc627851e491db277d1ea968c0ba4ca",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 999
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-remaining-source-history-tests.mjs",
+      "previousSha256": "cc9fa3a00c70ab70a014817daf3facff918af61c985ae1e10870db1b0649238a"
+    },
+    {
+      "currentSha256": "7a1283ae727fc290fcb569122b341a01ba2dff1d840e6cee30b15e47bd4a11a3",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 3569
+        }
+      ],
+      "path": "tests/helpers/checked-javascript-disposition-history-tests.mjs",
+      "previousSha256": "f8f680e4c80db3b2b9c400dec83f922150f9ac76517f563e35148bff398499a6"
+    },
+    {
+      "currentSha256": "bf6cfda33e5d2e77c52bf8075158622360b5ec38db66fc4d3596b3b844d5a601",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1235
+        }
+      ],
+      "path": "tests/helpers/checked-record-browser-archive-history-tests.mjs",
+      "previousSha256": "db8174faca7b0bbb9c7d6eb2b676707f90bb6f87966ac768c69a203b3a5dee03"
+    },
+    {
+      "currentSha256": "0bc40071b264f9e18a4eabd7439c111b117de4b4b499996bb4c2a8b5244b9095",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1174
+        }
+      ],
+      "path": "tests/helpers/checked-record-browser-ci-history-tests.mjs",
+      "previousSha256": "bc441c855a5e616dd9ce6b564373c03cae85501c2fab11c11217f52b2922ddd4"
+    },
+    {
+      "currentSha256": "f42a0f15a9d736666cab1c7f617130655723173cdb9e697e35c4aa82b567e889",
+      "edits": [
+        {
+          "current": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1209
+        }
+      ],
+      "path": "tests/helpers/checked-record-browser-history-tests.mjs",
+      "previousSha256": "3d8266a9159f788380e47cc2c3d085b93c37551a7983160a1d11cdd0995742b3"
+    },
+    {
+      "currentSha256": "caff57f284802eb969233e5da86a7ea261f6d8df917591b4b702599a543bf938",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1327
+        }
+      ],
+      "path": "tests/helpers/checked-record-browser-promotion-history-tests.mjs",
+      "previousSha256": "95dec86ab23909c4fa9aec48d676645e35bc6b42776f070cefd5f5f48f2a7a3d"
+    },
+    {
+      "currentSha256": "49d10b04125f20842985a17aaa4fa9ec0e1a32b50a3b271d046b198f0dc6da02",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1239
+        }
+      ],
+      "path": "tests/helpers/checked-record-php-wasm-archive-history-tests.mjs",
+      "previousSha256": "97b4dbbf20d32f1c1993869c6f42554ca630db80ac02ca1471618338f440e1cf"
+    },
+    {
+      "currentSha256": "f560b77523b13d932c30287d0293a5cf332a2cb46673f7a1ec481f4e89ff4971",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1179
+        }
+      ],
+      "path": "tests/helpers/checked-record-php-wasm-ci-history-tests.mjs",
+      "previousSha256": "f0543f424e7df5275462f8b6ff1266e827dc3b2160704ac8fc26b83edd075d2e"
+    },
+    {
+      "currentSha256": "bf5373576dc281b1909b434b4fa4382834be6442bb0634dfa766a8548ee7bba6",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1173
+        }
+      ],
+      "path": "tests/helpers/checked-record-php-wasm-history-tests.mjs",
+      "previousSha256": "ecc97bd803bb21ab5bc7bd8fe2f3745578461292f65bc49b194da2ba4fe2d7b3"
+    },
+    {
+      "currentSha256": "86c58b75cdb97d7f0ae57f5e27a2e8255e21253e8921817dfe9a561b3b4f4566",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${checkedRecordPhpWasmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1331
+        }
+      ],
+      "path": "tests/helpers/checked-record-php-wasm-promotion-history-tests.mjs",
+      "previousSha256": "233c88d5cecd7eaaf3960f6572063df18d765a27e9e1f268a501064db1494411"
+    },
+    {
+      "currentSha256": "8a32eed435e0e67e408d59ff96c275122ea49c8fdeb44f4e86294043f01671e9",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${cliImportRepairPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${cliImportRepairPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1192
+        }
+      ],
+      "path": "tests/helpers/cli-import-repair-history-tests.mjs",
+      "previousSha256": "254fc7c1131051dc68f87fb70e837aa382dc49a7e5c4955f4c0e9ee70cb83bfe"
+    },
+    {
+      "currentSha256": "3dc7d6a3eb627000f38e4a70a359c288ef4c456c690532a2fe956b0318d202e2",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentEngineClosurePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentEngineClosurePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1387
+        }
+      ],
+      "path": "tests/helpers/component-engine-closure-history-tests.mjs",
+      "previousSha256": "78696e358fb2049bba12bb7a3da9f27d471130f3324cebac93d61ad952af5e75"
+    },
+    {
+      "currentSha256": "882c0fc65c2f409647122aa9eb7ff43f862e42b355e57ba8f62872642f33ef4b",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentNominalSubtypePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentNominalSubtypePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1263
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-history-tests.mjs",
+      "previousSha256": "c26e31dd42d2e74657a1fb7eef3f906e87b78882c64c56f63c63ba1cf75de2a8"
+    },
+    {
+      "currentSha256": "b192f457f30c75d08c84d45f12b4126671d239dac944ac8274ead6a6f06ebc4a",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentRefinementMirrorPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${componentRefinementMirrorPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1305
+        }
+      ],
+      "path": "tests/helpers/component-refinement-mirror-history-tests.mjs",
+      "previousSha256": "f5f6808307bccaa14c1da8ef4b811730d1bbb87057e7d0b2387efb5d97ab7349"
+    },
+    {
+      "currentSha256": "258bab0bc5b77822ef9ad0ecf1c2659ff52c6e4c1ba379cc61b106fd8d7ab9cc",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${coreContractRepairPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${coreContractRepairPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1389
+        }
+      ],
+      "path": "tests/helpers/core-contract-repair-history-tests.mjs",
+      "previousSha256": "28e844e60df070baaf05d5a845bc06ceabcd723ddfd192ebe78aac08b73dceff"
+    },
+    {
+      "currentSha256": "cdfdc7684c38b4ba74574f7222101a832254eea59f778b28d2899033934eaa8d",
+      "edits": [
+        {
+          "current": "\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1619
+        }
+      ],
+      "path": "tests/helpers/core-quality-budget-history-tests.mjs",
+      "previousSha256": "79a49d022a12b2c0fbb65301bb9a483345f72c4cf3c6e58e56786e790e8726f0"
+    },
+    {
+      "currentSha256": "2938a08a80025f53d4f741aec7b7f6787e2e5890b3e3b48ff71699a53263c126",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 942
+        }
+      ],
+      "path": "tests/helpers/core-runner-headroom-source-history-tests.mjs",
+      "previousSha256": "20c99d44b1c21d0231ea1f6995d2311f14aa97bbc875cadacec01e7f5b0e6148"
+    },
+    {
+      "currentSha256": "2c12807f59708bf0100cd88fd76a6e3cc077c4160e5c5e4b5438305494c5baa2",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 998
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-composition-source-history-tests.mjs",
+      "previousSha256": "43a0338cdddff732b6812ea87185d5b3bf18c9e9aa58dabe1b2998061e35fe72"
+    },
+    {
+      "currentSha256": "1894a890fa4a7249b076cd9b80acccc4956f281f1d35f458b4769907a0aa8df8",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1121
+        },
+        {
+          "current": "\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "previous": "\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 }));\n",
+          "start": 3299
+        }
+      ],
+      "path": "tests/helpers/generic-subtype-npm-browser-source-history-tests.mjs",
+      "previousSha256": "7fe07fba985550f769ab94754fb40aeee0198cb6ff7696915cc61e06d27ed454"
+    },
+    {
+      "currentSha256": "7e6ad901da0000a9a14c34d8b4d241e501eb7c6a658a20552845924815277918",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 965
+        }
+      ],
+      "path": "tests/helpers/history-reader-hub-repair-source-history-tests.mjs",
+      "previousSha256": "3732e530328493bb2d74c6b858f8c7053550ce69b438fe4f1e0b95dfc37d4d9e"
+    },
+    {
+      "currentSha256": "f0c71f48e589421de4094f8ba34e3b8bad3dee051d0abf601dbae21a447def06",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1060
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-docs-closure-source-history-tests.mjs",
+      "previousSha256": "c8bb9784ca1a572a07bd635cf9d8b449e0dde1facb9449b42dbbe5c964fbfbab"
+    },
+    {
+      "currentSha256": "6bb7bb5ae8b7ebc0a671bcf9dac173e06bdf6436f0bf929767553f4e59df0d9d",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2462
+        },
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 6448
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-foundation-history-tests.mjs",
+      "previousSha256": "1b809361f0d28a7e51286c79c94aaac8f790004cd4a47b60fa646277830d08bf"
+    },
+    {
+      "currentSha256": "0551d4db0a8845e4145af6f74337c53f54ef65ad8b2c6ece754b2c591701ff74",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1282
+        }
+      ],
+      "path": "tests/helpers/inherited-checked-record-promotion-source-history-tests.mjs",
+      "previousSha256": "c31ef34234dad01eb3da8a8b60e900ac82047aef14955c7b5834591949d51865"
+    },
+    {
+      "currentSha256": "94c3f2b1ae75f40bc7eb091da7fc21041d5eb6f69fe094bf09cfccdae4a048a8",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1475
+        }
+      ],
+      "path": "tests/helpers/jvm-container-entry-exit-history-tests.mjs",
+      "previousSha256": "ed775d7c933b516b2451f113c5f9317d120ea3ac166763773ec952df24d8e9c2"
+    },
+    {
+      "currentSha256": "200124299d89e4221309c948bfacfd33783411f4599ac4f3c0792db0611b79b0",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${jvmPendingExitPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${jvmPendingExitPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1056
+        }
+      ],
+      "path": "tests/helpers/jvm-pending-exit-history-tests.mjs",
+      "previousSha256": "65dc8706f04855a57ad88f7c1813d5656610702914d7569322516ff77ecdfd54"
+    },
+    {
+      "currentSha256": "227908a87bb8ddec2e3daa93a44450d62a058bf6a85dc1cfee73915b6097a76f",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${managedNominalGatePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${managedNominalGatePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1185
+        }
+      ],
+      "path": "tests/helpers/managed-nominal-gate-history-tests.mjs",
+      "previousSha256": "75430140ad49a167d5340ad64a5e97a0e012fa5eac946f602c8d29472e51c1d6"
+    },
+    {
+      "currentSha256": "45c05e79751c033630dbb2eb1ab800612203bfb2c6b9a90d70737b61e1ead968",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1129
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-native-hardening-source-history-tests.mjs",
+      "previousSha256": "903a1c596426da238becdcf8f6ff5cca16271f71e5fc206fa84ad644adf96289"
+    },
+    {
+      "currentSha256": "dc5803459c80736b5daa043624aa8965ad8bd02d7fb637fa81a937d0bdfd9e4f",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1249
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-native-review-source-history-tests.mjs",
+      "previousSha256": "c4f157411899305ad30c1b1392b859ff3c987984bf65aaa3524164202e1e2145"
+    },
+    {
+      "currentSha256": "7edef6b404b908725c97374aafd25176917e10c93f68dfe1a3c5eb1b4af1538c",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2287
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-npm-source-history-tests.mjs",
+      "previousSha256": "2b1feeeab6f515254cb90919ca2e3c29a761753a7f08950e7633e6c918b80b84"
+    },
+    {
+      "currentSha256": "ac06b6d74911ad15b428e7cef1dab9cf1f9313382945b8bc29a822d62fd59706",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1801
+        }
+      ],
+      "path": "tests/helpers/mutual-checked-record-source-history-tests.mjs",
+      "previousSha256": "8cfc46c808148c19b4f88b6979a77770c7326f9cc708e7d26364b86604302b86"
+    },
+    {
+      "currentSha256": "ea83f25ea98df3792fffc5527cd1cf5ea3f7d752f7189c4b32cb3fc262e1e931",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeConsumerPartitionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeConsumerPartitionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1323
+        }
+      ],
+      "path": "tests/helpers/native-consumer-partition-history-tests.mjs",
+      "previousSha256": "268b7f3608c9791ce4c809b66808afa0654c999e49aebf06399a0c91e10ddf12"
+    },
+    {
+      "currentSha256": "739c088f4cd06da4f8e0d504b939b65e9e75be79963dceb46d2bd0deeac7a0db",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeFinJvmExitPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeFinJvmExitPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1245
+        }
+      ],
+      "path": "tests/helpers/native-fin-jvm-exit-history-tests.mjs",
+      "previousSha256": "7d219d2b82e3dbcc9dec3f2a5bc82d850400b2f3023a35b15ed1725a5955fcf3"
+    },
+    {
+      "currentSha256": "95809437017698d5c2d411d84dabbfb9435bcf9b0ce887c724a96ad1adb93d40",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${finNixComparisonPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${finNixComparisonPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1129
+        }
+      ],
+      "path": "tests/helpers/native-fin-nix-comparison-history-tests.mjs",
+      "previousSha256": "0acea79cee3a19a4dc33328fd68a8f6d6c26971bc19757a8a29b8617835373ad"
+    },
+    {
+      "currentSha256": "9e2879537f3d6128b7f9b60f526290f90fba087fbfec619a741a056e68116716",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1246
+        }
+      ],
+      "path": "tests/helpers/native-history-checkout-history-tests.mjs",
+      "previousSha256": "8c230890a3532a674810e9ea47655d51cae26c3353dfba7e8d8aa038fe09617c"
+    },
+    {
+      "currentSha256": "c781ff392280789259693a7ea70306e9d64dc4ba83948e9da3df5cb7edc41fa2",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeOwnedGatePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nativeOwnedGatePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1147
+        }
+      ],
+      "path": "tests/helpers/native-owned-gate-history-tests.mjs",
+      "previousSha256": "3c5754f4c39f34fc1c00b35680f2899084f979673f0c8765f5a242abe777e364"
+    },
+    {
+      "currentSha256": "b67f5c66986e409497cce1b119c240dc7f890859da2bef789bf195bdcc50bdbf",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 993
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-archive-gap-history-tests.mjs",
+      "previousSha256": "50efdfab76ea9f9182ebf55edafb43e4a446c2972172fd82a37052b9eb59db3a"
+    },
+    {
+      "currentSha256": "d2e13db4c9a06a1b55d6e30752444b606269f5aa8420c29ad35cadf257dfa1ee",
+      "edits": [
+        {
+          "current": "\t\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1942
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-browser-promotion-history-tests.mjs",
+      "previousSha256": "0da723db88607eff62293c56230bb6660eb05a166de2d5f92cc1493b97c5d682"
+    },
+    {
+      "currentSha256": "50e9b2c208cb3d772f9a568b85ac3089b0c4e7b970c6efba4eda79cd6046956a",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1429
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-diagnostic-oracle-source-history-tests.mjs",
+      "previousSha256": "c378ec526177e4dbd6c3114dad070e9764cf168cbe3ce55a7dea891f8cf98891"
+    },
+    {
+      "currentSha256": "15ba464e5315eb48a05893aaa6a39e3730970dbdc7169362def91a8827ca7035",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1861
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-dotnet-promotion-history-tests.mjs",
+      "previousSha256": "e90e41e8bda545131baac07a98a428fdda0dbff43c249330c48c69db9972d60a"
+    },
+    {
+      "currentSha256": "81d182a72b197f9b2d5e0aa4421c19d99fa5fd65e855c1f4622b8a02ac1ee026",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1831
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-jvm-promotion-history-tests.mjs",
+      "previousSha256": "7624be313bf0410424170a0c430bf8e8e4d0f02314fc67d5ddbd67d870205a5e"
+    },
+    {
+      "currentSha256": "c2fad049f5c42c2473a63b5296663cc62f48c47d95785c400cfaf4fb0b409720",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1973
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-matrix-closure-source-history-tests.mjs",
+      "previousSha256": "3d51d8c8e5f825ce7dc1059ff8c1fda300a306c66bb2f93f07dc8f2482a2ea05"
+    },
+    {
+      "currentSha256": "9a77aae179a56f8db600990f6bacd2faac5b96c258d0f57aabdef150f6f77ac5",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2278
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-native-correction-source-history-tests.mjs",
+      "previousSha256": "f627cf46d79be97a49598bb8338968411cfdae3bd26381d81ad876612ca6fe3a"
+    },
+    {
+      "currentSha256": "56f3debbfdf287fef85c93b4155de930299323d02a4e6b7f6cc65b8fad27bcd3",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1868
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-native-promotion-history-tests.mjs",
+      "previousSha256": "3a0c1f9d3536e2762ae497afee16ca89a6180f05b6b8d19b4f98132ec55acbdd"
+    },
+    {
+      "currentSha256": "16846d74135b62f79a2dffd84721bceb1c1c2deb0150d7133668711c31b0665d",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2120
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-perl-promotion-history-tests.mjs",
+      "previousSha256": "7a740b5c73254fd324e58a38ffc6ed9711393658580ae375c0cf0a0ece2d8740"
+    },
+    {
+      "currentSha256": "74ed1a8916bcd3031e9e6fe33b8c93caec7a228cebdd94e5bcfa192ab310b898",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1815
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-php-promotion-history-tests.mjs",
+      "previousSha256": "94f4b84e6e6fcc1bbe0a375476206c2e9b3d90626635f25d2d400ba78df94055"
+    },
+    {
+      "currentSha256": "8caf47ea52b44be5bfe256ce6681f52d64be46d9a1dd700f8ddee7d8adc474e9",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1878
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-php-wasm-promotion-history-tests.mjs",
+      "previousSha256": "0d0a78da1a0d999f0f293ecf2ec2739827aa5ab00244ce56ca2a3b40016d18dd"
+    },
+    {
+      "currentSha256": "81b6ed346f3cb75c82844a611cfdb18578c36ac26c819325f868b7d1ccbb8600",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1855
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-python-promotion-history-tests.mjs",
+      "previousSha256": "6baeef1e130adb37c34c65d698e942502e303673a9357077b0e6628513fc28c4"
+    },
+    {
+      "currentSha256": "ef5e91c6d6be693ef78cb92318cb6b87d11b3f5bacaa5fd127e94eabe0068ae2",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1885
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-quality-source-history-tests.mjs",
+      "previousSha256": "8098f0c9cb7c890f22459354ffb7e7e9e74103ca2ec17805849a45f6cd59da2d"
+    },
+    {
+      "currentSha256": "06c1eb45ab97c7e42cd502a154d4b8a2bfe1bd81a82358965de6c98223c9db4a",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1819
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-ruby-promotion-history-tests.mjs",
+      "previousSha256": "c3863756c0318fb2e1c5fffffaf9cff3af2bca8f7fb34cab7df86a4832baa2cc"
+    },
+    {
+      "currentSha256": "42ae201c8bc0adfb4f9fdd86955bb891627ea9152a35ae81f4e557630cc4cd20",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1819
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-rust-promotion-history-tests.mjs",
+      "previousSha256": "b800d59e83cd9d471ad5850121ea8587dfc0e30de9e2444b0c6119e6e9a0872d"
+    },
+    {
+      "currentSha256": "b0f6bc1d70e2ef1c2b808c50aca5657ad0b10ffd3bd1cf69759847b539a31ac5",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1670
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-source-history-tests.mjs",
+      "previousSha256": "645dade597acd92ef328e1d8adac36869dbd649753eb73f89fb50bff25e775ee"
+    },
+    {
+      "currentSha256": "940c2d405ffb6c47ee5221ffb53a7ddf1b492a405803d0e3b1d6efa467f9ba80",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1801
+        }
+      ],
+      "path": "tests/helpers/nested-checked-record-wit-promotion-history-tests.mjs",
+      "previousSha256": "08a1b24fd520eb2732cbccb6dafab1694999f234c3a808976866a770b6c4e2d1"
+    },
+    {
+      "currentSha256": "507661326237b7de3407cf2da557c1925d935c782f2c6a677b82138e40cdaae7",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1149
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-audit-correction-history-tests.mjs",
+      "previousSha256": "fd4ee052925275966552efa264c1d3142f49427eccdee7850836466e6e021800"
+    },
+    {
+      "currentSha256": "c0a23d38d089a3d78b148ac819281a374dade2daee5d220050cc658442cae1a6",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2099
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-browser-promotion-history-tests.mjs",
+      "previousSha256": "b57f7da53d87ccffb2e8fa6ed3d10da423e538c1bd8bf586b337407593a7a911"
+    },
+    {
+      "currentSha256": "8825558677c35f1b58f94371a86765af0c1bbd8df3d16396c4c6bbda055bf4cc",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1459
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-browser-registration-history-tests.mjs",
+      "previousSha256": "d3ddcc4ac3ac44e260e58ec95e51eec5ea93eb556d5bd2078e07e89b77f6c679"
+    },
+    {
+      "currentSha256": "1d60fd3d9fdd7759fe2b49b90032a4c15b92927140956b280914186cd8bb62a6",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1711
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-dotnet-promotion-history-tests.mjs",
+      "previousSha256": "951e6d59c19566e4d0562736c118429e235f1cfab0178884acf16ef7132daef5"
+    },
+    {
+      "currentSha256": "cc76b68bd1a6ce40526bedc7a3673ff70e5d77c528325195a671228901e54dec",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeJvmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeJvmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1671
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-jvm-promotion-history-tests.mjs",
+      "previousSha256": "ff3c3e2bb4d519604f0623d1ad8d36069847aadb26429b3004aa3035e6236b2d"
+    },
+    {
+      "currentSha256": "b85f155845dd36a680daaed7efab92f582def229e73469cb322d0f5012ec5de8",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNativePromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1958
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-native-promotion-history-tests.mjs",
+      "previousSha256": "2dbc868da3175a3cbd67db501484561aebc1af4825b5777d1237c20fa0705a2f"
+    },
+    {
+      "currentSha256": "9bb1ebcf6f10e2f7d433fb24253710939bf772d0509cc4d6d0181eed6910a440",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNativeRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNativeRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1447
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-native-registration-history-tests.mjs",
+      "previousSha256": "de45037dd93ceb9599f1e113cbb00c53c13f4ff2b6832334ee5a07af278e3d18"
+    },
+    {
+      "currentSha256": "23397d2ba22e0dbcf92fb1ae47a2c0e0dba2467d4acf83067c13986e38476fbe",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNpmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeNpmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1698
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-npm-promotion-history-tests.mjs",
+      "previousSha256": "de2ada457b12d1b5a01782681b541fdc6f7bab2aa6f95b8b77e42d66171660f8"
+    },
+    {
+      "currentSha256": "5ef39fa72a8126ae468fbc7920f48239680b68c188ba4aaef5f5ad2dc3853848",
+      "edits": [
+        {
+          "current": "\tconst at = (commit, path) => execFileSync(\"git\", [\"show\", `${commit}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst at = (commit, path) => execFileSync(\"git\", [\"show\", `${commit}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1524
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-perl-integration-history-tests.mjs",
+      "previousSha256": "153324ea5dc7ff070fa2c6f48ca2769b03c3b67888774f0be7abb77ac53928ed"
+    },
+    {
+      "currentSha256": "915503f75bcbcb9a095f38d360f3d5c438d1a95ea2970fc923df0c0af2437a80",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1831
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-perl-promotion-history-tests.mjs",
+      "previousSha256": "398ac7856021a22ff86d4ba09684a23ff1aececbcad27dc937dca5626c0fba95"
+    },
+    {
+      "currentSha256": "9afc4b5f8107bda9d669af87021cbe165b4042887b36759292676c301207c9ac",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n\tconst alternate = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlIntegrationAlternate}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n\tconst alternate = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePerlIntegrationAlternate}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1622
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-perl-registration-history-tests.mjs",
+      "previousSha256": "071fc76246070f16273f40510af49667fe2b2d8d4635bcafca700c9707ccce93"
+    },
+    {
+      "currentSha256": "150d294d231e1a88ca8ace81b23f1ba67911fe5dff2f57efb6395fad1a5881ab",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1669
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-promotion-history-tests.mjs",
+      "previousSha256": "1fc75b1818e3c037c4e252896a1a042c2e8d39cc7ddca236da565404a375880d"
+    },
+    {
+      "currentSha256": "328cf74f1b9d9ba7f36cee6fd5c50fe27b7cdd4717940bd46088fe37129827cf",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2472
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-php-wasm-promotion-history-tests.mjs",
+      "previousSha256": "2c33a7e0fa2797c1fdefa65061c401bf397be56d03615bc25f738ce07987cf53"
+    },
+    {
+      "currentSha256": "611411133dd393521f1cfc148f6fe1c29906acc8a8289f10d93504681ffb5341",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePythonPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePythonPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1747
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-python-promotion-history-tests.mjs",
+      "previousSha256": "8658db53732957a7bcc825cf946913b6c5d19f960a77481f26bb41de19abff69"
+    },
+    {
+      "currentSha256": "399392d032c2fd7e50e4be9baca9b7a020e0377ce4c79c04c2385146878d7f2e",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePythonRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypePythonRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1524
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-python-registration-history-tests.mjs",
+      "previousSha256": "37f1c69d80e81fc57be049279f6f2936c032fd51ca77916424db16b8d987ff99"
+    },
+    {
+      "currentSha256": "2e23e81f10b361874363870f818f0a6eb089ef27e6b39140eafdd492512fca41",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1072
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-registration-gap-history-tests.mjs",
+      "previousSha256": "ff0f0542d5d37e2751be16e42ec3a059c22bf34bf7d099e987ea428f2dcaa47e"
+    },
+    {
+      "currentSha256": "12e87d53a733566776ae5500ad6a38390606f145936918694379717d572e763e",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1382
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-registration-history-tests.mjs",
+      "previousSha256": "5a9b973fc4d9486e4a710067ce5f1bfe282e3d52fb00f491e197a4f980640163"
+    },
+    {
+      "currentSha256": "5927f8d2c45ad9005025337283914b4851e0ca71da3822e445913e8cef2d5021",
+      "edits": [
+        {
+          "current": "\tconst at = (commit, path) => execFileSync(\"git\", [\"show\", `${commit}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst at = (commit, path) => execFileSync(\"git\", [\"show\", `${commit}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1758
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-integration-history-tests.mjs",
+      "previousSha256": "f88599ac20d3e0dde5bef705a9c688b6f131e45582b956706f7cd44d6369a129"
+    },
+    {
+      "currentSha256": "74c5746febd29b763e698cb98ea16db5f7958dedbe655b745c0c4cbd18d8f3b0",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1718
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-promotion-history-tests.mjs",
+      "previousSha256": "54fd545e36aa04c8e741cb1a598755ddd158a684b2a541fe5bf08a8546e2b1d6"
+    },
+    {
+      "currentSha256": "e3db88f47121dd06bda36e4e16c2826749e1c4f0b29daed3f130801ea192e05d",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n\tconst alternate = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyIntegrationAlternate}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n\tconst alternate = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRubyIntegrationAlternate}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1674
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-ruby-registration-history-tests.mjs",
+      "previousSha256": "0bde458df75f5c888ddf8a74e4713b62473e995d94efc791bd1080b36aff5098"
+    },
+    {
+      "currentSha256": "faddb20fc5f366709dc295539015b6337fe4ecf983c303076c4691d1692ff0cf",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRustPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeRustPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1597
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-rust-promotion-history-tests.mjs",
+      "previousSha256": "70a90c94c1bd733a6a35cb7495f7dbec98065eeaf55a551627b6c53742185b29"
+    },
+    {
+      "currentSha256": "28c559310538fb06a81f1e63c758d28c67b6155a2896d7adf5d9956b06948e4f",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeWitPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalPrimitiveSubtypeWitPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1790
+        }
+      ],
+      "path": "tests/helpers/nominal-primitive-subtype-wit-promotion-history-tests.mjs",
+      "previousSha256": "ecae8587dacd2e63944c4e696fea83fc63e71066f873089603e40c660b76bda5"
+    },
+    {
+      "currentSha256": "d639f3730f25d41f12ced32c248896d756b258b2b759b661d7af38175cd5451e",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeAuthorPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeAuthorPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1274
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-author-history-tests.mjs",
+      "previousSha256": "5c5d9964ba1bea141bf455f7be495a13aa3e15e9c9681f80d0bd59d4dfeeb749"
+    },
+    {
+      "currentSha256": "a4068d013255a0ee2e353581558e1542b6dda4b8596e4ba1f20442ffdaf4c29d",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeBrowserPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1628
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-browser-promotion-history-tests.mjs",
+      "previousSha256": "373df8c0921d96e5516ea765cd5ebe7b29e541e5551569ab4a47ec9003023e2a"
+    },
+    {
+      "currentSha256": "80f28d91dc1b7a40e0a0708ab8ac54e8a750153ce9d20967047df9f9dba5e42d",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeBrowserRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1424
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-browser-registration-history-tests.mjs",
+      "previousSha256": "abc4fb4c30d5720d4bef4272d13f2f282ec8d79acd7337d52d3d2b05d8865fc6"
+    },
+    {
+      "currentSha256": "68449bcd8876b5203440df15267da9bef1e409efa47ee3cade5dfd741cb6dc41",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeConversionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeConversionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1280
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-conversion-history-tests.mjs",
+      "previousSha256": "d1c91d9bbce295f4ce628001cf13f91f8d8fdbf1c0966485ca5eda6c51db2525"
+    },
+    {
+      "currentSha256": "a13a09b165157edf866f265efa8d3f5d0041c53d2f6268cb020045807506c3b6",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetCeilingPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetCeilingPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1459
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ceiling-history-tests.mjs",
+      "previousSha256": "732bf4b9e68bd0f9ea0d2bb02a134ca7f245dbe3f1221470897f9592e1e1c735"
+    },
+    {
+      "currentSha256": "e9f8575cfcf592a85ce41c8f687ef2ed6b24bf2bfa86aeeebf50cc8d5bc2dbfc",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1384
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-ci-history-tests.mjs",
+      "previousSha256": "935e157a80c415ad4077171c9932f9a0a7b193f8006db2eb0dda7db7861d70b6"
+    },
+    {
+      "currentSha256": "82e6798312f251637b8de01843d9b5934860fce9e5ae2cf9698351d45e2aa3e3",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1586
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-promotion-history-tests.mjs",
+      "previousSha256": "04e425f9cc7563470bcb4d1e8e92a23c83e0beb92b3ae033739565c449c7ee26"
+    },
+    {
+      "currentSha256": "9f4d8f99061329a9a17b3064e30c95857990576cab401c737f69ecf46fe2a31b",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeDotnetRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1327
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dotnet-registration-history-tests.mjs",
+      "previousSha256": "d2242b93582d390440c14ac1ae5559a90b6857aa5f9a191bd3b57631733e86ae"
+    },
+    {
+      "currentSha256": "bf8d88cc47d4d1a6c57218d996b5416f7654bdc1aee985a87e1f3d4ce7a78603",
+      "edits": [
+        {
+          "current": "const original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeEntryMeasurementPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "const original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeEntryMeasurementPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1018
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-measurement-source-history-tests.mjs",
+      "previousSha256": "7c9c3fd12665433d171cc6b1a938ba0551f4fd6d663f7594af3e1d02e7b976ad"
+    },
+    {
+      "currentSha256": "ec9d9fa1c22d83bb58aa49533784f2b0cdd49babdfad2d0973005a2f00859180",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1262
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-ci-history-tests.mjs",
+      "previousSha256": "5a422483afd31623314cf71d286fcf10481d8ed18c6c6f5d225eee5ea1bf0e7a"
+    },
+    {
+      "currentSha256": "002cec84e7e8f681c9253c45482ff35a535e2c162514e99b9b5736eac26b35e6",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1553
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-promotion-history-tests.mjs",
+      "previousSha256": "0b3c37ac3d76324160a691fe9245c9e24796931308526dd6b6ad97118d1c0644"
+    },
+    {
+      "currentSha256": "dd17a7467693e3eb767b13fa182789ef4e3789306b9028d3b4667ec6af6b0e9d",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeJvmRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1299
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-jvm-registration-history-tests.mjs",
+      "previousSha256": "09bc802d37620170ed4250bfbcf91d60f6c88a11b69d592deca1b3fafbf85e56"
+    },
+    {
+      "currentSha256": "2a200be6b7eb17a7140eca17c160ed45409ba036ae50b474426c6f1aa0fa5ef2",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNativePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNativePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1244
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-history-tests.mjs",
+      "previousSha256": "6ce308a3cf8ecebd95ac5bedab83fd5b08c887ed1aeaf9bdd4dbc808f574018a"
+    },
+    {
+      "currentSha256": "a0fc347c5ee07c4bc16488a279027f81a12466ba5274a0eb25b631b7fcd92075",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNativePromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNativePromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2342
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-native-promotion-history-tests.mjs",
+      "previousSha256": "6baf5b3bcce395d38318a2388c0a98c4c5a0589b97dfa57daa3167617d5c6d05"
+    },
+    {
+      "currentSha256": "a3941ca94a60172b731b65a11c374841aa1a4587b954a565a3eb74acfa90e6a3",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNpmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeNpmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2300
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-npm-promotion-history-tests.mjs",
+      "previousSha256": "534f98076cef95e6662fbb91b115751b394baef4a17918a7af5ad49576f9bf92"
+    },
+    {
+      "currentSha256": "8175609b4fc4d82c4be2e377a91f81a7f8fe8c8632a6829ecb80d5718320b3ba",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePerlPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePerlPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2231
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-promotion-history-tests.mjs",
+      "previousSha256": "01ad1e7c89dea67818aa1d52d32b088b98b992dfc5e398d45a581a80fb2f5e3e"
+    },
+    {
+      "currentSha256": "90e366cb5a44face930ee239b5b044e5885e8c0f55e76515be855b23b096500c",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePerlRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePerlRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1470
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-perl-registration-history-tests.mjs",
+      "previousSha256": "0b6d24a07049642cb0e18e23a22324e5a7cbbd8394cd0f1d1374ba084771e9b9"
+    },
+    {
+      "currentSha256": "0457cc5f0f61c9e0324ccdb34021313bd8148d6a53b7af6970662c7a95822259",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1276
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-ci-history-tests.mjs",
+      "previousSha256": "424365c550dee60af6dda92d84d11a2bcd6ab94f799198498365a6da2acb1182"
+    },
+    {
+      "currentSha256": "118d319dd9928fd431541f66fb79a8266864b0e2bf2a5e7673e88c3ecbd17488",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1680
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-promotion-history-tests.mjs",
+      "previousSha256": "d7c1c6fbf4b047381427cd63348ce10c3945e6613157ae0c7c836ef4c34d2ffa"
+    },
+    {
+      "currentSha256": "c909a8d049e82591f43d3cdc46aedb49fbae5140fa43e76923260da9682cfe64",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1299
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-registration-history-tests.mjs",
+      "previousSha256": "83d23e5a784422a8f6d8aa3c07363a661836974768b8a9c0d3067e25ea5d740a"
+    },
+    {
+      "currentSha256": "9eb9a45866c859a3aa1f61a87e1379b25a7ffc2d88dbf1f6bff9bb84f2f63ca2",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmPathPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmPathPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1396
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-path-history-tests.mjs",
+      "previousSha256": "269e42b04416987336be3bed2a64ec7e4279e54a819dfccdc4d09a335335d5b1"
+    },
+    {
+      "currentSha256": "ccdf009fc86dedc037b3af7614dce61c7181a5c20fa3e0850946992802dfa95a",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1612
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-promotion-history-tests.mjs",
+      "previousSha256": "04076139d35fd35bebcffb97f72c1d324c4e11143fa99d5e1ed8d4c55f4fb2d8"
+    },
+    {
+      "currentSha256": "520627508c2259e1d182011126bca9e67961a42ea29129c626eeea18225ba490",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePhpWasmRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1346
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-php-wasm-registration-history-tests.mjs",
+      "previousSha256": "da934326f752713cd13ebf6fadccba7ccf0d00a244797ee293b56343c829dde7"
+    },
+    {
+      "currentSha256": "da6c6c0addfa9e2de77721faf6f6c6cda574a3b59f8ac9fba101cd8981c8cb74",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1276
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-archive-history-tests.mjs",
+      "previousSha256": "756398881851be5c9c428dd49a2d605ec44209fd5a186cfc3b740acb92cf2693"
+    },
+    {
+      "currentSha256": "d51ce2d8fe7a6b7d7d66e1157b5b6a2dd62ab39e8afb027861268cd83387f75c",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 2068
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-promotion-history-tests.mjs",
+      "previousSha256": "16e88d6e98ffa1a7e98d2c3771dd5e0255853b4a313b8ad0b2ec9160be1f9176"
+    },
+    {
+      "currentSha256": "6e46e83ffc6802b511eae235aea894aab7497dc013322f51afd47f1b985f98f9",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypePythonRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1333
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-registration-history-tests.mjs",
+      "previousSha256": "c62654b599c3844ea88ae2ca9e2a7d6bc5a8251e04e20abdb65234c855a2fe20"
+    },
+    {
+      "currentSha256": "b955dca371f19a3fb4c588572f1f5be3f5e460433ecf6d33c4084c1011dcf313",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1254
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-archive-history-tests.mjs",
+      "previousSha256": "244fdb49339926cf2dc26551cbe9eedc1bebeb823849397a376a295c8d9a6663"
+    },
+    {
+      "currentSha256": "1b1e016307c582319dbeb118db523e9a415b49968175f6503dc5917d9130d093",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1808
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-promotion-history-tests.mjs",
+      "previousSha256": "02f04924b7fd6bb89d1d970a4f611079f2fa02fb99d27a2b2742badf55022c66"
+    },
+    {
+      "currentSha256": "86347d8e2dc5086bdc30f73ffcac106fe01219f1f147f5743aaa3a15b89ffeaf",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRubyRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1309
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-registration-history-tests.mjs",
+      "previousSha256": "10da1c7988b337ccf3b51e525ee457ed5369a367c5d565a61a16c27a8088b6d1"
+    },
+    {
+      "currentSha256": "9d163e376f5623c21c9184f92382717b75918d74274a48d856c5687bfa4af0d9",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustArchivePredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1249
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-archive-history-tests.mjs",
+      "previousSha256": "86c0d26723098ba8e2c9cc306298dac4be87c6d958f3648e5968fd524627a82a"
+    },
+    {
+      "currentSha256": "5ad3b801a4f986beeb9ef17681ce94df6ecd33cbcd663eacb46fca166d5f837f",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1673
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-promotion-history-tests.mjs",
+      "previousSha256": "6aa9ec9e0fa4cb6a034dc38e99dd986080ede23b31c2694df07ed8b2d0ab5ba2"
+    },
+    {
+      "currentSha256": "74f56df4ef21d8b2b3c5a6d0f580780e8dc50a0dc0c79279de329f4ddbd1aa78",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeRustRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1309
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-registration-history-tests.mjs",
+      "previousSha256": "1f0f274b353bdd0dcdc72bf545946a7d01096788a23f914bd3ffa2a24f42e10c"
+    },
+    {
+      "currentSha256": "f3223b7fbb6fd22f914d34e8afa79f0bc419cb21ca479b1cb599943cd1aef493",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeSelectionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeSelectionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1265
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-selection-history-tests.mjs",
+      "previousSha256": "09610605916a4ed0bed4b2eaddf0a4b1fc4a82cec94b0f826c6e815e9a9815f3"
+    },
+    {
+      "currentSha256": "e54cf5e5cc723c18809fcaa8b5abee66cb6fb856e6b45f70afaa4e983a2d0664",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1262
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-ci-history-tests.mjs",
+      "previousSha256": "2d07302f5d4050a7ccb06e04021c22700b3581c18bc0e9c324d4e43a7ee808ed"
+    },
+    {
+      "currentSha256": "1ed55f97a424bb11bb3854d732f130340e8357f59fd3c769176ccc8c4c1b5205",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitPromotionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1667
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-promotion-history-tests.mjs",
+      "previousSha256": "5d37b6e248d2ce9fb4300488b1d93ab6ef4ffdb575ce4e38feb079b79c0422cd"
+    },
+    {
+      "currentSha256": "cc62a3038b90b2d6749eef00bdac53f3cd456493346d22250eefae080240afe1",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${nominalSubtypeWitRegistrationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1299
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-wit-registration-history-tests.mjs",
+      "previousSha256": "293fd47ded2c9770389d48e92bedbdff962f9eae6c8fdeb967597714bf65c214"
+    },
+    {
+      "currentSha256": "355f30ab32d376994cfa531f2e1db198ac2e38f1fc17164d2f05cef95f92cb4a",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1320
+        }
+      ],
+      "path": "tests/helpers/owned-refinement-carriers-source-history-tests.mjs",
+      "previousSha256": "4c910e2f7a1c0da7e40c2e609a3a863effed989b20a7300e4068b4460b5864c7"
+    },
+    {
+      "currentSha256": "f546ed73c8463152a57b93d0566dad737ec04d156a7aa0f5503354865f6a38e2",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1393
+        }
+      ],
+      "path": "tests/helpers/owned-refinement-model-source-history-tests.mjs",
+      "previousSha256": "dabbcb33f4034906859903a6cc4d7907aa5eb24742fdf2326ae84b2d20aab567"
+    },
+    {
+      "currentSha256": "40b0bb656b3f1e91222ec9fd9bcd5465c5e8c7fc480a766c371640f6ab5dd13a",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1368
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-analysis-source-history-tests.mjs",
+      "previousSha256": "1369d980ffed8047f1b51463144c48d8d57dafe33c06cf03d7ad6db551ce0e38"
+    },
+    {
+      "currentSha256": "0131bd43c690ab63e9cd9a7bec24997fdc78d6f1bba2fb59950f4dcc2a91f9dd",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1068
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-core-registration-source-history-tests.mjs",
+      "previousSha256": "958b05dde4a50800ad7f16ad3bcd502ab133ff18dfc6f22f8c6a2edfcbbbe09f"
+    },
+    {
+      "currentSha256": "81be08a8fc467b401079ef6eae3fc16be05ae524f4fb0e2632db967870388b4d",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1297
+        },
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2815
+        },
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 }));\n",
+          "start": 3102
+        },
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 3306
+        },
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 }));\n",
+          "start": 3617
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-javascript-source-history-tests.mjs",
+      "previousSha256": "eeaa847e87b18ee89408f07b1838f3b7d5c864448fa143153afcffe49fbf5a2d"
+    },
+    {
+      "currentSha256": "ece1b47c397a8ac80db847f47653db4f8c437129bec862b81aebd8085e4affe9",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1216
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-javascript-transfer-source-history-tests.mjs",
+      "previousSha256": "78663684f1701fa4dc7ce94527751c5492ebad885f257d3e0da0d8a8e77ac4d2"
+    },
+    {
+      "currentSha256": "16d2feeadf7ef544acaa819bb5ed0601baff6c9f277f68566c6a0bde888e0e4e",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${perlContainerSubtypeCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${perlContainerSubtypeCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1194
+        }
+      ],
+      "path": "tests/helpers/perl-container-subtype-ci-history-tests.mjs",
+      "previousSha256": "fb39b41e0df59e5da9ef480ace0234b4d28280a5288c181ffeed65753ccf7f17"
+    },
+    {
+      "currentSha256": "43235f67dae4e855327bdf17ca94b25ebc17181fbae1da02cbf197666e56050f",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1073
+        }
+      ],
+      "path": "tests/helpers/perl-engine-owned-refinement-closure-source-history-tests.mjs",
+      "previousSha256": "48e6aeb7497c7c91a0891523dfcc19779109614f59dde516e2833535823b28d3"
+    },
+    {
+      "currentSha256": "169c169e3c75f3e3c8b1c97471a46adf04b43a6a285465eca8a3ac359f9d4f64",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${perlHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${perlHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1212
+        }
+      ],
+      "path": "tests/helpers/perl-history-checkout-history-tests.mjs",
+      "previousSha256": "f39a0416575642858051dc41220fc47cdaac9af8c9e97e410e63d08ee7304b35"
+    },
+    {
+      "currentSha256": "1e0af445876083b1c5328e35202398b73f8f0f927f82d03baa5c48ea90aaa64b",
+      "edits": [
+        {
+          "current": "\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2755
+        }
+      ],
+      "path": "tests/helpers/perl-scalar-relocation-source-history-tests.mjs",
+      "previousSha256": "d2bb5ab78912c652273d3d70ddc7cd939796b7f5a4e904093b0370858632f517"
+    },
+    {
+      "currentSha256": "27201d068a48a99757dd662c16b9f604c3e71960874d705d5ff107516ac29f2e",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1890
+        }
+      ],
+      "path": "tests/helpers/php-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "7993a008ce3b8730655a0c4785935e479ea98059442ff94e023db299781d25bd"
+    },
+    {
+      "currentSha256": "39365a6bd26232d23c0e6bdcd3b689e7de385989e51f07f0bbb41991f9835a7b",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${phpWasmCorpusPartitionPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1287
+        }
+      ],
+      "path": "tests/helpers/php-wasm-corpus-partition-history-tests.mjs",
+      "previousSha256": "b91c8a925d40f0b31e71a7ac215f24c030367ae4607bd0449e3ec5d8b807252f"
+    },
+    {
+      "currentSha256": "c807d46ac41c21839572405495c22d885474719c3f86e8cb16e9329c82bf6912",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1447
+        }
+      ],
+      "path": "tests/helpers/php-wasm-failure-diagnostics-history-tests.mjs",
+      "previousSha256": "7bfaee76b804143389ab5cfbf2193d4eec54046c2613771dce0c1f82bd682d38"
+    },
+    {
+      "currentSha256": "3c606c1de0284d957180112e10cd6a62d497ce94255108b6e116c146288da9a2",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1259
+        }
+      ],
+      "path": "tests/helpers/primitive-audit-core-repair-source-history-tests.mjs",
+      "previousSha256": "944bffaefd165ae949ba01f5fde61a51132728b1007f2b0d07e5a4a52a19a89d"
+    },
+    {
+      "currentSha256": "78c21dc2cfb5245fa84c9e9041cad6ff156f55fd5c5f826f31e8b0ab4e60acc1",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1061
+        }
+      ],
+      "path": "tests/helpers/primitive-audit-integration-source-history-tests.mjs",
+      "previousSha256": "97dafdeabacd15bb9afc994f3cbaeb55577387702aa9ef649d05b41e898bebf6"
+    },
+    {
+      "currentSha256": "7d6e9499f40e5e3f59c7a86750977791c4203b5c4ca06b38bb59d7dd8b31af20",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1026
+        }
+      ],
+      "path": "tests/helpers/projected-checked-record-mirror-source-history-tests.mjs",
+      "previousSha256": "c748b21f05432a49e715d55d11533f2a07ee3062e6dadb91256625219fa89a31"
+    },
+    {
+      "currentSha256": "32e076045820c2f0bf4352622d6e3ff340d0089c2c171d81d6af0543a16f1fe8",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1844
+        }
+      ],
+      "path": "tests/helpers/python-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "336528caaf42951da2cc1bad7e953bff3ced20155ec454877fba3be139dd3f93"
+    },
+    {
+      "currentSha256": "2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1282
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-promotion-source-history-tests.mjs",
+      "previousSha256": "57613ecc6084963ea5cd085aa061c0604e2f2612e996ecb71c59728d9e963ae8"
+    },
+    {
+      "currentSha256": "92d49eae4661cc62f4eea1d0ae49a8795b7904905ef03b8c221123247e95c510",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1880
+        }
+      ],
+      "path": "tests/helpers/recursive-subtype-php-wasm-promotion-history-tests.mjs",
+      "previousSha256": "fe54600a1c445cf8413632b589dccd9474e5aa47ff004684e170b27dcaf67ef7"
+    },
+    {
+      "currentSha256": "d89ce5c33e5d70e3f32d8121c8e79874d2c91b61cedd88913dec26412cb22db0",
+      "edits": [
+        {
+          "current": "\t\tconst previous = execFileSync(\"git\", [\"show\", `${recursiveSubtypePhpWasmPredecessor}:${update.path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\tconst previous = execFileSync(\"git\", [\"show\", `${recursiveSubtypePhpWasmPredecessor}:${update.path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1583
+        }
+      ],
+      "path": "tests/helpers/recursive-subtype-php-wasm-source-history-tests.mjs",
+      "previousSha256": "738b901a320d1a95b1b7791e63ad117d9dc980b62f5a12bd6d6907fcff8c408f"
+    },
+    {
+      "currentSha256": "55e33c8bf0e89ad18a60659ebf4754b622d5ac2ce72da125d13197f2fa4ee3e1",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1779
+        }
+      ],
+      "path": "tests/helpers/ruby-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "097fa6da29ea1c298308b1826f473a0368393d021608baa7906fcd4b4be2eea2"
+    },
+    {
+      "currentSha256": "76fcf987b61f1fd47aff4432726d5348a14a95c5a8f7e8c831031ad05741994f",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1805
+        }
+      ],
+      "path": "tests/helpers/ruby-graph-keyword-field-source-history-tests.mjs",
+      "previousSha256": "0fae7b9a44f139f9ba9b67654cc618e828e8652e5e432bf7b9e41a3af2e2c635"
+    },
+    {
+      "currentSha256": "b9bbdb9371bb38882d46605d6a7ad1923f43d526a852f7f9a75122acd2d32be6",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1732
+        }
+      ],
+      "path": "tests/helpers/ruby-member-escape-source-history-tests.mjs",
+      "previousSha256": "bd3436143e1c69ab451b0f539adb7b79be709c2c1b3aa8885b4238b06434377f"
+    },
+    {
+      "currentSha256": "4556d570443d55890b41592ab30e8cb51f1363412569240b50c4a3637151f51b",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1763
+        }
+      ],
+      "path": "tests/helpers/rust-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "d850b195bdd3fd1dd595738a692708775a02644ffafab041684bdd8ce570c501"
+    },
+    {
+      "currentSha256": "326a271d29daac9aa43bd2bf6329cfaf3bb0671705c8a56da22640d42cae1603",
+      "edits": [
+        {
+          "current": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${structuralSubtypeCiFoundationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${structuralSubtypeCiFoundationPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1390
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-ci-foundation-history-tests.mjs",
+      "previousSha256": "81d3e520af53fcc440567f291299d0acd49a08f50959543c9b4788dc876c33bf"
+    },
+    {
+      "currentSha256": "d170a018b416f2dc0912370538a1cf7d17d46aa9d0b7a2807655547f141d6edf",
+      "edits": [
+        {
+          "current": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${structuralSubtypeCoreCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst gitSource = path => execFileSync(\"git\", [\"show\", `${structuralSubtypeCoreCiPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1326
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-core-ci-history-tests.mjs",
+      "previousSha256": "8c99f7e05863a1ac4b0374c8b5d82211cab0b6d44713f439518e06974fe0fd0f"
+    },
+    {
+      "currentSha256": "128cd5ca9b1459dd385d4307d6d1b3bbbb7ad970b1f7bfd67fbfd5e77c55d780",
+      "edits": [
+        {
+          "current": ", { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": ", { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1147
+        },
+        {
+          "current": "\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }));\n",
+          "previous": "\t\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 }));\n",
+          "start": 3332
+        }
+      ],
+      "path": "tests/helpers/structural-subtype-partition-validator-source-history-tests.mjs",
+      "previousSha256": "f9bcf093210aa0c18ffc66f40be8499274d4caf79c708c19f930f2e5fe42b3ef"
+    },
+    {
+      "currentSha256": "943a71dfbfdcea2b227abbf95bb3618f2357eb6d0a7760eccd3b664507182152",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${subtypeResultPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${subtypeResultPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1181
+        }
+      ],
+      "path": "tests/helpers/subtype-result-history-tests.mjs",
+      "previousSha256": "91a0bf39693fde453134fe9541b51a5eaf044a8f47e8e9e4780bd15f2a28495b"
+    },
+    {
+      "currentSha256": "23b6941673bc423e736456748aa0554764a85f8d903316cb1ba3e6c46590e29b",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 848
+        }
+      ],
+      "path": "tests/helpers/wit-callback-installed-acceptance-history-tests.mjs",
+      "previousSha256": "c2869e15122786a81866009f02d46689a34db9e2cd1a37737082934005211091"
+    },
+    {
+      "currentSha256": "0cf72bbf7daeb90f900eef7e6e2b562830c45529ab4073df531747f48e93e858",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1757
+        }
+      ],
+      "path": "tests/helpers/wit-graph-diagnostic-source-history-tests.mjs",
+      "previousSha256": "4aac7130f678be1c85b6d0b15f59bb7949783d84f91dff87dc80ded7699f12e7"
+    },
+    {
+      "currentSha256": "d895cceff060625d252ba8bc723a424982dc5a2a49a249c73e33b9b240dedfce",
+      "edits": [
+        {
+          "current": "\tconst original = path => execFileSync(\"git\", [\"show\", `${witHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\tconst original = path => execFileSync(\"git\", [\"show\", `${witHistoryCheckoutPredecessor}:${path}`], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1250
+        }
+      ],
+      "path": "tests/helpers/wit-history-checkout-history-tests.mjs",
+      "previousSha256": "dc58a0dfcd58583ab5675d8f7f6117e4e092846a54e0e30c78793c6a3efdb1d5"
+    },
+    {
+      "currentSha256": "cd8b46171597dc4c91f43d1ac2d0caa9da0f034d696e64eee3b8ac1b385e13ff",
+      "edits": [
+        {
+          "current": "\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t], { encoding: \"utf8\", maxBuffer: 32 * 1024 * 1024 });\n",
+          "start": 1347
+        }
+      ],
+      "path": "tests/helpers/wit-history-checkout-repair-history-tests.mjs",
+      "previousSha256": "99b0c00d5c26349424053e216e641284a6e9962527e7734a93b55abd5ede8a17"
+    },
+    {
+      "currentSha256": "c844ce0afec0f6960b3155e078e999ac626076d4ae19a5cf363b31bb2b2f4672",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1010
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-archive-source-history-tests.mjs",
+      "previousSha256": "ff651d75dc8021880af16cff9b494beb5ef721243b34d015652e67bdc0868a72"
+    },
+    {
+      "currentSha256": "0f589a9d32b82e72ed3ae48d7e74cfe26577470db5ca87bd69b9f47d5d5da234",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 872
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-ci-source-history-tests.mjs",
+      "previousSha256": "c92501d9759ac011e2aed1f8858a3e827f12757213371844d7158df05945fdce"
+    },
+    {
+      "currentSha256": "834cc43bfcbac5471937ae27380d85521d93b67f10fb077a492fcfcc02a8eaf8",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1036
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-diagnostic-source-history-tests.mjs",
+      "previousSha256": "9f75f481767ae287cd38c9c321b2a71351474d51c51d53cd1e8fac1a38bb5a59"
+    },
+    {
+      "currentSha256": "f87db3b8b4767d1b8087f0cd4e7f4b0203748199a9b12b556be639568d075fe1",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 862
+        }
+      ],
+      "path": "tests/helpers/zero-payload-browser-source-history-tests.mjs",
+      "previousSha256": "af7923a5fb5ce6190d7b7d688a13f3cb1d5a49aaf141bc42dfcc7a2a47f1e6b8"
+    },
+    {
+      "currentSha256": "e8c0901ee80bc56a455e5091d51cf9a8e3f618d92c949a363d08e601a9279b5a",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 908
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-source-history-tests.mjs",
+      "previousSha256": "d26f0d6fd54ad8b9c24e26d130b56e3eca5b55b59388e3785c6a53cc5a524cd1"
+    },
+    {
+      "currentSha256": "c40ba130167cbc611c79253f639052629d33608f6efc101aef59882f0d8235c7",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1004
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-archive-source-history-tests.mjs",
+      "previousSha256": "a5ce0cd04a85d2aa341fd9367f67d3f4828b61d1e37afe1b725f7a4c115dc827"
+    },
+    {
+      "currentSha256": "8245b3b1b21617fc5e886efbdcd14c8f0c1e5cf6ba32aecb975503120985448b",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 964
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-ci-source-history-tests.mjs",
+      "previousSha256": "5d828ee6d98c1b04b7373e9360bc2d92532e581fc1e5c25831932ff0a761e651"
+    },
+    {
+      "currentSha256": "5d730e9aeb1600393f4f596ad5d162b7fbf14b47deb9d1f5d0967acccd9aeaf6",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1057
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-control-repair-source-history-tests.mjs",
+      "previousSha256": "e9ebf941f595a6fa4dacf0e7c7710fe6783aca90fe70b0dba0472504e2a8483d"
+    },
+    {
+      "currentSha256": "ea10428f00c551ceccb6d5d46045ec7ed15f8b83718ac3bd517c7a509e5ae007",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 935
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-source-history-tests.mjs",
+      "previousSha256": "39ba48ca926b086dec277387b866bc0fdb4f4a98b5c06dc37f147980c399709c"
+    },
+    {
+      "currentSha256": "2f162fb74db71c5691ee96fb9b36fcb2f91a7ac3664ac7dc308909aa1ae73e34",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1048
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-verifier-repair-source-history-tests.mjs",
+      "previousSha256": "42638b5cf4d8e40bd4ae3a811152381ee090d3d153ed5030e5c05348f43804e0"
+    },
+    {
+      "currentSha256": "eb90236e6d11b15ab0d17568f127a7d0e792a3b2346a974ecafef433e4b097ff",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 887
+        }
+      ],
+      "path": "tests/helpers/zero-payload-javascript-source-history-tests.mjs",
+      "previousSha256": "cbf64d77968f86a42f0e862f706b036c98885ec2c0843ea9361688736c5078cb"
+    },
+    {
+      "currentSha256": "12fa3bb3adff3af985a351f54c1bddf9ddd4261c5cd534f2a27a4c4405f1de64",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 979
+        }
+      ],
+      "path": "tests/helpers/zero-payload-jvm-archive-source-history-tests.mjs",
+      "previousSha256": "a3aed805d8082373e34102f88df0dde85e4a851887c9dadef8d702d4afcedd95"
+    },
+    {
+      "currentSha256": "ddf35969cea7690b583685415e81af1ceca9784af15f105e3d24a5050ce31f24",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 910
+        }
+      ],
+      "path": "tests/helpers/zero-payload-jvm-source-history-tests.mjs",
+      "previousSha256": "2ab951b9c5f2ae990c9a05a33518bfccd9dcfe1e383c873731c80a885aaba4ba"
+    },
+    {
+      "currentSha256": "f5a5eb68d609a70a011e4a9ef6c7a368bde8d3a46b9ad8a2ab8ca765e620a748",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1006
+        }
+      ],
+      "path": "tests/helpers/zero-payload-native-archive-source-history-tests.mjs",
+      "previousSha256": "8121e9b047f7166eee99ec4fcde2d2e9782cf0c48e828484538ea87cdf5614d2"
+    },
+    {
+      "currentSha256": "60fb57d5797cef62ee7ed8d0fd07858b404306b7c31ef89580b82086cd9b7d76",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1012
+        }
+      ],
+      "path": "tests/helpers/zero-payload-native-evidence-source-history-tests.mjs",
+      "previousSha256": "46cd53bc808e9a5237fcc7500664b6c17d0aec2b4b0f7a54332e98f94c46e232"
+    },
+    {
+      "currentSha256": "a730673d85f24d44ccd7f1f6db66e201e18992c12c19701d2d4151bbc18bc896",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 936
+        }
+      ],
+      "path": "tests/helpers/zero-payload-native-source-history-tests.mjs",
+      "previousSha256": "1f131626ab4ee6254868872bd4b5ae970a9c64f1821fa5f1ff787bce98e2d5e2"
+    },
+    {
+      "currentSha256": "0caecf0c166e9c00e2f27f09b32e8ecde89e0f573a299d387b4e6bb5b37ad419",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 906
+        }
+      ],
+      "path": "tests/helpers/zero-payload-npm-foundation-source-history-tests.mjs",
+      "previousSha256": "6c9903789d41bc65a81a8b10629baadf7784cd637dcf1397e78e4ddefdeded15"
+    },
+    {
+      "currentSha256": "9f138454609b9d475fb728aa90536a2cc855389942d707da8791ec5061b73871",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 899
+        }
+      ],
+      "path": "tests/helpers/zero-payload-npm-installed-source-history-tests.mjs",
+      "previousSha256": "beb729c14e0dde5222cef90018fb01613db0d9284ef295c0af7284d72f7d1484"
+    },
+    {
+      "currentSha256": "d853d9d0b1e09ae1f164c03001b19eb665c7d1ab00b8f2d90adf790fb09bc18a",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 988
+        }
+      ],
+      "path": "tests/helpers/zero-payload-perl-archive-source-history-tests.mjs",
+      "previousSha256": "d3fe0abcdc711c7c29f2ace9e76941bee5157e1fcfe549674adbdf6963d03264"
+    },
+    {
+      "currentSha256": "9ed4e5fdddd303e9a63f12ff854375527932a1e01a3531dbbbaaa1d348da2df0",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1036
+        }
+      ],
+      "path": "tests/helpers/zero-payload-python-source-history-tests.mjs",
+      "previousSha256": "d0fe4e80b6195ab431833816338deccb5fcb28dab8ef27a1d9df8cf5544cf961"
+    },
+    {
+      "currentSha256": "da5c499bdeb94013e45a679f5f97f8f23d1080dd283ee8a2164381022fc546f6",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1016
+        }
+      ],
+      "path": "tests/helpers/zero-payload-ruby-source-history-tests.mjs",
+      "previousSha256": "a57b684943481c310069b48d6dbaca728b46b603f477d41c36273cc51d04e541"
+    },
+    {
+      "currentSha256": "1ed005eb041890cc7098b9e4eef9f2bde2cd27894f7f0a44ea6845beb0c9c98a",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 988
+        }
+      ],
+      "path": "tests/helpers/zero-payload-rust-archive-source-history-tests.mjs",
+      "previousSha256": "24f8d6340ef821bd00b40aba395c6ce49ecb99827caaf60dfc4dc45993a6bb38"
+    },
+    {
+      "currentSha256": "a022b2818842b896bc713947d38605f8a2950147caed2f517059b2c3469e9732",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1017
+        }
+      ],
+      "path": "tests/helpers/zero-payload-rust-audit-repair-source-history-tests.mjs",
+      "previousSha256": "3d7e0d0d218de0d9e8465ee1410a9f235aefc12a39b440664db7efbfda5d21ff"
+    },
+    {
+      "currentSha256": "d4f62d53e8ee561f8c1438501f7a13e3474866bd1223f49818bf683a49499e4b",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 940
+        }
+      ],
+      "path": "tests/helpers/zero-payload-rust-ci-source-history-tests.mjs",
+      "previousSha256": "b11ba8e44deed978a1c1721fb7eb07fe9467d16d3a5ceacb384c6ff7312b248a"
+    },
+    {
+      "currentSha256": "300e1fcb081c5ab1812eb700b43c11757ce0b8ffd9065335a610ada011ad6f07",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1003
+        }
+      ],
+      "path": "tests/helpers/zero-payload-rust-installed-source-history-tests.mjs",
+      "previousSha256": "e59c076c50a86a5c8d033c3400ce18cd49cfba6b571b725bfdfa75bea556b069"
+    },
+    {
+      "currentSha256": "b15422f9c9c68d2a2503774943af1f6f8d6dc853192d5faf755efbae77fed261",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 919
+        }
+      ],
+      "path": "tests/helpers/zero-payload-rust-source-history-tests.mjs",
+      "previousSha256": "2d23601ca0eca049f5875b374c32686b39264fb2aa2596c63a78780130e75c4c"
+    },
+    {
+      "currentSha256": "7f579cda6bb45e86988f5f6a996443b6cc01968194076da894d8cca6d2741589",
+      "edits": [
+        {
+          "current": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, `${revision}:${path}`], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 956
+        }
+      ],
+      "path": "tests/helpers/zero-payload-variant-source-history-tests.mjs",
+      "previousSha256": "5ce24aaa40fd6106b4c2920a68431e394e915aca78d92808b68bf941f792393e"
+    },
+    {
+      "currentSha256": "5016d6b2b3e74451a55ba68722c4f506505eec536271bd7655e28df909f5d772",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1307
+        }
+      ],
+      "path": "tests/inherited-checked-record-dotnet-artifact-retention-source-history.test.mjs",
+      "previousSha256": "46ed4df7ac4f51df34ba847c3dfa68be848fcb934274acc2dfa6813c062fb683"
+    },
+    {
+      "currentSha256": "0ec42491445ddf27ba3cd067ef7734567f17e872a9cca05a20a3fa86756c9bd8",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1175
+        }
+      ],
+      "path": "tests/inherited-checked-record-dotnet-source-history.test.mjs",
+      "previousSha256": "4f377b839be3be06898a72c626e4e00ab991ead2f196bdafd3051f1f50477c78"
+    },
+    {
+      "currentSha256": "47584759387f4baf82fcd9c4676b6caf0bba6b7a77d1ebcf5479927df2ed919b",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1170
+        }
+      ],
+      "path": "tests/inherited-checked-record-hosted-evidence-history.test.mjs",
+      "previousSha256": "4da7ea0d7021f0006ddb04de915a566384c6ff503fcc1cbcf20aefcfbba4eeb8"
+    },
+    {
+      "currentSha256": "272270579675773ecd83760c35cede1da2a492e4a0b419c2a542636bcc5729c4",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1125
+        }
+      ],
+      "path": "tests/inherited-checked-record-jvm-source-history.test.mjs",
+      "previousSha256": "b996e9ddcd19ef38307e8b1176a5349e0d652793254af9de4e1cbba314af4eab"
+    },
+    {
+      "currentSha256": "761f5f5479518c8793f536f280524161713403a7c8323baa98cafe70650aeb67",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 3883
+        }
+      ],
+      "path": "tests/inherited-checked-record-perl-source-history.test.mjs",
+      "previousSha256": "327c3ff5de56d70fa519fbd8c23be5c381d0c7e9d0c3ebb053095d4471a0e7f3"
+    },
+    {
+      "currentSha256": "13d060dbc1091650c9c954433f6330c246d109d4bfd7021d185422dde17c9b5a",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1627
+        }
+      ],
+      "path": "tests/inherited-checked-record-php-source-history.test.mjs",
+      "previousSha256": "50ed5537983aa65a9350a309a834211bfdf52cac97f81eb731589205b166e78e"
+    },
+    {
+      "currentSha256": "5967c7f7d6779ab33403d5ab1bc6d9631155dc73ff162c7fe6ad386017fbda2c",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1152
+        }
+      ],
+      "path": "tests/inherited-checked-record-python-source-history.test.mjs",
+      "previousSha256": "c86658141e4b1487eb3f0c789af7b9c104ea114ffe33f4fae010ff34f7105b12"
+    },
+    {
+      "currentSha256": "107214797d3717c6d3779dcd10d8bdcaf132b166c369b81bb955f18d88eeac46",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1134
+        }
+      ],
+      "path": "tests/inherited-checked-record-ruby-source-history.test.mjs",
+      "previousSha256": "283a258852f084e8764e8fc3aa0a8f5e5844350555fc74c8d4dcf5e0a9423a5f"
+    },
+    {
+      "currentSha256": "2c88d8188ccadd4fc4b70f227c0a89365d10db77223da84642b7ab0f1c5c84fc",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2035
+        }
+      ],
+      "path": "tests/inherited-checked-record-test-registration-history.test.mjs",
+      "previousSha256": "41302061da6d70ab66b435321691ac0356f81e2a50e61efb48192e7c8f070d98"
+    },
+    {
+      "currentSha256": "2828c0c572eea2ac22c9cdcd820213bd36cf164b6bb6a496bf56577e065e6167",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1730
+        }
+      ],
+      "path": "tests/late-checked-record-test-registration-history.test.mjs",
+      "previousSha256": "8600e69e631254676de6a4cb64b99f2b05f9799f776baf592e54d2b78f2e5b17"
+    },
+    {
+      "currentSha256": "1f36fb63dd194a18a4fe8907d69aacefdd74be65d30a7c50209ee05afbef93be",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1889
+        }
+      ],
+      "path": "tests/mutual-checked-record-dotnet-source-history.test.mjs",
+      "previousSha256": "9c2d3ebfa600ca9e25bba77d5fc29d25030428346a9877478f4e1f3e74003f82"
+    },
+    {
+      "currentSha256": "ebc969bca0d0b96f81aeffc91f4fa51fe8fdf508ac837e6a3f779c175d6d00df",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1834
+        }
+      ],
+      "path": "tests/mutual-checked-record-jvm-source-history.test.mjs",
+      "previousSha256": "a5a9d629e74409591c036a6c6dcb93805bb040f56f9cfc100e40db48a9743a16"
+    },
+    {
+      "currentSha256": "223defdb4faeacd57e6c251e6caa4b91a376f40394a31f3764ce71809d7dcc26",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1939
+        }
+      ],
+      "path": "tests/mutual-checked-record-npm-archive-source-history.test.mjs",
+      "previousSha256": "9174574a26bd0a220dab7e9ec5675eb2e5d8e5930e3e4c5ed86aba49773ae785"
+    },
+    {
+      "currentSha256": "acd563110338ad46d541151f8d7b3b94b34c9554265424afee3ef5d34f42d048",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1031
+        }
+      ],
+      "path": "tests/owned-subtype-host-registration-history.test.mjs",
+      "previousSha256": "6cdfacb12fb3ebd22ff0989125ccfda319020a0b21256d4413301d891d2fe791"
+    },
+    {
+      "currentSha256": "9446bb1ec5e6227243d31299cd09caeb15fef9333f05517499e719192bc9faef",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1052
+        }
+      ],
+      "path": "tests/php-copied-keyword-source-history.test.mjs",
+      "previousSha256": "f2dfb0453025a2cbfe0bdf02a2dcd51e657f4427d0a8fed7b9cc24e5546991ae"
+    },
+    {
+      "currentSha256": "db7d8d08b7b25422e1a6c2f7d7f9f7d69d9819b016fb980675b9616db66e0e87",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1069
+        }
+      ],
+      "path": "tests/php-wasm-writer-guard-source-history.test.mjs",
+      "previousSha256": "b11cb6f5de8bfe9d556a4d6ddf3f09c4b0f7f9c0b1990ac080c61cfac012f61a"
+    },
+    {
+      "currentSha256": "c82ae956d4e25c0d329766cafa9d22fd055896c9071165da164b92ec6eecb030",
+      "edits": [
+        {
+          "current": "\t\t], { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t\t], { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 2808
+        }
+      ],
+      "path": "tests/recursive-checked-record-perl-diagnostic-source-history.test.mjs",
+      "previousSha256": "f86c79a6a3fab521ca8eb679167759989ee7a352833e3122ee2875f81f7048fe"
+    },
+    {
+      "currentSha256": "e088075f0fd6a72831d9e6abb87b5614b2759277304f3de318a20002ea775ad4",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1344
+        }
+      ],
+      "path": "tests/recursive-checked-record-perl-package-history-repair.test.mjs",
+      "previousSha256": "56f873c95df5bc36589a5ec88db6844af5e330b3432774f55d38a6cf8c8aef89"
+    },
+    {
+      "currentSha256": "8ca0d7f74e4609ee04e523474507643abf48515f952b4456fccdef3e78fb902e",
+      "edits": [
+        {
+          "current": "\tencoding: \"utf8\", maxBuffer: 512 * 1024 * 1024\n",
+          "previous": "\tencoding: \"utf8\", maxBuffer: 64 * 1024 * 1024\n",
+          "start": 1181
+        }
+      ],
+      "path": "tests/recursive-component-regression-repair-source-history.test.mjs",
+      "previousSha256": "489386b0eb32ef015ad13db14235693394e47caafc15e25ed6d3c22811280558"
+    },
+    {
+      "currentSha256": "62d29434758b16ff094b94132f81f7750f75e1a19498988277b254e93df9fa1f",
+      "edits": [
+        {
+          "current": "\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 });\n",
+          "previous": "\t, { encoding: \"utf8\", maxBuffer: 64 * 1024 * 1024 });\n",
+          "start": 1635
+        }
+      ],
+      "path": "tests/recursive-wit-test-registration-history.test.mjs",
+      "previousSha256": "4f75e10dea79a0c9e3463d2c5ae198d07515d1fad06511c99d1afe93af7c54ab"
+    }
+  ]
+}

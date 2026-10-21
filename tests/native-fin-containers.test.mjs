@@ -31,6 +31,7 @@ import "./helpers/fin-container-host-dispatch-tests.mjs";
 import "./helpers/container-host-dispatch-source-history-tests.mjs";
 import "./helpers/perl-fin-archive-source-history-tests.mjs";
 import "./helpers/perl-fin-xs-audit-source-history-tests.mjs";
+import "./helpers/history-reader-buffer-repair-source-history-tests.mjs";
 import "./helpers/hub-transition-gap-source-history-tests.mjs";
 import "./helpers/history-reader-hub-repair-source-history-tests.mjs";
 import "./helpers/ledger-transition-gap-source-history-tests.mjs";

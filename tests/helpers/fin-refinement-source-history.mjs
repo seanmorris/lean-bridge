@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeHistoryReaderBufferRepairSource, historyReaderBufferRepairChangedPaths, historyReaderBufferRepairIntegrationPaths } from "./history-reader-buffer-repair-source-history.mjs";
 import { beforeHubTransitionGapSource, hubTransitionGapChangedPaths, hubTransitionGapHistoricalPaths } from "./hub-transition-gap-source-history.mjs";
 import { beforeHistoryReaderHubRepairSource, historyReaderHubRepairChangedPaths, historyReaderHubRepairIntegrationPaths } from "./history-reader-hub-repair-source-history.mjs";
 import { beforeLedgerTransitionGapSource, ledgerTransitionGapChangedPaths, ledgerTransitionGapHistoricalPaths } from "./ledger-transition-gap-source-history.mjs";
@@ -1438,7 +1439,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hubTransitionGapChangedPaths
+	...historyReaderBufferRepairChangedPaths
+	, ...historyReaderBufferRepairIntegrationPaths
+	, ...hubTransitionGapChangedPaths
 	, ...hubTransitionGapHistoricalPaths
 	, ...ownedSubtypeHostRegistrationChangedPaths
 	, ...callbackSubtypeBrowserArtifactChangedPaths
@@ -1992,7 +1995,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const hubGap = beforeHubTransitionGapSource(path, text, expected);
+	const bufferRepair = beforeHistoryReaderBufferRepairSource(path, text, expected);
+	if(sha256(bufferRepair) === expected) return bufferRepair;
+	const hubGap = beforeHubTransitionGapSource(path, bufferRepair, expected);
 	if(sha256(hubGap) === expected) return hubGap;
 	const readerRepair = beforeHistoryReaderHubRepairSource(path, hubGap, expected);
 	if(sha256(readerRepair) === expected) return readerRepair;
