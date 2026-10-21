@@ -56,12 +56,16 @@ export const componentRecursiveTypes = abi => {
  * @param exports - Compiler-selected source declarations and wrapper identities.
  * @param leanType - Renderer for semantic source type references.
  * @param nominalRefinements - Validated constraints at nominal field boundaries.
+ * @param options - Optional prebuilt mirrors (`conversion`) and whether to emit
+ * export wrappers (`emitSites`, default true).
  */
-export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefinements = []) => {
+export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefinements = [], options = {}) => {
 	const types = componentRecursiveTypes(abi), definitions = new Map(abi.types.map(type => [type.id, type]));
 	const constraints = new Map(nominalRefinements.map(entry => [entry.id, entry.refinement]));
 	const selected = exports.some(item => [...item.refinements?.parameters ?? [], item.refinements?.result ?? null].some(tree => hasComponentNominalRefinements(tree)));
-	const conversion = selected ? componentRefinementMirrors(abi, exports, leanType, nominalRefinements) : null;
+	// A structured callable component supplies the mirrors it derived from its callback
+	// sites and emits its own wrappers; the shared codecs then use the same mirror layouts.
+	const conversion = options.conversion ?? (selected ? componentRefinementMirrors(abi, exports, leanType, nominalRefinements) : null);
 	// A checked record crosses as its payload mirror: carriers build and read only the mirror, and
 	// each site's constructor alone builds the source record from it.
 	const checkedRecords = new Map(abi.types.filter(type => type.kind === "record" && type.erased).map(type => [type.id, type]));
@@ -187,7 +191,7 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			field(`field${index}`, child, ["match value with", `| .${name} child => pure child`, "| _ => .none"]);
 		});
 	}
-	for(const item of sites)
+	for(const item of options.emitSites === false ? [] : sites)
 	{
 		if(conversion) item.parameters.forEach((parameter, index) => lines.push(
 			`@[export ${item.symbol}_fin_guard_${index}]`

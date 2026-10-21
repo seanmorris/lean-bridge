@@ -143,10 +143,15 @@ export const componentRefinementMirrors = (abi, exports, leanType, nominalRefine
 		const selected = item.refinements ?? { parameters: signature.parameters.map(() => null), result: null };
 		if(!selected || Object.keys(selected).sort().join(",") !== "parameters,result" || !Array.isArray(selected.parameters)
 			|| selected.parameters.length !== signature.parameters.length) fail("refinements must cover the complete signature");
-		selected.parameters.forEach((tree, i) => assertRefinement(tree, signature.parameters[i], 0, true, publicTypes));
-		assertRefinement(selected.result, signature.result, 0, true, publicTypes, true);
-		const parameters = signature.parameters.map((type, i) => normalize(type, selected.parameters[i], false));
-		const result = normalize(signature.result, selected.result, true);
+		// An export consumes its parameters and produces its result. A callback site may
+		// state the opposite direction: a host callback produces its arguments and consumes
+		// its reply, so each tree is authenticated and normalized for its own producer.
+		const produced = index_ => item.produced?.parameters?.[index_] ?? false;
+		const producedResult = item.produced?.result ?? true;
+		selected.parameters.forEach((tree, i) => assertRefinement(tree, signature.parameters[i], 0, true, publicTypes, produced(i)));
+		assertRefinement(selected.result, signature.result, 0, true, publicTypes, producedResult);
+		const parameters = signature.parameters.map((type, i) => normalize(type, selected.parameters[i], produced(i)));
+		const result = normalize(signature.result, selected.result, producedResult);
 		return { ...item, refinements: { parameters, result } };
 	});
 	const names = refinementMirrorNames({ exports: sites });

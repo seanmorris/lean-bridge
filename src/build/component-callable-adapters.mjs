@@ -42,9 +42,10 @@ export const createComponentPrivateAbi = document => {
 	const copied = document.declarations.some(item => [...item.parameters.map(p => p.type), item.result.type].some(type => type.kind === "apply"));
 	const callbackTypes = document.types.filter(type => type.kind === "callback");
 	// Checked records cross only as payload mirrors, which the recursive graph carriers generate.
-	if(document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
+	// Checked records with callbacks cross as payload mirrors inside the structured
+	// callable carriers below; without callbacks the recursive graph carriers own them.
+	if(!callbackTypes.length && document.types.some(type => Object.hasOwn(type.source?.extensions ?? {}, "lean-lang.org/erased-proofs")))
 	{
-		if(callbackTypes.length) throw new TypeError("Checked records cannot share a component with callbacks yet");
 		const exports = document.declarations.map(declaration => ({ bindingId: declaration.id
 			, symbol: `lean_bridge_${sha256(`${document.component.id}\0${declaration.id}`).slice(0, 24)}`
 			, parameters: declaration.parameters.map(parameter => parameter.type)

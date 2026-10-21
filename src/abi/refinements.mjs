@@ -300,10 +300,13 @@ export const callbackRefinement = (signature, value, types = [], direction = und
 	if(direction !== undefined && !["host", "closure"].includes(direction))
 		throw new TypeError("Invalid callback refinement direction");
 	const structural = true;
+	// Private layouts name their erased proof fields directly; public definitions carry them
+	// as the erased-proofs extension that checked-record trees are authenticated against.
 	const definitions = types.map(definition => definition.source ? definition : {
 		...definition
 		, representation: "copied"
-		, source: { declaration: definition.id?.startsWith("lean:") ? definition.id.slice(5) : null, extensions: {} }
+		, source: { declaration: definition.id?.startsWith("lean:") ? definition.id.slice(5) : null
+			, extensions: definition.erased ? { "lean-lang.org/erased-proofs": { fields: [...definition.erased] } } : {} }
 	});
 	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
 	const containsSubtype = [...value.parameters, value.result].some(refinement => {

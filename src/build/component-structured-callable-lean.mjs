@@ -9,7 +9,7 @@ import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/compon
 import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
-import { hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
+import { componentRefinementMirrors, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
 import { callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
@@ -133,6 +133,72 @@ export const componentStructuredCopiedView = abi => {
 export const componentStructuredCallablePrefix = (abi, signature) => `${abi.exports[0].symbol}_structured_${signature.key}`;
 
 /**
+ * Derive erased payload mirrors and normalized constructor trees for every export and
+ * callback site of a structured callable component. A checked record crosses a callback
+ * as its mirror; a host callback produces its arguments and consumes its reply, a leased
+ * closure the reverse, so each callback site is normalized for its own producer. Components
+ * without checked records or nominal selections keep their previous mirror-free layout.
+ *
+ * @param abi - Authenticated copied-payload callable descriptor.
+ * @param sourceExports - Compiler-selected exports with public per-use refinement trees.
+ * @param directions - Callback identity to host/closure/null direction.
+ * @param nominalRefinements - Compiler-owned shared Fin constraints in nominal layouts.
+ */
+export const componentStructuredCallableMirrors = (abi, sourceExports, directions, nominalRefinements = []) => {
+	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
+	const trees = value => value ? [...value.parameters, value.result] : [];
+	const needed = abi.types.some(type => type.kind === "record" && type.erased)
+		|| abi.callbacks.some(type => trees(type.refinements).some(hasComponentNominalRefinements))
+		|| sourceExports.some(item => trees(item.refinements).some(hasComponentNominalRefinements));
+	if(!needed) return null;
+	const identity = type => type.kind === "named" && callbacks.has(type.id);
+	const unit = { kind: "primitive", name: "unit" };
+	const site = type => identity(type) ? unit : type;
+	const exports = [], items = [];
+	for(const signature of abi.exports)
+	{
+		const item = sourceExports.find(value => value.bindingId === signature.bindingId);
+		exports.push({
+			bindingId: signature.bindingId, symbol: signature.symbol
+			, parameters: signature.parameters.map(site), result: site(signature.result)
+			, resultMode: "value"
+		});
+		items.push({
+			bindingId: signature.bindingId, symbol: signature.symbol
+			, parameters: signature.parameters.map(() => ({ leanType: "" }))
+			, ...(item?.refinements ? { refinements: item.refinements } : {})
+		});
+	}
+	for(const callback of abi.callbacks)
+	{
+		const symbol = `lean_bridge_${sha256(`${abi.exports[0].symbol}\0callback\0${callback.key}`).slice(0, 24)}`;
+		const host = directions.get(callback.id) === "host";
+		exports.push({
+			bindingId: callback.id, symbol
+			, parameters: callback.parameters.map(site), result: site(callback.result)
+			, resultMode: "value"
+		});
+		items.push({
+			bindingId: callback.id, symbol
+			, parameters: callback.parameters.map(() => ({ leanType: "" }))
+			, ...(callback.refinements ? { refinements: callback.refinements } : {})
+			, produced: { parameters: callback.parameters.map(() => host), result: !host }
+		});
+	}
+	const mirrors = componentRefinementMirrors({ ...componentStructuredCopiedView(abi), exports }, items, componentStructuredLeanType, nominalRefinements);
+	const empty = value => !value || [...value.parameters, value.result].every(tree => tree === null);
+	const sites = new Map(mirrors.sites.map(entry => [entry.bindingId, entry]));
+	return {
+		...mirrors
+		, refinementsFor: bindingId => {
+			const value = sites.get(bindingId)?.refinements;
+			return empty(value) ? null : value;
+		}
+		, siteFor: bindingId => sites.get(bindingId)
+	};
+};
+
+/**
  * Generate total Array-carried wrappers without relying on source object layout.
  *
  * @param abi - Authenticated copied-payload callable descriptor.
@@ -143,24 +209,34 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const nominalRefinements = abi.nominalRefinements ?? [];
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
-	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
 		, callbackSubtypeDirection(type, type.refinements, abi.types)]));
-	for(const [id, value] of callbackRefinements) if(callbackDirections.get(id) === null
+	const conversion = componentStructuredCallableMirrors(abi, sourceExports, callbackDirections, nominalRefinements);
+	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id
+		, conversion ? conversion.refinementsFor(type.id) : runtimeRefinements(type, type.refinements)]));
+	for(const [id, value] of callbackRefinements) if(!conversion && callbackDirections.get(id) === null
 		&& value && [...value.parameters, value.result].some(hasComponentNominalRefinements))
 		throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
+	// Wire types: a checked record crosses as its erased mirror wherever mirrors exist.
+	const wire = type => type.kind === "named" && callbacks.has(type.id)
+		? wireCallbackType(callbacks.get(type.id))
+		: conversion ? conversion.renderType(type) : componentStructuredLeanType(type, callbacks);
 	const wireCallbackType = signature => {
 		const direction = callbackDirections.get(signature.id);
 		if(direction === "host") return "_root_.USize";
-		if(direction === "closure") return `(${[...signature.parameters.map(type => componentStructuredLeanType(type))
-			, `(_root_.Option ${componentStructuredLeanType(signature.result)})`].join(" → ")})`;
+		if(direction === "closure") return `(${[...signature.parameters.map(wire)
+			, `(_root_.Option ${wire(signature.result)})`].join(" → ")})`;
 		return componentStructuredLeanType({ kind: "named", id: signature.id }, callbacks);
 	};
-	const carrier = type => `(_root_.Array ${type.kind === "named" && callbacks.has(type.id)
-		? wireCallbackType(callbacks.get(type.id)) : componentStructuredLeanType(type, callbacks)})`;
+	const carrier = type => `(_root_.Array ${wire(type)})`;
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
-	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements);
-	const lines = [...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType, nominalRefinements), ...defaults.declarations];
+	const defaults = componentStructuredCallableDefaults(abi.types, nominalRefinements
+		, new Set([...conversion?.names ?? []].map(name => `lean:${name}`)));
+	const lines = [
+		...componentRecursiveLeanSource(componentStructuredCopiedView(abi), [], componentStructuredLeanType
+			, nominalRefinements, conversion ? { conversion, emitSites: false } : {})
+		, ...defaults.declarations
+	];
 	const checked = (names, body) => ["carrierResult (do", ...names.map(name => `  let ${name} ← carrierValue ${name}`), `  pure (${body})`, ")"];
 	for(const signature of abi.callbacks)
 	{
@@ -197,7 +273,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		const validators = (symbol, parameters, selected) => componentCarrierRefinementValidators({
 			symbol
 			, wrapper: `checked_${key}_${symbol.endsWith("result") ? "result" : "frame"}`
-			, parameters: parameters.map(type => ({ leanType: componentStructuredLeanType(type) }))
+			, parameters: parameters.map(type => ({ leanType: wire(type) }))
 			, refinements: { parameters: selected, result: null }
 		}, true);
 		if(refinements)
@@ -235,11 +311,12 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 	{
 		const signature = abi.exports.find(signature => signature.bindingId === sourceItem.bindingId);
 		if(!signature || seen.has(sourceItem.bindingId) || sourceItem.symbol !== signature.symbol) throw new TypeError("Structured source export identity mismatch");
-		const refinements = runtimeRefinements(signature, sourceItem.refinements);
-		if(refinements && [...refinements.parameters, refinements.result].some(hasComponentNominalRefinements))
+		const refinements = conversion ? conversion.refinementsFor(signature.bindingId) : runtimeRefinements(signature, sourceItem.refinements);
+		if(!conversion && refinements && [...refinements.parameters, refinements.result].some(hasComponentNominalRefinements))
 			throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
 		const base = { ...sourceItem };
 		delete base.refinements;
+		if(conversion) base.parameters = conversion.siteFor(signature.bindingId).parameters;
 		const item = refinements ? { ...base, refinements } : base;
 		lines.push(...componentCarrierRefinementValidators(item, constrained));
 		seen.add(item.bindingId);
@@ -267,7 +344,7 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
 		if(resultCallback && callbackDirections.get(resultCallback.id) === "closure")
 		{
 			const refinements = callbackRefinements.get(resultCallback.id);
-			const arguments_ = resultCallback.parameters.map((type, index) => `(_bridgeCallbackResult_${index} : ${componentStructuredLeanType(type)})`);
+			const arguments_ = resultCallback.parameters.map((type, index) => `(_bridgeCallbackResult_${index} : ${wire(type)})`);
 			const conversions = resultCallback.parameters.flatMap((_, index) => refinements.parameters[index]
 				? [`let _bridgeCallbackChecked_${index} ← ${componentRefinementConversion(refinements.parameters[index], `_bridgeCallbackResult_${index}`)}`] : []);
 			const applied = resultCallback.parameters.map((_, index) => refinements.parameters[index]

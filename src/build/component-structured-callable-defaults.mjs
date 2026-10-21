@@ -10,7 +10,6 @@ import { assertRefinement, nominalRefinement } from "../abi/refinements.mjs";
 
 const primitive = { unit: "()", bool: "false", char: "(_root_.Char.ofNat 0)"
 	, string: '""', bytes: "_root_.ByteArray.empty" };
-const namedType = id => `_root_.${id.slice(5)}`;
 const name = id => `callbackDefault_${sha256(id).slice(0, 20)}`;
 
 /**
@@ -20,9 +19,13 @@ const name = id => `callbackDefault_${sha256(id).slice(0, 20)}`;
  *
  * @param types - Authenticated copied definitions, never callback identities.
  * @param nominalRefinements - Checked constraints on copied constructors.
+ * @param mirrors - Identities that cross the wire as erased payload mirrors.
  */
-export const componentStructuredCallableDefaults = (types, nominalRefinements = []) => {
+export const componentStructuredCallableDefaults = (types, nominalRefinements = [], mirrors = new Set()) => {
 	const graph = snapshotComponentCopiedGraph({ schemaVersion: 1, root: { kind: "primitive", name: "unit" }, types });
+	// A checked record crosses the wire as its proof-free payload mirror, so its recovery
+	// value is a mirror too; only a site's constructor turns it into a source value.
+	const namedType = id => `${mirrors.has(id) ? "LbErased" : "_root_"}.${id.slice(5)}`;
 	const constraints = new Map(nominalRefinements.map(entry => {
 		const definition = graph.types.find(type => type.id === entry.id);
 		if(!definition) throw new TypeError("Unknown recovery refinement type");

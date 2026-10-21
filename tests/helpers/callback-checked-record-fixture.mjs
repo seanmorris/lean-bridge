@@ -54,6 +54,9 @@ export const callbackCheckedRecordContracts = Object.freeze({
 		, result: closure([copy(callbackCheckedRecordWeighted)], copy()) }
 });
 
+/** Exact counts the independent JavaScript consumer reports on a faithful package. */
+export const callbackCheckedRecordExpected = Object.freeze({ checks: 26, rejections: 12, callbackCalls: 5 });
+
 /** Closure makers take one seed argument; the compiler would otherwise curry the closure. */
 export const callbackCheckedRecordArities = Object.freeze({
 	[qualified("makeClosure")]: 1

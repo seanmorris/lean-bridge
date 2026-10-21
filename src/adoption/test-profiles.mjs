@@ -8,8 +8,10 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "callback-checked-record-browser-ci"
 		, "callback-checked-record-extractor"
 		, "callback-checked-record-foundation"
+		, "callback-checked-record-npm-browser"
 		, "callback-subtype-browser-ci"
 		, "callback-subtype-extractor"
 		, "callback-subtype-foundation"

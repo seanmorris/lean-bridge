@@ -42,11 +42,14 @@ def callHostMixed (callback : Nat → Interval → Interval) : Nat :=
 def makeMixedClosure (_seed : Nat) : Nat → Interval → Interval :=
   fun _marker value => value
 
-/-- Checked records inside structural containers keep their direction. -/
+/-- Checked records inside structural containers keep their direction; the export itself
+returns a plain value so only the callback carries records. -/
 def callHostContainer
-    (callback : Option Interval → Except String (Option Interval)) :
-    Except String (Option Interval) :=
-  callback none
+    (callback : Option Interval → Except String (Option Interval)) : Nat :=
+  match callback none with
+  | .ok (some reply) => reply.hi - reply.lo
+  | .ok none => 0
+  | .error _ => 1
 
 def makeContainerClosure (_seed : Nat) : Array (Option Interval) → Option Interval :=
   fun _values => none

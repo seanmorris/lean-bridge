@@ -660,9 +660,14 @@ const emitValidators = (ir, typeMap) => {
 		const value = type.kind === "callback" ? callbackDefinitionRefinement(type, ir.types) : null;
 		return value && [...value.parameters, value.result].some(nominal);
 	});
+	// A Subtype leaf below a structural or nominal tree is a Lean-side check; callback
+	// trees carry the same leaves inside their directional records.
 	const structuralSubtype = ir.declarations.some(item => {
 		const value = declarationRefinements(item, ir.types);
 		return [...value.parameters, value.result].some(tree => (tree?.arguments || nominal(tree)) && subtype(tree));
+	}) || ir.types.some(type => {
+		const value = type.kind === "callback" ? callbackDefinitionRefinement(type, ir.types) : null;
+		return value && [...value.parameters, value.result].some(tree => (tree?.arguments || nominal(tree)) && subtype(tree));
 	});
 	const lines = [
 		"// Generated copied-value validators. This file is package-internal."
