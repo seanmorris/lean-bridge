@@ -4,3 +4,4 @@
  * @file
  */
 import "./helpers/generic-subtype-language-tests.mjs";
+import "./helpers/generic-subtype-language-source-history-tests.mjs";

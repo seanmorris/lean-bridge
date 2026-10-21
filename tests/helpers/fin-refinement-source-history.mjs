@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeGenericSubtypeLanguageSource, genericSubtypeLanguageChangedPaths, genericSubtypeLanguageIntegrationPaths } from "./generic-subtype-language-source-history.mjs";
 import { beforeGenericSubtypeNativePerlSource, genericSubtypeNativePerlChangedPaths, genericSubtypeNativePerlIntegrationPaths } from "./generic-subtype-native-perl-source-history.mjs";
 import { beforeCallbackSubtypeHistoryPinReconciliationSource, callbackSubtypeHistoryPinReconciliationChangedPaths, callbackSubtypeHistoryPinReconciliationIntegrationPaths } from "./callback-subtype-history-pin-reconciliation-source-history.mjs";
 import { beforeCallbackSubtypeRemainingPhpRepairSource, callbackSubtypeRemainingPhpRepairChangedPaths, callbackSubtypeRemainingPhpRepairIntegrationPaths } from "./callback-subtype-remaining-php-repair-source-history.mjs";
@@ -1455,7 +1456,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...genericSubtypeNativePerlChangedPaths
+	...genericSubtypeLanguageChangedPaths
+	, ...genericSubtypeLanguageIntegrationPaths
+	, ...genericSubtypeNativePerlChangedPaths
 	, ...genericSubtypeNativePerlIntegrationPaths
 	, ...callbackSubtypeHistoryPinReconciliationChangedPaths
 	, ...callbackSubtypeHistoryPinReconciliationIntegrationPaths
@@ -2043,8 +2046,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const genericNativePerl = beforeGenericSubtypeNativePerlSource(
+	const genericLanguages = beforeGenericSubtypeLanguageSource(
 		path, text, expected
+	);
+	if(sha256(genericLanguages) === expected) return genericLanguages;
+	const genericNativePerl = beforeGenericSubtypeNativePerlSource(
+		path, genericLanguages, expected
 	);
 	if(sha256(genericNativePerl) === expected) return genericNativePerl;
 	const pinReconciliation = beforeCallbackSubtypeHistoryPinReconciliationSource(

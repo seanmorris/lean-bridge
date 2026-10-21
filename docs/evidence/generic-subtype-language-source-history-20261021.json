@@ -1,0 +1,432 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9663afe2dfc3b9fd084e9ef2e5eea354414a75f629bd75ce959f5d76bda9c08e",
+      "path": ".github/workflows/generic-subtype-languages.yml"
+    },
+    {
+      "currentSha256": "374ffb12f8c270d401dda737d56f54b1ce66ee441cb95a2ccd985ffe6a7120ab",
+      "path": "scripts/check-generic-subtype-language-ci.mjs"
+    },
+    {
+      "currentSha256": "80262cc4558a6004075fd4be2b8493e8c84c510a57a618c7bba48d5842c3c332",
+      "path": "scripts/run-generic-subtype-python-ci.sh"
+    },
+    {
+      "currentSha256": "5e4b1ad40ce13d1b982c05886d01254734f9a507b1bc0ef89f7bb6b8b36960bd",
+      "path": "scripts/run-generic-subtype-ruby-ci.sh"
+    },
+    {
+      "currentSha256": "4ec50eff8e9cdbccd16b6d6302bdeb43bd4b8c58ea70c41fdc8f8b815dc4e921",
+      "path": "scripts/run-generic-subtype-rust-ci.sh"
+    },
+    {
+      "currentSha256": "ea6f8d946bcc0d5c1675a2b3b6cec6070333f491b6edc00ab1e0e8f5eff7d2de",
+      "path": "tests/fixtures/generic-subtype-consumers/python.py"
+    },
+    {
+      "currentSha256": "bb92bf505ff6dab7ad295308a7b24e926efcb5a60c49823b6690571690a0f660",
+      "path": "tests/fixtures/generic-subtype-consumers/ruby.rb"
+    },
+    {
+      "currentSha256": "549f071646352cd559fe14373dd6917931a1908e96f8fec2d158c5cb7f0239cf",
+      "path": "tests/fixtures/generic-subtype-consumers/rust.rs"
+    },
+    {
+      "currentSha256": "4aa5e8822f93d16e626be14ddf83b22782dad901620943e076c17e62192138a4",
+      "path": "tests/generic-subtype-languages.test.mjs"
+    },
+    {
+      "currentSha256": "f5a6a099bc49083d3d6a4e98d61ecfd00e2574b530993ca91ef6bccd4a62c395",
+      "path": "tests/helpers/generic-subtype-language-report.mjs"
+    },
+    {
+      "currentSha256": "f07988146703698d4538e42d1e3cc3421014a148f40d3495ccb063f15c7e9f93",
+      "path": "tests/helpers/generic-subtype-language-tests.mjs"
+    },
+    {
+      "currentSha256": "3f4c98b2b28d21509bf9b55b92c4bcb02dd755927376fcf46e5d049356d05e5e",
+      "path": "tests/helpers/generic-subtype-languages.mjs"
+    },
+    {
+      "currentSha256": "477d4ed31aab8bd9bc1a3525c371381dcfd56ebb761fe188831e730789aa95ef",
+      "path": "scripts/update-generic-subtype-language-source-history.mjs"
+    },
+    {
+      "currentSha256": "cb20dcd9befb22bb2a33f2dace83b32bf6f89abf2d8725550479abbe271c2583",
+      "path": "tests/helpers/generic-subtype-language-source-history.mjs"
+    },
+    {
+      "currentSha256": "fe3d09e66680e35d24f2f46eccdadb5cc4e8c585472491a713553d3342c2f7c2",
+      "path": "tests/helpers/generic-subtype-language-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "5cb50d70893d49171361eebbd946f542b7ceef11",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4aa5e8822f93d16e626be14ddf83b22782dad901620943e076c17e62192138a4",
+      "edits": [
+        {
+          "current": "import \"./helpers/generic-subtype-language-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 140
+        }
+      ],
+      "path": "tests/generic-subtype-languages.test.mjs",
+      "previousSha256": "2f9b57c4064836e8efcd2fad75a4e97f3d6d5577d363e20a67220f0a2693ff4e"
+    },
+    {
+      "currentSha256": "5f56e1f78a52928667aa0d3c844b834ad3ce0537b02e9051b8c95d8eb20f5918",
+      "edits": [
+        {
+          "current": "import { beforeGenericSubtypeLanguageSource, genericSubtypeLanguageChangedPaths, genericSubtypeLanguageIntegrationPaths } from \"./generic-subtype-language-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...genericSubtypeLanguageChangedPaths\n\t, ...genericSubtypeLanguageIntegrationPaths\n\t, ...genericSubtypeNativePerlChangedPaths\n",
+          "previous": "\t...genericSubtypeNativePerlChangedPaths\n",
+          "start": 121640
+        },
+        {
+          "current": "\tconst genericLanguages = beforeGenericSubtypeLanguageSource(\n",
+          "previous": "\tconst genericNativePerl = beforeGenericSubtypeNativePerlSource(\n",
+          "start": 148080
+        },
+        {
+          "current": "\tif(sha256(genericLanguages) === expected) return genericLanguages;\n\tconst genericNativePerl = beforeGenericSubtypeNativePerlSource(\n\t\tpath, genericLanguages, expected\n\t);\n",
+          "previous": "",
+          "start": 148169
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9dd35454a320f47d845f4cbb9ba684e79e11391584dfae77f930f6429a19804e"
+    }
+  ],
+  "milestone": "generic-subtype-language-source-v1",
+  "predecessorCommit": "79eebd15336fb9e8e102f45640964fa8a18bad3b",
+  "schemaVersion": 1,
+  "scope": "Closed generic-record Subtype compositions reproduced from ordinary and independently reviewed sources, installed offline and replayed after relocation in Python, Ruby and Rust, including two Python floors and source-free Rust execution.",
+  "updates": [
+    {
+      "currentSha256": "b9294104b62a60ca77bdfbc274dc0e6cd7f1bc0f6cb255acb17a2cbf92f7b98c",
+      "edits": [
+        {
+          "current": "import { genericSubtypeLanguageCaller, parseGenericSubtypeLanguageResult } from \"./generic-subtype-languages.mjs\";\n",
+          "previous": "",
+          "start": 1016
+        },
+        {
+          "current": " * @param options.genericCompositions - Exercise the closed generic composition surface.\n",
+          "previous": "",
+          "start": 3057
+        },
+        {
+          "current": "export const installNominalSubtypePython = async ({ minor, command, route, mode, root, archive, artifact, receiptBytes, output, genericCompositions = false }) => {\n",
+          "previous": "export const installNominalSubtypePython = async ({ minor, command, route, mode, root, archive, artifact, receiptBytes, output }) => {\n",
+          "start": 3150
+        },
+        {
+          "current": "\tassert.equal(typeof genericCompositions, \"boolean\");\n\tif(genericCompositions) assert.equal(mode, \"full\");\n",
+          "previous": "",
+          "start": 3368
+        },
+        {
+          "current": "\tconst source = genericCompositions\n\t\t? await genericSubtypeLanguageCaller(\"python\", route)\n\t\t: await nominalSubtypePythonCaller(route);\n\tconst args = [\"consumer.py\", ...!genericCompositions && mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "previous": "\tconst source = await nominalSubtypePythonCaller(route), args = [\"consumer.py\", ...mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "start": 3648
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions\n\t\t\t? parseGenericSubtypeLanguageResult(run.stdout)\n\t\t\t: parseNominalSubtypePythonResult(run.stdout, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypePythonResult(run.stdout, mode);\n",
+          "start": 6579
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 7306
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-install.mjs",
+      "previousSha256": "a8a5848764a374c5145bea13fbd44d2427d106904deea119af3b1a5a6981618f"
+    },
+    {
+      "currentSha256": "2070972c93f7f18daeeb1ec1f0ebd90610cfe6abfd4534790aeb8f94bc272b55",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 384
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 848
+        },
+        {
+          "current": "import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection } from \"./generic-subtype-languages.mjs\";\n",
+          "previous": "",
+          "start": 1646
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypePythonSelection(process.env);\nconst genericSelection = genericSubtypeLanguageSelection(\"python\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic Python installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\nconst executableVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_PYTHONS\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHONS\";\nconst executables = enabled ? nominalSubtypePythonExecutables(process.env[executableVariable]) : null;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypePythonSelection(process.env);\nconst executables = enabled ? nominalSubtypePythonExecutables(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHONS) : null;\n",
+          "start": 1797
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype Python compositions\" : \"nominal Python packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal Python packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2528
+        },
+        {
+          "current": "\tconst callerPath = genericCompositions\n\t\t? \"tests/fixtures/generic-subtype-consumers/python.py\"\n\t\t: \"tests/fixtures/nominal-subtype-consumers/python.py\";\n\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", callerPath]);\n",
+          "previous": "\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/python.py\"]);\n",
+          "start": 3156
+        },
+        {
+          "current": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions });\n\tconst configuration = genericCompositions\n\t\t? genericSubtypeLanguageConfiguration(\"python\", route)\n\t\t: nominalSubtypePythonConfiguration(route, mode);\n\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_PYTHON_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHON_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-python\" : \"build/nominal-subtype-python\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\"), configuration = nominalSubtypePythonConfiguration(route, mode);\n\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PYTHON_OUTPUT ?? \"build/nominal-subtype-python\", route, mode);\n",
+          "start": 3462
+        },
+        {
+          "current": "\tconst caller = genericCompositions\n\t\t? await genericSubtypeLanguageCaller(\"python\", route)\n\t\t: await nominalSubtypePythonCaller(route);\n\tawait saveLakeFile(output, \"consumer.py\", caller);\n",
+          "previous": "\tawait saveLakeFile(output, \"consumer.py\", await nominalSubtypePythonCaller(route));\n",
+          "start": 5211
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true });\n\t\t\tawait cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 5994
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 7956
+        },
+        {
+          "current": "\t\t\t, receiptBytes: wheel.receiptBytes, output: record\n\t\t\t, genericCompositions });\n",
+          "previous": "\t\t\t, receiptBytes: wheel.receiptBytes, output: record });\n",
+          "start": 9806
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 10260
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-python-installed-tests.mjs",
+      "previousSha256": "81bac08b0af040e66874b86832221618533218111a5414cdaccfe8786529a567"
+    },
+    {
+      "currentSha256": "0d723bdc44dad7ea2e1d76f47f89f438727d93094bc39f6a29a78aa8757bcd3d",
+      "edits": [
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 804
+        },
+        {
+          "current": "import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection, parseGenericSubtypeLanguageResult } from \"./generic-subtype-languages.mjs\";\n",
+          "previous": "",
+          "start": 1602
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeRubySelection(process.env);\nconst genericSelection = genericSubtypeLanguageSelection(\"ruby\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic Ruby installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypeRubySelection(process.env);\n",
+          "start": 1788
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype Ruby compositions\" : \"nominal Ruby packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal Ruby packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2282
+        },
+        {
+          "current": "\tconst callerPath = genericCompositions\n\t\t? \"tests/fixtures/generic-subtype-consumers/ruby.rb\"\n\t\t: \"tests/fixtures/nominal-subtype-consumers/ruby.rb\";\n\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", callerPath]);\n",
+          "previous": "\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/ruby.rb\"]);\n",
+          "start": 2806
+        },
+        {
+          "current": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions });\n\tconst configuration = genericCompositions\n\t\t? genericSubtypeLanguageConfiguration(\"ruby\", route)\n\t\t: nominalSubtypeRubyConfiguration(route, mode);\n\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_RUBY_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-ruby\" : \"build/nominal-subtype-ruby\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\"), configuration = nominalSubtypeRubyConfiguration(route, mode);\n\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_RUBY_OUTPUT ?? \"build/nominal-subtype-ruby\", route, mode);\n",
+          "start": 3108
+        },
+        {
+          "current": "\tconst caller = genericCompositions\n\t\t? await genericSubtypeLanguageCaller(\"ruby\", route)\n\t\t: await nominalSubtypeRubyCaller(route);\n",
+          "previous": "\tconst caller = await nominalSubtypeRubyCaller(route);\n",
+          "start": 5561
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true });\n\t\t\tawait cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6336
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8293
+        },
+        {
+          "current": "\t\tconst selected = { ...context, gems: join(location, \"gems\") };\n\t\tconst args = [\"consumer.rb\", ...!genericCompositions && mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "previous": "\t\tconst selected = { ...context, gems: join(location, \"gems\") }, args = [\"consumer.rb\", ...mode === \"result-only\" ? [\"--result-only\"] : []];\n",
+          "start": 10372
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions\n\t\t\t? parseGenericSubtypeLanguageResult(run.stdout)\n\t\t\t: parseNominalSubtypeRubyResult(run.stdout, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeRubyResult(run.stdout, mode);\n",
+          "start": 10688
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 11497
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-ruby-installed-tests.mjs",
+      "previousSha256": "fbca40d547552bb44c59b52656c54fd74a411ae8a080b25cf0ab62071cb1960c"
+    },
+    {
+      "currentSha256": "51dcb37f35c3c4699bc23eb5ac6fde78351f5049182ef386713f4ab97065e56b",
+      "edits": [
+        {
+          "current": "export const genericSubtypeRustInputNames = Object.freeze([\n\t\"GenericNat\", \"generic_use\", \"echo_generic_first\", \"echo_generic_second\"\n]);\nexport const genericSubtypeRustApiProbe = `#[allow(unused_imports)]\nuse nominalsubtypes::{${genericSubtypeRustInputNames.join(\", \")}};\nfn main() {}\n`;\n",
+          "previous": "",
+          "start": 1590
+        },
+        {
+          "current": " * @param genericCompositions - Check the closed generic composition surface.\n",
+          "previous": "",
+          "start": 2090
+        },
+        {
+          "current": "export const checkNominalSubtypeRustApiProbe = (run, mode, genericCompositions = false) => {\n",
+          "previous": "export const checkNominalSubtypeRustApiProbe = (run, mode) => {\n",
+          "start": 2172
+        },
+        {
+          "current": "\tassert.equal(typeof genericCompositions, \"boolean\");\n\tif(genericCompositions) assert.equal(mode, \"full\");\n\tconst names = genericCompositions ? genericSubtypeRustInputNames : nominalSubtypeRustInputNames;\n",
+          "previous": "",
+          "start": 2317
+        },
+        {
+          "current": "\t{ assert.equal(run.code, 0); assert.deepEqual(errors, []); return { absent: [], present: [...names] }; }\n",
+          "previous": "\t{ assert.equal(run.code, 0); assert.deepEqual(errors, []); return { absent: [], present: [...nominalSubtypeRustInputNames] }; }\n",
+          "start": 2914
+        },
+        {
+          "current": "\tassert.deepEqual([...error.message.matchAll(/`nominalsubtypes::([A-Za-z_0-9]+)`/gu)].map(match => match[1]).sort(), [...names].sort());\n\treturn { absent: [...names], present: [] };\n",
+          "previous": "\tassert.deepEqual([...error.message.matchAll(/`nominalsubtypes::([A-Za-z_0-9]+)`/gu)].map(match => match[1]).sort(), [...nominalSubtypeRustInputNames].sort());\n\treturn { absent: [...nominalSubtypeRustInputNames], present: [] };\n",
+          "start": 3320
+        },
+        {
+          "current": " * @param options.genericCompositions - Exercise the closed generic composition surface.\n",
+          "previous": "",
+          "start": 5625
+        },
+        {
+          "current": "export const installNominalSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output, genericCompositions = false }) => {\n",
+          "previous": "export const installNominalSubtypeRust = async ({ root, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output }) => {\n",
+          "start": 5718
+        },
+        {
+          "current": "\tassert.equal(typeof genericCompositions, \"boolean\");\n\tif(genericCompositions) assert.equal(mode, \"full\");\n",
+          "previous": "",
+          "start": 5958
+        },
+        {
+          "current": "\tconst apiProbeSource = genericCompositions ? genericSubtypeRustApiProbe : nominalSubtypeRustApiProbe;\n\tawait saveLakeFile(root, \"src/main.rs\", caller); await saveLakeFile(root, \"src/bin/api-probe.rs\", apiProbeSource);\n",
+          "previous": "\tawait saveLakeFile(root, \"src/main.rs\", caller); await saveLakeFile(root, \"src/bin/api-probe.rs\", nominalSubtypeRustApiProbe);\n",
+          "start": 8980
+        },
+        {
+          "current": "\tconst api = checkNominalSubtypeRustApiProbe(apiProbe, mode, genericCompositions);\n",
+          "previous": "\tconst api = checkNominalSubtypeRustApiProbe(apiProbe, mode);\n",
+          "start": 10419
+        },
+        {
+          "current": "\t\t, [\"api-probe.rs\", apiProbeSource]\n",
+          "previous": "\t\t, [\"api-probe.rs\", nominalSubtypeRustApiProbe]\n",
+          "start": 11319
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-install.mjs",
+      "previousSha256": "7f3ca021496c44d70ad4a273b3f2f4ce817ed4befbeb816ad93ab7a443c54ee9"
+    },
+    {
+      "currentSha256": "48bd97d6b994b849764393fd6f60711d654909c47e81e1bdde07dc12696a72e0",
+      "edits": [
+        {
+          "current": "import { dirname, join, resolve } from \"node:path\";\n",
+          "previous": "import { join, resolve } from \"node:path\";\n",
+          "start": 348
+        },
+        {
+          "current": "import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "previous": "import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\n",
+          "start": 812
+        },
+        {
+          "current": "import { genericSubtypeLanguageCaller, genericSubtypeLanguageConfiguration, genericSubtypeLanguageSelection, parseGenericSubtypeLanguageResult } from \"./generic-subtype-languages.mjs\";\n",
+          "previous": "",
+          "start": 1677
+        },
+        {
+          "current": "const nominalSelection = nominalSubtypeRustSelection(process.env);\nconst genericSelection = genericSubtypeLanguageSelection(\"rust\", process.env);\nassert.ok(!(nominalSelection.enabled && genericSelection.enabled), \"Nominal and generic Rust installed gates are mutually exclusive\");\nconst genericCompositions = genericSelection.enabled;\nconst { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;\nconst modes = genericCompositions ? [\"full\"] : nominalSelection.modes;\n",
+          "previous": "const { enabled, routes, modes } = nominalSubtypeRustSelection(process.env);\n",
+          "start": 1863
+        },
+        {
+          "current": "for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? \"generic Subtype Rust compositions\" : \"nominal Rust packages\"} reproduce and relocate ${route} ${mode}`, {\n",
+          "previous": "for(const route of routes) for(const mode of modes) test(`installed nominal Rust packages reproduce and relocate ${route} ${mode}`, {\n",
+          "start": 2957
+        },
+        {
+          "current": "\tconst callerPath = genericCompositions\n\t\t? \"tests/fixtures/generic-subtype-consumers/rust.rs\"\n\t\t: \"tests/fixtures/nominal-subtype-consumers/rust.rs\";\n\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", callerPath]);\n",
+          "previous": "\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", \"tests/fixtures/nominal-subtype-consumers/rust.rs\"]);\n",
+          "start": 3496
+        },
+        {
+          "current": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\", { genericCompositions });\n\tconst configuration = genericCompositions\n\t\t? genericSubtypeLanguageConfiguration(\"rust\", route)\n\t\t: nominalSubtypeRustConfiguration(route, mode);\n\tconst outputVariable = genericCompositions ? \"LEAN_BRIDGE_GENERIC_SUBTYPE_RUST_OUTPUT\" : \"LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_OUTPUT\";\n\tconst outputRoot = genericCompositions ? \"build/generic-subtype-rust\" : \"build/nominal-subtype-rust\";\n\tconst output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);\n",
+          "previous": "\tconst expected = nominalSubtypeInstalledReview(mode === \"result-only\"), configuration = nominalSubtypeRustConfiguration(route, mode);\n\tconst output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_RUST_OUTPUT ?? \"build/nominal-subtype-rust\", route, mode);\n",
+          "start": 3798
+        },
+        {
+          "current": "\tconst caller = genericCompositions\n\t\t? await genericSubtypeLanguageCaller(\"rust\", route)\n\t\t: await nominalSubtypeRustCaller(route);\n\tawait saveLakeFile(output, \"consumer.rs\", caller);\n",
+          "previous": "\tconst caller = await nominalSubtypeRustCaller(route); await saveLakeFile(output, \"consumer.rs\", caller);\n",
+          "start": 5349
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t{\n\t\t\tconst genericModulePath = join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\";\n\t\t\tawait mkdir(dirname(genericModulePath), { recursive: true });\n\t\t\tawait cp(genericSubtypeSource, genericModulePath);\n\t\t}\n",
+          "previous": "",
+          "start": 6254
+        },
+        {
+          "current": "\t\tif(genericCompositions)\n\t\t\tawait saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(\".\")) + \".lean\"));\n",
+          "previous": "",
+          "start": 8207
+        },
+        {
+          "current": "\tconst installation = await installNominalSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output, genericCompositions });\n",
+          "previous": "\tconst installation = await installNominalSubtypeRust({ root: consumer, handoff, dependencyHandoff, pkg, dependencies, environment, model, floor, caller, mode, output });\n",
+          "start": 9748
+        },
+        {
+          "current": "\t\tassert.equal(run.stderr, \"\");\n\t\tconst counts = genericCompositions\n\t\t\t? parseGenericSubtypeLanguageResult(run.stdout)\n\t\t\t: parseNominalSubtypeRustResult(run.stdout, mode);\n",
+          "previous": "\t\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeRustResult(run.stdout, mode);\n",
+          "start": 11012
+        },
+        {
+          "current": "\tassert.equal(run.stderr, \"\");\n\tconst counts = genericCompositions\n\t\t? parseGenericSubtypeLanguageResult(run.stdout)\n\t\t: parseNominalSubtypeRustResult(run.stdout, mode);\n",
+          "previous": "\tassert.equal(run.stderr, \"\"); const counts = parseNominalSubtypeRustResult(run.stdout, mode);\n",
+          "start": 12125
+        },
+        {
+          "current": "\t\t, ...genericCompositions ? { genericCompositions: true } : {}\n",
+          "previous": "",
+          "start": 12886
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-rust-installed-tests.mjs",
+      "previousSha256": "d4931215fcdd067d1beb57c56256aa1c991d87e6be13d6c2280bed74b9d143e7"
+    }
+  ]
+}
