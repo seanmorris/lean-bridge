@@ -118,10 +118,13 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		remember(projection.result);
 	}
 	const callbackFailure = { mode: "declared", errors: ["error:native-callback"], unexpected: "poison-runtime" };
-	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable), ...exportContractOwnership(type, result)
+	const site = (type, result = false, decision) => ({ type: reference(type, decision?.callable, result), ...exportContractOwnership(type, result)
 		, ...decision ? { ownership: decision.ownership, lifetime: structuredClone(decision.lifetime) } : {} });
 	const parameter = (type, index, decision) => ({ name: `arg${index}`, ...site(type, false, decision), mutability: "immutable", optional: false, default: null });
-	const reference = (type, decision) => {
+	// A callback at a parameter site is the host's: Lean produces its arguments and the
+	// host its reply. A callback at a result site is a leased closure with the opposite
+	// direction. Checked-record trees record that direction; Subtype leaves carry it.
+	const reference = (type, decision, result = false) => {
 		if(["graph", "owned-graph"].includes(type.kind)) return reference(type.root);
 		if(type.kind === "reference")
 		{
@@ -138,7 +141,11 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 			parameters: type.parameters.map((type, index) => parameter(type, index, decision?.parameters?.[index]))
 			, result: site(type.result, true, decision?.result)
 		} : null;
-		const callbackRefinements = callable && { parameters: type.parameters.map(type => refinement(type)), result: refinement(type.result) };
+		// Callback sites sit one level below the export, so a checked record there always
+		// keeps its exact field form, produced or consumed, like any nested record.
+		const callbackRefinements = callable && {
+			parameters: type.parameters.map(type => refinement(type, false, false, new Map(), new Set(), 1, !result))
+			, result: refinement(type.result, false, false, new Map(), new Set(), 1, result) };
 		const constrainedCallback = callbackRefinements && [...callbackRefinements.parameters, callbackRefinements.result].some(value => value !== null);
 		const signature = callable && { ...callbackSemanticSignature(callable), ...(constrainedCallback ? { refinements: callbackRefinements } : {}) };
 		const callbackName = signature && `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;

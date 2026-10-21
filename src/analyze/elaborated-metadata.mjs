@@ -331,7 +331,9 @@ export const validateElaboratedMetadata = (report, request) => {
 					if(type?.kind !== "callback") return copied(type, 0, undefined, true, true, site === "result");
 					closed(type, ["kind", "parameters", "result"]);
 					if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("Invalid component callback arity");
-					if(containsKind(type, ["checked-record"])) fail("Checked records inside callbacks require a separate recovery contract");
+					// Checked records follow the callback direction: Lean-produced arguments and
+					// closure results cross bare, host-produced replies and closure arguments
+					// wrap their selected constructor.
 					const host = site === "parameter";
 					for(const parameter of type.parameters) copied(parameter, 0, undefined, true, true, host);
 					copied(type.result, 0, undefined, true, true, !host);

@@ -293,11 +293,11 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	{
 		if(copied) fail("callbacks inside copied values require a retention policy");
 		if(!Array.isArray(type.parameters) || !type.parameters.length || type.parameters.length > 16) fail("callback arity must be 1 through 16");
-		if(site !== undefined && containsKind(type, ["checked-record"], references))
-			fail("checked records inside callbacks require a separate recovery contract");
 		// A top-level parameter is a host callback: Lean produces its arguments and the host
 		// produces its reply. A top-level result is a leased Lean closure with the opposite
-		// direction. Nested callbacks retain the established no-refinement boundary.
+		// direction. Checked records follow that direction: a Lean-produced record crosses
+		// bare, and a host-produced one wraps its selected constructor. Nested callbacks
+		// retain the established no-refinement boundary, which the record rules below refuse.
 		if(site === undefined)
 		{
 			type.parameters.forEach(parameter => recurse(parameter, copied, false, false, false));

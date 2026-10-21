@@ -310,8 +310,9 @@ export const exportContractEffects = (projection, ownedAggregates = false) => {
  * @param contract - Structurally validated decisions for one selected export.
  * @param projection - Supported compiler-owned runtime projection.
  * @param ownedAggregates - Whether the explicit aggregate contract is selected.
+ * @param depth - Zero for the export itself, one for a callable decision below it.
  */
-export const exportContractProblem = (contract, projection, ownedAggregates = false) => {
+export const exportContractProblem = (contract, projection, ownedAggregates = false, depth = 0) => {
 	if(!contract || projection.status !== "supported") return null;
 	if(contract.receiver !== undefined)
 	{
@@ -341,7 +342,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 								: ["tuple", "result"].includes(type.kind) && type.arguments.some(refined));
 		if(site.refinement === "reject" && refined(type)) return `${label}: the contract rejects compiler-checked refined values`;
 		if(site.refinement !== undefined && site.refinement !== "reject"
-			&& canonicalJson(projectionCheckedSelection(type)) !== canonicalJson(site.refinement))
+			&& canonicalJson(projectionCheckedSelection(type, depth)) !== canonicalJson(site.refinement))
 			return `${label}: checked refinement constructor does not match the compiler-checked Subtype`;
 		if(site.callable !== undefined)
 		{
@@ -351,7 +352,7 @@ export const exportContractProblem = (contract, projection, ownedAggregates = fa
 			const problem = exportContractProblem(site.callable, {
 				status: "supported", parameters: type.parameters.map(type => ({ type }))
 				, result: type.result
-			}, ownedAggregates);
+			}, ownedAggregates, depth + 1);
 			if(problem) return `${label}.callable: ${problem}`;
 		}
 		if(ownedAggregates && !result && site.ownership === "transfer"

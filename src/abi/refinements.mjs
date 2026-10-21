@@ -244,12 +244,15 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
 /**
  * Require one callback site to agree with the direction in which its value crosses.
  * A produced Subtype is already proved by Lean and therefore carries no constructor;
- * a consumed Subtype must name the exact checked constructor. Checked records remain
- * outside the callback surface until their separate ownership and recovery work lands.
+ * a consumed Subtype must name the exact checked constructor. A checked record follows
+ * the same rule: a Lean-produced record projects its payload with no constructor, a
+ * host-produced record names the exact record constructor, and every payload field
+ * keeps its own directional leaf below the record. Owned records and callbacks nested
+ * inside callbacks stay outside this surface.
  *
  * @param refinement - A validated callback refinement tree.
  * @param produced - Whether Lean, rather than the host, produces this site.
- * @returns {boolean} Whether the tree contains a Subtype leaf.
+ * @returns {boolean} Whether the tree contains a Subtype or checked-record leaf.
  */
 export const assertCallbackRefinementDirection = (refinement, produced) => {
 	if(refinement === null || ["fin", "fin-field"].includes(refinement.kind)) return false;
@@ -260,7 +263,13 @@ export const assertCallbackRefinementDirection = (refinement, produced) => {
 		return true;
 	}
 	if(refinement.kind === "checked-record")
-		throw new TypeError("Callback refinements do not support checked records");
+	{
+		if(produced ? refinement.constructor !== null : typeof refinement.constructor !== "string")
+			throw new TypeError("Callback refinement direction does not match its checked record constructor");
+		for(const field of refinement.fields ?? [])
+			assertCallbackRefinementDirection(field.refinement, produced);
+		return true;
+	}
 	if(refinement.kind === "record")
 		return refinement.fields.reduce((found, field) => assertCallbackRefinementDirection(field.refinement, produced) || found, false);
 	if(refinement.kind === "variant")
@@ -298,7 +307,7 @@ export const callbackRefinement = (signature, value, types = [], direction = und
 	});
 	if(![...value.parameters, value.result].some(refinement => refinement !== null)) throw new TypeError("Empty callback refinement metadata");
 	const containsSubtype = [...value.parameters, value.result].some(refinement => {
-		const visit = child => child !== null && (child.kind === "subtype"
+		const visit = child => child !== null && (["subtype", "checked-record"].includes(child.kind)
 			|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
 			|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
 			|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));
@@ -332,8 +341,9 @@ export const callbackRefinement = (signature, value, types = [], direction = und
 };
 
 /**
- * Recover the unique Subtype direction of a callback tree. Fin-only trees carry
- * no directional information and return null after ordinary validation.
+ * Recover the unique Subtype or checked-record direction of a callback tree.
+ * Fin-only trees carry no directional information and return null after
+ * ordinary validation.
  *
  * @param signature - Erased parameter and result type references.
  * @param value - Compiler-owned callback refinement trees.
@@ -349,7 +359,7 @@ export const callbackSubtypeDirection = (signature, value, types = []) => {
 			callbackRefinement(signature, value, types, role);
 			const leaves = [...value.parameters, value.result];
 			if(leaves.some(refinement => {
-				const visit = child => child !== null && (child.kind === "subtype"
+				const visit = child => child !== null && (["subtype", "checked-record"].includes(child.kind)
 					|| (child.kind === "record" && child.fields.some(field => visit(field.refinement)))
 					|| (child.kind === "variant" && child.cases.some(branch => branch.fields.some(field => visit(field.refinement))))
 					|| (["array", "list", "option", "tuple", "result"].includes(child.kind) && child.arguments.some(visit)));

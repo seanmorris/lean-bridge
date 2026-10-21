@@ -182,8 +182,10 @@ export const checkedRefinementSelection = refinement => {
  * Bounds and source types remain compiler facts, outside the author selection.
  *
  * @param type - Fresh compiler metadata type, before transport erasure.
+ * @param depth - Zero at a top-level export site, one at a callable site, where a checked
+ * record always keeps its exact field form.
  */
-export const projectionCheckedSelection = type => {
+export const projectionCheckedSelection = (type, depth = 0) => {
 	let nodes = 0;
 	const containsRefinement = (value, definitions, seen = new Set()) => {
 		if(!value || typeof value !== "object") return false;
@@ -280,5 +282,5 @@ export const projectionCheckedSelection = type => {
 		const children = arguments_.map(child => visit(child, depth + 1, definitions, seen));
 		return children.every(child => child === null) ? null : { kind: value.kind, arguments: children };
 	};
-	return visit(type, 0);
+	return visit(type, depth);
 };

@@ -187,14 +187,20 @@ by name and type, in Lean order, and whose result is `Option` of the exact recor
 A result is produced by Lean, which already holds the proofs, so it takes no constructor. -/
 def checkedRecordSite (request : Request) (e : Expr) (reference : Json)
     (payload : Array (Name × Expr)) (depth : Nat) (copied structural : Bool)
-    (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool) : MetaM Json := do
+    (checked : Option String) (rich : Bool) (callbackSite : Option Bool) (hostReply : Bool)
+    (recordSite : Option Bool := none) : MetaM Json := do
   -- A record reaches this site only when it carries erased proofs, so an empty payload is a
-  -- proof-only checked record: its nullary constructor is the sole proof source.
-  unless structural && callbackSite.isSome && !hostReply do
+  -- proof-only checked record: its nullary constructor is the sole proof source. Inside a
+  -- top-level callback, `recordSite` carries the callback direction: `some true` where Lean
+  -- produces the record (a host callback's arguments, a leased closure's result) and
+  -- `some false` where the host produces it (a host reply, a leased closure's arguments).
+  let produced := callbackSite == some true || recordSite == some true
+  let consumed := callbackSite == some false || recordSite == some false
+  unless structural && (produced || consumed) && (recordSite.isSome || !hostReply) do
     reject e "checked records currently require a top-level parameter or result"
-  if callbackSite == some false && (depth != 0 || copied) && !rich then
+  if consumed && (depth != 0 || copied) && !rich then
     reject e "nested checked records require an exact checked-record selection"
-  if callbackSite == some true then
+  if produced then
     if checked.isSome then reject e "Lean-produced checked records take no constructor"
     return reference
   let some constructor := checked
@@ -448,7 +454,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     (containerFin : Bool := true) (structural : Bool := true) (alias : Option Name := none)
     (callbackSite : Option Bool := none) (hostReply : Bool := false)
     (subtypeStructural : Bool := false) (subtypeResult : Bool := false)
-    (callableDecision : Option Json := none) : ShapeM Json := do
+    (callableDecision : Option Json := none) (recordSite : Option Bool := none) : ShapeM Json := do
   if depth > 32 then reject e "native copied type nesting exceeds 32 inline edges"
   if seen.length > 1024 || (← get).nodes >= 4096 then reject e "copied type graph exceeds its node limit"
   modify fun state => { state with nodes := state.nodes + 1 }
@@ -536,7 +542,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               -- A closed application of a generic structure becomes a record named by this alias.
               let instantiation := definition.value.isApp && definition.value.getAppFn.isConst &&
                 (genericStructure? (← getEnv) definition.value.getAppFn.constName!).isSome
-              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply subtypeStructural subtypeResult callableDecision
+              let target ← shapeTree request definition.value (name :: seen) (if directFin then depth else 0) copied checked containerFin structural (if instantiation then some name else none) callbackSite hostReply subtypeStructural subtypeResult callableDecision recordSite
               -- A constructor selection belongs to this export site, never to a cached alias.
               -- Expand its structural transport, just as a direct Subtype alias expands below.
               if (checked.isSome || (subtypeResult && containsKind (← get).types target "subtype")) && ["array", "list", "option", "tuple", "result"].contains
@@ -569,19 +575,19 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
     return obj [("kind", str "primitive"), ("name", str "unit"), ("lean", str "Unit"), ("abi", ← abi e)]
   -- Established structural constructors keep their mappings ahead of generic-record admission.
   if e.isAppOfArity ``Array 1 then
-    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "array" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "array"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "array" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``List 1 then
-    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "list" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "list"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "list" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``Option 1 then
-    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "option" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
+    return obj [("kind", str "option"), ("element", ← shapeTree request e.appArg! seen (depth + 1) true (selectedChild checked "option" 0) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)), ("abi", ← abi e)]
   if e.isAppOfArity ``Except 2 || e.isAppOfArity ``Prod 2 then
     let args := e.getAppArgs
     -- Products and results are structural containers: native packages check Fin in both
     -- components and in the active branch.
     let result := e.isAppOfArity ``Except 2
     let kind := if result then "result" else "tuple"
-    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
-    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
+    let first ← shapeTree request args[0]! seen (depth + 1) true (selectedChild checked kind (if result then 1 else 0)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
+    let second ← shapeTree request args[1]! seen (depth + 1) true (selectedChild checked kind (if result then 0 else 1)) containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult)
     -- IR result arguments are [success, error]; Lean's Except is [error, success].
     return obj [("kind", str (if result then "result" else "tuple")),
       ("arguments", toJson (if result then #[second, first] else #[first, second])), ("abi", ← abi e)]
@@ -677,7 +683,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
               shapeTree request (mkConst (← resolveParentAlias request structureName fieldType)) (aliasName :: seen) 0 true none containerFin false
             else
               shapeTree request fieldType (aliasName :: seen) 0 true fieldSelection containerFin false
-                (callbackSite := callbackSite) (hostReply := hostReply)
+                (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
                 (subtypeStructural := subtypeStructural && nominalSelection checked "record" aliasName)
                 (subtypeResult := subtypeResult)
           fields := fields.push (obj [("name", str field.toString),
@@ -711,7 +717,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         if copied then
           reject e "nested generic checked records require a reviewed projection"
         return ← checkedRecordSite request e reference payload depth copied structural
-          (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply
+          (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply recordSite
   if let .const name _ := e then
     if let some (_, primitive) := primitives.find? (·.1 == name) then
       return obj [("kind", str "primitive"), ("name", str primitive), ("lean", str name.toString), ("abi", ← abi e)]
@@ -810,7 +816,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           | none =>
             let fieldSelection := selectedField checked "record" name field.toString
             shapeTree request fieldType (name :: seen) 0 true fieldSelection containerFin true
-              (callbackSite := callbackSite) (hostReply := hostReply)
+              (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
               (subtypeStructural := subtypeStructural && nominalSelection checked "record" name)
               (subtypeResult := subtypeResult)
         fields := fields.push (obj [("name", str field.toString),
@@ -826,7 +832,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         (if erased.isEmpty then [] else [("erased", toJson (erased.map toString))]) ++ [("abi", ← abi e)])) checked.isSome
       if erased.isEmpty then return reference
       return ← checkedRecordSite request e reference payload depth copied structural
-        (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply
+        (selectedConstructor checked) (richCheckedRecordSelection checked) callbackSite hostReply recordSite
     if let .inductInfo induct ← getConstInfo name then
       if seen.contains name then
         if checked.isSome || subtypeStructural then
@@ -870,7 +876,7 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           fields := fields.push (obj [("name", str fieldName),
             ("type", ← shapeTree request fieldType (name :: seen) 0 true
               (selectedField checked "variant" name fieldName (some caseName)) containerFin true
-              (callbackSite := callbackSite) (hostReply := hostReply)
+              (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite)
               (subtypeStructural := subtypeStructural && nominalSelection checked "variant" name)
               (subtypeResult := subtypeResult))])
           names := fieldName :: names
@@ -896,7 +902,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         if parameters.size >= 16 then reject e "native callbacks support at most 16 arguments"
         -- Arguments of a host callback come from Lean and therefore project their proof;
         -- arguments of a returned closure come from the host and require the selected
-        -- checked constructor. A callback nested in a callback stays unsupported.
+        -- checked constructor. Checked records inside a top-level callback follow the same
+        -- direction through `recordSite`. A callback nested in a callback stays unsupported.
         let decision := decisions.bind fun values => values[parameters.size]?
         let selection := decision.bind fun site => do
           let refinement ← (site.getObjVal? "refinement").toOption
@@ -906,7 +913,8 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
         parameters := parameters.push (← shapeTree request argument seen (depth + 1)
           (checked := if host then none else selection) (containerFin := containerFin)
           (structural := callbackSite.isSome) (subtypeStructural := callbackSite.isSome)
-          (subtypeResult := host))
+          (subtypeResult := host)
+          (recordSite := if callbackSite.isSome then some host else none))
         result := rest
       | _ => break
     let resultSelection := resultDecision.bind fun site => do
@@ -920,9 +928,10 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
       ("result", ← shapeTree request result seen (depth + 1)
         (checked := if producedResult then none else resultSelection) (containerFin := containerFin)
         (structural := callbackSite.isSome) (hostReply := host)
-        (subtypeStructural := callbackSite.isSome) (subtypeResult := producedResult)), ("abi", ← abi e)]
+        (subtypeStructural := callbackSite.isSome) (subtypeResult := producedResult)
+        (recordSite := if callbackSite.isSome then some producedResult else none)), ("abi", ← abi e)]
   let reduced ← whnf e
-  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult) (callableDecision := callableDecision)
+  if reduced != e then return ← shapeTree request reduced seen (depth + 1) copied checked containerFin structural (callbackSite := callbackSite) (hostReply := hostReply) (recordSite := recordSite) (subtypeStructural := subtypeStructural) (subtypeResult := subtypeResult) (callableDecision := callableDecision)
   reject e "unsupported native export type"
 
 /- Preserve the existing inline report for small acyclic types. Expansion has
@@ -1407,14 +1416,16 @@ partial def projectionCheckedSelectionWith (type : Json) (types : Array Json := 
 def projectionCheckedSelection (type : Json) : Json :=
   projectionCheckedSelectionWith type
 
+/-- `depth` is 0 at a top-level export site and 1 at a callable site, where a checked record
+always keeps its exact field form so the host-produced constructor stays explicit. -/
 def contractSiteProblem (site type : Json) (result : Bool) (label : String)
-    (owned : Bool := false) : Option String := Id.run do
+    (owned : Bool := false) (depth : Nat := 0) : Option String := Id.run do
   if let .ok refinement := site.getObjVal? "refinement" then
     if refinement == str "reject" then
       if containsRefinement type then
         return some s!"{label}: the contract rejects compiler-checked refined values"
     else
-      if refinement != projectionCheckedSelection type then
+      if refinement != projectionCheckedSelectionWith type (depth := depth) then
         return some s!"{label}: checked refinement constructor does not match the compiler-checked Subtype"
   let identity := ["resource", "callback", "owned-graph"].contains ((type.getObjValAs? String "kind").toOption.getD "")
   let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
@@ -1438,7 +1449,8 @@ def contractSiteProblem (site type : Json) (result : Bool) (label : String)
     return some s!"{label}: ownership or lifetime differs from the implemented adapter"
   return none
 
-partial def contractProblem (contract projection : Json) (owned : Bool := false) : Option String := Id.run do
+partial def contractProblem (contract projection : Json) (owned : Bool := false)
+    (depth : Nat := 0) : Option String := Id.run do
   let parameters := (projection.getObjValAs? (Array Json) "parameters").toOption.getD #[]
   let receiverKind := (contract.getObjValAs? String "receiver").toOption
   if let some kind := receiverKind then
@@ -1473,11 +1485,11 @@ partial def contractProblem (contract projection : Json) (owned : Bool := false)
       return some "parameter decisions must cover the exact runtime argument count"
     for index in [:sites.size] do
       let type := (parameters[index]!.getObjVal? "type").toOption.getD Json.null
-      if let some problem := contractSiteProblem sites[index]! type false s!"arg{index}" owned then
+      if let some problem := contractSiteProblem sites[index]! type false s!"arg{index}" owned depth then
         return some problem
   if let .ok site := contract.getObjVal? "result" then
     let type := (projection.getObjVal? "result").toOption.getD Json.null
-    if let some problem := contractSiteProblem site type true "result" owned then return some problem
+    if let some problem := contractSiteProblem site type true "result" owned depth then return some problem
     if (site.getObjValAs? String "ownership").toOption == some "borrow" then
       let lifetime := (site.getObjVal? "lifetime").toOption.getD Json.null
       let anchor := (lifetime.getObjValAs? String "anchor").toOption.getD ""
@@ -1513,7 +1525,7 @@ partial def contractProblem (contract projection : Json) (owned : Bool := false)
       let nested := obj [("status", str "supported"),
         ("parameters", toJson (arguments.map fun type => obj [("type", type)])),
         ("result", (type.getObjVal? "result").toOption.getD Json.null)]
-      if let some problem := contractProblem choice nested owned then
+      if let some problem := contractProblem choice nested owned (depth + 1) then
         return some s!"{label}.callable: {problem}"
   return none
 
