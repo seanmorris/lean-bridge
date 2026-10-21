@@ -1,0 +1,104 @@
+{
+  "additions": [
+    {
+      "currentSha256": "938643a34e475c4cf70ac6090f6bfcbd6cba535bd344ee481016aa948928d59a",
+      "path": "scripts/update-zero-payload-dotnet-verifier-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "28f552704f1ff2c2f04113973a1ce665cc45fa7fe4e8a3f9297665e46282cc73",
+      "path": "tests/helpers/zero-payload-dotnet-verifier-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "42638b5cf4d8e40bd4ae3a811152381ee090d3d153ed5030e5c05348f43804e0",
+      "path": "tests/helpers/zero-payload-dotnet-verifier-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "2aee414da1b93b5f8c235296589fe4cd48e952b5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5a2df95e76a5aaae446d5be1982a3db3b21c75151b3c29257c6389178f3e0af3",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadDotnetVerifierRepairSource, zeroPayloadDotnetVerifierRepairChangedPaths, zeroPayloadDotnetVerifierRepairIntegrationPaths } from \"./zero-payload-dotnet-verifier-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadDotnetVerifierRepairChangedPaths\n\t, ...zeroPayloadDotnetVerifierRepairIntegrationPaths\n\t, ...zeroPayloadDotnetCiChangedPaths\n",
+          "previous": "\t...zeroPayloadDotnetCiChangedPaths\n",
+          "start": 112773
+        },
+        {
+          "current": "\tconst zeroPayloadDotnetVerifierRepair\n\t\t= beforeZeroPayloadDotnetVerifierRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(zeroPayloadDotnetVerifierRepair) === expected)\n\t\treturn zeroPayloadDotnetVerifierRepair;\n",
+          "previous": "",
+          "start": 134941
+        },
+        {
+          "current": "\t\tpath, zeroPayloadDotnetVerifierRepair, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 135220
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7de717fb4bc7ce2a23d4ecadb72373dc5dea603376b25cbdf7c87e5ac3b50bfb"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-verifier-repair-v1",
+  "predecessorCommit": "548cad1fdb2104b5feaec42b1aec380e73ed642a",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "The independent NuGet verifier hashes only stable author-input fields while retaining timestamps solely as original observations.",
+  "updates": [
+    {
+      "currentSha256": "aa20a0496cda14638f365cb7592bf5ed2cdd09e2d289b47e053ac32a7fef9f32",
+      "edits": [
+        {
+          "current": "\t\tconst stableInputs = inputs.value.map(({\n\t\t\tpath, mode, sha256: digest\n\t\t}) => ({ path, mode, sha256: digest }));\n\t\tassert.equal(sha256(canonicalJson(stableInputs))\n",
+          "previous": "\t\tassert.equal(sha256(canonicalJson(inputs.value))\n",
+          "start": 8961
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-ci-report.mjs",
+      "previousSha256": "9d26e617169f20e461110e1c7e6eff28f33c4c435e01c4a7714e8744dcff590d"
+    },
+    {
+      "currentSha256": "5d828ee6d98c1b04b7373e9360bc2d92532e581fc1e5c25831932ff0a761e651",
+      "edits": [
+        {
+          "current": "\t\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetCiSource\n",
+          "start": 1819
+        },
+        {
+          "current": "\t\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetCiSource\n",
+          "start": 2402
+        },
+        {
+          "current": "\t\t\taddition.path, addition.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\t\taddition.path, addition.currentSha256\n",
+          "start": 2701
+        },
+        {
+          "current": "\t\tupdate.path, update.currentSha256, beforeFinRefinementSource\n",
+          "previous": "\t\tupdate.path, update.currentSha256, beforeZeroPayloadDotnetCiSource\n",
+          "start": 3092
+        }
+      ],
+      "path": "tests/helpers/zero-payload-dotnet-ci-source-history-tests.mjs",
+      "previousSha256": "ab30ec98402e7af300e03ac62e294c3ca0f7f3049630cf0a94c4a4e560f6f869"
+    },
+    {
+      "currentSha256": "41454dd6319a8320be73e4df21254ff59b1ba19383c66e0a3d255c5d63b0fccf",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-dotnet-verifier-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 452
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs",
+      "previousSha256": "03652bdfbaa8005aba3b29cd8d6a062a76a7c4bfc6b58c067f7fd2fc1397347f"
+    }
+  ]
+}
