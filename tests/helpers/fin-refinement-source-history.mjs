@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordHostedArchiversSource, dependentCheckedRecordHostedArchiversChangedPaths, dependentCheckedRecordHostedArchiversIntegrationPaths } from "./dependent-checked-record-hosted-archivers-source-history.mjs";
 import { beforeNestedCheckedRecordRegressionContractSource, nestedCheckedRecordRegressionContractChangedPaths, nestedCheckedRecordRegressionContractIntegrationPaths } from "./nested-checked-record-regression-contract-source-history.mjs";
 import { beforeDependentCheckedRecordPythonArchiveSource, dependentCheckedRecordPythonArchiveImplementationPaths, dependentCheckedRecordPythonArchiveIntegrationPaths } from "./dependent-checked-record-python-archive-source-history.mjs";
 import { beforeDependentCheckedRecordPerlArchiveSource, dependentCheckedRecordPerlArchiveImplementationPaths, dependentCheckedRecordPerlArchiveIntegrationPaths } from "./dependent-checked-record-perl-archive-source-history.mjs";
@@ -1482,7 +1483,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nestedCheckedRecordRegressionContractChangedPaths
+	...dependentCheckedRecordHostedArchiversChangedPaths
+	, ...dependentCheckedRecordHostedArchiversIntegrationPaths
+	, ...nestedCheckedRecordRegressionContractChangedPaths
 	, ...nestedCheckedRecordRegressionContractIntegrationPaths
 	, ...dependentCheckedRecordPythonArchiveImplementationPaths
 	, ...dependentCheckedRecordPythonArchiveIntegrationPaths
@@ -2123,9 +2126,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordHostedArchivers
+		= beforeDependentCheckedRecordHostedArchiversSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordHostedArchivers) === expected)
+		return dependentCheckedRecordHostedArchivers;
 	const nestedCheckedRecordRegressionContract
 		= beforeNestedCheckedRecordRegressionContractSource(
-			path, text, expected
+			path, dependentCheckedRecordHostedArchivers, expected
 		);
 	if(sha256(nestedCheckedRecordRegressionContract) === expected)
 		return nestedCheckedRecordRegressionContract;

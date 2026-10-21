@@ -1,0 +1,173 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9b14f431e123e20ff858ceb61243bd2b2e8345abdade43089a954c031a76e606",
+      "path": "scripts/archive-dependent-checked-record-browser-evidence.mjs"
+    },
+    {
+      "currentSha256": "073f4cbfe997b65b73bb08f26e43374e6cf453056c312bca58ea3181bb0bbe38",
+      "path": "scripts/archive-dependent-checked-record-dotnet-evidence.mjs"
+    },
+    {
+      "currentSha256": "7667649271296a515f225377d02a65b9b61cc16be8f72b7739a11c3d4873bc92",
+      "path": "scripts/archive-dependent-checked-record-jvm-evidence.mjs"
+    },
+    {
+      "currentSha256": "bafa25bc44e678919bec0085b0c1a11f39a025c025596be3da3c60de28a27cf8",
+      "path": "scripts/archive-dependent-checked-record-native-evidence.mjs"
+    },
+    {
+      "currentSha256": "81e2ff72deb4a2d8ba032f63ca02b2bef840244e6c20570bd6ef516e6c2a6735",
+      "path": "scripts/archive-dependent-checked-record-php-evidence.mjs"
+    },
+    {
+      "currentSha256": "16b84c048a315b8b42970be99e87d30074adecc451154b65763a8e6b42edd469",
+      "path": "scripts/archive-dependent-checked-record-php-wasm-evidence.mjs"
+    },
+    {
+      "currentSha256": "aacb08bd34c94fb8d5280684256a7b8e393a4751494cbcfd6f106e96a472f671",
+      "path": "scripts/archive-dependent-checked-record-wit-evidence.mjs"
+    },
+    {
+      "currentSha256": "25c4f800d027f5533991aa1c9ad09a35b553ca79b1d189b619cc7ab635f42580",
+      "path": "scripts/check-dependent-checked-record-browser-ci.mjs"
+    },
+    {
+      "currentSha256": "6e88b6853acc49b23cd59342a4d2eaaea97f6e711b80ee35a84c4aa1a8a21e44",
+      "path": "scripts/check-dependent-checked-record-native-ci.mjs"
+    },
+    {
+      "currentSha256": "09b710c1de08a3e7a554989a69d290a6b392198c975112e3a180928f3f8e0bf2",
+      "path": "tests/helpers/dependent-checked-record-browser-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "98ca6310278c049bebaf4adb27523c4a02f2146418a384fd6ba4fb9b4f774718",
+      "path": "tests/helpers/dependent-checked-record-browser-ci-report.mjs"
+    },
+    {
+      "currentSha256": "b8e208211b1484eeeb4c8ff2b9183f649c761c8be7a30b81a4bea11634208fe3",
+      "path": "tests/helpers/dependent-checked-record-browser-report.mjs"
+    },
+    {
+      "currentSha256": "a2b178f39183e91e4102ad6c73fd395ce9bb8c684e92d6d0404716206a5c8422",
+      "path": "tests/helpers/dependent-checked-record-native-ci-report-tests.mjs"
+    },
+    {
+      "currentSha256": "f9e6d992533e5e885abe5ea6445845a696ad955115ca87477303caf53e078dfc",
+      "path": "tests/helpers/dependent-checked-record-native-ci-report.mjs"
+    },
+    {
+      "currentSha256": "e287655aad5185fddaa49d3060f3c701994ea7dbaf9887c5312e78ed538c3b6f",
+      "path": "tests/helpers/dependent-checked-record-native-report.mjs"
+    },
+    {
+      "currentSha256": "2382a59ec096044656a7082b89d6a0ae0c787b8905c78f05e8d76c820561d02a",
+      "path": "scripts/update-dependent-checked-record-hosted-archivers-source-history.mjs"
+    },
+    {
+      "currentSha256": "d1766993e38eca19a752e3607c462d0b691acd360a22660b3c477d5b5394872f",
+      "path": "tests/helpers/dependent-checked-record-hosted-archivers-source-history.mjs"
+    },
+    {
+      "currentSha256": "cb1b308147d9f13726824f2fa987a4ec9ba3e3a081d136402ea3dc25fb477063",
+      "path": "tests/helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs"
+    }
+  ],
+  "commits": [
+    "40310c39b053333c51b8dccdad5b21ae62764c4f",
+    "59524779bfaad1a42ef31c89dd35ac33a89eee44",
+    "0687ab9aeab4378126ee6c17b26140b4337d70f5",
+    "ca747366c9744a6bdab6bc03da2384fc4169dca1",
+    "b9de411a56764e94ecb7006ba5a7998cf37bc1e1",
+    "544f1da177625ee8125200e1320591c569f73470",
+    "4d352cff2ebbc4f03504801619104248204c264a"
+  ],
+  "implementationCommit": "4d352cff2ebbc4f03504801619104248204c264a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "12d7dcf0ec123237298c156d5106cc5ccb973acd583545d6bad1580c9614ea51",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordHostedArchiversSource, dependentCheckedRecordHostedArchiversChangedPaths, dependentCheckedRecordHostedArchiversIntegrationPaths } from \"./dependent-checked-record-hosted-archivers-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordHostedArchiversChangedPaths\n\t, ...dependentCheckedRecordHostedArchiversIntegrationPaths\n\t, ...nestedCheckedRecordRegressionContractChangedPaths\n",
+          "previous": "\t...nestedCheckedRecordRegressionContractChangedPaths\n",
+          "start": 127433
+        },
+        {
+          "current": "\tconst dependentCheckedRecordHostedArchivers\n\t\t= beforeDependentCheckedRecordHostedArchiversSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordHostedArchivers) === expected)\n\t\treturn dependentCheckedRecordHostedArchivers;\n",
+          "previous": "",
+          "start": 156677
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordHostedArchivers, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 157018
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b05bf33b34e7ddb9971f927ecac8f8481bd6519df2b3375c410a76801172d2b3"
+    },
+    {
+      "currentSha256": "a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-hosted-archivers-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2951
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "310cf2699cee4b223cd4c1402c0675194c1eca5b19be9f3b9be54e8429e79f08"
+    }
+  ],
+  "milestone": "dependent-checked-record-hosted-archivers-source-v1",
+  "predecessorCommit": "e1899c46c9169c93419e230a9efba9892963c7f2",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "One reversible layer authenticates the .NET, JVM, native PHP, WIT, PHP-Wasm, npm/browser and C/C++ dependent checked-record archive preparation commits, including the two post-run checkers.",
+  "updates": [
+    {
+      "currentSha256": "aa7946d3dc854509b5276b062a2a96221c980953e1d5afdefc1d902c4a0eda4a",
+      "edits": [
+        {
+          "current": "\tdependentCheckedRecordBrowserEvidenceSources\n\t, dependentCheckedRecordDotnetEvidenceSources\n\t, dependentCheckedRecordHostedOriginal\n\t, dependentCheckedRecordJvmEvidenceSources\n\t, dependentCheckedRecordNativeEvidenceSources\n",
+          "previous": "\tdependentCheckedRecordHostedOriginal\n",
+          "start": 330
+        },
+        {
+          "current": "\t, dependentCheckedRecordPhpEvidenceSources\n\t, dependentCheckedRecordPhpWasmEvidenceSources\n",
+          "previous": "",
+          "start": 599
+        },
+        {
+          "current": "\t, dependentCheckedRecordWitEvidenceSources\n",
+          "previous": "",
+          "start": 828
+        },
+        {
+          "current": "\ntest(\"dependent .NET evidence closes NuGet production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordDotnetEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/dotnet.cs\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-dotnet.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-dotnet-ci.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-dotnet-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent JVM evidence closes Maven production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordJvmEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/java.java\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/kotlin.kt\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-jvm.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-jvm-ci.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-jvm-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent native-PHP evidence closes Composer production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordPhpEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/php.php\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-php.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-php-ci.mjs\"]\n\t, [\"checker\", \"scripts/select-nominal-subtype-php-ci-tools.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-php-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent WIT evidence closes component production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordWitEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/wit-wasi.c\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/wit-values.h\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-wit.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-wit-ci.mjs\"]\n\t, [\"checker\", \"scripts/select-nominal-subtype-wit-ci-tools.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-wit-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent browser evidence closes npm production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordBrowserEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-browser/browser.mjs\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-browser/javascript.mjs\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-browser.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-browser-ci.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-browser-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent native evidence closes C/C++ production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordNativeEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/c.c\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/cpp.cpp\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-native.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-native-ci.mjs\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-native-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n\ntest(\"dependent PHP-Wasm evidence closes package-set production, consumption and checking sources\", {\n\ttimeout: 120_000\n}, () => authenticate(select(dependentCheckedRecordPhpWasmEvidenceSources), [\n\t[\"producer\", \"tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean\"]\n\t, [\"consumer\", \"tests/fixtures/dependent-checked-record-consumers/php.php\"]\n\t, [\"checker\", \".github/workflows/dependent-checked-record-php-wasm.yml\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-php-wasm-ci.mjs\"]\n\t, [\"checker\", \"scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs\"]\n\t, [\"checker\", \"scripts/bootstrap-php-wasm-ci.sh\"]\n\t, [\"archiver\", \"scripts/archive-dependent-checked-record-php-wasm-evidence.mjs\"]\n\t, [\"archiver\", \"tests/helpers/dependent-checked-record-hosted-archive.mjs\"]\n]));\n",
+          "previous": "",
+          "start": 4686
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs",
+      "previousSha256": "07ba8c6b3a51addfebc290b7472051a0af7e20788b8c012ed38fbb20c6cb76c2"
+    },
+    {
+      "currentSha256": "027541d30bba2d2952ae678b223ff544e5bef78816f1d7d847620048887c5dc4",
+      "edits": [
+        {
+          "current": "\n/**\n * Select every source that explains the hosted dependent checked-record\n * NuGet artifact and its independent C# verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordDotnetEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst consumerCaller = caller(\"dotnet.cs\");\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-dotnet-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, consumerCaller\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-dotnet-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, consumerCaller\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-dotnet-ci.mjs\"\n\t\t\t\t\t, \"tests/helpers/dependent-checked-record-dotnet-controls.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt, \".github/workflows/dependent-checked-record-dotnet.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-dotnet-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-dotnet-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record\n * Maven artifact and its Java/Kotlin verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordJvmEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst callers = [caller(\"java.java\"), caller(\"kotlin.kt\")];\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-jvm-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, ...callers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-jvm-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...callers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-jvm-ci.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt, \".github/workflows/dependent-checked-record-jvm.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-jvm-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-jvm-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record\n * Composer artifact and native-PHP verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordPhpEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst consumerCaller = caller(\"php.php\");\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-php-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, consumerCaller\n\t\t\t\t, \"src/backends/php/brick-math.source.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-php-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, consumerCaller\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-php-ci.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt, \".github/workflows/dependent-checked-record-php.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-php-ci.sh\"\n\t\t\t\t, \"scripts/select-nominal-subtype-php-ci-tools.mjs\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-php-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record WIT\n * component artifact and native Wasmtime verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordWitEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst callers = [caller(\"wit-values.h\"), caller(\"wit-wasi.c\")];\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-wit-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, ...callers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-wit-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...callers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-wit-ci.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt, \".github/workflows/dependent-checked-record-wit.yml\"\n\t\t\t\t, \"flake.lock\", \"flake.nix\", \"scripts/bootstrap-toolchains.sh\"\n\t\t\t\t, \"scripts/env.sh\", \"scripts/run-dependent-checked-record-wit-ci.sh\"\n\t\t\t\t, \"scripts/select-nominal-subtype-wit-ci-tools.mjs\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-wit-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record\n * C/C++ packages and their independent native consumers.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordNativeEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst consumers = [\"c.c\", \"cpp.cpp\", \"result-only-c.c\"\n\t\t, \"result-only-cpp.cpp\"].map(path => caller(path));\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-native-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, ...consumers\n\t\t\t\t, \"src/backends/c/gmp.source.tar.xz\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-native-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...consumers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-native-ci.mjs\"\n\t\t\t\t\t, \"tests/helpers/dependent-checked-record-native-ci-report-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/dependent-checked-record-native.yml\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-native-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-native-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record npm\n * packages and Node/page/React/worker verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordBrowserEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst consumers = [\n\t\t\"tests/fixtures/dependent-checked-record-browser/javascript.mjs\"\n\t\t, \"tests/fixtures/dependent-checked-record-browser/browser.mjs\"\n\t\t, \"tests/fixtures/dependent-checked-record-browser/full.mts\"\n\t\t, \"tests/fixtures/dependent-checked-record-browser/result-only.mts\"\n\t\t, ...[\"plain.mjs\", \"react.mjs\", \"worker-main.mjs\", \"worker.mjs\"]\n\t\t\t.map(path => `tests/fixtures/type-corpus/consumers/browser/${path}`)\n\t];\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-browser-installed-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, ...consumers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-browser.mjs\"\n\t\t\t\t\t, \"tests/helpers/dependent-checked-record-browser-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...consumers\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-browser-ci.mjs\"\n\t\t\t\t\t, \"tests/helpers/dependent-checked-record-browser-ci-report-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/dependent-checked-record-browser.yml\"\n\t\t\t\t, \"flake.lock\", \"flake.nix\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\"\n\t\t\t\t, \"scripts/build-lean-link-spike.sh\", \"scripts/env.sh\"\n\t\t\t\t, \"scripts/install-playwright-browsers.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-browser-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-browser-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n\n/**\n * Select every source that explains the hosted dependent checked-record\n * PHP-Wasm package set and its Node/Chromium verification.\n *\n * @param {object} value Role revisions.\n */\nexport const dependentCheckedRecordPhpWasmEvidenceSources = value => {\n\tconst selected = revisions(value);\n\tconst consumerCaller = caller(\"php.php\");\n\treturn freeze([\n\t\t{\n\t\t\trole: \"producer\", revision: selected.producer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.producer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-php-wasm-installed-tests.mjs\"\n\t\t\t\t\t, \"tests/helpers/dependent-checked-record-php-wasm-lean-tests.mjs\"\n\t\t\t\t])\n\t\t\t\t, ...commonData, consumerCaller\n\t\t\t\t, \"src/backends/php/brick-math.source.json\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"consumer\", revision: selected.consumer\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.consumer, [\n\t\t\t\t\t\"tests/helpers/dependent-checked-record-php-wasm-fixture.mjs\"\n\t\t\t\t])\n\t\t\t\t, consumerCaller\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"checker\", revision: selected.checker\n\t\t\t, paths: [\n\t\t\t\t...closure(selected.checker, [\n\t\t\t\t\t\"scripts/check-dependent-checked-record-php-wasm-ci.mjs\"\n\t\t\t\t\t, \"scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs\"\n\t\t\t\t])\n\t\t\t\t, boundedApt\n\t\t\t\t, \".github/workflows/dependent-checked-record-php-wasm.yml\"\n\t\t\t\t, \"flake.lock\", \"flake.nix\"\n\t\t\t\t, \"scripts/bootstrap-php-wasm-ci.sh\"\n\t\t\t\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/build-lean-runtime.sh\"\n\t\t\t\t, \"scripts/env.sh\", \"scripts/install-playwright-browsers.sh\"\n\t\t\t\t, \"scripts/run-dependent-checked-record-php-wasm-ci.sh\"\n\t\t\t]\n\t\t}\n\t\t, {\n\t\t\trole: \"archiver\", revision: selected.archiver\n\t\t\t, paths: closure(selected.archiver, [\n\t\t\t\t\"scripts/archive-dependent-checked-record-php-wasm-evidence.mjs\"\n\t\t\t\t, \"tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs\"\n\t\t\t])\n\t\t}\n\t]);\n};\n",
+          "previous": "",
+          "start": 7522
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "67bee17454b465f0adec0d1a67f09f384e8e93c41620bfcf5ccbfbcd49476281"
+    }
+  ]
+}
