@@ -1,0 +1,128 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e77cc4d90c937af0f627aef017bd6e1ada4b3d9018447c1c2093c7e7a0d5a501",
+      "path": "scripts/update-dependent-checked-record-hosted-failure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "80f4a1372ccb2e75291fd25e0bc221c59481feb61686aff1d81161e9bc3f378d",
+      "path": "tests/helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "39af7b28e4e497a630273f4ca98b8921f08037167e3263030258e1f4d76c2bac",
+      "path": "tests/helpers/dependent-checked-record-hosted-failure-repair-source-history.mjs"
+    }
+  ],
+  "browserImplementationCommit": "15f0f577cee0d9b533d23131b9fdc59035622feb",
+  "integrationUpdates": [
+    {
+      "currentSha256": "36e3db8853e8328350e9282aeececc6a147a36e21ca8f3ed235c6ad04c02d68d",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordHostedFailureRepairSource, dependentCheckedRecordHostedFailureRepairChangedPaths, dependentCheckedRecordHostedFailureRepairIntegrationPaths } from \"./dependent-checked-record-hosted-failure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordHostedFailureRepairChangedPaths\n\t, ...dependentCheckedRecordHostedFailureRepairIntegrationPaths\n\t, ...dependentCheckedRecordRubyArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordRubyArchiveImplementationPaths\n",
+          "start": 126491
+        },
+        {
+          "current": "\tconst dependentCheckedRecordHostedFailureRepair\n\t\t= beforeDependentCheckedRecordHostedFailureRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordHostedFailureRepair) === expected)\n\t\treturn dependentCheckedRecordHostedFailureRepair;\n",
+          "previous": "",
+          "start": 155269
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordRubyArchiveSource(\n\t\t\tpath, dependentCheckedRecordHostedFailureRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordRubyArchiveSource(path, text, expected);\n",
+          "start": 155567
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "96b9d25575f3fb54dd72c4e1089c1521d58302ec6287e2fe27fa995360eb2201"
+    },
+    {
+      "currentSha256": "ce200ebdf824ba7132f063671d6408a4755329a080656442f87f56714a7807de",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2951
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f"
+    }
+  ],
+  "milestone": "dependent-checked-record-hosted-failure-repair-source-v1",
+  "nativeImplementationCommit": "af36107a1b8862d848578865bd6e25c7d9f8be88",
+  "predecessorCommit": "b41914253d02129f0d88e3473f1df7d68b616cd4",
+  "schemaVersion": 1,
+  "scope": "Generated JavaScript validates retained Fin payloads against their sibling Nat field, while C and C++ callers require the exact reviewed parameter diagnostic.",
+  "updates": [
+    {
+      "currentSha256": "6ad7f205e2b3b4a85b5227177c3646867d054f94c73afe3fe82702affefa7047",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t, \"    for (const field of fields) {\"\n\t\t\t\t\t, \"      const fieldPath = path + '.' + field.name, fieldRefinement = field.refinement;\"\n\t\t\t\t\t, \"      if (fieldRefinement?.kind === 'fin-field') {\"\n\t\t\t\t\t, \"        const boundPath = path + '.' + fieldRefinement.field, bound = value[fieldRefinement.field];\"\n\t\t\t\t\t, \"        assertNat(bound, boundPath); assertFin(value[field.name], bound, fieldPath);\"\n\t\t\t\t\t, \"      } else assertNestedFin(value[field.name], fieldRefinement, fieldPath);\"\n\t\t\t\t\t, \"    }\"\n",
+          "previous": "\t\t\t\t\t, \"    for (const field of fields) assertNestedFin(value[field.name], field.refinement, path + '.' + field.name);\"\n",
+          "start": 29941
+        }
+      ],
+      "path": "src/backends/javascript/generate.mjs",
+      "previousSha256": "8529cac82dff79f22c12564f338ec679788248c0b3416547b8f01a6e98833543"
+    },
+    {
+      "currentSha256": "9474d2f7df466bd2ef15304f6f44dd70870f60234a88c0a58e56434040c04617",
+      "edits": [
+        {
+          "current": "import { generateJavaScriptPackage } from \"../../src/backends/javascript/generate.mjs\";\n",
+          "previous": "",
+          "start": 463
+        },
+        {
+          "current": "test(\"generated JavaScript validates Fin fields against their sibling bound\"\n\t, async () => {\n\tconst expected = dependentCheckedRecordSelection(\"ordinary-source\").expected;\n\tconst generated = generateJavaScriptPackage(expected);\n\tconst validators = await import(`data:text/javascript,${encodeURIComponent(\n\t\tgenerated[\"internal/validators.mjs\"]\n\t)}`);\n\tconst refinement = expected.declarations[0].source.extensions[\n\t\t\"lean-lang.org/refinements\"\n\t].parameters[0];\n\tassert.doesNotThrow(() => validators.assertNestedFin({\n\t\tbound: 3n, below: 2n\n\t}, refinement, \"value\"));\n\tassert.throws(() => validators.assertNestedFin({\n\t\tbound: 3n, below: 3n\n\t}, refinement, \"value\"), /value\\.below must be bigint below 3/u);\n\tassert.throws(() => validators.assertNestedFin({\n\t\tbound: \"3\", below: 2n\n\t}, refinement, \"value\"), /value\\.bound must be bigint/u);\n\tassert.throws(() => validators.assertNestedFin({\n\t\tbound: 3n, below: -1n\n\t}, refinement, \"value\"), /value\\.below must be non-negative bigint/u);\n\t}\n);\n\n",
+          "previous": "",
+          "start": 4705
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "391f6cc8a68ae6f53be28f0cfeb2348b3ac504781cb23631bf2b8ad9b0fe36a6"
+    },
+    {
+      "currentSha256": "d923a75ec5d611971601adb760a942e62a41e19fe644d089c7a7fe844cd7ff64",
+      "edits": [
+        {
+          "current": "\tconst { resultOnly, reviewed } = dependentCheckedRecordNativeSelection(route);\n",
+          "previous": "\tconst { resultOnly } = dependentCheckedRecordNativeSelection(route);\n",
+          "start": 1374
+        },
+        {
+          "current": "\tlet source = await readFile(\n\t\t`tests/fixtures/dependent-checked-record-consumers/${resultOnly\n\t\t\t? \"result-only-\" : \"\"}${extension}.${extension}`, \"utf8\"\n\t);\n\tif(reviewed)\n\t\tsource = source.replaceAll(\n\t\t\t'\"arg0 was rejected by ', '\"value0 was rejected by '\n\t\t);\n",
+          "previous": "",
+          "start": 1504
+        },
+        {
+          "current": "\t\tsource\n",
+          "previous": "\t\tsource: await readFile(\n\t\t\t`tests/fixtures/dependent-checked-record-consumers/${resultOnly\n\t\t\t\t? \"result-only-\" : \"\"}${extension}.${extension}`, \"utf8\"\n\t\t)\n",
+          "start": 1779
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-native-fixture.mjs",
+      "previousSha256": "d1cad836254c7fb0b1a7c670e2456eed6f6cf609004f842263c62a666b99a64b"
+    },
+    {
+      "currentSha256": "d1879a615f2678bf267e4fd31e80381a3a08a4c02e1c7c4ddb98870ee399ae0f",
+      "edits": [
+        {
+          "current": "\t\t\tif(!selection.resultOnly)\n\t\t\t{\n\t\t\t\tassert.match(caller.source, selection.reviewed\n\t\t\t\t\t? /\"value0 was rejected by DependentRecords\\.mkDependent/u\n\t\t\t\t\t: /\"arg0 was rejected by DependentRecords\\.mkDependent/u);\n\t\t\t\tassert.doesNotMatch(caller.source, selection.reviewed\n\t\t\t\t\t? /\"arg0 was rejected by DependentRecords\\.mkDependent/u\n\t\t\t\t\t: /\"value0 was rejected by DependentRecords\\.mkDependent/u);\n\t\t\t}\n",
+          "previous": "",
+          "start": 1952
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-native-tests.mjs",
+      "previousSha256": "ed1ebb2c908cb8835a7acf5d71856d8c3c22dab96b49d6397ca3aea5faba59dd"
+    }
+  ]
+}
