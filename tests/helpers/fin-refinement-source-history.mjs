@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordTypeSurfaceGapSource, dependentCheckedRecordTypeSurfaceGapHistoricalPaths, dependentCheckedRecordTypeSurfaceGapIntegrationPaths } from "./dependent-checked-record-type-surface-gap-source-history.mjs";
 import { beforeDependentCheckedRecordPhpWasmSource, dependentCheckedRecordPhpWasmChangedPaths, dependentCheckedRecordPhpWasmIntegrationPaths } from "./dependent-checked-record-php-wasm-source-history.mjs";
 import { beforeDependentCheckedRecordJvmSource, dependentCheckedRecordJvmChangedPaths, dependentCheckedRecordJvmIntegrationPaths } from "./dependent-checked-record-jvm-source-history.mjs";
 import { beforeDependentCheckedRecordDotnetSource, dependentCheckedRecordDotnetChangedPaths, dependentCheckedRecordDotnetIntegrationPaths } from "./dependent-checked-record-dotnet-source-history.mjs";
@@ -1476,7 +1477,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPhpWasmChangedPaths
+	...dependentCheckedRecordTypeSurfaceGapHistoricalPaths
+	, ...dependentCheckedRecordTypeSurfaceGapIntegrationPaths
+	, ...dependentCheckedRecordPhpWasmChangedPaths
 	, ...dependentCheckedRecordPhpWasmIntegrationPaths
 	, ...dependentCheckedRecordJvmChangedPaths
 	, ...dependentCheckedRecordJvmIntegrationPaths
@@ -2105,8 +2108,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordTypeSurfaceGap
+		= beforeDependentCheckedRecordTypeSurfaceGapSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordTypeSurfaceGap) === expected)
+		return dependentCheckedRecordTypeSurfaceGap;
 	const dependentCheckedRecordPhpWasm
-		= beforeDependentCheckedRecordPhpWasmSource(path, text, expected);
+		= beforeDependentCheckedRecordPhpWasmSource(
+			path, dependentCheckedRecordTypeSurfaceGap, expected
+		);
 	if(sha256(dependentCheckedRecordPhpWasm) === expected)
 		return dependentCheckedRecordPhpWasm;
 	const dependentCheckedRecordJvm
