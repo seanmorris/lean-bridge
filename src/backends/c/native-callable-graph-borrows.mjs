@@ -26,10 +26,10 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 	const p = generated.layout.prefix, header = ["#pragma once", `#include "${p}-graph-types.h"`];
 	const controls = `${descriptor.exports[0].symbol}_structured_callback_controls`;
 	const lines = [generated.source
-		, "enum { NG_CALLBACK = 6 };"
+		, "enum { NG_CALLBACK = 6, NG_CALLBACK_RESULT = 10 };"
 		, "typedef struct ng_borrow_frame { ng_budget budget; uint32_t status; void (*observe)(struct ng_borrow_frame *); } ng_borrow_frame;"
 		, "static inline void ng_borrow_fail(ng_borrow_frame *frame, uint32_t status) {"
-		, "  if (!frame->status && status) frame->status = status <= NG_CALLBACK ? status : NG_CALLBACK;"
+		, "  if (!frame->status && status) frame->status = status == NG_CALLBACK_RESULT ? status : status <= NG_CALLBACK ? status : NG_CALLBACK;"
 		, "}"
 		, "static inline void ng_borrow_observe(ng_borrow_frame *frame) { if (frame->observe) frame->observe(frame); }"];
 	for(const signature of descriptor.callbacks)
@@ -81,7 +81,7 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 			, "}"
 			, `static inline lean_object *ng_reject_${key}(void *context, lean_object *recovery) {`
 			, `  ng_borrow_${key} *host = context;`
-			, "  ng_borrow_fail(host->frame, NG_INVALID);"
+			, "  ng_borrow_fail(host->frame, NG_CALLBACK_RESULT);"
 			, "  return recovery;"
 			, "}");
 	}

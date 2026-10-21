@@ -27,13 +27,22 @@ const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_PROFILES?.sp
 const supported = ["dotnet", "java", "kotlin", "php-native", "wit-wasi"];
 assert.ok(profiles.length === new Set(profiles).size && profiles.every(profile => supported.includes(profile)));
 const targets = {
-	dotnet: ["nuget", { name: "LeanBridge.Callbacksubtypes", version: "1.0.0" }]
-	, java: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
-	, kotlin: ["maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
-	, "php-native": ["composer", { name: "lean-bridge/callbacksubtypes", version: "1.0.0" }]
-	, "wit-wasi": ["wit-wasi", { name: "callback-subtypes", version: "1.0.0" }]
+	dotnet: ["nuget", "nuget", { name: "LeanBridge.Callbacksubtypes", version: "1.0.0" }]
+	, java: ["maven", "maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
+	, kotlin: ["maven", "maven", { name: "org.leanbridge:callbacksubtypes", version: "1.0.0" }]
+	, "php-native": ["composer", "php-native", { name: "lean-bridge/callbacksubtypes", version: "1.0.0" }]
+	, "wit-wasi": ["wit-wasi", "wit-wasi", { name: "callback-subtypes", version: "1.0.0" }]
 };
 const extension = { dotnet: "cs", java: "java", kotlin: "kt", "php-native": "php", "wit-wasi": "c" };
+const configuredTargets = selected => Object.fromEntries(selected.map(profile => [
+	targets[profile][1], targets[profile][2]
+]));
+
+test("remaining callback target mappings keep author keys separate from build aliases", () => {
+	assert.deepEqual(Object.keys(configuredTargets(["php-native"])), ["php-native"]);
+	assert.deepEqual(Object.keys(configuredTargets(["java", "kotlin"])), ["maven"]);
+	assert.deepEqual(Object.keys(configuredTargets(["dotnet", "wit-wasi"])), ["nuget", "wit-wasi"]);
+});
 
 test("ordinary and reviewed remaining managed callback Subtypes install offline", {
 	skip: !profiles.length, timeout: 3_600_000
@@ -52,7 +61,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 		const projectRoot = join(author, "project"), outputRoot = join(author, "release");
 		const handoff = join(routeRoot, "handoff");
 		await cp(callbackSubtypeFixture, projectRoot, { recursive: true });
-		const selectedTargets = Object.fromEntries(profiles.map(profile => targets[profile]));
+		const selectedTargets = configuredTargets(profiles);
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson({
 			...callbackSubtypeConfiguration(route), targets: selectedTargets
 		}));

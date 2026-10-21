@@ -125,7 +125,9 @@ test("native callback Subtype trampolines require typed recovery and report cons
 	assert.match(generated.borrowsHeader, new RegExp(`${hostSignature.key}[^}]+recovery`, "su"));
 	assert.match(generated.source, new RegExp(`ng_recovery_${hostSignature.key}`, "u"));
 	assert.match(generated.source, new RegExp(`ng_reject_${hostSignature.key}`, "u"));
-	assert.match(generated.source, /ng_borrow_fail\(host->frame, NG_INVALID\)/u);
+	assert.match(generated.source, /enum \{ NG_CALLBACK = 6, NG_CALLBACK_RESULT = 10 \}/u);
+	assert.match(generated.source, /status == NG_CALLBACK_RESULT \? status/u);
+	assert.match(generated.source, /ng_borrow_fail\(host->frame, NG_CALLBACK_RESULT\)/u);
 	assert.match(generated.source, new RegExp(`ng_borrow_${hostSignature.key}[^;]+ng_recovery_${hostSignature.key}[^;]+ng_reject_${hostSignature.key}`, "su"));
 	assert.doesNotMatch(generated.source, new RegExp(`ng_recovery_${closureSignature.key}`, "u"));
 	assert.equal(generated.closures.some(item => item.id === host.id), false);
