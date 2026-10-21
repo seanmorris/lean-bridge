@@ -14,6 +14,7 @@ import {
 	, dependentCheckedRecordJvmEvidenceSources
 	, dependentCheckedRecordPerlEvidenceSources
 	, dependentCheckedRecordPhpEvidenceSources
+	, dependentCheckedRecordPhpWasmEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
 	, dependentCheckedRecordRustEvidenceSources
@@ -139,6 +140,19 @@ test("dependent WIT evidence closes component production, consumption and checki
 	, ["checker", "scripts/check-dependent-checked-record-wit-ci.mjs"]
 	, ["checker", "scripts/select-nominal-subtype-wit-ci-tools.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-wit-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent PHP-Wasm evidence closes package-set production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPhpWasmEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/php.php"]
+	, ["checker", ".github/workflows/dependent-checked-record-php-wasm.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-php-wasm-ci.mjs"]
+	, ["checker", "scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs"]
+	, ["checker", "scripts/bootstrap-php-wasm-ci.sh"]
+	, ["archiver", "scripts/archive-dependent-checked-record-php-wasm-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

@@ -448,3 +448,59 @@ export const dependentCheckedRecordWitEvidenceSources = value => {
 		}
 	]);
 };
+
+/**
+ * Select every source that explains the hosted dependent checked-record
+ * PHP-Wasm package set and its Node/Chromium verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordPhpWasmEvidenceSources = value => {
+	const selected = revisions(value);
+	const consumerCaller = caller("php.php");
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-php-wasm-installed-tests.mjs"
+					, "tests/helpers/dependent-checked-record-php-wasm-lean-tests.mjs"
+				])
+				, ...commonData, consumerCaller
+				, "src/backends/php/brick-math.source.json"
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-php-wasm-fixture.mjs"
+				])
+				, consumerCaller
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-php-wasm-ci.mjs"
+					, "scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/dependent-checked-record-php-wasm.yml"
+				, "flake.lock", "flake.nix"
+				, "scripts/bootstrap-php-wasm-ci.sh"
+				, "scripts/bootstrap-toolchains.sh", "scripts/build-lean-runtime.sh"
+				, "scripts/env.sh", "scripts/install-playwright-browsers.sh"
+				, "scripts/run-dependent-checked-record-php-wasm-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-php-wasm-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
