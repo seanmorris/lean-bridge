@@ -13,6 +13,7 @@ import {
 	, validateZeroPayloadBrowserPhases
 	, zeroPayloadBrowserEngines
 	, zeroPayloadBrowserExpected
+	, zeroPayloadBrowserName
 	, zeroPayloadBrowserPackageSource
 	, zeroPayloadBrowserProfiles
 	, zeroPayloadBrowserSelection
@@ -23,6 +24,47 @@ export const zeroPayloadBrowserPositions = Object.freeze([
 	, "produceWitness.result", "produceToken.result", "witnesses.result[]"
 	, "maybeWitness.result.some", "produceMarker.result"
 ]);
+
+/**
+ * Enumerate the complete route-relative record closure after browser execution.
+ *
+ * @param receipt - Prepared component and runtime archive receipt.
+ */
+export const zeroPayloadBrowserRecordPaths = receipt => {
+	const paths = [
+		"browser.json", "configuration.json", "controls.json"
+		, "expected.binding-ir.json"
+		, "install.json", "installed.json", "relocated.json", "report.json"
+		, "callers/check.mjs", "callers/index.mjs", "callers/index.mts"
+		, "handoff/component-package-receipt.json"
+		, "handoff/verify-component-package-receipt.mjs"
+		, `handoff/${receipt.package.archive}`, `handoff/${receipt.runtime.archive}`
+	];
+	for(const attempt of [0, 1])
+		for(const path of [
+			"author-inputs.json", "binding/binding-ir.json"
+			, "component-package-receipt.json", "locks/compiler-adapters.json"
+			, "locks/component-build-plan.json", "metadata/provenance.json"
+			, "ZeroPayloadCheckedRecords.lean"
+		]) paths.push(`build-${attempt}/${path}`);
+	for(const profile of zeroPayloadBrowserProfiles)
+	{
+		const entry = {
+			"browser-javascript": "plain", "browser-react": "react"
+			, "browser-worker": "worker-main"
+		}[profile];
+		for(const path of [
+			"check.mjs", "index.html", "inputs.json", "install.json"
+			, "installed-binding-ir.json", "installed-component-package.json"
+			, "installed-index.d.ts", "installed-runtime-identity.json"
+			, "installed-runtime-package.json", "javascript.mjs", "observations.json"
+			, "package-lock.json", "package.mjs", "package.json", "report.json"
+			, "request.json", `${entry}.mjs`
+			, ...profile === "browser-worker" ? ["worker.mjs"] : []
+		]) paths.push(`browser/${profile}/${path}`);
+	}
+	return paths.sort();
+};
 
 const exactKeys = (value, keys) => assert.deepEqual(
 	Object.keys(value).sort(), [...keys].sort());
@@ -164,6 +206,8 @@ export const checkZeroPayloadNpmReport = async (
 export const checkZeroPayloadBrowserReport = async (
 	read, { route, producerCommit, consumerCommit }
 ) => {
+	const npm = json(await read("report.json"));
+	const expectedBinding = json(await read("expected.binding-ir.json"));
 	const report = json(await read("browser.json"));
 	assert.equal(report.schemaVersion, 1);
 	assert.equal(report.route, route);
@@ -183,6 +227,26 @@ export const checkZeroPayloadBrowserReport = async (
 		assert.equal(item.sourceRemovedBeforeInstallation, true);
 		assert.equal(item.corpusSha256, sha256(await read("callers/check.mjs")));
 		assert.equal(item.packageSourceSha256, sha256(zeroPayloadBrowserPackageSource));
+		const prefix = `browser/${profile}`;
+		const bindingBytes = await read(`${prefix}/installed-binding-ir.json`);
+		const binding = json(bindingBytes);
+		assert.equal(reviewedContractDifference(expectedBinding, binding), null);
+		assert.equal(hashBindingIr(binding), item.bindingIrSha256);
+		assert.equal(sha256(await read(`${prefix}/installed-index.d.ts`))
+			, npm.trees[zeroPayloadBrowserName]["index.d.ts"]);
+		const component = JSON.parse(await read(
+			`${prefix}/installed-component-package.json`
+		));
+		assert.equal(`${component.name}@${component.version}`, npm.receipt.package.package);
+		const identityBytes = await read(`${prefix}/installed-runtime-identity.json`);
+		const identity = JSON.parse(identityBytes);
+		const runtimePackage = JSON.parse(await read(
+			`${prefix}/installed-runtime-package.json`
+		));
+		assert.equal(runtimePackage.leanBridge.runtimeIdentity
+			, sha256(canonicalJson(identity)));
+		assert.equal(`${runtimePackage.name}@${runtimePackage.version}`
+			, npm.receipt.runtime.package);
 		assert.deepEqual(item.browser.requestedEngines, zeroPayloadBrowserEngines);
 		assert.equal(item.browser.installedSourcesRemoved, true);
 		assert.equal(item.browser.externalNetworkBlocked, true);
@@ -192,12 +256,12 @@ export const checkZeroPayloadBrowserReport = async (
 			item.observations, profile, zeroPayloadBrowserEngines, route);
 		for(const [path, identity] of Object.entries(item.inputs))
 		{
-			const bytes = await read(`browser/${profile}/${path}`);
+			const bytes = await read(`${prefix}/${path}`);
 			assert.deepEqual(identity, { bytes: bytes.length, sha256: sha256(bytes) });
 		}
-		const retained = json(await read(`browser/${profile}/report.json`));
+		const retained = json(await read(`${prefix}/report.json`));
 		assert.deepEqual(retained, item);
-		assert.deepEqual(json(await read(`browser/${profile}/observations.json`))
+		assert.deepEqual(json(await read(`${prefix}/observations.json`))
 			, item.observations);
 	}
 	return report;

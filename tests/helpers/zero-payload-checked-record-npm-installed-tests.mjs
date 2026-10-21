@@ -25,9 +25,13 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { refinementEngineTransport } from "./refinement-engine.mjs";
 import { checkZeroPayloadBrowsers } from "./zero-payload-checked-record-browser.mjs";
 import {
+	zeroPayloadBrowserNegativeControls
+} from "./zero-payload-checked-record-browser-controls.mjs";
+import {
 	checkZeroPayloadBrowserReport
 	, checkZeroPayloadNpmReport
 	, zeroPayloadBrowserPositions
+	, zeroPayloadBrowserRecordPaths
 } from "./zero-payload-checked-record-browser-report.mjs";
 import {
 	zeroPayloadCheckedRecordFixture
@@ -310,6 +314,20 @@ for(const route of routes) test(
 			await checkZeroPayloadBrowserReport(read, {
 				route, producerCommit, consumerCommit: producerCommit
 			});
+			const expectedPaths = zeroPayloadBrowserRecordPaths(receipt)
+				.filter(path => path !== "controls.json");
+			assert.deepEqual(await nativeArtifactPaths(output), expectedPaths);
+			const originals = new Map(await Promise.all(expectedPaths.map(async path => [
+				path, await read(path)
+			])));
+			const controls = await zeroPayloadBrowserNegativeControls(originals, {
+				route, producerCommit, consumerCommit: producerCommit, runtime
+			});
+			await saveLakeFile(output, "controls.json", canonicalJson({
+				schemaVersion: 1, checkerCommit: producerCommit, ...controls
+			}));
+			assert.deepEqual(await nativeArtifactPaths(output)
+				, zeroPayloadBrowserRecordPaths(receipt));
 		}
 		complete = true;
 	}
