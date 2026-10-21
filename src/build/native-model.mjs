@@ -204,7 +204,7 @@ const nativeRefinements = (declaration, callbacks = false) => {
 		}
 		throw unsupported("checked record alias chain exceeds the nominal type limit");
 	};
-	const tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === "result") => {
+	const tree = (type, top = true, site = undefined, subtypeStructural = top, produced = site === "result", allowFin = true) => {
 		if(type.kind === "callback")
 		{
 			if(site === undefined)
@@ -239,21 +239,22 @@ const nativeRefinements = (declaration, callbacks = false) => {
 			}
 			if(type.predicate.kind === "subtype")
 			{
-				if(!subtypeStructural) throw unsupported("checked Subtype refinements require a top-level or structural-container parameter or result, including copied plain records and variants but excluding callbacks, recursive graphs and generic records");
+				if(!subtypeStructural) throw unsupported("checked Subtype refinements require a top-level or structural-container parameter or result, including copied plain and generic records and variants but excluding callbacks and recursive graphs");
 				return { kind: "subtype", constructor: type.predicate.constructor };
 			}
+			if(!allowFin) throw unsupported("checked Fin refinements inside instantiated generic record fields are not supported by native packages");
 			return { kind: type.predicate.kind, bound: type.predicate.bound };
 		}
-		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural, produced);
+		if(type.kind === "alias") return tree(type.target, top, site, subtypeStructural, produced, allowFin);
 		if(["array", "list", "option"].includes(type.kind))
 		{
-			const element = tree(type.element, false, undefined, subtypeStructural, produced);
+			const element = tree(type.element, false, undefined, subtypeStructural, produced, allowFin);
 			return element === null ? null : { kind: type.kind, arguments: [element] };
 		}
 		// Products keep [first, second]; results keep [ok, error], as the transport does.
 		if(["tuple", "result"].includes(type.kind))
 		{
-			const children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced));
+			const children = type.arguments.map(child => tree(child, false, undefined, subtypeStructural, produced, allowFin));
 			return children.every(child => child === null) ? null : { kind: type.kind, arguments: children };
 		}
 		// A Lean-produced record with erased proofs is projected to its payload mirror; no constructor runs.
@@ -268,6 +269,15 @@ const nativeRefinements = (declaration, callbacks = false) => {
 				, fields: type.fields.map(field => field.name)
 			};
 			return !top || arguments_.some(Boolean) ? { ...value, arguments: arguments_ } : value;
+		}
+		// An instantiated plain record retains its nominal alias and exact provenance.
+		// Its fields may carry per-use Subtype choices, while Fin remains outside this
+		// representation until generic field bounds can be authenticated separately.
+		if(type.kind === "record" && Object.hasOwn(type, "provenance") && !containsGraph(type, "callback"))
+		{
+			const fields = type.fields.map(field => tree(field.type, false, undefined, subtypeStructural, produced, false));
+			return fields.every(child => child === null) ? null
+				: { kind: "record", definition: type.lean, fields: type.fields.map(field => field.name), arguments: fields };
 		}
 		// A plain record or variant names its definition and carries every field's tree in
 		// declaration order; a variant checks only its active case. Definitions are acyclic here.

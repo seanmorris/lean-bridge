@@ -56,7 +56,7 @@ export const nominalSubtypeConversionFixture = () => ({
 		, item("nested", [pair], [record(pair, envelopeTree("plusOne"), envelopeTree("plusTwo"))])
 		, item("eventFirst", [event], [eventTree("plusOne", "plusTwo")])
 		, item("eventSecond", [event], [eventTree("plusTwo", "plusOne")])
-		, item("echo", [envelope], [envelopeTree("plusOne")], envelope, envelopeTree("plusTwo"))
+		, item("echo", [envelope], [envelopeTree("plusOne")], envelope, envelopeTree(null))
 		, item("produce", [nat], [null], envelope, envelopeTree(null))
 		, item("produceEvent", [nat], [null], event, eventTree(null, null))
 	]

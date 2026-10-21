@@ -307,8 +307,7 @@ export const validateElaboratedMetadata = (report, request) => {
 							if(!text(field.name) || names.has(field.name)) fail("Invalid record field");
 							names.add(field.name);
 							copied(field.type, depth + 1, references, refinements,
-								subtypeStructural && !Object.hasOwn(type, "provenance")
-										&& (!Object.hasOwn(type, "erased") || checkedRecord || produced), produced);
+								subtypeStructural && (!Object.hasOwn(type, "erased") || checkedRecord || produced), produced);
 						}
 						return;
 					}

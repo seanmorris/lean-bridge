@@ -55,6 +55,7 @@ export const checkNominalNativeSource = async options => {
 	const generated = generateNativeLeanAdapters(model);
 	const call = name => `${generated.module}.f_${model.exports.find(item => item.name === name).symbol}`;
 	const f = name => call(`NominalConversion.${name}`);
+	const n = name => call(`NominalSelection.${name}`);
 	const checks = [
 		`example : ${f("first")} ⟨40, 2⟩ = some 41 := by decide`
 		, `example : ${f("second")} ⟨40, 2⟩ = some 42 := by decide`
@@ -78,6 +79,12 @@ export const checkNominalNativeSource = async options => {
 		, `example : ${call("NominalSelection.aliases")} #[some ⟨40, 2⟩] #[some ⟨95, 2⟩] = none := by native_decide`
 		, `example : ${call("NominalSelection.inspectAliasPair")} ⟨#[some ⟨95, 2⟩], #[some ⟨40, 2⟩]⟩ = some 2 := by native_decide`
 		, `example : ${call("NominalSelection.inspectAliasPair")} ⟨#[some ⟨40, 2⟩], #[some ⟨95, 2⟩]⟩ = none := by native_decide`
+		, `example : ${n("genericUse")} ⟨40, 2⟩ = some 43 := by decide`
+		, `example : ${n("genericUse")} ⟨100, 2⟩ = none := by decide`
+		, `example : ((${n("echoGenericFirst")} ⟨40, 2⟩).map fun value => value.value) = some 41 := by decide`
+		, `example : ((${n("echoGenericSecond")} ⟨40, 2⟩).map fun value => value.value) = some 42 := by decide`
+		, `example : ((${n("echoGenericFirst")} ⟨95, 2⟩).map fun value => value.value) = some 96 := by decide`
+		, `example : ${n("echoGenericSecond")} ⟨95, 2⟩ = none := by decide`
 		, `example : ${call("NominalSelection.plainFin")} 3 = none := by decide`
 	];
 	const adapter = generated.leanSource + "\n" + checks.join("\n") + "\n";

@@ -211,7 +211,7 @@ test("component nominal metadata preserves per-use Subtypes and constructor-free
 	}
 });
 
-test("component nominal Subtypes do not discard generic or erased-proof restrictions", () => {
+test("component nominal Subtypes and Fin cross generic fields independently", () => {
 	const leaf = { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "subtype", constructor: "Sample.checked" } };
 	const extension = { provenance: { structure: "Sample.Generic", arguments: [{ kind: "primitive", name: "nat" }] } };
 	for(const result of [false, true])
@@ -221,8 +221,15 @@ test("component nominal Subtypes do not discard generic or erased-proof restrict
 		if(result)
 { type.fields[0].type.predicate.constructor = null; projection.result = type; }
 		else projection.parameters[0].type = type;
-		assert.throws(() => validateElaboratedMetadata(report, request), /Unsupported nested refinement position/u);
+		assert.equal(validateElaboratedMetadata(report, request), true);
 	}
+	const { request, report } = sample();
+	report.modules[0].declarations[0].projection.parameters[0].type = {
+		kind: "record", name: "Sample.Record"
+		, ...extension
+		, fields: [{ name: "value", type: { kind: "refinement", base: { kind: "primitive", name: "nat" }, predicate: { kind: "fin", bound: "5" } } }]
+	};
+	assert.equal(validateElaboratedMetadata(report, request), true);
 });
 
 test("Lean-produced checked records retain refined fields without weakening input constructors", () => {

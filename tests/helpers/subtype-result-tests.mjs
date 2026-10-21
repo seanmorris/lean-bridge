@@ -41,18 +41,21 @@ test("constructor-free native results require an explicit result direction", asy
 	const input = structuredClone(value);
 	find(input, "first").projection.parameters[0].type = structuredClone(result);
 	assert.throws(() => createNativeModel(input, { refinements: true }), /invalid Subtype refinement/u);
+	const invented = fixture();
+	find(invented, "produce").projection.result.fields[0].type.predicate.constructor = "NominalConversion.plusOne";
+	assert.throws(() => createNativeModel(invented, { refinements: true }), /invalid Subtype refinement/u);
 	const missing = structuredClone(result); delete missing.fields[0].type.predicate.constructor;
 	assert.throws(() => validateNativeType(missing, 0, false, "result"), /refinement predicate fields/u);
 	await assert.rejects(() => assertJsonSchema("native-metadata-type", missing));
 	const callback = { kind: "callback", parameters: [result], result: find(value, "first").projection.result, abi: result.abi };
-	assert.throws(() => validateNativeType(callback, 0, false, "result"), /Subtype refinements require/u);
+	assert.throws(() => validateNativeType(callback, 0, false, "result"), /invalid Subtype refinement/u);
 	const returnedCallback = { ...callback, parameters: [callback.result], result };
-	assert.throws(() => validateNativeType(returnedCallback, 0, false, "result"), /Subtype refinements require/u);
+	validateNativeType(returnedCallback, 0, false, "result");
 	assert.throws(() => validateOwnedNativeType(result, { ownership: "lease", disposal: "required", fallback: "none", cycles: "reject" }), /Subtype refinements require/u);
 	const generic = { ...result, name: "Library.Instance", lean: "Library.Instance"
 		, constructor: "Library.Generic.mk"
 		, provenance: { structure: "Library.Generic", arguments: [callback.result] } };
-	assert.throws(() => validateNativeType(generic, 0, false, "result"), /refinements require/u);
+	assert.throws(() => validateNativeType(generic, 0, false, "result"), /Fin refinements require/u);
 });
 
 test("result projection retains shared identity and every Fin bound without inventing choices", () => {
@@ -71,7 +74,7 @@ test("result projection retains shared identity and every Fin bound without inve
 	assert.equal(choices["Sample.produceEvent"], undefined);
 	assert.equal(choices["Sample.echo"].result.refinement, undefined);
 	assert.equal(projectionCheckedSelection(find(fixture(), "produceEvent").projection.result), null);
-	assert.notEqual(reviewedContractDifference(selected.bindingIr, value.bindingIr), null);
+	assert.equal(reviewedContractDifference(selected.bindingIr, value.bindingIr), null);
 	const changed = structuredClone(value.bindingIr);
 	changed.declarations.find(item => item.name === "produce").source.extensions[key].result.fields[1].refinement.bound = "4";
 	assert.notEqual(reviewedContractDifference(changed, value.bindingIr), null);

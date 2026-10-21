@@ -6,7 +6,7 @@
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { corpusReviewedIr } from "./type-corpus-reviewed-ir.mjs";
-import { nominalSelectionContracts } from "./nominal-subtype-selection-fixture.mjs";
+import { nominalSelectionContracts, nominalSelectionSpecializations, selectedEnvelope, selectedEvent, selectedGenericNat } from "./nominal-subtype-selection-fixture.mjs";
 
 const envelope = { record: "NominalConversion.Envelope", fields: { payload: "nat", digit: "nat" } };
 const pair = { record: "NominalConversion.Pair", fields: { left: envelope, right: envelope } };
@@ -14,18 +14,26 @@ const event = { record: "NominalConversion.Event", fields: {} };
 const alias = { record: "NominalSelection.EnvelopeAlias", fields: {} };
 const group = { array: { option: alias } };
 const aliasPair = { record: "NominalSelection.AliasPair", fields: { left: group, right: group } };
+const genericNat = { record: "NominalSelection.GenericNat", fields: { value: "nat", marker: "nat" } };
 const nat = { kind: "primitive", name: "nat" };
 const apply = (constructor, ...arguments_) => ({ kind: "apply", constructor, arguments: arguments_ });
 const documentation = { summary: "Independent nominal review.", details: "" };
 const field = (name, type) => ({ name, type, mutability: "immutable", documentation });
 const fin = { kind: "fin", bound: "3" };
-const predicate = selection => {
+const predicate = (selection, produced = false) => {
 	if(selection === null || selection === undefined) return null;
-	if(Object.hasOwn(selection, "constructor")) return { kind: "subtype", constructor: selection.constructor };
-	const fields = members => members.map(member => ({ name: member.name, refinement: member.name === "digit" ? { ...fin } : predicate(member.refinement) }));
+	if(Object.hasOwn(selection, "constructor")) return { kind: "subtype", constructor: produced ? null : selection.constructor };
+	const fields = members => members.map(member => ({ name: member.name, refinement: member.name === "digit" ? { ...fin } : predicate(member.refinement, produced) }));
 	if(selection.kind === "record") return { ...selection, fields: fields(selection.fields) };
 	if(selection.kind === "variant") return { ...selection, cases: selection.cases.map(branch => ({ name: branch.name, fields: fields(branch.fields) })) };
-	return { kind: selection.kind, arguments: selection.arguments.map(predicate) };
+	return { kind: selection.kind, arguments: selection.arguments.map(value => predicate(value, produced)) };
+};
+const producedResults = {
+	"NominalConversion.echo": selectedEnvelope("plusOne")
+	, "NominalConversion.produce": selectedEnvelope("plusOne")
+	, "NominalConversion.produceEvent": selectedEvent("plusOne", "plusTwo")
+	, "NominalSelection.echoGenericFirst": selectedGenericNat("plusOne")
+	, "NominalSelection.echoGenericSecond": selectedGenericNat("plusTwo")
 };
 
 /** Author the complete twelve-export review without reading or lowering a Lean report. */
@@ -42,6 +50,9 @@ export const nominalSubtypeReviewedFixture = () => {
 		, ["NominalConversion.produceEvent", ["nat"], event]
 		, ["NominalSelection.aliases", [group, group], "nat"]
 		, ["NominalSelection.inspectAliasPair", [aliasPair], "nat"]
+		, ["NominalSelection.genericUse", [genericNat], "nat"]
+		, ["NominalSelection.echoGenericFirst", [genericNat], genericNat]
+		, ["NominalSelection.echoGenericSecond", [genericNat], genericNat]
 		, ["NominalSelection.plainFin", ["nat"], "nat"]
 	].map(([name, parameters, result]) => ({ name, parameters, result }));
 	const document = corpusReviewedIr({ id: "nominal-subtypes" }, signatures);
@@ -54,13 +65,33 @@ export const nominalSubtypeReviewedFixture = () => {
 	];
 	const definition = document.types.find(type => type.id === "lean:NominalSelection.EnvelopeAlias");
 	definition.kind = "alias"; definition.target = { kind: "named", id: "lean:NominalConversion.Envelope" };
+	const generic = document.types.find(type =>
+		type.id === "lean:NominalSelection.GenericNat");
+	generic.source.extensions["lean-lang.org/instantiation"] = {
+		structure: "NominalSelection.GenericCarrier"
+		, arguments: [structuredClone(nat)]
+	};
 	document.types.find(type => type.id === "lean:NominalConversion.Envelope").source.extensions["lean-lang.org/nominal-refinements"] = { kind: "record", fields: [null, { ...fin }] };
 	const selections = nominalSelectionContracts();
+	const specializations = new Map(nominalSelectionSpecializations().map(value => [value.name, value]));
 	for(const item of document.declarations)
 	{
-		const contract = selections[item.source.declaration];
-		item.source.extensions["lean-lang.org/refinements"] = { parameters: contract.parameters.map(site => predicate(site.refinement)), result: predicate(contract.result.refinement) };
-		if(item.source.declaration === "NominalSelection.plainFin") item.source.extensions["lean-lang.org/refinements"].parameters[0] = { ...fin };
+		const publicName = item.source.declaration;
+		const specialization = specializations.get(publicName);
+		const contract = selections[publicName];
+		item.source.extensions["lean-lang.org/refinements"] = {
+			parameters: contract.parameters.map(site => predicate(site.refinement))
+			// The review records the result's proof-erased shape, but never invents
+			// an output-side constructor invocation.
+			, result: predicate(producedResults[publicName], true)
+		};
+		if(publicName === "NominalSelection.plainFin") item.source.extensions["lean-lang.org/refinements"].parameters[0] = { ...fin };
+		if(specialization)
+		{
+			item.source.declaration = specialization.declaration;
+			item.source.extensions["lean-lang.org/specialization"] = { ...specialization
+				, application: `(@_root_.${specialization.declaration}.{0} (@_root_.${specialization.types[0]}))` };
+		}
 	}
 	return document;
 };

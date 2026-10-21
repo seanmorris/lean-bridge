@@ -13,7 +13,7 @@ const typed = (type, refinement) => {
 	{
 		const base = typed(type, null);
 		return { kind: "refinement", base
-			, predicate: refinement.kind === "subtype" ? { ...refinement, constructor: refinement.constructor ?? "NominalConversion.plusOne" } : refinement
+			, predicate: refinement.kind === "subtype" ? { ...refinement } : refinement
 			, abi: base.abi };
 	}
 	if(type.kind === "primitive") return { kind: type.kind, name: type.name, lean: type.lean, abi: { ...heap, heap: false } };

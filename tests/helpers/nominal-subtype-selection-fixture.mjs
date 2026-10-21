@@ -70,6 +70,13 @@ export const selectedEvent = (first, second) => selectedVariant("NominalConversi
  */
 export const selectedGroup = name => selectedTree("array", selectedTree("option", selectedEnvelope(name)));
 /**
+ * Select the fixed refined field of an alias-named generic record.
+ *
+ * @param name - Checked constructor for the fixed field.
+ */
+export const selectedGenericNat = name => selectedRecord("NominalSelection.GenericNat",
+	selectedField("value", selectedConstructor(name)), selectedField("marker", null));
+/**
  * Attach a choice to its copied contract site.
  *
  * @param selection - Optional constructor choice for one copied site.
@@ -88,12 +95,24 @@ export const nominalSelectionContracts = () => {
 			selectedField("left", first), selectedField("right", second))])
 		, "NominalConversion.eventFirst": contract([selectedEvent("plusOne", "plusTwo")])
 		, "NominalConversion.eventSecond": contract([selectedEvent("plusTwo", "plusOne")])
-		, "NominalConversion.echo": contract([first], second)
-		, "NominalConversion.produce": contract([null], first)
-		, "NominalConversion.produceEvent": contract([null], selectedEvent("plusOne", "plusTwo"))
+		// Results are compiler-owned projections. Constructor choices apply only to
+		// values entering Lean; a Lean-produced Subtype already carries its proof.
+		, "NominalConversion.echo": contract([first])
+		, "NominalConversion.produce": contract([null])
+		, "NominalConversion.produceEvent": contract([null])
 		, "NominalSelection.aliases": contract([selectedGroup("plusOne"), selectedGroup("plusTwo")])
 		, "NominalSelection.inspectAliasPair": contract([selectedRecord("NominalSelection.AliasPair",
 			selectedField("left", selectedGroup("plusOne")), selectedField("right", selectedGroup("plusTwo")))])
+		, "NominalSelection.genericUse": contract([selectedGenericNat("plusOne")])
+		, "NominalSelection.echoGenericFirst": contract([selectedGenericNat("plusOne")])
+		, "NominalSelection.echoGenericSecond": contract([selectedGenericNat("plusTwo")])
 		, "NominalSelection.plainFin": contract([null])
 	};
 };
+
+/** Two public specializations of one generic source keep independent constructor choices. */
+export const nominalSelectionSpecializations = () => ["First", "Second"].map(name => ({
+	name: `NominalSelection.echoGeneric${name}`
+	, declaration: "NominalSelection.genericEcho"
+	, types: ["NominalSelection.GenericNat"]
+}));

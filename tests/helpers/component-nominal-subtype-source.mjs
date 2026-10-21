@@ -57,7 +57,8 @@ export const checkComponentSubtypeSource = async options => {
 	await assertJsonSchema("binding-ir", analysis.bindingIr.document);
 	await assertJsonSchema("compiler-adapter-plan", generated.plan);
 	const call = name => {
-		const item = generated.plan.exports.find(item => item.sourceDeclaration === name);
+		const item = generated.plan.exports.find(item => item.bindingId === `lean:${name}`)
+			?? generated.plan.exports.find(item => item.sourceDeclaration === name);
 		assert.ok(item, name); return `${generated.plan.module}.${item.wrapper}`;
 	};
 	const checks = assertions(call);
@@ -228,6 +229,7 @@ export const checkRecursivePhpWasmSubtypeSource = async options => {
  */
 export const nominalComponentAssertions = call => {
 	const f = name => call(`NominalConversion.${name}`);
+	const n = name => call(`NominalSelection.${name}`);
 	return [
 		`example : ${f("first")} #[⟨40, 2⟩] = #[41] := by decide`
 		, `example : ${f("second")} #[⟨40, 2⟩] = #[42] := by decide`
@@ -253,6 +255,12 @@ export const nominalComponentAssertions = call => {
 		, `example : ${call("NominalSelection.aliases")} #[#[some ⟨40, 2⟩]] #[#[some ⟨95, 2⟩]] = #[] := by native_decide`
 		, `example : ${call("NominalSelection.inspectAliasPair")} #[⟨#[some ⟨95, 2⟩], #[some ⟨40, 2⟩]⟩] = #[2] := by native_decide`
 		, `example : ${call("NominalSelection.inspectAliasPair")} #[⟨#[some ⟨40, 2⟩], #[some ⟨95, 2⟩]⟩] = #[] := by native_decide`
+		, `example : ${n("genericUse")} #[⟨40, 2⟩] = #[43] := by decide`
+		, `example : ${n("genericUse")} #[⟨100, 2⟩] = #[] := by decide`
+		, `example : (${n("echoGenericFirst")} #[⟨40, 2⟩]).map (fun value => value.value) = #[41] := by native_decide`
+		, `example : (${n("echoGenericSecond")} #[⟨40, 2⟩]).map (fun value => value.value) = #[42] := by native_decide`
+		, `example : (${n("echoGenericFirst")} #[⟨95, 2⟩]).map (fun value => value.value) = #[96] := by native_decide`
+		, `example : ${n("echoGenericSecond")} #[⟨95, 2⟩] = #[] := by decide`
 		, `example : ${call("NominalSelection.plainFin")} #[3] = #[] := by decide`
 		, `example : ${f("first")}_fin_guard_0 #[⟨100, 2⟩] = 1 := by decide`
 		, `example : ${f("first")}_fin_guard_0 #[⟨40, 3⟩] = 0 := by decide`

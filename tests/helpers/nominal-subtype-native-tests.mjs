@@ -60,11 +60,17 @@ test("nominal reviewed decisions reject mismatched names, members, ownership and
 	{ const tree = structuredClone(original); mutate(tree); assert.throws(() => check(tree), /Refinement does not match/u); }
 	assert.throws(() => check(original, []), /Refinement does not match/u);
 	assert.throws(() => check(original, [...document.types, document.types[0]]), /Refinement does not match/u);
-	for(const extension of ["lean-lang.org/instantiation", "lean-lang.org/erased-proofs"])
-	{
-		const types = structuredClone(document.types); types.find(type => type.id === item.parameters[0].type.id).source.extensions[extension] = {};
-		assert.throws(() => check(original, types), /Refinement does not match/u);
-	}
+	const genericTypes = structuredClone(document.types);
+	const generic = genericTypes.find(type =>
+		type.id === item.parameters[0].type.id);
+	generic.source.extensions["lean-lang.org/instantiation"] = {
+		structure: "NominalConversion.GenericEnvelope"
+		, arguments: [{ kind: "primitive", name: "nat" }]
+	};
+	check(original, genericTypes);
+	const checkedTypes = structuredClone(document.types);
+	checkedTypes.find(type => type.id === item.parameters[0].type.id).source.extensions["lean-lang.org/erased-proofs"] = {};
+	assert.throws(() => check(original, checkedTypes), /Refinement does not match/u);
 	let calls = 0;
 	const accessor = structuredClone(original); Object.defineProperty(accessor.fields, "1", { get: () => { calls++; return original.fields[1]; } });
 	assert.throws(() => check(accessor), /Refinement does not match/u); assert.equal(calls, 0);

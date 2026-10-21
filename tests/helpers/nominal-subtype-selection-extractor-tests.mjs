@@ -15,7 +15,7 @@ import { createMetadataRequest, identifyLeanInterface, validateElaboratedMetadat
 import { projectionCheckedSelection } from "../../src/analyze/checked-refinement-selection.mjs";
 import { exportContractProblem } from "../../src/analyze/export-configuration.mjs";
 import { assertJsonSchema } from "./json-schema.mjs";
-import { nominalSelectionContracts, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
+import { nominalSelectionContracts, nominalSelectionSpecializations, selectedCase, selectedConstructor, selectedEnvelope, selectedEvent, selectedField, selectedGenericNat, selectedRecord, selectedSite, selectedTree, selectedVariant } from "./nominal-subtype-selection-fixture.mjs";
 import { reviewedSourceSelection } from "../../src/analyze/reviewed-source.mjs";
 import { nominalSubtypeReviewInput, nominalSubtypeReviewedFixture } from "./nominal-subtype-reviewed-fixture.mjs";
 import { checkNominalNativeSource } from "./nominal-subtype-native-source.mjs";
@@ -77,6 +77,7 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			, modules: modules.map(module => module.name)
 			, exportModules: modules.map(module => module.name)
 			, exports: Object.keys(contracts), resources: [], arities: [], contracts
+			, specializations: nominalSelectionSpecializations().filter(item => Object.hasOwn(contracts, item.name))
 			, ...(review ? reviewedSourceSelection(review) : {})
 		};
 		const request = createMetadataRequest(selection, { ...context, ...(review ? { reviewedBindingIrSha256: sha256(canonicalJson(review)) } : {}) });
@@ -92,8 +93,9 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			await writeFile(join(reports, `${route}-metadata.json`), output.stdout, { flag: "wx" });
 		}
 		await assertJsonSchema("elaborated-export-metadata", report);
-		const projections = new Map(report.modules.flatMap(module => module.declarations.filter(item => item.selected)
-			.map(item => [item.identity, item.projection])));
+		const declarations = new Map(report.modules.flatMap(module => module.declarations.filter(item => item.selected)
+			.map(item => [item.identity, item])));
+		const projections = new Map([...declarations].map(([name, item]) => [name, item.projection]));
 		assert.deepEqual([...projections.keys()].sort(), selection.exports.toSorted());
 		observations.push({ route, profile, requestSha256: sha256(canonicalJson(request)), metadataSha256: sha256(output.stdout), selected: projections.size });
 		if(profile === "native-library-v1" && !route.endsWith("refusals") && !route.endsWith("source-only"))
@@ -103,9 +105,9 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 				, request, context, directory, reports, route, run, review
 				, expected: nominalSubtypeReviewedFixture()
 				, assertions: nominalComponentAssertions }));
-		return { report, request, projections };
+		return { report, request, declarations, projections };
 	};
-	const checkPositive = ({ projections }, contracts) => {
+	const checkPositive = ({ declarations, projections }, contracts) => {
 		for(const [name, contract] of Object.entries(contracts))
 		{
 			const projection = projections.get(name);
@@ -119,6 +121,12 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 		const pair = projections.get("NominalConversion.nested").parameters[0].type;
 		assert.equal(pair.fields[0].type.fields[0].type.predicate.constructor, "NominalConversion.plusOne");
 		assert.equal(pair.fields[1].type.fields[0].type.predicate.constructor, "NominalConversion.plusTwo");
+		const first = projections.get("NominalSelection.echoGenericFirst");
+		const second = projections.get("NominalSelection.echoGenericSecond");
+		assert.equal(declarations.get("NominalSelection.echoGenericFirst").specialization.declaration, "NominalSelection.genericEcho");
+		assert.equal(first.parameters[0].type.fields[0].type.predicate.constructor, "NominalConversion.plusOne");
+		assert.equal(second.parameters[0].type.fields[0].type.predicate.constructor, "NominalConversion.plusTwo");
+		assert.equal(first.result.fields[0].type.predicate.constructor, null);
 	};
 	const invalidContracts = () => {
 		const make = (parameters, result = null) => ({ parameters: parameters.map(selectedSite), result: selectedSite(result) });
@@ -153,6 +161,9 @@ test("fresh Lean preserves nominal constructor selections and rejects false sour
 			, resultOnly: make([null])
 			, callback: { parameters: [{ ownership: "borrow", lifetime: { scope: "call", anchor: null }, refinement: selectedEnvelope("plusOne") }, selectedSite(selectedEnvelope("plusOne"))] }
 			, generic: make([selectedRecord("NominalSelection.GenericPositive", selectedField("value", selectedConstructor("plusOne")))])
+			, genericWrongName: make([{ ...selectedGenericNat("plusOne"), name: "NominalSelection.GenericCarrier" }])
+			, genericWrongField: make([selectedRecord("NominalSelection.GenericNat", selectedField("other", selectedConstructor("plusOne")), selectedField("marker", null))])
+			, genericWrongConstructor: make([selectedGenericNat("wrongInput")])
 			, recursive: make([selectedVariant("NominalSelection.Chain", selectedCase("empty"),
 				selectedCase("node", selectedField("value", selectedConstructor("plusOne")), selectedField("tail", null)))])
 		}).map(([name, value]) => [`NominalSelection.${name}`, value]));

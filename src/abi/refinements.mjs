@@ -95,7 +95,6 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 			if(!subtypeStructural || !definition || definition.kind !== value.kind
 				|| (definition.representation !== "copied" && !(ownedStructural && definition.representation === "owned"))
 				|| definition.source?.declaration !== value.name || seen.has(transport.id)
-				|| definition.source?.extensions?.["lean-lang.org/instantiation"] !== undefined
 				|| definition.source?.extensions?.["lean-lang.org/erased-proofs"] !== undefined) fail();
 			const inner = new Set([...seen, transport.id]);
 			const fields = (members, expected) => {

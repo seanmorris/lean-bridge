@@ -113,7 +113,7 @@ test("projection choices retain nominal identity and member order independently 
 	assert.deepEqual(projection, before);
 });
 
-test("nominal native admission preserves callback, generic and nested-site refusal gates", () => {
+test("nominal native admission preserves callback direction, generic Fin and nested-site gates", () => {
 	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
 	const type = {
 		kind: "record", name: "Library.Record", lean: "Library.Record"
@@ -130,11 +130,17 @@ test("nominal native admission preserves callback, generic and nested-site refus
 	validateExportConfiguration(configuration(selection));
 	validateNativeType(type, 0, false, "parameter");
 	assert.throws(() => validateNativeType(type, 1), /Subtype refinements require/u);
-	assert.throws(() => validateNativeType({ kind: "callback", parameters: [type], result: type.fields[0].type.base, abi }, 0, false, "parameter"), /Subtype refinements require/u);
+	assert.throws(() => validateNativeType({ kind: "callback", parameters: [type], result: type.fields[0].type.base, abi }, 0, false, "parameter"), /invalid Subtype refinement/u);
+	const produced = structuredClone(type);
+	produced.fields[0].type.predicate.constructor = null;
+	validateNativeType({ kind: "callback", parameters: [produced], result: type.fields[0].type.base, abi }, 0, false, "parameter");
 	const generic = {
 		...type, name: "Library.Instance", lean: "Library.Instance"
 		, constructor: "Library.Generic.mk"
 		, provenance: { structure: "Library.Generic", arguments: [type.fields[0].type.base] }
 	};
-	assert.throws(() => validateNativeType(generic, 0, false, "parameter"), /refinements require/u);
+	validateNativeType(generic, 0, false, "parameter");
+	const fin = structuredClone(generic);
+	fin.fields[0].type.predicate = { kind: "fin", bound: "3" };
+	assert.throws(() => validateNativeType(fin, 0, false, "parameter"), /Fin refinements require/u);
 });

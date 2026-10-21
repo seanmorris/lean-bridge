@@ -146,7 +146,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	} else if(type.kind === "refinement")
 	{
 		// Bounds stay decimal text; checked adapters exist only at top-level sites and inside structural containers.
-		if(!structural) fail(type.predicate?.kind === "subtype"
+		if(!structural && !(type.predicate?.kind === "subtype" && subtypeStructural)) fail(type.predicate?.kind === "subtype"
 			? "Subtype refinements require a top-level or directional callback site"
 			: "Fin refinements require a top-level native parameter or result, or an array, list, option, product, Except, plain record or variant of one");
 		if(type.predicate?.kind === "checked-record")
@@ -163,7 +163,7 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 		else if(type.predicate?.kind === "subtype")
 		{
 			// Copied plain records and variants retain a constructor at each use, not on the shared type.
-			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain records and variants but excluding callbacks and generic records");
+			if(!subtypeStructural) fail("Subtype refinements require a top-level or structural-container native parameter or result, including copied plain and generic records and variants but excluding callbacks");
 			closed(type.predicate, ["kind", "constructor"], "refinement predicate");
 			if(subtypeResult ? type.predicate.constructor !== null
 				: typeof type.predicate.constructor !== "string" || !identifier.test(type.predicate.constructor)) fail("invalid Subtype refinement");
@@ -240,10 +240,13 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 			closed(field, ["name", "projection", "type"], "record field");
 			if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(field.name) || !identifier.test(field.projection)
 	      || ["new", "DESTROY", "CLONE", "CLONE_SKIP"].includes(field.name)) fail("invalid or reserved record field");
-			// Plain record fields are structural; an instantiated generic structure's fields are not.
-			const plain = !Object.hasOwn(type, "provenance")
-				&& (!Object.hasOwn(type, "erased") || site === "checked-record" || subtypeResult || erasedTransport);
-			recurse(field.type, true, !Object.hasOwn(type, "provenance"), subtypeStructural && plain, subtypeResult && plain);
+			// Generic fields may carry a per-use Subtype constructor, but remain
+			// non-structural for Fin and every other nested refinement.
+			const refinable = !Object.hasOwn(type, "erased")
+				|| site === "checked-record" || subtypeResult || erasedTransport;
+			const generic = Object.hasOwn(type, "provenance");
+			recurse(field.type, true, !generic, subtypeStructural && refinable
+				, subtypeResult && refinable);
 		}
 	} else if(type.kind === "variant")
 	{

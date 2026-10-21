@@ -667,9 +667,14 @@ partial def shapeTree (request : Request) (e : Expr) (seen : List Name := [])
           let parent := info.parentInfo.any fun item => item.subobject && item.projFn == projection
           let env ← getEnv
           let generic := fieldType.getAppFn.constName?.any fun head => (genericStructure? env head).isSome
+          let fieldSelection := selectedField checked "record" aliasName field.toString
           let fieldShape ← if parent && fieldType.isApp && generic then
               shapeTree request (mkConst (← resolveParentAlias request structureName fieldType)) (aliasName :: seen) 0 true none containerFin false
-            else shapeTree request fieldType (aliasName :: seen) 0 true none containerFin false
+            else
+              shapeTree request fieldType (aliasName :: seen) 0 true fieldSelection containerFin false
+                (callbackSite := callbackSite) (hostReply := hostReply)
+                (subtypeStructural := subtypeStructural && nominalSelection checked "record" aliasName)
+                (subtypeResult := subtypeResult)
           fields := fields.push (obj [("name", str field.toString),
             ("projection", str projection.toString),
             ("type", fieldShape)])
