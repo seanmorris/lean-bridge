@@ -23,7 +23,7 @@ import {
 	dependentCheckedRecordRubyRoutes
 } from "../tests/helpers/dependent-checked-record-ruby-fixture.mjs";
 import {
-	dependentCheckedRecordBrowserSelection
+	dependentCheckedRecordSelection
 } from "../tests/helpers/dependent-checked-record-browser-fixture.mjs";
 import {
 	dependentCheckedRecordHostedOriginal
@@ -134,7 +134,7 @@ try
 			await putFile(`${route}/records/${path}`, join(recordsRoot, path));
 		for(const name of ["run.tap", "verification.json"])
 			await putFile(`${route}/${name}`, join(cell, name));
-		const selection = dependentCheckedRecordBrowserSelection(route);
+		const selection = dependentCheckedRecordSelection(route);
 		runs.push({
 			route, reviewed: selection.reviewed
 			, resultOnly: selection.resultOnly, recordCount: paths.length
