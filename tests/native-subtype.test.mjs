@@ -50,6 +50,7 @@ import "./helpers/dependent-checked-record-perl-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-perl-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-python-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-python-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-ruby-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs";

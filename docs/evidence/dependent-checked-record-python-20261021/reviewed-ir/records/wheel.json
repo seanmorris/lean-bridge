@@ -1,0 +1,175 @@
+{
+  "archive": {
+    "bytes": 51354221,
+    "path": "archives/dependentrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+    "sha256": "2e02b5f44e2ba7ab7e59f84ca4ab435ce70d540ea19d9fae97efa6fed5970bb9"
+  },
+  "evidence": {
+    "componentId": "dependentrecords@1.0.0",
+    "componentReceiptSha256": "f9b1d4affc49e81c0ab58833b4628fa17448c4242ec19fb67d868a96d8cacc2b",
+    "libraries": {
+      "libcomponent_ca8ca903379eb247d9eb.so": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94",
+      "libdependentrecords.so": "d27fed145516b259ff1a27709b57303fd0568da09efa8e7c85642ed0fb7bc312",
+      "liblean_bridge_native.so": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21",
+      "libleanshared.so": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "library": "libdependentrecords.so",
+    "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+  },
+  "files": {
+    "dependentrecords-1.0.0.dist-info/METADATA": {
+      "bytes": 4916,
+      "sha256": "70ba870133b7c2391b175ec421969a29707310680b94535e33d5a63a454db835"
+    },
+    "dependentrecords-1.0.0.dist-info/RECORD": {
+      "bytes": 3402,
+      "sha256": "28dddd1156a5651c14f8719e004678204e478fd071790d939731e9fda73934e5"
+    },
+    "dependentrecords-1.0.0.dist-info/WHEEL": {
+      "bytes": 117,
+      "sha256": "d391ca575dc1597f0e33751f6fe2ac710b8e64f41336cf49410762d2762c5f44"
+    },
+    "dependentrecords-1.0.0.dist-info/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "dependentrecords-1.0.0.dist-info/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "dependentrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "dependentrecords-1.0.0.dist-info/licenses/source-notices.json": {
+      "bytes": 2091,
+      "sha256": "a1b7781305ec37fad1c84303ca4e632584617583b4a2fcd251dfb0e20c9c7ad7"
+    },
+    "dependentrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "dependentrecords-1.0.0.dist-info/top_level.txt": {
+      "bytes": 22,
+      "sha256": "3dd27e0aece9a51fb9041f4fce42abca7e4ea2e2a58dfa6b53a8444f5bccdee3"
+    },
+    "lean_dependentrecords/__init__.py": {
+      "bytes": 1146,
+      "sha256": "d9b2af1f6b8920e80d67e20c12ad825f810dea2664bb54a962e6db1d42bc2506"
+    },
+    "lean_dependentrecords/__init__.pyi": {
+      "bytes": 995,
+      "sha256": "1cdbb83af06499657677f52183464fe12ea901d05d9db511a8ebe0a285e0c4c2"
+    },
+    "lean_dependentrecords/_native.py": {
+      "bytes": 8762,
+      "sha256": "f1d5f75f7a454978a201b2f06fc4d0cf9cb39d5a0d24c489ca29d838138f72d1"
+    },
+    "lean_dependentrecords/lean_bridge/README.md": {
+      "bytes": 4497,
+      "sha256": "2bcf21b3eaac8716a13a18d351e59a25070558c32643405dc407c911ed3b8a6e"
+    },
+    "lean_dependentrecords/lean_bridge/binding-manifest.json": {
+      "bytes": 1138,
+      "sha256": "6d9f0288619246281b4d3a8a4f34f77470925f7bde7c9789fa95d1c69229668a"
+    },
+    "lean_dependentrecords/lean_bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "lean_dependentrecords/lean_bridge/component/artifacts.json": {
+      "bytes": 1530,
+      "sha256": "3d4e3912d5b8ff2c908e7500197b9f27fbb0560287c09dcb4f726a489686d3ab"
+    },
+    "lean_dependentrecords/lean_bridge/component/binding-ir.json": {
+      "bytes": 11063,
+      "sha256": "e0f514f5f4aa87fa2aea572ba31fb3b22255d3abb17494d91fa020dd4ef864a9"
+    },
+    "lean_dependentrecords/lean_bridge/component/component.h": {
+      "bytes": 787,
+      "sha256": "7c2dc11ad05e0c21397d73aff334e955985d2fddcd63fdf83c9cd950be1d970d"
+    },
+    "lean_dependentrecords/lean_bridge/component/generated.lean": {
+      "bytes": 3277,
+      "sha256": "e73ff50eb68b575b11ba3d780ab2adad3bf359e1966bad1ec4aa5454112aeaac"
+    },
+    "lean_dependentrecords/lean_bridge/component/metadata.json": {
+      "bytes": 18863,
+      "sha256": "6116fd4a067c3a328a1825a3a9b1e45cb947d8cc7d5d6865ca8e331046e7d96c"
+    },
+    "lean_dependentrecords/lean_bridge/component/model.json": {
+      "bytes": 36801,
+      "sha256": "c39ef9ed74415ccc9f722b383af2dea69feb0965dbbca5c52e8ba169496dd87a"
+    },
+    "lean_dependentrecords/lean_bridge/component/native-component.json": {
+      "bytes": 14983,
+      "sha256": "f9b1d4affc49e81c0ab58833b4628fa17448c4242ec19fb67d868a96d8cacc2b"
+    },
+    "lean_dependentrecords/lean_bridge/include/dependentrecords.h": {
+      "bytes": 2030,
+      "sha256": "cba6d546bcecc87cc5b8875925c0c9ea268d255cf1d3d65b35f4a959c58a23b8"
+    },
+    "lean_dependentrecords/lean_bridge/native-c-adapter.json": {
+      "bytes": 1387,
+      "sha256": "638f18181d0917fbeda041ded9cc61050e627ae65b40019b830aa389aadaa03c"
+    },
+    "lean_dependentrecords/lean_bridge/package-receipt.json": {
+      "bytes": 19309,
+      "sha256": "856d79db3d8d7acde78a71288c1c7567ec240fa66e255b453d066a8b7e7c408d"
+    },
+    "lean_dependentrecords/lean_bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "lean_dependentrecords/native/linux-x64/libcomponent_ca8ca903379eb247d9eb.so": {
+      "bytes": 26360,
+      "sha256": "cd5e274866e4d6615a5da362d86900b493ee62a46ef9878944fa052a6a2eeb94"
+    },
+    "lean_dependentrecords/native/linux-x64/libdependentrecords.so": {
+      "bytes": 26024,
+      "sha256": "d27fed145516b259ff1a27709b57303fd0568da09efa8e7c85642ed0fb7bc312"
+    },
+    "lean_dependentrecords/native/linux-x64/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lean_dependentrecords/native/linux-x64/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lean_dependentrecords/py.typed": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "receiptSha256": "856d79db3d8d7acde78a71288c1c7567ec240fa66e255b453d066a8b7e7c408d",
+  "retained": [
+    "dependentrecords-1.0.0.dist-info/METADATA",
+    "dependentrecords-1.0.0.dist-info/RECORD",
+    "dependentrecords-1.0.0.dist-info/WHEEL",
+    "dependentrecords-1.0.0.dist-info/licenses/Lean-LICENSE",
+    "dependentrecords-1.0.0.dist-info/licenses/Lean-LICENSES",
+    "dependentrecords-1.0.0.dist-info/licenses/LeanBridge-LICENSE",
+    "dependentrecords-1.0.0.dist-info/licenses/source-notices.json",
+    "dependentrecords-1.0.0.dist-info/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt",
+    "dependentrecords-1.0.0.dist-info/top_level.txt",
+    "lean_dependentrecords/__init__.py",
+    "lean_dependentrecords/__init__.pyi",
+    "lean_dependentrecords/_native.py",
+    "lean_dependentrecords/lean_bridge/README.md",
+    "lean_dependentrecords/lean_bridge/binding-manifest.json",
+    "lean_dependentrecords/lean_bridge/component/allocation-guard.h",
+    "lean_dependentrecords/lean_bridge/component/artifacts.json",
+    "lean_dependentrecords/lean_bridge/component/binding-ir.json",
+    "lean_dependentrecords/lean_bridge/component/component.h",
+    "lean_dependentrecords/lean_bridge/component/generated.lean",
+    "lean_dependentrecords/lean_bridge/component/metadata.json",
+    "lean_dependentrecords/lean_bridge/component/model.json",
+    "lean_dependentrecords/lean_bridge/component/native-component.json",
+    "lean_dependentrecords/lean_bridge/include/dependentrecords.h",
+    "lean_dependentrecords/lean_bridge/native-c-adapter.json",
+    "lean_dependentrecords/lean_bridge/package-receipt.json",
+    "lean_dependentrecords/lean_bridge/runtime.json",
+    "lean_dependentrecords/py.typed"
+  ]
+}

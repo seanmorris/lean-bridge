@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51352017,
+          "path": "archives/dependentrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl",
+          "sha256": "cbddf6c79681de674447cc744542d18cfbd7d8ff43775e7098d3faf9efeca32a"
+        }
+      ],
+      "ecosystem": "pypi",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "pypi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ae027d5bdb4dd27676789ce1298949497c5db38c746cdcbc2611b8e9eb108319",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "8d868df7656e2f5e4f6abb2b6c3a4a18929e0d476af73f7e277c9b76871ac076"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "arguments": [
+    "-I",
+    "-B",
+    "-X",
+    "pycache_prefix=/home/runner/work/_temp/lean-bridge-dependent-checked-record-python-Qz5WVP/python-3.11/.dependent-checked-record-python-pip-bytecode-LM1XNi",
+    "-m",
+    "pip",
+    "--isolated",
+    "install",
+    "--no-index",
+    "--no-deps",
+    "--no-cache-dir",
+    "--no-compile",
+    "/home/runner/work/_temp/lean-bridge-dependent-checked-record-python-Qz5WVP/handoff/archives/dependentrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl"
+  ],
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "Processing /home/runner/work/_temp/lean-bridge-dependent-checked-record-python-Qz5WVP/handoff/archives/dependentrecords-1.0.0-py3-none-manylinux_2_38_x86_64.whl\nInstalling collected packages: dependentrecords\nSuccessfully installed dependentrecords-1.0.0\n"
+  }
+}
