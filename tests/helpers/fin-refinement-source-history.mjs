@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordRustSource, dependentCheckedRecordRustChangedPaths, dependentCheckedRecordRustIntegrationPaths } from "./dependent-checked-record-rust-source-history.mjs";
 import { beforeDependentCheckedRecordRubySource, dependentCheckedRecordRubyChangedPaths, dependentCheckedRecordRubyIntegrationPaths } from "./dependent-checked-record-ruby-source-history.mjs";
 import { beforeDependentCheckedRecordPythonSource, dependentCheckedRecordPythonChangedPaths, dependentCheckedRecordPythonIntegrationPaths } from "./dependent-checked-record-python-source-history.mjs";
 import { beforeDependentCheckedRecordPerlSource, dependentCheckedRecordPerlChangedPaths, dependentCheckedRecordPerlIntegrationPaths } from "./dependent-checked-record-perl-source-history.mjs";
@@ -1466,7 +1467,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordRubyChangedPaths
+	...dependentCheckedRecordRustChangedPaths
+	, ...dependentCheckedRecordRustIntegrationPaths
+	, ...dependentCheckedRecordRubyChangedPaths
 	, ...dependentCheckedRecordRubyIntegrationPaths
 	, ...dependentCheckedRecordPythonChangedPaths
 	, ...dependentCheckedRecordPythonIntegrationPaths
@@ -2076,8 +2079,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordRust
+		= beforeDependentCheckedRecordRustSource(path, text, expected);
+	if(sha256(dependentCheckedRecordRust) === expected)
+		return dependentCheckedRecordRust;
 	const dependentCheckedRecordRuby
-		= beforeDependentCheckedRecordRubySource(path, text, expected);
+		= beforeDependentCheckedRecordRubySource(
+			path, dependentCheckedRecordRust, expected
+		);
 	if(sha256(dependentCheckedRecordRuby) === expected)
 		return dependentCheckedRecordRuby;
 	const dependentCheckedRecordPython

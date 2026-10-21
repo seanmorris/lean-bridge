@@ -1,0 +1,133 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6a3dc6c86bedcf5fe7e859e9b877cdbf666b7664303d89f37caa05a16f3c1b89",
+      "path": ".github/workflows/dependent-checked-record-rust.yml"
+    },
+    {
+      "currentSha256": "2a89c0e9f63a57e8633c295412c312842c391b5d12ae753d3a61b9076c718b4e",
+      "path": "scripts/check-dependent-checked-record-rust-ci.mjs"
+    },
+    {
+      "currentSha256": "034985ee2991447b59b33ad453f27bdae7f96f95d792ec34846140a9c86b6a1c",
+      "path": "scripts/run-dependent-checked-record-rust-ci.sh"
+    },
+    {
+      "currentSha256": "abea727d976da3dca50b18286a666da0fe95fd2581eebd6ef6d0b18a8b27438b",
+      "path": "tests/fixtures/dependent-checked-record-consumers/rust.rs"
+    },
+    {
+      "currentSha256": "2a7f5ee52ce2dff07c17bd19e6092a6b154a3022d445058d22b960a4efd02b6f",
+      "path": "tests/helpers/dependent-checked-record-rust-ci-policy-tests.mjs"
+    },
+    {
+      "currentSha256": "a208094cf686f28333a69e25fca0b85148875cce4ac9cf8f52cee640b0b7b307",
+      "path": "tests/helpers/dependent-checked-record-rust-ci-report.mjs"
+    },
+    {
+      "currentSha256": "ac64625d5ed5799c446043d98c26abd1fb2c0621eaa9f9d916144a7bbd9105aa",
+      "path": "tests/helpers/dependent-checked-record-rust-dependency-records.mjs"
+    },
+    {
+      "currentSha256": "1343dacdc9f4f02afdc2968fb5ac024cd8e1c03690fbb1232565de5f6144386e",
+      "path": "tests/helpers/dependent-checked-record-rust-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "6e2b922b69afbc007eeb7e95dbfd91c599831e3b344f4f4a6c31a667b263440a",
+      "path": "tests/helpers/dependent-checked-record-rust-fixture.mjs"
+    },
+    {
+      "currentSha256": "afad57a45737f1f855a96ea1046036f2396defa4b8b407f771faea42d834afbb",
+      "path": "tests/helpers/dependent-checked-record-rust-install.mjs"
+    },
+    {
+      "currentSha256": "22bddb1b065221b4f56185794fa0a248a5a61cb40b34a97721c3810ac18bc34e",
+      "path": "tests/helpers/dependent-checked-record-rust-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "7a8fb789d392f7b022dde284258d4967f28ec625e1f828ea602ca9a9a40de6c1",
+      "path": "tests/helpers/dependent-checked-record-rust-package.mjs"
+    },
+    {
+      "currentSha256": "0d128bf366e85b01936153c3b98d15736362fba11c01d39b89e9a4ec356dddc5",
+      "path": "tests/helpers/dependent-checked-record-rust-report.mjs"
+    },
+    {
+      "currentSha256": "e65e5c57cf0128009126f3a559f3bcc2dce127a80ca3d08d287ba0b75198ed06",
+      "path": "tests/helpers/dependent-checked-record-rust-resources.mjs"
+    },
+    {
+      "currentSha256": "e27649632c1d31a7060d33e4dead1ec664c9f3f60b5ca159f3d062326c313d0f",
+      "path": "scripts/update-dependent-checked-record-rust-source-history.mjs"
+    },
+    {
+      "currentSha256": "2ac3dd921c470a91108c92c9a2657275925a73aa4c0b9220630940d30abc8c4a",
+      "path": "tests/helpers/dependent-checked-record-rust-source-history.mjs"
+    },
+    {
+      "currentSha256": "e8c417a9c5c63717028f15e683ef785edc386c9928801cf321f7a4a5acbd3494",
+      "path": "tests/helpers/dependent-checked-record-rust-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "1fb370ad0d1a0aaafc55a233e0c847a46d21e82c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "94d069052aa5173a9bcb56951a2f68c9ee3a48dd64a8a0af5ec4537c0ced3de3",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordRustSource, dependentCheckedRecordRustChangedPaths, dependentCheckedRecordRustIntegrationPaths } from \"./dependent-checked-record-rust-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordRustChangedPaths\n\t, ...dependentCheckedRecordRustIntegrationPaths\n\t, ...dependentCheckedRecordRubyChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordRubyChangedPaths\n",
+          "start": 123860
+        },
+        {
+          "current": "\tconst dependentCheckedRecordRust\n\t\t= beforeDependentCheckedRecordRustSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordRust) === expected)\n\t\treturn dependentCheckedRecordRust;\n",
+          "previous": "",
+          "start": 151382
+        },
+        {
+          "current": "\t\t= beforeDependentCheckedRecordRubySource(\n\t\t\tpath, dependentCheckedRecordRust, expected\n\t\t);\n",
+          "previous": "\t\t= beforeDependentCheckedRecordRubySource(path, text, expected);\n",
+          "start": 151606
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "59eb990ff9401e43d932d6847f49489510931a82b35c4a45c58b13072008db0f"
+    },
+    {
+      "currentSha256": "de30b431f2947540e647133bd29d58f92b79598309123e4f7f892c2faefd8c0a",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-rust-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3336
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "b544d86416e4868e9894fe3b9874ac3397ce5926a0f067cc940a91034995dcc1"
+    }
+  ],
+  "milestone": "dependent-checked-record-rust-source-v1",
+  "predecessorCommit": "0cecd988aef144c38b98fe9ed7b49ed9b49349a3",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent Fin payloads install offline with pinned Rust 1.90 in ordinary, reviewed, full and result-only routes.",
+  "updates": [
+    {
+      "currentSha256": "76c2d2f8b31004fb69c1a0dad4f2d26e3f69011f1952cf8b00d49bc521bba5a0",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-rust-fixture-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-ci-policy-tests.mjs\";\nimport \"./helpers/dependent-checked-record-rust-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 552
+        }
+      ],
+      "path": "tests/dependent-checked-record-native-foundation.test.mjs",
+      "previousSha256": "f6607b6427ce2b0c3039572e2213e65ec5c4d06235a67d123a34ad6de8dd6f79"
+    }
+  ]
+}
