@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "zeropayloadcheckedrecords@1.0.0",
+    "name": "zeropayloadcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51345134,
+          "path": "archives/zeropayloadcheckedrecords-1.0.0.crate",
+          "sha256": "db73291f3afa6e6fa8b6ff3a857ae44a3e97f459a710b61b510e717b20024c18"
+        }
+      ],
+      "ecosystem": "cargo",
+      "name": "zeropayloadcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cargo",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "4e6d5bc94d8e311d8a443478bb101a5c54b1388995dc312fb2944e7bfd38bb44",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "1c763477de8dd9f6a88803b88b0f00e0a5555fb23a2da111ea821b3c0ab95511"
+  }
+}

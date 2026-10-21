@@ -1,0 +1,4 @@
+[source.crates-io]
+replace-with = "zero-payload-vendor"
+[source.zero-payload-vendor]
+directory = "vendor/dependencies"

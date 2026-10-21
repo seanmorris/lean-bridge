@@ -1,0 +1,73 @@
+/**
+ * Preserve exact source predecessors of the JVM acceptance shard change (#1220).
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { sha256 } from "./source-history-digest.mjs";
+import { beforeArchiveBatchSource } from "./archive-batch-source-history.mjs";
+
+export const jvmShardHistoryPath = "docs/evidence/jvm-shard-source-history-20261008.json";
+export const jvmShardChangedPaths = [
+	"docs/type-surface.v1.json"
+	, ".github/workflows/consumer-matrix.yml"
+	, "tests/documentation.test.mjs"
+	, "tests/helpers/jvm-thread-exit-repair-evidence.mjs"
+	, "tests/helpers/owned-jvm-borrow-evidence.mjs"
+	, "tests/helpers/owned-jvm-ci.mjs"
+	, "tests/helpers/owned-jvm-receiver-ci.mjs"
+	, "tests/helpers/owned-jvm-receiver-gc-ci.mjs"
+	, "tests/helpers/owned-jvm-transfer-evidence.mjs"
+	, "tests/jvm-thread-exit-repair-evidence.test.mjs"
+	, "tests/owned-jvm-ci.test.mjs"
+	, "tests/owned-jvm-receiver-evidence.test.mjs"
+	, "tests/owned-jvm-receiver-gc-ci.test.mjs"
+	, "tests/helpers/fin-wit-archive-source-history.mjs"
+	, "tests/helpers/fin-wit-archive-source-history-tests.mjs"
+	, "tests/helpers/fin-refinement-source-history.mjs"
+];
+let history;
+
+/**
+ * Reverse registered spans only when both complete source hashes match.
+ *
+ * @param source - Complete current source text.
+ * @param update - Exact recorded transition.
+ */
+export const reverseJvmShardUpdate = (source, update) => {
+	assert.ok(jvmShardChangedPaths.includes(update.path));
+	assert.equal(sha256(source), update.currentSha256, update.path);
+	assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
+	let cursor = 0; const parts = [];
+	for(const edit of update.edits)
+	{
+		assert.ok(Number.isSafeInteger(edit.start) && edit.start >= cursor && edit.start <= source.length);
+		assert.equal(typeof edit.previous, "string"); assert.equal(typeof edit.current, "string");
+		assert.notEqual(edit.previous, edit.current);
+		assert.equal(source.slice(edit.start, edit.start + edit.current.length), edit.current);
+		parts.push(source.slice(cursor, edit.start), edit.previous);
+		cursor = edit.start + edit.current.length;
+	}
+	parts.push(source.slice(cursor));
+	const previous = parts.join("");
+	assert.equal(sha256(previous), update.previousSha256, update.path);
+	return previous;
+};
+
+/**
+ * Restore the source before #1220, stopping at an explicitly requested identity.
+ *
+ * @param path - Repository-relative source path.
+ * @param source - Complete current or historical source text.
+ * @param expected - Optional exact stopping digest.
+ */
+export const beforeJvmShardSource = (path, source, expected) => {
+	source = beforeArchiveBatchSource(path, source, expected);
+	if(typeof source !== "string" || !jvmShardChangedPaths.includes(path)) return source;
+	const digest = sha256(source);
+	if(digest === expected) return source;
+	const record = history ??= JSON.parse(readFileSync(jvmShardHistoryPath, "utf8"));
+	const update = record.updates.find(item => item.path === path);
+	return update?.currentSha256 === digest ? reverseJvmShardUpdate(source, update) : source;
+};

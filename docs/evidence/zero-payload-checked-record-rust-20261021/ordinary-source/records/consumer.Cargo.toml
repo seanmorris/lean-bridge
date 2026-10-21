@@ -1,0 +1,12 @@
+[package]
+name = "zero-payload-consumer"
+version = "0.0.0"
+edition = "2021"
+[features]
+result-only = []
+reviewed = []
+[dependencies]
+zeropayloadcheckedrecords = { path = "vendor/zeropayloadcheckedrecords-1.0.0" }
+[profile.dev]
+debug = 0
+incremental = false
