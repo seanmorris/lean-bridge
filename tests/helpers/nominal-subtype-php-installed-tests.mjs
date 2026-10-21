@@ -7,14 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypePhpSelection, nominalSubtypePhpReview, nominalSubtypePhpConfiguration, nominalSubtypePhpLeanSource, nominalSubtypePhpCaller, parseNominalSubtypePhpResult } from "./nominal-subtype-php-fixture.mjs";
 import { nominalSubtypePhpToolSelection, inspectNominalSubtypePhpTools } from "./nominal-subtype-php-tools.mjs";
 import { inspectNominalSubtypePhpPackage } from "./nominal-subtype-php-package.mjs";
@@ -23,18 +23,27 @@ import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-reso
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from "./generic-subtype-managed-wit.mjs";
 
-const { enabled, routes, modes } = nominalSubtypePhpSelection(process.env);
+const nominalSelection = nominalSubtypePhpSelection(process.env);
+const genericSelection = genericSubtypeManagedWitSelection("php", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic PHP installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal PHP packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype PHP compositions" : "nominal PHP packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const name of ["fixture", "tools", "package", "installed-tests"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-php-${name}.mjs`]);
-	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/php-native.php"]);
+	const callerPath = `tests/fixtures/${genericCompositions ? "generic" : "nominal"}-subtype-consumers/php-native.php`;
+	execFileSync("git", ["ls-files", "--error-unmatch", callerPath]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_OUTPUT ?? "build/nominal-subtype-php", route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-php" : "build/nominal-subtype-php";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const resourceChecks = [];
 	const resourceCheck = async () => {
@@ -43,7 +52,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 	};
 	await resourceCheck();
 	const environment = { ...nativeFixtureEnvironment(["php-native"]), LEAN_NUM_THREADS: "1", OMP_NUM_THREADS: "1", MAKEFLAGS: "-j1" };
-	const selected = nominalSubtypePhpToolSelection(environment), tools = await inspectNominalSubtypePhpTools(selected, output);
+	const toolEnvironment = genericCompositions ? { ...environment
+		, LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_VERSION: environment.LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_VERSION
+		, LEAN_BRIDGE_NOMINAL_SUBTYPE_PHP_COMPOSER_VERSION: environment.LEAN_BRIDGE_GENERIC_SUBTYPE_PHP_COMPOSER_VERSION } : environment;
+	const selected = nominalSubtypePhpToolSelection(toolEnvironment), tools = await inspectNominalSubtypePhpTools(selected, output);
 	environment.LEAN_BRIDGE_PHP = tools.command; environment.LEAN_BRIDGE_COMPOSER = tools.composer;
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
 	assert.match(floor ?? "", /^2\.[0-9]+$/u, "Select the native glibc floor explicitly");
@@ -51,10 +63,14 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 	const runtime = { platform: process.platform, arch: process.arch, glibc: await runCopied("/usr/bin/getconf", ["GNU_LIBC_VERSION"], output) };
 	assert.equal(runtime.glibc.stderr, ""); assert.match(runtime.glibc.stdout, /^glibc 2\.[0-9]+\n$/u);
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
-	const expected = nominalSubtypePhpReview(mode), configuration = nominalSubtypePhpConfiguration(route, mode);
+	const expected = genericCompositions ? genericSubtypeManagedWitReview("php") : nominalSubtypePhpReview(mode);
+	const configuration = genericCompositions ? genericSubtypeManagedWitConfiguration("php", route) : nominalSubtypePhpConfiguration(route, mode);
 	for(const [path, value] of Object.entries({ "tools.json": tools, "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
-	const source = await nominalSubtypePhpLeanSource(), caller = await nominalSubtypePhpCaller(route, mode);
+	const source = await nominalSubtypePhpLeanSource();
+	const caller = genericCompositions
+		? await genericSubtypeManagedWitCaller("php", route)
+		: await nominalSubtypePhpCaller(route, mode);
 	await saveLakeFile(output, "consumer.php", caller);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-php-installed-"));
 	let complete = false;
@@ -69,6 +85,11 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, `${nominalSubtypeModule}.lean`, source);
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -79,7 +100,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 		assert.deepEqual(await lakeInputState(projectRoot), sourceBefore);
 		const modelBytes = await readFile(join(outputRoot, "native/component/model.json")); model = JSON.parse(modelBytes);
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
-		assert.equal(model.exports.length, mode === "full" ? 26 : 13);
+		assert.equal(model.exports.length, genericCompositions ? 29 : mode === "full" ? 26 : 13);
 		if(route === "reviewed") assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
 		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
 		const receiptBytes = await readFile(join(outputRoot, "package-set-receipt.json")), receipt = JSON.parse(receiptBytes);
@@ -89,6 +110,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 			await saveLakeFile(record, path, bytes);
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0)
 		{
@@ -122,7 +145,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 			await resourceCheck();
 			const before = await verifyFinContainerEdgePhpEnvironment(relocated);
 			const run = await runFinContainerEdgePhp(relocated, strictness);
-			assert.equal(run.stderr, ""); const counts = parseNominalSubtypePhpResult(run.stdout, mode);
+			assert.equal(run.stderr, "");
+			const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypePhpResult(run.stdout, mode);
 			assert.deepEqual(await verifyFinContainerEdgePhpEnvironment(relocated), before);
 			const entry = strictness === "strict" ? "strict.php" : "consumer.php";
 			assert.equal(await readFile(join(location, entry), "utf8"), strictness === "strict" ? caller.replace("declare(strict_types=0);", "declare(strict_types=1);") : caller);
@@ -135,7 +159,9 @@ for(const route of routes) for(const mode of modes) test(`installed nominal PHP 
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
-		schemaVersion: 1, route, mode, producerCommit, runtime, tools
+		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
+		, runtime, tools
 		, configuration, builds, receipt, observations, declaredGlibcFloor: floor
 		, expectedBindingIrSha256: hashBindingIr(expected)
 		, packageReceiptSha256: packaged.receiptSha256

@@ -7,14 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeJvmCaller, nominalSubtypeJvmConfiguration, nominalSubtypeJvmLeanSource, nominalSubtypeJvmProfiles, nominalSubtypeJvmReview, nominalSubtypeJvmSelection, parseNominalSubtypeJvmResult } from "./nominal-subtype-jvm-fixture.mjs";
 import { inspectNominalSubtypeJvmPackage, runNominalSubtypeJvmDeployment, verifyNominalSubtypeJvmDeployment } from "./nominal-subtype-jvm-package.mjs";
 import { runNominalSubtypeJvmProbe } from "./nominal-subtype-jvm-probe.mjs";
@@ -24,19 +24,27 @@ import { installFinContainerEdgeJvm, runFinContainerEdgeJvm, verifyFinContainerE
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from "./generic-subtype-managed-wit.mjs";
 
-const { enabled, routes, modes } = nominalSubtypeJvmSelection(process.env);
+const nominalSelection = nominalSubtypeJvmSelection(process.env);
+const genericSelection = genericSubtypeManagedWitSelection("jvm", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic JVM installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal JVM packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype JVM compositions" : "nominal JVM packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const name of ["fixture", "package", "probe", "nullability", "installed-tests"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-jvm-${name}.mjs`]);
 	for(const path of ["java.java", "kotlin.kt"])
-		execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/" + path]);
+		execFileSync("git", ["ls-files", "--error-unmatch", `tests/fixtures/${genericCompositions ? "generic" : "nominal"}-subtype-consumers/` + path]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_OUTPUT ?? "build/nominal-subtype-jvm", route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_JVM_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_JVM_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-jvm" : "build/nominal-subtype-jvm";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const environment = { ...nativeFixtureEnvironment(nominalSubtypeJvmProfiles), LEAN_NUM_THREADS: "1" };
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
@@ -45,7 +53,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 	const runtime = { platform: process.platform, arch: process.arch, glibc: await runCopied("/usr/bin/getconf", ["GNU_LIBC_VERSION"], output) };
 	assert.equal(runtime.glibc.stderr, ""); assert.match(runtime.glibc.stdout, /^glibc 2\.[0-9]+\n$/u);
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
-	const expected = nominalSubtypeJvmReview(mode), configuration = nominalSubtypeJvmConfiguration(route, mode);
+	const expected = genericCompositions ? genericSubtypeManagedWitReview("jvm") : nominalSubtypeJvmReview(mode);
+	const configuration = genericCompositions ? genericSubtypeManagedWitConfiguration("jvm", route) : nominalSubtypeJvmConfiguration(route, mode);
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
 	const resourceChecks = [];
@@ -68,6 +77,11 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
 		await saveLakeFile(projectRoot, `${nominalSubtypeModule}.lean`, await nominalSubtypeJvmLeanSource());
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -88,6 +102,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 			await saveLakeFile(record, path, bytes);
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0)
 		{
@@ -110,7 +126,11 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 	for(const profile of nominalSubtypeJvmProfiles)
 	{
 		await resourceCheck();
-		const extension = profile === "java" ? "java" : "kt", caller = await nominalSubtypeJvmCaller(profile, route, mode), consumer = join(root, profile);
+		const extension = profile === "java" ? "java" : "kt";
+		const caller = genericCompositions
+			? await genericSubtypeManagedWitCaller("jvm", route, profile)
+			: await nominalSubtypeJvmCaller(profile, route, mode);
+		const consumer = join(root, profile);
 		await saveLakeFile(output, "consumer." + extension, caller); await saveLakeFile(consumer, "consumer." + extension, caller);
 		const { context } = await installFinContainerEdgeJvm({ profile, root: consumer, archive, archiveSha256: artifact.sha256, environment });
 		const apiProbe = await runNominalSubtypeJvmProbe({ root: join(root, "probes", profile)
@@ -133,7 +153,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 			{ await rename(consumer, location); await assert.rejects(access(consumer), { code: "ENOENT" }); }
 			const current = { ...context, root: location }, closure = await verifyFinContainerEdgeJvmEnvironment(current);
 			const run = await runFinContainerEdgeJvm(current);
-			assert.equal(run.stderr, ""); const counts = parseNominalSubtypeJvmResult(run.stdout, profile, mode);
+			assert.equal(run.stderr, "");
+			const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeJvmResult(run.stdout, profile, mode);
 			assert.deepEqual(await verifyFinContainerEdgeJvmEnvironment(current), closure);
 			const observation = { stage: index ? "relocated" : "installed", cwd: location, run, counts, closure };
 			observations.push(observation); await saveLakeFile(output, `${profile}/${observation.stage}.json`, canonicalJson(observation));
@@ -155,14 +176,17 @@ for(const route of routes) for(const mode of modes) test(`installed nominal JVM 
 		const { profile, context, observations } = consumer, sourceFree = join(root, profile + "-source-free");
 		const closure = await verifyNominalSubtypeJvmDeployment(sourceFree, context);
 		const run = await runNominalSubtypeJvmDeployment(sourceFree, context);
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypeJvmResult(run.stdout, profile, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeJvmResult(run.stdout, profile, mode);
 		assert.deepEqual(await verifyNominalSubtypeJvmDeployment(sourceFree, context), closure);
 		const observation = { stage: "source-free", cwd: sourceFree, run, counts, closure, sourcesRemoved: true };
 		observations.push(observation); await saveLakeFile(output, `${profile}/source-free.json`, canonicalJson(observation));
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(output, "handoff/package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
-		schemaVersion: 1, route, mode, producerCommit, runtime, builds, receipt
+		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
+		, runtime, builds, receipt
 		, installation, consumers, resourceChecks
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true

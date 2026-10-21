@@ -77,10 +77,12 @@ const renamed = value => {
  * Preserve all independent contracts, changing only the colliding nominal name.
  *
  * @param mode - Full API or standalone constructor-free results.
+ * @param options - Optional generic-composition selection.
+ * @param options.genericCompositions - Include the closed generic surface.
  */
-export const nominalSubtypeJvmReview = mode => {
+export const nominalSubtypeJvmReview = (mode, { genericCompositions = false } = {}) => {
 	assert.ok(nominalSubtypeJvmModes.includes(mode));
-	return renamed(nominalSubtypeInstalledReview(mode === "result-only"));
+	return renamed(nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions }));
 };
 
 /**
@@ -88,10 +90,12 @@ export const nominalSubtypeJvmReview = mode => {
  *
  * @param route - Ordinary source or independent review.
  * @param mode - Full API or standalone constructor-free results.
+ * @param options - Optional generic-composition selection.
+ * @param options.genericCompositions - Include the closed generic surface.
  */
-export const nominalSubtypeJvmConfiguration = (route, mode) => {
+export const nominalSubtypeJvmConfiguration = (route, mode, { genericCompositions = false } = {}) => {
 	assert.ok(nominalSubtypeJvmModes.includes(mode));
-	return { ...renamed(nominalSubtypeInstalledConfiguration(route, ["c"], mode === "result-only"))
+	return { ...renamed(nominalSubtypeInstalledConfiguration(route, ["c"], mode === "result-only", { genericCompositions }))
 		, targets: { maven: { name: "org.leanbridge:nominalsubtypes", version: "1.0.0" } } };
 };
 

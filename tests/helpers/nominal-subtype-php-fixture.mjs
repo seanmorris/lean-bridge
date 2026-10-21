@@ -53,10 +53,12 @@ const renamed = value => {
  * Preserve every independent reviewed type and per-site constructor choice.
  *
  * @param mode - Full API or standalone constructor-free results.
+ * @param options - Optional generic-composition selection.
+ * @param options.genericCompositions - Include the closed generic surface.
  */
-export const nominalSubtypePhpReview = mode => {
+export const nominalSubtypePhpReview = (mode, { genericCompositions = false } = {}) => {
 	assert.ok(nominalSubtypePhpModes.includes(mode));
-	return renamed(nominalSubtypeInstalledReview(mode === "result-only"));
+	return renamed(nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions }));
 };
 
 /**
@@ -64,10 +66,12 @@ export const nominalSubtypePhpReview = mode => {
  *
  * @param route - Ordinary source or independent review.
  * @param mode - Full API or standalone constructor-free results.
+ * @param options - Optional generic-composition selection.
+ * @param options.genericCompositions - Include the closed generic surface.
  */
-export const nominalSubtypePhpConfiguration = (route, mode) => {
+export const nominalSubtypePhpConfiguration = (route, mode, { genericCompositions = false } = {}) => {
 	assert.ok(nominalSubtypePhpModes.includes(mode));
-	return { ...renamed(nominalSubtypeInstalledConfiguration(route, ["c"], mode === "result-only"))
+	return { ...renamed(nominalSubtypeInstalledConfiguration(route, ["c"], mode === "result-only", { genericCompositions }))
 		, targets: { "php-native": { name: "example/nominalsubtypes", version: "1.0.0" } } };
 };
 

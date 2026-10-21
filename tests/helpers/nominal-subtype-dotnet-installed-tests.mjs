@@ -7,14 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeDotnetCaller, nominalSubtypeDotnetConfiguration, nominalSubtypeDotnetSelection, parseNominalSubtypeDotnetResult } from "./nominal-subtype-dotnet-fixture.mjs";
 import { nominalSubtypeDotnetAssembly, inspectNominalSubtypeDotnetPackage, verifyNominalSubtypeDotnetDeployment } from "./nominal-subtype-dotnet-package.mjs";
 import { nominalSubtypeDotnetEnvironment, observeNominalSubtypeDotnetRuntime, selectNominalSubtypeDotnetTools } from "./nominal-subtype-dotnet-tools.mjs";
@@ -24,19 +24,31 @@ import { installFinContainerEdgeDotnet, runFinContainerEdgeDotnet, verifyFinCont
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from "./generic-subtype-managed-wit.mjs";
 
-const { enabled, routes, modes } = nominalSubtypeDotnetSelection(process.env);
+const nominalSelection = nominalSubtypeDotnetSelection(process.env);
+const genericSelection = genericSubtypeManagedWitSelection("dotnet", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic C# installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal C# packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype C# compositions" : "nominal C# packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const path of ["fixture.mjs", "package.mjs", "tools.mjs", "probe.mjs", "resources.mjs", "installed-tests.mjs"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-dotnet-${path}`]);
-	execFileSync("git", ["ls-files", "--error-unmatch", "tests/fixtures/nominal-subtype-consumers/dotnet.cs"]);
+	const callerPath = `tests/fixtures/${genericCompositions ? "generic" : "nominal"}-subtype-consumers/dotnet.cs`;
+	execFileSync("git", ["ls-files", "--error-unmatch", callerPath]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const expected = nominalSubtypeInstalledReview(mode === "result-only"), configuration = nominalSubtypeDotnetConfiguration(route, mode);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_OUTPUT ?? "build/nominal-subtype-dotnet", route, mode);
+	const expected = nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions });
+	const configuration = genericCompositions
+		? genericSubtypeManagedWitConfiguration("dotnet", route)
+		: nominalSubtypeDotnetConfiguration(route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_DOTNET_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_DOTNET_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-dotnet" : "build/nominal-subtype-dotnet";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const environment = { ...nativeFixtureEnvironment(["dotnet"]), LEAN_NUM_THREADS: "1", MSBUILDDISABLENODEREUSE: "1" };
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
@@ -47,7 +59,10 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
 	for(const [path, value] of Object.entries({ "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
-	const caller = await nominalSubtypeDotnetCaller(route, mode); await saveLakeFile(output, "consumer.cs", caller);
+	const caller = genericCompositions
+		? await genericSubtypeManagedWitCaller("dotnet", route)
+		: await nominalSubtypeDotnetCaller(route, mode);
+	await saveLakeFile(output, "consumer.cs", caller);
 	const resourceChecks = [];
 	const resourceCheck = async () => {
 		resourceChecks.push(await waitNominalSubtypeDotnetResources(output, { notify: message => t.diagnostic(message) }));
@@ -70,6 +85,11 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 		await resourceCheck();
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -90,6 +110,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 		await saveLakeFile(record, "author-inputs.json", canonicalJson(sourceBefore));
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0)
 		{
@@ -121,7 +143,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 		const current = { ...context, root: location }, closure = await verifyFinContainerEdgeDotnetEnvironment(current);
 		const framework = await observeNominalSubtypeDotnetRuntime(location, "out/Consumer.dll", tools);
 		const run = await runFinContainerEdgeDotnet(current);
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypeDotnetResult(run.stdout, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeDotnetResult(run.stdout, mode);
 		assert.deepEqual(await verifyFinContainerEdgeDotnetEnvironment(current), closure);
 		const observation = { stage: index ? "relocated" : "installed", cwd: location, run, counts, closure, framework };
 		observations.push(observation); await saveLakeFile(output, `${observation.stage}.json`, canonicalJson(observation));
@@ -135,7 +158,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	const closure = await verifyNominalSubtypeDotnetDeployment(sourceFree, context.outputs);
 	const framework = await observeNominalSubtypeDotnetRuntime(sourceFree, "Consumer.dll", tools);
 	const run = await runCopied(tools.command, ["Consumer.dll"], sourceFree, nominalSubtypeDotnetEnvironment(sourceFree, tools.command));
-	assert.equal(run.stderr, ""); const counts = parseNominalSubtypeDotnetResult(run.stdout, mode);
+	assert.equal(run.stderr, "");
+	const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeDotnetResult(run.stdout, mode);
 	assert.deepEqual(await verifyNominalSubtypeDotnetDeployment(sourceFree, context.outputs), closure);
 	const observation = { stage: "source-free", cwd: sourceFree, run, counts, closure, framework, sourcesRemoved: true };
 	observations.push(observation); await saveLakeFile(output, "source-free.json", canonicalJson(observation));
@@ -146,7 +170,9 @@ for(const route of routes) for(const mode of modes) test(`installed nominal C# p
 	}
 	await verifyPackageSetReceipt({ receiptPath: join(output, "handoff/package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({
-		schemaVersion: 1, route, mode, producerCommit, runtime, tools, builds
+		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
+		, runtime, tools, builds
 		, receipt, observations, installation, apiProbe, resourceChecks
 		, declaredGlibcFloor: floor, expectedBindingIrSha256: hashBindingIr(expected)
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true

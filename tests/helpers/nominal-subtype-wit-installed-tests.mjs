@@ -7,14 +7,14 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeWitSelection, nominalSubtypeWitReview, nominalSubtypeWitConfiguration, nominalSubtypeWitCaller, parseNominalSubtypeWitResult } from "./nominal-subtype-wit-fixture.mjs";
 import { nominalSubtypeWitToolSelection, inspectNominalSubtypeWitTools } from "./nominal-subtype-wit-tools.mjs";
 import { installNominalSubtypeWit, verifyNominalSubtypeWitEnvironment } from "./nominal-subtype-wit-install.mjs";
@@ -22,19 +22,29 @@ import { waitNominalSubtypeDotnetResources } from "./nominal-subtype-dotnet-reso
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
+import { genericSubtypeManagedWitCaller, genericSubtypeManagedWitConfiguration, genericSubtypeManagedWitReview, genericSubtypeManagedWitSelection, parseGenericSubtypeManagedWitResult } from "./generic-subtype-managed-wit.mjs";
 
-const { enabled, routes, modes } = nominalSubtypeWitSelection(process.env);
+const nominalSelection = nominalSubtypeWitSelection(process.env);
+const genericSelection = genericSubtypeManagedWitSelection("wit", process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic WIT installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal WIT packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype WIT compositions" : "nominal WIT packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const name of ["fixture", "tools", "package", "install", "installed-tests"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/nominal-subtype-wit-${name}.mjs`]);
-	for(const name of ["wit-wasi.c", "wit-values.h", "wit-inputs.h"])
-		execFileSync("git", ["ls-files", "--error-unmatch", `tests/fixtures/nominal-subtype-consumers/${name}`]);
+	for(const path of genericCompositions
+		? ["tests/fixtures/generic-subtype-consumers/wit-wasi.c", "tests/fixtures/nominal-subtype-consumers/wit-values.h"]
+		: ["wit-wasi.c", "wit-values.h", "wit-inputs.h"].map(name => `tests/fixtures/nominal-subtype-consumers/${name}`))
+		execFileSync("git", ["ls-files", "--error-unmatch", path]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_OUTPUT ?? "build/nominal-subtype-wit", route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_WIT_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_WIT_OUTPUT";
+	const outputRoot = genericCompositions ? "build/generic-subtype-wit" : "build/nominal-subtype-wit";
+	const output = resolve(process.env[outputVariable] ?? outputRoot, route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const resourceChecks = [];
 	const resourceCheck = async () => {
@@ -53,11 +63,15 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 		, glibc: await runCopied(tools.commands.getconf.command, ["GNU_LIBC_VERSION"], output) };
 	assert.equal(runtime.glibc.stderr, ""); assert.match(runtime.glibc.stdout, /^glibc 2\.[0-9]+\n$/u);
 	assert.ok(Number(runtime.glibc.stdout.match(/2\.([0-9]+)/u)[1]) >= Number(floor.split(".")[1]));
-	const expected = nominalSubtypeWitReview(mode), configuration = nominalSubtypeWitConfiguration(route, mode);
+	const expected = genericCompositions ? genericSubtypeManagedWitReview("wit") : nominalSubtypeWitReview(mode);
+	const configuration = genericCompositions ? genericSubtypeManagedWitConfiguration("wit", route) : nominalSubtypeWitConfiguration(route, mode);
 	for(const [path, value] of Object.entries({ "tools.json": tools, "runtime.json": runtime, "expected.binding-ir.json": expected, "configuration.json": configuration }))
 		await saveLakeFile(output, path, canonicalJson(value));
 	const source = await readFile(join(nominalSubtypeFixture, `${nominalSubtypeModule}.lean`), "utf8");
-	const caller = await nominalSubtypeWitCaller(route, mode); await saveLakeFile(output, "consumer.c", caller);
+	const caller = genericCompositions
+		? await genericSubtypeManagedWitCaller("wit", route)
+		: await nominalSubtypeWitCaller(route, mode);
+	await saveLakeFile(output, "consumer.c", caller);
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-wit-installed-"));
 	let complete = false;
 	t.after(async () => {
@@ -71,6 +85,11 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 		await resourceCheck();
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release"), record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true }); await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -81,7 +100,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 		assert.deepEqual(await lakeInputState(projectRoot), sourceBefore);
 		const modelBytes = await readFile(join(outputRoot, "native/component/model.json")); model = JSON.parse(modelBytes);
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
-		assert.equal(model.exports.length, mode === "full" ? 26 : 13);
+		assert.equal(model.exports.length, genericCompositions ? 29 : mode === "full" ? 26 : 13);
 		if(route === "reviewed") assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
 		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
 		const receiptBytes = await readFile(join(outputRoot, "package-set-receipt.json")), receipt = JSON.parse(receiptBytes);
@@ -93,6 +112,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 			, [`${nominalSubtypeModule}.lean`, source]
 			, ["lean-bridge.exports.json", canonicalJson(configuration)]])
 			await saveLakeFile(record, path, bytes);
+		if(genericCompositions)
+			await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
 		builds.push({ bindingIrSha256: built.bindingIrSha256
@@ -114,7 +135,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 		await resourceCheck();
 		const relocated = { ...context, root: location }, before = await verifyNominalSubtypeWitEnvironment(relocated);
 		const command = join(location, "consumer"), args = [], run = await runCopied(command, args, location);
-		assert.equal(run.stderr, ""); const counts = parseNominalSubtypeWitResult(run.stdout, mode);
+		assert.equal(run.stderr, "");
+		const counts = genericCompositions ? parseGenericSubtypeManagedWitResult(run.stdout) : parseNominalSubtypeWitResult(run.stdout, mode);
 		assert.deepEqual(await verifyNominalSubtypeWitEnvironment(relocated), before);
 		const observation = { relocated: Boolean(position), command, args, cwd: location, environment: copiedCleanEnvironment, run, counts, closure: before };
 		observations.push(observation);
@@ -124,7 +146,9 @@ for(const route of routes) for(const mode of modes) test(`installed nominal WIT 
 	const toolsAfter = await inspectNominalSubtypeWitTools(selected, output);
 	await saveLakeFile(output, "tools-after.json", canonicalJson(toolsAfter)); assert.deepEqual(toolsAfter, tools);
 	await saveLakeFile(output, "report.json", canonicalJson({
-		schemaVersion: 1, route, mode, producerCommit, runtime, tools
+		schemaVersion: 1, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
+		, runtime, tools
 		, configuration, builds, receipt, observations, declaredGlibcFloor: floor
 		, expectedBindingIrSha256: hashBindingIr(expected)
 		, packageReceiptSha256: packaged.receiptSha256
