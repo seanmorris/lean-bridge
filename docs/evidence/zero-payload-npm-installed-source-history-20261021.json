@@ -1,0 +1,145 @@
+{
+  "additions": [
+    {
+      "currentSha256": "4335af51d8fe3cf9f7a1c80ddeaf491911adaee0abfb2a5856c9898cb44a862c",
+      "path": "tests/helpers/zero-payload-checked-record-npm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "d55eeed4a7b0db5f3e2a26c235b8c1e66d60ec9c7fada91e71867e5033dde0f0",
+      "path": "scripts/update-zero-payload-npm-installed-source-history.mjs"
+    },
+    {
+      "currentSha256": "2fdbe9479df3d52b4c44e040c49d9856596242765358bb04a1b9372e68d2d6d4",
+      "path": "tests/helpers/zero-payload-npm-installed-source-history.mjs"
+    },
+    {
+      "currentSha256": "7e2865fc3f0891766413463522968c11f257930613a54deda0af1252f784da7c",
+      "path": "tests/helpers/zero-payload-npm-installed-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "e84d8a3ba9e074560156684f3afb360865f9479c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b2d7afffb8a5a5055b7f81ca3f8aa8a6565a33901d47f73954729c37b3612cbb",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNpmInstalledSource, zeroPayloadNpmInstalledChangedPaths, zeroPayloadNpmInstalledIntegrationPaths } from \"./zero-payload-npm-installed-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNpmInstalledChangedPaths\n\t, ...zeroPayloadNpmInstalledIntegrationPaths\n\t, ...zeroPayloadJavaScriptChangedPaths\n",
+          "previous": "\t...zeroPayloadJavaScriptChangedPaths\n",
+          "start": 111379
+        },
+        {
+          "current": "\tconst zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(\n",
+          "previous": "\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n",
+          "start": 132869
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadNpmInstalled) === expected) return zeroPayloadNpmInstalled;\n\tconst zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(\n\t\tpath, zeroPayloadNpmInstalled, expected\n\t);\n",
+          "previous": "",
+          "start": 132966
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3f5ba9fffc2d466e411b4363d431eaa2a26f1fe1081de54d5f78b76046994238"
+    }
+  ],
+  "milestone": "zero-payload-npm-installed-source-v1",
+  "predecessorCommit": "319891d4d6b9c693d443dfa4a899adab6418db1f",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Two independent Lean roots produce reproducible zero-payload npm packages consumed offline and after relocation.",
+  "updates": [
+    {
+      "currentSha256": "be066922bda594a9d7debd8174e8684e5dec62aad340a628aa7606f530ec2ff3",
+      "edits": [
+        {
+          "current": "\t\tconst expected = shape\n",
+          "previous": "\t\tcheck(shape\n",
+          "start": 2429
+        },
+        {
+          "current": "\t\t\t\t&& failure.message === \"absentCount.arg0 was rejected by ZeroPayloadCheckedRecords.mkAbsent\";\n\t\tcheck(expected, `${name} refusal`);\n",
+          "previous": "\t\t\t\t&& /failed \\(5\\)/u.test(failure.message), `${name} refusal`);\n",
+          "start": 2617
+        }
+      ],
+      "path": "tests/fixtures/zero-payload-checked-record-browser/javascript.mjs",
+      "previousSha256": "ec4d7b69d15b3342202d4f26c0b41b1f77d651a63793d438b2f387ad20c313fe"
+    },
+    {
+      "currentSha256": "98654f0e94bcc6ebf66d0573c7d20ced48be42edfb86155c7c5145af89cdd377",
+      "edits": [
+        {
+          "current": "export const zeroPayloadBrowserInputNames = Object.freeze([\n\t\"witnessCount\", \"absentCount\", \"tokenTag\", \"markerCount\"\n]);\nexport const zeroPayloadBrowserResultNames = Object.freeze([\n\t\"produceWitness\", \"produceToken\", \"witnesses\", \"maybeWitness\", \"produceMarker\"\n]);\n",
+          "previous": "",
+          "start": 713
+        },
+        {
+          "current": "\tconst resultNames = new Set(zeroPayloadBrowserResultNames);\n",
+          "previous": "\tconst resultNames = new Set([\n\t\t\"produceWitness\", \"produceToken\", \"witnesses\", \"maybeWitness\", \"produceMarker\"\n\t]);\n",
+          "start": 1816
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-browser-fixture.mjs",
+      "previousSha256": "2729f54ec26cf183e5ece6f56597947c91c78b57a02d198fb8aa301dcc69dc8f"
+    },
+    {
+      "currentSha256": "cbf64d77968f86a42f0e862f706b036c98885ec2c0843ea9361688736c5078cb",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "start": 441
+        },
+        {
+          "current": "const historyCommit = \"319891d4d6b9c693d443dfa4a899adab6418db1f\";\n",
+          "previous": "",
+          "start": 966
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadJavaScriptSource\n\t\t);\n",
+          "start": 1759
+        },
+        {
+          "current": "\t\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256, beforeZeroPayloadJavaScriptSource\n\t\t);\n",
+          "start": 2394
+        },
+        {
+          "current": "\t\tassert.equal(sha256(sourceAt(historyCommit, addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256\n\t\t)), addition.currentSha256, addition.path);\n",
+          "start": 2627
+        },
+        {
+          "current": "\tconst current = sourceAt(historyCommit, update.path);\n",
+          "previous": "\tconst current = await sourceAtFinHistoryMilestone(\n\t\tupdate.path, update.currentSha256, beforeZeroPayloadJavaScriptSource\n\t);\n",
+          "start": 2959
+        }
+      ],
+      "path": "tests/helpers/zero-payload-javascript-source-history-tests.mjs",
+      "previousSha256": "a98c44681b960ff9d3405a37b458943d4d12084e4b5debc473b4deda88f37762"
+    },
+    {
+      "currentSha256": "6dc1c9d5728ab299669285ff50540c829125c85823d69fcde9f63e962dde85d7",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-npm-installed-tests.mjs\";\n",
+          "previous": "",
+          "start": 821
+        },
+        {
+          "current": "\t\t\texact(value, [], \"Witness\");\n\t\t\tthrow new Error(\n\t\t\t\t\"absentCount.arg0 was rejected by ZeroPayloadCheckedRecords.mkAbsent\"\n\t\t\t);\n",
+          "previous": "\t\t\texact(value, [], \"Witness\"); throw new Error(\"Lean call failed (5)\");\n",
+          "start": 1757
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-javascript.test.mjs",
+      "previousSha256": "f47ad8c07dde050c07bf99f0c4ce4f406ce6e939b051b1419b95ead2f3b24872"
+    }
+  ]
+}

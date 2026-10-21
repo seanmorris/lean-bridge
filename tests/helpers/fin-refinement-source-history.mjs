@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNpmInstalledSource, zeroPayloadNpmInstalledChangedPaths, zeroPayloadNpmInstalledIntegrationPaths } from "./zero-payload-npm-installed-source-history.mjs";
 import { beforeZeroPayloadJavaScriptSource, zeroPayloadJavaScriptChangedPaths, zeroPayloadJavaScriptIntegrationPaths } from "./zero-payload-javascript-source-history.mjs";
 import { beforeZeroPayloadNpmFoundationSource, zeroPayloadNpmFoundationChangedPaths, zeroPayloadNpmFoundationIntegrationPaths } from "./zero-payload-npm-foundation-source-history.mjs";
 import { beforeZeroPayloadCheckedRecordSource, zeroPayloadCheckedRecordChangedPaths, zeroPayloadCheckedRecordIntegrationPaths } from "./zero-payload-checked-record-source-history.mjs";
@@ -1400,7 +1401,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadJavaScriptChangedPaths
+	...zeroPayloadNpmInstalledChangedPaths
+	, ...zeroPayloadNpmInstalledIntegrationPaths
+	, ...zeroPayloadJavaScriptChangedPaths
 	, ...zeroPayloadJavaScriptIntegrationPaths
 	, ...zeroPayloadNpmFoundationChangedPaths
 	, ...zeroPayloadNpmFoundationIntegrationPaths
@@ -1880,8 +1883,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(
+	const zeroPayloadNpmInstalled = beforeZeroPayloadNpmInstalledSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadNpmInstalled) === expected) return zeroPayloadNpmInstalled;
+	const zeroPayloadJavaScript = beforeZeroPayloadJavaScriptSource(
+		path, zeroPayloadNpmInstalled, expected
 	);
 	if(sha256(zeroPayloadJavaScript) === expected) return zeroPayloadJavaScript;
 	const zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(
