@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadNpmFoundationSource, zeroPayloadNpmFoundationChangedPaths, zeroPayloadNpmFoundationIntegrationPaths } from "./zero-payload-npm-foundation-source-history.mjs";
 import { beforeZeroPayloadCheckedRecordSource, zeroPayloadCheckedRecordChangedPaths, zeroPayloadCheckedRecordIntegrationPaths } from "./zero-payload-checked-record-source-history.mjs";
 import { beforeProjectedCheckedRecordMirrorSource, projectedCheckedRecordMirrorChangedPaths, projectedCheckedRecordMirrorIntegrationPaths } from "./projected-checked-record-mirror-source-history.mjs";
 import { beforePerlEngineOwnedRefinementClosureSource, perlEngineOwnedRefinementClosureChangedPaths, perlEngineOwnedRefinementClosureIntegrationPaths } from "./perl-engine-owned-refinement-closure-source-history.mjs";
@@ -1398,7 +1399,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadCheckedRecordChangedPaths
+	...zeroPayloadNpmFoundationChangedPaths
+	, ...zeroPayloadNpmFoundationIntegrationPaths
+	, ...zeroPayloadCheckedRecordChangedPaths
 	, ...zeroPayloadCheckedRecordIntegrationPaths
 	, ...projectedCheckedRecordMirrorChangedPaths
 	, ...projectedCheckedRecordMirrorIntegrationPaths
@@ -1874,8 +1877,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayload = beforeZeroPayloadCheckedRecordSource(
+	const zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;
+	const zeroPayload = beforeZeroPayloadCheckedRecordSource(
+		path, zeroPayloadNpm, expected
 	);
 	if(sha256(zeroPayload) === expected) return zeroPayload;
 	const projectedMirror = beforeProjectedCheckedRecordMirrorSource(

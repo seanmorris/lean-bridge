@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "33b8d1dc8ab219208fd977818bc0a55a561fb4a000955abdd2adac0138399b59",
+      "path": "tests/zero-payload-checked-record-browser-foundation.test.mjs"
+    },
+    {
+      "currentSha256": "430328bd91d29481f0417b6a146b7f53dd31c069b28a6e860889fcfad8017524",
+      "path": "scripts/update-zero-payload-npm-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "00c25247b5a1e1d36371a6e179dd25dfae72c3394433b8210144cd2787c1c85a",
+      "path": "tests/helpers/zero-payload-npm-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "ea66b74d3e83465583f67c910e2f044f9e8dd17d9fb7787119703173fdc0d2f1",
+      "path": "tests/helpers/zero-payload-npm-foundation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "7794d931167ff3c7f8a809774c930a10dc31d751",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7675159d6529981e10237e70a597d52264f713359b9fc678622c8e1689b4b612",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNpmFoundationSource, zeroPayloadNpmFoundationChangedPaths, zeroPayloadNpmFoundationIntegrationPaths } from \"./zero-payload-npm-foundation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNpmFoundationChangedPaths\n\t, ...zeroPayloadNpmFoundationIntegrationPaths\n\t, ...zeroPayloadCheckedRecordChangedPaths\n",
+          "previous": "\t...zeroPayloadCheckedRecordChangedPaths\n",
+          "start": 111026
+        },
+        {
+          "current": "\tconst zeroPayloadNpm = beforeZeroPayloadNpmFoundationSource(\n",
+          "previous": "\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n",
+          "start": 132344
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadNpm) === expected) return zeroPayloadNpm;\n\tconst zeroPayload = beforeZeroPayloadCheckedRecordSource(\n\t\tpath, zeroPayloadNpm, expected\n\t);\n",
+          "previous": "",
+          "start": 132433
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "38a802b066cba5048104279630eefca6847164925d1d28fc61e3a9ea6df0fb7d"
+    }
+  ],
+  "milestone": "zero-payload-npm-foundation-source-v1",
+  "predecessorCommit": "a9968c5e1b0710091880409280d8047ce001fc4f",
+  "reconciledTypeSurfacePointers": 125,
+  "schemaVersion": 1,
+  "scope": "The component graph and npm compiler adapters preserve proof-only empty carriers and nullary checked constructors.",
+  "updates": [
+    {
+      "currentSha256": "56bb060235becf659a9f31480be67ce4f095eba2e87af0833e4a3b899f72841f",
+      "edits": [
+        {
+          "current": "\t\t\tif(!value.erased.length || new Set(value.erased).size !== value.erased.length\n",
+          "previous": "\t\t\tif(!value.erased.length || !payload.length || new Set(value.erased).size !== value.erased.length\n",
+          "start": 5397
+        }
+      ],
+      "path": "src/abi/component-recursive.mjs",
+      "previousSha256": "4002752b124460c95cd9461e7c9a77173f211507f8a3f4d38b08c1293e006e5e"
+    },
+    {
+      "currentSha256": "d4044b9755e917befa8639d939f08221913368ceeb354dec86b7cad249aa1b09",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-browser-foundation\"\n",
+          "previous": "",
+          "start": 13719
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "b8c9f5e1d56d7ca4f00c84beeab7aae65e1fc9972e80eedbacdb511925d24324"
+    },
+    {
+      "currentSha256": "9fbbb242862340af4faf70ffb92eb7b74791c4f103d12a1c7952b703c46830ae",
+      "edits": [
+        {
+          "current": "\t\t\t|| !Array.isArray(value.fields) || value.fields.length > 1024\n",
+          "previous": "\t\t\t|| !Array.isArray(value.fields) || !value.fields.length || value.fields.length > 1024\n",
+          "start": 8482
+        }
+      ],
+      "path": "src/build/compiler-adapters.mjs",
+      "previousSha256": "5591ad08720d16eb7d9e69a9862d2c8b384d213d93403fe400f17f1f6834b160"
+    }
+  ]
+}

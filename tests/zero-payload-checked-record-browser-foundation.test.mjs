@@ -25,6 +25,7 @@ import {
 	, zeroPayloadCheckedRecordModule
 	, zeroPayloadCheckedRecordReview
 } from "./helpers/zero-payload-checked-record-fixture.mjs";
+import "./helpers/zero-payload-npm-foundation-source-history-tests.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_ZERO_PAYLOAD_CHECKED_RECORD_BROWSER_FOUNDATION_TEST === "1";
 const leanPrefix = join(process.cwd()
