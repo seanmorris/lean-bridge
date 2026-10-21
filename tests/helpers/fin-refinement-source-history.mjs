@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeRemainingRuntimeRepairSource, callbackSubtypeRemainingRuntimeRepairChangedPaths, callbackSubtypeRemainingRuntimeRepairIntegrationPaths } from "./callback-subtype-remaining-runtime-repair-source-history.mjs";
 import { beforeOwnedSubtypeNativeTransferAcceptanceSource, ownedSubtypeNativeTransferAcceptanceChangedPaths, ownedSubtypeNativeTransferAcceptanceIntegrationPaths } from "./owned-subtype-native-transfer-acceptance-source-history.mjs";
 import { beforeHostedAcceptanceHandoffRepairSource, hostedAcceptanceHandoffRepairChangedPaths, hostedAcceptanceHandoffRepairIntegrationPaths } from "./hosted-acceptance-handoff-repair-source-history.mjs";
 import { beforeZeroPayloadPhpWasmPlainExportRepairSource, zeroPayloadPhpWasmPlainExportRepairChangedPaths, zeroPayloadPhpWasmPlainExportRepairIntegrationPaths } from "./zero-payload-php-wasm-plain-export-repair-source-history.mjs";
@@ -1449,7 +1450,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypeNativeTransferAcceptanceChangedPaths
+	...callbackSubtypeRemainingRuntimeRepairChangedPaths
+	, ...callbackSubtypeRemainingRuntimeRepairIntegrationPaths
+	, ...ownedSubtypeNativeTransferAcceptanceChangedPaths
 	, ...ownedSubtypeNativeTransferAcceptanceIntegrationPaths
 	, ...hostedAcceptanceHandoffRepairChangedPaths
 	, ...hostedAcceptanceHandoffRepairIntegrationPaths
@@ -2025,8 +2028,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(
+	const callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(
 		path, text, expected
+	);
+	if(sha256(callbackRuntimeRepair) === expected) return callbackRuntimeRepair;
+	const nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(
+		path, callbackRuntimeRepair, expected
 	);
 	if(sha256(nativeTransferAcceptance) === expected) return nativeTransferAcceptance;
 	const handoffRepair = beforeHostedAcceptanceHandoffRepairSource(

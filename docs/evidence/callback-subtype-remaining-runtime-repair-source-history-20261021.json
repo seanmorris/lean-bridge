@@ -1,0 +1,120 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fce67d8a7c1086cf09fb7af8e3c6a9ebca17999c145bc9b70964624dff7b04d8",
+      "path": "scripts/update-callback-subtype-remaining-runtime-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "9aa53f408d1e9ce72ebb8b1a999fd47bf682df0ea2a0992b8c17ef745f376ab1",
+      "path": "tests/helpers/callback-subtype-remaining-runtime-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "cd10c3e2544ee507bd365d84d982c28c9f1ee56c114ab13f7fd1f2ab6c8252b7",
+      "path": "tests/helpers/callback-subtype-remaining-runtime-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "12ad892b12962ad4ed868a602600c1a13f993995",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1623fbb3ffed99598d69a1e653db835a5309e63fcadf1412d848dd62a5e18460",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-remaining-runtime-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4656
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "f15915bbcf2df8584a45e7c0ecebaf6947a7c9bf09a1dd2a051933d630f1f929"
+    },
+    {
+      "currentSha256": "69ebfa292cd91fede1aa2ae6f1f4887e46cc6c96b0fddcae9c16544f96b524aa",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeRemainingRuntimeRepairSource, callbackSubtypeRemainingRuntimeRepairChangedPaths, callbackSubtypeRemainingRuntimeRepairIntegrationPaths } from \"./callback-subtype-remaining-runtime-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackSubtypeRemainingRuntimeRepairChangedPaths\n\t, ...callbackSubtypeRemainingRuntimeRepairIntegrationPaths\n\t, ...ownedSubtypeNativeTransferAcceptanceChangedPaths\n",
+          "previous": "\t...ownedSubtypeNativeTransferAcceptanceChangedPaths\n",
+          "start": 120423
+        },
+        {
+          "current": "\tconst callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(\n",
+          "previous": "\tconst nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(\n",
+          "start": 146271
+        },
+        {
+          "current": "\tif(sha256(callbackRuntimeRepair) === expected) return callbackRuntimeRepair;\n\tconst nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(\n\t\tpath, callbackRuntimeRepair, expected\n\t);\n",
+          "previous": "",
+          "start": 146380
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f16c726becf68e00246323232a7a2648a611a30b9a4784e33abac047ab24282a"
+    }
+  ],
+  "milestone": "callback-subtype-remaining-runtime-repair-source-v1",
+  "predecessorCommit": "0615085b582d83bf6e553000c2c3d8b4ce6e0fee",
+  "schemaVersion": 1,
+  "scope": "Native callable graphs preserve the dedicated host-callback result-refinement rejection status through managed frontends, while native PHP author configuration uses the php-native key independently of its Composer build alias.",
+  "updates": [
+    {
+      "currentSha256": "72718a60292145b41d354ef47ae1023b1ec7661498960432093a713046958e1f",
+      "edits": [
+        {
+          "current": "\t\t, \"enum { NG_CALLBACK = 6, NG_CALLBACK_RESULT = 10 };\"\n",
+          "previous": "\t\t, \"enum { NG_CALLBACK = 6 };\"\n",
+          "start": 1553
+        },
+        {
+          "current": "\t\t, \"  if (!frame->status && status) frame->status = status == NG_CALLBACK_RESULT ? status : status <= NG_CALLBACK ? status : NG_CALLBACK;\"\n",
+          "previous": "\t\t, \"  if (!frame->status && status) frame->status = status <= NG_CALLBACK ? status : NG_CALLBACK;\"\n",
+          "start": 1829
+        },
+        {
+          "current": "\t\t\t, \"  ng_borrow_fail(host->frame, NG_CALLBACK_RESULT);\"\n",
+          "previous": "\t\t\t, \"  ng_borrow_fail(host->frame, NG_INVALID);\"\n",
+          "start": 5370
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-borrows.mjs",
+      "previousSha256": "c8552377d15502f12ffa8cc3b38ff9e62430a570bbfe1386f74a4ec089d40173"
+    },
+    {
+      "currentSha256": "3c47925f998302a1e6ea1ed629b12980eea0294091a505237773f66d672c7235",
+      "edits": [
+        {
+          "current": "\tdotnet: [\"nuget\", \"nuget\", { name: \"LeanBridge.Callbacksubtypes\", version: \"1.0.0\" }]\n\t, java: [\"maven\", \"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, kotlin: [\"maven\", \"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"php-native\": [\"composer\", \"php-native\", { name: \"lean-bridge/callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"wit-wasi\": [\"wit-wasi\", \"wit-wasi\", { name: \"callback-subtypes\", version: \"1.0.0\" }]\n",
+          "previous": "\tdotnet: [\"nuget\", { name: \"LeanBridge.Callbacksubtypes\", version: \"1.0.0\" }]\n\t, java: [\"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, kotlin: [\"maven\", { name: \"org.leanbridge:callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"php-native\": [\"composer\", { name: \"lean-bridge/callbacksubtypes\", version: \"1.0.0\" }]\n\t, \"wit-wasi\": [\"wit-wasi\", { name: \"callback-subtypes\", version: \"1.0.0\" }]\n",
+          "start": 1859
+        },
+        {
+          "current": "const configuredTargets = selected => Object.fromEntries(selected.map(profile => [\n\ttargets[profile][1], targets[profile][2]\n]));\n\ntest(\"remaining callback target mappings keep author keys separate from build aliases\", () => {\n\tassert.deepEqual(Object.keys(configuredTargets([\"php-native\"])), [\"php-native\"]);\n\tassert.deepEqual(Object.keys(configuredTargets([\"java\", \"kotlin\"])), [\"maven\"]);\n\tassert.deepEqual(Object.keys(configuredTargets([\"dotnet\", \"wit-wasi\"])), [\"nuget\", \"wit-wasi\"]);\n});\n",
+          "previous": "",
+          "start": 2428
+        },
+        {
+          "current": "\t\tconst selectedTargets = configuredTargets(profiles);\n",
+          "previous": "\t\tconst selectedTargets = Object.fromEntries(profiles.map(profile => targets[profile]));\n",
+          "start": 3763
+        }
+      ],
+      "path": "tests/callback-subtype-remaining-installed.test.mjs",
+      "previousSha256": "6e51f3226d43a4cb5b6712b1b069300a52fb78a2dbee7355d26ecd882a6dcc84"
+    },
+    {
+      "currentSha256": "fb987a98290503cd1250b246ec18e6f0c249a0372f6a84c7b1001c42cd591abd",
+      "edits": [
+        {
+          "current": "\tassert.match(generated.source, /enum \\{ NG_CALLBACK = 6, NG_CALLBACK_RESULT = 10 \\}/u);\n\tassert.match(generated.source, /status == NG_CALLBACK_RESULT \\? status/u);\n\tassert.match(generated.source, /ng_borrow_fail\\(host->frame, NG_CALLBACK_RESULT\\)/u);\n",
+          "previous": "\tassert.match(generated.source, /ng_borrow_fail\\(host->frame, NG_INVALID\\)/u);\n",
+          "start": 7851
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "fd68213b509131be81e1f9a6b9e79e07a742ee4de38efd311a3dd3e490d725de"
+    }
+  ]
+}
