@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
@@ -18,20 +18,28 @@ import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.m
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
-import { nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypePerlCaller, nominalSubtypePerlConfiguration, nominalSubtypePerlSelection } from "./nominal-subtype-perl-fixture.mjs";
 import { checkedRecordPerlConfigurations, checkedRecordPerlExecutables, checkedRecordPerlModes, probeCheckedRecordPerl } from "./checked-record-perl-install.mjs";
 import { installNominalSubtypePerl } from "./nominal-subtype-perl-install.mjs";
+import { genericSubtypePerlCaller, genericSubtypePerlConfiguration, genericSubtypePerlSelection } from "./generic-subtype-native-perl.mjs";
 
-const { enabled, routes, modes } = nominalSubtypePerlSelection(process.env);
+const nominalSelection = nominalSubtypePerlSelection(process.env);
+const genericSelection = genericSubtypePerlSelection(process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic Perl installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 
-for(const route of routes) for(const mode of modes) test(`installed nominal Perl packages reproduce and relocate ${route} ${mode}`, {
+for(const route of routes) for(const mode of modes) test(`installed ${genericCompositions ? "generic Subtype Perl compositions" : "nominal Perl packages"} reproduce and relocate ${route} ${mode}`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
-	const expected = nominalSubtypeInstalledReview(mode === "result-only"), configuration = nominalSubtypePerlConfiguration(route, mode);
+	const expected = nominalSubtypeInstalledReview(mode === "result-only", { genericCompositions });
+	const configuration = genericCompositions ? genericSubtypePerlConfiguration(route) : nominalSubtypePerlConfiguration(route, mode);
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
-	const executables = checkedRecordPerlExecutables(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PERLS);
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_PERL_OUTPUT ?? "build/nominal-subtype-perl", route, mode);
+	const executables = checkedRecordPerlExecutables(process.env[genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_PERLS" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_PERLS"]);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_PERL_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_PERL_OUTPUT";
+	const output = resolve(process.env[outputVariable] ?? (genericCompositions ? "build/generic-subtype-perl" : "build/nominal-subtype-perl"), route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const interpreters = [];
 	for(const name of checkedRecordPerlConfigurations)
@@ -60,6 +68,12 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Perl
 		const author = join(root, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release");
 		const record = join(output, `build-${attempt}`);
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true });
+			await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -81,6 +95,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Perl
 		await saveLakeFile(record, "author-inputs.json", canonicalJson(sourceBefore));
 		for(const name of [`${nominalSubtypeModule}.lean`, "lean-bridge.exports.json"])
 			await saveLakeFile(record, name, await readFile(join(projectRoot, name)));
+		if(genericCompositions) await saveLakeFile(record, `${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		if(route === "reviewed") await saveLakeFile(record, "api.binding-ir.json", canonicalJson(expected));
 		if(attempt === 0)
 		{
@@ -94,7 +109,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Perl
 	}
 	assert.deepEqual(builds[1], builds[0], "Both author roots reproduce the complete four-ABI archives");
 	const receipt = JSON.parse(await readFile(join(handoff, "package-set-receipt.json")));
-	const source = await nominalSubtypePerlCaller(route), reports = [];
+	const source = genericCompositions ? await genericSubtypePerlCaller(route) : await nominalSubtypePerlCaller(route), reports = [];
 	await saveLakeFile(output, "consumer.pl", source);
 	for(const name of checkedRecordPerlConfigurations) for(const delivery of checkedRecordPerlModes)
 	{
@@ -102,7 +117,8 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Perl
 		const record = join(output, name, delivery);
 		const report = await installNominalSubtypePerl({ configuration: name
 			, delivery, route, mode, consumer, handoff, output: record
-			, command: executables[name], packages: receipt.packages });
+			, command: executables[name], packages: receipt.packages
+			, genericCompositions });
 		assert.equal(report.consumerSha256, sha256(source)); reports.push(report);
 		await saveLakeFile(record, "report.json", canonicalJson(report));
 		await rm(join(consumer, `${name}-${delivery}-relocated`), { recursive: true });
@@ -110,6 +126,7 @@ for(const route of routes) for(const mode of modes) test(`installed nominal Perl
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await saveLakeFile(output, "report.json", canonicalJson({ schemaVersion: 1
 		, route, mode, producerCommit
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, configurations: checkedRecordPerlConfigurations
 		, deliveryModes: checkedRecordPerlModes
 		, interpreters, builds, reports, runtime, declaredGlibcFloor: floor

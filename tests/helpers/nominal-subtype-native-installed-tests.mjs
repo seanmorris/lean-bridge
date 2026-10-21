@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { hashBindingIr } from "../../src/binding-ir/canonical.mjs";
@@ -19,11 +19,17 @@ import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { copyPackageSetHandoff } from "./package-set.mjs";
 import { verifyFinContainerEdgeArchiveClosure } from "./fin-container-edge-closure.mjs";
-import { nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { genericSubtypeModule, genericSubtypeSource, nominalSubtypeInstalledConfiguration, nominalSubtypeFixture, nominalSubtypeModule, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
 import { nominalSubtypeNativeCaller, nominalSubtypeNativeSelection } from "./nominal-subtype-native-caller.mjs";
 import { assertNominalSubtypeDispatchPositiveControls, classifyNominalSubtypeDispatchSymbols, nominalSubtypeDispatchExpected, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchProbe, parseNominalSubtypeDispatchRows } from "./nominal-subtype-dispatch.mjs";
+import { genericSubtypeNativeCaller, genericSubtypeNativeExpected, genericSubtypeNativeSelection } from "./generic-subtype-native-perl.mjs";
 
-const { enabled, profiles, routes, modes } = nominalSubtypeNativeSelection(process.env);
+const nominalSelection = nominalSubtypeNativeSelection(process.env);
+const genericSelection = genericSubtypeNativeSelection(process.env);
+assert.ok(!(nominalSelection.enabled && genericSelection.enabled), "Nominal and generic native installed gates are mutually exclusive");
+const genericCompositions = genericSelection.enabled;
+const { enabled, profiles, routes } = genericCompositions ? genericSelection : nominalSelection;
+const modes = genericCompositions ? ["full"] : nominalSelection.modes;
 const dispatchFlag = process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH;
 assert.ok(dispatchFlag === undefined || ["0", "1"].includes(dispatchFlag), "Invalid nominal native DISPATCH");
 const dispatchEnabled = dispatchFlag === "1";
@@ -70,9 +76,10 @@ const observeDispatch = async ({ consumer, location, packageName, receipt, envir
 	return { interposer: "LD_PRELOAD", library, librarySha256, symbols, symbolsSha256: sha256(symbols), columns, observed, positiveControl, unmeasured };
 };
 
-for(const route of routes) for(const mode of modes) test(`installed native nominal Subtypes reproduce and relocate ${route} ${mode}`, { skip: !enabled, timeout: 3_600_000 }, async t => {
+for(const route of routes) for(const mode of modes) test(`installed native ${genericCompositions ? "generic Subtype compositions" : "nominal Subtypes"} reproduce and relocate ${route} ${mode}`, { skip: !enabled, timeout: 3_600_000 }, async t => {
 	const resultOnly = mode === "result-only";
-	const output = resolve(process.env.LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_OUTPUT ?? "build/nominal-subtype-native", route, mode);
+	const outputVariable = genericCompositions ? "LEAN_BRIDGE_GENERIC_SUBTYPE_NATIVE_OUTPUT" : "LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_OUTPUT";
+	const output = resolve(process.env[outputVariable] ?? (genericCompositions ? "build/generic-subtype-native" : "build/nominal-subtype-native"), route, mode);
 	await assert.rejects(access(output), { code: "ENOENT" }); await mkdir(output, { recursive: true });
 	const directory = await mkdtemp(join(tmpdir(), "lean-bridge-nominal-subtype-native-"));
 	let complete = false;
@@ -80,8 +87,9 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 		if(complete) await rm(directory, { recursive: true });
 		else t.diagnostic(`Retained failed nominal native inputs: ${directory}`);
 	});
-	const expected = nominalSubtypeInstalledReview(resultOnly);
-	const configuration = nominalSubtypeInstalledConfiguration(route, profiles, resultOnly);
+	const options = { genericCompositions };
+	const expected = nominalSubtypeInstalledReview(resultOnly, options);
+	const configuration = nominalSubtypeInstalledConfiguration(route, profiles, resultOnly, options);
 	const environment = nativeFixtureEnvironment(profiles), builds = [];
 	const floor = environment.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR;
 	assert.match(floor ?? "", /^2\.[0-9]+$/u, "Select and report the native glibc floor explicitly");
@@ -100,6 +108,12 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 	{
 		const author = join(directory, `author-${attempt}`), projectRoot = join(author, "project"), outputRoot = join(author, "release");
 		await cp(nominalSubtypeFixture, projectRoot, { recursive: true });
+		if(genericCompositions)
+		{
+			const genericModulePath = join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean";
+			await mkdir(dirname(genericModulePath), { recursive: true });
+			await cp(genericSubtypeSource, genericModulePath);
+		}
 		await saveLakeFile(projectRoot, "lean-bridge.exports.json", canonicalJson(configuration));
 		if(route === "reviewed") await saveLakeFile(projectRoot, "api.binding-ir.json", canonicalJson(expected));
 		const sourceBefore = await lakeInputState(projectRoot);
@@ -119,6 +133,7 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 		await saveLakeFile(output, `build-${attempt}/package-set-receipt.json`, receiptBytes);
 		await saveLakeFile(output, `build-${attempt}/author-inputs.json`, canonicalJson(sourceBefore));
 		await saveLakeFile(output, `build-${attempt}/${nominalSubtypeModule}.lean`, await readFile(join(projectRoot, `${nominalSubtypeModule}.lean`)));
+		if(genericCompositions) await saveLakeFile(output, `build-${attempt}/${genericSubtypeModule}.lean`, await readFile(join(projectRoot, ...genericSubtypeModule.split(".")) + ".lean"));
 		builds.push({ bindingIrSha256: built.bindingIrSha256
 			, modelSha256: sha256(modelBytes), receiptSha256: sha256(receiptBytes)
 			, archives: Object.fromEntries(receipt.packages.flatMap(pkg => pkg.artifacts.map(item => [item.path, item.sha256]))) });
@@ -133,10 +148,15 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 		const packages = receipt.packages.filter(pkg => pkg.target === profile);
 		assert.equal(packages.length, 1);
 		const pkg = packages[0]; assert.equal(pkg.role, "component");
-		const source = await nominalSubtypeNativeCaller(profile, route, mode);
+		const source = genericCompositions
+			? await genericSubtypeNativeCaller(profile, route)
+			: await nominalSubtypeNativeCaller(profile, route, mode);
 		await saveLakeFile(output, `consumers/${profile}.${profile}`, source);
-		const fixture = { source: () => source, success: "nominal-subtype-ok"
-			, ...resultOnly ? { expectedChecks: 2042 } : {}
+		const fixture = { source: () => source
+			, success: genericCompositions ? "generic-subtype-ok" : "nominal-subtype-ok"
+			, ...genericCompositions
+				? { expectedChecks: genericSubtypeNativeExpected[profile] }
+				: resultOnly ? { expectedChecks: 2042 } : {}
 			, verifyInstalledPackage: verifyFinContainerEdgeArchiveClosure };
 		const observation = await installCopiedConsumer({ profile, consumer, handoff, packages, environment, fixture });
 		const root = join(consumer, profile), relocated = root + "-relocated", packageName = `${pkg.name}-${pkg.version}-${profile}`;
@@ -156,7 +176,7 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 				, archiveSha256: pkg.artifacts[0].sha256 });
 			const closure = await verify();
 			const result = await runCopied(join(location, "consumer"), [], location, { ...copiedCleanEnvironment, LD_LIBRARY_PATH: join(installed, "lib") });
-			assert.equal(result.stderr, ""); assert.equal(result.stdout, `nominal-subtype-ok:${observation.checks}\n`);
+			assert.equal(result.stderr, ""); assert.equal(result.stdout, `${genericCompositions ? "generic-subtype-ok" : "nominal-subtype-ok"}:${observation.checks}\n`);
 			assert.deepEqual(await verify(), closure);
 			assert.equal(sha256(await readFile(join(location, "consumer"))), executableSha256);
 			assert.equal(await readFile(join(location, `consumer.${profile}`), "utf8"), source);
@@ -164,7 +184,7 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 			await saveLakeFile(output, `${profile}/${location === relocated ? "relocated" : "installed"}.json`, canonicalJson(runs.at(-1)));
 		}
 		delete observation.command;
-		const measured = dispatchEnabled && profile === "c" && !resultOnly;
+		const measured = dispatchEnabled && profile === "c" && !resultOnly && !genericCompositions;
 		const dispatch = measured
 			? await observeDispatch({ consumer, location: relocated, packageName, receipt: JSON.parse(await readFile(join(relocated, packageName, "lean-bridge-package.json"), "utf8")), environment })
 			: { observed: false, reason: dispatchEnabled ? "Dispatch is measured on the C profile of constructor-bearing modes only" : "Separate constructor/source entry probe remains required (LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH=1)" };
@@ -177,6 +197,7 @@ for(const route of routes) for(const mode of modes) test(`installed native nomin
 	}
 	await saveLakeFile(output, "report.json", canonicalJson({ schemaVersion: 1
 		, route, mode, profiles, producerCommit, configuration, builds, reports
+		, ...genericCompositions ? { genericCompositions: true } : {}
 		, expectedBindingIrSha256: hashBindingIr(expected), runtime
 		, reproducible: true, independentBuilds: 2, authorInputsUnchanged: true
 		, declaredGlibcFloor: floor }));

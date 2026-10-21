@@ -15,6 +15,7 @@ import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs"
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { checkedRecordPerlConfigurations, checkedRecordPerlModes, checkedRecordPerlInstalledFiles, probeCheckedRecordPerl } from "./checked-record-perl-install.mjs";
 import { nominalSubtypePerlModule, nominalSubtypePerlRoutes, nominalSubtypePerlModes, nominalSubtypePerlCounts, nominalSubtypePerlCaller, parseNominalSubtypePerlResult } from "./nominal-subtype-perl-fixture.mjs";
+import { genericSubtypePerlCaller, genericSubtypePerlExpected, parseGenericSubtypePerlResult } from "./generic-subtype-native-perl.mjs";
 
 /**
  * Bind each CPAN distribution to its package-set entry and shared runtime.
@@ -55,8 +56,9 @@ export const assertNominalSubtypePerlPackageIdentity = (manifest, pkg, runtime) 
  * @param options.handoff - Verified package-set handoff directory.
  * @param options.packages - Runtime and component package-set entries.
  * @param options.output - Destination for original execution and inspection records.
+ * @param options.genericCompositions - Exercise the closed generic composition surface.
  */
-export const installNominalSubtypePerl = async ({ configuration, command, delivery, route, mode, consumer, handoff, packages, output }) => {
+export const installNominalSubtypePerl = async ({ configuration, command, delivery, route, mode, consumer, handoff, packages, output, genericCompositions = false }) => {
 	assert.ok(checkedRecordPerlModes.includes(delivery));
 	assert.ok(checkedRecordPerlConfigurations.includes(configuration));
 	assert.ok(nominalSubtypePerlRoutes.includes(route)); assert.ok(nominalSubtypePerlModes.includes(mode));
@@ -65,7 +67,9 @@ export const installNominalSubtypePerl = async ({ configuration, command, delive
 	const root = join(consumer, `${configuration}-${delivery}`), prefix = join(root, "installed");
 	await assert.rejects(access(root), { code: "ENOENT" }); await mkdir(root, { recursive: true });
 	const interpreter = await probeCheckedRecordPerl(configuration, command, root);
-	const source = await nominalSubtypePerlCaller(route);
+	assert.equal(typeof genericCompositions, "boolean");
+	if(genericCompositions) assert.equal(mode, "full");
+	const source = genericCompositions ? await genericSubtypePerlCaller(route) : await nominalSubtypePerlCaller(route);
 	await saveLakeFile(root, "consumer.pl", source);
 	const tools = join(root, "tools"); await mkdir(tools);
 	const allowed = ["make", "tar", "gzip", "sh", "cp", "mv", "rm", "chmod", "mkdir", "touch", "true"];
@@ -108,9 +112,10 @@ export const installNominalSubtypePerl = async ({ configuration, command, delive
 	}
 	const installed = await checkedRecordPerlInstalledFiles(prefix);
 	await saveLakeFile(output, "installed-files.json", canonicalJson(installed));
-	const arguments_ = ["consumer.pl", ...mode === "result-only" ? ["--result-only"] : []];
+	const arguments_ = ["consumer.pl", ...!genericCompositions && mode === "result-only" ? ["--result-only"] : []];
 	const first = await runCopied(command, arguments_, root, { ...copiedCleanEnvironment, PERL5LIB: join(prefix, "lib/perl5") });
-	assert.equal(first.stderr, ""); parseNominalSubtypePerlResult(first.stdout, mode);
+	assert.equal(first.stderr, "");
+	if(genericCompositions) parseGenericSubtypePerlResult(first.stdout); else parseNominalSubtypePerlResult(first.stdout, mode);
 	assert.deepEqual(await checkedRecordPerlInstalledFiles(prefix), installed);
 	assert.equal(await readFile(join(root, "consumer.pl"), "utf8"), source);
 	await saveLakeFile(output, "first.json", canonicalJson(first));
@@ -120,13 +125,15 @@ export const installNominalSubtypePerl = async ({ configuration, command, delive
 	assert.deepEqual(await checkedRecordPerlInstalledFiles(join(moved, "installed")), installed);
 	assert.deepEqual(await probeCheckedRecordPerl(configuration, command, moved), interpreter);
 	const repeated = await runCopied(command, arguments_, moved, { ...copiedCleanEnvironment, PERL5LIB: join(moved, "installed/lib/perl5") });
-	assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout, first.stdout); parseNominalSubtypePerlResult(repeated.stdout, mode);
+	assert.equal(repeated.stderr, ""); assert.equal(repeated.stdout, first.stdout);
+	if(genericCompositions) parseGenericSubtypePerlResult(repeated.stdout); else parseNominalSubtypePerlResult(repeated.stdout, mode);
 	await saveLakeFile(output, "repeated.json", canonicalJson(repeated));
 	assert.deepEqual(await checkedRecordPerlInstalledFiles(join(moved, "installed")), installed);
 	assert.equal(await readFile(join(moved, "consumer.pl"), "utf8"), source);
 	await assert.rejects(access(root), { code: "ENOENT" });
 	return { configuration, delivery, ...interpreter, route, mode
-		, ...nominalSubtypePerlCounts[mode]
+		, ...genericCompositions ? { genericCompositions: true } : {}
+		, ...(genericCompositions ? genericSubtypePerlExpected : nominalSubtypePerlCounts[mode])
 		, consumerSha256: sha256(source), arguments: arguments_
 		, installedFilesSha256: sha256(canonicalJson(installed)), traces
 		, offlineInstall: true, compilerFreeExecution: true
