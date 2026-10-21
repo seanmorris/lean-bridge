@@ -19,6 +19,21 @@ const records = {
 	, Token: { fields: { tag: "unit" }, erased: ["fresh"] }
 	, Marker: { fields: {}, erased: [] } };
 
+const markWitness = (module, constructor) => ({
+	kind: "checked-record", name: `${module}.Witness`
+	, constructor: constructor === null ? null : `${module}.${constructor}`
+	, fields: []
+});
+const markSelector = (module, constructor) => ({
+	kind: "variant", name: `${module}.Mark`
+	, cases: [
+		{ name: "blank", fields: [] }
+		, { name: "marked"
+			, fields: [{ name: "witness", refinement: markWitness(module, constructor) }]
+		}
+	]
+});
+
 /** Each export: parameter types with their site constructors, and the result type. */
 const exports = {
 	witnessCount: [[["Witness", "mkWitness"]], "nat"]
@@ -32,7 +47,9 @@ const exports = {
 	, maybeWitness: [[["bool", null]], { option: "Witness" }]
 	// A plain empty record is an ordinary copied record and takes no constructor.
 	, markerCount: [[["Marker", null]], "nat"]
-	, produceMarker: [[], "Marker"] };
+	, produceMarker: [[], "Marker"]
+	, markCount: [[["Mark", { mark: "mkWitness" }]], "nat"]
+	, produceMark: [[["bool", null]], { mark: "Mark" }] };
 
 const site = constructor => ({ ownership: "copy", lifetime: null, refinement: { constructor } });
 const plain = { ownership: "copy", lifetime: null };
@@ -44,7 +61,10 @@ const plain = { ownership: "copy", lifetime: null };
  */
 export const zeroPayloadCheckedRecordContracts = (module = zeroPayloadCheckedRecordModule) => Object.fromEntries(
 	Object.entries(exports).map(([name, [parameters]]) => [`${module}.${name}`
-		, { parameters: parameters.map(([, constructor]) => constructor ? site(`${module}.${constructor}`) : plain), result: plain }]));
+		, { parameters: parameters.map(([, selector]) => selector?.mark
+			? { ...plain, refinement: markSelector(module, selector.mark) }
+			: selector ? site(`${module}.${selector}`) : plain)
+		, result: plain }]));
 
 /**
  * Describe every record and export before Lean runs.
@@ -54,26 +74,48 @@ export const zeroPayloadCheckedRecordContracts = (module = zeroPayloadCheckedRec
  * @param options.component - Component name of the Lake package.
  */
 export const zeroPayloadCheckedRecordReview = ({ module = zeroPayloadCheckedRecordModule, component = "zeropayloadcheckedrecords" } = {}) => {
+	const record = name => ({ record: `${module}.${name}`, fields: records[name].fields });
 	const type = name => typeof name === "string"
-		? (Object.hasOwn(records, name) ? { record: `${module}.${name}`, fields: records[name].fields } : name)
-		: name.array ? { array: type(name.array) } : { option: type(name.option) };
+		? (name === "Mark" ? { record: `${module}.Mark`, fields: { witness: record("Witness") } }
+			: Object.hasOwn(records, name) ? record(name) : name)
+		: name.array ? { array: type(name.array) }
+			: name.option ? { option: type(name.option) } : type(name.mark);
 	const signature = ([name, [parameters, result]]) => ({ name: `${module}.${name}`, parameters: parameters.map(([parameter]) => type(parameter)), result: type(result) });
 	const ir = corpusReviewedIr({ id: component }, Object.entries(exports).map(signature));
+	const documentation = { summary: "Independent zero-payload contract.", details: "" };
+	const mark = ir.types.find(type_ => type_.name === "Mark");
+	if(mark)
+	{
+		mark.kind = "variant"; mark.fields = [];
+		mark.cases = [
+			{ name: "blank", fields: [], documentation }
+			, { name: "marked"
+				, fields: [{
+					name: "witness", type: { kind: "named", id: `lean:${module}.Witness` }
+					, mutability: "immutable", documentation
+				}]
+				, documentation }
+		];
+	}
 	for(const definition of ir.types)
 	{
 		const record = records[definition.name];
-		if(record.erased.length) definition.source.extensions[erasedProofsKey] = { fields: [...record.erased] };
+		if(record?.erased.length) definition.source.extensions[erasedProofsKey] = { fields: [...record.erased] };
 	}
 	// A produced record inside a container keeps its payload tree so generated mirrors can erase it.
 	const produced = name => ({ kind: "checked-record", name: `${module}.${name}`, constructor: null, fields: [] });
 	const resultTree = result => typeof result === "string" ? null
-		: { kind: result.array ? "array" : "option", arguments: [produced(result.array ?? result.option)] };
+		: result.mark ? markSelector(module, null)
+			: { kind: result.array ? "array" : "option", arguments: [produced(result.array ?? result.option)] };
 	for(const declaration of ir.declarations)
 	{
 		const [parameters, result] = exports[declaration.name];
 		const tree = resultTree(result);
-		if(parameters.some(([, constructor]) => constructor) || tree !== null)
-			declaration.source.extensions[refinementsKey] = { parameters: parameters.map(([, constructor]) => constructor ? { kind: "checked-record", constructor: `${module}.${constructor}` } : null), result: tree };
+		if(parameters.some(([, selector]) => selector) || tree !== null)
+			declaration.source.extensions[refinementsKey] = { parameters: parameters.map(([, selector]) => selector?.mark
+				? markSelector(module, selector.mark)
+				: selector ? { kind: "checked-record", constructor: `${module}.${selector}` } : null)
+			, result: tree };
 	}
 	return ir;
 };

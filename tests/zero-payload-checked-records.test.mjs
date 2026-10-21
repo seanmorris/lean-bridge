@@ -56,7 +56,10 @@ test("an independent zero-payload review is valid and selects the nullary constr
 	validateReviewedSource(reviewInput(review));
 	const selection = reviewedSourceSelection(reviewInput(review));
 	const expected = Object.fromEntries(Object.entries(zeroPayloadCheckedRecordContracts())
-		.filter(([name]) => [`${module}.witnessCount`, `${module}.absentCount`, `${module}.tokenTag`].includes(name)));
+		.filter(([name]) => [
+			`${module}.witnessCount`, `${module}.absentCount`
+			, `${module}.tokenTag`, `${module}.markCount`
+		].includes(name)));
 	assert.equal(canonicalJson(selection.contracts), canonicalJson(expected));
 	assert.equal(selection.contracts[`${module}.witnessCount`].parameters[0].refinement.constructor, `${module}.mkWitness`);
 	assert.equal(selection.contracts[`${module}.tokenTag`].parameters[0].refinement.constructor, `${module}.mkToken`);
@@ -67,6 +70,15 @@ test("an independent zero-payload review is valid and selects the nullary constr
 	assert.deepEqual(types.Token.source.extensions[erasedProofsKey], { fields: ["fresh"] });
 	assert.deepEqual(types.Marker.fields, []);
 	assert.equal(types.Marker.source.extensions[erasedProofsKey], undefined);
+	assert.deepEqual(types.Mark.cases.map(branch => [branch.name, branch.fields.map(field => field.name)])
+		, [["blank", []], ["marked", ["witness"]]]);
+	const markInput = review.declarations.find(item => item.name === "markCount")
+		.source.extensions[refinementsKey].parameters[0];
+	assert.equal(markInput.kind, "variant");
+	assert.equal(markInput.cases[1].fields[0].refinement.constructor, `${module}.mkWitness`);
+	const markResult = review.declarations.find(item => item.name === "produceMark")
+		.source.extensions[refinementsKey].result;
+	assert.equal(markResult.cases[1].fields[0].refinement.constructor, null);
 	const produced = review.declarations.find(item => item.name === "produceWitness");
 	assert.equal(produced.source.extensions[refinementsKey], undefined);
 });
@@ -96,6 +108,12 @@ test("compiler plans retain empty checked-record input and result trees", async 
 	const input = { kind: "checked-record", name: `${module}.Witness`, constructor: `${module}.mkWitness`, fields: [] };
 	const result = { ...input, constructor: null };
 	assert.deepEqual(validateCheckedRefinementSelection(input), input);
+	const nested = { kind: "variant", name: `${module}.Mark`
+	, cases: [
+		{ name: "blank", fields: [] }
+		, { name: "marked", fields: [{ name: "witness", refinement: input }] }
+	] };
+	assert.deepEqual(validateCheckedRefinementSelection(nested), nested);
 	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/refinement", input), null);
 	assert.equal(await jsonSchemaErrors("compiler-adapter-plan#/$defs/resultRefinement", result), null);
 });
@@ -138,6 +156,8 @@ test("fresh Lean admits proof-only and Unit-bearing checked records with exact e
 	assert.deepEqual(types.Witness.source.extensions[erasedProofsKey], { fields: ["positive"] });
 	assert.deepEqual(types.Token.source.extensions[erasedProofsKey], { fields: ["fresh"] });
 	assert.equal(types.Marker.source.extensions[erasedProofsKey], undefined);
+	assert.deepEqual(types.Mark.cases.map(branch => [branch.name, branch.fields.map(field => field.name)])
+		, [["blank", []], ["marked", ["witness"]]]);
 	assert.deepEqual(exportNamed(model, "witnessCount").refinements
 		, { parameters: [{ kind: "checked-record", definition: `${module}.Witness`, constructor: `${module}.mkWitness`, fields: [] }], result: null });
 	assert.deepEqual(exportNamed(model, "absentCount").refinements
@@ -146,6 +166,21 @@ test("fresh Lean admits proof-only and Unit-bearing checked records with exact e
 		, { parameters: [], result: { kind: "checked-record", definition: `${module}.Witness`, constructor: null, fields: [] } });
 	assert.deepEqual(exportNamed(model, "tokenTag").refinements
 		, { parameters: [{ kind: "checked-record", definition: `${module}.Token`, constructor: `${module}.mkToken`, fields: ["tag"] }], result: null });
+	const erasedWitness = constructor => ({
+		kind: "checked-record", definition: `${module}.Witness`
+		, constructor, fields: [], arguments: []
+	});
+	const mark = constructor => ({
+		kind: "variant", definition: `${module}.Mark`
+		, cases: [
+			{ name: "blank", fields: [], arguments: [] }
+			, { name: "marked", fields: ["witness"], arguments: [erasedWitness(constructor)] }
+		]
+	});
+	assert.deepEqual(exportNamed(model, "markCount").refinements
+		, { parameters: [mark(`${module}.mkWitness`)], result: null });
+	assert.deepEqual(exportNamed(model, "produceMark").refinements
+		, { parameters: [null], result: mark(null) });
 	// A plain empty record is unrefined, so its export carries no refinement metadata at all.
 	assert.equal(exportNamed(model, "markerCount").refinements, undefined);
 	// Mirrors exist for both checked records; the nullary constructor is applied with no payload.
@@ -155,6 +190,9 @@ test("fresh Lean admits proof-only and Unit-bearing checked records with exact e
 		assert.match(source, new RegExp(`structure LbErased\\.${module}\\.${name} where`, "u"), name);
 		assert.match(source, new RegExp(`def LbErased\\.${module}\\.${name}\\.erase \\(value : _root_\\.${module}\\.${name}\\)`, "u"), name);
 	}
+	assert.match(source, new RegExp(`inductive LbErased\\.${module}\\.Mark where`, "u"));
+	assert.match(source, new RegExp(`def LbErased\\.${module}\\.Mark\\.check`, "u"));
+	assert.match(source, new RegExp(`def LbErased\\.${module}\\.Mark\\.erase`, "u"));
 	assert.match(source, new RegExp(`_root_\\.${module}\\.mkWitness\\b`, "u"));
 	assert.doesNotMatch(source, new RegExp(`_root_\\.${module}\\.(Witness|Token)\\.mk|⟨`, "u"));
 });

@@ -192,7 +192,8 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		}
 		return type.kind === "refinement" ? ["subtype", "checked-record"].includes(type.predicate.kind) || hasSubtype(type.base, references, seen)
 			: type.kind === "alias" ? hasSubtype(type.target, references, seen)
-				: type.kind === "record" ? type.fields.some(field => hasSubtype(field.type, references, seen))
+				: type.kind === "record" ? Object.hasOwn(type, "erased")
+					|| type.fields.some(field => hasSubtype(field.type, references, seen))
 					: type.kind === "variant" ? type.cases.some(branch => branch.fields.some(field => hasSubtype(field.type, references, seen)))
 						: ["array", "list", "option"].includes(type.kind) ? hasSubtype(type.element, references, seen)
 							: ["tuple", "result"].includes(type.kind) && type.arguments.some(child => hasSubtype(child, references, seen));

@@ -371,8 +371,11 @@ partial def checkedSelectionProblem (value : Json) (depth : Nat := 0) : StateM N
     let constructor := (value.getObjValAs? String "constructor").toOption.getD ""
     let some members := (value.getObjValAs? (Array Json) "fields").toOption
       | return some "checked record selection requires ordered fields"
+    -- A proof-only checked record has no payload members. It still needs the rich form when
+    -- selected below a nominal container so the site identity and nullary constructor remain
+    -- explicit; empty ordered fields are therefore valid here.
     if fields.size != 4 || !nativeIdentifier name || !nativeIdentifier constructor ||
-        members.isEmpty || members.size > 1024 then return some "invalid checked record selection"
+        members.size > 1024 then return some "invalid checked record selection"
     let mut names : List String := []
     for member in members do
       modify (· + 1)

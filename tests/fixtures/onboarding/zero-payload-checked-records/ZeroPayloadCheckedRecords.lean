@@ -12,6 +12,11 @@ structure Token : Type where
 /-- A plain empty record: no fields and no proofs, so it is never a checked record. -/
 structure Marker : Type where
 
+/-- A variant whose active branch carries a proof-only checked record. -/
+inductive Mark : Type where
+  | blank
+  | marked (witness : Witness)
+
 /-- Checked constructors: a nullary constructor is the only proof source for a `Witness`. -/
 @[noinline] def mkWitness : Option Witness := some ⟨Nat.zero_lt_one⟩
 @[noinline] def mkToken (tag : Unit) : Option Token := some ⟨tag, trivial⟩
@@ -35,5 +40,12 @@ structure Marker : Type where
 /-- A plain empty record crosses as an ordinary copied record in both directions. -/
 @[noinline] def markerCount (value : Marker) : Nat := 0
 @[noinline] def produceMarker : Marker := Marker.mk
+/-- Both variant branches remain distinct after the nested proof has been erased. -/
+@[noinline] def markCount (value : Mark) : Nat :=
+  match value with
+  | .blank => 0
+  | .marked _ => 1
+@[noinline] def produceMark (active : Bool) : Mark :=
+  if active then .marked ⟨Nat.zero_lt_one⟩ else .blank
 
 end ZeroPayloadCheckedRecords
