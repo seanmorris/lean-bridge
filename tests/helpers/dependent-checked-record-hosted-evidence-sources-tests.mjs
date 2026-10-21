@@ -9,7 +9,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-	dependentCheckedRecordDotnetEvidenceSources
+	dependentCheckedRecordBrowserEvidenceSources
+	, dependentCheckedRecordDotnetEvidenceSources
 	, dependentCheckedRecordHostedOriginal
 	, dependentCheckedRecordJvmEvidenceSources
 	, dependentCheckedRecordPerlEvidenceSources
@@ -140,6 +141,18 @@ test("dependent WIT evidence closes component production, consumption and checki
 	, ["checker", "scripts/check-dependent-checked-record-wit-ci.mjs"]
 	, ["checker", "scripts/select-nominal-subtype-wit-ci-tools.mjs"]
 	, ["archiver", "scripts/archive-dependent-checked-record-wit-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent browser evidence closes npm production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordBrowserEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-browser/browser.mjs"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-browser/javascript.mjs"]
+	, ["checker", ".github/workflows/dependent-checked-record-browser.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-browser-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-browser-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

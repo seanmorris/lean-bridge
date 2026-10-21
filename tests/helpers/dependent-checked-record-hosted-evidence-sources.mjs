@@ -450,6 +450,68 @@ export const dependentCheckedRecordWitEvidenceSources = value => {
 };
 
 /**
+ * Select every source that explains the hosted dependent checked-record npm
+ * packages and Node/page/React/worker verification.
+ *
+ * @param {object} value Role revisions.
+ */
+export const dependentCheckedRecordBrowserEvidenceSources = value => {
+	const selected = revisions(value);
+	const consumers = [
+		"tests/fixtures/dependent-checked-record-browser/javascript.mjs"
+		, "tests/fixtures/dependent-checked-record-browser/browser.mjs"
+		, "tests/fixtures/dependent-checked-record-browser/full.mts"
+		, "tests/fixtures/dependent-checked-record-browser/result-only.mts"
+		, ...["plain.mjs", "react.mjs", "worker-main.mjs", "worker.mjs"]
+			.map(path => `tests/fixtures/type-corpus/consumers/browser/${path}`)
+	];
+	return freeze([
+		{
+			role: "producer", revision: selected.producer
+			, paths: [
+				...closure(selected.producer, [
+					"tests/helpers/dependent-checked-record-browser-installed-tests.mjs"
+				])
+				, ...commonData, ...consumers
+			]
+		}
+		, {
+			role: "consumer", revision: selected.consumer
+			, paths: [
+				...closure(selected.consumer, [
+					"tests/helpers/dependent-checked-record-browser.mjs"
+					, "tests/helpers/dependent-checked-record-browser-fixture.mjs"
+				])
+				, ...consumers
+			]
+		}
+		, {
+			role: "checker", revision: selected.checker
+			, paths: [
+				...closure(selected.checker, [
+					"scripts/check-dependent-checked-record-browser-ci.mjs"
+					, "tests/helpers/dependent-checked-record-browser-ci-report-tests.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/dependent-checked-record-browser.yml"
+				, "flake.lock", "flake.nix"
+				, "scripts/bootstrap-toolchains.sh"
+				, "scripts/build-lean-link-spike.sh", "scripts/env.sh"
+				, "scripts/install-playwright-browsers.sh"
+				, "scripts/run-dependent-checked-record-browser-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: selected.archiver
+			, paths: closure(selected.archiver, [
+				"scripts/archive-dependent-checked-record-browser-evidence.mjs"
+				, "tests/helpers/dependent-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
  * Select every source that explains the hosted dependent checked-record
  * PHP-Wasm package set and its Node/Chromium verification.
  *
