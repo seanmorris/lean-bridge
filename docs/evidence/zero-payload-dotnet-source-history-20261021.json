@@ -1,0 +1,97 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9eaf893831c68659d1ccb9e9af765be58d93ecd03a1f06681f99c5af17853fc7",
+      "path": "tests/fixtures/zero-payload-checked-record-dotnet/dotnet.cs"
+    },
+    {
+      "currentSha256": "4536407fd4fd503992b3635c6c5581e4861871c5be00c2234ad81babd5dc3c4a",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "13ed2531f8683de8660a6dd3fed9a6290dfe1e264b5b598b973f24a19ae21ea2",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-fixture.mjs"
+    },
+    {
+      "currentSha256": "dc1ea7c9d4c9739b07903d72e321df4417f250fb90270f7f33a757abedcc5009",
+      "path": "tests/helpers/zero-payload-checked-record-dotnet-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "dc3bf1869226ac50a7bf667ded36680f3b78af7ff1568ad1534237c5305edd3f",
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs"
+    },
+    {
+      "currentSha256": "bea2f6c53f0d892ba6a403e4480a2a9c8853e6d2a8267e518b97ce1dfbdabd43",
+      "path": "scripts/update-zero-payload-dotnet-source-history.mjs"
+    },
+    {
+      "currentSha256": "5290f04f4a2df203a8410089e33f4e9ee34330ef3f05bd318aa50b82034a4dc5",
+      "path": "tests/helpers/zero-payload-dotnet-source-history.mjs"
+    },
+    {
+      "currentSha256": "ab3ed56078c4dd227263e83925b06ad3e02620d3e5686c7f3f3fcf264bb48490",
+      "path": "tests/helpers/zero-payload-dotnet-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "a3be0e096f4d2ba0ff105b7882c11da817eb053d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "df09f7f7b3e238fd1fb80d41578550207b87633dc6cf80d32d357a686f614a04",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadDotnetSource, zeroPayloadDotnetChangedPaths, zeroPayloadDotnetIntegrationPaths } from \"./zero-payload-dotnet-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadDotnetChangedPaths\n\t, ...zeroPayloadDotnetIntegrationPaths\n\t, ...zeroPayloadNativeArchiveChangedPaths\n",
+          "previous": "\t...zeroPayloadNativeArchiveChangedPaths\n",
+          "start": 112394
+        },
+        {
+          "current": "\tconst zeroPayloadDotnet = beforeZeroPayloadDotnetSource(\n",
+          "previous": "\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n",
+          "start": 134378
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadDotnet) === expected) return zeroPayloadDotnet;\n\tconst zeroPayloadNativeArchive = beforeZeroPayloadNativeArchiveSource(\n\t\tpath, zeroPayloadDotnet, expected\n\t);\n",
+          "previous": "",
+          "start": 134463
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "13a7f48eefd0593906106b6c54055d374606e5fe679369c451aee7a442d83398"
+    }
+  ],
+  "milestone": "zero-payload-dotnet-source-v1",
+  "predecessorCommit": "00451b44487f514344dccfbaf53194c19863e742",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Generated C# keeps proof-only, Unit-bearing and plain empty records nominally distinct across full and result-only NuGet package routes.",
+  "updates": [
+    {
+      "currentSha256": "889ee0ca1dcfdd967ffcedaf386fd1b7d629aebd45d1a78646bad99079774c11",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-dotnet\"\n",
+          "previous": "",
+          "start": 13772
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c5a9f7fa6980fda8660cd6c15d995ff2b5ca6c8d6925935e0424cbbebd30dbe3"
+    },
+    {
+      "currentSha256": "dc3bf1869226ac50a7bf667ded36680f3b78af7ff1568ad1534237c5305edd3f",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-dotnet-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 244
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-dotnet.test.mjs",
+      "previousSha256": "6c7bffcd2df38cbba1830f63e5bb5a8110a0b23a62c4255edc847084f7f4315d"
+    }
+  ]
+}
