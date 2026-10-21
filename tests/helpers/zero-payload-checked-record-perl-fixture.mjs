@@ -11,6 +11,9 @@ import {
 } from "./zero-payload-checked-record-browser-fixture.mjs";
 
 export const zeroPayloadPerlModule = "LeanBridge::ZeroPayloadCheckedRecords";
+export const zeroPayloadPerlLeanModule = "ZeroPayloadCheckedRecords";
+export const zeroPayloadPerlFixtureRoot
+	= "tests/fixtures/onboarding/zero-payload-checked-records";
 export const zeroPayloadPerlRoutes = zeroPayloadBrowserRoutes;
 export const zeroPayloadPerlConfigurations = Object.freeze([
 	"5.36.3-threaded", "5.36.3-unthreaded"

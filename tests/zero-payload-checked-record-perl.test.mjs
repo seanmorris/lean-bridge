@@ -4,3 +4,4 @@
  * @file
  */
 import "./helpers/zero-payload-checked-record-perl-fixture-tests.mjs";
+import "./helpers/zero-payload-checked-record-perl-installed-tests.mjs";
