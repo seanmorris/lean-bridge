@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordFoundationSource, dependentCheckedRecordFoundationChangedPaths, dependentCheckedRecordFoundationIntegrationPaths } from "./dependent-checked-record-foundation-source-history.mjs";
 import { beforeDependentGenericSubtypeCiPinReconciliationSource, dependentGenericSubtypeCiPinReconciliationChangedPaths, dependentGenericSubtypeCiPinReconciliationIntegrationPaths } from "./dependent-generic-subtype-ci-pin-reconciliation-source-history.mjs";
 import { beforeDependentGenericSubtypeCiSource, dependentGenericSubtypeCiChangedPaths, dependentGenericSubtypeCiIntegrationPaths } from "./dependent-generic-subtype-ci-source-history.mjs";
 import { beforeDependentGenericSubtypeSource, dependentGenericSubtypeChangedPaths, dependentGenericSubtypeIntegrationPaths } from "./dependent-generic-subtype-source-history.mjs";
@@ -1461,7 +1462,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentGenericSubtypeCiPinReconciliationChangedPaths
+	...dependentCheckedRecordFoundationChangedPaths
+	, ...dependentCheckedRecordFoundationIntegrationPaths
+	, ...dependentGenericSubtypeCiPinReconciliationChangedPaths
 	, ...dependentGenericSubtypeCiPinReconciliationIntegrationPaths
 	, ...dependentGenericSubtypeCiChangedPaths
 	, ...dependentGenericSubtypeCiIntegrationPaths
@@ -2061,9 +2064,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecord = beforeDependentCheckedRecordFoundationSource(
+		path, text, expected
+	);
+	if(sha256(dependentCheckedRecord) === expected)
+		return dependentCheckedRecord;
 	const dependentGenericSubtypeCiPinReconciliation
 		= beforeDependentGenericSubtypeCiPinReconciliationSource(
-			path, text, expected
+			path, dependentCheckedRecord, expected
 		);
 	if(sha256(dependentGenericSubtypeCiPinReconciliation) === expected)
 		return dependentGenericSubtypeCiPinReconciliation;

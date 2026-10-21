@@ -1,0 +1,455 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b7dafdda45f03841410ba8b048cf1b5864d3e8e1b5b40e9c25e7c8057f3cb166",
+      "path": "scripts/update-dependent-checked-record-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "ea0a690632ab26a3d65589ccd1243ca1a0ac96da1d115db8a097b22d983b3206",
+      "path": "tests/helpers/dependent-checked-record-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "d509d782a111e5357aefb5c202cd313e5b44d20592e5ade8c8f45ad855a3c072",
+      "path": "tests/helpers/dependent-checked-record-foundation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "9e228d9c8d5eca9fbf7eb6338a1f99e7dcac42a2",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b83aa21b8e47019e575f0c0a6dd3cdd882e5fe8dea9b3045b8d063aae400862f",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordFoundationSource, dependentCheckedRecordFoundationChangedPaths, dependentCheckedRecordFoundationIntegrationPaths } from \"./dependent-checked-record-foundation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordFoundationChangedPaths\n\t, ...dependentCheckedRecordFoundationIntegrationPaths\n\t, ...dependentGenericSubtypeCiPinReconciliationChangedPaths\n",
+          "previous": "\t...dependentGenericSubtypeCiPinReconciliationChangedPaths\n",
+          "start": 122879
+        },
+        {
+          "current": "\tconst dependentCheckedRecord = beforeDependentCheckedRecordFoundationSource(\n\t\tpath, text, expected\n\t);\n\tif(sha256(dependentCheckedRecord) === expected)\n\t\treturn dependentCheckedRecord;\n",
+          "previous": "",
+          "start": 149923
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecord, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 150220
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b5d60418f945ae1d4539080290a1726ddf2ea40ff604f5b56fb8feaf3da9a807"
+    },
+    {
+      "currentSha256": "f1c665dd1896632631116441469bf5ce0403f82370c3b335548a602e64163f3a",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-foundation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2951
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94"
+    }
+  ],
+  "milestone": "dependent-checked-record-foundation-source-v1",
+  "predecessorCommit": "37b789cc0618944f0cbfeabcc1bb5d9fb0427bea",
+  "schemaVersion": 1,
+  "scope": "Compiler-owned dependent Fin payload fields in checked records, represented as Nat at host boundaries, reconstructed only by the record's reviewed checked constructor and erased through Fin.val on output.",
+  "updates": [
+    {
+      "currentSha256": "99ea01c70cf8b2a6c6487cd46655cd08f832ff540f34ebf0ff251896d162f1fb",
+      "edits": [
+        {
+          "current": "        { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"field\"], \"properties\": { \"kind\": { \"const\": \"fin-field\" }, \"field\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$\" } } },\n",
+          "previous": "",
+          "start": 4125
+        },
+        {
+          "current": "        { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"field\"], \"properties\": { \"kind\": { \"const\": \"fin-field\" }, \"field\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$\" } } },\n",
+          "previous": "",
+          "start": 7138
+        },
+        {
+          "current": "        , { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"field\"], \"properties\": { \"kind\": { \"const\": \"fin-field\" }, \"field\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$\" } } }\n",
+          "previous": "",
+          "start": 10129
+        }
+      ],
+      "path": "schema/compiler-adapter-plan.schema.json",
+      "previousSha256": "3d0e0e24de7b3b864e8651cb3058f57899def88aac9c74aba13d171032bf7355"
+    },
+    {
+      "currentSha256": "742b7e3d9a5024c6c8f721fdf288e5b729d555598020ea51927492ea44e3a6e0",
+      "edits": [
+        {
+          "current": "              {\n                \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"field\"],\n                \"properties\": {\n                  \"kind\": { \"const\": \"fin-field\" },\n                  \"field\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$\" }\n                }\n              },\n",
+          "previous": "",
+          "start": 10624
+        }
+      ],
+      "path": "schema/elaborated-export-metadata.schema.json",
+      "previousSha256": "1d555fa0c3cf169dea0a1223d501930a9333414a7d832e6a4a1fcafc30180996"
+    },
+    {
+      "currentSha256": "6384d04e3dad941a5195ea28cb5c80dc5947015371bb35e3d7a71bdf47ab2ef5",
+      "edits": [
+        {
+          "current": "    {\n      \"type\": \"object\", \"additionalProperties\": false,\n      \"required\": [\"kind\", \"base\", \"predicate\", \"abi\"],\n      \"properties\": {\n        \"kind\": { \"const\": \"refinement\" },\n        \"base\": { \"allOf\": [{ \"$ref\": \"#\" }, { \"properties\": { \"kind\": { \"const\": \"primitive\" }, \"name\": { \"const\": \"nat\" } } }] },\n        \"predicate\": { \"type\": \"object\", \"additionalProperties\": false, \"required\": [\"kind\", \"field\"],\n          \"properties\": { \"kind\": { \"const\": \"fin-field\" }, \"field\": { \"type\": \"string\", \"pattern\": \"^[A-Za-z][A-Za-z0-9_]*$\" } } },\n        \"abi\": { \"$ref\": \"#/$defs/abi\" }\n      }\n    },\n",
+          "previous": "",
+          "start": 8930
+        }
+      ],
+      "path": "schema/native-metadata-type.schema.json",
+      "previousSha256": "135e60491f78cfb28b97a90e67f0baf053be2415d4e81c1886a576e88786b07f"
+    },
+    {
+      "currentSha256": "60d7323898d63d3b32d07cb751a7de0857f3f75c93a2fa9967d8532cb3fd68bf",
+      "edits": [
+        {
+          "current": "\tconst dependentField = (value, transport, definition, index) => {\n\t\tclosed(value, [\"kind\", \"field\"]);\n\t\tconst dependency = definition?.fields?.findIndex((field, position) => position < index && field.name === value.field);\n\t\tif(value.kind !== \"fin-field\" || typeof value.field !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(value.field)\n\t\t\t|| transport?.kind !== \"primitive\" || transport.name !== \"nat\" || !Number.isInteger(dependency) || dependency < 0\n\t\t\t|| definition.fields[dependency].type?.kind !== \"primitive\" || definition.fields[dependency].type.name !== \"nat\") fail();\n\t\treturn true;\n\t};\n",
+          "previous": "",
+          "start": 1859
+        },
+        {
+          "current": "\t\t\t\tif(field.refinement?.kind === \"fin-field\")\n\t\t\t\t\tdependentField(field.refinement, definition.fields[index].type, definition, index);\n\t\t\t\telse visit(field.refinement, definition.fields[index].type, level + 1, seen);\n",
+          "previous": "\t\t\t\tvisit(field.refinement, definition.fields[index].type, level + 1, seen);\n",
+          "start": 5158
+        },
+        {
+          "current": "\t\tif(tree === null || [\"fin\", \"fin-field\"].includes(tree.kind)) return;\n",
+          "previous": "\t\tif(tree === null || tree.kind === \"fin\") return;\n",
+          "start": 8351
+        },
+        {
+          "current": "\tconst check = (values, fields, dependent = false) => {\n",
+          "previous": "\tconst check = (values, fields) => {\n",
+          "start": 10701
+        },
+        {
+          "current": "\t\tfor(const [index, refinement] of values.entries())\n\t\t{\n\t\t\tif(refinement?.kind !== \"fin-field\") assertRefinement(refinement, fields[index].type, 1);\n\t\t\telse\n\t\t\t{\n\t\t\t\tif(!dependent || !refinement || Object.keys(refinement).sort().join(\",\") !== \"field,kind\"\n\t\t\t\t\t|| typeof refinement.field !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(refinement.field)\n\t\t\t\t\t|| fields[index].type?.kind !== \"primitive\" || fields[index].type.name !== \"nat\") fail();\n\t\t\t\tconst dependency = fields.findIndex((candidate, position) => position < index && candidate.name === refinement.field);\n\t\t\t\tif(dependency < 0 || fields[dependency].type?.kind !== \"primitive\" || fields[dependency].type.name !== \"nat\") fail();\n\t\t\t}\n\t\t}\n",
+          "previous": "\t\tfor(const [index, refinement] of values.entries()) assertRefinement(refinement, fields[index].type, 1);\n",
+          "start": 10829
+        },
+        {
+          "current": "\telse if(field === \"fields\") check(value.fields, definition.fields,\n\t\tdefinition.source?.extensions?.[\"lean-lang.org/erased-proofs\"] !== undefined\n\t\t\t|| Array.isArray(definition.erased) && definition.erased.length > 0);\n",
+          "previous": "\telse if(field === \"fields\") check(value.fields, definition.fields);\n",
+          "start": 11615
+        },
+        {
+          "current": "\tif(refinement === null || [\"fin\", \"fin-field\"].includes(refinement.kind)) return false;\n",
+          "previous": "\tif(refinement === null || refinement.kind === \"fin\") return false;\n",
+          "start": 13252
+        }
+      ],
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "7efb750ef2c44dbbcc6cfd121763fe7b3dfaa94ed9fa195c51f9e6e47ff78bb8"
+    },
+    {
+      "currentSha256": "c99146478525f029189f4dc23271729c0c4f80d5845b4ff0d85bc1adae3310ff",
+      "edits": [
+        {
+          "current": "configured checked constructor alone, whose explicit binders are the transported payload fields\nby name and type, in Lean order, and whose result is `Option` of the exact record. A dependent\n`Fin earlierField` payload is transported as `Nat`; the checked constructor owns its bound proof.\nA result is produced by Lean, which already holds the proofs, so it takes no constructor. -/\n",
+          "previous": "configured checked constructor alone, whose explicit binders are the payload fields by name and\ntype, in Lean order, and whose result is `Option` of the exact record. A result is produced by Lean,\nwhich already holds the proofs, so it takes no constructor. -/\n",
+          "start": 8726
+        },
+        {
+          "current": "      let mut payloadProjections : Array (Name × Name) := #[]\n      let mut dependentPayload := false\n",
+          "previous": "",
+          "start": 50125
+        },
+        {
+          "current": "        -- A retained `Fin earlierField` is the one dependent payload relation whose erased\n        -- transport is closed: the host carries Nat and this site's checked constructor rebuilds\n        -- the Fin proof. The bound must be exactly an earlier retained Nat projection, never an\n        -- arbitrary expression, a later field, or an erased proof.\n        let mut transportType := fieldType\n        let mut dependentField : Option Name := none\n        if fieldType.hasLooseBVars then\n          dependentField ← withLocalDecl `value .default e fun receiver => do\n            let instantiated := fieldType.instantiate1 receiver\n            unless instantiated.isAppOfArity ``Fin 1 do\n              reject e \"dependent or unresolved native type\"\n            let bound := instantiated.appArg!\n            let mut found : Option Name := none\n            for (previousField, previousProjection) in payloadProjections do\n              let projection := mkApp (← mkConstWithFreshMVarLevels previousProjection) receiver\n              if ← isDefEq (← inferType projection) (mkConst ``Nat) then\n                if ← isDefEq bound projection then\n                  found := some previousField\n            if found.isNone then\n              reject e \"dependent Fin payload bound must be an earlier retained Nat field\"\n            return found\n          transportType := mkConst ``Nat\n          dependentPayload := true\n        payload := payload.push (field, transportType)\n        payloadProjections := payloadProjections.push (field, projection)\n",
+          "previous": "        -- A payload field that depends on another field stays refused as a dependent type.\n        payload := payload.push (field, fieldType)\n",
+          "start": 51016
+        },
+        {
+          "current": "        let fieldShape ← match dependentField with\n          | some boundField => pure <| obj [\n              (\"kind\", str \"refinement\"),\n              (\"base\", ← shapeTree request (mkConst ``Nat)),\n              (\"predicate\", obj [(\"kind\", str \"fin-field\"),\n                (\"field\", str boundField.toString)]),\n              (\"abi\", ← abi (mkConst ``Nat))]\n          | none =>\n            let fieldSelection := selectedField checked \"record\" name field.toString\n            shapeTree request fieldType (name :: seen) 0 true fieldSelection containerFin true\n              (callbackSite := callbackSite) (hostReply := hostReply)\n              (subtypeStructural := subtypeStructural && nominalSelection checked \"record\" name)\n              (subtypeResult := subtypeResult)\n",
+          "previous": "",
+          "start": 52657
+        },
+        {
+          "current": "          (\"projection\", str projection.toString), (\"type\", fieldShape)])\n      if dependentPayload && erased.isEmpty then\n        reject e \"dependent or unresolved native type\"\n",
+          "previous": "          (\"projection\", str projection.toString),\n          (\"type\", ← shapeTree request fieldType (name :: seen) 0 true\n            (selectedField checked \"record\" name field.toString) containerFin true\n            (callbackSite := callbackSite) (hostReply := hostReply)\n            (subtypeStructural := subtypeStructural && nominalSelection checked \"record\" name)\n            (subtypeResult := subtypeResult))])\n",
+          "start": 53496
+        },
+        {
+          "current": "      let constrained := ((definition.getObjValAs? (Array Json) \"fields\").toOption.getD #[]).any fun field =>\n        containsRefinement ((field.getObjVal? \"type\").toOption.getD Json.null)\n      -- A graph reference or compiler-owned field predicate forces the exact field\n      -- form even when this node has no nested constructor choice. The constructor\n      -- then owns every dependent relation without turning it into author metadata.\n      if depth > 0 || referenceName.isSome || selected || constrained then\n",
+          "previous": "      -- A graph reference forces the exact field form even when this node has no\n      -- nested constructor choice. The finite nominal cycle means the same site\n      -- constructor owns every reachable occurrence of the checked record.\n      if depth > 0 || referenceName.isSome || selected then\n",
+          "start": 86854
+        }
+      ],
+      "path": "src/analyze/NativeExports.lean",
+      "previousSha256": "22d5899a8ff86919fcda7d9dc12ce86c3a5db600256ba796a57224a0f2925992"
+    },
+    {
+      "currentSha256": "77ee2518eb33b066377492a0dceaf0a845c29f605a70c3578759df826f7263ac",
+      "edits": [
+        {
+          "current": "\t\tif(value?.kind === \"fin-field\")\n\t\t{\n\t\t\tclosed(value, [\"kind\", \"field\"]);\n\t\t\tif(typeof value.field !== \"string\" || !memberName.test(value.field)) fail();\n\t\t\treturn null;\n\t\t}\n",
+          "previous": "",
+          "start": 4597
+        },
+        {
+          "current": "\tconst containsRefinement = (value, definitions, seen = new Set()) => {\n\t\tif(!value || typeof value !== \"object\") return false;\n\t\tif(value.kind === \"refinement\") return true;\n\t\tif(value.kind === \"reference\")\n\t\t{\n\t\t\tif(seen.has(value.name) || !definitions.has(value.name)) return false;\n\t\t\treturn containsRefinement(definitions.get(value.name), definitions, new Set([...seen, value.name]));\n\t\t}\n\t\tif(value.kind === \"alias\") return containsRefinement(value.target, definitions, seen);\n\t\tif([\"array\", \"list\", \"option\"].includes(value.kind)) return containsRefinement(value.element, definitions, seen);\n\t\tif([\"tuple\", \"result\"].includes(value.kind)) return value.arguments.some(child => containsRefinement(child, definitions, seen));\n\t\tif(value.kind === \"record\") return value.fields.some(field => containsRefinement(field.type, definitions, seen));\n\t\tif(value.kind === \"variant\") return value.cases.some(branch => branch.fields.some(field => containsRefinement(field.type, definitions, seen)));\n\t\treturn false;\n\t};\n",
+          "previous": "",
+          "start": 8236
+        },
+        {
+          "current": "\t\t\tconst constrained = base.fields.some(field => containsRefinement(field.type, definitions, inner));\n\t\t\tif(depth > 0 || reference !== null || selected || constrained)\n",
+          "previous": "\t\t\tif(depth > 0 || reference !== null || selected)\n",
+          "start": 11524
+        }
+      ],
+      "path": "src/analyze/checked-refinement-selection.mjs",
+      "previousSha256": "f8beb51d260ecde0cdaf454487245f75d0285c5b9ee27374415fbb47f44f5601"
+    },
+    {
+      "currentSha256": "9614112a527960004a9484d4f0988e54cca1f4fff6ff8cd239fbf9abfab8838a",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t\tfor(const [index, field] of type.fields.entries())\n",
+          "previous": "\t\t\t\t\t\tfor(const field of type.fields)\n",
+          "start": 19297
+        },
+        {
+          "current": "\t\t\t\t\t\t\tif(field.type?.kind === \"refinement\" && field.type.predicate?.kind === \"fin-field\")\n\t\t\t\t\t\t\t{\n\t\t\t\t\t\t\t\tclosed(field.type, [\"kind\", \"base\", \"predicate\"]);\n\t\t\t\t\t\t\t\tclosed(field.type.predicate, [\"kind\", \"field\"]);\n\t\t\t\t\t\t\t\tconst dependency = type.fields.findIndex((candidate, position) => position < index && candidate.name === field.type.predicate.field);\n\t\t\t\t\t\t\t\tif(!Object.hasOwn(type, \"erased\") || (!checkedRecord && !produced)\n\t\t\t\t\t\t\t\t\t|| typeof field.type.predicate.field !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.type.predicate.field)\n\t\t\t\t\t\t\t\t\t|| dependency < 0 || type.fields[dependency].type?.kind !== \"primitive\" || type.fields[dependency].type.name !== \"nat\")\n\t\t\t\t\t\t\t\t\tfail(\"Invalid dependent Fin field\");\n\t\t\t\t\t\t\t\tscalar(field.type.base);\n\t\t\t\t\t\t\t\tif(field.type.base.name !== \"nat\") fail(\"Invalid dependent Fin transport\");\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\telse copied(field.type, depth + 1, references, refinements,\n",
+          "previous": "\t\t\t\t\t\t\tcopied(field.type, depth + 1, references, refinements,\n",
+          "start": 19516
+        }
+      ],
+      "path": "src/analyze/elaborated-metadata.mjs",
+      "previousSha256": "990c2fa896f546563ad4eccfd6a2d585230ede30d5a79c78a083466b25adce7d"
+    },
+    {
+      "currentSha256": "6efef81c18de6c07d3a8c08642f7f4164a834c5174c8a2b77c8aab329dbdd3ef",
+      "edits": [
+        {
+          "current": "\t\tfor(const [index, field] of type.fields.entries())\n",
+          "previous": "\t\tfor(const field of type.fields)\n",
+          "start": 15222
+        },
+        {
+          "current": "\t\t\t// A dependent Fin payload is transported as Nat and may name only an earlier\n\t\t\t// retained Nat field of this proof-backed record. Its enclosing checked-record\n\t\t\t// constructor, rather than a standalone static bound, validates the relationship.\n\t\t\tif(field.type?.kind === \"refinement\" && field.type.predicate?.kind === \"fin-field\")\n\t\t\t{\n\t\t\t\tif(!Object.hasOwn(type, \"erased\") || !refinable || generic) fail(\"dependent Fin fields require a checked record\");\n\t\t\t\tclosed(field.type, [\"kind\", \"base\", \"predicate\", \"abi\"], \"native type\");\n\t\t\t\trepresentation(field.type);\n\t\t\t\tclosed(field.type.predicate, [\"kind\", \"field\"], \"refinement predicate\");\n\t\t\t\tconst dependency = type.fields.findIndex((candidate, position) => position < index && candidate.name === field.type.predicate.field);\n\t\t\t\tif(typeof field.type.predicate.field !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(field.type.predicate.field)\n\t\t\t\t\t|| dependency < 0 || type.fields[dependency].type?.kind !== \"primitive\" || type.fields[dependency].type.name !== \"nat\")\n\t\t\t\t\tfail(\"dependent Fin field must reference an earlier retained Nat field\");\n\t\t\t\trecurse(field.type.base, true, true, false, false);\n\t\t\t\tif(field.type.base.kind !== \"primitive\" || field.type.base.name !== \"nat\"\n\t\t\t\t\t|| [\"cType\", \"box\", \"unbox\", \"heap\"].some(name => field.type.abi[name] !== field.type.base.abi[name]))\n\t\t\t\t\tfail(\"dependent Fin fields require a Nat transport\");\n\t\t\t}\n\t\t\telse recurse(field.type, true, !generic, subtypeStructural && refinable\n",
+          "previous": "\t\t\trecurse(field.type, true, !generic, subtypeStructural && refinable\n",
+          "start": 15862
+        }
+      ],
+      "path": "src/analyze/native-types.mjs",
+      "previousSha256": "1e1189ef4111c5ea805622390c70affa9cd495e10989158e66b7d64f3dd97210"
+    },
+    {
+      "currentSha256": "c545be58daf93cdcc10ffe74e994631d6e8516bc2bf75e0a4af13536adb3b248",
+      "edits": [
+        {
+          "current": "\tif(refinement === null || [\"fin\", \"fin-field\"].includes(refinement.kind)) return;\n",
+          "previous": "\tif(refinement === null || refinement.kind === \"fin\") return;\n",
+          "start": 345
+        }
+      ],
+      "path": "src/analyze/reviewed-refinements.mjs",
+      "previousSha256": "6d05fcdfb7f080750d37b157882186e91ac14349c22793838c2438f5fb482584"
+    },
+    {
+      "currentSha256": "92b6c1b36340f72b96a79515eb5aba68e91ae1517b2ae79207fdb31872fd7a55",
+      "edits": [
+        {
+          "current": "\t\tif(site === null || [\"subtype\", \"fin-field\"].includes(site.kind)) return [];\n",
+          "previous": "\t\tif(site === null || site.kind === \"subtype\") return [];\n",
+          "start": 3246
+        },
+        {
+          "current": "\t\tif(site === null || [\"fin\", \"fin-field\"].includes(site.kind)) return [];\n",
+          "previous": "\t\tif(site === null || site.kind === \"fin\") return [];\n",
+          "start": 7127
+        }
+      ],
+      "path": "src/backends/c/native-copied-values.mjs",
+      "previousSha256": "c133682ea4eec48cec6611c6b22814e59363f5a5d1befb416a6b89cd72a2b0fb"
+    },
+    {
+      "currentSha256": "0b7b716d5e279c3eabe7da12a508573ab9b0c60f3fee960212db952dfdb297c9",
+      "edits": [
+        {
+          "current": "\tconst supported = refinement => refinement === null || [\"fin\", \"fin-field\", \"subtype\"].includes(refinement.kind)\n",
+          "previous": "\tconst supported = refinement => refinement === null || [\"fin\", \"subtype\"].includes(refinement.kind)\n",
+          "start": 1415
+        },
+        {
+          "current": "\t\tif(tree.kind !== shared.kind || (tree.kind === \"fin\" && tree.bound !== shared.bound)\n\t\t\t|| (tree.kind === \"fin-field\" && tree.field !== shared.field))\n",
+          "previous": "\t\tif(tree.kind !== shared.kind || (tree.kind === \"fin\" && tree.bound !== shared.bound))\n",
+          "start": 4619
+        },
+        {
+          "current": "\t\treturn [\"fin\", \"fin-field\"].includes(tree.kind) ? tree\n\t\t\t: { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };\n",
+          "previous": "\t\treturn tree.kind === \"fin\" ? tree : { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };\n",
+          "start": 4855
+        },
+        {
+          "current": "\tif(refinement.kind === \"fin-field\") return [`${path} < ${path.slice(0, path.lastIndexOf(\".\") + 1)}${refinement.field}`];\n",
+          "previous": "",
+          "start": 9894
+        }
+      ],
+      "path": "src/backends/native/fin-refinements.mjs",
+      "previousSha256": "190e9dbced21c5b405f501131696d30a803084f4b3bd7ba4efc878b4e5b49371"
+    },
+    {
+      "currentSha256": "fe561d62d7ddccf47576fb9d39427b902806731dd69a4637ad204496d6c2a378",
+      "edits": [
+        {
+          "current": "\tif(refinement === null || [\"subtype\", \"fin-field\"].includes(refinement.kind)) return null;\n",
+          "previous": "\tif(refinement === null || refinement.kind === \"subtype\") return null;\n",
+          "start": 22763
+        }
+      ],
+      "path": "src/backends/perl/generate.mjs",
+      "previousSha256": "789c50b89bb90f98ca355ff4bce423350023b28e7648108698f7c06700052d39"
+    },
+    {
+      "currentSha256": "06e4a48efb6df8059fe53f2d017b94db4e553c3fa1b0d848e4b5187b20fdb718",
+      "edits": [
+        {
+          "current": "const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }, dependent = false) => {\n",
+          "previous": "const validateRefinement = (value, path, leanType, depth = 0, produced = false, budget = { nodes: 0 }) => {\n",
+          "start": 5554
+        },
+        {
+          "current": "\tif(value.kind === \"fin-field\")\n\t{\n\t\texactKeys(value, [\"kind\", \"field\"], path);\n\t\tif(!(dependent instanceof Set) || typeof value.field !== \"string\" || !/^[A-Za-z][A-Za-z0-9_]*$/.test(value.field)\n\t\t\t|| !dependent.has(value.field))\n\t\t\tfail(\"invalid-compiler-adapter-plan\", `${path} must name an earlier checked-record Nat field`);\n\t\treturn;\n\t}\n",
+          "previous": "",
+          "start": 8054
+        },
+        {
+          "current": "\t\t\tvalidateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget, new Set(names));\n",
+          "previous": "",
+          "start": 9348
+        },
+        {
+          "current": "",
+          "previous": "\t\t\tvalidateRefinement(field.refinement, `${path}.${field.name}`, undefined, depth + 1, produced, budget);\n",
+          "start": 9496
+        }
+      ],
+      "path": "src/build/compiler-adapters.mjs",
+      "previousSha256": "9fbbb242862340af4faf70ffb92eb7b74791c4f103d12a1c7952b703c46830ae"
+    },
+    {
+      "currentSha256": "1168928dad8ef801eca10e02c8126c9fe0aaf14777843d48907b0c4c4db07a45",
+      "edits": [
+        {
+          "current": "\t\tif(tree.kind !== shared.kind || (tree.kind === \"fin\" && tree.bound !== shared.bound)\n\t\t\t|| (tree.kind === \"fin-field\" && tree.field !== shared.field))\n",
+          "previous": "\t\tif(tree.kind !== shared.kind || (tree.kind === \"fin\" && tree.bound !== shared.bound))\n",
+          "start": 3710
+        },
+        {
+          "current": "\t\treturn [\"fin\", \"fin-field\"].includes(tree.kind) ? tree\n\t\t\t: { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };\n",
+          "previous": "\t\treturn tree.kind === \"fin\" ? tree : { ...tree, arguments: tree.arguments.map((child, index) => merge(child, shared.arguments[index])) };\n",
+          "start": 3927
+        }
+      ],
+      "path": "src/build/component-refinement-mirrors.mjs",
+      "previousSha256": "245c08eb3febb457c11562ff07d7e5ae50d4b09f3a8808f25607046fc6edefed"
+    },
+    {
+      "currentSha256": "9ce698430cb1216f395c282b164c4aa80b0b4d981d0a39af10f71bbebffff229",
+      "edits": [
+        {
+          "current": "\tif(refinement === null || [\"fin\", \"fin-field\"].includes(refinement.kind)) return [];\n",
+          "previous": "\tif(refinement === null || refinement.kind === \"fin\") return [];\n",
+          "start": 1207
+        },
+        {
+          "current": "\t\tif(tree === null || tree === undefined || [\"fin\", \"fin-field\"].includes(tree.kind)) return;\n",
+          "previous": "\t\tif(tree === null || tree === undefined || tree.kind === \"fin\") return;\n",
+          "start": 4040
+        },
+        {
+          "current": "\t// The surrounding checked-record constructor validates the relationship between\n\t// sibling fields. This leaf only transports the dependent Fin as its Nat value.\n\tif(refinement.kind === \"fin-field\") return checked\n\t\t? `(_root_.Option.some ${input})`\n\t\t: `${input}.val`;\n",
+          "previous": "",
+          "start": 9020
+        }
+      ],
+      "path": "src/build/component-refinements.mjs",
+      "previousSha256": "34f46dd0cce2fabcc828749febee1dedcfede7a63a6e26aab6578b701cd74154"
+    },
+    {
+      "currentSha256": "84c2c113765aee5d1ed845940f2129d82aa12a88340115f5144fab7cd464f210",
+      "edits": [
+        {
+          "current": "\t\t\treturn type.predicate.kind === \"fin-field\"\n\t\t\t\t? { kind: \"fin-field\", field: type.predicate.field }\n\t\t\t\t: { kind: type.predicate.kind, bound: type.predicate.bound };\n",
+          "previous": "\t\t\treturn { kind: type.predicate.kind, bound: type.predicate.bound };\n",
+          "start": 14337
+        }
+      ],
+      "path": "src/build/native-model.mjs",
+      "previousSha256": "e857e05e4cb3354d79867aff55a8efd6338ad73b2e97e7c0e4b1f7ffea360f5d"
+    },
+    {
+      "currentSha256": "d179446a74f75800b52fe486dd75ff4bb2ccb0c5715129266172c35c024ccc1c",
+      "edits": [
+        {
+          "current": "import { generateCompilerAdapters, validateCompilerAdapterPlan } from \"../src/build/compiler-adapters.mjs\";\n",
+          "previous": "import { generateCompilerAdapters } from \"../src/build/compiler-adapters.mjs\";\n",
+          "start": 1333
+        },
+        {
+          "current": "import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, checkedRecordValueIndexContracts, checkedRecordValueIndexReview, checkedRecordValueIndexSource, dependentCheckedRecordContracts, dependentCheckedRecordReview, dependentCheckedRecordSource, erasedProofsKey, instantiationKey, nominalRefinementsKey, refinementsKey } from \"./helpers/checked-record-fixture.mjs\";\n",
+          "previous": "import { relabelCheckedRecordDiagnostics, checkedRecordContracts, checkedRecordFixture, checkedRecordRefusalSource, checkedRecordRefusals, checkedRecordReview, checkedRecordValueIndexContracts, checkedRecordValueIndexReview, checkedRecordValueIndexSource, erasedProofsKey, instantiationKey, refinementsKey } from \"./helpers/checked-record-fixture.mjs\";\n",
+          "start": 3128
+        },
+        {
+          "current": "test(\"dependent checked-record reviews retain the exact earlier-field relation\", () => {\n\tconst review = dependentCheckedRecordReview();\n\tvalidateReviewedSource(reviewInput(review));\n\tconst selection = reviewedSourceSelection(reviewInput(review));\n\tconst expected = dependentCheckedRecordContracts();\n\tdelete expected[`${module}.dependentResult`];\n\tassert.equal(canonicalJson(selection.contracts), canonicalJson(expected));\n\tconst definition = review.types.find(item => item.name === \"Dependent\");\n\tassert.deepEqual(definition.source.extensions[nominalRefinementsKey], {\n\t\tkind: \"record\", fields: [null, { kind: \"fin-field\", field: \"bound\" }]\n\t});\n\tconst mutate = edit => {\n\t\tconst changed = dependentCheckedRecordReview();\n\t\tedit(changed);\n\t\treturn changed;\n\t};\n\tfor(const [label, changed] of [\n\t\t[\"a missing dependency\", mutate(ir => { ir.types[0].source.extensions[nominalRefinementsKey].fields[1].field = \"missing\"; })]\n\t\t, [\"a self dependency\", mutate(ir => { ir.types[0].source.extensions[nominalRefinementsKey].fields[1].field = \"below\"; })]\n\t\t, [\"a dropped erased proof\", mutate(ir => { delete ir.types[0].source.extensions[erasedProofsKey]; })]])\n\t\tassert.throws(() => validateReviewedSource(reviewInput(changed)), { code: \"reviewed-ir-build-unsupported\" }, label);\n});\n\ntest(\"dependent Fin metadata is contextual to an earlier retained Nat field\", () => {\n\tconst fieldType = field => ({ kind: \"refinement\", base: nat\n\t\t, predicate: { kind: \"fin-field\", field }, abi: nat.abi });\n\tconst field = (name, type) => ({ name, projection: `${module}.Dependent.${name}`, type });\n\tconst record = { kind: \"record\"\n\t\t, name: `${module}.Dependent`\n\t\t, lean: `${module}.Dependent`\n\t\t, constructor: `${module}.Dependent.mk`\n\t\t, fields: [field(\"bound\", nat), field(\"below\", fieldType(\"bound\"))]\n\t\t, erased: [\"valid\"], abi: nat.abi };\n\tconst checked = { kind: \"refinement\", base: record\n\t\t, predicate: { kind: \"checked-record\", constructor: `${module}.mkDependent` }\n\t\t, abi: nat.abi };\n\tvalidateNativeType(checked, 0, false, \"parameter\");\n\tvalidateNativeType(record, 0, false, \"result\");\n\tfor(const [label, value] of [\n\t\t[\"a missing field\", { ...record, fields: [field(\"bound\", nat), field(\"below\", fieldType(\"missing\"))] }]\n\t\t, [\"a self reference\", { ...record, fields: [field(\"bound\", nat), field(\"below\", fieldType(\"below\"))] }]\n\t\t, [\"a forward reference\", { ...record, fields: [field(\"below\", fieldType(\"bound\")), field(\"bound\", nat)] }]\n\t\t, [\"a non-Nat dependency\", { ...record, fields: [field(\"bound\", { ...nat, name: \"string\", lean: \"String\" }), field(\"below\", fieldType(\"bound\"))] }]\n\t\t, [\"an unproved record\", { ...record, erased: undefined }]])\n\t\tassert.throws(() => validateNativeType(value, 0, false, \"result\"), TypeError, label);\n\tassert.throws(() => validateNativeType(fieldType(\"bound\"), 0, false, \"result\"), TypeError, \"the relation is not a standalone refinement\");\n});\n\ntest(\"component plans retain dependent checked-record relationships\", async () => {\n\tconst review = dependentCheckedRecordReview();\n\tconst semanticSha256 = \"1\".repeat(64);\n\tconst generated = generateCompilerAdapters({ analysis: {\n\t\tbindingIr: { origin: \"lean-elaborated\", document: review, semanticSha256 }\n\t\t, exportCandidates: review.declarations.map(declaration => ({\n\t\t\tdeclaration: declaration.source.declaration\n\t\t\t, sourceModule: module\n\t\t\t, status: \"exportable\"\n\t\t}))\n\t}\n\t, componentPlan: { sha256: \"2\".repeat(64), document: { bindingIr: { semanticSha256 } } } });\n\tassert.equal(validateCompilerAdapterPlan(generated.plan), true);\n\tawait assertJsonSchema(\"compiler-adapter-plan\", generated.plan);\n\tassert.deepEqual(generated.plan.nominalRefinements, [{\n\t\tid: `lean:${module}.Dependent`\n\t\t, refinement: { kind: \"record\", fields: [null, { kind: \"fin-field\", field: \"bound\" }] }\n\t}]);\n\tassert.match(generated.files[\"LeanBridgeGenerated.lean\"], /\\.mkDependent/u);\n\tconst changed = structuredClone(generated.plan);\n\tchanged.exports.find(item => item.sourceDeclaration.endsWith(\"dependentTotal\"))\n\t\t.refinements.parameters[0].fields[1].refinement.field = \"below\";\n\tassert.throws(() => validateCompilerAdapterPlan(changed), { code: \"invalid-compiler-adapter-plan\" });\n});\n\n",
+          "previous": "",
+          "start": 7887
+        },
+        {
+          "current": "\tconst nativeDependent = { ...native\n\t\t, name: `${module}.Dependent`\n\t\t, lean: `${module}.Dependent`\n\t\t, constructor: `${module}.Dependent.mk`, erased: [\"valid\"]\n\t\t, fields: [\n\t\t\t{ name: \"bound\", projection: `${module}.Dependent.bound`, type: nativeNat }\n\t\t\t, {\n\t\t\t\tname: \"below\"\n\t\t\t\t, projection: `${module}.Dependent.below`\n\t\t\t\t, type: { kind: \"refinement\", base: nativeNat\n\t\t\t\t\t, predicate: { kind: \"fin-field\", field: \"bound\" }, abi }\n\t\t\t}\n\t\t]\n\t};\n\tdelete nativeDependent.provenance;\n\tconst componentDependent = { kind: \"record\"\n\t\t, name: `${module}.Dependent`\n\t\t, erased: [\"valid\"]\n\t\t, fields: [\n\t\t\t{ name: \"bound\", type: nat }\n\t\t\t, {\n\t\t\t\tname: \"below\"\n\t\t\t\t, type: { kind: \"refinement\", base: nat\n\t\t\t\t\t, predicate: { kind: \"fin-field\", field: \"bound\" } }\n\t\t\t}\n\t\t]\n\t};\n",
+          "previous": "",
+          "start": 17007
+        },
+        {
+          "current": "\t\t, [\"native-metadata-type\", nativeDependent]\n",
+          "previous": "",
+          "start": 18653
+        },
+        {
+          "current": "\t\t, [copied, componentDependent]\n",
+          "previous": "",
+          "start": 19118
+        },
+        {
+          "current": "\t\t, [\"native-metadata-type\", { kind: \"refinement\", base: native, predicate: { kind: \"subtype\", constructor: `${module}.mkTriple` }, abi }, \"a Subtype predicate over a record\"]\n\t\t, [\n\t\t\t\"native-metadata-type\"\n\t\t\t, { ...nativeDependent\n\t\t\t\t, fields: [nativeDependent.fields[0], { ...nativeDependent.fields[1]\n\t\t\t\t\t, type: { ...nativeDependent.fields[1].type\n\t\t\t\t\t\t, predicate: { kind: \"fin-field\", field: \"not-valid\", bound: \"3\" } } }] }\n\t\t\t, \"an extra dependent predicate key\"\n\t\t]\n\t\t, [\n\t\t\tcopied\n\t\t\t, { ...componentDependent\n\t\t\t\t, fields: [componentDependent.fields[0], { ...componentDependent.fields[1]\n\t\t\t\t\t, type: { ...componentDependent.fields[1].type\n\t\t\t\t\t\t, predicate: { kind: \"fin-field\", field: \"1bound\" } } }] }\n\t\t\t, \"an invalid dependent field identifier\"\n\t\t]\n\t];\n",
+          "previous": "\t\t, [\"native-metadata-type\", { kind: \"refinement\", base: native, predicate: { kind: \"subtype\", constructor: `${module}.mkTriple` }, abi }, \"a Subtype predicate over a record\"]];\n",
+          "start": 22148
+        },
+        {
+          "current": "test(\"fresh Lean preserves dependent checked-record fields without fabricating proofs\", { skip: !lean, timeout: 1_200_000 }, async t => {\n\tconst contracts = dependentCheckedRecordContracts();\n\tconst { model, adapters, metadata } = await nativeModel(t, { extra: dependentCheckedRecordSource, contracts });\n\tawait assertJsonSchema(\"elaborated-export-metadata\", metadata);\n\tconst definition = model.bindingIr.types.find(item => item.name === \"Dependent\");\n\tassert.deepEqual(definition.source.extensions[nominalRefinementsKey], {\n\t\tkind: \"record\", fields: [null, { kind: \"fin-field\", field: \"bound\" }]\n\t});\n\tconst parameter = { kind: \"checked-record\", definition: `${module}.Dependent`\n\t\t, constructor: `${module}.mkDependent`, fields: [\"bound\", \"below\"]\n\t\t, arguments: [null, { kind: \"fin-field\", field: \"bound\" }] };\n\tassert.deepEqual(exportNamed(model, \"dependentTotal\").refinements, { parameters: [parameter], result: null });\n\tassert.deepEqual(exportNamed(model, \"dependentRoundtrip\").refinements, { parameters: [parameter]\n\t\t, result: { ...parameter, constructor: null } });\n\tassert.deepEqual(exportNamed(model, \"dependentResult\").refinements, { parameters: [null]\n\t\t, result: { ...parameter, constructor: null } });\n\tassert.match(adapters.leanSource, /structure LbErased\\.CheckedRecords\\.Dependent where\\s+«bound» : _root_\\.Nat\\s+«below» : _root_\\.Nat/u);\n\tassert.match(adapters.leanSource, /_root_\\.CheckedRecords\\.mkDependent a0 a1/u);\n\tassert.match(adapters.leanSource, /\\(value\\.«below»\\)\\.val/u);\n\tassert.doesNotMatch(adapters.leanSource, /sorry|by exact|Fin\\.mk/u);\n\tconst call = name => `${adapters.module}.f_${exportNamed(model, name).symbol}`;\n\tconst evaluations = [\n\t\t[`[${call(\"dependentTotal\")} ⟨3, 2⟩, ${call(\"dependentTotal\")} ⟨2, 2⟩, ${call(\"dependentTotal\")} ⟨0, 0⟩]`, \"[some 5, none, none]\"]\n\t\t, [`((${call(\"dependentRoundtrip\")} ⟨4, 3⟩).map (fun value => (value.bound, value.below)), (${call(\"dependentRoundtrip\")} ⟨3, 4⟩).map (fun value => (value.bound, value.below)))`, \"(some (4, 3), none)\"]\n\t\t, [`((${call(\"dependentResult\")} 7).bound, (${call(\"dependentResult\")} 7).below)`, \"(8, 7)\"]];\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-bridge-dependent-checked-record-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst fixture = await readFile(join(checkedRecordFixture, \"CheckedRecords.lean\"), \"utf8\");\n\tconst source = fixture.replace(\"end CheckedRecords\", `${dependentCheckedRecordSource}\\nend CheckedRecords`);\n\tawait writeFile(join(directory, \"Dependent.lean\"), [source\n\t\t, adapters.leanSource.replace(/^import CheckedRecords$/mu, \"\")\n\t\t, ...evaluations.map(([expression]) => `#eval ${expression}`)].join(\"\\n\"));\n\tconst run = await processBuildRunner.capture({ command: join(leanPrefix, \"bin/lean\")\n\t\t, args: [\"Dependent.lean\"]\n\t\t, cwd: directory, timeoutMs: 600_000 });\n\tassert.deepEqual(run.stdout.trim().split(\"\\n\"), evaluations.map(([, expected]) => expected));\n\tconst reviewed = await nativeModel(t, { extra: dependentCheckedRecordSource, review: dependentCheckedRecordReview() });\n\tassert.equal(reviewedContractDifference(dependentCheckedRecordReview(), reviewed.model.bindingIr), null);\n\tconst changed = dependentCheckedRecordReview();\n\tchanged.types.find(item => item.name === \"Dependent\").source.extensions[nominalRefinementsKey].fields[1]\n\t\t= { kind: \"fin\", bound: \"3\" };\n\tassert.notEqual(reviewedContractDifference(changed, reviewed.model.bindingIr), null\n\t\t, \"a static literal cannot replace the field dependency\");\n});\n\n",
+          "previous": "",
+          "start": 37230
+        }
+      ],
+      "path": "tests/checked-records.test.mjs",
+      "previousSha256": "98987cb40fc35be30692160a2953bffaf1075e047e156fa34c3869842ff75baa"
+    },
+    {
+      "currentSha256": "91c71eaab1a97012fb15f84b341a96c58f93d25a0ad5c73358b19e40cbf47cea",
+      "edits": [
+        {
+          "current": "export const nominalRefinementsKey = \"lean-lang.org/nominal-refinements\";\n",
+          "previous": "",
+          "start": 628
+        },
+        {
+          "current": "/** A checked record whose retained Fin payload is bounded by an earlier retained field. */\nexport const dependentCheckedRecordSource = `\nstructure Dependent where\n  bound : Nat\n  below : Fin bound\n  valid : below.val < bound\ndef mkDependent (bound below : Nat) : Option Dependent :=\n  if h : below < bound then some ⟨bound, ⟨below, h⟩, h⟩ else none\ndef dependentTotal (value : Dependent) : Nat := value.bound + value.below.val\ndef dependentRoundtrip (value : Dependent) : Dependent := value\ndef dependentResult (seed : Nat) : Dependent :=\n  ⟨seed + 1, ⟨seed, Nat.lt_succ_self seed⟩, Nat.lt_succ_self seed⟩\n`;\n\nconst dependentFin = Object.freeze({ kind: \"fin-field\", field: \"bound\" });\nconst dependentSelection = module => ({\n\tkind: \"checked-record\"\n\t, name: `${module}.Dependent`\n\t, constructor: `${module}.mkDependent`\n\t, fields: [\n\t\t{ name: \"bound\", refinement: null }\n\t\t, { name: \"below\", refinement: null }\n\t]\n});\nconst dependentParameter = (module, constructor = `${module}.mkDependent`) => ({\n\tkind: \"checked-record\", name: `${module}.Dependent`, constructor\n\t, fields: [\n\t\t{ name: \"bound\", refinement: null }\n\t\t, { name: \"below\", refinement: structuredClone(dependentFin) }\n\t]\n});\nconst dependentResult = module => ({\n\t...dependentParameter(module, null), constructor: null\n});\n\n/**\n * Exact export contracts for the dependent checked-record fixture.\n *\n * @param module - Lean module and namespace name.\n */\nexport const dependentCheckedRecordContracts = (module = \"CheckedRecords\") => ({\n\t[`${module}.dependentTotal`]: {\n\t\tparameters: [{ ...plain, refinement: dependentSelection(module) }]\n\t\t, result: plain\n\t}\n\t, [`${module}.dependentRoundtrip`]: {\n\t\tparameters: [{ ...plain, refinement: dependentSelection(module) }]\n\t\t, result: plain\n\t}\n\t, [`${module}.dependentResult`]: {\n\t\tparameters: [plain], result: plain\n\t}\n});\n\n/**\n * Independently authored Binding IR for retained dependent runtime fields.\n *\n * @param root0 - Fixture identity.\n * @param root0.module - Lean module and namespace name.\n * @param root0.component - Component name.\n */\nexport const dependentCheckedRecordReview = ({ module = \"CheckedRecords\", component = \"checkedrecords\" } = {}) => {\n\tconst signatures = [\n\t\t{ name: `${module}.dependentTotal`, parameters: [{ record: `${module}.Dependent`, fields: { bound: \"nat\", below: \"nat\" } }], result: \"nat\" }\n\t\t, { name: `${module}.dependentRoundtrip`, parameters: [{ record: `${module}.Dependent`, fields: { bound: \"nat\", below: \"nat\" } }], result: { record: `${module}.Dependent`, fields: { bound: \"nat\", below: \"nat\" } } }\n\t\t, { name: `${module}.dependentResult`, parameters: [\"nat\"], result: { record: `${module}.Dependent`, fields: { bound: \"nat\", below: \"nat\" } } }\n\t];\n\tconst ir = corpusReviewedIr({ id: component }, signatures);\n\tconst record = ir.types.find(item => item.name === \"Dependent\");\n\trecord.source.extensions[erasedProofsKey] = { fields: [\"valid\"] };\n\trecord.source.extensions[nominalRefinementsKey] = {\n\t\tkind: \"record\", fields: [null, structuredClone(dependentFin)]\n\t};\n\tfor(const declaration of ir.declarations)\n\t{\n\t\tconst input = declaration.name === \"dependentResult\"\n\t\t\t? null : dependentParameter(module);\n\t\tconst output = declaration.name === \"dependentTotal\"\n\t\t\t? null : dependentResult(module);\n\t\tdeclaration.source.extensions[refinementsKey] = {\n\t\t\tparameters: declaration.parameters.map((_, index) => index === 0 ? input : null)\n\t\t\t, result: output\n\t\t};\n\t}\n\treturn ir;\n};\n\n",
+          "previous": "",
+          "start": 9764
+        }
+      ],
+      "path": "tests/helpers/checked-record-fixture.mjs",
+      "previousSha256": "2d483528ed82c6d8517901b3494668d39fa3c6ecea5445aedfaf3995f4e234cb"
+    }
+  ]
+}
