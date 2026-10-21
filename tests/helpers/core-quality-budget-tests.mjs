@@ -41,6 +41,15 @@ const assertCoreQualityBudget = source => {
 		, "The aggregate must recompute closure from the exact current tree");
 	assert.equal([...source.matchAll(/^\s+persist-credentials:\s*false\s*$/gmu)].length, 3
 		, "No checkout may persist credentials");
+	assert.equal([...source.matchAll(/^\s+- name: Free hosted runner disk for the evidence checkout\s*$/gmu)].length, 1
+		, "Only the archive-heavy contract matrix must remove unused hosted SDKs");
+	assert.match(source, /- name: Free hosted runner disk for the evidence checkout\n {8}run: \|\n {10}df -h \/\n {10}sudo rm -rf \/usr\/share\/dotnet \/usr\/local\/lib\/android \/opt\/ghc \/usr\/local\/\.ghcup \/opt\/hostedtoolcache\/CodeQL\n {10}df -h \/\n {6}- name: Check out the exact revision/u
+		, "Core must reclaim only reviewed preinstalled SDK roots before its full-history checkout");
+	assert.equal([...source.matchAll(/^\s+- name: Report disk after the evidence checkout\s*$/gmu)].length, 1);
+	assert.match(source, /- name: Report disk after the evidence checkout\n {8}run: df -h \/ "\$GITHUB_WORKSPACE"/u);
+	assert.equal([...source.matchAll(/^\s+- name: Report disk and memory after the shard\s*$/gmu)].length, 1);
+	assert.match(source, /- name: Report disk and memory after the shard\n {8}if: always\(\)\n {8}run: \|\n {10}df -h \/ "\$RUNNER_TEMP" "\$GITHUB_WORKSPACE"\n {10}free -m/u
+		, "Core must retain terminal disk and memory diagnostics even when a shard fails");
 	assert.match(source, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(source, /if-no-files-found: error/u);
 	assert.match(source, /overwrite: true/u);
@@ -177,6 +186,10 @@ test("Core quality has bounded static, sharded contract, and aggregate gates", a
 			, '--test-name-pattern "${{ matrix.shard }}/6"')
 		, source.replace("fetch-depth: 0", "fetch-depth: 1")
 		, source.replace("persist-credentials: false", "persist-credentials: true")
+		, source.replace("/opt/hostedtoolcache/CodeQL", "/opt/hostedtoolcache")
+		, source.replace('df -h / "$GITHUB_WORKSPACE"', "true")
+		, source.replace("Report disk and memory after the shard\n        if: always()"
+			, "Report disk and memory after the shard\n        if: success()")
 		, source.replace("needs: [static, contract]", "needs: [static]")
 		, source.replace("if: always()", "if: success()")
 		, source.replace("merge-multiple: true", "merge-multiple: false")
