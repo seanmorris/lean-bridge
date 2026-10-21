@@ -1,0 +1,24 @@
+{
+  "ecosystem": "cpan",
+  "files": [
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/ZeroPayloadCheckedRecords.pm",
+      "sha256": "5edacfef49ae1a0d860b8e38a5d46bb3f65244d8bb68ca59f5aeee95a2b2561f"
+    },
+    {
+      "origin": "prepared-payload",
+      "path": "LeanBridge/ZeroPayloadCheckedRecords/native/libcomponent_d43d7c5a9f170f3ce127.so",
+      "sha256": "99757ffd528089839276986cecbacc46ff50f89c9c9d51ddfaa77e680091384a"
+    },
+    {
+      "origin": "generated-xs-only",
+      "path": "auto/LeanBridge/ZeroPayloadCheckedRecords/ZeroPayloadCheckedRecords.so",
+      "sha256": "05dc44eb62216313261c38ddef4f33e9528ec285045e9a8d60c0e11f5a507717"
+    }
+  ],
+  "nativePayloadUnchanged": true,
+  "operation": "generated-xs-only",
+  "runtimeIdentity": "6f4dbd1e2e112f4678734553d1c9bb8722fad3e6290adbff1ac46d05e5eff7dd",
+  "schemaVersion": 1
+}
