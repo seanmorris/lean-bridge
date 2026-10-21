@@ -22,6 +22,8 @@ const records = {
 /** Each export: parameter types with their site constructors, and the result type. */
 const exports = {
 	witnessCount: [[["Witness", "mkWitness"]], "nat"]
+	// The refusing constructor is accepted at analysis time and rejects every host value at runtime.
+	, absentCount: [[["Witness", "mkAbsent"]], "nat"]
 	, tokenTag: [[["Token", "mkToken"]], "unit"]
 	// Lean produces the proof; no constructor is selected at a result.
 	, produceWitness: [[], "Witness"]

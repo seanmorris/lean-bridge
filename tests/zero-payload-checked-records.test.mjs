@@ -49,7 +49,7 @@ test("an independent zero-payload review is valid and selects the nullary constr
 	validateReviewedSource(reviewInput(review));
 	const selection = reviewedSourceSelection(reviewInput(review));
 	const expected = Object.fromEntries(Object.entries(zeroPayloadCheckedRecordContracts())
-		.filter(([name]) => [`${module}.witnessCount`, `${module}.tokenTag`].includes(name)));
+		.filter(([name]) => [`${module}.witnessCount`, `${module}.absentCount`, `${module}.tokenTag`].includes(name)));
 	assert.equal(canonicalJson(selection.contracts), canonicalJson(expected));
 	assert.equal(selection.contracts[`${module}.witnessCount`].parameters[0].refinement.constructor, `${module}.mkWitness`);
 	assert.equal(selection.contracts[`${module}.tokenTag`].parameters[0].refinement.constructor, `${module}.mkToken`);
@@ -125,6 +125,8 @@ test("fresh Lean admits proof-only and Unit-bearing checked records with exact e
 	assert.equal(types.Marker.source.extensions[erasedProofsKey], undefined);
 	assert.deepEqual(exportNamed(model, "witnessCount").refinements
 		, { parameters: [{ kind: "checked-record", definition: `${module}.Witness`, constructor: `${module}.mkWitness`, fields: [] }], result: null });
+	assert.deepEqual(exportNamed(model, "absentCount").refinements
+		, { parameters: [{ kind: "checked-record", definition: `${module}.Witness`, constructor: `${module}.mkAbsent`, fields: [] }], result: null });
 	assert.deepEqual(exportNamed(model, "produceWitness").refinements
 		, { parameters: [], result: { kind: "checked-record", definition: `${module}.Witness`, constructor: null, fields: [] } });
 	assert.deepEqual(exportNamed(model, "tokenTag").refinements
