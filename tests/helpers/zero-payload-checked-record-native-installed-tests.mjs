@@ -84,7 +84,6 @@ for(const route of routes) test(
 		), "Installed evidence requires clean tracked source");
 		const environment = {
 			...nativeFixtureEnvironment(zeroPayloadNativeProfiles)
-			, LEAN_BRIDGE_BUILD_BACKEND: "nix"
 			, LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR:
 				process.env.LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR ?? "2.36"
 		};
