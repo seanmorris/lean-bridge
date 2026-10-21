@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "milestone": "ledger-transition-gap-source-v1",
+  "predecessorCommit": "736ce9d03fc324ed6004aa77de534cd9885bfa83",
+  "pathsSha256": "7c908174f0a9536ddf9aa6c2e1fc512accb8efebcaaafb668a7f48dae0b4ac67",
+  "historicalPathsSha256": "399bc827337cabcd7c79e2d171601809c581509340335df497cd31894d5de004",
+  "pinCount": 9,
+  "pinUpdates": [
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621",
+      "currentSha256": "90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd",
+      "count": 9
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-ledger-transition-gap-source-history.mjs",
+      "currentSha256": "46f63c19b7c00c9f6bcbc49aa68620dc74ea7efac82e8c0971e12f555f647de6"
+    },
+    {
+      "path": "tests/helpers/ledger-transition-gap-source-history-tests.mjs",
+      "currentSha256": "35b3fd2bd7b2660a18ed32b1abc61517c44abe93d2bab42f047e2d4c393bedb2"
+    },
+    {
+      "path": "tests/helpers/ledger-transition-gap-source-history.mjs",
+      "currentSha256": "f394f2226898887b050110641a7edeb2e0cf68d336d3a3e9f395ff7168970470"
+    }
+  ],
+  "historicalTransitions": [
+    {
+      "path": "src/release/cpan-package.mjs",
+      "previousCommit": "70989c90670341d1dd2a82da0423fb3230356496",
+      "currentCommit": "18804049b371cfe17eaec867c0365fb4b47b8152",
+      "previousSha256": "b0fffc682d28c55dd38ad36cc507a8c719d3223a0a510e1f19573b4d477e1636",
+      "currentSha256": "b7a606541cc82a2917851074513a2371e968c8add561e08b86e4701b8b8ad463",
+      "edits": [
+        {
+          "start": 11023,
+          "previous": "\t\t\t, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true, nativeCheckedRecords: !isOwned });\n",
+          "current": "\t\t\t, { copiedGraphs: true, ownedGraphs: isOwned, ownedHostCallbacks: isOwned, ownedInputTransfers: isOwned, ownedAnchoredResults: isOwned, ownedReceiverExports: isOwned, ownedCallbackResultAnchors: isOwned, nativeRefinements: true, nativeCheckedRecords: true });\n"
+        }
+      ]
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "be327c7bfeb7f1f57cdf687fc31072facc8542906a04d1a72f013b4d13f184a6",
+      "currentSha256": "7c4118bcb70a03610c638cd79993528dc54cd94faef8be4b14dd6e91f525c156",
+      "edits": [
+        {
+          "start": 29500,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 40480,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1519350,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1523361,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1526867,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1530743,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1534222,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1537706,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        },
+        {
+          "start": 1541194,
+          "previous": "          \"sha256\": \"f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621\"\n",
+          "current": "          \"sha256\": \"90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5a021097f0896d68416f08a55457785bec6bce000c3e5c3d56c5a1ae130df45a",
+      "currentSha256": "35c14cad959163ec70e6b1d6af44620d0185459640d72df083a8121b2179f935",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeLedgerTransitionGapSource, ledgerTransitionGapChangedPaths, ledgerTransitionGapHistoricalPaths } from \"./ledger-transition-gap-source-history.mjs\";\n"
+        },
+        {
+          "start": 117250,
+          "previous": "\t...zeroPayloadRustPromotionChangedPaths\n",
+          "current": "\t...ledgerTransitionGapChangedPaths\n\t, ...ledgerTransitionGapHistoricalPaths\n\t, ...zeroPayloadRustPromotionChangedPaths\n"
+        },
+        {
+          "start": 141609,
+          "previous": "",
+          "current": "\tconst ledgerGap = beforeLedgerTransitionGapSource(path, text, expected);\n\tif(sha256(ledgerGap) === expected) return ledgerGap;\n"
+        },
+        {
+          "start": 141809,
+          "previous": "\t\tpath, text, expected\n",
+          "current": "\t\tpath, ledgerGap, expected\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/native-fin-containers.test.mjs",
+      "previousSha256": "f4d2c95c9e2e40b2de4ed7dddfb49979d4c06128129313a2de40a684540ad621",
+      "currentSha256": "90fc0aa91a0b1a3ac87a659d949e2259f81b0a5a619e4204f4d991d2b7f816cd",
+      "edits": [
+        {
+          "start": 2328,
+          "previous": "",
+          "current": "import \"./helpers/ledger-transition-gap-source-history-tests.mjs\";\n"
+        }
+      ]
+    }
+  ]
+}
