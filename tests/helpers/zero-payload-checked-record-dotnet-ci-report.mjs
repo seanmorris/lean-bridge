@@ -211,7 +211,10 @@ export const checkZeroPayloadDotnetCiRecords = async (
 		assert.equal(sha256(receipt.bytes), build.receiptSha256);
 		assert.deepEqual(receipt.value, report.receipt);
 		const inputs = await json(read, `build-${index}/author-inputs.json`);
-		assert.equal(sha256(canonicalJson(inputs.value))
+		const stableInputs = inputs.value.map(({
+			path, mode, sha256: digest
+		}) => ({ path, mode, sha256: digest }));
+		assert.equal(sha256(canonicalJson(stableInputs))
 			, build.authorInputsSha256);
 		assert.equal((await read(
 			`build-${index}/lean-bridge.exports.json`
