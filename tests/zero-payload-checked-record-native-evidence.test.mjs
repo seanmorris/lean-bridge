@@ -9,6 +9,7 @@ import test from "node:test";
 import {
 	checkZeroPayloadNativeEvidence, zeroPayloadNativeEvidence
 } from "./helpers/zero-payload-checked-record-native-evidence.mjs";
+import "./helpers/zero-payload-native-evidence-source-history-tests.mjs";
 
 test("hosted zero-payload C/C++ archive authenticates every retained route", {
 	timeout: 120_000

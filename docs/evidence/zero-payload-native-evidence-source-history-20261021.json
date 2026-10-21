@@ -1,0 +1,85 @@
+{
+  "additions": [
+    {
+      "currentSha256": "bd396bbc0bc6da981a0538ec20a1cdef6f28b4fdba2dc3f41eaa99e0358d0df7",
+      "path": "tests/helpers/zero-payload-checked-record-native-evidence.mjs"
+    },
+    {
+      "currentSha256": "fd3f7a9c89c83f58b04383a92cb498aaf335ba02a53d231a0c92c5928507f93c",
+      "path": "tests/zero-payload-checked-record-native-evidence.test.mjs"
+    },
+    {
+      "currentSha256": "1106e55df82aa53d611d7a95cc221698ac96fa29b44f7ef738cd717cf2ff7b8f",
+      "path": "scripts/update-zero-payload-native-evidence-source-history.mjs"
+    },
+    {
+      "currentSha256": "78adfd1a41476fae1b612faa9672e2dc843b28e567bd5f7aba9bd1a5144a7b49",
+      "path": "tests/helpers/zero-payload-native-evidence-source-history.mjs"
+    },
+    {
+      "currentSha256": "46cd53bc808e9a5237fcc7500664b6c17d0aec2b4b0f7a54332e98f94c46e232",
+      "path": "tests/helpers/zero-payload-native-evidence-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "ac26590b1c4b10e2ea535d0a28899c88e1a4fd9d",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b61706e470e9958bc23bea9a1ce44395656092b5a61154ac86af29542483a522",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadNativeEvidenceSource, zeroPayloadNativeEvidenceChangedPaths, zeroPayloadNativeEvidenceIntegrationPaths } from \"./zero-payload-native-evidence-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadNativeEvidenceChangedPaths\n\t, ...zeroPayloadNativeEvidenceIntegrationPaths\n\t, ...zeroPayloadRustArchiveChangedPaths\n",
+          "previous": "\t...zeroPayloadRustArchiveChangedPaths\n",
+          "start": 114695
+        },
+        {
+          "current": "\tconst zeroPayloadNativeEvidence = beforeZeroPayloadNativeEvidenceSource(\n",
+          "previous": "\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n",
+          "start": 137797
+        },
+        {
+          "current": "\tif(sha256(zeroPayloadNativeEvidence) === expected)\n\t\treturn zeroPayloadNativeEvidence;\n\tconst zeroPayloadRustArchive = beforeZeroPayloadRustArchiveSource(\n\t\tpath, zeroPayloadNativeEvidence, expected\n\t);\n",
+          "previous": "",
+          "start": 137898
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "339893d73f4a4df190fa79948cae3df2b25fd45a209b07340859ee5149ae3b12"
+    }
+  ],
+  "milestone": "zero-payload-native-evidence-source-v1",
+  "predecessorCommit": "05af12cf39dc3ebe95c499e8b386ce8d4db756b6",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Hosted zero-payload C and C++ evidence retains four exact installed routes, the original GitHub records and artifact bytes, independent checker output, and complete producer, consumer, checker and archiver source closures.",
+  "updates": [
+    {
+      "currentSha256": "28450211357476bb4c793b8147ae4f82b62dfbabc5f57715d6ad18c1c79b7e01",
+      "edits": [
+        {
+          "current": "\t\t, \"zero-payload-checked-record-native-evidence\"\n",
+          "previous": "",
+          "start": 13896
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "4d33efe8ae638d0d9eb9fc0b79fe39454846bcd8441fda1c6ed3d3e56f91d46a"
+    },
+    {
+      "currentSha256": "12616229f88f28268559851a0c634b033159c739a3f22e40be961f653bf64e1a",
+      "edits": [
+        {
+          "current": "\t\t, \"checked-record-value-index-python\"\n\t\t, \"zero-payload-checked-record-native-evidence\"])\n",
+          "previous": "\t\t, \"checked-record-value-index-python\"])\n",
+          "start": 2129
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "cb190358e0cf7dd9f007dcebccb0462e6cce170948e1e6e96bb99e214a25d02b"
+    }
+  ]
+}
