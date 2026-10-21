@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadRustSource, zeroPayloadRustChangedPaths, zeroPayloadRustIntegrationPaths } from "./zero-payload-rust-source-history.mjs";
 import { beforeZeroPayloadJvmArchiveSource, zeroPayloadJvmArchiveChangedPaths, zeroPayloadJvmArchiveIntegrationPaths } from "./zero-payload-jvm-archive-source-history.mjs";
 import { beforeZeroPayloadJvmSource, zeroPayloadJvmChangedPaths, zeroPayloadJvmIntegrationPaths } from "./zero-payload-jvm-source-history.mjs";
 import { beforeZeroPayloadDotnetControlRepairSource, zeroPayloadDotnetControlRepairChangedPaths, zeroPayloadDotnetControlRepairIntegrationPaths } from "./zero-payload-dotnet-control-repair-source-history.mjs";
@@ -1414,7 +1415,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadJvmArchiveChangedPaths
+	...zeroPayloadRustChangedPaths
+	, ...zeroPayloadRustIntegrationPaths
+	, ...zeroPayloadJvmArchiveChangedPaths
 	, ...zeroPayloadJvmArchiveIntegrationPaths
 	, ...zeroPayloadJvmChangedPaths
 	, ...zeroPayloadJvmIntegrationPaths
@@ -1922,8 +1925,10 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const zeroPayloadRust = beforeZeroPayloadRustSource(path, text, expected);
+	if(sha256(zeroPayloadRust) === expected) return zeroPayloadRust;
 	const zeroPayloadJvmArchive = beforeZeroPayloadJvmArchiveSource(
-		path, text, expected
+		path, zeroPayloadRust, expected
 	);
 	if(sha256(zeroPayloadJvmArchive) === expected)
 		return zeroPayloadJvmArchive;

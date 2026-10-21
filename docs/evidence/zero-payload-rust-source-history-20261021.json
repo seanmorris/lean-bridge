@@ -1,0 +1,85 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d38d60642d5ada6fb39fbed0cf46934074e91684582d067ca78f53981e14ad95",
+      "path": "tests/fixtures/zero-payload-checked-record-rust/rust.rs"
+    },
+    {
+      "currentSha256": "8e968e7ad9758225e3d78618fcdb60fffb304e8705a962d4cd61e72e058ea1dc",
+      "path": "tests/helpers/zero-payload-checked-record-rust-caller-tests.mjs"
+    },
+    {
+      "currentSha256": "7901014897397077a667195448ec984aa6eb9d991452dc038029629effdd3dff",
+      "path": "tests/helpers/zero-payload-checked-record-rust-fixture-tests.mjs"
+    },
+    {
+      "currentSha256": "f931f166560723ddcbe74ffed5d2fd8ea27980bd36a88bf921a8f63b867956f8",
+      "path": "tests/helpers/zero-payload-checked-record-rust-fixture.mjs"
+    },
+    {
+      "currentSha256": "735bc07d343620a6b7dc26855ee83df58a5a2b9505ab05b685e92b800e664ecd",
+      "path": "tests/zero-payload-checked-record-rust.test.mjs"
+    },
+    {
+      "currentSha256": "81e493e9ebcdc7dff06067904b613a268a2275f82d60d98c9cb999c0b55aea1c",
+      "path": "scripts/update-zero-payload-rust-source-history.mjs"
+    },
+    {
+      "currentSha256": "57949615e5430280b4f2bdd524105ffa91b6e51cb7eecde2f41babac79150e65",
+      "path": "tests/helpers/zero-payload-rust-source-history.mjs"
+    },
+    {
+      "currentSha256": "2d23601ca0eca049f5875b374c32686b39264fb2aa2596c63a78780130e75c4c",
+      "path": "tests/helpers/zero-payload-rust-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "b9762f82ad3997b8330747c49ff75c2b997154b9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "42a807cffff2c6d412b9fe8d25dd503115dfed2f9d7b5080bb4632bf447c8d0d",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadRustSource, zeroPayloadRustChangedPaths, zeroPayloadRustIntegrationPaths } from \"./zero-payload-rust-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadRustChangedPaths\n\t, ...zeroPayloadRustIntegrationPaths\n\t, ...zeroPayloadJvmArchiveChangedPaths\n",
+          "previous": "\t...zeroPayloadJvmArchiveChangedPaths\n",
+          "start": 113793
+        },
+        {
+          "current": "\tconst zeroPayloadRust = beforeZeroPayloadRustSource(path, text, expected);\n\tif(sha256(zeroPayloadRust) === expected) return zeroPayloadRust;\n",
+          "previous": "",
+          "start": 136457
+        },
+        {
+          "current": "\t\tpath, zeroPayloadRust, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 136665
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f33f434aa82b54b6b7114e0392874b756c7eb1769ccd844171c54a9970360d52"
+    }
+  ],
+  "milestone": "zero-payload-rust-source-v1",
+  "predecessorCommit": "b5317e6b0abc215d43557eb341ec6f9ed10077f9",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Generated Rust bindings keep proof-only, Unit-bearing and plain empty records nominally distinct across full and result-only Cargo package routes.",
+  "updates": [
+    {
+      "currentSha256": "735bc07d343620a6b7dc26855ee83df58a5a2b9505ab05b685e92b800e664ecd",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-rust-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 221
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-rust.test.mjs",
+      "previousSha256": "c4ff1a236f8c0f5457d5655b60f037498f9038a800df476b7555f45ed0d2ef7c"
+    }
+  ]
+}
