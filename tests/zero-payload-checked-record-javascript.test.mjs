@@ -17,6 +17,7 @@ import {
 } from "./helpers/zero-payload-checked-record-browser-fixture.mjs";
 import { checkZeroPayloadRecords } from "./fixtures/zero-payload-checked-record-browser/javascript.mjs";
 import "./helpers/zero-payload-javascript-source-history-tests.mjs";
+import "./helpers/zero-payload-checked-record-npm-installed-tests.mjs";
 
 const exact = (value, fields, path = "value") => {
 	if(!value || typeof value !== "object" || ![Object.prototype, null].includes(

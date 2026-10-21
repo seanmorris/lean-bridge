@@ -24,6 +24,12 @@ export const zeroPayloadBrowserProfiles = Object.freeze([
 export const zeroPayloadBrowserEngines = Object.freeze([
 	"chromium", "firefox", "webkit"
 ]);
+export const zeroPayloadBrowserInputNames = Object.freeze([
+	"witnessCount", "absentCount", "tokenTag", "markerCount"
+]);
+export const zeroPayloadBrowserResultNames = Object.freeze([
+	"produceWitness", "produceToken", "witnesses", "maybeWitness", "produceMarker"
+]);
 /**
  * Return exact independent-caller totals for one route.
  *
@@ -45,9 +51,7 @@ export const zeroPayloadBrowserSelection = route => {
 	assert.ok(zeroPayloadBrowserRoutes.includes(route), "Unknown zero-payload browser route");
 	const resultOnly = route.startsWith("result-only-");
 	const reviewed = route.endsWith("reviewed-ir");
-	const resultNames = new Set([
-		"produceWitness", "produceToken", "witnesses", "maybeWitness", "produceMarker"
-	]);
+	const resultNames = new Set(zeroPayloadBrowserResultNames);
 	const expected = zeroPayloadCheckedRecordReview();
 	if(resultOnly)
 	{
