@@ -63,6 +63,9 @@ const fixture = [
 const callers = [
 	"browser.mjs", "full.mts", "javascript.mjs", "result-only.mts"
 ].map(path => `tests/fixtures/zero-payload-checked-record-browser/${path}`);
+const nativeCallers = [
+	"c.c", "cpp.cpp", "result-only-c.c", "result-only-cpp.cpp"
+].map(path => `tests/fixtures/zero-payload-checked-record-native/${path}`);
 const commonData = [
 	...fixture, ...callers, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
@@ -129,6 +132,59 @@ export const zeroPayloadBrowserEvidenceSources = revisions => {
 			role: "archiver", revision: revisions.archiver
 			, paths: closure(revisions.archiver, [
 				"scripts/archive-zero-payload-checked-record-browser-evidence.mjs"
+				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
+			])
+		}
+	]);
+};
+
+/**
+ * Select every source whose bytes explain the hosted native artifact.
+ *
+ * @param revisions - Producer, consumer, checker and archiver revisions.
+ */
+export const zeroPayloadNativeEvidenceSources = revisions => {
+	assert.deepEqual(Object.keys(revisions).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(revisions))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return freeze([
+		{
+			role: "producer", revision: revisions.producer
+			, paths: [
+				...closure(revisions.producer, [
+					"tests/helpers/zero-payload-checked-record-native-installed-tests.mjs"
+				])
+				, ...commonData, ...nativeCallers
+			]
+		}
+		, {
+			role: "consumer", revision: revisions.consumer
+			, paths: [
+				...closure(revisions.consumer, [
+					"tests/helpers/zero-payload-checked-record-native-fixture.mjs"
+				])
+				, ...nativeCallers, "package-lock.json", "package.json"
+			]
+		}
+		, {
+			role: "checker", revision: revisions.checker
+			, paths: [
+				...closure(revisions.checker, [
+					"scripts/check-zero-payload-checked-record-native-ci.mjs"
+					, "tests/zero-payload-checked-records.test.mjs"
+				])
+				, boundedApt
+				, ".github/workflows/zero-payload-checked-record-native.yml"
+				, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
+				, "scripts/run-zero-payload-checked-record-native-ci.sh"
+			]
+		}
+		, {
+			role: "archiver", revision: revisions.archiver
+			, paths: closure(revisions.archiver, [
+				"scripts/archive-zero-payload-checked-record-native-evidence.mjs"
 				, "tests/helpers/zero-payload-checked-record-hosted-evidence-sources-tests.mjs"
 			])
 		}

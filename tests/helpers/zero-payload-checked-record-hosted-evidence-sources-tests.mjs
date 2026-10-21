@@ -9,6 +9,7 @@ import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
 	zeroPayloadBrowserEvidenceSources, zeroPayloadHostedOriginal
+	, zeroPayloadNativeEvidenceSources
 } from "./zero-payload-checked-record-hosted-evidence-sources.mjs";
 import {
 	parseZeroPayloadHostedArchiveArgs, zeroPayloadHostedSafeZipPath
@@ -44,6 +45,36 @@ test("zero-payload browser evidence closes every hosted source role", {
 		, ["checker", ".github/workflows/zero-payload-checked-record-browser.yml"]
 		, ["checker", "scripts/check-zero-payload-checked-record-browser-ci.mjs"]
 		, ["archiver", "scripts/archive-zero-payload-checked-record-browser-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload native evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadNativeEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-native/c.c"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-native.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-native-ci.mjs"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-native-evidence.mjs"]
 		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
 	]) assert.ok(sources.some(item => item.role === role && item.path === path)
 		, `${role}:${path}`);
