@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadPhpWasmArchiveSource, zeroPayloadPhpWasmArchiveChangedPaths, zeroPayloadPhpWasmArchiveIntegrationPaths } from "./zero-payload-php-wasm-archive-source-history.mjs";
 import { beforeCallbackSubtypeRemainingRuntimeRepairSource, callbackSubtypeRemainingRuntimeRepairChangedPaths, callbackSubtypeRemainingRuntimeRepairIntegrationPaths } from "./callback-subtype-remaining-runtime-repair-source-history.mjs";
 import { beforeOwnedSubtypeNativeTransferAcceptanceSource, ownedSubtypeNativeTransferAcceptanceChangedPaths, ownedSubtypeNativeTransferAcceptanceIntegrationPaths } from "./owned-subtype-native-transfer-acceptance-source-history.mjs";
 import { beforeHostedAcceptanceHandoffRepairSource, hostedAcceptanceHandoffRepairChangedPaths, hostedAcceptanceHandoffRepairIntegrationPaths } from "./hosted-acceptance-handoff-repair-source-history.mjs";
@@ -1450,7 +1451,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeRemainingRuntimeRepairChangedPaths
+	...zeroPayloadPhpWasmArchiveChangedPaths
+	, ...zeroPayloadPhpWasmArchiveIntegrationPaths
+	, ...callbackSubtypeRemainingRuntimeRepairChangedPaths
 	, ...callbackSubtypeRemainingRuntimeRepairIntegrationPaths
 	, ...ownedSubtypeNativeTransferAcceptanceChangedPaths
 	, ...ownedSubtypeNativeTransferAcceptanceIntegrationPaths
@@ -2028,8 +2031,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(
+	const phpWasmArchive = beforeZeroPayloadPhpWasmArchiveSource(
 		path, text, expected
+	);
+	if(sha256(phpWasmArchive) === expected) return phpWasmArchive;
+	const callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(
+		path, phpWasmArchive, expected
 	);
 	if(sha256(callbackRuntimeRepair) === expected) return callbackRuntimeRepair;
 	const nativeTransferAcceptance = beforeOwnedSubtypeNativeTransferAcceptanceSource(

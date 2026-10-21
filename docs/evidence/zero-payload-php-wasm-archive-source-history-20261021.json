@@ -1,0 +1,73 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9d011f66cd94621ca2cc5a3e18d3618b9a818d22469be71c4cc7768617bc5597",
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-evidence.mjs"
+    },
+    {
+      "currentSha256": "ec9cc50398eb0ed2c47320feece8566790c463e9ffa20a887b5efd4d8485fe5b",
+      "path": "tests/helpers/zero-payload-checked-record-php-wasm-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "b94ae282a5766b2cd674362e9a582b860bf665fcb543d8b6b743f44d02cb64c6",
+      "path": "scripts/update-zero-payload-php-wasm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "85f6b7b429b8c513948bb8ff01897b8772419759543150497610cf4f13b30e12",
+      "path": "tests/helpers/zero-payload-php-wasm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "25a222054a2dd6a71fd36c7a9435a4205572481913e2bf7e340030c4c98b7a66",
+      "path": "tests/helpers/zero-payload-php-wasm-archive-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "40c21dc633390b376bf5ea0c91eb97163adfb159",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c68914301eb031998d527b16b3870f2477d4d0e169d2e287e93d2fe56e1e853a",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadPhpWasmArchiveSource, zeroPayloadPhpWasmArchiveChangedPaths, zeroPayloadPhpWasmArchiveIntegrationPaths } from \"./zero-payload-php-wasm-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...zeroPayloadPhpWasmArchiveChangedPaths\n\t, ...zeroPayloadPhpWasmArchiveIntegrationPaths\n\t, ...callbackSubtypeRemainingRuntimeRepairChangedPaths\n",
+          "previous": "\t...callbackSubtypeRemainingRuntimeRepairChangedPaths\n",
+          "start": 120613
+        },
+        {
+          "current": "\tconst phpWasmArchive = beforeZeroPayloadPhpWasmArchiveSource(\n",
+          "previous": "\tconst callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(\n",
+          "start": 146553
+        },
+        {
+          "current": "\tif(sha256(phpWasmArchive) === expected) return phpWasmArchive;\n\tconst callbackRuntimeRepair = beforeCallbackSubtypeRemainingRuntimeRepairSource(\n\t\tpath, phpWasmArchive, expected\n\t);\n",
+          "previous": "",
+          "start": 146643
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "69ebfa292cd91fede1aa2ae6f1f4887e46cc6c96b0fddcae9c16544f96b524aa"
+    }
+  ],
+  "milestone": "zero-payload-php-wasm-archive-source-v1",
+  "predecessorCommit": "0e8b0f36182a5ae90bf47da2439faae3e3a60b49",
+  "reconciledTypeSurfacePointers": 0,
+  "schemaVersion": 1,
+  "scope": "Authenticated hosted PHP-Wasm records preserve all four zero-payload source and API routes, their compiler outputs, exact runtime identity, reproducible packages and independent installed executions.",
+  "updates": [
+    {
+      "currentSha256": "108e3ac09451a83e6d1234078ee765c3271d70261ef8a136336cefe14d5f87fb",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-checked-record-php-wasm-evidence-tests.mjs\";\nimport \"./helpers/zero-payload-php-wasm-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1985
+        }
+      ],
+      "path": "tests/zero-payload-checked-records.test.mjs",
+      "previousSha256": "2b64a3b81c0322bac36dc7ffb664d6372c920f16a4086aa1e2ee7a407ae6092b"
+    }
+  ]
+}
