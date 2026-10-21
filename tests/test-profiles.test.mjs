@@ -51,11 +51,13 @@ test("every repository test receives exactly one named execution profile", async
 		, "zero-payload-checked-record-jvm-evidence"
 		, "zero-payload-checked-record-jvm-promotion"
 		, "zero-payload-checked-record-perl"
+		, "zero-payload-checked-record-perl-evidence"
 		, "zero-payload-checked-record-php-evidence"
 		, "zero-payload-checked-record-python-evidence"
 		, "zero-payload-checked-record-ruby-evidence"
 		, "zero-payload-checked-record-rust-evidence"
-		, "zero-payload-checked-record-rust-promotion"])
+		, "zero-payload-checked-record-rust-promotion"
+		, "zero-payload-checked-record-wit-evidence"])
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-results.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
