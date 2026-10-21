@@ -13,7 +13,9 @@ import {
 	, zeroPayloadJvmEvidenceSources
 	, zeroPayloadNativeEvidenceSources
 	, zeroPayloadPerlEvidenceSources
+	, zeroPayloadPhpEvidenceSources
 	, zeroPayloadRustEvidenceSources
+	, zeroPayloadWitEvidenceSources
 } from "./zero-payload-checked-record-hosted-evidence-sources.mjs";
 import {
 	parseZeroPayloadHostedArchiveArgs, zeroPayloadHostedSafeZipPath
@@ -199,6 +201,68 @@ test("zero-payload Perl evidence closes every hosted source role", {
 		, ["checker", ".github/workflows/zero-payload-checked-record-perl.yml"]
 		, ["checker", "scripts/check-zero-payload-checked-record-perl-ci.mjs"]
 		, ["archiver", "scripts/archive-zero-payload-checked-record-perl-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload native-PHP evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadPhpEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-php/php.php"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-php.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-php-ci.mjs"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-php-evidence.mjs"]
+		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
+	]) assert.ok(sources.some(item => item.role === role && item.path === path)
+		, `${role}:${path}`);
+});
+
+test("zero-payload WIT evidence closes every hosted source role", {
+	timeout: 120_000
+}, () => {
+	const head = revision();
+	const sources = zeroPayloadWitEvidenceSources({
+		producer: head, consumer: head, checker: head, archiver: head
+	});
+	assert.ok(sources.length > 80);
+	assert.equal(new Set(sources.map(item =>
+		`${item.role}:${item.path}`)).size, sources.length);
+	assert.deepEqual([...new Set(sources.map(item => item.role))].sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const item of sources)
+	{
+		assert.equal(item.revision, head);
+		assert.ok(zeroPayloadHostedOriginal(item.revision, item.path).length > 0
+			, `${item.role}:${item.path}`);
+	}
+	for(const [role, path] of [
+		["producer", "tests/fixtures/onboarding/zero-payload-checked-records/ZeroPayloadCheckedRecords.lean"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-wit/wit-wasi.c"]
+		, ["consumer", "tests/fixtures/zero-payload-checked-record-wit/wit-values.h"]
+		, ["checker", ".github/workflows/zero-payload-checked-record-wit.yml"]
+		, ["checker", "scripts/check-zero-payload-checked-record-wit-ci.mjs"]
+		, ["checker", "flake.lock"]
+		, ["archiver", "scripts/archive-zero-payload-checked-record-wit-evidence.mjs"]
 		, ["archiver", "tests/helpers/zero-payload-checked-record-hosted-archive.mjs"]
 	]) assert.ok(sources.some(item => item.role === role && item.path === path)
 		, `${role}:${path}`);
