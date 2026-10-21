@@ -81,6 +81,11 @@ test("zero-payload JVM carriers keep empty, Unit, Option and variant identity", 
 		assert.match(files[java + "MarkBlank.java"], /record MarkBlank\(\)/u);
 		assert.match(files[java + "MarkMarked.java"]
 			, /record MarkMarked\(Witness witness\)/u);
+		assert.match(files[java + "MarkMarked.java"]
+			, /public MarkMarked \{\s+java\.util\.Objects\.requireNonNull\(witness\);/u);
+		assert.match(files[java + "Token.java"]
+			, /public Token \{\s+java\.util\.Objects\.requireNonNull\(tag\);/u);
+		assert.doesNotMatch(files[java + "Witness.java"], /requireNonNull/u);
 		assert.match(files[java + "Option.java"]
 			, /record Some<T>\(T value\) implements Option<T>/u);
 		assert.match(files[kotlin + "Witness.kt"], /class `Witness`\(\)/u);
@@ -88,6 +93,11 @@ test("zero-payload JVM carriers keep empty, Unit, Option and variant identity", 
 		assert.match(files[kotlin + "Marker.kt"], /class `Marker`\(\)/u);
 		assert.match(files[kotlin + "MarkBlank.kt"], /class `MarkBlank`\(\)/u);
 		assert.match(files[kotlin + "MarkMarked.kt"], /val `witness`:/u);
+		assert.match(files[kotlin + "MarkMarked.kt"]
+			, /init \{\s+java\.util\.Objects\.requireNonNull\(`witness`\)/u);
+		assert.match(files[kotlin + "Token.kt"]
+			, /init \{\s+java\.util\.Objects\.requireNonNull\(`tag`\)/u);
+		assert.doesNotMatch(files[kotlin + "Witness.kt"], /requireNonNull/u);
 		for(const [prefix, extension] of [[java, "java"], [kotlin, "kt"]])
 		{
 			const api = files[prefix + `Api.${extension}`];

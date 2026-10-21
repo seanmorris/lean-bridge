@@ -4,7 +4,9 @@
  * @file
  */
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
-import { compileCopiedJvmModel } from "./copied-model.mjs";
+import {
+	compileCopiedJvmModel, copiedJvmFieldNeedsNullCheck
+} from "./copied-model.mjs";
 import { copiedJvmAssets } from "./copied-assets.mjs";
 import { copiedJvmScope } from "./copied-conversions.mjs";
 import { jvmCopiedAliases, jvmAliasCatalogDocs, jvmAliasSiteDocs, jvmAliasReadme } from "./copied-aliases.mjs";
@@ -26,6 +28,13 @@ const valueEquality = (name, fields, parameters = "") => `    @Override public b
     @Override public int hashCode() {
         return java.util.Arrays.deepHashCode(new Object[] { ${[`${name}.class`, ...fields.map(field => `this.${field}`)].join(", ")} });
     }`;
+const nullBoundary = (model, name, fields) => {
+	const checked = fields.filter(field => copiedJvmFieldNeedsNullCheck(model, field));
+	return checked.length ? `    public ${name} {
+${checked.map(field => `        java.util.Objects.requireNonNull(${field.publicName});`).join("\n")}
+    }
+` : "";
+};
 
 const parameters = (model, fn) => fn.declaration.parameters.map((site, index) => `${model.publicType(jvmValue(model, site.type))} arg${index}`).join(", ");
 const resultType = (model, fn) => jvmResult(model, jvmValue(model, fn.declaration.result.type));
@@ -44,12 +53,12 @@ export const renderCopiedJvmPackage = (model, evidence = null) => {
 		, [`${prefix}/Api.java`]: `package ${model.namespace};\n${jvmAliasCatalogDocs(model)}public final class Api {\n    private Api() { }\n${model.surface.functions.map((fn, index) => `${withFinDocs(fn, jvmAliasSiteDocs(model, fn.declaration.parameters.map((site, n) => ({ name: `arg${n}`, type: site.type })), fn.declaration.result.type, fn.resultType === "void"), model.ir.types)}    public static ${resultType(model, fn)} ${fn.publicName}(${parameters(model, fn)}) { ${fn.resultType === "void" ? "" : "return "}Runtime.call${index}(${fn.declaration.parameters.map((_, n) => `arg${n}`).join(", ")}); }`).join("\n")}\n}\n`
 	};
 	for(const copy of model.surface.copies.filter(copy => copy.record))
-		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.record.fields.map((field, index) => ({ name: copy.fields[index].publicName, type: field.type })))}public record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) {\n${valueEquality(copy.publicName, copy.fields.map(field => field.publicName))}\n}\n`;
+		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.record.fields.map((field, index) => ({ name: copy.fields[index].publicName, type: field.type })))}public record ${copy.publicName}(${copy.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) {\n${nullBoundary(model, copy.publicName, copy.fields)}${valueEquality(copy.publicName, copy.fields.map(field => field.publicName))}\n}\n`;
 	for(const copy of model.surface.copies.filter(copy => copy.variant))
 	{
 		files[`${prefix}/${copy.publicName}.java`] = `package ${model.namespace};\npublic sealed interface ${copy.publicName} permits ${copy.cases.map(branch => branch.publicName).join(", ")} { }\n`;
 		for(const [index, branch] of copy.cases.entries())
-			files[`${prefix}/${branch.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.variant.cases[index].fields.map((field, i) => ({ name: branch.fields[i].publicName, type: field.type })))}public record ${branch.publicName}(${branch.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) implements ${copy.publicName} {\n${valueEquality(branch.publicName, branch.fields.map(field => field.publicName))}\n}\n`;
+			files[`${prefix}/${branch.publicName}.java`] = `package ${model.namespace};\n${jvmAliasSiteDocs(model, copy.variant.cases[index].fields.map((field, i) => ({ name: branch.fields[i].publicName, type: field.type })))}public record ${branch.publicName}(${branch.fields.map(field => `${model.publicType(field.type)} ${field.publicName}`).join(", ")}) implements ${copy.publicName} {\n${nullBoundary(model, branch.publicName, branch.fields)}${valueEquality(branch.publicName, branch.fields.map(field => field.publicName))}\n}\n`;
 	}
 	for(const callback of model.surface.callbacks.values())
 		files[`${prefix}/${callback.publicName}.java`] = jvmCallablePublic(model, callback);

@@ -3,7 +3,9 @@
  *
  * @file
  */
-import { compileCopiedJvmModel } from "./copied-model.mjs";
+import {
+	compileCopiedJvmModel, copiedJvmFieldNeedsNullCheck
+} from "./copied-model.mjs";
 import { renderCopiedJvmRuntime } from "./copied-runtime.mjs";
 import { jvmValue, jvmResult, jvmCallablePublic } from "./callables.mjs";
 import { generateCopiedJvmPackage } from "./copied-values.mjs";
@@ -85,8 +87,12 @@ const equality = (name, fields, parameters = "") => `    override fun equals(oth
 
 const record = (model, name, fields, parent = null) => {
 	const simple = name.split(".").at(-1), members = fields.map(field => field.publicName);
+	const checked = fields.filter(field => copiedJvmFieldNeedsNullCheck(model, field));
 	return `class ${quoted(simple)}(${fields.map(field => `@kotlin.jvm.JvmField val ${quoted(field.publicName)}: ${model.kotlinType(field.type)}`).join(", ")})${parent ? ` : ${quoted(parent)}` : ""} {
-${fields.map(field => `    fun ${quoted(field.publicName)}(): ${model.kotlinType(field.type)} = ${quoted(field.publicName)}`).join("\n")}
+${checked.length ? `    init {
+${checked.map(field => `        java.util.Objects.requireNonNull(${quoted(field.publicName)})`).join("\n")}
+    }
+` : ""}${fields.map(field => `    fun ${quoted(field.publicName)}(): ${model.kotlinType(field.type)} = ${quoted(field.publicName)}`).join("\n")}
 ${equality(quoted(simple), members)}
 }
 `;

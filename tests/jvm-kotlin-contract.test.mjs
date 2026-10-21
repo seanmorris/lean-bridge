@@ -66,6 +66,29 @@ test("Kotlin collections retain every primitive and all 24 explicitly typed arra
 	assert.ok(api.includes(`fun \`deep\`(arg0: ${expected}): ${expected}`));
 	assert.equal([...api.matchAll(/fun `/g)].length, 35);
 	assert.doesNotMatch(api, /kotlin\.Any|Object\b|MemorySegment|java\.lang\.reflect/);
+	const javaValues = original["src/main/java/org/leanbridge/collections/Primitives.java"];
+	const kotlinValues = rendered.files[
+		"src/main/kotlin/org/leanbridge/collections/kotlin/Primitives.kt"];
+	const referenceFields = [
+		"unit", "u64", "natural", "integer", "text", "bytes", "usize"
+	];
+	const primitiveFields = [
+		"flag", "u8", "u16", "u32", "i8", "i16", "i32", "i64", "f32", "f64"
+		, "char_", "isize"
+	];
+	for(const field of referenceFields)
+	{
+		assert.match(javaValues, new RegExp(
+			`java\\.util\\.Objects\\.requireNonNull\\(${field}\\);`, "u"));
+		assert.match(kotlinValues, new RegExp(
+			"java\\.util\\.Objects\\.requireNonNull\\(`" + field + "`\\)", "u"));
+	}
+	for(const field of primitiveFields)
+	{
+		assert.doesNotMatch(javaValues, new RegExp(`requireNonNull\\(${field}\\)`, "u"));
+		assert.doesNotMatch(kotlinValues, new RegExp(
+			"requireNonNull\\(`" + field + "`\\)", "u"));
+	}
 	const bridge = rendered.files[rendered.internalFiles.find(path => path.endsWith("/KotlinBridge.java"))];
 	assert.match(bridge, /final class KotlinBridge/); assert.doesNotMatch(bridge, /public class/);
 	const calls = rendered.files[rendered.internalFiles.find(path => path.endsWith("/KotlinCalls.kt"))];

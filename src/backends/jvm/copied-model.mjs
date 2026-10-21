@@ -14,9 +14,21 @@ const fieldName = name => {
 	return keywords.has(result) ? `${result}_` : result;
 };
 const publicTypes = { char: "int", unit: "Unit", bool: "boolean", uint8: "int", uint16: "int", uint32: "long", uint64: "java.math.BigInteger", int8: "byte", int16: "short", int32: "int", int64: "long", nat: "java.math.BigInteger", int: "java.math.BigInteger", float32: "float", float64: "double", string: "String", bytes: "byte[]" };
+const primitivePublicTypes = new Set([
+	"boolean", "byte", "short", "int", "long", "float", "double"
+]);
 const nativeTypes = { char: "int", unit: "byte", bool: "byte", uint8: "byte", uint16: "short", uint32: "int", uint64: "long", int8: "byte", int16: "short", int32: "int", int64: "long", float32: "float", float64: "double" };
 const widths = { byte: 1, short: 2, int: 4, long: 8, float: 4, double: 8 };
 const align = (size, boundary) => Math.ceil(size / boundary) * boundary;
+
+/**
+ * Whether a copied public field needs an explicit JVM null boundary.
+ *
+ * @param model - Closed JVM projection.
+ * @param field - Copied record or variant field.
+ */
+export const copiedJvmFieldNeedsNullCheck = (model, field) =>
+	!primitivePublicTypes.has(model.publicType(field.type));
 
 /**
  * Validate copied source types and calculate their Java names and C layouts.
