@@ -1,0 +1,112 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a4f912ff169da5bb55b54a29582101fa6c4a6a5057277dfdafaf20a63faf945d",
+      "path": "scripts/update-dependent-generic-subtype-ci-pin-reconciliation-source-history.mjs"
+    },
+    {
+      "currentSha256": "5801a2a44449afa0a40dd3981a95eff35a2a8fea1fce8c5dd8974abe67bc9934",
+      "path": "tests/helpers/dependent-generic-subtype-ci-pin-reconciliation-source-history.mjs"
+    },
+    {
+      "currentSha256": "3fc3d3ecdaeb81629c25aa1274dd4f3d1aff4e995b0214050634f3340fe70065",
+      "path": "tests/helpers/dependent-generic-subtype-ci-pin-reconciliation-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "4699217182c280aee63368ad91490a925d6f1480",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b5d60418f945ae1d4539080290a1726ddf2ea40ff604f5b56fb8feaf3da9a807",
+      "edits": [
+        {
+          "current": "import { beforeDependentGenericSubtypeCiPinReconciliationSource, dependentGenericSubtypeCiPinReconciliationChangedPaths, dependentGenericSubtypeCiPinReconciliationIntegrationPaths } from \"./dependent-generic-subtype-ci-pin-reconciliation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentGenericSubtypeCiPinReconciliationChangedPaths\n\t, ...dependentGenericSubtypeCiPinReconciliationIntegrationPaths\n\t, ...dependentGenericSubtypeCiChangedPaths\n",
+          "previous": "\t...dependentGenericSubtypeCiChangedPaths\n",
+          "start": 122662
+        },
+        {
+          "current": "\tconst dependentGenericSubtypeCiPinReconciliation\n\t\t= beforeDependentGenericSubtypeCiPinReconciliationSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentGenericSubtypeCiPinReconciliation) === expected)\n\t\treturn dependentGenericSubtypeCiPinReconciliation;\n",
+          "previous": "",
+          "start": 149600
+        },
+        {
+          "current": "\t\tpath, dependentGenericSubtypeCiPinReconciliation, expected\n",
+          "previous": "\t\tpath, text, expected\n",
+          "start": 149935
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f375bdda1b0a04a47e7cc795195df301918790550f84c733d34e5689b8348403"
+    },
+    {
+      "currentSha256": "6dff2662aec33fdfd0d2f8410c72b7d136d5cc6508505fb03704e833be2d4a76",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-generic-subtype-ci-pin-reconciliation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 206
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-hosted-promotion.test.mjs",
+      "previousSha256": "7aab777e2e408545f5fd1d33cddb2de52ee0759eddfaf77f7b86b54524ef2fb1"
+    }
+  ],
+  "milestone": "dependent-generic-subtype-ci-pin-reconciliation-source-v1",
+  "predecessorCommit": "6bd178408228557a670b273eaa4c063f652bdbc1",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Eight existing native Subtype evidence references advance to the recurring dependent-generic CI registration bytes without changing commands, artifacts, observations or support claims.",
+  "updates": [
+    {
+      "currentSha256": "c849b9e648892e9c553834162219b1d8e5c86ff6f42525f70bb07d3c1a62c070",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"dfe36a7194a937cbb83511d75e039a2b0f2a8701747fb3101f61260fb6ee9b94\"\n",
+          "previous": "          \"sha256\": \"966a6e8a20767cdd9f42e797a77f7efef26a26816bc90988eb292e39c24bbf0d\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "1c86e97cfee7eaaacbfd3c0e6f5dc97e97914ca9d8984f93b06e8e4c1764342c"
+    }
+  ]
+}

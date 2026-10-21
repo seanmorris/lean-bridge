@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
+import "./helpers/dependent-generic-subtype-ci-pin-reconciliation-source-history-tests.mjs";
 import "./helpers/callback-subtype-history-pin-reconciliation-source-history-tests.mjs";
 import "./helpers/zero-payload-php-wasm-promotion-source-history-tests.mjs";
 import "./helpers/zero-payload-hosted-promotion-source-history-tests.mjs";
