@@ -132,6 +132,11 @@ const emitTypeDeclarations = (ir, typeMap) => {
 			const parameters = type.typeParameters.length
 				? `<${type.typeParameters.map(parameter => parameter.id).join(", ")}>`
 				: "";
+			if(type.fields.length === 0)
+			{
+				output.push(`export type ${type.name}${parameters} = Readonly<Record<PropertyKey, never>>;`, "");
+				continue;
+			}
 			output.push(`export interface ${type.name}${parameters} {`);
 			for(const field of type.fields)
 			{
