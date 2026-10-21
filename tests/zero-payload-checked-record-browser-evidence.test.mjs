@@ -9,6 +9,7 @@ import test from "node:test";
 import {
 	checkZeroPayloadBrowserEvidence, zeroPayloadBrowserEvidence
 } from "./helpers/zero-payload-checked-record-browser-evidence.mjs";
+import "./helpers/zero-payload-browser-evidence-source-history-tests.mjs";
 
 test("hosted zero-payload browser archive authenticates every retained route", {
 	timeout: 120_000

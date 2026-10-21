@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadBrowserEvidenceSource, zeroPayloadBrowserEvidenceChangedPaths, zeroPayloadBrowserEvidenceIntegrationPaths } from "./zero-payload-browser-evidence-source-history.mjs";
 import { beforeZeroPayloadOrdinaryEvidenceExpectationSource, zeroPayloadOrdinaryEvidenceExpectationChangedPaths, zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths } from "./zero-payload-ordinary-evidence-expectation-source-history.mjs";
 import { beforeHistoryReaderBufferRepairSource, historyReaderBufferRepairChangedPaths, historyReaderBufferRepairIntegrationPaths } from "./history-reader-buffer-repair-source-history.mjs";
 import { beforeHubTransitionGapSource, hubTransitionGapChangedPaths, hubTransitionGapHistoricalPaths } from "./hub-transition-gap-source-history.mjs";
@@ -1441,7 +1442,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadOrdinaryEvidenceExpectationChangedPaths
+	...zeroPayloadBrowserEvidenceChangedPaths
+	, ...zeroPayloadBrowserEvidenceIntegrationPaths
+	, ...zeroPayloadOrdinaryEvidenceExpectationChangedPaths
 	, ...zeroPayloadOrdinaryEvidenceExpectationIntegrationPaths
 	, ...historyReaderBufferRepairChangedPaths
 	, ...historyReaderBufferRepairIntegrationPaths
@@ -2001,8 +2004,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
+	const browserEvidence = beforeZeroPayloadBrowserEvidenceSource(
 		path, text, expected
+	);
+	if(sha256(browserEvidence) === expected) return browserEvidence;
+	const evidenceExpectation = beforeZeroPayloadOrdinaryEvidenceExpectationSource(
+		path, browserEvidence, expected
 	);
 	if(sha256(evidenceExpectation) === expected) return evidenceExpectation;
 	const bufferRepair = beforeHistoryReaderBufferRepairSource(
