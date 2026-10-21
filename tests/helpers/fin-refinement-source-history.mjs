@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadJvmPromotionSource, zeroPayloadJvmPromotionChangedPaths, zeroPayloadJvmPromotionIntegrationPaths } from "./zero-payload-jvm-promotion-source-history.mjs";
 import { beforeZeroPayloadRubyHistorySource, zeroPayloadRubyHistoryChangedPaths, zeroPayloadRubyHistoryIntegrationPaths } from "./zero-payload-ruby-source-history.mjs";
 import { beforeZeroPayloadPythonHistorySource, zeroPayloadPythonHistoryChangedPaths, zeroPayloadPythonHistoryIntegrationPaths } from "./zero-payload-python-source-history.mjs";
 import { beforeZeroPayloadJvmNullBoundarySource, zeroPayloadJvmNullBoundaryChangedPaths, zeroPayloadJvmNullBoundaryHistoricalPaths, zeroPayloadJvmNullBoundaryIntegrationPaths } from "./zero-payload-jvm-null-boundary-source-history.mjs";
@@ -1425,7 +1426,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadRubyHistoryChangedPaths
+	...zeroPayloadJvmPromotionChangedPaths
+	, ...zeroPayloadJvmPromotionIntegrationPaths
+	, ...zeroPayloadRubyHistoryChangedPaths
 	, ...zeroPayloadRubyHistoryIntegrationPaths
 	, ...zeroPayloadPythonHistoryChangedPaths
 	, ...zeroPayloadPythonHistoryIntegrationPaths
@@ -1956,8 +1959,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
-	const zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(
+	const zeroPayloadJvmPromotion = beforeZeroPayloadJvmPromotionSource(
 		path, text, expected
+	);
+	if(sha256(zeroPayloadJvmPromotion) === expected)
+		return zeroPayloadJvmPromotion;
+	const zeroPayloadRuby = beforeZeroPayloadRubyHistorySource(
+		path, zeroPayloadJvmPromotion, expected
 	);
 	if(sha256(zeroPayloadRuby) === expected) return zeroPayloadRuby;
 	const zeroPayloadPython = beforeZeroPayloadPythonHistorySource(

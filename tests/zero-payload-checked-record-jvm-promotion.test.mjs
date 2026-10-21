@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
+import "./helpers/zero-payload-jvm-promotion-source-history-tests.mjs";
 import {
 	promoteZeroPayloadJvm, zeroPayloadJvmPromotionConversion
 	, zeroPayloadJvmPromotionHostTypes, zeroPayloadJvmPromotionLimit
