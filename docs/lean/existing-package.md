@@ -459,6 +459,12 @@ Nested support is established only for the archived acyclic `Packet`, `Holder`, 
 
 That acceptance does not cover generic or recursive checked records, value-carrying receiver-dependent inherited fields, other index kinds, open value-dependent or zero-payload records, callbacks or owned positions.
 
+#### Export a proof-only checked record
+
+A proof-only record is a real nominal value, not `Unit`, null or absence. Declare the structure in `Type`, provide a nullary checked constructor such as `def mkWitness : Option Witness`, and select that constructor at each public input site. The host receives an empty carrier; a record with a `Unit` field keeps that field. Lean-produced results need no input constructor.
+
+The [hosted C/C++ zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) validates proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, arrays and variant branches through ordinary and reviewed full/result-only packages. C uses a single non-semantic byte to give the nominal structure legal storage; C++ uses an empty structure. Neither carrier contains a proof.
+
 ### Export a checked Subtype
 
 For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:

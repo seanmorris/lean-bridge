@@ -43,7 +43,8 @@ test("every repository test receives exactly one named execution profile", async
 		, "checked-record-value-index-native-evidence"
 		, "checked-record-value-index-php"
 		, "checked-record-value-index-python"
-		, "zero-payload-checked-record-native-evidence"])
+		, "zero-payload-checked-record-native-evidence"
+		, "zero-payload-checked-record-native-promotion"])
 		assert.ok(grouped.contract.includes(`tests/${name}.test.mjs`), name);
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-results.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
