@@ -96,6 +96,8 @@ const lanes = Object.freeze({
 		, producerAssets: [
 			"src/backends/perl/Build.pm"
 			, "src/backends/perl/BuildCallbackResults.pm"
+			, "src/backends/perl/OwnedAssets.pm"
+			, "src/backends/perl/Platform.pm"
 			, "src/backends/perl/Runtime.pm"
 			, "src/backends/perl/Runtime.xs"
 			, "src/backends/perl/runtime.h"

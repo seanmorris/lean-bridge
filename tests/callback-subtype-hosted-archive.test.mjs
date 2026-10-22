@@ -56,7 +56,8 @@ const laneSources = Object.freeze({
 	]
 	, perl: [
 		...["Build.pm", "BuildCallbackResults.pm", "Runtime.pm", "Runtime.xs"
-			, "runtime.h"].map(path => ["producer", `src/backends/perl/${path}`])
+			, "runtime.h", "OwnedAssets.pm", "Platform.pm"]
+			.map(path => ["producer", `src/backends/perl/${path}`])
 		, ["checker", "scripts/build-perl-toolchains.mjs"]
 	]
 	, dotnet: [], jvm: [], "php-native": []
