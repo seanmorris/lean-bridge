@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeWitConsumerRootRepairSource, witConsumerRootRepairChangedPaths } from "./wit-consumer-root-repair-source-history.mjs";
 import { beforeNominalEntryRepairSource, nominalEntryRepairChangedPaths } from "./nominal-entry-repair-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmSource, callbackRefinementsPhpWasmChangedPaths } from "./callback-refinements-php-wasm-source-history.mjs";
 import { beforeCallbackSubtypePhpWasmSource, callbackSubtypePhpWasmChangedPaths } from "./callback-subtype-php-wasm-source-history.mjs";
@@ -1897,7 +1898,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...nominalEntryRepairChangedPaths
+	...witConsumerRootRepairChangedPaths
+	, ...nominalEntryRepairChangedPaths
 	, ...callbackRefinementsPhpWasmChangedPaths
 	, ...callbackSubtypePhpWasmChangedPaths
 	, ...ownedCheckedRecordPhpWasmChangedPaths
@@ -2577,7 +2579,9 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
-	const nominalEntryRepair = beforeNominalEntryRepairSource(path, text, expected);
+	const witConsumerRootRepair = beforeWitConsumerRootRepairSource(path, text, expected);
+	if(sha256(witConsumerRootRepair) === expected) return witConsumerRootRepair;
+	const nominalEntryRepair = beforeNominalEntryRepairSource(path, witConsumerRootRepair, expected);
 	if(sha256(nominalEntryRepair) === expected) return nominalEntryRepair;
 	const callbackRefinementsPhpWasm
 		= beforeCallbackRefinementsPhpWasmSource(path, nominalEntryRepair, expected);

@@ -1,0 +1,135 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6b03a4000a840123b9b93055aa690b47f6f128ea50c01d98f73a8c90585101b3",
+      "path": "scripts/update-wit-consumer-root-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "48bf71d9a2b6cb31c03899ec5c96a1fa4dff459372910b2f7b376427650e027e",
+      "path": "tests/helpers/wit-consumer-root-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d15cacfe494720ad3f9cb449cafdca008081fe9943eb929e064568be423230e7",
+      "path": "tests/helpers/wit-consumer-root-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "bef4ad20de7565fc6d586fb9216b4d69180770bd",
+  "milestone": "wit-consumer-root-repair-v1",
+  "predecessorCommit": "36a4cd72c660427534af9d01b9e8bb74c0521cd5",
+  "schemaVersion": 1,
+  "scope": "The WIT dependent checked-record lane names its immutable C caller root once, tests/fixtures/dependent-checked-record-consumers/, in the fixture reader, the installed git guard and the producer-revision reconstruction, replacing a cloned tests/fixtures/dependent-checked-record-wit/ root that never existed. A source-only control proves both files are committed and that reconstruction follows the producer revision. No installed run is claimed.",
+  "updates": [
+    {
+      "currentSha256": "c19a10db4c93a66128c1a0c05d99f28fa5bbe7ebde7b3d9a633a87922abda222",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "import { spawnSync } from \"node:child_process\";\n",
+          "start": 311
+        },
+        {
+          "current": "\t, dependentCheckedRecordWitConfiguration, dependentCheckedRecordWitConsumerFiles\n\t, dependentCheckedRecordWitConsumerRoot, dependentCheckedRecordWitCounts\n",
+          "previous": "\t, dependentCheckedRecordWitConfiguration, dependentCheckedRecordWitCounts\n",
+          "start": 1074
+        },
+        {
+          "current": "import { dependentCheckedRecordWitOriginalCaller } from \"./dependent-checked-record-wit-report.mjs\";\n",
+          "previous": "",
+          "start": 1551
+        },
+        {
+          "current": "test(\"dependent checked-record WIT caller files resolve from one committed root and reconstruct from the producer revision\", async () => {\n\tconst git = args => execFileSync(\"git\", args, { encoding: \"utf8\" });\n\t// Both files are committed under the shared root; no second fixture directory exists to drift to.\n\tfor(const name of dependentCheckedRecordWitConsumerFiles)\n\t\tassert.equal(git([\"ls-files\", \"--error-unmatch\", `${dependentCheckedRecordWitConsumerRoot}${name}`]).trim()\n\t\t\t, `${dependentCheckedRecordWitConsumerRoot}${name}`);\n\tassert.equal(existsSync(\"tests/fixtures/dependent-checked-record-wit\"), false);\n\t// The report rebuilds each route's caller from git objects at the producer revision, byte-identical\n\t// to what the fixture reader inlines from the committed working tree.\n\tconst revision = git([\"rev-parse\", \"HEAD\"]).trim();\n\tfor(const route of dependentCheckedRecordWitRoutes)\n\t{\n\t\tconst mode = dependentCheckedRecordSelection(route).resultOnly ? \"result-only\" : \"full\";\n\t\tassert.equal(dependentCheckedRecordWitOriginalCaller(revision, route, mode)\n\t\t\t, await dependentCheckedRecordWitCaller(route), route);\n\t\tassert.throws(() => dependentCheckedRecordWitOriginalCaller(revision, route\n\t\t\t, mode === \"full\" ? \"result-only\" : \"full\"));\n\t}\n\t// A revision from before the caller existed cannot be reconstructed from the working tree instead.\n\tconst introduced = git([\"log\", \"--diff-filter=A\", \"--format=%H\", \"--\"\n\t\t, `${dependentCheckedRecordWitConsumerRoot}wit-wasi.c`]).trim().split(\"\\n\").at(-1);\n\tconst before = git([\"rev-parse\", `${introduced}^`]).trim();\n\tassert.throws(() => dependentCheckedRecordWitOriginalCaller(before\n\t\t, dependentCheckedRecordWitRoutes[0], \"full\"));\n});\n\n",
+          "previous": "",
+          "start": 6857
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-fixture-tests.mjs",
+      "previousSha256": "856871ac63199d8153d64f90b9f699e8ad30c1aa790ae051517e4946fa288528"
+    },
+    {
+      "currentSha256": "a624acb9f202384317440febd78f2549f65a6471b4e4318e1470c5facf0207ca",
+      "edits": [
+        {
+          "current": "// The one committed home of the immutable C caller and its value helpers. The fixture reader,\n// the installed git guard and the producer-revision reconstruction all name it from here.\nexport const dependentCheckedRecordWitConsumerRoot = \"tests/fixtures/dependent-checked-record-consumers/\";\nexport const dependentCheckedRecordWitConsumerFiles = Object.freeze([\"wit-wasi.c\", \"wit-values.h\"]);\n",
+          "previous": "",
+          "start": 939
+        },
+        {
+          "current": "\tconst root = dependentCheckedRecordWitConsumerRoot;\n",
+          "previous": "\tconst root = \"tests/fixtures/dependent-checked-record-consumers/\";\n",
+          "start": 4267
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-fixture.mjs",
+      "previousSha256": "6e0b44e1d48d57256975a350c19eda13d1985b26e363517bb01a136bcfa761b0"
+    },
+    {
+      "currentSha256": "b95c5dd1d175053b4379064dcf3c5a11a9ba5bc88e2a9051085ddf4d29f35c86",
+      "edits": [
+        {
+          "current": "import {\n\tdependentCheckedRecordWitConsumerFiles, dependentCheckedRecordWitConsumerRoot\n\t, dependentCheckedRecordWitFixtureRoot, dependentCheckedRecordWitLeanModule\n} from \"./dependent-checked-record-wit-fixture.mjs\";\n",
+          "previous": "import { dependentCheckedRecordWitFixtureRoot, dependentCheckedRecordWitLeanModule } from \"./dependent-checked-record-wit-fixture.mjs\";\n",
+          "start": 1059
+        },
+        {
+          "current": "\tfor(const name of dependentCheckedRecordWitConsumerFiles)\n\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", `${dependentCheckedRecordWitConsumerRoot}${name}`]);\n",
+          "previous": "\tfor(const name of [\"wit-wasi.c\", \"wit-values.h\"])\n\t\texecFileSync(\"git\", [\"ls-files\", \"--error-unmatch\", `tests/fixtures/dependent-checked-record-wit/${name}`]);\n",
+          "start": 2621
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-installed-tests.mjs",
+      "previousSha256": "5a7caf3dacd031fd0f7e7cc1ef7a1a93a9560315c1cdab21addfd2e41cca5929"
+    },
+    {
+      "currentSha256": "d1331baf2b265a7fd4cc076a7aa5795b36395de98881329cc21391beae40244a",
+      "edits": [
+        {
+          "current": "import { dependentCheckedRecordWitConsumerRoot, dependentCheckedRecordWitLeanModule } from \"./dependent-checked-record-wit-fixture.mjs\";\n",
+          "previous": "import { dependentCheckedRecordWitLeanModule } from \"./dependent-checked-record-wit-fixture.mjs\";\n",
+          "start": 450
+        },
+        {
+          "current": "\tconst root = dependentCheckedRecordWitConsumerRoot;\n",
+          "previous": "\tconst root = \"tests/fixtures/dependent-checked-record-wit/\";\n",
+          "start": 1953
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-report.mjs",
+      "previousSha256": "6ec36d6773dce250b60ec3cefc582ac851a7adfa5e7b8bf52d65dfa475553cce"
+    },
+    {
+      "currentSha256": "af16045ab1c19d71bd324a8e93470a901285906c163cb1d8126ac3497724a1ea",
+      "edits": [
+        {
+          "current": "import { beforeWitConsumerRootRepairSource, witConsumerRootRepairChangedPaths } from \"./wit-consumer-root-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...witConsumerRootRepairChangedPaths\n\t, ...nominalEntryRepairChangedPaths\n",
+          "previous": "\t...nominalEntryRepairChangedPaths\n",
+          "start": 143601
+        },
+        {
+          "current": "\tconst witConsumerRootRepair = beforeWitConsumerRootRepairSource(path, text, expected);\n\tif(sha256(witConsumerRootRepair) === expected) return witConsumerRootRepair;\n\tconst nominalEntryRepair = beforeNominalEntryRepairSource(path, witConsumerRootRepair, expected);\n",
+          "previous": "\tconst nominalEntryRepair = beforeNominalEntryRepairSource(path, text, expected);\n",
+          "start": 174481
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a9ad1a2fe940969f30ce1551f6522eb426ec39a77cfd577843916efe3040ee9f"
+    },
+    {
+      "currentSha256": "020c1de7e33126f155846398d6207797beb08c0c29b9b38e2d9c4779c42b00ee",
+      "edits": [
+        {
+          "current": "import \"./helpers/wit-consumer-root-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4451
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719"
+    }
+  ]
+}
