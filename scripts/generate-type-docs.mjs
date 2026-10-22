@@ -71,6 +71,15 @@ const hasCallbackSubtypeHostedEvidence = document =>
 	callbackSubtypeHostedEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const callbackSubtypeHostedReference = "[Hosted synchronous callback Subtype acceptance](../evidence/callback-subtype-promotion-20261022.md) establishes proof-erased selected Nat Subtypes in host callback replies and returned Lean closure inputs across all sixteen non-PHP-Wasm consumer profiles and both source routes. Lean-produced values cross as base values. Host-produced replies use the target's exact typed recovery wrapper; invalid or missing recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. Retained or asynchronous callbacks, checked-record and owned callback positions, arbitrary predicates, recursive or generic refined payloads, dispatch cost and peak memory remain separate work.";
+const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.
+The separate entry-measurement probes instrument fixture packages only: their
+24 copied, owned and indexed routes count validator, constructor, adapter and
+Lean-source entries, while four callback routes record callback control totals.
+Together they form 28 ordinary/reviewed routes in 26 retained artifacts and do
+not widen any type-support cell. The configured [promotion
+workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
+is not a hosted result; entry counts become hosted evidence only when a
+completed run publishes a verified summary for one revision.`;
 
 const callbackSubtypeHostedGuide = (document, profiles, reference) => {
 	if(!hasCallbackSubtypeHostedEvidence(document)) return null;
@@ -278,6 +287,8 @@ export async function renderTypeDocuments({ root, inventory = null })
 			, "Both ordinary-source and compiler-checked reviewed packages have installed corpus runs across all seventeen consumer profiles. The [native](../evidence/reviewed-native-20260918.md) and [Wasm](../evidence/reviewed-wasm-20260918.md) records list tested signatures and gaps. All profiles accept nineteen primitive parameter/result types, including [Char in npm](../evidence/char-npm-20260918.md), [native/PHP-Wasm Char](../evidence/char-native-20260918.md), and [USize/ISize](../evidence/platform-words-20260918.md). All profiles also accept copied arrays and acyclic records containing these primitives."
 			, ""
 			, "Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit words; native packages and native-backed WIT components use 64-bit words. Host adapters check those ranges before calling Lean. The consumer's pointer width does not select the range. Lean arithmetic still wraps at its compiled word width."
+			, ""
+			, phpWasmRefinementEntryBoundary
 			, ""
 			, "All seventeen profiles have installed checks for synchronous primitive callbacks and returned Lean functions on both source paths. The [npm callable record](../evidence/npm-callables-20260919.md) covers Node, strict TypeScript, Chromium and Firefox, including React and workers. These shared callable checks use one through sixteen primitive arguments and a primitive result. All seventeen profiles also accept acyclic copied callback payloads. All seventeen profiles additionally accept finite recursive callback values. Asynchronous callables require separate contracts."
 			, ""

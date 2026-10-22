@@ -146,6 +146,12 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	assert.doesNotMatch(before.reference, evidence);
 	assert.match(after.reference, evidence);
 	assert.match(after.reference, /sixteen non-PHP-Wasm consumer profiles/u);
+	for(const source of [before.reference, after.reference])
+	{
+		assert.match(source, /28 ordinary\/reviewed routes in 26 retained artifacts/u);
+		assert.match(source, /do\s+not widen any type-support cell/u);
+		assert.match(source, /is not a hosted result/u);
+	}
 });
 
 test("callback Subtype promotion replaces both stale Lean-author boundaries", async () => {
