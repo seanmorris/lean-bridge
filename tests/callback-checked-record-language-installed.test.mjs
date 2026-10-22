@@ -22,7 +22,10 @@ import {
 	installCopiedConsumer, nativeFixtureEnvironment
 } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute
+	, writeCallbackCheckedRecordRetainedPackages
+} from "./helpers/callback-checked-record-retained-packages.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const profiles = process.env
@@ -46,6 +49,10 @@ test("ordinary and reviewed Python, Ruby and Rust callback checked records insta
 		else t.diagnostic(
 			`Retained failed callback checked-record language inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_OUTPUT
+		?? "build/callback-checked-records/languages/report.json");
+	await clearCallbackCheckedRecordRetainedPackages(output);
+	const retainedEntries = [];
 	const environment = nativeFixtureEnvironment(profiles), reports = [];
 	let review;
 	for(const route of ["ordinary", "reviewed"])
@@ -78,7 +85,9 @@ test("ordinary and reviewed Python, Ruby and Rust callback checked records insta
 		if(route === "ordinary")
 			review = callbackCheckedRecordReviewedIr(model.bindingIr);
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackCheckedRecordRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
 		});
@@ -120,10 +129,8 @@ test("ordinary and reviewed Python, Ruby and Rust callback checked records insta
 			await rm(consumer, { recursive: true, force: true });
 		}
 	}
-	const output = resolve(process.env
-		.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_OUTPUT
-		?? "build/callback-checked-records/languages.json");
 	await saveLakeFile(dirname(output), basename(output)
 		, canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);
 	complete = true;
 });

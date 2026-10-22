@@ -21,6 +21,10 @@ import {
 	callbackCheckedRecordRemainingVerification
 } from "./callback-checked-record-remaining-ci.mjs";
 import {
+	callbackCheckedRecordRetentionRequired
+	, verifyCallbackCheckedRecordRetainedPackages
+} from "./callback-checked-record-retained-packages.mjs";
+import {
 	callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedOriginal
 } from "./callback-checked-record-hosted-evidence-sources.mjs";
@@ -111,11 +115,17 @@ const replay = async (lane, root, revision) => {
 		};
 	}
 	const report = JSON.parse(await readFile(join(output, "report.json")));
-	return contract.nativeKind
+	const verified = contract.nativeKind
 		? callbackCheckedRecordNativeVerification(
 			contract.nativeKind, revision, tap, report)
 		: callbackCheckedRecordRemainingVerification(
 			revision, contract.profiles, tap, report);
+	if(!callbackCheckedRecordRetentionRequired(contract.nativeKind ?? "remaining"
+		, path => callbackCheckedRecordHostedOriginal(revision, path)))
+		return verified;
+	return { ...verified
+		, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(
+			output, report) };
 };
 
 const reconstruct = async (root, parts, target) => {

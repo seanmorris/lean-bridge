@@ -4,8 +4,24 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
+import {
+	appendFile, mkdtemp, readFile, rm, writeFile
+} from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import {
+	packageSetReceiptName, writePackageSetReceipt
+} from "../src/release/package-set-receipt.mjs";
+import {
+	callbackCheckedRecordRetentionRequired
+	, clearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute
+	, verifyCallbackCheckedRecordRetainedPackages
+	, writeCallbackCheckedRecordRetainedPackages
+} from "./helpers/callback-checked-record-retained-packages.mjs";
+import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import {
 	callbackCheckedRecordLanguageChecks
 	, callbackCheckedRecordLanguageTestName
@@ -359,4 +375,139 @@ test("callback checked-record native workflows preserve failures and cannot narr
 		assert.match(shell, /test "\$\(git rev-parse HEAD\)" = "\$revision"/u);
 		assert.doesNotMatch(shell, /\|\| true|set \+e/u);
 	}
+});
+
+const producedRelease = async (root, route) => {
+	const abi = { id: "native-library-v1", bindingIrSha256: sha("1")
+		, runtimeIdentity: sha("2") };
+	const packages = [];
+	for(const target of ["c", "cpp"])
+	{
+		const path = `archives/${target}/callbackcheckedrecords-${route}.fixture`;
+		const bytes = Buffer.from(`Inert ${target} archive for ${route}\n`);
+		await saveLakeFile(root, path, bytes);
+		const artifacts = [{ path, bytes: bytes.length, sha256: sha256(bytes) }];
+		packages.push({ target, ecosystem: target, name: "callbackcheckedrecords"
+			, version: "1.0.0", profile: abi.id, role: "component"
+			, runtimeIdentity: abi.runtimeIdentity, runtimeDelivery: "embedded"
+			, requires: [], artifacts });
+	}
+	return writePackageSetReceipt({ root
+		, component: { id: "callbackcheckedrecords@1.0.0"
+			, name: "callbackcheckedrecords", version: "1.0.0" }
+		, source: { treeSha256: sha("9") }, profiles: [abi], packages });
+};
+
+const retainedLane = async (t, { perl = false } = {}) => {
+	const root = await mkdtemp(join(tmpdir(), "lean-callback-checked-record-retained-"));
+	t.after(() => rm(root, { recursive: true, force: true }));
+	const output = join(root, "lane-ci/report.json");
+	await clearCallbackCheckedRecordRetainedPackages(output);
+	const entries = [], reports = [];
+	for(const route of ["ordinary", "reviewed"])
+	{
+		const release = join(root, `${route}-release`);
+		await producedRelease(release, route);
+		const handoff = join(root, `${route}-handoff`);
+		const { receipt, entry } = await retainCallbackCheckedRecordRoute({
+			output, route, source: release, handoff });
+		entries.push(entry);
+		const installed = await readFile(join(handoff, packageSetReceiptName));
+		assert.equal(sha256(installed), entry.receiptSha256);
+		reports.push(perl ? { route, packages: receipt.packages }
+			: { route, receiptSha256: entry.receiptSha256 });
+	}
+	await writeCallbackCheckedRecordRetainedPackages(output, entries.toReversed());
+	return { root, outputRoot: join(root, "lane-ci"), output
+		, report: { schemaVersion: 1, reports } };
+};
+
+test("callback checked-record lanes install from and verify their retained package sets", async t => {
+	for(const perl of [false, true])
+	{
+		const lane = await retainedLane(t, { perl });
+		const summary = await verifyCallbackCheckedRecordRetainedPackages(
+			lane.outputRoot, lane.report);
+		assert.deepEqual(summary.routes.map(route => route.route)
+			, ["ordinary", "reviewed"]);
+		for(const route of summary.routes)
+			assert.ok(route.archives === 2 && route.archiveBytes > 0);
+	}
+	const exists = await retainedLane(t);
+	await assert.rejects(retainCallbackCheckedRecordRoute({ output: exists.output
+		, route: "ordinary", source: join(exists.root, "ordinary-release")
+		, handoff: join(exists.root, "again") }), /must not already exist/u);
+});
+
+test("callback checked-record retained package verification rejects every tampering", async t => {
+	const rejects = async (change, pattern) => {
+		const lane = await retainedLane(t);
+		await change(lane);
+		await assert.rejects(verifyCallbackCheckedRecordRetainedPackages(
+			lane.outputRoot, lane.report), pattern);
+	};
+	await rejects(({ outputRoot }) => appendFile(join(outputRoot
+		, "evidence/ordinary/handoff/archives/c/callbackcheckedrecords-ordinary.fixture"), "x")
+	, /Archive differs|archive-mismatch/u);
+	await rejects(({ outputRoot }) => writeFile(join(outputRoot
+		, "evidence/reviewed/handoff/CallbackCheckedRecords.lean"), "-- source\n")
+	, /exactly the receipt-named set/u);
+	await rejects(({ outputRoot }) => saveLakeFile(outputRoot
+		, "evidence/stale/handoff/extra.fixture", "stale\n")
+	, /only route package sets/u);
+	await rejects(async ({ outputRoot }) => {
+		const path = join(outputRoot, "retained-packages.json");
+		await writeFile(path, JSON.stringify(JSON.parse(await readFile(path, "utf8"))));
+	}, /must be canonical/u);
+	await rejects(async ({ outputRoot }) => {
+		const path = join(outputRoot, "retained-packages.json");
+		const record = JSON.parse(await readFile(path, "utf8"));
+		record.routes[1].archiveBytes += 1;
+		await writeFile(path, canonicalJson(record));
+	}, /retained package metadata/u);
+	await rejects(async ({ report }) => {
+		report.reports[0].receiptSha256 = sha("0");
+	}, /reported receipt is the retained receipt/u);
+	await rejects(async ({ report }) => {
+		report.reports = report.reports.slice(1);
+	}, /report covers the route/u);
+	const perl = await retainedLane(t, { perl: true });
+	perl.report.reports[1].packages[0].name = "forged";
+	await assert.rejects(verifyCallbackCheckedRecordRetainedPackages(perl.outputRoot
+		, perl.report), /reported packages are the retained set/u);
+});
+
+test("callback checked-record producers, checkers and archives require retained packages", async () => {
+	for(const lane of ["native", "language", "perl", "remaining"])
+	{
+		const source = await readFile(`tests/callback-checked-record-${lane}-installed.test.mjs`, "utf8");
+		for(const required of ["await clearCallbackCheckedRecordRetainedPackages(output);"
+			, "await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: outputRoot, handoff });"
+			, "await writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);"])
+			assert.ok(source.includes(required), `${lane}: ${required}`);
+		assert.doesNotMatch(source, /copyPackageSetHandoff\(outputRoot/u, lane);
+	}
+	for(const lane of ["native", "languages", "perl", "remaining"])
+		assert.match(await readFile(`scripts/check-callback-checked-record-${lane}-ci.mjs`, "utf8")
+			, /retainedPackages: await verifyCallbackCheckedRecordRetainedPackages\(\n\t\tdirname\(selected\.report\), report\)/u, lane);
+	for(const path of ["scripts/archive-callback-checked-record-evidence.mjs"
+		, "tests/helpers/callback-checked-record-hosted-evidence.mjs"])
+		assert.match(await readFile(path, "utf8")
+			, /retainedPackages: await verifyCallbackCheckedRecordRetainedPackages\(/u, path);
+});
+
+test("callback checked-record retention is required exactly for retention-era producers", async () => {
+	const legacy = () => Buffer.from("const receipt = await copyPackageSetHandoff(outputRoot, handoff);\n");
+	for(const kind of ["native", "language", "perl", "remaining"])
+	{
+		assert.equal(callbackCheckedRecordRetentionRequired(kind, legacy), false, kind);
+		assert.equal(callbackCheckedRecordRetentionRequired(kind
+			, path => readFileSync(path)), true, kind);
+	}
+	assert.throws(() => callbackCheckedRecordRetentionRequired("browser", legacy));
+	const replay = await readFile("tests/helpers/callback-checked-record-hosted-evidence.mjs", "utf8");
+	assert.match(replay, /if\(!callbackCheckedRecordRetentionRequired\(/u);
+	const archiver = await readFile("scripts/archive-callback-checked-record-evidence.mjs", "utf8");
+	assert.match(archiver
+		, /New callback checked-record archives require a producer that retains its installed package sets/u);
 });
