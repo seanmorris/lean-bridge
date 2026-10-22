@@ -96,7 +96,7 @@ export const generateOwnedWasmCallbacks = (generated, hooks = {}) => {
 			, `  if (!status && fallback) status = ${result.walker}_in(fallback, 0, 1, &transaction, &recovery);`
 			, "  if (!status) {"
 			, "    if (!recovery) recovery = lean_alloc_array(0, 0);"
-			, `    lean_object *closure = ${carrier.symbol}_wrap((size_t)host->token, recovery);`
+			, `    lean_object *closure = ${carrier.symbol}_wrap((size_t)host->token, fallback ? 1 : 0, recovery);`
 			, "    if (!ov_carrier(closure)) { lean_dec(closure); status = LB_OWNED_INVALID; }"
 			, `    else status = ${node.walker}_out(out, closure, 0, &transaction);`, "  }"
 			, "  if (!status) status = ov_commit(&transaction, owner);"

@@ -89,7 +89,7 @@ export const ownedCCallbacks = (values, carriers) => {
 			, "  }"
 			, "  if (!status) {"
 			, "    if (!recovery) recovery = lean_alloc_array(0, 0);"
-			, `    lean_object *closure = ${symbol}_wrap((size_t)borrow->token, recovery);`
+			, `    lean_object *closure = ${symbol}_wrap((size_t)borrow->token, input->recovery ? 1 : 0, recovery);`
 			, "    if (!ov_carrier(closure)) { lean_dec(closure); status = LB_OWNED_INVALID; }"
 			, `    else status = ${node.walker}_out(out, closure, 0, &transaction);`, "  }"
 			, "  oc_release(arena.head);"

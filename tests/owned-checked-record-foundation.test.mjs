@@ -206,6 +206,12 @@ test("reviewed owned callbacks preserve exact host and closure checked-record di
 		if(role === "host")
 		{
 			assert.match(generated.carriers.leanSource
+				, /def hostWrap0 \(token explicit : _root_\.USize\)/u);
+			assert.match(generated.carriers.leanSource
+				, /if explicit != 0 then #\[\] else/u);
+			assert.match(generated.carriers.header
+				, /_wrap\(size_t, size_t, lean_object \*\);/u);
+			assert.match(generated.carriers.leanSource
 				, /opaque hostReject0 .* := recovery/u);
 			assert.match(generated.carriers.callbackSource
 				, /_reject\(size_t token, lean_object \*recovery\)[^}]+_state = 1;/u);
@@ -219,6 +225,8 @@ test("reviewed owned callbacks preserve exact host and closure checked-record di
 				hostCallbacks: true, publicPrefix: "checked_callback"
 			});
 			const source = ownedCCallbacks(values, generated.carriers);
+			assert.match(source
+				, /_wrap\(\(size_t\)borrow->token, input->recovery \? 1 : 0, recovery\)/u);
 			assert.equal(source.match(new RegExp(
 				`if \\(!${validator}\\((?:returned|recovery)\\)\\)`, "gu"
 			))?.length, 2);
@@ -242,8 +250,11 @@ test("reviewed owned callback carriers elaborate against their proof-carrying Le
 	const fixture = resolve(
 		"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean"
 	);
-	await writeFile(join(directory, `${module}.lean`)
-		, `${await readFile(fixture, "utf8")}\nnamespace ${module}\n\ndef withClaimCallback (_callback : Claim → Claim) : Nat := 0\n\ndef claimClosure : Claim → Claim := id\n\nend ${module}\n`);
+	const source = await readFile(fixture, "utf8");
+	await writeFile(join(directory, `${module}.lean`), source.replace(
+		/def withClaimCallback \(claim : Claim\) \(callback : Claim → Claim\) : Claim :=\n {2}callback claim/u
+		, "def withClaimCallback (_callback : Claim → Claim) : Nat := 0"
+	));
 	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX
 		?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
 	const lean = join(leanPrefix, "bin/lean");

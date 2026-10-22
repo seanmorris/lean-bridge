@@ -870,6 +870,7 @@
     "test:owned-checked-record-perl": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_PERL_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-perl-packaging.test.mjs",
     "test:owned-checked-record-languages": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-language-packaging.test.mjs",
     "test:owned-checked-record-managed": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs",
+    "test:owned-checked-record-php-wasm": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/owned-checked-record-php-wasm-packaging.test.mjs",
     "test:owned-subtype-languages": "LEAN_BRIDGE_OWNED_SUBTYPE_LANGUAGE_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-language-packaging.test.mjs",
     "test:owned-subtype-remaining": "LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-remaining-packaging.test.mjs",
     "test:owned-subtype-php-wasm": "LEAN_BRIDGE_OWNED_SUBTYPE_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-php-wasm-packaging.test.mjs",

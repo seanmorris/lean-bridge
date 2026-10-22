@@ -52,6 +52,7 @@ const profileManifest = Object.freeze({
 		, "owned-checked-record-managed-packaging"
 		, "owned-checked-record-native-packaging"
 		, "owned-checked-record-perl-packaging"
+		, "owned-checked-record-php-wasm-packaging"
 		, "owned-subtype-host-registration-history"
 		, "owned-subtype-javascript-packaging"
 		, "owned-subtype-language-packaging"

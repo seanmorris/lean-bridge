@@ -182,18 +182,19 @@ export const generateOwnedCallbackCarriers = ({
 			, `opaque hostInvoke${index} (token : _root_.USize) ${node.callable.parameters.map((site, i) => `(a${i} : ${carrier(site.type)})`).join(" ")} : ${carrier(node.callable.result.type)} := #[]`
 			, "", `@[export ${symbol}_wrap]`);
 		if(node.callable.direction === "closure")
-			lines.push(`def hostWrap${index} (_token : _root_.USize) (_recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} := #[]`, "");
+			lines.push(`def hostWrap${index} (_token _explicit : _root_.USize) (_recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} := #[]`, "");
 		else lines.push(
-			`def hostWrap${index} (token : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`
+			`def hostWrap${index} (token explicit : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`
 			, `  match ${checkedRecovery} with`, "  | .some fallback =>"
 			, `    #[fun ${names.join(" ")} => match ${checkedResult} with`
 			, "      | .some value => value", `      | .none => ${reject("fallback")}]`
 			, ...recovery ? ["  | .none =>"
-				, `    #[fun ${names.join(" ")} => match ${checkedResult} with`
-				, "      | .some value => value"
-				, `      | .none => ${reject(`hostRecovery${index} ${names.join(" ")}`)}]`] : ["  | .none => #[]"]
+				, "    if explicit != 0 then #[] else"
+				, `      #[fun ${names.join(" ")} => match ${checkedResult} with`
+				, "        | .some value => value"
+				, `        | .none => ${reject(`hostRecovery${index} ${names.join(" ")}`)}]`] : ["  | .none => #[]"]
 			, "");
-		header.push(`lean_object *${symbol}_wrap(size_t, lean_object *);`
+		header.push(`lean_object *${symbol}_wrap(size_t, size_t, lean_object *);`
 			, `lean_object *${symbol}_invoke(size_t${names.map(() => ", lean_object *").join("")});`
 			, ...resultSite?.direction === "input" ? [`lean_object *${symbol}_reject(size_t, lean_object *);`] : []);
 		source.push(`lean_object *${symbol}_invoke(size_t token${names.map(name => `, lean_object *${name}`).join("")}) {`

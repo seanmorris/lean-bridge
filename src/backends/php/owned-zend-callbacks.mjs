@@ -129,14 +129,14 @@ static int ${name}_begin(lgo_call *call, zval *input, ${node.cName} *out) {
   }
   if (!status) {
     if (!recovery) recovery = lean_alloc_array(0, 0);
-    lean_object *closure = ${symbol}_wrap((size_t)host->token, recovery); recovery = NULL;
+    lean_object *closure = ${symbol}_wrap((size_t)host->token, explicit_recovery ? 1 : 0, recovery); recovery = NULL;
     if (!ov_carrier(closure)) { lean_dec(closure); status = LB_OWNED_INVALID; }
     else status = ${node.walker}_out(out, closure, 0, &transaction);
   }
   if (recovery) lean_dec(recovery);
   if (!status) status = ov_commit(&transaction, &host->owner);
   else if (transaction.scope.context) status = ov_abort(&transaction, status);
-  if (status) return lgo_walk_fail(&call->walk, status, "Cannot prepare the typed Lean callback", status == LB_OWNED_INVALID);
+  if (status) return lgo_walk_fail(&call->walk, status, "Cannot prepare the typed Lean callback", 0);
   return 1;
 }
 `;
