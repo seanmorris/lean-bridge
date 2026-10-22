@@ -3949,11 +3949,68 @@ constructor rejection, nested option/result replies, returned-closure argument
 checks, error preservation, reuse and idempotent close. The default record is
 `build/callback-checked-records/languages.json`.
 
-The hosted workflows run `scripts/run-callback-checked-record-native-ci.sh` and
-`scripts/run-callback-checked-record-perl-ci.sh`, plus
-`scripts/run-callback-checked-record-languages-ci.sh`. They refuse environment
-variables that would narrow the matrix, pin the release glibc floor, keep the
-original TAP and report, and verify each with the closed checkers in
-`scripts/check-callback-checked-record-native-ci.mjs` and
-`scripts/check-callback-checked-record-perl-ci.mjs`, plus
-`scripts/check-callback-checked-record-languages-ci.mjs`.
+Run the npm and browser lane after building the pinned shared Wasm runtime and
+installing Chromium, Firefox and WebKit:
+
+```sh
+source scripts/env.sh
+bash scripts/run-callback-checked-record-browser-ci.sh \
+  "$PWD/build/lean-link-spike/lazy"
+```
+
+It reproduces ordinary and reviewed component packages, removes the author
+trees, installs offline, relocates the installation and runs unchanged Node
+JavaScript and TypeScript consumers. The same packages then run in pages,
+React production and StrictMode lifecycles, and dedicated workers in all three
+engines. The retained records include both package archives and receipts,
+per-context results, failed-asset recovery and lifecycle observations.
+
+The .NET, JVM, native PHP and WIT/WASI workflow invokes one closed lane at a
+time with absolute executable paths:
+
+```sh
+source scripts/env.sh
+bash scripts/run-callback-checked-record-remaining-ci.sh dotnet \
+  /absolute/path/to/dotnet
+bash scripts/run-callback-checked-record-remaining-ci.sh jvm \
+  /absolute/path/to/java /absolute/path/to/javac \
+  /absolute/path/to/kotlinc /absolute/path/to/mvn
+bash scripts/run-callback-checked-record-remaining-ci.sh php-native \
+  /absolute/path/to/php /absolute/path/to/composer
+bash scripts/run-callback-checked-record-remaining-ci.sh wit-wasi \
+  /absolute/path/to/cc /absolute/path/to/wasm-tools \
+  /absolute/path/to/wasmtime-c-api
+```
+
+Each lane builds ordinary and reviewed packages, removes author sources,
+installs offline and replays its independent consumer. The reports retain 30
+checks per .NET, Java, Kotlin or native PHP route and 64 per WIT/WASI route,
+plus the host-specific source-free, relocation and repeat-execution facts.
+
+The hosted workflows use the five `run-callback-checked-record-*-ci.sh` entry
+points for browser, C/C++, Perl, Python/Ruby/Rust and the remaining host matrix.
+They reject environment variables that could narrow the selection, keep the
+original TAP and report or browser record tree, and run a closed checker bound
+to the exact producer commit. After a successful job, maintainers retain the
+original artifact ZIP and GitHub run, job and artifact API records with:
+
+```sh
+node scripts/archive-callback-checked-record-evidence.mjs \
+  --lane languages \
+  --artifact-zip /absolute/path/to/artifact.zip \
+  --run-json /absolute/path/to/run.json \
+  --job-json /absolute/path/to/job.json \
+  --artifact-json /absolute/path/to/artifact.json
+```
+
+Replace `languages` with `browser`, `native`, `perl`, `dotnet`, `jvm`,
+`php-native` or `wit-wasi` for the matching artifact. The archiver requires a
+clean tracked tree, authenticates the exact workflow/job/artifact identities,
+independently replays the lane checker and freezes the original ZIP, output,
+API records and producer/checker/archive source closures. The promotion command
+runs only after all eight archives exist and replays every one before updating
+the public type surface:
+
+```sh
+node scripts/promote-callback-checked-record-evidence.mjs
+```
