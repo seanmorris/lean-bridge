@@ -58,6 +58,10 @@ const reports = [];
 const extensions = { python: "py", ruby: "rb", rust: "rs" };
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const targetFor = profile => ownedCheckedRecordLanguageTargets[profile][0];
+const evidenceProfile = profiles.length === 1 ? profiles[0]
+	: `combined-${sha256(canonicalJson(profiles.toSorted())).slice(0, 12)}`;
+const packagingRoot = "build/owned-checked-record-language-packaging";
+const evidenceRoot = join(packagingRoot, "evidence", evidenceProfile);
 const successName = (profile, resultOnly) => `owned-checked-record-${resultOnly
 	? "result-only-" : ""}${profile}`;
 const installPython = async ({ baseCommand, root, archive }) => {
@@ -69,13 +73,17 @@ const installPython = async ({ baseCommand, root, archive }) => {
 			, ["-I", "-B", ...args], cwd, environment) };
 };
 
+test.before(async () => {
+	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
+});
+
 test.after(async () => {
 	if(!enabled || reports.length !== routes.length) return;
 	const complete = routes.length === ownedCheckedRecordLanguageRoutes.length
 		&& ownedCheckedRecordLanguageRoutes.every(route => routes.includes(route));
 	const name = complete ? "report.json"
 		: `partial-${sha256(canonicalJson(routes.toSorted())).slice(0, 12)}.json`;
-	await saveLakeFile("build/owned-checked-record-language-packaging", name
+	await saveLakeFile(packagingRoot, name
 		, canonicalJson({ schemaVersion: 1
 			, profile: "installed-owned-checked-record-languages"
 			, selectedProfiles: profiles.toSorted()
@@ -138,7 +146,7 @@ test("owned checked-record language consumers and recurring workflow stay regist
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-language-packaging/report.json"
 		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
-		, "test -s \"build/owned-checked-record-language-packaging/evidence/$route/package-set-receipt.json\""
+		, "test -s \"build/owned-checked-record-language-packaging/evidence/${{ matrix.profile }}/$route/handoff/package-set-receipt.json\""
 		, "build/owned-checked-record-language-packaging/"
 		, "name: owned-checked-record-${{ matrix.profile }}-${{ github.sha }}"
 		, "if: always() && steps.acceptance.outcome != 'success'"
@@ -310,10 +318,9 @@ for(const route of routes)
 			, !resultOnly);
 		const { evidence, reassembled } = await reproduce({ routeRoot: scratch
 			, output, environment, config: selected.configuration, built });
-		const evidenceRoot = join("build/owned-checked-record-language-packaging"
-			, "evidence", route);
-		const retained = await retainPackageSetEvidence(output, evidenceRoot);
-		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		const retainedRoot = join(evidenceRoot, route, "handoff");
+		const retained = await retainPackageSetEvidence(output, retainedRoot);
+		const receipt = await copyPackageSetHandoff(retainedRoot, handoff);
 		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
@@ -381,9 +388,11 @@ for(const route of routes)
 						: "drop-plus-explicit-close"]))
 			, bindingIrSha256: built.bindingIrSha256, versions, dependencies
 			, reassembled, packageSetReceipt: receipt
-			, retainedPackageSet: { path: `evidence/${route}`
+			, retainedPackageSet: {
+				path: `evidence/${evidenceProfile}/${route}/handoff`
 				, receiptSha256: retained.receiptSha256
-				, archives: retained.archives, files: retained.files }
+				, archives: retained.archives
+				, archiveBytes: retained.archiveBytes, files: retained.files }
 			, componentReceipts: Object.fromEntries(profiles.map(profile =>
 				[profile, evidence[profile].receipt]))
 			, observations: Object.fromEntries(profiles.map(profile => [profile, {

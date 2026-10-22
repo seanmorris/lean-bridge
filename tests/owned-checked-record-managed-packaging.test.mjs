@@ -53,15 +53,21 @@ const extensions = { dotnet: "cs", java: "java", kotlin: "kt"
 	, "php-native": "php", "wit-wasi": "c" };
 const reports = [];
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const packagingRoot = "build/owned-checked-record-managed-packaging";
+const evidenceRoot = join(packagingRoot, "evidence");
 const successName = (profile, resultOnly) => `owned-checked-record-${resultOnly
 	? "result-only-" : ""}${profile}`;
+
+test.before(async () => {
+	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
+});
 
 test.after(async () => {
 	if(!enabled || reports.length !== routes.length * groups.length) return;
 	for(const group of groups)
 	{
 		const selected = reports.filter(report => report.group === group);
-		await saveLakeFile("build/owned-checked-record-managed-packaging"
+		await saveLakeFile(packagingRoot
 			, `${group}.json`, canonicalJson({ schemaVersion: 1
 				, profile: "installed-owned-checked-record-managed"
 				, group
@@ -126,7 +132,7 @@ test("managed owned checked-record consumers are independently authored", async 
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-managed-packaging/${{ matrix.group }}.json"
 		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
-		, "test -s \"build/owned-checked-record-managed-packaging/evidence/${{ matrix.group }}/$route/package-set-receipt.json\""
+		, "test -s \"build/owned-checked-record-managed-packaging/evidence/${{ matrix.group }}/$route/handoff/package-set-receipt.json\""
 		, "build/owned-checked-record-managed-packaging/"
 		, "name: owned-checked-record-managed-${{ matrix.group }}-${{ github.sha }}"
 		, "if: always() && steps.acceptance.outcome != 'success'"
@@ -301,10 +307,9 @@ for(const group of groups) for(const route of routes)
 		const reassembled = await reassemble({ group, root: scratch, output
 			, environment, settings: selected.configuration.targets[specification.target]
 			, projection });
-		const evidenceRoot = join("build/owned-checked-record-managed-packaging"
-			, "evidence", group, route);
-		const retained = await retainPackageSetEvidence(output, evidenceRoot);
-		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		const retainedRoot = join(evidenceRoot, group, route, "handoff");
+		const retained = await retainPackageSetEvidence(output, retainedRoot);
+		const receipt = await copyPackageSetHandoff(retainedRoot, handoff);
 		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff
 			, "package-set-receipt.json") });
@@ -329,9 +334,10 @@ for(const group of groups) for(const route of routes)
 			, handoffRemovedBeforeRelocatedExecution: true
 			, deterministicReassembly: true, immutableInstalledInputs: true
 			, packageSetReceiptSha256: sha256(canonicalJson(receipt))
-			, retainedPackageSet: { path: `evidence/${group}/${route}`
+			, retainedPackageSet: { path: `evidence/${group}/${route}/handoff`
 				, receiptSha256: retained.receiptSha256
-				, archives: retained.archives, files: retained.files }
+				, archives: retained.archives
+				, archiveBytes: retained.archiveBytes, files: retained.files }
 			, reassembled, repeated
 			, observations: Object.fromEntries(Object.entries(observations).map(
 				([profile, observed]) => [profile, { checks: observed.checks

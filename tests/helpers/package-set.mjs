@@ -4,7 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { copyFile, mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import {
+	copyFile, lstat, mkdir, mkdtemp, readFile, readdir, rm
+} from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -105,7 +107,15 @@ export const retainPackageSetEvidence = async (source, destination) => {
 	assert.ok(disjoint(sourceRoot, destinationRoot)
 		&& disjoint(destinationRoot, sourceRoot)
 	, "Package evidence and producer roots must be disjoint");
-	await rm(destination, { recursive: true, force: true });
+	try
+	{
+		await lstat(destination);
+		assert.fail(`Package evidence destination must not already exist: ${destination}`);
+	}
+	catch(error)
+	{
+		if(error.code !== "ENOENT") throw error;
+	}
 	const receipt = await copyPackageSetHandoff(source, destination);
 	const receiptPath = join(destination, packageSetReceiptName);
 	const receiptBytes = await readFile(receiptPath);
@@ -115,8 +125,10 @@ export const retainPackageSetEvidence = async (source, destination) => {
 	const files = await regularFiles(destination);
 	assert.deepEqual(files, packageSetFiles(receipt)
 		, "Retained evidence must contain exactly the receipt-named package set");
+	const archiveBytes = receipt.packages.flatMap(pkg => pkg.artifacts)
+		.reduce((total, artifact) => total + artifact.bytes, 0);
 	return { receipt, receiptSha256: sha256(receiptBytes), files
-		, archives: verified.archives };
+		, archives: verified.archives, archiveBytes };
 };
 
 /**

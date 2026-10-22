@@ -41,10 +41,16 @@ assert.ok(routes.length && routes.every(route =>
 	ownedCheckedRecordNativeRoutes.includes(route)
 ));
 const reports = [];
+const packagingRoot = "build/owned-checked-record-perl-packaging";
+const evidenceRoot = join(packagingRoot, "evidence");
 const explain = error => {
 	throw new Error(`${error.message}: ${JSON.stringify(error.details ?? {})}`
 		, { cause: error });
 };
+
+test.before(async () => {
+	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
+});
 
 test("owned checked-record CPAN projection retains mixed transport", () => {
 	const selected = ownedCheckedRecordNativeSelection("reviewed-full", ["cpan"]);
@@ -79,7 +85,7 @@ test("owned checked-record Perl acceptance is a required recurring job", async (
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-perl-packaging/report.json"
 		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
-		, "test -s \"build/owned-checked-record-perl-packaging/evidence/$route/package-set-receipt.json\""
+		, "test -s \"build/owned-checked-record-perl-packaging/evidence/$route/handoff/package-set-receipt.json\""
 		, "build/owned-checked-record-perl-packaging/"
 		, "name: owned-checked-record-perl-${{ github.sha }}"
 	]) assert.ok(source.includes(required), required);
@@ -92,7 +98,7 @@ test.after(async () => {
 		&& ownedCheckedRecordNativeRoutes.every(route => routes.includes(route));
 	const name = complete ? "report.json"
 		: `partial-${sha256(canonicalJson(routes.toSorted())).slice(0, 12)}.json`;
-	await saveLakeFile("build/owned-checked-record-perl-packaging", name
+	await saveLakeFile(packagingRoot, name
 		, canonicalJson({ schemaVersion: 1
 			, profile: "installed-owned-checked-record-perl"
 			, reports: reports.toSorted((left, right) =>
@@ -155,10 +161,9 @@ for(const route of routes)
 				producer, "archives", again.receipt.archive
 			)));
 		}
-		const evidenceRoot = join("build/owned-checked-record-perl-packaging"
-			, "evidence", route);
-		const retained = await retainPackageSetEvidence(producer, evidenceRoot);
-		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		const retainedRoot = join(evidenceRoot, route, "handoff");
+		const retained = await retainPackageSetEvidence(producer, retainedRoot);
+		const receipt = await copyPackageSetHandoff(retainedRoot, handoff);
 		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
@@ -250,9 +255,10 @@ for(const route of routes)
 			, callbackRecovery: !resultOnly
 			, lifecycle: "perl-destruction-plus-explicit-close"
 			, bindingIrSha256: built.bindingIrSha256
-			, retainedPackageSet: { path: `evidence/${route}`
+			, retainedPackageSet: { path: `evidence/${route}/handoff`
 				, receiptSha256: retained.receiptSha256
-				, archives: retained.archives, files: retained.files }
+				, archives: retained.archives
+				, archiveBytes: retained.archiveBytes, files: retained.files }
 			, packageSetReceipt: receipt
 			, consumerSha256: sha256(consumerSource)
 			, componentReceipt: JSON.parse(prepared.files.get(

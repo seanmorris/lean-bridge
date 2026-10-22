@@ -45,11 +45,17 @@ test("retained package evidence is canonical, verified and closed over original 
 	t.after(() => rm(retained, { recursive: true, force: true }));
 	await mkdir(retained, { recursive: true });
 	await writeFile(join(retained, "stale.txt"), "must not survive\n");
+	await assert.rejects(retainPackageSetEvidence(handoff.root, retained)
+		, /must not already exist/u);
+	await rm(retained, { recursive: true });
 	const evidence = await retainPackageSetEvidence(handoff.root, retained);
 	assert.deepEqual(evidence.receipt, handoff.receipt);
 	assert.equal(evidence.receiptSha256
 		, sha256(await readFile(handoff.receiptPath)));
 	assert.equal(evidence.archives, 17);
+	assert.equal(evidence.archiveBytes, handoff.receipt.packages
+		.flatMap(pkg => pkg.artifacts)
+		.reduce((total, artifact) => total + artifact.bytes, 0));
 	assert.equal(evidence.files.length, evidence.archives + 2);
 	assert.ok(evidence.files.includes(packageSetReceiptName));
 	assert.ok(evidence.files.includes(`${packageSetReceiptName}.sha256`));

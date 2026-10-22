@@ -108,7 +108,7 @@ jobs:
           rg '^# skipped 0$' build/owned-checked-record-language-ci/acceptance.log
           test -s build/owned-checked-record-language-packaging/report.json
           for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
-            test -s "build/owned-checked-record-language-packaging/evidence/$route/package-set-receipt.json"
+            test -s "build/owned-checked-record-language-packaging/evidence/${{ matrix.profile }}/$route/handoff/package-set-receipt.json"
           done
       - name: Preserve language acceptance evidence
         if: always()

@@ -38,6 +38,12 @@ assert.ok(routes.length && routes.every(route =>
 ));
 const reports = [];
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const packagingRoot = "build/owned-checked-record-native-packaging";
+const evidenceRoot = join(packagingRoot, "evidence");
+
+test.before(async () => {
+	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
+});
 
 test("owned checked-record C and C++ generators retain exact callback directions", () => {
 	const selected = ownedCheckedRecordNativeSelection("reviewed-full", ["c", "cpp"]);
@@ -67,7 +73,7 @@ test("owned checked-record native acceptance is a required recurring job", async
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-native-packaging/report.json"
 		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
-		, "test -s \"build/owned-checked-record-native-packaging/evidence/$route/package-set-receipt.json\""
+		, "test -s \"build/owned-checked-record-native-packaging/evidence/$route/handoff/package-set-receipt.json\""
 		, "build/owned-checked-record-native-packaging/"
 		, "name: owned-checked-record-native-${{ github.sha }}"
 	]) assert.ok(source.includes(required), required);
@@ -80,7 +86,7 @@ test.after(async () => {
 		&& ownedCheckedRecordNativeRoutes.every(route => routes.includes(route));
 	const name = complete ? "report.json"
 		: `partial-${sha256(canonicalJson(routes.toSorted())).slice(0, 12)}.json`;
-	await saveLakeFile("build/owned-checked-record-native-packaging", name
+	await saveLakeFile(packagingRoot, name
 		, canonicalJson({ schemaVersion: 1
 			, profile: "installed-owned-checked-record-native"
 			, reports: reports.toSorted((left, right) =>
@@ -208,10 +214,9 @@ for(const route of routes)
 				, "archives", projection.packages[0].archive)));
 			await rm(reassembled, { recursive: true, force: true });
 		}
-		const evidenceRoot = join("build/owned-checked-record-native-packaging"
-			, "evidence", route);
-		const retained = await retainPackageSetEvidence(output, evidenceRoot);
-		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		const retainedRoot = join(evidenceRoot, route, "handoff");
+		const retained = await retainPackageSetEvidence(output, retainedRoot);
+		const receipt = await copyPackageSetHandoff(retainedRoot, handoff);
 		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
@@ -256,9 +261,10 @@ for(const route of routes)
 				, cpp: resultOnly ? "raii" : "raii-plus-sanitizers" }
 			, bindingIrSha256: built.bindingIrSha256
 			, componentReceipt: verified.receipt
-			, retainedPackageSet: { path: `evidence/${route}`
+			, retainedPackageSet: { path: `evidence/${route}/handoff`
 				, receiptSha256: retained.receiptSha256
-				, archives: retained.archives, files: retained.files }
+				, archives: retained.archives
+				, archiveBytes: retained.archiveBytes, files: retained.files }
 			, packageSetReceipt: receipt, observed, relocated });
 		t.diagnostic(JSON.stringify({ route
 			, c: observed.c.checks, cpp: observed.cpp.checks
