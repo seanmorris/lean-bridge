@@ -28,6 +28,7 @@ import {
 } from "./dependent-checked-record-wit-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { dependentCheckedRecordWitOriginalCaller } from "./dependent-checked-record-wit-report.mjs";
+import { parseDependentCheckedRecordWitPkgConfigFlags } from "./dependent-checked-record-wit-install.mjs";
 
 const capi = resolve(".toolchains/wasmtime42");
 const cc = process.env.CC ?? "/usr/bin/cc";
@@ -35,6 +36,23 @@ const model = resolve("tests/helpers/dependent-checked-record-wit-model.c");
 const header = route => renderWitHostHeader(compileCopiedWitModel(
 	dependentCheckedRecordSelection(route).expected, dependentCheckedRecordWitTarget, { callables: true }
 ));
+
+test("dependent checked-record WIT preserves shell-escaped pkg-config paths", () => {
+	assert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(
+		"-I/tmp/lean-bridge-dependent\\ checked/include -L/tmp/lean-bridge-dependent\\ checked/lib -ldependent\n"
+	), [
+		"-I/tmp/lean-bridge-dependent checked/include"
+		, "-L/tmp/lean-bridge-dependent checked/lib", "-ldependent"
+	]);
+	assert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(
+		"'-I/single quoted' \"-L/double quoted\" plain\\ value empty''\n"
+	), ["-I/single quoted", "-L/double quoted", "plain value", "empty"]);
+	assert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(" \n\t"), []);
+	assert.throws(() => parseDependentCheckedRecordWitPkgConfigFlags("-I/tmp/ending\\")
+		, /ends in an escape/u);
+	assert.throws(() => parseDependentCheckedRecordWitPkgConfigFlags("'-I/tmp/open")
+		, /unterminated quote/u);
+});
 
 test("dependent checked-record WIT retains all four author routes and the limb-list projection", async () => {
 	assert.deepEqual(dependentCheckedRecordWitRoutes, [

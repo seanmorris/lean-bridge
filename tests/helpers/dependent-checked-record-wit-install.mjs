@@ -16,6 +16,65 @@ import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interfa
 import { assertDependentCheckedRecordWitIdentity, inspectDependentCheckedRecordWitPackage, dependentCheckedRecordWitComponent, dependentCheckedRecordWitDirectory, dependentCheckedRecordWitPkgConfig, dependentCheckedRecordWitReceipt } from "./dependent-checked-record-wit-package.mjs";
 
 /**
+ * Parse pkg-config's shell-escaped stdout into literal argv entries without
+ * invoking a shell. In particular, pkg-config escapes spaces in a relocated
+ * prefix with a backslash; splitting on whitespace corrupts that path.
+ *
+ * @param source - Complete pkg-config stdout.
+ */
+export const parseDependentCheckedRecordWitPkgConfigFlags = source => {
+	assert.equal(typeof source, "string");
+	const flags = [];
+	let flag = "", quote = null, started = false;
+	for(let index = 0; index < source.length; index++)
+	{
+		const character = source[index];
+		if(quote !== null)
+		{
+			if(character === quote)
+			{
+				quote = null;
+				continue;
+			}
+			if(character === "\\" && quote === '"')
+			{
+				assert.ok(index + 1 < source.length, "pkg-config ends in an escape");
+				flag += source[++index];
+				continue;
+			}
+			flag += character;
+			continue;
+		}
+		if(/\s/u.test(character))
+		{
+			if(started)
+			{
+				flags.push(flag);
+				flag = "";
+				started = false;
+			}
+			continue;
+		}
+		started = true;
+		if(character === "'" || character === '"')
+		{
+			quote = character;
+			continue;
+		}
+		if(character === "\\")
+		{
+			assert.ok(index + 1 < source.length, "pkg-config ends in an escape");
+			flag += source[++index];
+			continue;
+		}
+		flag += character;
+	}
+	assert.equal(quote, null, "pkg-config contains an unterminated quote");
+	if(started) flags.push(flag);
+	return flags;
+};
+
+/**
  * Require the same archive-owned files and consumer executable, with no source or tools.
  *
  * @param context - Original receipt and executable identities, plus the current real root.
@@ -76,7 +135,9 @@ export const installDependentCheckedRecordWit = async ({ root, archive, pkg, mod
 	const buildTools = join(root, "tools"); await mkdir(buildTools);
 	for(const [name, role] of [["as", "assembler"], ["ld", "linker"]]) await symlink(tools.commands[role].command, join(buildTools, name));
 	const environment = { ...copiedCleanEnvironment, PATH: buildTools, PKG_CONFIG_LIBDIR: join(installed, "lib/pkgconfig"), PKG_CONFIG_PATH: "" };
-	const flags = (await capture("pkgConfig", ["--cflags", "--libs", dependentCheckedRecordWitPkgConfig], environment)).stdout.trim().split(/\s+/u);
+	const flags = parseDependentCheckedRecordWitPkgConfigFlags((await capture(
+		"pkgConfig", ["--cflags", "--libs", dependentCheckedRecordWitPkgConfig]
+		, environment)).stdout);
 	assert.equal(flags.filter(flag => flag.startsWith("-Wl,-rpath,")).length, 1);
 	const runtimeSearchPath = `$ORIGIN/${dependentCheckedRecordWitDirectory}/lib`;
 	const relativeFlags = flags.map(flag => flag.startsWith("-Wl,-rpath,") ? `-Wl,-rpath,${runtimeSearchPath}` : flag);
