@@ -1,0 +1,140 @@
+name: Installed owned checked records in managed and WIT hosts
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-checked-record-managed-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  managed:
+    name: Owned checked records in ${{ matrix.group }} packages
+    runs-on: ubuntu-24.04
+    timeout-minutes: 280
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [dotnet, jvm, php, wit]
+    env:
+      LEAN_NUM_THREADS: "1"
+      LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR: "2.38"
+      LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS: ${{ matrix.group }}
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Select .NET 8
+        if: matrix.group == 'dotnet'
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-owned-record-dotnet
+        with:
+          dotnet-version: '8.0.424'
+      - name: Select Java 22
+        if: matrix.group == 'jvm'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '22.0.2'
+      - name: Install the checksummed Kotlin 2.2 compiler
+        if: matrix.group == 'jvm'
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          curl -fL --retry 3 --output build/kotlin-compiler.zip https://github.com/JetBrains/kotlin/releases/download/v2.2.0/kotlin-compiler-2.2.0.zip
+          echo '1adb6f1a5845ba0aa5a59e412e44c8e405236b957de1a9683619f1dca3b16932  build/kotlin-compiler.zip' | sha256sum --check
+          unzip -q build/kotlin-compiler.zip -d build/kotlin-tools
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler, package and archive dependencies
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          packages=(build-essential cmake curl git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep unzip xz-utils zstd)
+          if [[ '${{ matrix.group }}' == jvm ]]; then packages+=(maven); fi
+          if [[ '${{ matrix.group }}' == php ]]; then
+            packages+=(composer php-cli php-common php-dev php-mbstring php-zip)
+          fi
+          sudo apt-get install -y "${packages[@]}"
+      - name: Install the documented Nix CLI
+        if: matrix.group == 'wit'
+        uses: cachix/install-nix-action@v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.24.11/install
+      - name: Install dependencies and pinned Lean tools
+        timeout-minutes: 35
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build/owned-checked-record-managed-ci
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-checked-record-managed-ci/toolchain.log
+          if [[ '${{ matrix.group }}' == wit ]]; then
+            bash scripts/bootstrap-toolchains.sh --wasm-tools-only 2>&1 | tee -a build/owned-checked-record-managed-ci/toolchain.log
+          fi
+      - name: Build the pinned Wasmtime C API
+        if: matrix.group == 'wit'
+        timeout-minutes: 30
+        shell: bash
+        run: nix build .#wasmtime-c-api --out-link build/wasmtime-c-api
+      - name: Execute source-free managed acceptance
+        id: acceptance
+        timeout-minutes: 220
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          case '${{ matrix.group }}' in
+            dotnet)
+              export LEAN_BRIDGE_DOTNET="$RUNNER_TEMP/lean-bridge-owned-record-dotnet/dotnet"
+              ;;
+            jvm)
+              export LEAN_BRIDGE_JAVA="$JAVA_HOME/bin/java"
+              export LEAN_BRIDGE_JAVAC="$JAVA_HOME/bin/javac"
+              export LEAN_BRIDGE_KOTLINC="$PWD/build/kotlin-tools/kotlinc/bin/kotlinc"
+              export LEAN_BRIDGE_MAVEN="$(command -v mvn)"
+              ;;
+            php)
+              export LEAN_BRIDGE_PHP="$(command -v php)"
+              export LEAN_BRIDGE_COMPOSER="$(command -v composer)"
+              ;;
+            wit)
+              export CC=/usr/bin/cc
+              export LEAN_BRIDGE_WASM_TOOLS="$PWD/.toolchains/wasm-tools/bin/wasm-tools"
+              export LEAN_BRIDGE_WASMTIME_C_API="$PWD/build/wasmtime-c-api"
+              ;;
+          esac
+          npm run test:owned-checked-record-managed 2>&1 | tee build/owned-checked-record-managed-ci/acceptance.log
+          rg '^# fail 0$' build/owned-checked-record-managed-ci/acceptance.log
+          rg '^# skipped 0$' build/owned-checked-record-managed-ci/acceptance.log
+          test -s build/owned-checked-record-managed-packaging/${{ matrix.group }}.json
+      - name: Preserve managed acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-checked-record-managed-${{ matrix.group }}-${{ github.sha }}
+          path: |
+            build/owned-checked-record-managed-ci/
+            build/owned-checked-record-managed-packaging/${{ matrix.group }}.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed managed acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

@@ -183,8 +183,15 @@ export const installCopiedConsumer = async ({ profile, consumer, handoff, packag
 		else if(profile === "java")
 		{
 			await cp(join(handoff, artifact.path), jar);
-			await runCopied(environment.LEAN_BRIDGE_JAVAC, ["--release", "22", "-Werror", "-cp", jar, "consumer.java"], root);
-			args = ["--enable-native-access=ALL-UNNAMED", "-cp", `${jar}:${root}`, "Consumer"];
+			const stdlib = join(dirname(dirname(environment.LEAN_BRIDGE_KOTLINC))
+				, "lib/kotlin-stdlib.jar");
+			const installedStdlib = join(root, "kotlin-stdlib.jar");
+			await cp(stdlib, installedStdlib);
+			await runCopied(environment.LEAN_BRIDGE_JAVAC, ["--release", "22"
+				, "-Werror", "-cp", `${jar}:${installedStdlib}`, "consumer.java"]
+			, root);
+			args = ["--enable-native-access=ALL-UNNAMED", "-cp"
+				, `${jar}:${installedStdlib}:${root}`, "Consumer"];
 		}
 		else
 		{
