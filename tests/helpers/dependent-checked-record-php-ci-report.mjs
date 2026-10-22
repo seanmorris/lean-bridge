@@ -12,7 +12,8 @@ import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { generateCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
 import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mjs";
 import {
-	dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpRoutes
+	dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpCallerPath
+	, dependentCheckedRecordPhpRoutes
 	, dependentCheckedRecordPhpSelection, parseDependentCheckedRecordPhpResult
 } from "./dependent-checked-record-php-fixture.mjs";
 import { assertNominalSubtypePhpToolRecords } from "./nominal-subtype-php-tool-records.mjs";
@@ -217,7 +218,7 @@ export const checkDependentCheckedRecordPhpReport = async (read, {
 	const firstModel = JSON.parse(await read("build-0/model.json"));
 	for(const [path, source] of Object.entries(generateCopiedPhpPackage(firstModel.bindingIr, packaged.evidence)))
 		assert.equal((await read(`package/${path}`)).toString(), source, path);
-	const caller = sourceAt(producerCommit, "tests/fixtures/dependent-checked-record-php/php.php").toString();
+	const caller = sourceAt(producerCommit, dependentCheckedRecordPhpCallerPath).toString();
 	assert.equal((await read("consumer.php")).toString(), caller);
 	const environment = await json("environment.json");
 	for(const [path, expected] of Object.entries({ ...environment.inputs, ...environment.generatedFiles }))

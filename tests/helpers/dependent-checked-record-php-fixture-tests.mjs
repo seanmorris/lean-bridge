@@ -15,7 +15,8 @@ import { compileCopiedPhpModel } from "../../src/backends/php/copied-model.mjs";
 import { renderCopiedPhpPackage } from "../../src/backends/php/copied-values.mjs";
 import {
 	parseDependentCheckedRecordPhpResult, dependentCheckedRecordPhpCaller
-	, dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpEnvironment
+	, dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpCallerPath
+	, dependentCheckedRecordPhpEnvironment
 	, dependentCheckedRecordPhpExpected, dependentCheckedRecordPhpFixtureRoot
 	, dependentCheckedRecordPhpLeanModule, dependentCheckedRecordPhpLoadCeilings
 	, dependentCheckedRecordPhpNamespace, dependentCheckedRecordPhpRoutes
@@ -40,6 +41,7 @@ test("dependent native PHP selections preserve all four independent routes", () 
 	assert.equal(dependentCheckedRecordPhpFixtureRoot
 		, "tests/fixtures/onboarding/dependent-checked-records");
 	assert.equal(dependentCheckedRecordPhpLeanModule, "DependentRecords");
+	assert.equal(dependentCheckedRecordPhpCallerPath, callerPath);
 	assert.deepEqual(dependentCheckedRecordPhpLoadCeilings, [8, 12, 16, 20]);
 	for(const route of dependentCheckedRecordPhpRoutes)
 	{

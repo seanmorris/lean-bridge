@@ -24,6 +24,8 @@ export const dependentCheckedRecordPhpFixtureRoot = dependentCheckedRecordFixtur
 export const dependentCheckedRecordPhpLeanModule = "DependentRecords";
 export const dependentCheckedRecordPhpNamespace = "LeanDependentrecords";
 export const dependentCheckedRecordPhpLoadCeilings = Object.freeze([8, 12, 16, 20]);
+export const dependentCheckedRecordPhpCallerPath
+	= "tests/fixtures/dependent-checked-record-consumers/php.php";
 
 /**
  * Select an all-route native-PHP producer run.  This remains opt-in so the
@@ -61,7 +63,7 @@ export const dependentCheckedRecordPhpEnvironment = environment => {
 
 /** Load the immutable weak-mode caller without consulting generated output. */
 export const dependentCheckedRecordPhpCaller = () => readFile(
-	"tests/fixtures/dependent-checked-record-consumers/php.php", "utf8"
+	dependentCheckedRecordPhpCallerPath, "utf8"
 );
 
 /**
