@@ -67,6 +67,7 @@ import { beforeCallbackCheckedRecordNativeSource, callbackCheckedRecordNativeCha
 import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
 import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
+import { beforeDependentCheckedRecordWitExportCountRepairSource, dependentCheckedRecordWitExportCountRepairChangedPaths, dependentCheckedRecordWitExportCountRepairIntegrationPaths } from "./dependent-checked-record-wit-export-count-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserDiagnosticRepairSource, dependentCheckedRecordBrowserDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserDiagnosticRepairIntegrationPaths } from "./dependent-checked-record-browser-diagnostic-repair-source-history.mjs";
 import { beforeDependentCheckedRecordDotnetArchiveSource, dependentCheckedRecordDotnetArchiveImplementationPaths, dependentCheckedRecordDotnetArchiveIntegrationPaths } from "./dependent-checked-record-dotnet-archive-source-history.mjs";
 import { beforeDependentCheckedRecordNativeArchiveSource, dependentCheckedRecordNativeArchiveImplementationPaths, dependentCheckedRecordNativeArchiveIntegrationPaths } from "./dependent-checked-record-native-archive-source-history.mjs";
@@ -1938,7 +1939,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordBrowserDiagnosticRepairChangedPaths
+	...dependentCheckedRecordWitExportCountRepairChangedPaths
+	, ...dependentCheckedRecordWitExportCountRepairIntegrationPaths
+	, ...dependentCheckedRecordBrowserDiagnosticRepairChangedPaths
 	, ...dependentCheckedRecordBrowserDiagnosticRepairIntegrationPaths
 	, ...dependentCheckedRecordDotnetArchiveImplementationPaths
 	, ...dependentCheckedRecordDotnetArchiveIntegrationPaths
@@ -2667,9 +2670,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordWitExportCountRepair
+		= beforeDependentCheckedRecordWitExportCountRepairSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordWitExportCountRepair) === expected)
+		return dependentCheckedRecordWitExportCountRepair;
 	const dependentCheckedRecordBrowserDiagnosticRepair
 		= beforeDependentCheckedRecordBrowserDiagnosticRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordWitExportCountRepair, expected
 		);
 	if(sha256(dependentCheckedRecordBrowserDiagnosticRepair) === expected)
 		return dependentCheckedRecordBrowserDiagnosticRepair;

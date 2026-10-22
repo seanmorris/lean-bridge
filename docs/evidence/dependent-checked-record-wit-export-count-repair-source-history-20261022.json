@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "currentSha256": "317c89e7dbacd4a70ff3df91e9018d52269ad5dae8b22ec1fc28ab7dbfe45b6d",
+      "path": "scripts/update-dependent-checked-record-wit-export-count-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c70aaada40c9714cf29ff45d88bb72192dac13a5dc55b6d690ec8f39e81a9c56",
+      "path": "tests/helpers/dependent-checked-record-wit-export-count-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2f6e68b9dee3dd5dcf4e49f1de2e02bdf7b202d6eb26345ac7dae093f193bda4",
+      "path": "tests/helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "7f9d96bb9edc247153581a921ebdbe5707ca7ebd",
+  "integrationBaseCommit": "7f9d96bb9edc247153581a921ebdbe5707ca7ebd",
+  "integrationUpdates": [
+    {
+      "currentSha256": "8b712ac5ba98ab28e924d596c8f6e0e85df09d5988d17d063d7be07aa99b0a21",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "previous": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7859a21c04bb8ebe45b8d5a2f8cd4e33448760935e176633f5deb9d05138b6d6"
+    },
+    {
+      "currentSha256": "b0d661f8ca48dd30b93ba8328bf4afb7d1a40a58ac727bdabb61876f65f34e16",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordWitExportCountRepairSource, dependentCheckedRecordWitExportCountRepairChangedPaths, dependentCheckedRecordWitExportCountRepairIntegrationPaths } from \"./dependent-checked-record-wit-export-count-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordWitExportCountRepairChangedPaths\n\t, ...dependentCheckedRecordWitExportCountRepairIntegrationPaths\n\t, ...dependentCheckedRecordBrowserDiagnosticRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordBrowserDiagnosticRepairChangedPaths\n",
+          "start": 151218
+        },
+        {
+          "current": "\tconst dependentCheckedRecordWitExportCountRepair\n\t\t= beforeDependentCheckedRecordWitExportCountRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordWitExportCountRepair) === expected)\n\t\treturn dependentCheckedRecordWitExportCountRepair;\n",
+          "previous": "",
+          "start": 184816
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordWitExportCountRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 185193
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "811689ebd91bf07c4a3be503d0789e8271dfddb75340d2c7ba42bd5a64e33a4c"
+    },
+    {
+      "currentSha256": "3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4785
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5"
+    }
+  ],
+  "milestone": "dependent-checked-record-wit-export-count-repair-source-v1",
+  "predecessorCommit": "d53790678d9ee923b2755f424e4560a330469b5a",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent checked-record WIT acceptance derives the exact exported function count and names from the authenticated ordinary or reviewed binding contract instead of unrelated copied constants.",
+  "updates": [
+    {
+      "currentSha256": "a8a84a56cb5812c881a676b62471b1079c9e10cbd5e0ad24e2128cc897709d26",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(model.exports.length, expected.declarations.length);\n\t\tassert.deepEqual(model.exports.map(item => item.name).sort()\n\t\t\t, expected.declarations.map(item => item.id.slice(5)).sort());\n",
+          "previous": "\t\tassert.equal(model.exports.length, selection.resultOnly ? 6 : 11);\n",
+          "start": 6688
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-installed-tests.mjs",
+      "previousSha256": "b95c5dd1d175053b4379064dcf3c5a11a9ba5bc88e2a9051085ddf4d29f35c86"
+    },
+    {
+      "currentSha256": "6f8dd4790ec6e2e6b7eba309f0bf52eb37bb5f043cb0138c629ac1df871747fc",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(model.exports.length, expected.declarations.length);\n",
+          "previous": "\t\tassert.equal(model.exports.length, selection.resultOnly ? 6 : 11);\n",
+          "start": 3424
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-model-records.mjs",
+      "previousSha256": "da3a52ee2710a56d05d63cfae157078bcc48e75506c3617697e4935d868b80a4"
+    }
+  ]
+}
