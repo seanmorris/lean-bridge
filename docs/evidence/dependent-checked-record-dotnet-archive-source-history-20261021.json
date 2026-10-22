@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8adef694ce8ec880e98cc292502b34cf9d6a212ded4837ba2b2924b6649dae1e",
+      "path": "tests/helpers/dependent-checked-record-dotnet-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "fbf9cd752b628aab62babe558a67dfdf56ad08cbd0ac63035b38f272d1a45085",
+      "path": "tests/helpers/dependent-checked-record-dotnet-evidence.mjs"
+    },
+    {
+      "currentSha256": "bd493bbb53882aa55352a1bdd8858bc89256efbc1e78bb79d23c9441e24fe9f7",
+      "path": "scripts/update-dependent-checked-record-dotnet-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "e25db1cf8efc460ef86d413fd182836ea7fc31d7ab5dde934f225a76f87b61c5",
+      "path": "tests/helpers/dependent-checked-record-dotnet-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "523cf7a4a2f78528f8f81955a28ee5b97af7e438177c3900afebc4c2868ec67f",
+      "path": "tests/helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 811,
+    "archiveFileCount": 809,
+    "indexSha256": "d2ec61bbd52061c90a6fc4ead14c8cbc3477df24c002b8fe8ce94b665762af92",
+    "indexedFileCount": 808,
+    "root": "docs/evidence/dependent-checked-record-dotnet-20261021"
+  },
+  "implementationCommit": "12996aceefe7821fa1b72d01408db444e374d478",
+  "implementationUpdates": [
+    {
+      "currentSha256": "fd5801350b1a0adf173e7a0756afb892bd2d80c116d91cc78c010de72abd6e9b",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-dotnet-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 4533
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "bcf543fb44189bee8c6a1a4008be8141593d477f328d3e19aca5033a17642f04",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "previous": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "0cc58f9e2775cd60d2790a4abd9628fc3fc8865b3e0a9bdaec4bbf0365e5b5ca"
+    },
+    {
+      "currentSha256": "29724afd807ff14c5a5784e7b4657cf057224977cb8cf2c55bc365fe97e816aa",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordDotnetArchiveSource, dependentCheckedRecordDotnetArchiveImplementationPaths, dependentCheckedRecordDotnetArchiveIntegrationPaths } from \"./dependent-checked-record-dotnet-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordDotnetArchiveImplementationPaths\n\t, ...dependentCheckedRecordDotnetArchiveIntegrationPaths\n\t, ...dependentCheckedRecordNativeArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordNativeArchiveImplementationPaths\n",
+          "start": 150687
+        },
+        {
+          "current": "\tconst dependentCheckedRecordDotnetArchive\n\t\t= beforeDependentCheckedRecordDotnetArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordDotnetArchive) === expected)\n\t\treturn dependentCheckedRecordDotnetArchive;\n",
+          "previous": "",
+          "start": 184027
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordDotnetArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 184356
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1a9a1bf90c3bb412cbbdb7b8aa5e1aa2b7e5a5f260999d790227d0627b3f635b"
+    },
+    {
+      "currentSha256": "05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4604
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "fd5801350b1a0adf173e7a0756afb892bd2d80c116d91cc78c010de72abd6e9b"
+    }
+  ],
+  "milestone": "dependent-checked-record-dotnet-archive-source-v1",
+  "predecessorCommit": "11eeb5895a9eba94b5888b70a453ee3d14353b3d",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted .NET dependent checked-record evidence retains all four routes, exact NuGet packages and independent C# consumers, source roles, destructive controls and the original GitHub artifact bytes."
+}
