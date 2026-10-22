@@ -1,0 +1,136 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9a261d2e27d642ad9a7f4909dc3e3116af57caaf29a55f93487efd8ec61a87f8",
+      "path": "tests/helpers/php-wasm-refinement-entry-documentation-tests.mjs"
+    },
+    {
+      "currentSha256": "edbb613be7ce42092c1d672c8632a4eb80a66e46625cbef1a6af9e2cd3bcfb92",
+      "path": "scripts/update-php-wasm-refinement-entry-documentation-source-history.mjs"
+    },
+    {
+      "currentSha256": "09aa118f8c13966a8109ed4c19ea09b723f0c02ccebb3497885fafea41649027",
+      "path": "tests/helpers/php-wasm-refinement-entry-documentation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6621790d26ccc0910c40b6e54046a8a8a13fff1859d40be0bfa239097d02acf0",
+      "path": "tests/helpers/php-wasm-refinement-entry-documentation-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "34df06d23a68827be9ac2388b5d0035f4c001de0",
+  "milestone": "php-wasm-refinement-entry-documentation-v1",
+  "predecessorCommit": "4553a2910f10725118b532b480820ad7907afc3e",
+  "schemaVersion": 1,
+  "scope": "PHP consumer, publisher, Lean-author and type-reference documentation now separate support proved by unmodified prepared packages from the 28-route, 26-artifact instrumented probe topology. The type inventory records the source-level probe contract without attaching it to any installed-support stage or claiming hosted counts before a verified promotion summary exists.",
+  "updates": [
+    {
+      "currentSha256": "8c31e62cb9b2cbb15b7b89f720974f9c44e7965c67f124fcc8d52a1d532b2116",
+      "edits": [
+        {
+          "current": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean. Those unmodified prepared packages do not contain runtime entry counters. Separate instrumented fixture packages count named validator, constructor, adapter and Lean-source entries across 28 ordinary/reviewed routes in 26 retained artifacts; they do not widen the consumer type surface. The [promotion workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml) is configured to rebuild that matrix at one revision, but no hosted count claim exists until a completed run publishes its verified summary. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Refined PHP-Wasm callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "previous": "Native source rejections name the declaration in `native-elaboration-unsupported`. Readers without a checked adapter reject refined metadata with `native-refinements-unsupported`. PHP-Wasm's [installed Subtype checks](../evidence/php-wasm-subtype-installed-20261010.md) cover ordinary and reviewed top-level parameters and results: twelve exports, twelve Node/Chromium configurations per route, and 2,024 checks per execution. Constructors and adapters compile with fresh Lean; runtime entry counts remain unmeasured. PHP-Wasm accepts the listed structural containers, acyclic nominal fields, [finite recursive copied graphs](../evidence/recursive-subtype-php-wasm-20261015.md), and the tested [acyclic owned record](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md). The owned-record checks preserve exact constructor choices, reject an invalid transferred value before moving its resources, exercise explicit and fallback cleanup, and recover on later requests across both source routes. Refined PHP-Wasm callbacks and recursive owned graphs remain rejected. A consumer that does not declare checked support cannot read a verified refined component (`native-refinements-unavailable`). Python's [installed CI reports](../evidence/python-refinements-20261007/receipt.json) cover scalar and container `Fin`, top-level checked `Subtype`, and finite function specializations. Local acceptance does not establish a hosted CI result for a later revision.\n",
+          "start": 103413
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "df8ce6b3f5bf244bd113ec8981ddf9128b0e2c2dd2d1027d018940122ef77ac3"
+    },
+    {
+      "currentSha256": "dede77c0948b188f2fa00f858e447e14488a9958e33fad97d448ddab7742af0b",
+      "edits": [
+        {
+          "current": "### Refinement support and entry measurements\n\nThe support statements on this page come from unmodified prepared packages.\nThose packages contain the generated checks that enforce `Fin`, `Subtype` and\nchecked-record contracts, but they do not contain diagnostic entry counters.\n\nEntry measurements use separate instrumented fixture packages. They count the\nnamed validator, constructor, adapter and Lean-source entries for 28\nordinary/reviewed routes in 26 retained artifacts. The counters do not change a\nconsumer package or widen its supported types. The [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis configured to rebuild the complete matrix at one revision and recheck the\nretained artifacts. Until a completed run publishes that verified summary, the\ndocumentation makes no hosted entry-count claim.\n\n",
+          "previous": "",
+          "start": 43417
+        },
+        {
+          "current": "Source-dispatch counters were not measured in these unmodified package runs.\nThe separate instrumented matrix described above measures named fixture entries\nwithout changing the consumer packages. Refined callbacks and refinements\n",
+          "previous": "Source-dispatch counters were not measured. Refined callbacks and refinements\n",
+          "start": 48300
+        },
+        {
+          "current": "Constructor and dispatch counts were not measured in these unmodified package\nruns. The separate instrumented matrix described above measures named fixture\nentries without changing the consumer packages. The later structural checks\n",
+          "previous": "Constructor and dispatch counts were not measured. The later structural checks\n",
+          "start": 56827
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "c5b59498b6b2ee6415ee2142266b6a90ce40d1581f7458186c4da681edc4307e"
+    },
+    {
+      "currentSha256": "0301e0b36cceb5480f3e5c3f898d431e582f9ff96ad27b81001fcf801782a5d0",
+      "edits": [
+        {
+          "current": "## Refinement checks and measurement probes\n\nUnmodified prepared PHP-Wasm packages enforce supported `Fin`, `Subtype` and\nchecked-record contracts with their ordinary generated adapters. They do not\nship validator, constructor, adapter or Lean-source entry counters.\n\nLean Bridge measures those entries in separate instrumented fixture packages.\nThe closed matrix has 28 ordinary/reviewed routes in 26 retained artifacts; it\ndoes not widen the prepared-package type surface or become part of a consumer\nrelease. The [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis configured to rebuild all four producer groups at one revision and verify\ntheir retained bytes. Do not describe its counts as hosted evidence until a\ncompleted promotion run publishes the verified summary.\n\n",
+          "previous": "",
+          "start": 2030
+        }
+      ],
+      "path": "docs/publish/php.md",
+      "previousSha256": "091d55824ac4e6922175b2cb55db40b38828cad3b9ff2380b9bd99e3212b5f46"
+    },
+    {
+      "currentSha256": "f53193a0ffa728dfc03c4e325bd132b19534ad12455d1c0a133e1b3b53a2fd4a",
+      "edits": [
+        {
+          "current": "PHP-Wasm refinement support is established by unmodified prepared packages.\nThe separate entry-measurement probes instrument fixture packages only: their\nclosed topology has 28 ordinary/reviewed routes in 26 retained artifacts and\ndoes not widen any type-support cell. The configured [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis not a hosted result; entry counts become hosted evidence only when a\ncompleted run publishes a verified summary for one revision.\n\n",
+          "previous": "",
+          "start": 49880
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "91b87cdc03ded5ad24214a775c47e0666d20c7572398afd4b85a48dfccc611a0"
+    },
+    {
+      "currentSha256": "673c302f64db2ce70c23251691bdb4ad32a0fddd333bd930a0c368fa98cc446c",
+      "edits": [
+        {
+          "current": "    },\n    {\n      \"id\": \"php-wasm-refinement-entry-instrumented-probe-contract\",\n      \"kind\": \"test\",\n      \"revision\": \"4553a2910f10725118b532b480820ad7907afc3e\",\n      \"command\": \"node --test tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs\",\n      \"scope\": \"This is a source-level contract for separate instrumented PHP-Wasm fixture packages, not installed consumer-package evidence. The closed promotion topology expects 28 ordinary/reviewed routes in 26 retained artifacts at one revision and reruns their exact verifiers. It does not change the support states established by unmodified prepared packages and does not claim hosted entry counts until a completed promotion run publishes a verified summary.\",\n      \"files\": [\n        {\n          \"path\": \".github/workflows/php-wasm-refinement-entry-promotion.yml\",\n          \"sha256\": \"e3921d7f1dde5b9056e15da772b7b8afd0e3d0ec93b82d94a667b46b7145dcc8\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-matrix.mjs\",\n          \"sha256\": \"feb9a25749a40c63f5e79d716039d26e7bf439f9b17a659ff56aa0a2583599ab\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs\",\n          \"sha256\": \"631abd0800b98fc1550e6855471b12c720a01c0d1c962c263bc1b36570f18260\"\n        },\n        {\n          \"path\": \"tests/helpers/php-wasm-refinement-entry-promotion-ci.mjs\",\n          \"sha256\": \"eeb2eaf1f5b5caffea67bfa83a7f03c0b9ec906ca0f058f171755ace62b5cbeb\"\n        }\n      ],\n      \"artifacts\": []\n",
+          "previous": "",
+          "start": 75676697
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "77d0da14ad23240b382e50b77a3d738967d0d216d30f30a543111d172b2655fe"
+    },
+    {
+      "currentSha256": "6ab18d767e5b5887976783427ab20fd09dfca1dd07afd767b29ae66bfb85086e",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-documentation-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-documentation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3774
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "df34dcdc0907cbcbfd624cf0528eeb01d5b022b3ad5d52d4ea5c38a7070ab76a"
+    },
+    {
+      "currentSha256": "022094f6c39261e5aca79673df312906c708a05adfdfad97697c934167cbc62f",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from \"./php-wasm-refinement-entry-documentation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryDocumentationChangedPaths\n\t, ...phpWasmRefinementEntryHostedVerifierRootChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryHostedVerifierRootChangedPaths\n",
+          "start": 146051
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryDocumentation\n\t\t= beforePhpWasmRefinementEntryDocumentationSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryDocumentation) === expected)\n\t\treturn phpWasmRefinementEntryDocumentation;\n",
+          "previous": "",
+          "start": 177672
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementEntryHostedVerifierRootSource(\n\t\t\tpath, phpWasmRefinementEntryDocumentation, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementEntryHostedVerifierRootSource(path, text, expected);\n",
+          "start": 177946
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f652db6c6293758f1988435332acbda6e48dc74fd97a227ac177ce3d35bdadf3"
+    }
+  ]
+}

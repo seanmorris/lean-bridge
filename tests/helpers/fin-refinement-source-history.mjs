@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from "./php-wasm-refinement-entry-documentation-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierRootSource, phpWasmRefinementEntryHostedVerifierRootChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs";
 import { beforePhpWasmRefinementEntryPromotionSource, phpWasmRefinementEntryPromotionChangedPaths } from "./php-wasm-refinement-entry-promotion-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierClosureSource, phpWasmRefinementEntryHostedVerifierClosureChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs";
@@ -1912,7 +1913,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryHostedVerifierRootChangedPaths
+	...phpWasmRefinementEntryDocumentationChangedPaths
+	, ...phpWasmRefinementEntryHostedVerifierRootChangedPaths
 	, ...phpWasmRefinementEntryPromotionChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierClosureChangedPaths
 	, ...phpWasmRefinementCiClosureRepairChangedPaths
@@ -2607,8 +2609,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryDocumentation
+		= beforePhpWasmRefinementEntryDocumentationSource(path, text, expected);
+	if(sha256(phpWasmRefinementEntryDocumentation) === expected)
+		return phpWasmRefinementEntryDocumentation;
 	const phpWasmRefinementEntryHostedVerifierRoot
-		= beforePhpWasmRefinementEntryHostedVerifierRootSource(path, text, expected);
+		= beforePhpWasmRefinementEntryHostedVerifierRootSource(
+			path, phpWasmRefinementEntryDocumentation, expected
+		);
 	if(sha256(phpWasmRefinementEntryHostedVerifierRoot) === expected)
 		return phpWasmRefinementEntryHostedVerifierRoot;
 	const phpWasmRefinementEntryPromotion
