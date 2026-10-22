@@ -28,3 +28,17 @@ test("retained perl callback checked-record evidence replays", async () => {
 	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
 	assert.equal(index.accepted.reports, 16);
 });
+
+for(const [lane, profiles, reports] of [
+	["dotnet", ["dotnet"], 2]
+	, ["jvm", ["java", "kotlin"], 4]
+	, ["php-native", ["php-native"], 2]
+	, ["wit-wasi", ["wit-wasi"], 2]
+]) test(`retained ${lane} callback checked-record evidence replays`, async () => {
+	const index = await checkCallbackCheckedRecordHostedEvidence(
+		lane, `docs/evidence/callback-checked-record-${lane}-20261022`
+	);
+	assert.deepEqual(index.accepted.profiles, profiles);
+	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
+	assert.equal(index.accepted.reports, reports);
+});
