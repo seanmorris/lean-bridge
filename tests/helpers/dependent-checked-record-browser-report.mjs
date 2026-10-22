@@ -328,7 +328,7 @@ export const checkDependentCheckedRecordNpmReport = async (
 			, await read(`build-1/${path}`), path);
 	const index = `import * as api from "${dependentCheckedRecordName}";\n`
 		+ "import {checkDependentRecords} from \"./check.mjs\";\n"
-		+ `console.log(JSON.stringify(checkDependentRecords(api, ${selection.resultOnly})));\n`;
+		+ `console.log(JSON.stringify(checkDependentRecords(api, ${selection.resultOnly}, ${selection.reviewed})));\n`;
 	const callers = {
 		"index.mjs": Buffer.from(index)
 		, "check.mjs": original(`${consumerRoot}/javascript.mjs`)

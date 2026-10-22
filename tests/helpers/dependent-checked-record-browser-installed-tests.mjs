@@ -227,7 +227,7 @@ for(const route of routes) test(
 	await saveLakeFile(output, "install.json", canonicalJson(install));
 	const script = `import * as api from "${dependentCheckedRecordName}";
 import {checkDependentRecords} from "./check.mjs";
-console.log(JSON.stringify(checkDependentRecords(api, ${resultOnly})));
+console.log(JSON.stringify(checkDependentRecords(api, ${resultOnly}, ${reviewed})));
 `;
 	const fixture = "tests/fixtures/dependent-checked-record-browser";
 	const corpus = await readFile(join(fixture, "javascript.mjs"));

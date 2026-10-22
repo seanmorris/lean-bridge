@@ -9,8 +9,11 @@
  *
  * @param api - Installed generated package exports.
  * @param resultOnly - Whether only Lean-produced results are exported.
+ * @param reviewed - Whether reviewed Binding IR supplies public parameter names.
  */
-export const checkDependentRecords = (api, resultOnly = false) => {
+export const checkDependentRecords = (
+	api, resultOnly = false, reviewed = false
+) => {
 	let checks = 0, rejections = 0, calls = 0, snapshots = 0, recoveries = 0;
 	const check = (condition, label) => {
 		if(!condition) throw new Error(`failed: ${label}`);
@@ -39,7 +42,9 @@ export const checkDependentRecords = (api, resultOnly = false) => {
 		{ invoke(call); }
 		catch(error)
 		{
-			if(!/failed \(5\)/u.test(String(error?.message)))
+			const parameter = reviewed ? "value0" : "arg0";
+			if(error?.message !== `${parameter} was rejected by `
+				+ "DependentRecords.mkDependent")
 				throw new Error(`wrong refusal: ${label}: ${error?.message}`
 					, { cause: error });
 			rejections++;

@@ -34,10 +34,10 @@ const fields = value => {
 	if(Object.keys(value).sort().join() !== "below,bound")
 		throw new TypeError("dependent record shape");
 };
-const checked = value => {
+const checked = (value, parameter = "arg0") => {
 	fields(value);
 	if(value.below >= value.bound)
-		throw new Error("Component recursive call failed (5)");
+		throw new Error(`${parameter} was rejected by DependentRecords.mkDependent`);
 	return value;
 };
 const model = {
@@ -52,6 +52,14 @@ const model = {
 test("the dependent checked-record caller covers bounds, recovery and results", () => {
 	assert.deepEqual(checkDependentRecords(model)
 		, dependentCheckedRecordExpected("ordinary-source"));
+	assert.deepEqual(checkDependentRecords({
+		dependentTotal: value => {
+			checked(value, "value0");
+			return value.bound + value.below;
+		}
+		, dependentRoundtrip: value => ({ ...checked(value, "value0") })
+		, dependentResult: model.dependentResult
+	}, false, true), dependentCheckedRecordExpected("reviewed-ir"));
 	assert.deepEqual(checkDependentRecords({
 		dependentResult: model.dependentResult
 	}, true), dependentCheckedRecordExpected("result-only-reviewed-ir"));
