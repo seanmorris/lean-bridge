@@ -1,0 +1,113 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9acbe484e43cf6dfbaf82bce6fad0d5eb35dfba2145d97680bbdeb01dcf29334",
+      "path": "scripts/update-dependent-checked-record-browser-path-diagnostic-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "df23cc06a6ab569baaa6348239dc8754922e5f0ecc03f686d48f08d06ae23a44",
+      "path": "tests/helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b6a6c46c1f8ab9559c73132b7aa1c8dc8e4199b54514475a280db74ae0c7ab83",
+      "path": "tests/helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "993a7def382e2908c7579fe8906c9f9416c566ca",
+  "integrationUpdates": [
+    {
+      "currentSha256": "51e4b3bb3ece44f3c8d389913141c48084811d012dea1b02e5d206d9a208be7d",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource, dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths } from \"./dependent-checked-record-browser-path-diagnostic-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...dependentCheckedRecordBrowserPathDiagnosticRepairChangedPaths\n\t, ...dependentCheckedRecordBrowserPathDiagnosticRepairIntegrationPaths\n\t, ...dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths\n",
+          "start": 153291
+        },
+        {
+          "current": "\tconst dependentCheckedRecordBrowserPathDiagnosticRepair\n\t\t= beforeDependentCheckedRecordBrowserPathDiagnosticRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordBrowserPathDiagnosticRepair) === expected)\n\t\treturn dependentCheckedRecordBrowserPathDiagnosticRepair;\n",
+          "previous": "",
+          "start": 187905
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordBrowserPathDiagnosticRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 188316
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3a73274b90479c535c2a12cdba445bee68aa718ca6601a3fe3886649f63e694e"
+    },
+    {
+      "currentSha256": "fa0fe08d5709f348c8b13e383595c1db16fc4e1af2d2d4cd7137b7d211a3266c",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-browser-path-diagnostic-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5306
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "1de161670a1816473401fcb0b9dbfe84b408012cb9047219b228e0ef01427eb4"
+    }
+  ],
+  "milestone": "dependent-checked-record-browser-path-diagnostic-repair-source-v1",
+  "predecessorCommit": "57a88dd93005bbd8de2097c4aa6d49fc1bf9679a",
+  "schemaVersion": 1,
+  "scope": "Installed npm and browser consumers require the runtime's callable-qualified dependent checked-record rejection path for ordinary and reviewed public parameter names.",
+  "updates": [
+    {
+      "currentSha256": "234fc5ce6b41bac2f42a3ae0be354fd88cbade23c34dd55ce9482214635623bf",
+      "edits": [
+        {
+          "current": "\t\t\tif(error?.message !== `dependentTotal.${parameter} was rejected by `\n",
+          "previous": "\t\t\tif(error?.message !== `${parameter} was rejected by `\n",
+          "start": 1362
+        }
+      ],
+      "path": "tests/fixtures/dependent-checked-record-browser/javascript.mjs",
+      "previousSha256": "bdbdf8c3d704b21b01be410ce60dbb8d7a8034fc069466110b0d377ece6813c8"
+    },
+    {
+      "currentSha256": "abb186f4e6ad34ad58e970429babe2422a2ce000bdf278ada7de746ca13a4b20",
+      "edits": [
+        {
+          "current": "const checked = (value, parameter) => {\n",
+          "previous": "const checked = (value, parameter = \"arg0\") => {\n",
+          "start": 1393
+        },
+        {
+          "current": "\t\tchecked(value, \"dependentTotal.arg0\");\n",
+          "previous": "\t\tchecked(value);\n",
+          "start": 1623
+        },
+        {
+          "current": "\t, dependentRoundtrip: value => ({\n\t\t...checked(value, \"dependentRoundtrip.arg0\")\n\t})\n",
+          "previous": "\t, dependentRoundtrip: value => ({ ...checked(value) })\n",
+          "start": 1703
+        },
+        {
+          "current": "\t\t\tchecked(value, \"dependentTotal.value0\");\n",
+          "previous": "\t\t\tchecked(value, \"value0\");\n",
+          "start": 2119
+        },
+        {
+          "current": "\t\t, dependentRoundtrip: value => ({\n\t\t\t...checked(value, \"dependentRoundtrip.value0\")\n\t\t})\n",
+          "previous": "\t\t, dependentRoundtrip: value => ({ ...checked(value, \"value0\") })\n",
+          "start": 2204
+        },
+        {
+          "current": "\tassert.throws(() => checkDependentRecords({\n\t\t...model\n\t\t, dependentTotal: value => {\n\t\t\tchecked(value, \"arg0\");\n\t\t\treturn value.bound + value.below;\n\t\t}\n\t}), /wrong refusal: equal bound: arg0 was rejected/u);\n",
+          "previous": "",
+          "start": 2558
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "b027df564d8b37b83624f95de882afad12ae5d6d3168e880902ed8686a28299b"
+    }
+  ]
+}
