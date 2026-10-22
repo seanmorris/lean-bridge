@@ -29,6 +29,15 @@ test("retained perl callback checked-record evidence replays", async () => {
 	assert.equal(index.accepted.reports, 16);
 });
 
+test("retained native callback checked-record evidence replays", async () => {
+	const index = await checkCallbackCheckedRecordHostedEvidence(
+		"native", "docs/evidence/callback-checked-record-native-20261022"
+	);
+	assert.deepEqual(index.accepted.profiles, ["c", "cpp"]);
+	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
+	assert.equal(index.accepted.reports, 4);
+});
+
 test("retained browser callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
 		"browser", "docs/evidence/callback-checked-record-browser-20261022"
