@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "kind": "zero-payload-checked-record-matrix-closure",
+  "verifiedRevision": "62f29794ea5f7fbaeeea21ac8e4f9876efdf5330",
+  "matrix": {
+    "laneCount": 11,
+    "profileCount": 17,
+    "routeCountPerLane": 4,
+    "evidenceIdentityCount": 44,
+    "promotedCellCount": 68,
+    "shape": "checked-record",
+    "positions": [
+      "parameter",
+      "result"
+    ],
+    "routes": [
+      "ordinary-source",
+      "reviewed-ir",
+      "result-only-ordinary-source",
+      "result-only-reviewed-ir"
+    ],
+    "profiles": [
+      "node-javascript",
+      "node-typescript",
+      "browser-javascript",
+      "browser-react",
+      "browser-worker",
+      "c",
+      "cpp",
+      "dotnet",
+      "java",
+      "kotlin",
+      "rust",
+      "php-native",
+      "python",
+      "ruby",
+      "perl",
+      "wit-wasi",
+      "php-wasm"
+    ]
+  },
+  "evidenceIdentities": [
+    "zero-payload-browser-ordinary-source-hosted-installed",
+    "zero-payload-browser-reviewed-ir-hosted-installed",
+    "zero-payload-browser-result-only-ordinary-source-hosted-installed",
+    "zero-payload-browser-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-native-ordinary-source-hosted-installed",
+    "zero-payload-native-reviewed-ir-hosted-installed",
+    "zero-payload-native-result-only-ordinary-source-hosted-installed",
+    "zero-payload-native-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-dotnet-ordinary-source-hosted-installed",
+    "zero-payload-dotnet-reviewed-ir-hosted-installed",
+    "zero-payload-dotnet-result-only-ordinary-source-hosted-installed",
+    "zero-payload-dotnet-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-jvm-ordinary-source-hosted-installed",
+    "zero-payload-jvm-reviewed-ir-hosted-installed",
+    "zero-payload-jvm-result-only-ordinary-source-hosted-installed",
+    "zero-payload-jvm-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-rust-ordinary-source-hosted-installed",
+    "zero-payload-rust-reviewed-ir-hosted-installed",
+    "zero-payload-rust-result-only-ordinary-source-hosted-installed",
+    "zero-payload-rust-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-php-ordinary-source-hosted-installed",
+    "zero-payload-php-reviewed-ir-hosted-installed",
+    "zero-payload-php-result-only-ordinary-source-hosted-installed",
+    "zero-payload-php-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-python-ordinary-source-hosted-installed",
+    "zero-payload-python-reviewed-ir-hosted-installed",
+    "zero-payload-python-result-only-ordinary-source-hosted-installed",
+    "zero-payload-python-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-ruby-ordinary-source-hosted-installed",
+    "zero-payload-ruby-reviewed-ir-hosted-installed",
+    "zero-payload-ruby-result-only-ordinary-source-hosted-installed",
+    "zero-payload-ruby-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-perl-ordinary-source-hosted-installed",
+    "zero-payload-perl-reviewed-ir-hosted-installed",
+    "zero-payload-perl-result-only-ordinary-source-hosted-installed",
+    "zero-payload-perl-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-wit-ordinary-source-hosted-installed",
+    "zero-payload-wit-reviewed-ir-hosted-installed",
+    "zero-payload-wit-result-only-ordinary-source-hosted-installed",
+    "zero-payload-wit-result-only-reviewed-ir-hosted-installed",
+    "zero-payload-php-wasm-ordinary-source-hosted-installed",
+    "zero-payload-php-wasm-reviewed-ir-hosted-installed",
+    "zero-payload-php-wasm-result-only-ordinary-source-hosted-installed",
+    "zero-payload-php-wasm-result-only-reviewed-ir-hosted-installed"
+  ],
+  "archives": [
+    {
+      "lane": "browser",
+      "profiles": ["node-javascript", "node-typescript", "browser-javascript", "browser-react", "browser-worker"],
+      "root": "docs/evidence/zero-payload-checked-record-browser-20261021",
+      "indexSha256": "90f9686218060b004135226c51ce7977a6426497a348aefafa37a17e9f9bf4f0",
+      "producerRunId": 39588425879,
+      "artifactId": 12342149147
+    },
+    {
+      "lane": "native",
+      "profiles": ["c", "cpp"],
+      "root": "docs/evidence/zero-payload-checked-record-native-20261021",
+      "indexSha256": "c9018392c2e3d706f98305862ebd7c6d68b5abbf89fae99a514ff406101236ea",
+      "producerRunId": 39548744700,
+      "artifactId": 12324250671
+    },
+    {
+      "lane": "dotnet",
+      "profiles": ["dotnet"],
+      "root": "docs/evidence/zero-payload-checked-record-dotnet-20261021",
+      "indexSha256": "0268c8ef8f9b247db6a880346484db5ef154007db21af3e7677f61884c507891",
+      "producerRunId": 39561655735,
+      "artifactId": 12329431983
+    },
+    {
+      "lane": "jvm",
+      "profiles": ["java", "kotlin"],
+      "root": "docs/evidence/zero-payload-checked-record-jvm-20261021",
+      "indexSha256": "fb47730801e16e214af7bf824179657f2ed18ac5aaf109732063314dbd41491e",
+      "producerRunId": 39561655653,
+      "artifactId": 12328792684
+    },
+    {
+      "lane": "rust",
+      "profiles": ["rust"],
+      "root": "docs/evidence/zero-payload-checked-record-rust-20261021",
+      "indexSha256": "47a71983922b4b079c577de03ea31e5ba94b3a148d0331fe258f26b6682a6903",
+      "producerRunId": 39561655967,
+      "artifactId": 12329518106
+    },
+    {
+      "lane": "php",
+      "profiles": ["php-native"],
+      "root": "docs/evidence/zero-payload-checked-record-php-20261021",
+      "indexSha256": "0c14e36be0a912d31cddb75dbb883fe312c8a55b717a0f94a25cc9c30829fc08",
+      "producerRunId": 39588427478,
+      "artifactId": 12342822535
+    },
+    {
+      "lane": "python",
+      "profiles": ["python"],
+      "root": "docs/evidence/zero-payload-checked-record-python-20261021",
+      "indexSha256": "4b89c65f711f6e0a8f5fb53d4b8f62112e88d4cf33e8e1e42c28e8a34d5ea04f",
+      "producerRunId": 39588425854,
+      "artifactId": 12343095184
+    },
+    {
+      "lane": "ruby",
+      "profiles": ["ruby"],
+      "root": "docs/evidence/zero-payload-checked-record-ruby-20261021",
+      "indexSha256": "670ad0e816662c33d8a5451ddafec96ae7e3423effe09f851c036ba0bbc5a2e8",
+      "producerRunId": 39588425786,
+      "artifactId": 12343731732
+    },
+    {
+      "lane": "perl",
+      "profiles": ["perl"],
+      "root": "docs/evidence/zero-payload-checked-record-perl-20261021",
+      "indexSha256": "97417bd624ec2d48c6a5920438b6e91e751fa438e947324929791c52304a072b",
+      "producerRunId": 39588425122,
+      "artifactId": 12344196352
+    },
+    {
+      "lane": "wit",
+      "profiles": ["wit-wasi"],
+      "root": "docs/evidence/zero-payload-checked-record-wit-20261021",
+      "indexSha256": "3f5f32536cff627c8f537a733c1aa8cf2b8b599aa74729748e7a5dbb365f8881",
+      "producerRunId": 39588427412,
+      "artifactId": 12344107815
+    },
+    {
+      "lane": "php-wasm",
+      "profiles": ["php-wasm"],
+      "root": "docs/evidence/zero-payload-checked-record-php-wasm-20261021",
+      "indexSha256": "3e9d3dbe6630c3512749465488ed0fa1d7c08f0ec11501d40837a69e7756a7a9",
+      "producerRunId": 39621064577,
+      "artifactId": 12356309200
+    }
+  ],
+  "recurringRuns": [
+    {"lane": "perl", "runId": 39738170709, "workflow": "Installed zero-payload checked records in Perl"},
+    {"lane": "python", "runId": 39738170630, "workflow": "Zero-payload checked records in Python"},
+    {"lane": "browser", "runId": 39738169208, "workflow": "Zero-payload checked records in npm and browsers"},
+    {"lane": "jvm", "runId": 39738170784, "workflow": "Installed zero-payload checked records in Java and Kotlin"},
+    {"lane": "rust", "runId": 39738170999, "workflow": "Zero-payload checked records in Rust"},
+    {"lane": "php-wasm", "runId": 39738169161, "workflow": "Installed zero-payload checked records in PHP-Wasm"},
+    {"lane": "ruby", "runId": 39738169188, "workflow": "Zero-payload checked records in Ruby"},
+    {"lane": "native", "runId": 39738169320, "workflow": "Zero-payload checked records in C and C++"},
+    {"lane": "dotnet", "runId": 39738169429, "workflow": "Zero-payload checked records in .NET"},
+    {"lane": "wit", "runId": 39738170627, "workflow": "Zero-payload checked records in WIT and WASI components"},
+    {"lane": "php", "runId": 39738169289, "workflow": "Zero-payload checked records in native PHP"}
+  ],
+  "boundaries": {
+    "includedValues": ["Witness", "Token", "Marker", "Option", "Array", "Mark"],
+    "excludedPositions": ["field", "callback-parameter", "callback-result", "owned"],
+    "excludedScope": "Other zero-payload shapes and any inference between host lanes remain unsupported.",
+    "trustedInputs": "Lean and each host compiler, runtime, package manager, operating system and GitHub Actions remain trusted recorded inputs."
+  },
+  "sourceHistory": "docs/evidence/zero-payload-checked-record-matrix-closure-source-history-20261022.json"
+}

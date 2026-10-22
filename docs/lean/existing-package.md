@@ -471,6 +471,8 @@ The [hosted .NET zero-payload archive](../evidence/zero-payload-checked-record-d
 
 The [hosted Rust zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) validates all four Cargo routes. Rust emits `Witness` as a nominal empty struct, distinct from `()`, absence, `Marker` and `Token`; options, vectors and active variant branches retain the empty carrier.
 
+The [complete hosted zero-payload matrix](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) adds independently retained npm/browser, native PHP, Python, Ruby, Perl, WIT/WASI and PHP-Wasm archives to those four lanes. Together, the eleven archives establish all four ordinary/reviewed full/result-only routes across all seventeen consumer profiles. This acceptance is exact: it covers the tested `Witness`, `Token`, `Marker`, `Option`, array and `Mark` values only at copied parameter and result sites. It does not cover fields, callbacks, owned positions or other zero-payload shapes.
+
 ### Export a checked Subtype
 
 For a `Subtype` input, provide a total Lean function that checks a host value and returns the exact subtype:

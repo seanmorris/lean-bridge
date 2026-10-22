@@ -5,12 +5,18 @@
  */
 
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import { docPages } from "../site/registry.mjs";
 import { readTypeSurface, typeSurfaceCells } from "../src/adoption/type-surface.mjs";
-import { cellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection, typeGuideProfiles } from "../scripts/generate-type-docs.mjs";
+import {
+	cellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection
+	, typeGuideProfiles, zeroPayloadMatrixEvidenceIds
+	, zeroPayloadMatrixProfiles
+} from "../scripts/generate-type-docs.mjs";
 import { alpha } from "../poc/lean-link-spike/descriptors.mjs";
 import { generatePhpBindingPackage } from "../src/backends/php/generate.mjs";
 import { generateRustBindingPackage } from "../src/backends/rust/generate.mjs";
@@ -85,6 +91,91 @@ test("every consumer table is generated and includes all 48 source forms exactly
 		assert.ok(source.indexOf("### Type conversions") < source.indexOf("## Start from a raw Lean package"));
 		assert.match(source, /### (?:Alpha example API|Scalar package example|Workshop example API)/u);
 		assert.equal(replaceTypeSection(source, renderTypeTable(inventory, profiles, path.posix.relative(path.posix.dirname(filename), "docs/reference/types.md"))), source);
+	}
+});
+
+test("zero-payload matrix closure binds every lane, route and documented boundary", async () => {
+	const receipt = JSON.parse(await readFile(
+		"docs/evidence/zero-payload-checked-record-matrix-closure-20261022.json"
+		, "utf8"));
+	assert.equal(receipt.schemaVersion, 1);
+	assert.equal(receipt.kind, "zero-payload-checked-record-matrix-closure");
+	assert.equal(receipt.verifiedRevision
+		, "62f29794ea5f7fbaeeea21ac8e4f9876efdf5330");
+	assert.deepEqual(receipt.evidenceIdentities, zeroPayloadMatrixEvidenceIds);
+	assert.deepEqual(receipt.matrix.profiles, zeroPayloadMatrixProfiles);
+	assert.deepEqual(receipt.matrix, {
+		laneCount: 11, profileCount: 17, routeCountPerLane: 4
+		, evidenceIdentityCount: 44, promotedCellCount: 68
+		, shape: "checked-record", positions: ["parameter", "result"]
+		, routes: ["ordinary-source", "reviewed-ir"
+			, "result-only-ordinary-source", "result-only-reviewed-ir"]
+		, profiles: [...zeroPayloadMatrixProfiles]
+	});
+	assert.equal(new Set(receipt.evidenceIdentities).size, 44);
+	assert.ok(receipt.evidenceIdentities.every(id =>
+		document.evidence.some(item => item.id === id)));
+	const evidence = new Set(receipt.evidenceIdentities);
+	const promoted = cells.filter(cell => Object.values(cell.stages)
+		.some(stage => stage.evidence.some(id => evidence.has(id))));
+	assert.equal(promoted.length, 68);
+	assert.deepEqual(new Set(promoted.map(cell => cell.shape))
+		, new Set(["checked-record"]));
+	assert.deepEqual(new Set(promoted.map(cell => cell.position))
+		, new Set(["parameter", "result"]));
+	assert.deepEqual(new Set(promoted.map(cell => cell.profile))
+		, new Set(zeroPayloadMatrixProfiles));
+	assert.equal(receipt.archives.length, 11);
+	assert.equal(new Set(receipt.archives.flatMap(item => item.profiles)).size
+		, 17);
+	for(const archive of receipt.archives)
+	{
+		const bytes = execFileSync("git", ["show"
+			, `HEAD:${archive.root}/index.json`], { maxBuffer: 16 * 1024 * 1024 });
+		assert.equal(createHash("sha256").update(bytes).digest("hex")
+			, archive.indexSha256, archive.lane);
+		assert.ok(Number.isSafeInteger(archive.producerRunId));
+		assert.ok(Number.isSafeInteger(archive.artifactId));
+	}
+	assert.equal(receipt.recurringRuns.length, 11);
+	assert.deepEqual(new Set(receipt.recurringRuns.map(item => item.lane))
+		, new Set(receipt.archives.map(item => item.lane)));
+	assert.ok(receipt.recurringRuns.every(item =>
+		Number.isSafeInteger(item.runId) && item.workflow.length > 0));
+	assert.deepEqual(receipt.boundaries.excludedPositions
+		, ["field", "callback-parameter", "callback-result", "owned"]);
+
+	const rendered = await renderTypeDocuments({ root, inventory });
+	const link = /zero-payload-checked-record-matrix-closure-20261022\.md/u;
+	for(const [path, source] of Object.entries(rendered.documents))
+	{
+		assert.match(source, link, path);
+		assert.match(source
+			, /Fields, callback positions, owned positions and other zero-payload shapes remain outside/u
+			, path);
+	}
+	assert.match(rendered.reference, link);
+	assert.match(rendered.reference, /44 route evidence identities/u);
+	assert.match(rendered.reference, /68 profile\/path\/position cells/u);
+	const incomplete = {
+		document: JSON.parse(execFileSync("git", ["show"
+			, "e434aaffaeda338c7abbb13c439466a4f7fb4a17:docs/type-surface.v1.json"]
+		, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 }))
+		, ...contracts
+	};
+	const refused = await renderTypeDocuments({ root, inventory: incomplete });
+	assert.doesNotMatch(refused.reference, link);
+	for(const source of Object.values(refused.documents))
+		assert.doesNotMatch(source, link);
+	const authorGuides = ["docs/lean/existing-package.md"
+		, "docs/lean/export-decisions.md"];
+	for(const path of authorGuides)
+	{
+		const source = await readFile(path, "utf8");
+		assert.match(source, link, path);
+		assert.match(source
+			, /does not (?:cover|promote) fields, callbacks, owned positions or other zero-payload shapes/u
+			, path);
 	}
 });
 
