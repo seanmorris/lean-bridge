@@ -25,6 +25,8 @@ import { generateCallableJvmGraphPackage } from "../src/backends/jvm/callable-gr
 import { generateCallablePhpGraphPackage } from "../src/backends/php/callable-graph-package.mjs";
 import { compileCallableWitGraphPackageModel } from "../src/backends/wit/callable-graph-package.mjs";
 import { renderWitGraphCallableHostSource } from "../src/backends/wit/callable-graph-host.mjs";
+import { componentStructuredCallbackDirection, componentStructuredClosureRefuses } from "../src/abi/component-structured-callables.mjs";
+import { componentStructuredClosureRefusals } from "../src/build/component-structured-callable-lean.mjs";
 
 const fixture = () => {
 	const input = nativeMetadataFixture(), projection = input.metadata.modules[0].declarations[0].projection;
@@ -133,6 +135,41 @@ test("native Fin callback validators derive carrier types from the authenticated
 		assert.match(source, new RegExp(`@\\[export ${three.symbol}_refinement_1\\][\\s\\S]+carrier : _root_\\.Array _root_\\.Nat`, "u"));
 		assert.match(source, /match \(if proof : \(value\) < 3 then/u);
 	}
+});
+
+test("nominal callback bounds make returned closure refusals recoverable without changing reusable direction", () => {
+	const ir = reviewedCallbackFinReview({ hostReply: true });
+	const copiedGraph = createNativeCallableGraphDescriptor(ir);
+	const abi = nativeCallableGraphCarrierAbi(copiedGraph, ir);
+	const callback = name => {
+		const declaration = ir.declarations.find(item => item.id === `lean:ReviewedCallbacks.${name}`);
+		assert.equal(declaration.result.type.kind, "named");
+		return abi.callbacks.find(item => item.id === declaration.result.type.id);
+	};
+	const tiles = callback("tiles"), tileMaker = callback("tileMaker");
+	const apply = abi.callbacks.find(item => item.id === ir.declarations
+		.find(entry => entry.id === "lean:ReviewedCallbacks.apply").parameters[0].type.id);
+	assert.equal(componentStructuredCallbackDirection(abi, tiles, true), null);
+	assert.equal(componentStructuredCallbackDirection(abi, tileMaker, true), null);
+	assert.equal(componentStructuredCallbackDirection(abi, apply, true), null);
+	assert.equal(componentStructuredClosureRefuses(abi, tiles, true), true);
+	assert.equal(componentStructuredClosureRefuses(abi, tileMaker, true), false);
+	assert.equal(componentStructuredClosureRefuses(abi, apply, true), false);
+	const refusals = componentStructuredClosureRefusals(abi, { finDirections: true });
+	const site = refusals.sites.find(item => item.bindingId === tiles.id);
+	assert.equal(site.refinements.parameters[0].kind, "list");
+	assert.equal(site.refinements.parameters[0].arguments[0].kind, "record");
+	assert.equal(site.refinements.parameters[0].arguments[0].arguments[0].bound, "5");
+
+	const generated = generateNativeCallableGraphCalls(ir, copiedGraph,
+		{ initializer: "initialize_LeanBridgeNative0123456789abcdef", finDirections: true });
+	const call = signature => {
+		const start = generated.source.indexOf(`uint32_t ${generated.layout.prefix}_callback_${signature.key}_lease_call(`);
+		return generated.source.slice(start, generated.source.indexOf("\n}\n", start));
+	};
+	assert.match(call(tiles), new RegExp(`int refused = 0;[\\s\\S]+ng_closure_refusal_${tiles.key}\\(a0\\) == NG_INVALID`, "u"));
+	assert.doesNotMatch(call(tileMaker), /int refused = 0|ng_closure_refusal_/u);
+	assert.match(generated.source, /ng_refinement_text\("\.digit"[\s\S]+is not below its Fin 5 bound/u);
 });
 
 test("acyclic callback Subtypes select the callable-graph carrier", () => {

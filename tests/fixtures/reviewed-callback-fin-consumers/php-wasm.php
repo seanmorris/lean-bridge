@@ -51,13 +51,13 @@ $before = $calls;
 $check($reject(fn() => visit($host)) instanceof TypeError, 'host callback requires recovery');
 $check($calls === $before, 'missing recovery stops host callback');
 
-$array = digits($n(0));
+$array = digits(null);
 $check($array([$n(1), $n(2), $n(0)])->isEqualTo($n(15)), 'nested closure Fin inputs');
 $check($reject(fn() => $array([$n(3)])) instanceof LeanBridgeError, 'nested closure Fin rejection');
 $check($array([])->isZero(), 'nested closure recovery');
 $array->close();
 
-$rows = tiles($n(0));
+$rows = tiles(null);
 $tile = fn(int $digit, int $count): Tile => new Tile($n($digit), $n($count));
 $check($rows([$tile(2, 5), $tile(4, 1)])->isEqualTo($n(606)), 'nominal closure Fin fields');
 $check($reject(fn() => $rows([$tile(5, 1)])) instanceof LeanBridgeError, 'nominal field rejection');
@@ -80,7 +80,7 @@ $check($reject(fn() => three(with_recovery($identity, $n(3)), $n(1))) instanceof
 $check($reject(fn() => three(with_recovery($identity, $n(0)), $n(3))) instanceof LeanBridgeError,
     'ordinary Fin argument rejection');
 $check(three(with_recovery($identity, $n(0)), $n(1))->isEqualTo($n(1)), 'host Fin recovery');
-$check($calls === 7, 'callback call count');
+$check($calls === 8, 'callback call count');
 
 echo json_encode([
     'checks' => $checks,

@@ -44,6 +44,33 @@ const data = (value, key) => {
 };
 
 /**
+ * Whether a copied root reaches a compiler-owned nominal refinement. Nominal
+ * field bounds live on the shared definition rather than on each callback use,
+ * but they still make that callback directional and capable of refusing input.
+ *
+ * @param abi - Closed callable carrier containing copied definitions.
+ * @param root - Copied value root to inspect.
+ */
+const componentStructuredNominallyConstrained = (abi, root) => {
+	const constraints = new Set((abi.nominalRefinements ?? []).map(entry => entry.id));
+	if(!constraints.size) return false;
+	const definitions = new Map(abi.types.map(type => [type.id, type]));
+	const visit = (type, seen = new Set()) => {
+		if(type.kind === "primitive") return false;
+		if(type.kind === "apply") return type.arguments.some(child => visit(child, seen));
+		if(constraints.has(type.id)) return true;
+		if(seen.has(type.id)) return false;
+		const definition = definitions.get(type.id);
+		if(!definition) return false;
+		const inner = new Set([...seen, type.id]);
+		if(definition.kind === "alias") return visit(definition.target, inner);
+		if(definition.kind === "record") return definition.fields.some(field => visit(field.type, inner));
+		return definition.cases.some(branch => branch.fields.some(field => visit(field.type, inner)));
+	};
+	return visit(root);
+};
+
+/**
  * Recover the callback role that the public export table already authenticates.
  * Subtype and checked-record trees encode their direction in their constructors;
  * Fin-only trees do not, so their unique borrowed/leased use supplies it. An
@@ -78,9 +105,18 @@ export const componentStructuredCallbackDirection = (abi, signature, inferFinDir
  * @param signature - One callback signature from that carrier.
  * @param inferFinDirection - Recover a Fin-only role from the export table.
  */
-export const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) =>
-	componentStructuredCallbackDirection(abi, signature, inferFinDirection) === "closure"
-	&& Boolean(signature.refinements?.parameters.some(Boolean));
+export const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) => {
+	const direction = componentStructuredCallbackDirection(abi, signature, inferFinDirection);
+	const nominal = signature.parameters.some(type => componentStructuredNominallyConstrained(abi, type));
+	// Nominal Fin bounds live on the copied definition, so they deliberately do not
+	// turn an otherwise reusable callback identity into a directional one. A backend
+	// that recovers Fin roles may still identify its actual returned-closure use and
+	// classify that lease's empty carrier as an argument refusal.
+	const leasedNominal = direction === null && inferFinDirection && nominal
+		&& abi.exports.some(item => item.result.kind === "named" && item.result.id === signature.id);
+	return (direction === "closure" || leasedNominal)
+		&& Boolean(signature.refinements?.parameters.some(Boolean) || nominal);
+};
 
 /**
  * Bind a callback key to copied definitions as well as its root references.

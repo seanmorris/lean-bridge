@@ -175,7 +175,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 		, ...refusals.sites.filter(item => refuses(item.signature)).flatMap(refusal));
 	const render = (name, parameters, resultRef, symbol, lease = null) => {
 		const resultCallback = callback(resultRef), result = resultCallback ? null : copy(resultRef);
-		const rejectsInput = lease && direction(lease) === "closure"
+		const rejectsInput = lease && (direction(lease) === "closure" || refuses(lease))
 			|| parameters.some(ref => callback(ref) && direction(callback(ref)) === "host");
 		const resultName = resultCallback ? "uint64_t" : result.name;
 		const args = parameters.map((ref, index) => `const ${callback(ref) ? callbackName(callback(ref)) : copy(ref).name} *a${index}`);

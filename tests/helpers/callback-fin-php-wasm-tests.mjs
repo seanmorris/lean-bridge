@@ -31,6 +31,9 @@ test("PHP-Wasm Fin callback caller keeps strictness, loading and exact report cl
 	assert.match(weak, /^<\?php\n\/\/ Installed PHP-Wasm acceptance[^\n]+\ndeclare\(strict_types=0\);/u);
 	assert.match(strict, /declare\(strict_types=1\);/u);
 	assert.equal(weak.replace("strict_types=0", "strict_types=1"), strict);
+	assert.match(weak, /\$array = digits\(null\);/u);
+	assert.match(weak, /\$rows = tiles\(null\);/u);
+	assert.doesNotMatch(weak, /(?:digits|tiles)\(\$n\(0\)\)/u);
 	for(const arrangement of ["embedded", "composer"])
 	{
 		const request = JSON.parse(callbackFinPhpWasmRequest(arrangement));

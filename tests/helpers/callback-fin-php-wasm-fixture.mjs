@@ -22,7 +22,7 @@ export const callbackFinPhpWasmExports = Object.freeze([
 	...reviewedCallbackFinExports, "ReviewedCallbacks.three"
 ]);
 export const callbackFinPhpWasmExpected = Object.freeze({
-	checks: 25, rejections: 8, callback_calls: 7, word_bits: 32, php: "8.4.1"
+	checks: 23, rejections: 7, callback_calls: 8, word_bits: 32, php: "8.4.1"
 });
 
 /**
