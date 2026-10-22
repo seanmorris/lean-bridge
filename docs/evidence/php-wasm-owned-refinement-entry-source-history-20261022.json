@@ -1,0 +1,304 @@
+{
+  "additions": [
+    {
+      "currentSha256": "be3969421a2387c69c4a183b315ebeaf3bd0b9f7650a1f8ed3522ca72f1332e4",
+      "path": ".github/workflows/php-wasm-owned-refinement-entry.yml"
+    },
+    {
+      "currentSha256": "0781e2079b26574a5f35bcc252ee1faaec340c273cf3e70f19eaa37195fae59d",
+      "path": "scripts/run-php-wasm-owned-refinement-entry-ci.sh"
+    },
+    {
+      "currentSha256": "bafb0e1780ef9c77cf053c0b7e4ac98b97fa61039d41f8807a3bdccb1b56a163",
+      "path": "tests/fixtures/php-wasm-refinement-entry/owned-checked-record.php"
+    },
+    {
+      "currentSha256": "0f0277b46bdbf7a81de5220f3f7b001629aee1188dd5940751264fdc40afc2f8",
+      "path": "tests/fixtures/php-wasm-refinement-entry/owned-subtype.php"
+    },
+    {
+      "currentSha256": "2216ae71b4616eba83d9098d192e6356039e48832bdd36e66bdaf8ece1567199",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-build.mjs"
+    },
+    {
+      "currentSha256": "ab44baac16fc606a5a610c7753aa894eb695d8b4675a40efeff19e958a2c235e",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "e7bf7c9660fb87ef128059c12189271115a7642d02cf386950b390fb8c3cc787",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-fixtures-tests.mjs"
+    },
+    {
+      "currentSha256": "d7822cf376b524dd5e400197e90499cbc069321f211a5226b378f7510cb51d56",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-fixtures.mjs"
+    },
+    {
+      "currentSha256": "433af6e498bd6f72973aa45cc0e25232302fc71e6822f9b7ef0edb4517fa3f21",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "537b5e781f8ca42596a26069063122284c3ae180a2b6e235f3010d801ed5cf38",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan-tests.mjs"
+    },
+    {
+      "currentSha256": "52d4cc0a43220bf538aff92c0a65384fc2a816e2b0e8f858020e98d2188375e5",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-plan.mjs"
+    },
+    {
+      "currentSha256": "8bcb93cd859c9001cd06d32012dc2a2abe09bd9514f26d65495dd6ed71113fd4",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-selection-tests.mjs"
+    },
+    {
+      "currentSha256": "128338e49d4516c5630c388f77796d6b181aea2f00973eb6079b67f0f41c0c22",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-selection.mjs"
+    },
+    {
+      "currentSha256": "30fd00ae9dc2e7b2fd3116bf14bbce9230263f287647b62699e10619a8a51f48",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-source-fixtures.mjs"
+    },
+    {
+      "currentSha256": "632bb231e578a821d603f2cc7bffd6a8c0189322360d16eab766f14aee8ed683",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-source-tests.mjs"
+    },
+    {
+      "currentSha256": "75a6648f6c6c6303e389a65de470a6d680bd4c0f1d6b4e5cc9356e6663f42158",
+      "path": "scripts/update-php-wasm-owned-refinement-entry-source-history.mjs"
+    },
+    {
+      "currentSha256": "68375d0891c9c952d7db66304502d6b0f1cf0a476295fd7bab51a8099fae70ca",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "9605043592c552b6eed7f043fa49145d9f1e4fa4190b566a1533ad0135605cab",
+      "path": "tests/helpers/php-wasm-owned-refinement-entry-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6d03992c2d1c896f1bd986ded176bb33721954cc",
+  "milestone": "php-wasm-owned-refinement-entry-v1",
+  "predecessorCommit": "936cda7456a0aa35c801311e9a60e9210a62efd9",
+  "schemaVersion": 1,
+  "scope": "Two owned Subtype and checked-record families run from reproduced PHP-Wasm package handoffs in weak and strict PHP across embedded, Composer, eager, lazy, Node and Chromium routes. Compiler-derived Zend, native, validator, constructor, Lean, source and ownership markers are bound to independently authored call plans that distinguish accepted borrows and transfers from refusal boundaries. The probe remains a separate instrumented build and makes no unmodified-package dispatch claim.",
+  "updates": [
+    {
+      "currentSha256": "2bb3be722a32c8c31a451ef6f0445a69ec6f3aef2fad2def278cfa5ea82373c8",
+      "edits": [
+        {
+          "current": "\trequire([\n\t\t\"nominal-full\"\n\t\t, \"nominal-result-only\"\n\t\t, \"recursive-subtype\"\n\t\t, \"recursive-checked-record\"\n\t\t, \"owned-subtype\", \"owned-checked-record\"\n\t].includes(plan.family), \"entry plan family\");\n",
+          "previous": "\trequire([\"nominal-full\", \"nominal-result-only\", \"recursive-subtype\", \"recursive-checked-record\"].includes(plan.family), \"entry plan family\");\n",
+          "start": 783
+        },
+        {
+          "current": "\t\tconst owned = plan.family.startsWith(\"owned-\");\n",
+          "previous": "",
+          "start": 2009
+        },
+        {
+          "current": "\t\t{\n\t\t\trequire(item.call.counts.source > 0, \"accepted entry reaches its source\");\n\t\t\tif(owned)\n\t\t\t{\n\t\t\t\trequire(item.call.entries.some(entry => entry.kind === \"adapter\"\n\t\t\t\t\t&& entry.label === `${item.call.publicName}:native`), \"owned acceptance reaches its native adapter\");\n\t\t\t\trequire(item.call.entries.some(entry => entry.kind === \"adapter\"\n\t\t\t\t\t&& entry.label === `${item.call.publicName}:lean`), \"owned acceptance reaches its Lean adapter\");\n\t\t\t}\n\t\t\telse require(item.call.counts.adapter === 1, \"copied acceptance reaches one adapter\");\n\t\t}\n\t\telse\n\t\t{\n\t\t\trequire(item.call.counts.source === 0, \"refused entry stops before its source\");\n\t\t\tif(owned)\n\t\t\t{\n\t\t\t\trequire(item.call.entries.some(entry => entry.kind === \"adapter\"\n\t\t\t\t\t&& entry.label === `${item.call.publicName}:native`), \"owned refusal reaches its native adapter\");\n\t\t\t\trequire(!item.call.entries.some(entry => entry.kind === \"adapter\"\n\t\t\t\t\t&& entry.label === `${item.call.publicName}:lean`), \"owned refusal stops before its Lean adapter\");\n\t\t\t}\n\t\t\telse require(item.call.counts.adapter === 0, \"copied refusal stops before its adapter\");\n\t\t}\n",
+          "previous": "\t\t\trequire(item.call.counts.adapter === 1 && item.call.counts.source > 0, \"accepted entry reaches adapter and source\");\n\t\telse require(item.call.counts.adapter === 0 && item.call.counts.source === 0, \"refused entry stops before adapter\");\n",
+          "start": 2093
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "6f9fe84403c06e4bd645676f74002f29b9985e660558ffff425ead47c7304418"
+    },
+    {
+      "currentSha256": "4e7ee4b57e34a44e44d4cd27704429d9809a1b4c1b0f58662028a66a9002f526",
+      "edits": [
+        {
+          "current": "\ntest(\"compiler-input observer overlays and restores generated owned headers\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-entry-header-observer-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst input = join(root, \"input\"), include = join(input, \"owned\");\n\tconst records = join(root, \"records\"), objects = join(root, \"objects\");\n\tawait mkdir(include, { recursive: true }); await mkdir(records); await mkdir(objects);\n\tawait writeFile(join(include, \"owned-values-codec.h\")\n\t\t, '#include \"owned-leases.h\"\\nstatic inline int native_adapter(int x) { return x; }\\n');\n\tawait writeFile(join(include, \"owned-leases.h\")\n\t\t, \"static inline int owner_move(int x) { return x; }\\n\");\n\tawait writeFile(join(input, \"zend.c\")\n\t\t, '#include \"owned-values-codec.h\"\\nstatic ZEND_FUNCTION(lg_call0) { RETURN_NULL(); }\\n');\n\tconst selection = [\n\t\t{ symbol: \"native_adapter\", kind: \"adapter\", label: \"Probe.native\" }\n\t\t, { symbol: \"owner_move\", kind: \"adapter\", label: \"Probe.owner\" }\n\t\t, { symbol: \"lg_call0\", kind: \"public\", label: \"Probe.call\" }\n\t];\n\tconst runner = { capture: async request => {\n\t\tif(request.args.includes(\"-c\"))\n\t\t{\n\t\t\tconst probe = request.args[request.args.indexOf(\"-iquote\") + 1];\n\t\t\tassert.match(await readFile(join(probe, \"owned-values-codec.h\"), \"utf8\")\n\t\t\t\t, /LB_SUBTYPE_ENTRY_V1 enter adapter Probe\\.native/u);\n\t\t\tassert.match(await readFile(join(probe, \"owned-leases.h\"), \"utf8\")\n\t\t\t\t, /LB_SUBTYPE_ENTRY_V1 enter adapter Probe\\.owner/u);\n\t\t\tawait writeFile(request.args[request.args.indexOf(\"-o\") + 1]\n\t\t\t\t, await readFile(request.args[request.args.indexOf(\"-c\") + 1]));\n\t\t}\n\t\treturn { stdout: \"\", stderr: \"\", code: 0 };\n\t} };\n\tconst observer = createPhpWasmRefinementEntryBuildObserver({\n\t\trecordRoot: records, runner\n\t\t, headerInputs: [\"owned-values-codec.h\", \"owned-leases.h\"]\n\t});\n\tobserver.select(selection);\n\tawait observer.capture({\n\t\tcommand: \"/tool/emcc\"\n\t\t, args: [\n\t\t\t\"-I\", include, \"-c\", join(input, \"zend.c\"), \"-o\", join(objects, \"zend.o\")\n\t\t]\n\t});\n\tawait observer.capture({\n\t\tcommand: \"/tool/emcc\"\n\t\t, args: [\n\t\t\t\"-sSIDE_MODULE=2\", join(objects, \"zend.o\"), \"-o\", join(root, \"probe.so\")\n\t\t]\n\t});\n\tconst observation = observer.snapshot();\n\tassert.deepEqual(observation.definitionCounts, {\n\t\tnative_adapter: 1, owner_move: 1, lg_call0: 1\n\t});\n\tassert.equal(observation.headers.length, 2);\n\tfor(const item of observation.headers)\n\t{\n\t\tconst original = await readFile(join(records, \"header-inputs\", item.path), \"utf8\");\n\t\tconst probe = await readFile(join(records, \"header-probes\", item.path), \"utf8\");\n\t\tassert.equal(restoreSubtypeCEntries(probe, item), original);\n\t}\n});\n",
+          "previous": "",
+          "start": 3344
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build-tests.mjs",
+      "previousSha256": "ff5cec9bd590cb1d9d891067b0f3abec09aff8df321397013119f43ed53bcf32"
+    },
+    {
+      "currentSha256": "5ae31aaf986d6d25d41e7c32ac3f2f90810f6ee4f8624d0f9c71e02e65f23d64",
+      "edits": [
+        {
+          "current": "\tconst { recordRoot, runner, headerInputs = [] } = options;\n",
+          "previous": "\tconst { recordRoot, runner } = options;\n",
+          "start": 1507
+        },
+        {
+          "current": "\tassert.ok(Array.isArray(headerInputs));\n\tassert.equal(new Set(headerInputs).size, headerInputs.length);\n\tfor(const path of headerInputs)\n\t\tassert.match(path, /^[A-Za-z_][A-Za-z0-9_.-]*(?:\\/[A-Za-z_][A-Za-z0-9_.-]*)*$/u);\n\tconst compiled = [], headers = [], commands = [], counts = new Map();\n\tlet selected = null, linked = false, headerProbeRoot = null;\n",
+          "previous": "\tconst compiled = [], commands = [], counts = new Map();\n\tlet selected = null, linked = false;\n",
+          "start": 1639
+        },
+        {
+          "current": "\tconst instrumentHeaders = async args => {\n\t\tif(!headerInputs.length) return null;\n\t\tif(headers.length) return headerProbeRoot;\n\t\tconst roots = args.flatMap((item, index) => item === \"-I\" ? [args[index + 1]] : []);\n\t\tconst matches = [];\n\t\tfor(const root of roots)\n\t\t{\n\t\t\ttry\n\t\t\t{\n\t\t\t\tawait Promise.all(headerInputs.map(path => readFile(join(root, path))));\n\t\t\t\tmatches.push(root);\n\t\t\t}\n\t\t\tcatch(error)\n\t\t\t{ if(error.code !== \"ENOENT\") throw error; }\n\t\t}\n\t\tassert.equal(matches.length, 1, \"one closed generated header root required\");\n\t\tconst originalRoot = matches[0], probeRoot = join(recordRoot, \"header-probes\");\n\t\theaderProbeRoot = probeRoot;\n\t\tfor(const path of headerInputs)\n\t\t{\n\t\t\tconst originalPath = join(originalRoot, path), original = await readFile(originalPath, \"utf8\");\n\t\t\tconst { source, receipt } = instrumentSubtypeCEntries(original, selected);\n\t\t\tawait save(recordRoot, `header-inputs/${path}`, original);\n\t\t\tawait save(recordRoot, `header-probes/${path}`, source);\n\t\t\tfor(const item of receipt.insertions.filter(item => item.kind !== \"preamble\"))\n\t\t\t\tcounts.set(item.symbol, counts.get(item.symbol) + 1);\n\t\t\theaders.push({ path, originalPath, probePath: join(probeRoot, path), ...receipt });\n\t\t}\n\t\treturn probeRoot;\n\t};\n",
+          "previous": "",
+          "start": 2265
+        },
+        {
+          "current": "\t\t\tconst headerRoot = await instrumentHeaders(args);\n",
+          "previous": "",
+          "start": 3710
+        },
+        {
+          "current": "\t\t\targs.push(...headerRoot ? [\"-iquote\", headerRoot] : []\n\t\t\t\t, \"-iquote\", dirname(originalPath)\n",
+          "previous": "\t\t\targs.push(\"-iquote\", dirname(originalPath)\n",
+          "start": 4366
+        },
+        {
+          "current": "\t\t\tfor(const item of headers)\n\t\t\t{\n\t\t\t\tassert.equal(sha256(await readFile(item.originalPath)), item.originalSha256);\n\t\t\t\tassert.equal(sha256(await readFile(item.probePath)), item.probeSha256);\n\t\t\t}\n",
+          "previous": "",
+          "start": 5538
+        },
+        {
+          "current": "\t\t, compiled: structuredClone(compiled), headers: structuredClone(headers)\n\t\t, commands: structuredClone(commands)\n",
+          "previous": "\t\t, compiled: structuredClone(compiled), commands: structuredClone(commands)\n",
+          "start": 6032
+        },
+        {
+          "current": "\t\tassert.equal(headers.length, headerInputs.length, \"every selected generated header is retained\");\n",
+          "previous": "",
+          "start": 6264
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build.mjs",
+      "previousSha256": "001ee2be9d94be0613da1641671f9b964ff331d42594d6150e81c10dc5150c8b"
+    },
+    {
+      "currentSha256": "28b6e4f3d63519419eb7913dade600ada60d8a370ffd705ac0e94632b159c99d",
+      "edits": [
+        {
+          "current": "\ntest(\"entry driver admits owned native/Lean layers while preserving refusal boundary\", async () => {\n\tconst ownedSelected = [\n\t\t{ symbol: \"lgo_call0\", kind: \"public\", label: \"echoClaim\" }\n\t\t, { symbol: \"native\", kind: \"adapter\", label: \"echoClaim:native\" }\n\t\t, { symbol: \"guard\", kind: \"validator\", label: \"owned:guard\" }\n\t\t, { symbol: \"constructor\", kind: \"constructor\", label: \"Owned.mkClaim\" }\n\t\t, { symbol: \"lean\", kind: \"adapter\", label: \"echoClaim:lean\" }\n\t\t, { symbol: \"source\", kind: \"source\", label: \"Owned.echoClaim\" }\n\t];\n\tconst entries = ownedSelected.slice(1).map(({ kind, label }) => ({ kind, label }));\n\tconst ownedCall = { publicName: \"echoClaim\", entries\n\t\t, counts: { validator: 1, constructor: 1, adapter: 2, source: 1 } };\n\tconst ownedPlan = {\n\t\tscope: \"separate-instrumented-probe\", family: \"owned-checked-record\"\n\t\t, selected: ownedSelected\n\t\t, cases: [{ control: \"accepted\", outcome: \"accepted\", call: ownedCall }] };\n\tconst ownedTrace = \"LB_SUBTYPE_ENTRY_V1 begin public echoClaim\\n\"\n\t\t+ entries.map(entry => `LB_SUBTYPE_ENTRY_V1 enter ${entry.kind} ${entry.label}\\n`).join(\"\")\n\t\t+ \"LB_SUBTYPE_ENTRY_V1 end public echoClaim\\n\";\n\tconst { value } = await driver({ plan: ownedPlan, trace: ownedTrace });\n\tassert.equal(value.entryProbe.calls, 1);\n\tassert.deepEqual(value.entryProbe.counts, ownedCall.counts);\n\tconst refusedEntries = entries.slice(0, 3);\n\tconst refused = { ...ownedPlan, cases: [{\n\t\tcontrol: \"refused\", outcome: \"refused\"\n\t\t, call: { publicName: \"echoClaim\", entries: refusedEntries\n\t\t\t, counts: { validator: 1, constructor: 1, adapter: 1, source: 0 } } }] };\n\tconst refusedTrace = \"LB_SUBTYPE_ENTRY_V1 begin public echoClaim\\n\"\n\t\t+ refusedEntries.map(entry => `LB_SUBTYPE_ENTRY_V1 enter ${entry.kind} ${entry.label}\\n`).join(\"\")\n\t\t+ \"LB_SUBTYPE_ENTRY_V1 end public echoClaim\\n\";\n\tassert.equal((await driver({ plan: refused, trace: refusedTrace })).value.entryProbe.calls, 1);\n\tawait assert.rejects(driver({ plan: { ...ownedPlan, cases: [{ ...ownedPlan.cases[0]\n\t\t, outcome: \"refused\" }] }\n\t\t, trace: ownedTrace }));\n});\n",
+          "previous": "",
+          "start": 4174
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "previousSha256": "1952bd0b4053d7ef2ca3df1ba20fefd43ac0d663275d99b5b5a5f40a340c78bc"
+    },
+    {
+      "currentSha256": "bc74b7e614b6306bb8e38c6b13b4fca005286a68f87616c1d21262f57f457ece",
+      "edits": [
+        {
+          "current": "\t\t\t, compiled\n\t\t\t, headers: []\n\t\t\t, commands\n\t\t\t, linked: true\n\t\t\t, modelSha256: sha256(modelBytes)\n",
+          "previous": "\t\t\t, compiled, commands, linked: true, modelSha256: sha256(modelBytes)\n",
+          "start": 6990
+        },
+        {
+          "current": "\t\t\t, compiled, headers: [], commands, linked: true\n",
+          "previous": "\t\t\t, compiled, commands, linked: true\n",
+          "start": 7529
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report-tests.mjs",
+      "previousSha256": "8fba4669bc94c8e605bc3813e833d5d4ce6d87472e151100f189ae6c88f0fb54"
+    },
+    {
+      "currentSha256": "011d1da1ae9757edc1e7d26154df1e3ef2dfff1253dd288a159cb447d6ba1828",
+      "edits": [
+        {
+          "current": "import {\n\tphpWasmOwnedRefinementEntryCaller, phpWasmOwnedRefinementEntryExpected\n\t, phpWasmOwnedRefinementEntryFamilies, phpWasmOwnedRefinementEntryRequest\n\t, phpWasmOwnedRefinementEntryRoutes\n} from \"./php-wasm-owned-refinement-entry-fixtures.mjs\";\nimport { phpWasmOwnedRefinementEntryPlan } from \"./php-wasm-owned-refinement-entry-plan.mjs\";\nimport { phpWasmOwnedRefinementEntrySelection } from \"./php-wasm-owned-refinement-entry-selection.mjs\";\nimport {\n\tphpWasmOwnedRefinementEntrySourceDefinition\n} from \"./php-wasm-owned-refinement-entry-source-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 1148
+        },
+        {
+          "current": "const allFamilies = [...phpWasmRefinementEntrySourceFamilies, ...phpWasmOwnedRefinementEntryFamilies];\nconst ownedFamily = family => phpWasmOwnedRefinementEntryFamilies.includes(family);\nassert.deepEqual(phpWasmOwnedRefinementEntryRoutes, phpWasmRefinementEntryRoutes);\nconst sourceDefinition = family => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntrySourceDefinition(family)\n\t: phpWasmRefinementEntrySourceFixture(family);\nconst selectEntries = (family, model, sourceEntries) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntrySelection(model, sourceEntries)\n\t: phpWasmGraphRefinementEntrySelection(model, sourceEntries);\nconst planEntries = (family, selection) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource)\n\t: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\nconst caller = (family, mode) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryCaller(family, mode)\n\t: phpWasmRefinementEntryCaller(family, mode);\nconst expectedObservation = (family, cases) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryExpected(family, cases)\n\t: phpWasmRefinementEntryExpected(family, cases);\nconst requestFor = (family, arrangement, plan) => ownedFamily(family)\n\t? phpWasmOwnedRefinementEntryRequest(family, arrangement, plan)\n\t: phpWasmRefinementEntryRequest(family, arrangement, plan);\n",
+          "previous": "",
+          "start": 2581
+        },
+        {
+          "current": "\tassert.ok(allFamilies.includes(selected.family));\n",
+          "previous": "\tassert.ok(phpWasmRefinementEntrySourceFamilies.includes(selected.family));\n",
+          "start": 4730
+        },
+        {
+          "current": "\tassert.ok(allFamilies.includes(family));\n",
+          "previous": "\tassert.ok(phpWasmRefinementEntrySourceFamilies.includes(family));\n",
+          "start": 5756
+        },
+        {
+          "current": "\tconst marker = sourceDefinition(family);\n",
+          "previous": "\tconst marker = phpWasmRefinementEntrySourceFixture(family);\n",
+          "start": 7510
+        },
+        {
+          "current": "\t\t\t\"schemaVersion\"\n\t\t\t, \"scope\"\n\t\t\t, \"selected\"\n\t\t\t, \"definitionCounts\"\n\t\t\t, \"compiled\"\n\t\t\t, \"headers\"\n",
+          "previous": "\t\t\t\"schemaVersion\", \"scope\", \"selected\", \"definitionCounts\", \"compiled\"\n",
+          "start": 8473
+        },
+        {
+          "current": "\t\tconst selected = selectEntries(family, model, sourceProbe.entries);\n",
+          "previous": "\t\tconst selected = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries);\n",
+          "start": 8897
+        },
+        {
+          "current": "\t\tconst plan = planEntries(family, selected);\n",
+          "previous": "\t\tconst plan = phpWasmRefinementEntryPlan(family, selected.selected, selected.generated.leanSource);\n",
+          "start": 9151
+        },
+        {
+          "current": "\t\t\t, compiled: observation.compiled, headers: observation.headers\n",
+          "previous": "\t\t\t, compiled: observation.compiled\n",
+          "start": 9415
+        },
+        {
+          "current": "\t\tfor(const header of observation.headers)\n\t\t{\n\t\t\tassert.ok(safePath(header.path));\n\t\t\tconst inputPath = `${prefix}header-inputs/${header.path}`;\n\t\t\tconst probePath = `${prefix}header-probes/${header.path}`;\n\t\t\texpectedPaths.add(inputPath); expectedPaths.add(probePath);\n\t\t\tconst input = await bytes(inputPath), probe = await bytes(probePath);\n\t\t\tconst reconstructed = instrumentSubtypeCEntries(input.toString(), observation.selected);\n\t\t\tassert.deepEqual(probe, Buffer.from(reconstructed.source));\n\t\t\tassert.equal(header.originalSha256, sha256(input));\n\t\t\tassert.equal(header.probeSha256, sha256(probe));\n\t\t\tassert.deepEqual(header.insertions, reconstructed.receipt.insertions);\n\t\t}\n",
+          "previous": "",
+          "start": 10599
+        },
+        {
+          "current": "\tconst expected = expectedObservation(family, report.entryPlan.cases);\n",
+          "previous": "\tconst expected = phpWasmRefinementEntryExpected(family, report.entryPlan.cases);\n",
+          "start": 13112
+        },
+        {
+          "current": "\t\tconst source = await caller(family, mode);\n",
+          "previous": "\t\tconst source = await phpWasmRefinementEntryCaller(family, mode);\n",
+          "start": 15381
+        },
+        {
+          "current": "\t\tconst request = requestFor(family, arrangement, report.entryPlan);\n",
+          "previous": "\t\tconst request = phpWasmRefinementEntryRequest(family, arrangement, report.entryPlan);\n",
+          "start": 15595
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs",
+      "previousSha256": "6fbf20e3508e3c04db40934b1920b5211743abe0adb309523ae9fdac576defaf"
+    },
+    {
+      "currentSha256": "609241779b55224b0d996189970c0b8f90c9791edb7d9c5c3139d4eed281683a",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-selection-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-source-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-plan-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-fixtures-tests.mjs\";\nimport \"./helpers/php-wasm-owned-refinement-entry-ci-tests.mjs\";\n",
+          "previous": "",
+          "start": 4532
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "071ecf935c7a4c2ce40fce60c9b0ec07021b61bd2535a378546ecd2cd08bb907"
+    },
+    {
+      "currentSha256": "539e9146b0ea615a4fa30ed671035eed6f5e031670d8774acf6c0aaaf49798b4",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmOwnedRefinementEntrySource, phpWasmOwnedRefinementEntryChangedPaths } from \"./php-wasm-owned-refinement-entry-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmOwnedRefinementEntryChangedPaths\n\t, ...phpWasmRefinementEntryInstalledChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryInstalledChangedPaths\n",
+          "start": 144078
+        },
+        {
+          "current": "\tconst phpWasmOwnedRefinementEntry\n\t\t= beforePhpWasmOwnedRefinementEntrySource(path, text, expected);\n\tif(sha256(phpWasmOwnedRefinementEntry) === expected)\n\t\treturn phpWasmOwnedRefinementEntry;\n",
+          "previous": "",
+          "start": 175102
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementEntryInstalledSource(\n\t\t\tpath, phpWasmOwnedRefinementEntry, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementEntryInstalledSource(path, text, expected);\n",
+          "start": 175335
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f48f88ff83da2f9ab0b6ec62f2e7917c11a54ddf8114e570775a566570a5c959"
+    }
+  ]
+}
