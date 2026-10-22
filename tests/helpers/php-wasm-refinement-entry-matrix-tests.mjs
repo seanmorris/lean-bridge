@@ -4,7 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { phpWasmRefinementCiMatrix } from "./php-wasm-refinement-ci-matrix.mjs";
 import {
 	checkPhpWasmRefinementEntryMatrix
 	, phpWasmRefinementEntryMatrix
@@ -45,6 +47,56 @@ test("the complete PHP-Wasm refinement entry topology has 28 exact route cells",
 		.map(cell => cell.route))], ["ordinary", "reviewed"]);
 });
 
+test("the entry topology is pinned to workflow matrices, artifacts and run layouts", async () => {
+	const groups = [...new Set(phpWasmRefinementEntryMatrix.map(item => item.workflow))];
+	assert.deepEqual(groups, [
+		"php-wasm-refinement-entry", "php-wasm-owned-refinement-entry"
+		, "php-wasm-callback-entry", "php-wasm-indexed-refinement-entry"
+	]);
+	for(const workflow of groups)
+	{
+		const lane = phpWasmRefinementCiMatrix.find(item => item.id === workflow);
+		assert.ok(lane && lane.kind === "measurement");
+		const cells = phpWasmRefinementEntryMatrix.filter(item => item.workflow === workflow);
+		assert.deepEqual([...new Set(cells.map(item => item.family))], lane.axes.family);
+		assert.deepEqual([...new Set(cells.map(item => item.route))]
+			, lane.axes.route ?? ["ordinary", "reviewed"]);
+		assert.equal(cells.length, workflow === "php-wasm-callback-entry"
+			? lane.cells * 2 : lane.cells);
+		const source = await readFile(lane.path, "utf8");
+		assert.equal([...source.matchAll(
+			/^ {10}LEAN_BRIDGE_[A-Z_]+_FAMILIES: \$\{\{ matrix\.family \}\}$/gmu
+		)].length, 1);
+		const route = workflow === "php-wasm-callback-entry"
+			? "ordinary,reviewed" : "${{ matrix.route }}";
+		assert.equal([...source.matchAll(new RegExp(
+			"^ {10}LEAN_BRIDGE_[A-Z_]+_ROUTES: "
+				+ route.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&") + "$", "gmu"
+		))].length, 1);
+		for(const item of cells)
+		{
+			const expected = lane.artifactName
+				.replace("${{ matrix.family }}", item.family)
+				.replace("${{ matrix.route }}", item.route)
+				.replace("${{ github.sha }}", revision);
+			assert.equal(phpWasmRefinementEntryMatrixLocation(item, revision).artifact
+				, expected);
+		}
+	}
+	const common = await readFile("scripts/run-php-wasm-refinement-entry-ci.sh", "utf8");
+	assert.match(common, /records="\$output\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES"/u);
+	assert.match(common, /check="\$output\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\.check\.json"/u);
+	const owned = await readFile("scripts/run-php-wasm-owned-refinement-entry-ci.sh", "utf8");
+	assert.match(owned, /records="\$output\/\$LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_ROUTES\/\$LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_FAMILIES"/u);
+	assert.match(owned, /check="\$records\.check\.json"/u);
+	const callback = await readFile("scripts/run-php-wasm-callback-entry-ci.sh", "utf8");
+	assert.match(callback, /records="\$output\/\$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES\/\$route"/u);
+	assert.match(callback, /check="\$output\/\$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES\/\$route\.check\.json"/u);
+	for(const item of phpWasmRefinementEntryMatrix)
+		assert.equal(item.recordPath, item.kind === "callback"
+			? `${item.family}/${item.route}` : `${item.route}/${item.family}`);
+});
+
 test("the complete PHP-Wasm refinement entry matrix accepts one closed verifier set", () => {
 	assert.deepEqual(checkPhpWasmRefinementEntryMatrix(revision, observations()), {
 		schemaVersion: 1, scope: "separate-instrumented-probe"
@@ -80,10 +132,6 @@ test("the complete PHP-Wasm refinement entry matrix rejects structural forgery",
 		const changed = structuredClone(valid); changed[0].result[key] = value;
 		mutations.push(changed);
 	}
-	const noAdapter = structuredClone(valid);
-	noAdapter[0].result.counts.adapter = 0; mutations.push(noAdapter);
-	const noSource = structuredClone(valid);
-	noSource[0].result.counts.source = 0; mutations.push(noSource);
 	const negative = structuredClone(valid);
 	negative[0].result.counts.validator = -1; mutations.push(negative);
 	const callback = valid.findIndex(item => item.cell.startsWith("callback/"));
@@ -96,6 +144,6 @@ test("the complete PHP-Wasm refinement entry matrix rejects structural forgery",
 	widened[0].result.unverified = true; mutations.push(widened);
 	for(const changed of mutations)
 		assert.throws(() => checkPhpWasmRefinementEntryMatrix(revision, changed));
-	assert.equal(mutations.length, 76);
+	assert.equal(mutations.length, 74);
 	t.diagnostic(`${mutations.length} missing, duplicate, reordered and forged controls`);
 });

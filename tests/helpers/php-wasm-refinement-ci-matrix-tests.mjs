@@ -53,6 +53,8 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 		const mutations = [
 			source.replace("  pull_request:\n", "")
 			, source.replace("  workflow_dispatch:\n", "")
+			, source.replace("  workflow_dispatch:\n"
+				, "  workflow_dispatch:\n  merge_group:\n")
 			, source.replace("  contents: read\n", "  contents: write\n")
 			, source.replace("  cancel-in-progress: true\n"
 				, "  cancel-in-progress: false\n")
@@ -81,6 +83,15 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 			, source.replace("        run: exit 1\n", "        run: exit 0\n")
 			, source.replace("    steps:\n"
 				, "    continue-on-error: true\n    steps:\n")
+			, source.replace("    steps:\n"
+				, "    continue-on-error: ${{ true }}\n    steps:\n")
+			, source.replace(`  ${lane.job}:\n`
+				, `  ${lane.job}:\n    if: github.event_name != 'pull_request'\n`)
+			, source.replace(`          ${lane.acceptanceCommand}\n`
+				, "          true\n")
+			, source.replace(`          name: ${lane.artifactName}\n`
+				, "          name: forged-${{ github.sha }}\n")
+			, source.replace(`            ${lane.artifactPaths[0]}\n`, "")
 		];
 		if(lane.kind === "measurement")
 		{
@@ -88,6 +99,10 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 				, "      fail-fast: true\n"));
 			mutations.push(source.replace(`      max-parallel: ${lane.maxParallel}\n`
 				, `      max-parallel: ${lane.maxParallel + 1}\n`));
+			mutations.push(source.replace("      matrix:\n"
+				, "      matrix:\n        exclude:\n          - family: nominal-full\n"));
+			const first = Object.values(lane.axes)[0][0];
+			mutations.push(source.replace(`          - ${first}\n`, ""));
 		}
 		for(const [index, changed] of mutations.entries())
 		{
@@ -97,6 +112,6 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 			controls++;
 		}
 	}
-	assert.equal(controls, 350);
+	assert.equal(controls, 466);
 	t.diagnostic(`${controls} workflow suppression controls`);
 });

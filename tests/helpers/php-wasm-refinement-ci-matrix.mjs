@@ -5,6 +5,15 @@
  */
 import assert from "node:assert/strict";
 
+const genericRun = id => "set -euo pipefail\nsource scripts/env.sh\n"
+	+ `bash scripts/run-${id}-ci.sh\n`;
+const genericPaths = (id, kind) => Object.freeze([
+	`build/${id}-ci/`
+	, ...(kind === "measurement" ? [`build/${id}-ci.tap`] : [])
+	, `build/${id}-host.log`
+	, `build/${id}-runtime.log`
+	, `build/${id}-input/php-wasm-runtime/runtime.json`
+]);
 const workflow = (id, title, ownerNodes, timeoutMinutes, options = {}) =>
 	Object.freeze({
 		id, title, ownerNodes: Object.freeze(ownerNodes), timeoutMinutes
@@ -12,6 +21,13 @@ const workflow = (id, title, ownerNodes, timeoutMinutes, options = {}) =>
 		, kind: options.kind ?? "acceptance"
 		, cells: options.cells ?? 1
 		, maxParallel: options.maxParallel ?? 1
+		, axes: Object.freeze(options.axes ?? {})
+		, acceptanceRun: options.acceptanceRun ?? genericRun(id)
+		, acceptanceCommand: options.acceptanceCommand
+			?? `bash scripts/run-${id}-ci.sh`
+		, artifactName: options.artifactName ?? id + "-${{ github.sha }}"
+		, artifactPaths: Object.freeze(options.artifactPaths
+			?? genericPaths(id, options.kind ?? "acceptance"))
 		, path: `.github/workflows/${id}.yml`
 	});
 
@@ -23,9 +39,41 @@ const workflow = (id, title, ownerNodes, timeoutMinutes, options = {}) =>
  */
 export const phpWasmRefinementCiMatrix = Object.freeze([
 	workflow("callback-refinements-php-wasm"
-		, "checked Fin and record callbacks", [1460, 1483], 360)
+		, "checked Fin and record callbacks", [1460, 1483], 360, {
+			acceptanceCommand: "npm run test:callback-refinements-php-wasm 2>&1 | tee build/callback-refinements-php-wasm/run.tap"
+			, acceptanceRun: "set -euo pipefail\nsource scripts/env.sh\n"
+				+ "npm run test:callback-refinements-php-wasm 2>&1 | tee build/callback-refinements-php-wasm/run.tap\n"
+				+ "rg '^# fail 0$' build/callback-refinements-php-wasm/run.tap\n"
+				+ "rg '^# skipped 0$' build/callback-refinements-php-wasm/run.tap\n"
+				+ "test -s build/callback-refinements-php-wasm/records/index.json\n"
+				+ "node scripts/check-callback-refinements-php-wasm-reports.mjs \\\n  --directory build/callback-refinements-php-wasm/records \\\n  --producer \"$GITHUB_SHA\" | tee build/callback-refinements-php-wasm/verification.json\n"
+			, artifactPaths: [
+				"build/callback-refinements-php-wasm/host.log"
+				, "build/callback-refinements-php-wasm/runtime.log"
+				, "build/callback-refinements-php-wasm/run.tap"
+				, "build/callback-refinements-php-wasm/verification.json"
+				, "build/callback-refinements-php-wasm/records"
+			]
+		}
+	)
 	, workflow("callback-subtype-php-wasm"
-		, "callback Subtypes", [1460, 1471], 240)
+		, "callback Subtypes", [1460, 1471], 240, {
+			acceptanceCommand: "npm run test:callback-subtype-php-wasm 2>&1 | tee build/callback-subtype-php-wasm/run.tap"
+			, acceptanceRun: "set -euo pipefail\nsource scripts/env.sh\n"
+				+ "npm run test:callback-subtype-php-wasm 2>&1 | tee build/callback-subtype-php-wasm/run.tap\n"
+				+ "rg '^# fail 0$' build/callback-subtype-php-wasm/run.tap\n"
+				+ "rg '^# skipped 0$' build/callback-subtype-php-wasm/run.tap\n"
+				+ "test -s build/callback-subtype-php-wasm/records/index.json\n"
+				+ "node scripts/check-callback-subtype-php-wasm-reports.mjs \\\n  --directory build/callback-subtype-php-wasm/records \\\n  --producer \"$GITHUB_SHA\" | tee build/callback-subtype-php-wasm/verification.json\n"
+			, artifactPaths: [
+				"build/callback-subtype-php-wasm/host.log"
+				, "build/callback-subtype-php-wasm/runtime.log"
+				, "build/callback-subtype-php-wasm/run.tap"
+				, "build/callback-subtype-php-wasm/verification.json"
+				, "build/callback-subtype-php-wasm/records"
+			]
+		}
+	)
 	, workflow("checked-record-php-wasm"
 		, "top-level checked records", [1458, 1476], 180)
 	, workflow("checked-record-value-index-php-wasm"
@@ -41,9 +89,43 @@ export const phpWasmRefinementCiMatrix = Object.freeze([
 	, workflow("nominal-subtype-php-wasm"
 		, "nominal Subtypes", [1457], 180)
 	, workflow("owned-checked-record-php-wasm"
-		, "owned checked records", [1459, 1484], 180)
+		, "owned checked records", [1459, 1484], 180, {
+			acceptanceCommand: "npm run test:owned-checked-record-php-wasm 2>&1 | tee build/owned-checked-record-php-wasm.log"
+			, acceptanceRun: "set -euo pipefail\nsource scripts/env.sh\n"
+				+ "npm run test:owned-checked-record-php-wasm 2>&1 | tee build/owned-checked-record-php-wasm.log\n"
+				+ "rg '^# fail 0$' build/owned-checked-record-php-wasm.log\n"
+				+ "rg '^# skipped 0$' build/owned-checked-record-php-wasm.log\n"
+				+ "test -s build/owned-checked-record-php-wasm/packages.json\n"
+				+ "test -s build/owned-checked-record-php-wasm/full.json\n"
+				+ "test -s build/owned-checked-record-php-wasm/result-only.json\n"
+			, artifactPaths: [
+				"build/owned-checked-record-php-wasm.log"
+				, "build/owned-checked-record-php-wasm-host.log"
+				, "build/owned-checked-record-php-wasm-runtime.log"
+				, "build/owned-checked-record-php-wasm/packages.json"
+				, "build/owned-checked-record-php-wasm/full.json"
+				, "build/owned-checked-record-php-wasm/result-only.json"
+				, "build/owned-checked-record-php-wasm/evidence"
+			]
+		}
+	)
 	, workflow("owned-subtype-php-wasm"
-		, "owned Subtypes", [1459, 1472], 180)
+		, "owned Subtypes", [1459, 1472], 180, {
+			acceptanceCommand: "npm run test:owned-subtype-php-wasm 2>&1 | tee build/owned-subtype-php-wasm.log"
+			, acceptanceRun: "set -euo pipefail\nsource scripts/env.sh\n"
+				+ "npm run test:owned-subtype-php-wasm 2>&1 | tee build/owned-subtype-php-wasm.log\n"
+				+ "rg '^# fail 0$' build/owned-subtype-php-wasm.log\n"
+				+ "rg '^# skipped 0$' build/owned-subtype-php-wasm.log\n"
+				+ "test -s build/owned-subtype-php-wasm/packages.json\n"
+			, artifactPaths: [
+				"build/owned-subtype-php-wasm.log"
+				, "build/owned-subtype-php-wasm-host.log"
+				, "build/owned-subtype-php-wasm-runtime.log"
+				, "build/owned-subtype-php-wasm/packages.json"
+				, "build/owned-subtype-php-wasm/evidence"
+			]
+		}
+	)
 	, workflow("recursive-checked-record-php-wasm"
 		, "recursive checked records", [1458, 1478], 180)
 	, workflow("recursive-subtype-php-wasm"
@@ -52,21 +134,103 @@ export const phpWasmRefinementCiMatrix = Object.freeze([
 		, "zero-payload checked records", [1461, 1482], 180)
 	, workflow("php-wasm-refinement-entry"
 		, "nominal and recursive copied dispatch", [1824], 240
-		, { job: "entry-probe", kind: "measurement", cells: 8, maxParallel: 2 })
+		, { job: "entry-probe", kind: "measurement", cells: 8, maxParallel: 2
+			, axes: { family: ["nominal-full", "nominal-result-only"
+				, "recursive-subtype", "recursive-checked-record"]
+			, route: ["ordinary", "reviewed"] }
+			, acceptanceRun: "source scripts/env.sh\nbash scripts/run-php-wasm-refinement-entry-ci.sh\n"
+			, acceptanceCommand: "bash scripts/run-php-wasm-refinement-entry-ci.sh"
+			, artifactName: "php-wasm-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}"
+		}
+	)
 	, workflow("php-wasm-owned-refinement-entry"
 		, "owned dispatch and transfer ordering", [1825], 240
-		, { job: "entry-probe", kind: "measurement", cells: 4, maxParallel: 2 })
+		, { job: "entry-probe", kind: "measurement", cells: 4, maxParallel: 2
+			, axes: { family: ["owned-subtype", "owned-checked-record"]
+				, route: ["ordinary", "reviewed"] }
+			, acceptanceRun: "source scripts/env.sh\nbash scripts/run-php-wasm-owned-refinement-entry-ci.sh\n"
+			, acceptanceCommand: "bash scripts/run-php-wasm-owned-refinement-entry-ci.sh"
+			, artifactName: "php-wasm-owned-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}"
+		}
+	)
 	, workflow("php-wasm-callback-entry"
 		, "synchronous callback dispatch", [1826], 240
 		, { job: "callback-entry-probe", kind: "measurement"
-			, cells: 2, maxParallel: 2 })
+			, cells: 2, maxParallel: 2
+			, axes: { family: ["callback-fin", "callback-checked-record"] }
+			, acceptanceRun: "source scripts/env.sh\nbash scripts/run-php-wasm-callback-entry-ci.sh\n"
+			, acceptanceCommand: "bash scripts/run-php-wasm-callback-entry-ci.sh"
+			, artifactName: "php-wasm-callback-entry-${{ matrix.family }}-${{ github.sha }}"
+		}
+	)
 	, workflow("php-wasm-indexed-refinement-entry"
 		, "dependent, indexed and zero-payload dispatch", [1827], 240
-		, { job: "entry-probe", kind: "measurement", cells: 12, maxParallel: 2 })
+		, { job: "entry-probe", kind: "measurement", cells: 12, maxParallel: 2
+			, axes: { family: ["dependent-full", "dependent-result-only"
+				, "value-index-full", "value-index-result-only"
+				, "zero-payload-full", "zero-payload-result-only"]
+			, route: ["ordinary", "reviewed"] }
+			, acceptanceRun: "source scripts/env.sh\nbash scripts/run-php-wasm-refinement-entry-ci.sh\n"
+			, acceptanceCommand: "bash scripts/run-php-wasm-refinement-entry-ci.sh"
+			, artifactName: "php-wasm-indexed-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}"
+		}
+	)
 ]);
 
 const escape = value => value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 const count = (source, expression) => [...source.matchAll(expression)].length;
+const indented = (source, spaces) => source.split("\n").slice(0, -1)
+	.map(line => " ".repeat(spaces) + line).join("\n") + "\n";
+const runBlock = job => {
+	const identity = job.indexOf("        id: acceptance\n");
+	assert.ok(identity >= 0);
+	const marker = "        run: |\n";
+	const start = job.indexOf(marker, identity);
+	assert.ok(start >= 0);
+	const body = start + marker.length;
+	const end = job.indexOf("      - name:", body);
+	assert.ok(end >= 0);
+	return job.slice(body, end);
+};
+const uploadPaths = job => {
+	const upload = job.indexOf("        uses: actions/upload-artifact@v7\n");
+	assert.ok(upload >= 0);
+	const marker = "          path: |\n";
+	const start = job.indexOf(marker, upload);
+	assert.ok(start >= 0);
+	const body = start + marker.length;
+	const end = job.indexOf("          if-no-files-found:", body);
+	assert.ok(end >= 0);
+	return job.slice(body, end);
+};
+const matrixAxes = job => {
+	const marker = "      matrix:\n";
+	const start = job.indexOf(marker);
+	assert.ok(start >= 0);
+	const body = start + marker.length;
+	const end = job.indexOf("    env:\n", body);
+	assert.ok(end >= 0);
+	const source = job.slice(body, end);
+	assert.doesNotMatch(source, /^ {8}(?:include|exclude):/mu);
+	const axes = {};
+	const lines = source.trimEnd().split("\n");
+	for(let index = 0; index < lines.length;)
+	{
+		const head = /^ {8}([a-z][a-z0-9-]*):$/u.exec(lines[index]);
+		assert.ok(head, `matrix axis ${lines[index]}`);
+		const values = [];
+		for(++index; index < lines.length; ++index)
+		{
+			const value = /^ {10}- ([a-z0-9-]+)$/u.exec(lines[index]);
+			if(!value) break;
+			values.push(value[1]);
+		}
+		assert.ok(values.length > 0, head[1]);
+		assert.ok(!Object.hasOwn(axes, head[1]), head[1]);
+		axes[head[1]] = values;
+	}
+	return axes;
+};
 
 /**
  * Check one dedicated workflow without executing its expensive producer.
@@ -76,14 +240,15 @@ const count = (source, expression) => [...source.matchAll(expression)].length;
  */
 export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 	assert.equal(typeof source, "string");
-	assert.match(source, /^name: [^\n]+\n\non:\n {2}push:\n {2}pull_request:\n {2}workflow_dispatch:\n/u);
+	const triggers = /\non:\n[\s\S]*?\npermissions:\n/u.exec(source);
+	assert.ok(triggers);
+	assert.equal(triggers[0]
+		, "\non:\n  push:\n  pull_request:\n  workflow_dispatch:\n\npermissions:\n");
 	assert.match(source, /\npermissions:\n {2}contents: read\n/u);
 	assert.match(source, new RegExp("\\nconcurrency:\\n {2}group: "
 		+ escape(lane.id) + "-\\$\\{\\{ github\\.ref \\}\\}\\n"
 		+ " {2}cancel-in-progress: true\\n", "u"));
-	assert.doesNotMatch(source, /\n {2}schedule:/u);
-	assert.doesNotMatch(source, /^\s+continue-on-error:\s*true\s*$/mu);
-	assert.doesNotMatch(source, /^\s+if:\s*false\s*$/mu);
+	assert.doesNotMatch(source, /^\s+continue-on-error:/mu);
 
 	const pieces = source.split("\njobs:\n");
 	assert.equal(pieces.length, 2);
@@ -91,6 +256,7 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 		.map(match => match[1]);
 	assert.deepEqual(jobs, [lane.job]);
 	const job = pieces[1];
+	assert.doesNotMatch(job, /^ {4}if:/mu);
 	assert.match(job, /^ {4}runs-on: ubuntu-24\.04$/mu);
 	const timeout = /^ {4}timeout-minutes: (\d+)$/mu.exec(job);
 	assert.ok(timeout);
@@ -107,6 +273,10 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 		assert.match(job, new RegExp("^ {6}max-parallel: "
 			+ lane.maxParallel + "$", "mu"));
 		assert.ok(lane.cells >= lane.maxParallel);
+		const axes = matrixAxes(job);
+		assert.deepEqual(axes, lane.axes);
+		assert.equal(Object.values(axes)
+			.reduce((product, values) => product * values.length, 1), lane.cells);
 	}
 	else
 	{
@@ -124,10 +294,13 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 	assert.equal(count(job, /^ {8}uses: cachix\/install-nix-action@v31$/gmu), 1);
 	assert.equal(count(job, /^ {8}uses: actions\/cache@v5$/gmu), 1);
 	assert.equal(count(job, /^ {8}id: acceptance$/gmu), 1);
+	assert.equal(runBlock(job), indented(lane.acceptanceRun, 10));
 
 	assert.equal(count(job, /^ {8}if: always\(\)$/gmu), 1);
 	assert.equal(count(job, /^ {8}uses: actions\/upload-artifact@v7$/gmu), 1);
-	assert.equal(count(job, /^ {10}name: .+\$\{\{ github\.sha \}\}$/gmu), 1);
+	assert.equal(count(job, new RegExp("^ {10}name: "
+		+ escape(lane.artifactName) + "$", "gmu")), 1);
+	assert.equal(uploadPaths(job), indented(lane.artifactPaths.join("\n") + "\n", 12));
 	assert.equal(count(job, /^ {10}if-no-files-found: error$/gmu), 1);
 	assert.equal(count(job, /^ {10}retention-days: 30$/gmu), 1);
 	assert.equal(count(job

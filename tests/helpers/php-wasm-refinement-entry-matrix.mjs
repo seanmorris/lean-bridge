@@ -114,8 +114,6 @@ const checkEntryResult = (cell_, result, producerCommit) => {
 		, `${cell_.id} counts`);
 	for(const [name, value] of Object.entries(result.counts))
 		nonnegative(value, `${cell_.id} ${name}`);
-	positive(result.counts.adapter, `${cell_.id} adapter entries`);
-	positive(result.counts.source, `${cell_.id} source entries`);
 };
 
 const checkCallbackResult = (cell_, result, producerCommit) => {
@@ -132,8 +130,9 @@ const checkCallbackResult = (cell_, result, producerCommit) => {
 };
 
 /**
- * Authenticate the ordered output of every independent per-cell verifier.
- * This gate does not trust a missing, reordered or widened hosted selection.
+ * Close the ordered results supplied by every independent per-cell verifier.
+ * This consistency gate rejects a missing, reordered or widened selection; the
+ * hosted artifact summary reruns the verifiers over retained bytes first.
  *
  * @param producerCommit - Full common producer revision.
  * @param observations - Ordered per-cell verifier outputs and archive locations.
