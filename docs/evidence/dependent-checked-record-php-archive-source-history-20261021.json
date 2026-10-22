@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "461b1152237ba403df3a77844887d997c4244ac31c821d5a74bdd13def0f90c6",
+      "path": "tests/helpers/dependent-checked-record-php-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "930e679213c62c43dc0bc6f41efefd92db1ec909f23461cec32abde90a663045",
+      "path": "tests/helpers/dependent-checked-record-php-evidence.mjs"
+    },
+    {
+      "currentSha256": "2515ecf1ed9734e6088489cefd602e7439c6952bbdf7707c57798e6bb5694013",
+      "path": "scripts/update-dependent-checked-record-php-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "179cb21b617a2e7296634bb9c405c1cee293930b4926999d26c91115fbb5a1c7",
+      "path": "tests/helpers/dependent-checked-record-php-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "e13aaed35cb36bd91b7d3c088941159878c03a47fb383ea8394a3a1ac1c5b61c",
+      "path": "tests/helpers/dependent-checked-record-php-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1011,
+    "archiveFileCount": 1009,
+    "indexSha256": "7c9dbd914da5d205852565d4c968575c9762fa6560a13faa71e0aa47d65bdc16",
+    "indexedFileCount": 1008,
+    "root": "docs/evidence/dependent-checked-record-php-20261021"
+  },
+  "implementationCommit": "b0638b4f8b8f2d529d4d509a787d9a814de44792",
+  "implementationUpdates": [
+    {
+      "currentSha256": "a952a33390644e4b4814e080b6ad6f5fa549937b5217b75c543686244cd58d89",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 5055
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "1079e8367fcd583b6e3db8af015a3b1c6c143ba0187df80b80650167a781c52f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c\"\n",
+          "previous": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "595546d2261de340d531bb9af9c5f10bdf103a3903a9dce9c11821f217bfa5d4"
+    },
+    {
+      "currentSha256": "161247e70050b2bf11af343aa2735a1206e35f24c4a29492549c7bd1c78b681c",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPhpArchiveSource, dependentCheckedRecordPhpArchiveImplementationPaths, dependentCheckedRecordPhpArchiveIntegrationPaths } from \"./dependent-checked-record-php-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordPhpArchiveImplementationPaths\n\t, ...dependentCheckedRecordPhpArchiveIntegrationPaths\n\t, ...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths\n",
+          "start": 152274
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPhpArchive\n\t\t= beforeDependentCheckedRecordPhpArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPhpArchive) === expected)\n\t\treturn dependentCheckedRecordPhpArchive;\n",
+          "previous": "",
+          "start": 186392
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPhpArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 186729
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cb0c06a824a3b2b4a3463d957206037783c714d5d706f1d644e5c4dcd12178c4"
+    },
+    {
+      "currentSha256": "ad3f08117e74d89585efc00c1555f88267423e9a822179be68986fb22709844c",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5123
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a952a33390644e4b4814e080b6ad6f5fa549937b5217b75c543686244cd58d89"
+    }
+  ],
+  "milestone": "dependent-checked-record-php-archive-source-v1",
+  "predecessorCommit": "9726d5d4ab5a72befcbb904e32b5c8b0390af447",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted native-PHP dependent checked-record evidence retains all four routes, copied runtime and tool identity, exact Composer packages and execution observations, source roles, destructive controls and the original GitHub artifact bytes."
+}

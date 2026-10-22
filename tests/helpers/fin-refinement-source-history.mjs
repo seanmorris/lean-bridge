@@ -67,6 +67,7 @@ import { beforeCallbackCheckedRecordNativeSource, callbackCheckedRecordNativeCha
 import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
 import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
+import { beforeDependentCheckedRecordPhpArchiveSource, dependentCheckedRecordPhpArchiveImplementationPaths, dependentCheckedRecordPhpArchiveIntegrationPaths } from "./dependent-checked-record-php-archive-source-history.mjs";
 import { beforeDependentCheckedRecordWitPkgConfigSpaceRepairSource, dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths, dependentCheckedRecordWitPkgConfigSpaceRepairIntegrationPaths } from "./dependent-checked-record-wit-pkg-config-space-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource, dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths, dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths } from "./dependent-checked-record-promotion-artifact-identity-hardening-source-history.mjs";
 import { beforeDependentCheckedRecordPhpWasmArchiveSource, dependentCheckedRecordPhpWasmArchiveImplementationPaths, dependentCheckedRecordPhpWasmArchiveIntegrationPaths } from "./dependent-checked-record-php-wasm-archive-source-history.mjs";
@@ -1942,7 +1943,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths
+	...dependentCheckedRecordPhpArchiveImplementationPaths
+	, ...dependentCheckedRecordPhpArchiveIntegrationPaths
+	, ...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths
 	, ...dependentCheckedRecordWitPkgConfigSpaceRepairIntegrationPaths
 	, ...dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths
 	, ...dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths
@@ -2679,9 +2682,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordPhpArchive
+		= beforeDependentCheckedRecordPhpArchiveSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordPhpArchive) === expected)
+		return dependentCheckedRecordPhpArchive;
 	const dependentCheckedRecordWitPkgConfigSpaceRepair
 		= beforeDependentCheckedRecordWitPkgConfigSpaceRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordPhpArchive, expected
 		);
 	if(sha256(dependentCheckedRecordWitPkgConfigSpaceRepair) === expected)
 		return dependentCheckedRecordWitPkgConfigSpaceRepair;

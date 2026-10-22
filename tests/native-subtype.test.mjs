@@ -70,6 +70,7 @@ import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-evidence-tests.mjs";
+import "./helpers/dependent-checked-record-php-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
