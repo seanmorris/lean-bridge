@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b6c371823be9b72367dad04a6e08aa585a54ba266f1d6b335589b671edb9f5ca",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "cb96995dd86c6fee92740add0f66702017b9547cef9fe991b5f26a5172a2d075",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-evidence.mjs"
+    },
+    {
+      "currentSha256": "e159339ac7f641d8294c1482668606e701a14fbefa06f4368e57923ae1c1ef8b",
+      "path": "scripts/update-dependent-checked-record-php-wasm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "61e5f07e614d55b7bee2c162387c49fc33e2c7b7e9a071acd1e60ad56cbb4175",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "3d0286759cc369cc581fe02af2c9cb99a021bac0cac9d1bdd733111cb1ee3859",
+      "path": "tests/helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 2414,
+    "archiveFileCount": 2412,
+    "indexSha256": "948cbee670d29c1ba97dc64ceb1771b7c74b0f23f7ba1d09091826939e455091",
+    "indexedFileCount": 2411,
+    "root": "docs/evidence/dependent-checked-record-php-wasm-20261021"
+  },
+  "implementationCommit": "8463c96ed7770947b4e1719ad80c94761e0cf79b",
+  "implementationUpdates": [
+    {
+      "currentSha256": "890e32fb7ab9599c6bc2e86dc69b589945614356d265844d0a2dc12bf760a3fc",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 4232
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "7ae186140bee945e6920a742963435f0bf516485fffae45ab8505f5bb2db2dbe",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "previous": "          \"sha256\": \"3e0c3cc6c869588d7c46f8f6bf50a53e9e2ea872e6e4f2d7f5ef368f8651bf9b\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "8b712ac5ba98ab28e924d596c8f6e0e85df09d5988d17d063d7be07aa99b0a21"
+    },
+    {
+      "currentSha256": "2faceb6bd47242504baf3d7b5957b367a45d01c05e21562fc6aa47f6da371931",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPhpWasmArchiveSource, dependentCheckedRecordPhpWasmArchiveImplementationPaths, dependentCheckedRecordPhpWasmArchiveIntegrationPaths } from \"./dependent-checked-record-php-wasm-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordPhpWasmArchiveImplementationPaths\n\t, ...dependentCheckedRecordPhpWasmArchiveIntegrationPaths\n\t, ...dependentCheckedRecordWitExportCountRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordWitExportCountRepairChangedPaths\n",
+          "start": 151460
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPhpWasmArchive\n\t\t= beforeDependentCheckedRecordPhpWasmArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPhpWasmArchive) === expected)\n\t\treturn dependentCheckedRecordPhpWasmArchive;\n",
+          "previous": "",
+          "start": 185179
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPhpWasmArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 185526
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b0d661f8ca48dd30b93ba8328bf4afb7d1a40a58ac727bdabb61876f65f34e16"
+    },
+    {
+      "currentSha256": "2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4305
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "890e32fb7ab9599c6bc2e86dc69b589945614356d265844d0a2dc12bf760a3fc"
+    }
+  ],
+  "milestone": "dependent-checked-record-php-wasm-archive-source-v1",
+  "predecessorCommit": "764e6a5443eb8d838d634c592aa8f88b6a2c9f3c",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted PHP-Wasm dependent checked-record evidence retains all four routes, compiler records, copied runtime identity, exact packages and execution observations, source roles, destructive controls and the original GitHub artifact bytes."
+}

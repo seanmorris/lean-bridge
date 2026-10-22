@@ -60,6 +60,7 @@ import "./helpers/dependent-checked-record-ruby-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-type-surface-gap-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-wasm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-wasm-evidence-tests.mjs";
+import "./helpers/dependent-checked-record-php-wasm-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs";
