@@ -16,11 +16,14 @@ import { zendGraphCalls } from "./callable-graph-zend-calls.mjs";
  * Emit regenerable sources, with no installed-consumer admission claim.
  *
  * @param ir - Compiler-authenticated public callable semantics.
+ * @param options - PHP-Wasm-only callback direction controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const generateCallablePhpGraphZendAdapter = ir => {
-	const model = compileCallablePhpGraphZendModel(ir), prefix = model.layout.prefix;
+export const generateCallablePhpGraphZendAdapter = (ir, { finDirections = false } = {}) => {
+	const model = compileCallablePhpGraphZendModel(ir, { finDirections }), prefix = model.layout.prefix;
 	const native = generateNativeCallableGraphCalls(ir, model.descriptor, { wordBits: 32
-		, initializer: `initialize_LeanBridgeNative${sha256(ir.component.id).slice(0, 16)}` });
+		, initializer: `initialize_LeanBridgeNative${sha256(ir.component.id).slice(0, 16)}`
+		, finDirections });
 	if(canonicalJson(native.layout) !== canonicalJson(model.layout) || native.typesHeader !== model.typesHeader)
 		throw new TypeError("Zend callable payloads differ from their native ABI");
 	const files = generateCallablePhpGraphZendPhp(model);

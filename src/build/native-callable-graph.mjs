@@ -9,9 +9,10 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { validateBindingIr } from "../binding-ir/contract.mjs";
 import { componentRecordDefinitions } from "../abi/component-records.mjs";
 import { componentStructuredCallableAbi, componentStructuredCallableDispatch,
-	componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from "../abi/component-structured-callables.mjs";
+	componentStructuredCallableSignatureText, assertComponentStructuredCallableBindings
+	, componentStructuredCallbackDirection } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallablePrefix } from "./component-structured-callable-lean.mjs";
-import { callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinementEntries } from "../abi/refinements.mjs";
+import { callbackDefinitionRefinement, nominalRefinementEntries } from "../abi/refinements.mjs";
 
 const controlsName = abi => `${abi.exports[0].symbol}_structured_callback_controls`;
 
@@ -67,10 +68,12 @@ export const nativeCallableGraphCarrierAbi = (descriptor, ir) => {
  * Match every generated Lean callback carrier with its native C prototype.
  *
  * @param abi - Authenticated typed callable carrier view.
+ * @param options - Backend-specific callback-role recovery controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const nativeCallableGraphHeader = abi => {
+export const nativeCallableGraphHeader = (abi, { finDirections = false } = {}) => {
 	const lines = [];
-	if(abi.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, abi.types) === "host"))
+	if(abi.callbacks.some(signature => componentStructuredCallbackDirection(abi, signature, finDirections) === "host"))
 	{
 		const guard = `${controlsName(abi).toUpperCase()}_DEFINED`;
 		lines.push(`#ifndef ${guard}`, `#define ${guard}`
@@ -83,7 +86,7 @@ export const nativeCallableGraphHeader = abi => {
 	{
 		const symbol = componentStructuredCallablePrefix(abi, signature);
 		const parameters = signature.parameters.map(() => "lean_object *").join(", ");
-		const direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);
+		const direction = componentStructuredCallbackDirection(abi, signature, finDirections);
 		if(direction !== "closure") lines.push(`lean_object *${symbol}_wrap(size_t);`
 			, `lean_object *${symbol}_invoke(size_t, ${parameters});`);
 		if(direction !== "host") lines.push(`lean_object *${symbol}_apply(lean_object *, ${parameters});`);
@@ -101,13 +104,15 @@ export const nativeCallableGraphHeader = abi => {
  * Empty carriers propagate failure through the typed Lean recovery branch.
  *
  * @param abi - Authenticated typed callable carrier view.
+ * @param options - Backend-specific callback-role recovery controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const generateNativeCallableGraphTrampolines = abi => {
+export const generateNativeCallableGraphTrampolines = (abi, { finDirections = false } = {}) => {
 	const lines = ['#include "component.h"', '#include "lean_bridge_native_runtime.h"'];
 	for(const signature of abi.callbacks)
 	{
 		const symbol = componentStructuredCallablePrefix(abi, signature);
-		const direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);
+		const direction = componentStructuredCallbackDirection(abi, signature, finDirections);
 		const names = signature.parameters.map((_, index) => `value${index}`);
 		const parameters = names.map(name => `lean_object *${name}`).join(", ");
 		const types = names.map(() => "lean_object *").join(", ");

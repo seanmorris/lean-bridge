@@ -125,7 +125,7 @@ const sources = async ({ model, receipt, runtime, runtimeFiles, packing, npmSett
 		, receiverExports: Boolean(model.ownedGraph.receiverExports)
 		, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 	})
-		: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)
+		: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true })
 			: model.copiedGraph ? compileCopiedPhpGraphZendModel(model.bindingIr)
 				: compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 	const { namespace } = projection, aliases = model.copiedGraph || model.ownedGraph ? projection.aliases : phpCopiedAliases(projection);

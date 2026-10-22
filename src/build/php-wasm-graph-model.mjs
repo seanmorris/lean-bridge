@@ -75,11 +75,11 @@ export const createCompiledPhpWasmModel = options => {
 	const { metadata, component, sourceIdentity } = options;
 	if(sourceIdentity.request.ownedAggregates !== undefined) return createOwnedPhpWasmModel(options);
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: true });
-	// Directional Subtype/checked-record callbacks need the callable graph even
-	// when their erased payloads are otherwise acyclic. The primitive copied
-	// model cannot preserve constructor direction, recovery, or rejection.
+	// Checked callbacks need the callable graph even when their erased payloads
+	// are otherwise acyclic. It preserves compiler-known host/closure direction,
+	// explicit recovery, constructor/bound rejection, and cleanup.
 	if(!elaborated.declarations.some(containsGraph)
-		&& !elaborated.declarations.some(containsCallbackSubtype))
+		&& !elaborated.declarations.some(value => containsCallbackSubtype(value, { fin: true })))
 		return createPhpWasmCopiedModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
@@ -153,11 +153,11 @@ export const generateCompiledPhpWasmLeanAdapters = model => {
 		, ...(item.specialization ? { sourceApplication: item.specialization.application } : {}) }));
 	const lines = [...new Set(model.exports.map(item => `import ${item.module}`))
 		, "set_option maxRecDepth 10000", `namespace ${module}`
-		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)
+		, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports, { finDirections: true })
 			: componentRecursiveLeanSource(abi, exports, leanType, nominalRefinementEntries(model.bindingIr.types)))
 		, `end ${module}`, ""];
 	const header = abi.callbacks
-		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)
+		? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi, { finDirections: true })
 		: carrierHeader(abi);
 	return { module, leanSource: lines.join("\n"), header };
 };

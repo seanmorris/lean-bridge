@@ -29,14 +29,14 @@ export const generateCompiledPhpWasmGraph = (model, adapters) => {
 		, ...(item.refinements ? { refinements: item.refinements } : {})
 	}));
 	const transport = callable ? generateNativeCallableGraphCalls(
-		model.bindingIr, model.copiedGraph, { initializer, wordBits: 32 }
+		model.bindingIr, model.copiedGraph, { initializer, wordBits: 32, finDirections: true }
 	) : generateNativeCopiedGraphAdapters(
 		model.bindingIr, abi, {
 			initializer, wordBits: 32, refinementExports
 			, nominalRefinements: nominalRefinementEntries(model.bindingIr.types)
 		}
 	);
-	const zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr)
+	const zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr, { finDirections: true })
 		: generateCopiedPhpGraphZendAdapter(model.bindingIr, { refinementDiagnostics: transport.refinementDiagnostics });
 	const manifest = JSON.parse(zend["graph-zend-manifest.json"]), prefix = transport.layout.prefix;
 	const layout = callable ? { layout: transport.layout, descriptor: model.copiedGraph } : transport.layout;
@@ -56,7 +56,7 @@ uint32_t ${prefix}_graph_initialize(void) {
 int ${prefix}_graph_ready(void) { return lean_bridge_native_component_ready(${JSON.stringify(model.component.id)}); }
 void ${prefix}_graph_retire(void) { lean_bridge_native_runtime_retire(); }
 `;
-	const callbacks = callable ? generateNativeCallableGraphTrampolines(abi) : null;
+	const callbacks = callable ? generateNativeCallableGraphTrampolines(abi, { finDirections: true }) : null;
 	const files = { ...zend, "graph/transport.c": transport.source
 		, "graph/runtime.c": lifecycle
 		, "graph/allocation-guard.h": nativeAllocationGuardHeader };

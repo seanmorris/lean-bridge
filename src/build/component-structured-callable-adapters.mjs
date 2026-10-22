@@ -5,11 +5,10 @@
  *
  * @file
  */
-import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus } from "../abi/component-structured-callables.mjs";
+import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus, componentStructuredCallbackDirection } from "../abi/component-structured-callables.mjs";
 import { componentRecursiveLimits } from "../abi/component-recursive.mjs";
 import { componentRecursiveWalker, generateComponentRecursiveAdapters } from "./component-recursive-adapters.mjs";
 import { componentStructuredCallablePrefix, componentStructuredCopiedView, componentStructuredRuntimeRefinements } from "./component-structured-callable-lean.mjs";
-import { callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 const budget = `  recursive_budget budget = { .bytes = 16u * 1024u * 1024u, .nodes = ${componentRecursiveLimits.valueNodes}, .owner = NULL, .path = {0} };`;
 const parameters = count => Array(Math.max(1, count)).fill("lean_object *").join(", ");
@@ -28,7 +27,7 @@ export const generateComponentStructuredCallableAdapters = (abi, exports = []) =
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
 	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id, runtimeRefinements(type, type.refinements)]));
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
-		, callbackSubtypeDirection(type, type.refinements, abi.types)]));
+		, componentStructuredCallbackDirection(abi, type)]));
 	const constrained = nominalRefinements.length > 0 || [...callbackRefinements.values()].some(Boolean);
 	const walker = type => componentRecursiveWalker(copied, type, nominalRefinements);
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));

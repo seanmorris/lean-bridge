@@ -44,6 +44,32 @@ const data = (value, key) => {
 };
 
 /**
+ * Recover the callback role that the public export table already authenticates.
+ * Subtype and checked-record trees encode their direction in their constructors;
+ * Fin-only trees do not, so their unique borrowed/leased use supplies it. An
+ * unrefined callback deliberately remains bidirectional.
+ *
+ * @param abi - Closed callable carrier containing the export sites.
+ * @param signature - One callback signature from that carrier.
+ * @param inferFinDirection - Recover a Fin-only role from the export table.
+ */
+export const componentStructuredCallbackDirection = (abi, signature, inferFinDirection = false) => {
+	const selected = callbackSubtypeDirection(signature, signature.refinements, abi.types);
+	if(selected !== null || signature.refinements === undefined || !inferFinDirection) return selected;
+	const roles = new Set();
+	for(const item of abi.exports)
+	{
+		if(item.parameters.some(type => type.kind === "named" && type.id === signature.id))
+			roles.add("host");
+		if(item.result.kind === "named" && item.result.id === signature.id)
+			roles.add("closure");
+	}
+	if(roles.size !== 1)
+		fail(`checked Fin callback ${signature.id} must have one host or closure role`);
+	return roles.values().next().value;
+};
+
+/**
  * Bind a callback key to copied definitions as well as its root references.
  * Matching nominal names with different field types cannot share a key.
  *

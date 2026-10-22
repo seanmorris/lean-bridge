@@ -6,7 +6,7 @@
  */
 import { sha256 } from "../../capsule/node.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "../../build/native-callable-graph.mjs";
 import { componentStructuredCallablePrefix } from "../../build/component-structured-callable-lean.mjs";
 import { generateNativeCallableGraphBorrows } from "./native-callable-graph-borrows.mjs";
@@ -21,23 +21,27 @@ import { generateNativeCallableGraphBorrows } from "./native-callable-graph-borr
  * @param options - Target initialization and machine-word layout.
  * @param options.initializer - Required checked component initializer.
  * @param options.wordBits - Native pointer width.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const generateNativeCallableGraphCalls = (ir, descriptor, { initializer, wordBits = 64 } = {}) => {
+export const generateNativeCallableGraphCalls = (ir, descriptor, {
+	initializer, wordBits = 64, finDirections = false
+} = {}) => {
 	if(typeof initializer !== "string" || !/^initialize_LeanBridgeNative[0-9a-f]{16}$/.test(initializer))
 		throw new TypeError("Native callable graph calls require a checked component initializer");
 	const abi = nativeCallableGraphCarrierAbi(descriptor, ir);
-	const generated = generateNativeCallableGraphBorrows(ir, descriptor, { wordBits, initializer });
+	const generated = generateNativeCallableGraphBorrows(ir, descriptor, { wordBits, initializer, finDirections });
 	const p = generated.layout.prefix, copy = generated.payloads.copy;
 	const callbacks = new Map(abi.callbacks.map(signature => [signature.id, signature]));
 	const callback = ref => callbacks.get(ref.id);
-	const direction = signature => callbackSubtypeDirection(signature, signature.refinements, abi.types);
+	const direction = signature => componentStructuredCallbackDirection(abi, signature, finDirections);
 	const storesClosures = [...abi.exports, ...abi.callbacks].some(item => callback(item.result));
 	const callbackName = signature => `${p}_callback_${signature.key}`;
 	const walker = ref => `ng_${sha256(copy(ref).id).slice(0, 20)}`;
 	const kind = signature => JSON.stringify(`${ir.component.id}:graph-callback:${signature.key}`);
 	const header = ["#pragma once", `#include "${p}-callable-borrows.h"`
 		, "#ifdef __cplusplus", 'extern "C" {', "#endif"];
-	const lines = ["#include <lean/lean.h>", nativeCallableGraphHeader(abi), generated.source
+	const lines = ["#include <lean/lean.h>"
+		, nativeCallableGraphHeader(abi, { finDirections }), generated.source
 		, `
 #include <pthread.h>
 #include <unistd.h>

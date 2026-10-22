@@ -4,7 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
@@ -16,8 +16,10 @@ import { phpClassName, phpFieldName } from "./copied-names.mjs";
  * Bind every callable site to a copied payload, leaving identities out of values.
  *
  * @param ir - Compiler-checked public Binding IR.
+ * @param options - PHP-Wasm-only callback direction controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const compileCallablePhpGraphZendModel = ir => {
+export const compileCallablePhpGraphZendModel = (ir, { finDirections = false } = {}) => {
 	const descriptor = createNativeCallableGraphDescriptor(ir);
 	if(!descriptor.callbacks.length) throw new TypeError("Callable Zend graphs require a callback signature");
 	const payloads = compileNativeCallableGraphPayloads(ir, descriptor, { wordBits: 32 });
@@ -30,14 +32,20 @@ export const compileCallablePhpGraphZendModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
-		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
-		const projected = { ...signature, index, direction, parameters, result
+		const direction = componentStructuredCallbackDirection(descriptor, signature, finDirections);
+		const projected = {
+			...signature
+			, index
+			, direction
+			, parameters
+			, result
 			, docType: `callable(${parameters.map(node => node.docType).join(", ")}): ${result.docType}`
 			, borrowedType: `${prefix}_callback_${signature.key}`
 			, ...direction === "host" ? {} : {
 				call: `${prefix}_callback_${signature.key}_lease_call`
 				, dispose: `${prefix}_callback_${signature.key}_lease_dispose`
-			} };
+			}
+		};
 		return [signature.id, projected];
 	}));
 	const value = ref => callbacks.has(ref.id) ? { callback: callbacks.get(ref.id) } : { node: copy(ref) };

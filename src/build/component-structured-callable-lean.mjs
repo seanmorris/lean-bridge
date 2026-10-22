@@ -6,11 +6,10 @@
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
-import { assertComponentStructuredCallableAbi } from "../abi/component-structured-callables.mjs";
+import { assertComponentStructuredCallableAbi, componentStructuredCallbackDirection } from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 import { componentRefinementMirrors, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
-import { callbackSubtypeDirection } from "../abi/refinements.mjs";
 
 const primitive = { unit: "Unit", bool: "Bool", char: "Char"
 	, nat: "Nat", int: "Int"
@@ -203,14 +202,16 @@ export const componentStructuredCallableMirrors = (abi, sourceExports, direction
  *
  * @param abi - Authenticated copied-payload callable descriptor.
  * @param sourceExports - Compiler-selected declarations, symbols and applications.
+ * @param options - Backend-specific callback-role recovery controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const componentStructuredCallableLeanSource = (abi, sourceExports) => {
+export const componentStructuredCallableLeanSource = (abi, sourceExports, { finDirections = false } = {}) => {
 	assertComponentStructuredCallableAbi(abi);
 	const callbacks = new Map(abi.callbacks.map(type => [type.id, type]));
 	const nominalRefinements = abi.nominalRefinements ?? [];
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
-		, callbackSubtypeDirection(type, type.refinements, abi.types)]));
+		, componentStructuredCallbackDirection(abi, type, finDirections)]));
 	const conversion = componentStructuredCallableMirrors(abi, sourceExports, callbackDirections, nominalRefinements);
 	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id
 		, conversion ? conversion.refinementsFor(type.id) : runtimeRefinements(type, type.refinements)]));

@@ -146,7 +146,7 @@ export const buildPhpWasmCopiedComponent = async options => {
 				, receiverExports: Boolean(model.ownedGraph.receiverExports)
 				, callbackResultAnchors: Boolean(model.ownedGraph.callbackResultAnchors)
 			});
-			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);
+			else if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true });
 			else if(model.copiedGraph) compileCopiedPhpGraphZendModel(model.bindingIr);
 			else compileCopiedPhpModel(model.bindingIr, { integerBits: 32, structuredCallables: true, lists: true, variants: true });
 			options.validateModel?.(model);

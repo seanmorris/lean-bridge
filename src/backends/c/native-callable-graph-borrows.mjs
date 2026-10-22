@@ -6,7 +6,7 @@
  * @file
  */
 import { sha256 } from "../../capsule/node.mjs";
-import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
+import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { compileNativeCallableGraphPayloads } from "./native-callable-graph-payloads.mjs";
 import { generateNativeCopiedGraphAdapters } from "./native-graph-adapters.mjs";
 
@@ -19,8 +19,11 @@ import { generateNativeCopiedGraphAdapters } from "./native-graph-adapters.mjs";
  * @param options - Native or PHP-Wasm machine-word layout.
  * @param options.wordBits - Target pointer width.
  * @param options.initializer - Checked component initializer, when calls own readiness checks.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
  */
-export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 64, initializer = null } = {}) => {
+export const generateNativeCallableGraphBorrows = (ir, descriptor, {
+	wordBits = 64, initializer = null, finDirections = false
+} = {}) => {
 	const payloads = compileNativeCallableGraphPayloads(ir, descriptor, { wordBits });
 	const generated = generateNativeCopiedGraphAdapters(payloads.ir, payloads.abi, { wordBits, initializer, exportCalls: false });
 	const p = generated.layout.prefix, header = ["#pragma once", `#include "${p}-graph-types.h"`];
@@ -35,7 +38,7 @@ export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 
 	for(const signature of descriptor.callbacks)
 	{
 		const key = signature.key, name = `${p}_callback_${key}`;
-		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const direction = componentStructuredCallbackDirection(descriptor, signature, finDirections);
 		const parameters = signature.parameters.map(payloads.copy), result = payloads.copy(signature.result);
 		const walker = node => `ng_${sha256(node.id).slice(0, 20)}`;
 		const types = parameters.map((node, index) => `const ${node.name} *arg${index}`);

@@ -37,19 +37,19 @@ const containsGraph = value => value && typeof value === "object"
 
 /**
  * Select the callable-graph carrier when an erased Subtype or a checked record
- * sits inside a callback signature, even if every erased payload is otherwise
- * acyclic. The primitive native model predates directional callback
- * constructors and cannot represent their recovery protocol; a checked record
- * crosses a callback only as the erased payload mirror that carrier generates,
- * whether the site names its constructor or Lean produces the record bare.
+ * sits inside a callback signature. PHP-Wasm may additionally opt Fin-only
+ * callbacks into this carrier because it can recover their role from exports.
  *
  * @param value - One compiler-projected declaration or nested type node.
+ * @param options - Backend-specific refinement routing controls.
+ * @param options.fin - Include Fin-only callbacks in graph routing.
  */
-export const containsCallbackSubtype = value => {
+export const containsCallbackSubtype = (value, { fin = false } = {}) => {
 	const visit = (node, callback) => {
 		if(node === null || typeof node !== "object") return false;
 		const inside = callback || node.kind === "callback";
-		if(inside && node.kind === "refinement" && ["subtype", "checked-record"].includes(node.predicate?.kind)) return true;
+		if(inside && node.kind === "refinement"
+			&& (fin || ["subtype", "checked-record"].includes(node.predicate?.kind))) return true;
 		if(inside && node.kind === "record" && Array.isArray(node.erased)) return true;
 		return Object.values(node).some(child => visit(child, inside));
 	};
