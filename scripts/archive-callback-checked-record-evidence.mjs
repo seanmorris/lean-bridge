@@ -70,7 +70,7 @@ const configs = Object.freeze({
 		, job: "Directional callback checked records on all four Perl ABIs"
 		, prefix: "callback-checked-record-perl"
 		, root: "callback-checked-record-perl-ci"
-		, logs: [], profiles: ["perl"], nativeKind: "perl"
+		, flat: true, logs: [], profiles: ["perl"], nativeKind: "perl"
 	}
 	, dotnet: {
 		workflow: ".github/workflows/callback-checked-record-remaining.yml"
@@ -163,14 +163,15 @@ const partsRoot = await mkdtemp(join(
 	tmpdir(), "lean-bridge-callback-checked-record-zip-"));
 try
 {
-	assert.deepEqual((await readdir(extracted.root)).sort()
-		, [config.root, ...config.logs].sort());
-	const outputRoot = join(extracted.root, config.root);
-	const outputNames = await readdir(outputRoot);
 	const required = lane === "browser"
 		? ["acceptance.tap", "records", "runtime-before.json"
 			, "verification.json"]
 		: ["acceptance.tap", "report.json", "verification.json"];
+	assert.deepEqual((await readdir(extracted.root)).sort()
+		, (config.flat ? required : [config.root, ...config.logs]).sort());
+	const outputRoot = config.flat
+		? extracted.root : join(extracted.root, config.root);
+	const outputNames = await readdir(outputRoot);
 	assert.deepEqual(outputNames.sort(), required.sort());
 	const tap = await readFile(join(outputRoot, "acceptance.tap"), "utf8");
 	const verification = await readFile(join(outputRoot, "verification.json"));

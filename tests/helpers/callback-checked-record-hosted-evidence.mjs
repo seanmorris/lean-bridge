@@ -58,7 +58,7 @@ const contracts = Object.freeze({
 		, job: "Directional callback checked records on all four Perl ABIs"
 		, prefix: "callback-checked-record-perl"
 		, root: "callback-checked-record-perl-ci"
-		, profiles: ["perl"], nativeKind: "perl"
+		, flat: true, profiles: ["perl"], nativeKind: "perl"
 	}
 	, dotnet: {
 		workflow: ".github/workflows/callback-checked-record-remaining.yml"
@@ -91,7 +91,8 @@ const contracts = Object.freeze({
 });
 
 const replay = async (lane, root, revision) => {
-	const contract = contracts[lane], output = join(root, contract.root);
+	const contract = contracts[lane], output = contract.flat
+		? root : join(root, contract.root);
 	const tap = await readFile(join(output, "acceptance.tap"), "utf8");
 	if(lane === "browser")
 	{
@@ -213,9 +214,11 @@ export const checkCallbackCheckedRecordHostedEvidence = async (
 		const accepted = await replay(
 			lane, join(root, "hosted/output"), index.producerCommit);
 		assert.deepEqual(accepted, index.accepted);
-		assert.equal(await readFile(join(root, "hosted/output"
-			, contracts[lane].root, "verification.json"), "utf8")
-		, canonicalJson(accepted));
+		const output = contracts[lane].flat
+			? join(root, "hosted/output")
+			: join(root, "hosted/output", contracts[lane].root);
+		assert.equal(await readFile(join(output, "verification.json"), "utf8")
+			, canonicalJson(accepted));
 	}
 	finally
 	{
