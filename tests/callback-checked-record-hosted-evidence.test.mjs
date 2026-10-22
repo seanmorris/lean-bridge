@@ -9,7 +9,7 @@ import {
 	checkCallbackCheckedRecordHostedEvidence
 } from "./helpers/callback-checked-record-hosted-evidence.mjs";
 
-test("retained language callback checked-record evidence replays", async () => {
+test("retained languages callback checked-record evidence replays", async () => {
 	const index = await checkCallbackCheckedRecordHostedEvidence(
 		"languages"
 		, "docs/evidence/callback-checked-record-languages-20261022"

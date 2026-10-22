@@ -8,6 +8,9 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "callback-checked-record-hosted-archive"
+		, "callback-checked-record-hosted-evidence"
+		, "callback-checked-record-promotion"
 		, "callback-checked-record-browser-ci"
 		, "callback-checked-record-extractor"
 		, "callback-checked-record-foundation"
@@ -17,6 +20,8 @@ const profileManifest = Object.freeze({
 		, "callback-checked-record-native-installed"
 		, "callback-checked-record-npm-browser"
 		, "callback-checked-record-perl-installed"
+		, "callback-checked-record-remaining-installed"
+		, "callback-dependent-integration-source-history"
 		, "callback-subtype-browser-ci"
 		, "callback-subtype-extractor"
 		, "callback-subtype-foundation"
