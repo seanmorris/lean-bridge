@@ -67,6 +67,7 @@ test("every repository test receives exactly one named execution profile", async
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-results.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/owned-php-wasm-callback-result-evidence.test.mjs"));
 	assert.ok(grouped.contract.includes("tests/wit-owned-callback-result-installed-acceptance.test.mjs"));
+	assert.ok(grouped.contract.includes("tests/owned-checked-record-javascript-packaging.test.mjs"));
 	for(const name of [
 		"owned-subtype-host-registration-history"
 		, "owned-subtype-javascript-packaging"

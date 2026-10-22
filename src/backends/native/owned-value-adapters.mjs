@@ -5,6 +5,7 @@
  * @file
  */
 import { generateOwnedAggregateCarriers, generateOwnedBindingCarriers } from "../../build/owned-aggregate-carriers.mjs";
+import { ownedCallbackFailureSymbol } from "../../build/owned-callback-carriers.mjs";
 import { compileOwnedNativeValueLayout } from "./owned-value-layout.mjs";
 import { ownedNativeValueRuntime } from "./owned-value-runtime.mjs";
 import { ownedNativeInputTransferRuntime } from "./owned-value-transfers.mjs";
@@ -28,6 +29,8 @@ const renderOwnedNativeValueAdapters = (options, carriers) => {
 	const hasTransfers = layout.functions.some(item => item.transfers?.length);
 	const hasAnchors = [...layout.functions, ...layout.callbacks].some(item => item.anchor !== undefined);
 	const table = new Map(layout.nodes.map(node => [node.id, node]));
+	const callbackFailure = options.hostCallbacks
+		? ownedCallbackFailureSymbol(carriers.model) : null;
 	const helper = node => carriers.symbols.types[node.id];
 	const lines = ['#include "owned-values.h"', '#include "carriers.h"'
 		, ownedNativeValueRuntime(layout.model.limits, wordBits, hasTransfers, hasAnchors)
@@ -296,13 +299,13 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 			, "  lean_dec(arguments);"
 			, ...options.hostCallbacks ? [
 				"  ov_callback_frame frame = { .parent = ov_active_callback_frame, .transaction = &transaction };"
-				, "  if (!frame.parent) (void)lb_native_callback_take_error();"
+				, `  if (!frame.parent) { (void)lb_native_callback_take_error(); (void)${callbackFailure}(); }`
 				, "  ov_active_callback_frame = &frame;"
 			] : []
 			, `  lean_object *returned = ${symbol}(${declaration.parameters.length ? declaration.parameters.map((_, i) => `v${i}`).join(", ") : "lean_box(0)"});`
 			, ...options.hostCallbacks ? [
 				"  ov_active_callback_frame = frame.parent; status = frame.status;"
-				, "  if (lb_native_callback_take_error() && !status) status = OV_CALLBACK;"
+				, `  if ((lb_native_callback_take_error() | ${callbackFailure}()) && !status) status = OV_CALLBACK;`
 				, "  if (!status) status = lb_owned_scope_ready(&transaction.scope);"
 			] : ["  status = lb_owned_scope_ready(&transaction.scope);"]
 			, "  if (status) { lean_dec(returned); return ov_abort(&transaction, status); }"

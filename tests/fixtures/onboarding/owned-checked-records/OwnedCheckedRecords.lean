@@ -73,4 +73,14 @@ def firstClaim (values : Array (Option Claim)) : Option Claim :=
 /-- Result-only: Lean produces an owned checked record from a resource. -/
 def claimFor (holder : Ticket) : Option Claim := mkClaim holder 0
 
+/-- The second constructor can reject after the first owned argument converted. -/
+def pairClaim (_booking : Booking) (claim : Claim) : Claim := claim
+
+/-- A host callback receives a proved claim and must return another proved claim. -/
+def withClaimCallback (claim : Claim) (callback : Claim → Claim) : Claim :=
+  callback claim
+
+/-- A leased Lean closure consumes host claims and returns proved claims. -/
+def claimClosure : Claim → Claim := id
+
 end OwnedCheckedRecords

@@ -27,6 +27,7 @@ test("owned callback recovery needs real witnesses for opaque resources", () => 
 	assert.ok(ownedCallbackRecovery(model, callback("callbackRecursive", 1), render));
 	const record = ownedCallbackRecovery(model, callback("callbackRecord", 1), render);
 	assert.match(record[0], /:= a0$/u);
+	assert.equal(record.length, 2, "recovery emits only the result dependency closure");
 	assert.equal(record.at(-1), "recovery0");
 });
 

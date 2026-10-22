@@ -257,7 +257,11 @@ const lowerSemanticModel = ({ metadata, request, component, elaborationSha256, i
 		{
 			const fields = type.fields.map(field => ({ name: field.name
 				, refinement: refinement(field.type, true, shared, references, seen, depth + 1, produced) }));
-			return produced && (depth > 0 || fields.some(field => field.refinement !== null))
+			// The compiler owns this constructor-free projection decision even when
+			// the erased record is the result root and none of its payload fields is
+			// independently refined. Owned carriers still need that occurrence to
+			// erase the proof-bearing Lean value into its transport mirror.
+			return produced
 				? { kind: "checked-record", name: type.name, constructor: null, fields } : null;
 		}
 		if(nominal && type.kind === "alias") return refinement(type.target, true, shared, references, seen, depth, produced);

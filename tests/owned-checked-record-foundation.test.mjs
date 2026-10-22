@@ -198,6 +198,12 @@ test("reviewed owned callbacks preserve exact host and closure checked-record di
 		const validator = generated.carriers.refinementValidators[validatorKey];
 		if(role === "host")
 		{
+			assert.match(generated.carriers.leanSource
+				, /opaque hostReject0 .* := recovery/u);
+			assert.match(generated.carriers.callbackSource
+				, /_reject\(size_t token, lean_object \*recovery\)[^}]+_state = 1;/u);
+			assert.match(generated.source
+				, /lb_native_callback_take_error\(\) \| lean_bridge_owned_callback_failure_[0-9a-f]{20}\(\)/u);
 			const values = generateOwnedCValues(document, {
 				hostCallbacks: true, publicPrefix: "checked_callback"
 			});
