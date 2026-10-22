@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordJavaScriptSource, ownedCheckedRecordJavaScriptChangedPaths } from "./owned-checked-record-javascript-source-history.mjs";
 import { beforeOwnedCheckedRecordCallableSource, ownedCheckedRecordCallableChangedPaths } from "./owned-checked-record-callable-source-history.mjs";
 import { beforeOwnedCheckedRecordFoundationSource, ownedCheckedRecordFoundationChangedPaths, ownedCheckedRecordFoundationIntegrationPaths } from "./owned-checked-record-foundation-source-history.mjs";
 import { beforeDependentRecordConstructorAuthoritySource, dependentRecordConstructorAuthorityChangedPaths, dependentRecordConstructorAuthorityIntegrationPaths } from "./dependent-record-constructor-authority-source-history.mjs";
@@ -1888,7 +1889,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordCallableChangedPaths
+	...ownedCheckedRecordJavaScriptChangedPaths
+	, ...ownedCheckedRecordCallableChangedPaths
 	, ...ownedCheckedRecordFoundationChangedPaths
 	, ...ownedCheckedRecordFoundationIntegrationPaths
 	, ...dependentRecordConstructorAuthorityChangedPaths
@@ -2559,8 +2561,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordJavaScript
+		= beforeOwnedCheckedRecordJavaScriptSource(path, text, expected);
+	if(sha256(ownedCheckedRecordJavaScript) === expected)
+		return ownedCheckedRecordJavaScript;
 	const ownedCheckedRecordCallable
-		= beforeOwnedCheckedRecordCallableSource(path, text, expected);
+		= beforeOwnedCheckedRecordCallableSource(
+			path, ownedCheckedRecordJavaScript, expected
+		);
 	if(sha256(ownedCheckedRecordCallable) === expected)
 		return ownedCheckedRecordCallable;
 	const ownedCheckedRecordFoundation
