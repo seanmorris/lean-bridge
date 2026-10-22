@@ -1,0 +1,181 @@
+{
+  "additions": [
+    {
+      "currentSha256": "02fb19f563ad36342ebe1491ce7e523f647b201fc94b481ffaf80db43457769c",
+      "path": "scripts/update-dependent-checked-record-browser-diagnostic-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2df09179ffddd1b43d09202b6f0abb38fdcfe7f269c791d5d12cd063ec1143b2",
+      "path": "tests/helpers/dependent-checked-record-browser-diagnostic-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b789f256e5853979aa07a143ea83856471fd97f8f9e6d6eec5f2616fef5b3fde",
+      "path": "tests/helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "ca36284777b57cf8b2f619450926717dead64a0b",
+  "integrationBaseCommit": "1d1a836956970b1ca6f8de61fa991b49f1e0b76c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "7859a21c04bb8ebe45b8d5a2f8cd4e33448760935e176633f5deb9d05138b6d6",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5\"\n",
+          "previous": "          \"sha256\": \"05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "bcf543fb44189bee8c6a1a4008be8141593d477f328d3e19aca5033a17642f04"
+    },
+    {
+      "currentSha256": "811689ebd91bf07c4a3be503d0789e8271dfddb75340d2c7ba42bd5a64e33a4c",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordBrowserDiagnosticRepairSource, dependentCheckedRecordBrowserDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserDiagnosticRepairIntegrationPaths } from \"./dependent-checked-record-browser-diagnostic-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordBrowserDiagnosticRepairChangedPaths\n\t, ...dependentCheckedRecordBrowserDiagnosticRepairIntegrationPaths\n\t, ...dependentCheckedRecordDotnetArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordDotnetArchiveImplementationPaths\n",
+          "start": 150958
+        },
+        {
+          "current": "\tconst dependentCheckedRecordBrowserDiagnosticRepair\n\t\t= beforeDependentCheckedRecordBrowserDiagnosticRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordBrowserDiagnosticRepair) === expected)\n\t\treturn dependentCheckedRecordBrowserDiagnosticRepair;\n",
+          "previous": "",
+          "start": 184430
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordBrowserDiagnosticRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 184799
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "29724afd807ff14c5a5784e7b4657cf057224977cb8cf2c55bc365fe97e816aa"
+    },
+    {
+      "currentSha256": "1af1aac3baa4323606779e7b5fa280b72ba0450b6c23e26b9fef61ad31d204d5",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4689
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "05d340cf8255bab5b3fcbe341bc3f72a347317193c95a43519894d849b4208d5"
+    }
+  ],
+  "milestone": "dependent-checked-record-browser-diagnostic-repair-source-v1",
+  "predecessorCommit": "2e5facfb946f9156ea119823380abaf5bf072752",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Browser dependent checked-record consumers authenticate the runtime's ordinary and reviewed constructor-rejection diagnostics instead of requiring obsolete raw WebAssembly trap text.",
+  "updates": [
+    {
+      "currentSha256": "bdbdf8c3d704b21b01be410ce60dbb8d7a8034fc069466110b0d377ece6813c8",
+      "edits": [
+        {
+          "current": " * @param reviewed - Whether reviewed Binding IR supplies public parameter names.\n",
+          "previous": "",
+          "start": 285
+        },
+        {
+          "current": "export const checkDependentRecords = (\n\tapi, resultOnly = false, reviewed = false\n) => {\n",
+          "previous": "export const checkDependentRecords = (api, resultOnly = false) => {\n",
+          "start": 371
+        },
+        {
+          "current": "\t\t\tconst parameter = reviewed ? \"value0\" : \"arg0\";\n\t\t\tif(error?.message !== `${parameter} was rejected by `\n\t\t\t\t+ \"DependentRecords.mkDependent\")\n",
+          "previous": "\t\t\tif(!/failed \\(5\\)/u.test(String(error?.message)))\n",
+          "start": 1311
+        }
+      ],
+      "path": "tests/fixtures/dependent-checked-record-browser/javascript.mjs",
+      "previousSha256": "b5d1cbc02c61d42f6f21374b7439c4adf0d936fc2c1ef8519cfe2e1a53cfd826"
+    },
+    {
+      "currentSha256": "de2b03fc18af8b9a4e11ff3991f682ca6fcdebc3223c2855be0ffd87c3f67d34",
+      "edits": [
+        {
+          "current": "console.log(JSON.stringify(checkDependentRecords(api, ${resultOnly}, ${reviewed})));\n",
+          "previous": "console.log(JSON.stringify(checkDependentRecords(api, ${resultOnly})));\n",
+          "start": 9690
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-installed-tests.mjs",
+      "previousSha256": "18a8074e2b11dd78bb0dac16a04662bbdaac60a45bebac5be4c5745aa08c01e0"
+    },
+    {
+      "currentSha256": "9ff74df8619d75862070052ecbbcacbc43b242b26da25a42bd2d9d9d77e6c5d6",
+      "edits": [
+        {
+          "current": "\t\t+ `console.log(JSON.stringify(checkDependentRecords(api, ${selection.resultOnly}, ${selection.reviewed})));\\n`;\n",
+          "previous": "\t\t+ `console.log(JSON.stringify(checkDependentRecords(api, ${selection.resultOnly})));\\n`;\n",
+          "start": 13342
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-report.mjs",
+      "previousSha256": "b8e208211b1484eeeb4c8ff2b9183f649c761c8be7a30b81a4bea11634208fe3"
+    },
+    {
+      "currentSha256": "b027df564d8b37b83624f95de882afad12ae5d6d3168e880902ed8686a28299b",
+      "edits": [
+        {
+          "current": "const checked = (value, parameter = \"arg0\") => {\n",
+          "previous": "const checked = value => {\n",
+          "start": 1393
+        },
+        {
+          "current": "\t\tthrow new Error(`${parameter} was rejected by DependentRecords.mkDependent`);\n",
+          "previous": "\t\tthrow new Error(\"Component recursive call failed (5)\");\n",
+          "start": 1490
+        },
+        {
+          "current": "\tassert.deepEqual(checkDependentRecords({\n\t\tdependentTotal: value => {\n\t\t\tchecked(value, \"value0\");\n\t\t\treturn value.bound + value.below;\n\t\t}\n\t\t, dependentRoundtrip: value => ({ ...checked(value, \"value0\") })\n\t\t, dependentResult: model.dependentResult\n\t}, false, true), dependentCheckedRecordExpected(\"reviewed-ir\"));\n",
+          "previous": "",
+          "start": 2004
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "acf9083d257fd70df416d65d5a3983fa0c7b914fdac3ca5f58b8ca74f2942070"
+    }
+  ]
+}

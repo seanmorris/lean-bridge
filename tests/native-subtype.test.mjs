@@ -65,6 +65,7 @@ import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs"
 import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-archive-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs";
 import "./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs";
