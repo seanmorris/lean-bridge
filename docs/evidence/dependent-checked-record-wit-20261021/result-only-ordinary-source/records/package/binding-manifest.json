@@ -1,0 +1,24 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "6d0c9be50b31fe4acfbcc21c1f72cd484564e023886b7d47c284d4fd53e0da30",
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:DependentRecords.dependentResult",
+      "witName": "dependent-result"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:dependentrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:dependentrecords/native@1.0.0",
+    "package": "lean-bridge:dependentrecords@1.0.0",
+    "world": "dependentrecords"
+  }
+}

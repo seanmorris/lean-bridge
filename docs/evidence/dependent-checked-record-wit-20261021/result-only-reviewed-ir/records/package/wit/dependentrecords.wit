@@ -1,0 +1,17 @@
+package lean-bridge:dependentrecords@1.0.0;
+
+interface native {
+  type bridge-value-0 = list<u32>;
+  record dependent { bound: bridge-value-0, below: bridge-value-0 }
+  dependent-result: func(value0: bridge-value-0) -> dependent;
+}
+
+interface api {
+  use native.{bridge-value-0, dependent};
+  dependent-result: func(value0: bridge-value-0) -> dependent;
+}
+
+world dependentrecords {
+  import native;
+  export api;
+}

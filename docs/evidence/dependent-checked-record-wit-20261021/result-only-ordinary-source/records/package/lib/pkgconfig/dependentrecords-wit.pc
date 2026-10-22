@@ -1,0 +1,9 @@
+prefix=${pcfiledir}/../..
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: dependentrecords-wit
+Description: Compiled Lean WIT API and Wasmtime 42.0.1 host
+Version: 1.0.0
+Libs: -L${libdir} -Wl,-rpath,${libdir} -ldependentrecords_wasmtime -lwasmtime
+Cflags: -I${includedir}

@@ -1,0 +1,34 @@
+{
+  "args": [],
+  "closure": {
+    "consumerFileSetSha256": "c09933b7e5ca904c10fecb57f8f2ac9c505e1bd4463e88acce0b9548d7b926c2",
+    "executable": {
+      "bytes": 26336,
+      "sha256": "22434feecc2a413138907110ca4f3f22fbfa1610329e6815c1e368e654954ecd"
+    },
+    "packageFileSetSha256": "5775f4cf8a66c4bd62b3e1f981b5a15240f10e2f7cc39bde56eca543b1562912",
+    "receiptSha256": "a867c2773a30f162cb2ecfeb5da57063e3b19f01388238a3e8a010dddbaaaf76"
+  },
+  "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-wit-mz5o3r/consumer/consumer",
+  "counts": {
+    "checks": 4169,
+    "hostRejections": 6,
+    "recoveries": 264,
+    "rejections": 258,
+    "snapshots": 1301
+  },
+  "cwd": "/home/runner/work/_temp/lean-bridge-dependent checked-record-wit-mz5o3r/consumer",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "relocated": false,
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"checks\":4169,\"rejections\":258,\"hostRejections\":6,\"recoveries\":264,\"snapshots\":1301}\n"
+  }
+}

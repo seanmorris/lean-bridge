@@ -1,0 +1,32 @@
+{
+  "assurance": [],
+  "backend": "ordinary-wit-native-v1",
+  "bindingIrSha256": "049209e01a8a7a6402438d72688959593426efd55729f70531d7171aad4d7d69",
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "id": "lean:DependentRecords.dependentResult",
+      "witName": "dependent-result"
+    },
+    {
+      "id": "lean:DependentRecords.dependentRoundtrip",
+      "witName": "dependent-roundtrip"
+    },
+    {
+      "id": "lean:DependentRecords.dependentTotal",
+      "witName": "dependent-total"
+    }
+  ],
+  "deferred": [],
+  "schemaVersion": 1,
+  "wit": {
+    "apiInterface": "lean-bridge:dependentrecords/api@1.0.0",
+    "nativeImport": "lean-bridge:dependentrecords/native@1.0.0",
+    "package": "lean-bridge:dependentrecords@1.0.0",
+    "world": "dependentrecords"
+  }
+}

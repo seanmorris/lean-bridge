@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59204864,
+          "path": "archives/dependentrecords-1.0.0-wit-wasi.tar.gz",
+          "sha256": "9347d4c852715f17e87d8dc889b15d0c08a7eb6932f4bd5e4bdb49b478f5ce71"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "049209e01a8a7a6402438d72688959593426efd55729f70531d7171aad4d7d69",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5a381bcacfd27565ac8a83191337a7238a98237aa6f783a30803f03a27a28659"
+  }
+}

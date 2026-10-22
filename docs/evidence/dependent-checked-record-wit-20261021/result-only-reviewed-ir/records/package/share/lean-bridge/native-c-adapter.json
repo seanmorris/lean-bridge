@@ -1,0 +1,38 @@
+{
+  "bindingIrSha256": "5501f2e8d83e130d885fe12041e242510c25649565e591323ec1c1fdd7b031a9",
+  "componentReceiptSha256": "51460e0f1ec42bc65e0065d1b9cfa2ecae2c07ba11652b795938ca07e7a128ae",
+  "files": {
+    "README.md": {
+      "bytes": 914,
+      "sha256": "eaff3d537acd45de52d8176a5a0d6ed98443bcb32043741ad68fd55128c31926"
+    },
+    "binding-manifest.json": {
+      "bytes": 602,
+      "sha256": "f364cda8ae76b9560b1b8737920d2a265452d4b70a0c5b7af7d90c853f817288"
+    },
+    "include/dependentrecords.h": {
+      "bytes": 1704,
+      "sha256": "503aa4473788d30db9b38ae0029ecb247fbece686ab35fb0fa91900fc93b39d9"
+    },
+    "internal/dependentrecords_runtime.h": {
+      "bytes": 715,
+      "sha256": "7cc494c0e5e1537ac2b764ff871f7522ef620c1c46d7dbe4f9fe679e8780ef80"
+    },
+    "lib/libdependentrecords.so": {
+      "bytes": 17192,
+      "sha256": "3861b4094ed610eba4e592d572734b8a992575ddbfa2a7cdfe593a34a13bb181"
+    },
+    "src/dependentrecords.c": {
+      "bytes": 3927,
+      "sha256": "b9192a71acff18e841000857f8e313e98ad51ca37824b64fa0deafcd35f497f6"
+    },
+    "src/native.c": {
+      "bytes": 7734,
+      "sha256": "f34c0953cba639414a16f7db0bbe93262a22fae0974e2747890a6d41a8b94340"
+    }
+  },
+  "library": "libdependentrecords.so",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1
+}
