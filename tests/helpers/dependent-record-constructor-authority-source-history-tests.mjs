@@ -23,6 +23,9 @@ import {
 	beforeFinRefinementSource, exactTypeSurfaceSourceHistoryStatistics
 	, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
+import {
+	beforeOwnedCheckedRecordFoundationSource
+} from "./owned-checked-record-foundation-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
 
 const git = args => execFileSync("git", args
@@ -56,20 +59,29 @@ test("dependent-record constructor authority restores every exact source"
 		for(const update of [...record.updates, ...record.integrationUpdates])
 		{
 			const current = await readFile(update.path, "utf8");
+			const milestone = beforeOwnedCheckedRecordFoundationSource(
+				update.path, current, update.currentSha256
+			);
 			const previous = reverseDependentRecordConstructorAuthorityUpdate(
-				current, update
+				milestone, update
 			);
 			assert.equal(sha256(previous), update.previousSha256, update.path);
 			assert.equal(beforeDependentRecordConstructorAuthoritySource(
-				update.path, current, update.previousSha256), previous, update.path);
+				update.path, milestone, update.previousSha256), previous, update.path);
 			assert.equal(beforeFinRefinementSource(
 				update.path, current, update.previousSha256), previous, update.path);
 			assert.ok(finRefinementNormalizationPaths.includes(update.path)
 				, update.path);
 		}
 		for(const addition of record.additions)
-			assert.equal(sha256(await readFile(addition.path))
+		{
+			const current = await readFile(addition.path, "utf8");
+			const milestone = beforeOwnedCheckedRecordFoundationSource(
+				addition.path, current, addition.currentSha256
+			);
+			assert.equal(sha256(milestone)
 				, addition.currentSha256, addition.path);
+		}
 	}
 );
 

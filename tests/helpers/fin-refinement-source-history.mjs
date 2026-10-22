@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordFoundationSource, ownedCheckedRecordFoundationChangedPaths, ownedCheckedRecordFoundationIntegrationPaths } from "./owned-checked-record-foundation-source-history.mjs";
 import { beforeDependentRecordConstructorAuthoritySource, dependentRecordConstructorAuthorityChangedPaths, dependentRecordConstructorAuthorityIntegrationPaths } from "./dependent-record-constructor-authority-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionSource, callbackCheckedRecordPromotionChangedPaths, callbackCheckedRecordPromotionIntegrationPaths } from "./callback-checked-record-promotion-source-history.mjs";
 import { beforeCallbackDependentIntegrationSource, callbackDependentIntegrationChangedPaths } from "./callback-dependent-integration-source-history.mjs";
@@ -1886,7 +1887,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentRecordConstructorAuthorityChangedPaths
+	...ownedCheckedRecordFoundationChangedPaths
+	, ...ownedCheckedRecordFoundationIntegrationPaths
+	, ...dependentRecordConstructorAuthorityChangedPaths
 	, ...dependentRecordConstructorAuthorityIntegrationPaths
 	, ...callbackCheckedRecordPromotionChangedPaths
 	, ...callbackCheckedRecordPromotionIntegrationPaths
@@ -2554,8 +2557,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordFoundation
+		= beforeOwnedCheckedRecordFoundationSource(path, text, expected);
+	if(sha256(ownedCheckedRecordFoundation) === expected)
+		return ownedCheckedRecordFoundation;
 	const dependentRecordConstructorAuthority
-		= beforeDependentRecordConstructorAuthoritySource(path, text, expected);
+		= beforeDependentRecordConstructorAuthoritySource(path, ownedCheckedRecordFoundation, expected);
 	if(sha256(dependentRecordConstructorAuthority) === expected)
 		return dependentRecordConstructorAuthority;
 	const callbackCheckedRecordPromotion

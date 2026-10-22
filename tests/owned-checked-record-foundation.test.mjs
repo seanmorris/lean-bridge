@@ -16,6 +16,7 @@ import { validateOwnedNativeType } from "../src/analyze/native-types.mjs";
 import { validateReviewedOwnedSource } from "../src/analyze/reviewed-owned-source.mjs";
 import { generateOwnedNativeBindingAdapters } from "../src/backends/native/owned-value-adapters.mjs";
 import { ownedCheckedRecordModule, ownedCheckedRecordReviewedIr, ownedCheckedRecordTrees } from "./helpers/owned-checked-record-fixture.mjs";
+import "./helpers/owned-checked-record-foundation-source-history-tests.mjs";
 
 const module = ownedCheckedRecordModule, q = name => `${module}.${name}`;
 const erasedKey = "lean-lang.org/erased-proofs", refinementKey = "lean-lang.org/refinements";
