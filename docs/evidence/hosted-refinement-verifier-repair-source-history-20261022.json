@@ -1,0 +1,189 @@
+{
+  "additions": [
+    {
+      "currentSha256": "aa64e21005717eb92fe5bbf03c5295a158272a4432b994e7c3393cee49d707be",
+      "path": "scripts/update-hosted-refinement-verifier-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6275da5e1e2bc6b9dd851ab94bf98f7281ebfcf644b95a4f984d7da927654886",
+      "path": "tests/helpers/hosted-refinement-verifier-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6d97aece4435c2947212e45ea13b25e363f734371e2b27f698e5d4d41de8ef1c",
+      "path": "tests/helpers/hosted-refinement-verifier-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "ee21e4a0c529cfb6de1ecaad9be1566456d11f7e",
+  "integrationBaseCommit": "ee21e4a0c529cfb6de1ecaad9be1566456d11f7e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4b8f94cec42710b8bbbc18cbcfa86b2d9171e5a6d36c0271d82e24a443f1f9ae",
+      "edits": [
+        {
+          "current": "import \"./helpers/hosted-refinement-verifier-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "2f20dc30af2de19fc64406191dd7b5da8b8c07278d54e543ff9e94a6449a3489"
+    },
+    {
+      "currentSha256": "1c110397941703e0bcb1d7237e97be4da008cc4cbf6ea3a3d7b98baebc083938",
+      "edits": [
+        {
+          "current": "import { beforeHostedRefinementVerifierRepairSource, hostedRefinementVerifierRepairChangedPaths, hostedRefinementVerifierRepairIntegrationPaths } from \"./hosted-refinement-verifier-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...hostedRefinementVerifierRepairChangedPaths\n\t, ...hostedRefinementVerifierRepairIntegrationPaths\n\t, ...callbackFinPhpWasmNominalRefusalRepairChangedPaths\n",
+          "previous": "\t...callbackFinPhpWasmNominalRefusalRepairChangedPaths\n",
+          "start": 149967
+        },
+        {
+          "current": "\tconst hostedRefinementVerifierRepair\n\t\t= beforeHostedRefinementVerifierRepairSource(path, text, expected);\n\tif(sha256(hostedRefinementVerifierRepair) === expected)\n\t\treturn hostedRefinementVerifierRepair;\n",
+          "previous": "",
+          "start": 182949
+        },
+        {
+          "current": "\t\t\tpath, hostedRefinementVerifierRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 183257
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "984a68e6bb1bf764baf099bf2f332815e0f70b97628813ff6306bcb9cfbea94c"
+    }
+  ],
+  "milestone": "hosted-refinement-verifier-repair-source-v1",
+  "predecessorCommit": "2beba112ca77cefc934a60d93ad8b5716defb4bb",
+  "schemaVersion": 1,
+  "scope": "Recursive copied-value validators derive carriers from authenticated signatures and fail closed when a type is absent; hosted native-PHP reports authenticate the one retained caller path used by producers.",
+  "updates": [
+    {
+      "currentSha256": "0da9389a050e8510b13048adfdbf80500672baa0200fc6c1eea398884ed8537b",
+      "edits": [
+        {
+          "current": "\t\t// Native and PHP-Wasm graph projections do not promise compiler-adapter\n\t\t// `leanType` fields. Derive every validator carrier from the authenticated\n\t\t// private signature, exactly as the export wrapper itself does.\n\t\treturn { ...item, parameters: item.parameters.map((parameter, index) => ({\n\t\t\t...parameter\n\t\t\t, leanType: mirror(signature.parameters[index]) ?? sourceType(signature.parameters[index])\n\t\t}))\n",
+          "previous": "\t\treturn { ...item, parameters: item.parameters.map((parameter, index) => mirror(signature.parameters[index]) ? { ...parameter, leanType: mirror(signature.parameters[index]) } : parameter)\n",
+          "start": 8131
+        }
+      ],
+      "path": "src/build/component-recursive-lean.mjs",
+      "previousSha256": "a7a09a35b9d54922e1d3c313d18facc0df220431066dbba34ce72cda1f919387"
+    },
+    {
+      "currentSha256": "39ae12b0017b7394b7f0aa161d89d8a5743f9943a7d7f76ded3bd5f36235fc85",
+      "edits": [
+        {
+          "current": "\tconst carrier = item.parameters?.[index]?.leanType;\n\tif(typeof carrier !== \"string\" || carrier.length === 0)\n\t\tthrow new TypeError(`Refinement validator ${index} has no carrier Lean type`);\n",
+          "previous": "",
+          "start": 14905
+        },
+        {
+          "current": "\t\t, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${carrier}) : _root_.UInt8 :=`\n",
+          "previous": "\t\t, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`\n",
+          "start": 15323
+        }
+      ],
+      "path": "src/build/component-refinements.mjs",
+      "previousSha256": "9ce698430cb1216f395c282b164c4aa80b0b4d981d0a39af10f71bbebffff229"
+    },
+    {
+      "currentSha256": "2b7859725b9363e8ba6db6e3adf63682be077f9e911ed8401b5a6166af613d8b",
+      "edits": [
+        {
+          "current": "\tdependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpCallerPath\n\t, dependentCheckedRecordPhpRoutes\n",
+          "previous": "\tdependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpRoutes\n",
+          "start": 632
+        },
+        {
+          "current": "\tconst caller = sourceAt(producerCommit, dependentCheckedRecordPhpCallerPath).toString();\n",
+          "previous": "\tconst caller = sourceAt(producerCommit, \"tests/fixtures/dependent-checked-record-php/php.php\").toString();\n",
+          "start": 12276
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-php-ci-report.mjs",
+      "previousSha256": "c7564561235b435bfc2b9ef9a5a91af485a797313c078eb88f77c2466229ad61"
+    },
+    {
+      "currentSha256": "229aa91f6cda326d0b9a605235449831954bae7bb4e4a25f671087c0b89f81ab",
+      "edits": [
+        {
+          "current": "\t, dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpCallerPath\n\t, dependentCheckedRecordPhpEnvironment\n",
+          "previous": "\t, dependentCheckedRecordPhpCallerArgs, dependentCheckedRecordPhpEnvironment\n",
+          "start": 757
+        },
+        {
+          "current": "\tassert.equal(dependentCheckedRecordPhpCallerPath, callerPath);\n",
+          "previous": "",
+          "start": 2140
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-php-fixture-tests.mjs",
+      "previousSha256": "071712be3c297a41a801193a9ee4a2ce7f1d18549b49d39b06403249d200a191"
+    },
+    {
+      "currentSha256": "d7d356cbcdebe4e9efd449372a8e39304bbc8a6d5dc42a9f8605baf0c677f710",
+      "edits": [
+        {
+          "current": "export const dependentCheckedRecordPhpCallerPath\n\t= \"tests/fixtures/dependent-checked-record-consumers/php.php\";\n",
+          "previous": "",
+          "start": 1174
+        },
+        {
+          "current": "\tdependentCheckedRecordPhpCallerPath, \"utf8\"\n",
+          "previous": "\t\"tests/fixtures/dependent-checked-record-consumers/php.php\", \"utf8\"\n",
+          "start": 3225
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-php-fixture.mjs",
+      "previousSha256": "c6e45db8b19d4e380da61e8ab47dbcdc3edd063b4926ae409521e0e0a3ad52d8"
+    },
+    {
+      "currentSha256": "b5bc6fb35d160e3148aca1e01468a6b697ec918026ed81c70f9c0b738f4fb16e",
+      "edits": [
+        {
+          "current": "import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from \"../src/build/php-wasm-graph-model.mjs\";\n",
+          "previous": "",
+          "start": 654
+        },
+        {
+          "current": "import { componentCarrierRefinementValidators } from \"../src/build/component-refinements.mjs\";\n",
+          "previous": "",
+          "start": 955
+        },
+        {
+          "current": "const refinedFixture = () => {\n\tconst input = fixture(), declaration = input.metadata.modules[0].declarations[0];\n\tconst abi = { cType: \"lean_object*\", box: \"lean_box\", unbox: \"lean_unbox\", heap: true };\n\tconst nat = { kind: \"primitive\", name: \"nat\", lean: \"Nat\", abi };\n\tconst checked = { kind: \"refinement\", base: nat\n\t\t, predicate: { kind: \"subtype\", constructor: \"Sample.checked\" }, abi };\n\tdeclaration.parameters.push({ name: \"extra\", binderInfo: \"explicit\"\n\t\t, typeExpression: \"{ value : Nat // 0 < value }\" });\n\tdeclaration.typeExpression = \"Sample.Tree → { value : Nat // 0 < value } → Sample.Tree\";\n\tdeclaration.projection.parameters.push({ name: \"extra\", type: checked });\n\treturn input;\n};\n\n",
+          "previous": "",
+          "start": 2281
+        },
+        {
+          "current": "test(\"recursive graph refinement validators derive every carrier from the authenticated signature\", () => {\n\tconst input = refinedFixture();\n\tconst outputs = [\n\t\tgenerateCompiledNativeLeanAdapters(createCompiledNativeModel(input\n\t\t\t, { nativeRefinements: true })).leanSource\n\t\t, generateCompiledPhpWasmLeanAdapters(createCompiledPhpWasmModel(input)).leanSource\n\t];\n\tfor(const source of outputs)\n\t{\n\t\tassert.doesNotMatch(source, /\\bundefined\\b/u);\n\t\tassert.match(source, /def export0_refinement_1 \\(carrier : _root_\\.Array _root_\\.Nat\\) : _root_\\.UInt8 :=/u);\n\t\tassert.match(source, /def export0 \\(a0 : \\(_root_\\.Array _root_\\.Sample\\.Tree\\)\\) \\(a1 : \\(_root_\\.Array _root_\\.Nat\\)\\)/u);\n\t\tassert.match(source, /_root_\\.Sample\\.checked value/u);\n\t}\n\n\tconst item = {\n\t\tsymbol: \"checked\", wrapper: \"checked\"\n\t\t, parameters: [{ name: \"value\" }]\n\t\t, refinements: {\n\t\t\tparameters: [{ kind: \"fin\", bound: \"3\" }], result: null\n\t\t}\n\t};\n\tassert.throws(() => componentCarrierRefinementValidators(item, true)\n\t\t, /Refinement validator 0 has no carrier Lean type/u);\n\tassert.throws(() => componentCarrierRefinementValidators({ ...item\n\t\t, parameters: [{ leanType: \"\" }] }, true), /no carrier Lean type/u);\n\tassert.deepEqual(componentCarrierRefinementValidators(item, false), []);\n});\n\n",
+          "previous": "",
+          "start": 6797
+        }
+      ],
+      "path": "tests/native-graph-model.test.mjs",
+      "previousSha256": "31f5c985ae2b6ae9130e521607f6c651f6e125a684b573c1f3bd9053a859df9b"
+    },
+    {
+      "currentSha256": "a9c84f45d9963d65f071a635c52db28aecca63932e241171db2790f7228b22a4",
+      "edits": [
+        {
+          "current": "import { reviewedCallbackFinReview } from \"./helpers/reviewed-callback-fin-fixture.mjs\";\n",
+          "previous": "",
+          "start": 1580
+        },
+        {
+          "current": "const callableValidatorCarriers = source => {\n\tconst wrappers = new Map();\n\tfor(const match of source.matchAll(/^def (\\w+) (\\(a0 : .*) : .* :=$/gmu))\n\t{\n\t\tconst groups = [];\n\t\tlet depth = 0, start = 0;\n\t\tfor(const [index, character] of [...match[2]].entries())\n\t\t{\n\t\t\tif(character === \"(\" && depth++ === 0) start = index;\n\t\t\tif(character === \")\" && --depth === 0) groups.push(match[2].slice(start + 1, index));\n\t\t}\n\t\twrappers.set(match[1], groups.map(group => /^a\\d+ : \\((_root_\\.Array .*)\\)$/u.exec(group)[1]));\n\t}\n\treturn [...source.matchAll(/^def (\\w+)_refinement_(\\d+) \\(carrier : (_root_\\.Array .*)\\) : _root_\\.UInt8 :=$/gmu)]\n\t\t.filter(match => wrappers.has(match[1]))\n\t\t.map(match => ({ wrapper: match[1], index: Number(match[2])\n\t\t\t, carrier: match[3], expected: wrappers.get(match[1])[Number(match[2])] }));\n};\n\ntest(\"reviewed PHP-Wasm Fin callbacks validate export arguments over their exact wrapper carriers\", () => {\n\tconst ir = reviewedCallbackFinReview({ hostReply: true });\n\tconst copiedGraph = createNativeCallableGraphDescriptor(ir);\n\tconst model = {\n\t\tschemaVersion: 5, profile: \"php-wasm-copied-v1\"\n\t\t, pointerBits: 32, byteOrder: \"little\"\n\t\t, component: ir.component, bindingIr: ir, copiedGraph\n\t\t, exports: ir.declarations.map(declaration => {\n\t\t\tconst entry = copiedGraph.exports.find(item => item.bindingId === declaration.id);\n\t\t\tconst refinements = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\t\treturn {\n\t\t\t\tmodule: \"ReviewedCallbacks\", name: declaration.source.declaration\n\t\t\t\t, bindingId: declaration.id, symbol: `${entry.symbol}_lean`\n\t\t\t\t, parameters: declaration.parameters.map(parameter => ({ name: parameter.name }))\n\t\t\t\t, ...refinements ? { refinements } : {}\n\t\t\t};\n\t\t})\n\t};\n\tconst source = generateCompiledPhpWasmLeanAdapters(model).leanSource;\n\tassert.doesNotMatch(source, /\\bundefined\\b/u);\n\tassert.match(source, /opaque recovery_[a-f0-9]+/u);\n\tassert.match(source, /opaque reject_[a-f0-9]+/u);\n\tconst carriers = callableValidatorCarriers(source);\n\tassert.ok(carriers.length > 0);\n\tassert.ok(carriers.some(entry => entry.index === 1\n\t\t&& entry.carrier === \"_root_.Array _root_.Nat\"));\n\tfor(const entry of carriers)\n\t\tassert.equal(entry.carrier, entry.expected\n\t\t\t, `${entry.wrapper}_refinement_${entry.index}`);\n});\n\n",
+          "previous": "",
+          "start": 10560
+        }
+      ],
+      "path": "tests/php-wasm-recursive-callable-contract.test.mjs",
+      "previousSha256": "950a6adfb81c1c64388e0f388525f5e998b2a4773817923c16e675e47ae40743"
+    }
+  ]
+}

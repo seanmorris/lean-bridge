@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeHostedRefinementVerifierRepairSource, hostedRefinementVerifierRepairChangedPaths, hostedRefinementVerifierRepairIntegrationPaths } from "./hosted-refinement-verifier-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmNominalRefusalRepairSource, callbackFinPhpWasmNominalRefusalRepairChangedPaths, callbackFinPhpWasmNominalRefusalRepairIntegrationPaths } from "./callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPhpSpacePathRepairSource, dependentCheckedRecordPhpSpacePathRepairChangedPaths, dependentCheckedRecordPhpSpacePathRepairIntegrationPaths } from "./dependent-checked-record-php-space-path-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmValidatorRepairSource, callbackFinPhpWasmValidatorRepairChangedPaths, callbackFinPhpWasmValidatorRepairIntegrationPaths } from "./callback-fin-php-wasm-validator-repair-source-history.mjs";
@@ -1933,7 +1934,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinPhpWasmNominalRefusalRepairChangedPaths
+	...hostedRefinementVerifierRepairChangedPaths
+	, ...hostedRefinementVerifierRepairIntegrationPaths
+	, ...callbackFinPhpWasmNominalRefusalRepairChangedPaths
 	, ...callbackFinPhpWasmNominalRefusalRepairIntegrationPaths
 	, ...dependentCheckedRecordPhpSpacePathRepairChangedPaths
 	, ...dependentCheckedRecordPhpSpacePathRepairIntegrationPaths
@@ -2652,9 +2655,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const hostedRefinementVerifierRepair
+		= beforeHostedRefinementVerifierRepairSource(path, text, expected);
+	if(sha256(hostedRefinementVerifierRepair) === expected)
+		return hostedRefinementVerifierRepair;
 	const callbackFinPhpWasmNominalRefusalRepair
 		= beforeCallbackFinPhpWasmNominalRefusalRepairSource(
-			path, text, expected
+			path, hostedRefinementVerifierRepair, expected
 		);
 	if(sha256(callbackFinPhpWasmNominalRefusalRepair) === expected)
 		return callbackFinPhpWasmNominalRefusalRepair;
