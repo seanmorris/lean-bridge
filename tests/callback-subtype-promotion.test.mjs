@@ -154,15 +154,19 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	}
 });
 
-test("callback Subtype promotion replaces both stale Lean-author boundaries", async () => {
-	const [existingPackage, exportDecisions] = await Promise.all([
+test("callback Subtype promotion repairs stale Lean-author and consumer boundaries", async () => {
+	const [existingPackage, exportDecisions, dotnet, java, witWasi]
+		= await Promise.all([
 		readFile("docs/lean/existing-package.md", "utf8")
 		, readFile("docs/lean/export-decisions.md", "utf8")
-	]);
+		, readFile("docs/consume/dotnet.md", "utf8")
+		, readFile("docs/consume/java.md", "utf8")
+		, readFile("docs/consume/wit-wasi.md", "utf8")
+		]);
 	const rendered = renderCallbackSubtypeLeanAuthorDocs({
-		existingPackage, exportDecisions
+		existingPackage, exportDecisions, dotnet, java, witWasi
 	});
-	for(const source of Object.values(rendered))
+	for(const source of [rendered.existingPackage, rendered.exportDecisions])
 	{
 		assert.match(source, /callback-subtype-promotion-20261022\.md/u);
 		assert.match(source, /all sixteen non-PHP-Wasm/u);
@@ -172,10 +176,31 @@ test("callback Subtype promotion replaces both stale Lean-author boundaries", as
 	}
 	assert.doesNotMatch(rendered.existingPackage
 		, /\.NET, JVM, native PHP and WIT\/WASI remain separate work/u);
+	assert.match(rendered.existingPackage
+		, /Directional `Subtype` inside callback signatures \| Node, TypeScript, Chromium, Firefox, WebKit, React and workers installed/u);
+	assert.match(rendered.existingPackage, /for `Fin` and selected `Subtype`/u);
+	assert.match(rendered.existingPackage, /with_recovery\(callback, value\)/u);
+	assert.match(rendered.existingPackage, /Runtime::Callback/u);
+	assert.match(rendered.existingPackage, /Nested callbacks/u);
+	assert.match(rendered.existingPackage
+		, /PHP-Wasm callback positions, retained or asynchronous callbacks and owned checked records remain separate/u);
 	assert.match(rendered.exportDecisions
 		, /The result expires with the selected input owner/u);
+	for(const source of Object.values(rendered))
+	{
+		assert.doesNotMatch(source, /Installed refined-callback acceptance/u);
+		assert.doesNotMatch(source, /Refined\ncallbacks, owned/u);
+	}
+	assert.match(rendered.dotnet
+		, /Retained or asynchronous refined callbacks and owned Subtypes remain pending/u);
+	assert.match(rendered.java
+		, /Retained or asynchronous refined callbacks, owned, recursive/u);
+	assert.match(rendered.witWasi
+		, /Retained or asynchronous refined callbacks/u);
 	assert.throws(() => renderCallbackSubtypeLeanAuthorDocs({
 		existingPackage: rendered.existingPackage
 		, exportDecisions: rendered.exportDecisions
-	}), /Expected one documentation marker/u);
+		, dotnet: rendered.dotnet, java: rendered.java
+		, witWasi: rendered.witWasi
+	}), /Expected one documentation (?:marker|statement)/u);
 });
