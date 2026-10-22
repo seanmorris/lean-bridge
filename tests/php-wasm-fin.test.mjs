@@ -59,6 +59,7 @@ import "./helpers/php-wasm-refinement-entry-documentation-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-documentation-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-documentation-precision-source-history-tests.mjs";
 import "./helpers/zero-payload-matrix-closure-source-history-tests.mjs";
+import "./helpers/callback-subtype-retained-packages-source-history-tests.mjs";
 import "./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs";
 import "./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs";
 import "./helpers/recursive-php-wasm-evidence-replay-repair-source-history-tests.mjs";

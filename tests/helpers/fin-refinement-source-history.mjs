@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from "./callback-subtype-retained-packages-source-history.mjs";
 import { beforeRecursivePhpWasmEvidenceReplayRepairSource, recursivePhpWasmEvidenceReplayRepairChangedPaths } from "./recursive-php-wasm-evidence-replay-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHostedArchiversChangedPaths } from "./owned-checked-record-hosted-archivers-source-history.mjs";
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
@@ -1927,7 +1928,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...recursivePhpWasmEvidenceReplayRepairChangedPaths
+	...callbackSubtypeRetainedPackagesChangedPaths
+	, ...recursivePhpWasmEvidenceReplayRepairChangedPaths
 	, ...ownedCheckedRecordHostedArchiversChangedPaths
 	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
@@ -2637,9 +2639,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeRetainedPackages
+		= beforeCallbackSubtypeRetainedPackagesSource(
+			path, text, expected
+		);
+	if(sha256(callbackSubtypeRetainedPackages) === expected)
+		return callbackSubtypeRetainedPackages;
 	const recursivePhpWasmEvidenceReplayRepair
 		= beforeRecursivePhpWasmEvidenceReplayRepairSource(
-			path, text, expected
+			path, callbackSubtypeRetainedPackages, expected
 		);
 	if(sha256(recursivePhpWasmEvidenceReplayRepair) === expected)
 		return recursivePhpWasmEvidenceReplayRepair;
