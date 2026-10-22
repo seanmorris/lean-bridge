@@ -7,7 +7,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { createMetadataRequest } from "../src/analyze/elaborated-metadata.mjs";
-import { createElaboratedSemanticModel, elaboratedComponent, sourceApiIdentity } from "../src/analyze/semantic-model.mjs";
+import {
+	createElaboratedSemanticModel, createOwnedElaboratedSemanticModel, elaboratedComponent, sourceApiIdentity
+} from "../src/analyze/semantic-model.mjs";
 import { createNativeModel } from "../src/build/native-model.mjs";
 import { projectPerlNames } from "../src/backends/perl/naming.mjs";
 
@@ -94,4 +96,42 @@ test("shared lowering rejects stale reports, forged ABI types and invalid select
 	assert.deepEqual(empty.document.declarations, []);
 	assert.equal(empty.semanticSha256, null);
 	assert.throws(() => sourceApiIdentity(empty.document), /non-empty/);
+});
+
+test("a bare produced checked record stays bare in copied builds and explicit in owned builds", () => {
+	const heap = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const policy = { ownership: "lease", disposal: "required", fallback: "queued-finalizer", cycles: "reject" };
+	const ticket = { kind: "resource", name: "Sample.Ticket", lean: "Sample.Ticket", module: "Sample", abi: heap };
+	const result = (input, owned) => {
+		const projection = input.metadata.modules[0].declarations[0].projection;
+		const claim = { kind: "record", name: "Sample.Claim", lean: "Sample.Claim"
+			, constructor: "Sample.Claim.mk", abi: heap
+			, fields: [...owned ? [{ name: "holder", projection: "Sample.Claim.holder", type: ticket }] : []
+				, { name: "value", projection: "Sample.Claim.value", type: projection.result }]
+			, erased: ["bounded"] };
+		const root = { kind: "reference", name: claim.name, lean: claim.lean, abi: heap };
+		projection.result = owned ? { kind: "owned-graph", root, types: [claim], policy, abi: heap }
+			: { kind: "graph", root, types: [claim], abi: heap };
+		return claim.fields.map(field => ({ name: field.name, refinement: null }));
+	};
+	// A copied build keeps a top-level produced record bare: Lean already holds its proof and
+	// the copied reviewed contracts pin that decision.
+	const copied = native();
+	result(copied, false);
+	const plain = lower(copied).document.declarations[0];
+	assert.equal(Object.hasOwn(plain.source.extensions, "lean-lang.org/refinements"), false);
+	// An owned build names the same occurrence explicitly so its carrier erases the record.
+	const owned = native();
+	const { metadata: context, ...selection } = owned.sourceIdentity.request;
+	owned.sourceIdentity.request = createMetadataRequest({ ...selection
+		, resources: ["Sample.Ticket"], ownedAggregates: policy }, context);
+	owned.metadata.producer.invocationIdentitySha256 = owned.sourceIdentity.request.metadata.invocationIdentitySha256;
+	const fields = result(owned, true);
+	const explicit = createOwnedElaboratedSemanticModel({ metadata: owned.metadata
+		, request: owned.sourceIdentity.request, component
+		, elaborationSha256: "9".repeat(64) }).document.declarations[0];
+	assert.deepEqual(explicit.source.extensions["lean-lang.org/refinements"], {
+		parameters: [null]
+		, result: { kind: "checked-record", name: "Sample.Claim", constructor: null, fields }
+	});
 });
