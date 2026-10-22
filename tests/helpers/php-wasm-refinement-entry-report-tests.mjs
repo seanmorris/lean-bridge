@@ -147,7 +147,11 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 			schemaVersion: 1, scope: "separate-instrumented-probe"
 			, selected: selection.selected
 			, definitionCounts: Object.fromEntries(selection.selected.map(item => [item.symbol, 1]))
-			, compiled, commands, linked: true, modelSha256: sha256(modelBytes)
+			, compiled
+			, headers: []
+			, commands
+			, linked: true
+			, modelSha256: sha256(modelBytes)
 			, component: { id: "component", wasmLibrary: library }
 			, library, packageSetSha256
 		};
@@ -158,7 +162,7 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 		save(prefix + "commands.json", canonicalJson({
 			selected: observation.selected
 			, definitionCounts: observation.definitionCounts
-			, compiled, commands, linked: true
+			, compiled, headers: [], commands, linked: true
 		}));
 		save(prefix + "c-inputs/1-probe.c", cInput);
 		save(prefix + "c-probes/1-probe.c", instrumented.source);

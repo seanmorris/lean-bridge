@@ -28,21 +28,56 @@ const save = async (root, path, bytes) => {
  * @param options - Retained record root and underlying process runner.
  */
 export const createPhpWasmRefinementEntryBuildObserver = options => {
-	const { recordRoot, runner } = options;
+	const { recordRoot, runner, headerInputs = [] } = options;
 	assert.equal(typeof recordRoot, "string"); assert.ok(runner?.capture);
-	const compiled = [], commands = [], counts = new Map();
-	let selected = null, linked = false;
+	assert.ok(Array.isArray(headerInputs));
+	assert.equal(new Set(headerInputs).size, headerInputs.length);
+	for(const path of headerInputs)
+		assert.match(path, /^[A-Za-z_][A-Za-z0-9_.-]*(?:\/[A-Za-z_][A-Za-z0-9_.-]*)*$/u);
+	const compiled = [], headers = [], commands = [], counts = new Map();
+	let selected = null, linked = false, headerProbeRoot = null;
 	const select = entries => {
 		assert.equal(selected, null, "entry selection is bound once");
 		validateSubtypeEntrySelection(entries); selected = structuredClone(entries);
 		for(const item of selected) counts.set(item.symbol, 0);
 		return structuredClone(selected);
 	};
+	const instrumentHeaders = async args => {
+		if(!headerInputs.length) return null;
+		if(headers.length) return headerProbeRoot;
+		const roots = args.flatMap((item, index) => item === "-I" ? [args[index + 1]] : []);
+		const matches = [];
+		for(const root of roots)
+		{
+			try
+			{
+				await Promise.all(headerInputs.map(path => readFile(join(root, path))));
+				matches.push(root);
+			}
+			catch(error)
+			{ if(error.code !== "ENOENT") throw error; }
+		}
+		assert.equal(matches.length, 1, "one closed generated header root required");
+		const originalRoot = matches[0], probeRoot = join(recordRoot, "header-probes");
+		headerProbeRoot = probeRoot;
+		for(const path of headerInputs)
+		{
+			const originalPath = join(originalRoot, path), original = await readFile(originalPath, "utf8");
+			const { source, receipt } = instrumentSubtypeCEntries(original, selected);
+			await save(recordRoot, `header-inputs/${path}`, original);
+			await save(recordRoot, `header-probes/${path}`, source);
+			for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
+				counts.set(item.symbol, counts.get(item.symbol) + 1);
+			headers.push({ path, originalPath, probePath: join(probeRoot, path), ...receipt });
+		}
+		return probeRoot;
+	};
 	const capture = async request => {
 		const args = [...request.args];
 		if(basename(request.command) === "emcc" && args.includes("-c"))
 		{
 			assert.ok(selected, "entry selection precedes C compilation");
+			const headerRoot = await instrumentHeaders(args);
 			const originalPath = args[args.indexOf("-c") + 1], original = await readFile(originalPath, "utf8");
 			const { source, receipt } = instrumentSubtypeCEntries(original, selected);
 			const name = `${compiled.length + 1}-${basename(originalPath)}`;
@@ -52,7 +87,8 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 			for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
 				counts.set(item.symbol, counts.get(item.symbol) + 1);
 			args[args.indexOf("-c") + 1] = probePath;
-			args.push("-iquote", dirname(originalPath)
+			args.push(...headerRoot ? ["-iquote", headerRoot] : []
+				, "-iquote", dirname(originalPath)
 				, `-ffile-prefix-map=${resolve(recordRoot)}=/build/php-wasm-refinement-entry-probe`);
 			const command = { command: request.command, originalArgs: request.args, probeArgs: args };
 			commands.push(command);
@@ -73,6 +109,11 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 				assert.deepEqual(identity(await readFile(item.objectPath)), item.object);
 				assert.ok(args.includes(item.objectPath));
 			}
+			for(const item of headers)
+			{
+				assert.equal(sha256(await readFile(item.originalPath)), item.originalSha256);
+				assert.equal(sha256(await readFile(item.probePath)), item.probeSha256);
+			}
 			commands.push({ command: request.command, originalArgs: request.args, probeArgs: args });
 			linked = true;
 		}
@@ -81,11 +122,13 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 	const transcript = () => ({
 		selected: selected === null ? null : structuredClone(selected)
 		, definitionCounts: Object.fromEntries(counts)
-		, compiled: structuredClone(compiled), commands: structuredClone(commands)
+		, compiled: structuredClone(compiled), headers: structuredClone(headers)
+		, commands: structuredClone(commands)
 		, linked
 	});
 	const snapshot = () => {
 		assert.ok(selected && linked, "completed entry-observer link required");
+		assert.equal(headers.length, headerInputs.length, "every selected generated header is retained");
 		return {
 			schemaVersion: 1, scope: "separate-instrumented-probe"
 			, ...transcript()

@@ -63,3 +63,63 @@ test("compiler-input observer refuses a missing definition before linking", asyn
 	assert.throws(() => value.observer.snapshot(), /completed/u);
 	assert.equal(value.observer.transcript().linked, false);
 });
+
+test("compiler-input observer overlays and restores generated owned headers", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-entry-header-observer-"));
+	t.after(() => rm(root, { recursive: true }));
+	const input = join(root, "input"), include = join(input, "owned");
+	const records = join(root, "records"), objects = join(root, "objects");
+	await mkdir(include, { recursive: true }); await mkdir(records); await mkdir(objects);
+	await writeFile(join(include, "owned-values-codec.h")
+		, '#include "owned-leases.h"\nstatic inline int native_adapter(int x) { return x; }\n');
+	await writeFile(join(include, "owned-leases.h")
+		, "static inline int owner_move(int x) { return x; }\n");
+	await writeFile(join(input, "zend.c")
+		, '#include "owned-values-codec.h"\nstatic ZEND_FUNCTION(lg_call0) { RETURN_NULL(); }\n');
+	const selection = [
+		{ symbol: "native_adapter", kind: "adapter", label: "Probe.native" }
+		, { symbol: "owner_move", kind: "adapter", label: "Probe.owner" }
+		, { symbol: "lg_call0", kind: "public", label: "Probe.call" }
+	];
+	const runner = { capture: async request => {
+		if(request.args.includes("-c"))
+		{
+			const probe = request.args[request.args.indexOf("-iquote") + 1];
+			assert.match(await readFile(join(probe, "owned-values-codec.h"), "utf8")
+				, /LB_SUBTYPE_ENTRY_V1 enter adapter Probe\.native/u);
+			assert.match(await readFile(join(probe, "owned-leases.h"), "utf8")
+				, /LB_SUBTYPE_ENTRY_V1 enter adapter Probe\.owner/u);
+			await writeFile(request.args[request.args.indexOf("-o") + 1]
+				, await readFile(request.args[request.args.indexOf("-c") + 1]));
+		}
+		return { stdout: "", stderr: "", code: 0 };
+	} };
+	const observer = createPhpWasmRefinementEntryBuildObserver({
+		recordRoot: records, runner
+		, headerInputs: ["owned-values-codec.h", "owned-leases.h"]
+	});
+	observer.select(selection);
+	await observer.capture({
+		command: "/tool/emcc"
+		, args: [
+			"-I", include, "-c", join(input, "zend.c"), "-o", join(objects, "zend.o")
+		]
+	});
+	await observer.capture({
+		command: "/tool/emcc"
+		, args: [
+			"-sSIDE_MODULE=2", join(objects, "zend.o"), "-o", join(root, "probe.so")
+		]
+	});
+	const observation = observer.snapshot();
+	assert.deepEqual(observation.definitionCounts, {
+		native_adapter: 1, owner_move: 1, lg_call0: 1
+	});
+	assert.equal(observation.headers.length, 2);
+	for(const item of observation.headers)
+	{
+		const original = await readFile(join(records, "header-inputs", item.path), "utf8");
+		const probe = await readFile(join(records, "header-probes", item.path), "utf8");
+		assert.equal(restoreSubtypeCEntries(probe, item), original);
+	}
+});

@@ -16,7 +16,13 @@ const exact = (value, keys, label) => {
 const validatePlan = plan => {
 	exact(plan, ["scope", "family", "selected", "cases"], "entry plan");
 	require(plan.scope === "separate-instrumented-probe", "entry plan scope");
-	require(["nominal-full", "nominal-result-only", "recursive-subtype", "recursive-checked-record"].includes(plan.family), "entry plan family");
+	require([
+		"nominal-full"
+		, "nominal-result-only"
+		, "recursive-subtype"
+		, "recursive-checked-record"
+		, "owned-subtype", "owned-checked-record"
+	].includes(plan.family), "entry plan family");
 	require(Array.isArray(plan.selected) && plan.selected.length > 0, "entry plan selection");
 	require(Array.isArray(plan.cases) && plan.cases.length > 0, "entry plan cases");
 	const controls = new Set();
@@ -32,9 +38,31 @@ const validatePlan = plan => {
 		const count = kind => item.call.entries.filter(entry => entry.kind === kind).length;
 		for(const kind of ["validator", "constructor", "adapter", "source"])
 			require(item.call.counts[kind] === count(kind), `entry ${kind} count`);
+		const owned = plan.family.startsWith("owned-");
 		if(item.outcome === "accepted")
-			require(item.call.counts.adapter === 1 && item.call.counts.source > 0, "accepted entry reaches adapter and source");
-		else require(item.call.counts.adapter === 0 && item.call.counts.source === 0, "refused entry stops before adapter");
+		{
+			require(item.call.counts.source > 0, "accepted entry reaches its source");
+			if(owned)
+			{
+				require(item.call.entries.some(entry => entry.kind === "adapter"
+					&& entry.label === `${item.call.publicName}:native`), "owned acceptance reaches its native adapter");
+				require(item.call.entries.some(entry => entry.kind === "adapter"
+					&& entry.label === `${item.call.publicName}:lean`), "owned acceptance reaches its Lean adapter");
+			}
+			else require(item.call.counts.adapter === 1, "copied acceptance reaches one adapter");
+		}
+		else
+		{
+			require(item.call.counts.source === 0, "refused entry stops before its source");
+			if(owned)
+			{
+				require(item.call.entries.some(entry => entry.kind === "adapter"
+					&& entry.label === `${item.call.publicName}:native`), "owned refusal reaches its native adapter");
+				require(!item.call.entries.some(entry => entry.kind === "adapter"
+					&& entry.label === `${item.call.publicName}:lean`), "owned refusal stops before its Lean adapter");
+			}
+			else require(item.call.counts.adapter === 0, "copied refusal stops before its adapter");
+		}
 	}
 	return [...controls];
 };

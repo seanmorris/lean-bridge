@@ -21,6 +21,16 @@ import {
 	phpWasmRefinementEntryRoutes, phpWasmRefinementEntrySourceFamilies
 	, phpWasmRefinementEntrySourceFixture
 } from "./php-wasm-refinement-entry-source-fixtures.mjs";
+import {
+	phpWasmOwnedRefinementEntryCaller, phpWasmOwnedRefinementEntryExpected
+	, phpWasmOwnedRefinementEntryFamilies, phpWasmOwnedRefinementEntryRequest
+	, phpWasmOwnedRefinementEntryRoutes
+} from "./php-wasm-owned-refinement-entry-fixtures.mjs";
+import { phpWasmOwnedRefinementEntryPlan } from "./php-wasm-owned-refinement-entry-plan.mjs";
+import { phpWasmOwnedRefinementEntrySelection } from "./php-wasm-owned-refinement-entry-selection.mjs";
+import {
+	phpWasmOwnedRefinementEntrySourceDefinition
+} from "./php-wasm-owned-refinement-entry-source-fixtures.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
 import { instrumentSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
 import { parseSubtypeEntryTrace } from "./php-wasm-subtype-entry-trace.mjs";
@@ -35,6 +45,27 @@ const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 const safePath = path => typeof path === "string" && path.length > 0
 	&& !path.startsWith("/") && !path.includes("\\") && !/[\0\r\n]/u.test(path)
 	&& path.split("/").every(part => part && part !== "." && part !== "..");
+const allFamilies = [...phpWasmRefinementEntrySourceFamilies, ...phpWasmOwnedRefinementEntryFamilies];
+const ownedFamily = family => phpWasmOwnedRefinementEntryFamilies.includes(family);
+assert.deepEqual(phpWasmOwnedRefinementEntryRoutes, phpWasmRefinementEntryRoutes);
+const sourceDefinition = family => ownedFamily(family)
+	? phpWasmOwnedRefinementEntrySourceDefinition(family)
+	: phpWasmRefinementEntrySourceFixture(family);
+const selectEntries = (family, model, sourceEntries) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntrySelection(model, sourceEntries)
+	: phpWasmGraphRefinementEntrySelection(model, sourceEntries);
+const planEntries = (family, selection) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource)
+	: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
+const caller = (family, mode) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntryCaller(family, mode)
+	: phpWasmRefinementEntryCaller(family, mode);
+const expectedObservation = (family, cases) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntryExpected(family, cases)
+	: phpWasmRefinementEntryExpected(family, cases);
+const requestFor = (family, arrangement, plan) => ownedFamily(family)
+	? phpWasmOwnedRefinementEntryRequest(family, arrangement, plan)
+	: phpWasmRefinementEntryRequest(family, arrangement, plan);
 
 /**
  * Parse the closed report-checker CLI selection.
@@ -52,7 +83,7 @@ export const parsePhpWasmRefinementEntryReportArgs = args => {
 		const key = option.slice(2); assert.ok(!Object.hasOwn(selected, key)); selected[key] = value;
 	}
 	assert.deepEqual(Object.keys(selected).sort(), ["directory", "family", "producer", "route"]);
-	assert.ok(phpWasmRefinementEntrySourceFamilies.includes(selected.family));
+	assert.ok(allFamilies.includes(selected.family));
 	assert.ok(phpWasmRefinementEntryRoutes.includes(selected.route));
 	assert.match(selected.producer, /^[a-f0-9]{40}$/u);
 	assert.ok(!selected.directory.startsWith("--"));
@@ -76,7 +107,7 @@ export const parsePhpWasmRefinementEntryReportArgs = args => {
 export const checkPhpWasmRefinementEntryReport = async (records, {
 	family, route, producerCommit
 }) => {
-	assert.ok(phpWasmRefinementEntrySourceFamilies.includes(family));
+	assert.ok(allFamilies.includes(family));
 	assert.ok(phpWasmRefinementEntryRoutes.includes(route));
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
 	const { paths, read } = records;
@@ -113,7 +144,7 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 	]) assert.equal(report[flag], true, flag);
 	assert.equal(report.independentBuilds, 2);
 	validatePackageSetReceipt(summary.receipt);
-	const marker = phpWasmRefinementEntrySourceFixture(family);
+	const marker = sourceDefinition(family);
 	const original = execFileSync("git", ["show", `${producerCommit}:${marker.path}`], {
 		maxBuffer: 16 * 1024 * 1024
 	}).toString();
@@ -133,24 +164,29 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 		const model = JSON.parse(modelBytes); assert.equal(modelBytes.toString(), canonicalJson(model));
 		const observation = await json(prefix + "observation.json");
 		exact(observation, [
-			"schemaVersion", "scope", "selected", "definitionCounts", "compiled"
+			"schemaVersion"
+			, "scope"
+			, "selected"
+			, "definitionCounts"
+			, "compiled"
+			, "headers"
 			, "commands", "linked", "modelSha256", "component", "library"
 			, "packageSetSha256"
 		], `build ${index} observation`);
 		assert.equal(observation.schemaVersion, 1);
 		assert.equal(observation.scope, report.scope); assert.equal(observation.linked, true);
 		assert.equal(observation.modelSha256, sha256(modelBytes));
-		const selected = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries);
+		const selected = selectEntries(family, model, sourceProbe.entries);
 		assert.deepEqual(observation.selected, selected.selected);
 		assert.deepEqual(observation.definitionCounts
 			, Object.fromEntries(selected.selected.map(item => [item.symbol, 1])));
-		const plan = phpWasmRefinementEntryPlan(family, selected.selected, selected.generated.leanSource);
+		const plan = planEntries(family, selected);
 		assert.deepEqual(report.entryPlan, plan);
 		const commands = await json(prefix + "commands.json");
 		assert.deepEqual(commands, {
 			selected: observation.selected
 			, definitionCounts: observation.definitionCounts
-			, compiled: observation.compiled
+			, compiled: observation.compiled, headers: observation.headers
 			, commands: observation.commands, linked: true
 		});
 		assert.ok(observation.compiled.length > 0);
@@ -171,6 +207,19 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 			exact(compiled.object, ["bytes", "sha256"], "compiled object identity");
 			assert.ok(Number.isSafeInteger(compiled.object.bytes) && compiled.object.bytes > 0);
 			digest(compiled.object.sha256);
+		}
+		for(const header of observation.headers)
+		{
+			assert.ok(safePath(header.path));
+			const inputPath = `${prefix}header-inputs/${header.path}`;
+			const probePath = `${prefix}header-probes/${header.path}`;
+			expectedPaths.add(inputPath); expectedPaths.add(probePath);
+			const input = await bytes(inputPath), probe = await bytes(probePath);
+			const reconstructed = instrumentSubtypeCEntries(input.toString(), observation.selected);
+			assert.deepEqual(probe, Buffer.from(reconstructed.source));
+			assert.equal(header.originalSha256, sha256(input));
+			assert.equal(header.probeSha256, sha256(probe));
+			assert.deepEqual(header.insertions, reconstructed.receipt.insertions);
 		}
 		assert.deepEqual(summary.observations[index], observation);
 		assert.equal(observation.packageSetSha256, sha256(canonicalJson(summary.receipt)));
@@ -199,7 +248,7 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 	assert.equal(summary.receipt.profiles.length, 1);
 	assert.equal(summary.receipt.profiles[0].id, "php-wasm-copied-v1");
 	assert.equal(summary.receipt.profiles[0].bindingIrSha256, builds[0].model.bindingIrSha256);
-	const expected = phpWasmRefinementEntryExpected(family, report.entryPlan.cases);
+	const expected = expectedObservation(family, report.entryPlan.cases);
 	assert.deepEqual(report.observation, expected);
 	const tuples = phpWasm.executions.map(item =>
 		`${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort();
@@ -241,13 +290,13 @@ export const checkPhpWasmRefinementEntryReport = async (records, {
 	deployed("driver.mjs", driver); deployed("entry-trace.mjs", traceParser);
 	for(const mode of ["weak", "strict"])
 	{
-		const source = await phpWasmRefinementEntryCaller(family, mode);
+		const source = await caller(family, mode);
 		assert.equal(phpWasm.consumerSources[mode], sha256(source));
 		deployed(mode + ".php", Buffer.from(source));
 	}
 	for(const arrangement of ["embedded", "composer"])
 	{
-		const request = phpWasmRefinementEntryRequest(family, arrangement, report.entryPlan);
+		const request = requestFor(family, arrangement, report.entryPlan);
 		assert.equal(phpWasm.requests[arrangement], sha256(request));
 		deployed(`request-${arrangement}.json`, Buffer.from(request));
 	}

@@ -115,3 +115,39 @@ test("graph refinement entry driver refuses trace and plan drift", async () => {
 		, { status: 1 }
 	]) await assert.rejects(driver(faults));
 });
+
+test("entry driver admits owned native/Lean layers while preserving refusal boundary", async () => {
+	const ownedSelected = [
+		{ symbol: "lgo_call0", kind: "public", label: "echoClaim" }
+		, { symbol: "native", kind: "adapter", label: "echoClaim:native" }
+		, { symbol: "guard", kind: "validator", label: "owned:guard" }
+		, { symbol: "constructor", kind: "constructor", label: "Owned.mkClaim" }
+		, { symbol: "lean", kind: "adapter", label: "echoClaim:lean" }
+		, { symbol: "source", kind: "source", label: "Owned.echoClaim" }
+	];
+	const entries = ownedSelected.slice(1).map(({ kind, label }) => ({ kind, label }));
+	const ownedCall = { publicName: "echoClaim", entries
+		, counts: { validator: 1, constructor: 1, adapter: 2, source: 1 } };
+	const ownedPlan = {
+		scope: "separate-instrumented-probe", family: "owned-checked-record"
+		, selected: ownedSelected
+		, cases: [{ control: "accepted", outcome: "accepted", call: ownedCall }] };
+	const ownedTrace = "LB_SUBTYPE_ENTRY_V1 begin public echoClaim\n"
+		+ entries.map(entry => `LB_SUBTYPE_ENTRY_V1 enter ${entry.kind} ${entry.label}\n`).join("")
+		+ "LB_SUBTYPE_ENTRY_V1 end public echoClaim\n";
+	const { value } = await driver({ plan: ownedPlan, trace: ownedTrace });
+	assert.equal(value.entryProbe.calls, 1);
+	assert.deepEqual(value.entryProbe.counts, ownedCall.counts);
+	const refusedEntries = entries.slice(0, 3);
+	const refused = { ...ownedPlan, cases: [{
+		control: "refused", outcome: "refused"
+		, call: { publicName: "echoClaim", entries: refusedEntries
+			, counts: { validator: 1, constructor: 1, adapter: 1, source: 0 } } }] };
+	const refusedTrace = "LB_SUBTYPE_ENTRY_V1 begin public echoClaim\n"
+		+ refusedEntries.map(entry => `LB_SUBTYPE_ENTRY_V1 enter ${entry.kind} ${entry.label}\n`).join("")
+		+ "LB_SUBTYPE_ENTRY_V1 end public echoClaim\n";
+	assert.equal((await driver({ plan: refused, trace: refusedTrace })).value.entryProbe.calls, 1);
+	await assert.rejects(driver({ plan: { ...ownedPlan, cases: [{ ...ownedPlan.cases[0]
+		, outcome: "refused" }] }
+		, trace: ownedTrace }));
+});
