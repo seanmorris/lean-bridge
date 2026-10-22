@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryGeneratorClosureSource, phpWasmRefinementEntryGeneratorClosureChangedPaths } from "./php-wasm-refinement-entry-generator-closure-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocumentationReadinessChangedPaths } from "./callback-subtype-documentation-readiness-source-history.mjs";
 import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from "./callback-subtype-test-registration-source-history.mjs";
 import { beforeCallbackSubtypeReviewRepairSource, callbackSubtypeReviewRepairChangedPaths } from "./callback-subtype-review-repair-source-history.mjs";
@@ -1919,7 +1920,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeDocumentationReadinessChangedPaths
+	...phpWasmRefinementEntryGeneratorClosureChangedPaths
+	, ...callbackSubtypeDocumentationReadinessChangedPaths
 	, ...callbackSubtypeTestRegistrationChangedPaths
 	, ...callbackSubtypeReviewRepairChangedPaths
 	, ...callbackSubtypePromotionContractChangedPaths
@@ -2621,9 +2623,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryGeneratorClosure
+		= beforePhpWasmRefinementEntryGeneratorClosureSource(
+			path, text, expected
+		);
+	if(sha256(phpWasmRefinementEntryGeneratorClosure) === expected)
+		return phpWasmRefinementEntryGeneratorClosure;
 	const callbackSubtypeDocumentationReadiness
 		= beforeCallbackSubtypeDocumentationReadinessSource(
-			path, text, expected
+			path, phpWasmRefinementEntryGeneratorClosure, expected
 		);
 	if(sha256(callbackSubtypeDocumentationReadiness) === expected)
 		return callbackSubtypeDocumentationReadiness;

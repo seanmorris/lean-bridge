@@ -1,0 +1,93 @@
+{
+  "additions": [
+    {
+      "currentSha256": "92343c36329cebc3e632b4e720c181f5389714783ea218357d19832150b9bb5d",
+      "path": "scripts/update-php-wasm-refinement-entry-generator-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "6d877ee0006cef6ad2949aa640f16026f5be1d25a4292450a96a798a781f04ee",
+      "path": "tests/helpers/php-wasm-refinement-entry-generator-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8662ebbf6b2ac30a922c41c58e3c13e982edda986079be82aa16e4c14d2bf9a7",
+      "path": "tests/helpers/php-wasm-refinement-entry-generator-closure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "4ac6688f7d925312da8e4a1ff4da9a09d4a76ea8",
+  "integrationUpdates": [
+    {
+      "currentSha256": "81accf910162d02750166c2e82fcd065094e4d40f0887638eabe1e6540de7fb0",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryGeneratorClosureSource, phpWasmRefinementEntryGeneratorClosureChangedPaths } from \"./php-wasm-refinement-entry-generator-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryGeneratorClosureChangedPaths\n\t, ...callbackSubtypeDocumentationReadinessChangedPaths\n",
+          "previous": "\t...callbackSubtypeDocumentationReadinessChangedPaths\n",
+          "start": 147294
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryGeneratorClosure\n\t\t= beforePhpWasmRefinementEntryGeneratorClosureSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(phpWasmRefinementEntryGeneratorClosure) === expected)\n\t\treturn phpWasmRefinementEntryGeneratorClosure;\n",
+          "previous": "",
+          "start": 179295
+        },
+        {
+          "current": "\t\t\tpath, phpWasmRefinementEntryGeneratorClosure, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 179640
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3ef04953163234413fad0c6b6aea83c2e94f751907c9ed669a821b57c145ca76"
+    },
+    {
+      "currentSha256": "aa22ac11f7a29b0e2010dbd867c6ae3b6723c8cca9495f097b3a92b2baae412d",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-generator-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "f40a2e7dba9f75811be0b0bf47e2a75b92a101898e23a2ff6ee41005379064bf"
+    }
+  ],
+  "milestone": "php-wasm-refinement-entry-generator-closure-v1",
+  "predecessorCommit": "fcec9453137799bea805c347313f1c361093d0d8",
+  "schemaVersion": 1,
+  "scope": "Keep the documented 28-route, 26-artifact PHP-Wasm entry-measurement boundary inside the checked type-reference generator and preserve it across callback Subtype promotion.",
+  "updates": [
+    {
+      "currentSha256": "7cf971f237738c19f65ae0c20828fe4fe2d5ad5ffed86d19c98f528559661f1a",
+      "edits": [
+        {
+          "current": "const phpWasmRefinementEntryBoundary = `PHP-Wasm refinement support is established by unmodified prepared packages.\nThe separate entry-measurement probes instrument fixture packages only: their\n24 copied, owned and indexed routes count validator, constructor, adapter and\nLean-source entries, while four callback routes record callback control totals.\nTogether they form 28 ordinary/reviewed routes in 26 retained artifacts and do\nnot widen any type-support cell. The configured [promotion\nworkflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)\nis not a hosted result; entry counts become hosted evidence only when a\ncompleted run publishes a verified summary for one revision.`;\n",
+          "previous": "",
+          "start": 8750
+        },
+        {
+          "current": "\t\t\t, phpWasmRefinementEntryBoundary\n\t\t\t, \"\"\n",
+          "previous": "",
+          "start": 40283
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "d26d805643b920c854370e6a98019fc609f71d8c0194acc144c17b2d05b44249"
+    },
+    {
+      "currentSha256": "19d88e312482d7791865a1b1b3a2732e1090bfaddb58f71cf91a42fc6dd4493c",
+      "edits": [
+        {
+          "current": "\tfor(const source of [before.reference, after.reference])\n\t{\n\t\tassert.match(source, /28 ordinary\\/reviewed routes in 26 retained artifacts/u);\n\t\tassert.match(source, /do\\s+not widen any type-support cell/u);\n\t\tassert.match(source, /is not a hosted result/u);\n\t}\n",
+          "previous": "",
+          "start": 5824
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "abace23688b06f29d6c0107b75504992092ccf7c708883564391903ec40ecf3e"
+    }
+  ]
+}
