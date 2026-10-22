@@ -191,12 +191,11 @@ test("callback Subtype promotion repairs stale Lean-author and consumer boundari
 		assert.doesNotMatch(source, /Installed refined-callback acceptance/u);
 		assert.doesNotMatch(source, /Refined\ncallbacks, owned/u);
 	}
-	assert.match(rendered.dotnet
-		, /Retained or asynchronous refined callbacks and owned Subtypes remain pending/u);
-	assert.match(rendered.java
-		, /Retained or asynchronous refined callbacks, owned, recursive/u);
-	assert.match(rendered.witWasi
-		, /Retained or asynchronous refined callbacks/u);
+	for(const source of [rendered.dotnet, rendered.java, rendered.witWasi])
+		assert.match(source
+			, /Synchronous `Fin` callbacks, retained or asynchronous refined callbacks/u);
+	assert.match(rendered.exportDecisions
+		, /Synchronous `Fin` callbacks outside C\/C\+\+/u);
 	assert.throws(() => renderCallbackSubtypeLeanAuthorDocs({
 		existingPackage: rendered.existingPackage
 		, exportDecisions: rendered.exportDecisions

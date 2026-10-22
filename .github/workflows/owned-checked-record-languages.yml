@@ -107,6 +107,9 @@ jobs:
           rg '^# fail 0$' build/owned-checked-record-language-ci/acceptance.log
           rg '^# skipped 0$' build/owned-checked-record-language-ci/acceptance.log
           test -s build/owned-checked-record-language-packaging/report.json
+          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
+            test -s "build/owned-checked-record-language-packaging/evidence/$route/package-set-receipt.json"
+          done
       - name: Preserve language acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -114,7 +117,7 @@ jobs:
           name: owned-checked-record-${{ matrix.profile }}-${{ github.sha }}
           path: |
             build/owned-checked-record-language-ci/
-            build/owned-checked-record-language-packaging/report.json
+            build/owned-checked-record-language-packaging/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed language acceptance

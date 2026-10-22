@@ -23,7 +23,9 @@ const insertBeforeParagraph = (source, start, paragraph) => {
 const replaceExact = (source, current, replacement) => {
 	assert.equal(source.split(current).length, 2
 		, `Expected one documentation statement: ${current}`);
-	return source.replace(current, replacement);
+	const offset = source.indexOf(current);
+	return source.slice(0, offset) + replacement
+		+ source.slice(offset + current.length);
 };
 
 const existingPackageStart
@@ -61,18 +63,18 @@ export const renderCallbackSubtypeLeanAuthorDocs = ({
 	, exportDecisions: replaceExact(insertBeforeParagraph(exportDecisions
 		, exportDecisionsStart, exportDecisionsReplacement)
 	, "Refined\ncallbacks, owned and recursive Subtypes, and Subtype fields in generic records\nremain unfinished."
-	, "Retained or asynchronous refined callbacks, owned and recursive Subtypes,\nand Subtype fields in generic records remain unfinished.")
+	, "Synchronous `Fin` callbacks outside C/C++, retained or asynchronous refined\ncallbacks, owned and recursive Subtypes, and Subtype fields in generic records\nremain unfinished.")
 	, dotnet: replaceExact(replaceExact(dotnet
 		, "Installed refined-callback acceptance and owned Subtypes remain pending. These local"
-		, "Retained or asynchronous refined callbacks and owned Subtypes remain pending. These local")
+		, "Synchronous `Fin` callbacks, retained or asynchronous refined callbacks and owned Subtypes remain pending. These local")
 	, "Installed refined-callback acceptance, owned, recursive,\ndependent and broader generic Subtypes still need separate acceptance."
-	, "Retained or asynchronous refined callbacks, owned, recursive, dependent and\nbroader generic Subtypes still need separate acceptance.")
+	, "Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned,\nrecursive, dependent and broader generic Subtypes still need separate acceptance.")
 	, java: replaceExact(java
 		, "Installed refined-callback acceptance, owned, recursive, dependent and broader\ngeneric Subtypes still need acceptance."
-		, "Retained or asynchronous refined callbacks, owned, recursive, dependent and broader\ngeneric Subtypes still need acceptance.")
+		, "Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned,\nrecursive, dependent and broader generic Subtypes still need acceptance.")
 	, witWasi: replaceExact(replaceExact(witWasi
 		, "Installed refined-callback acceptance,\nowned values, recursive graphs, dependent and broader generic Subtypes, plus"
-		, "Retained or asynchronous refined callbacks, owned values, recursive graphs,\ndependent and broader generic Subtypes, plus")
+		, "Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned\nvalues, recursive graphs, dependent and broader generic Subtypes, plus")
 	, "Subtype fields in nominal records or variants, installed refined-callback acceptance and\nowned Subtypes remain unsupported."
-	, "Retained or asynchronous refined callbacks and owned Subtypes remain unsupported.")
+	, "Synchronous `Fin` callbacks, retained or asynchronous refined callbacks and owned\nSubtypes remain unsupported.")
 });

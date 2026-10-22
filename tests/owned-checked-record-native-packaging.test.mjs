@@ -25,7 +25,9 @@ import { ownedCheckedRecordFixture } from "./helpers/owned-checked-record-fixtur
 import {
 	ownedCheckedRecordNativeRoutes, ownedCheckedRecordNativeSelection
 } from "./helpers/owned-checked-record-native-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	copyPackageSetHandoff, retainPackageSetEvidence
+} from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_NATIVE_TEST === "1";
 const routeVariable = "LEAN_BRIDGE_OWNED_CHECKED_RECORD_NATIVE_ROUTES";
@@ -64,6 +66,9 @@ test("owned checked-record native acceptance is a required recurring job", async
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-native-packaging/report.json"
+		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
+		, "test -s \"build/owned-checked-record-native-packaging/evidence/$route/package-set-receipt.json\""
+		, "build/owned-checked-record-native-packaging/"
 		, "name: owned-checked-record-native-${{ github.sha }}"
 	]) assert.ok(source.includes(required), required);
 	assert.doesNotMatch(source, /continue-on-error:\s*true/u);
@@ -203,7 +208,11 @@ for(const route of routes)
 				, "archives", projection.packages[0].archive)));
 			await rm(reassembled, { recursive: true, force: true });
 		}
-		const receipt = await copyPackageSetHandoff(output, handoff);
+		const evidenceRoot = join("build/owned-checked-record-native-packaging"
+			, "evidence", route);
+		const retained = await retainPackageSetEvidence(output, evidenceRoot);
+		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
 		});
@@ -247,6 +256,9 @@ for(const route of routes)
 				, cpp: resultOnly ? "raii" : "raii-plus-sanitizers" }
 			, bindingIrSha256: built.bindingIrSha256
 			, componentReceipt: verified.receipt
+			, retainedPackageSet: { path: `evidence/${route}`
+				, receiptSha256: retained.receiptSha256
+				, archives: retained.archives, files: retained.files }
 			, packageSetReceipt: receipt, observed, relocated });
 		t.diagnostic(JSON.stringify({ route
 			, c: observed.c.checks, cpp: observed.cpp.checks

@@ -33,7 +33,9 @@ import {
 	ownedCheckedRecordManagedRoutes, ownedCheckedRecordManagedSelection
 	, ownedCheckedRecordManagedTargets
 } from "./helpers/owned-checked-record-managed-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	copyPackageSetHandoff, retainPackageSetEvidence
+} from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST === "1";
 const groupVariable = "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS";
@@ -123,6 +125,9 @@ test("managed owned checked-record consumers are independently authored", async 
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-managed-packaging/${{ matrix.group }}.json"
+		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
+		, "test -s \"build/owned-checked-record-managed-packaging/evidence/${{ matrix.group }}/$route/package-set-receipt.json\""
+		, "build/owned-checked-record-managed-packaging/"
 		, "name: owned-checked-record-managed-${{ matrix.group }}-${{ github.sha }}"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(workflow.includes(required), required);
@@ -296,7 +301,11 @@ for(const group of groups) for(const route of routes)
 		const reassembled = await reassemble({ group, root: scratch, output
 			, environment, settings: selected.configuration.targets[specification.target]
 			, projection });
-		const receipt = await copyPackageSetHandoff(output, handoff);
+		const evidenceRoot = join("build/owned-checked-record-managed-packaging"
+			, "evidence", group, route);
+		const retained = await retainPackageSetEvidence(output, evidenceRoot);
+		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff
 			, "package-set-receipt.json") });
 		await rm(author, { recursive: true, force: true });
@@ -320,6 +329,9 @@ for(const group of groups) for(const route of routes)
 			, handoffRemovedBeforeRelocatedExecution: true
 			, deterministicReassembly: true, immutableInstalledInputs: true
 			, packageSetReceiptSha256: sha256(canonicalJson(receipt))
+			, retainedPackageSet: { path: `evidence/${group}/${route}`
+				, receiptSha256: retained.receiptSha256
+				, archives: retained.archives, files: retained.files }
 			, reassembled, repeated
 			, observations: Object.fromEntries(Object.entries(observations).map(
 				([profile, observed]) => [profile, { checks: observed.checks

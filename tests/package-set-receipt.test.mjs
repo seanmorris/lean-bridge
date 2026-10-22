@@ -13,7 +13,9 @@ import { writeCombinedPackageSet } from "../src/release/package-set-assembly.mjs
 import { runCli } from "../src/cli/run.mjs";
 import { verificationHandler } from "../src/cli/verify.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
-import { copyPackageSetHandoff, createPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	copyPackageSetHandoff, createPackageSetHandoff, retainPackageSetEvidence
+} from "./helpers/package-set.mjs";
 
 test("one closed receipt covers every ordinary package ecosystem and deterministically records its archives", async t => {
 	const handoff = await createPackageSetHandoff(t);
@@ -31,6 +33,30 @@ test("one closed receipt covers every ordinary package ecosystem and determinist
 	const rebuilt = await writePackageSetReceipt({ root: moved, ...handoff.receipt, profiles: [...handoff.receipt.profiles].reverse(), packages: [...handoff.receipt.packages].reverse() });
 	assert.deepEqual(rebuilt, handoff.receipt);
 	assert.deepEqual(await readFile(join(moved, packageSetReceiptName)), await readFile(handoff.receiptPath));
+});
+
+test("retained package evidence is canonical, verified and closed over original archives", async t => {
+	const handoff = await createPackageSetHandoff(t);
+	await assert.rejects(retainPackageSetEvidence(handoff.root
+		, join(handoff.root, "nested-evidence")), /must be disjoint/u);
+	await assert.rejects(retainPackageSetEvidence(handoff.root
+		, join(handoff.root, "..")), /must be disjoint/u);
+	const retained = `${handoff.root}-retained-evidence`;
+	t.after(() => rm(retained, { recursive: true, force: true }));
+	await mkdir(retained, { recursive: true });
+	await writeFile(join(retained, "stale.txt"), "must not survive\n");
+	const evidence = await retainPackageSetEvidence(handoff.root, retained);
+	assert.deepEqual(evidence.receipt, handoff.receipt);
+	assert.equal(evidence.receiptSha256
+		, sha256(await readFile(handoff.receiptPath)));
+	assert.equal(evidence.archives, 17);
+	assert.equal(evidence.files.length, evidence.archives + 2);
+	assert.ok(evidence.files.includes(packageSetReceiptName));
+	assert.ok(evidence.files.includes(`${packageSetReceiptName}.sha256`));
+	assert.ok(!evidence.files.includes("stale.txt"));
+	for(const pkg of handoff.receipt.packages) for(const artifact of pkg.artifacts)
+		assert.deepEqual(await readFile(join(retained, artifact.path))
+			, await readFile(join(handoff.root, artifact.path)));
 });
 
 test("owned npm receipts select their checked compiled profile without changing other targets", async t => {

@@ -4,8 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { copyFile, mkdir, mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { packageSetReceiptName, verifyPackageSetReceipt, writePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
@@ -64,6 +64,59 @@ export const copyPackageSetHandoff = async (source, destination) => {
 		await copyFile(join(source, path), join(destination, path));
 	}
 	return receipt;
+};
+
+const packageSetFiles = receipt => [
+	packageSetReceiptName, `${packageSetReceiptName}.sha256`
+	, ...receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => artifact.path))
+].toSorted();
+
+const regularFiles = async (root, prefix = "") => {
+	const files = [];
+	for(const entry of await readdir(join(root, prefix), { withFileTypes: true }))
+	{
+		const path = prefix ? `${prefix}/${entry.name}` : entry.name;
+		if(entry.isDirectory()) files.push(...await regularFiles(root, path));
+		else
+		{
+			assert.ok(entry.isFile(), `Retained package evidence must be regular: ${path}`);
+			files.push(path);
+		}
+	}
+	return files.toSorted();
+};
+
+/**
+ * Retain the exact closed package set as uploadable evidence.
+ *
+ * The destination is rebuilt from the receipt allowlist, independently
+ * verified, and rejected if it contains anything except the canonical receipt,
+ * its sidecar and the named release archives.
+ *
+ * @param source - Release root containing its package-set receipt.
+ * @param destination - Stable evidence directory outside the consumer root.
+ */
+export const retainPackageSetEvidence = async (source, destination) => {
+	const sourceRoot = resolve(source), destinationRoot = resolve(destination);
+	const disjoint = (left, right) => {
+		const path = relative(left, right);
+		return path === ".." || path.startsWith(`..${sep}`) || isAbsolute(path);
+	};
+	assert.ok(disjoint(sourceRoot, destinationRoot)
+		&& disjoint(destinationRoot, sourceRoot)
+	, "Package evidence and producer roots must be disjoint");
+	await rm(destination, { recursive: true, force: true });
+	const receipt = await copyPackageSetHandoff(source, destination);
+	const receiptPath = join(destination, packageSetReceiptName);
+	const receiptBytes = await readFile(receiptPath);
+	assert.equal(receiptBytes.toString("utf8"), canonicalJson(receipt)
+		, "Retained package receipt must preserve canonical bytes");
+	const verified = await verifyPackageSetReceipt({ receiptPath });
+	const files = await regularFiles(destination);
+	assert.deepEqual(files, packageSetFiles(receipt)
+		, "Retained evidence must contain exactly the receipt-named package set");
+	return { receipt, receiptSha256: sha256(receiptBytes), files
+		, archives: verified.archives };
 };
 
 /**

@@ -33,7 +33,9 @@ import {
 	ownedCheckedRecordLanguageRoutes, ownedCheckedRecordLanguageSelection
 	, ownedCheckedRecordLanguageTargets
 } from "./helpers/owned-checked-record-language-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	copyPackageSetHandoff, retainPackageSetEvidence
+} from "./helpers/package-set.mjs";
 import { installPythonWheel } from "./helpers/python-wheel-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
@@ -135,6 +137,9 @@ test("owned checked-record language consumers and recurring workflow stay regist
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-checked-record-language-packaging/report.json"
+		, "for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do"
+		, "test -s \"build/owned-checked-record-language-packaging/evidence/$route/package-set-receipt.json\""
+		, "build/owned-checked-record-language-packaging/"
 		, "name: owned-checked-record-${{ matrix.profile }}-${{ github.sha }}"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -305,7 +310,11 @@ for(const route of routes)
 			, !resultOnly);
 		const { evidence, reassembled } = await reproduce({ routeRoot: scratch
 			, output, environment, config: selected.configuration, built });
-		const receipt = await copyPackageSetHandoff(output, handoff);
+		const evidenceRoot = join("build/owned-checked-record-language-packaging"
+			, "evidence", route);
+		const retained = await retainPackageSetEvidence(output, evidenceRoot);
+		const receipt = await copyPackageSetHandoff(evidenceRoot, handoff);
+		assert.deepEqual(receipt, retained.receipt);
 		await verifyPackageSetReceipt({
 			receiptPath: join(handoff, "package-set-receipt.json")
 		});
@@ -372,6 +381,9 @@ for(const route of routes)
 						: "drop-plus-explicit-close"]))
 			, bindingIrSha256: built.bindingIrSha256, versions, dependencies
 			, reassembled, packageSetReceipt: receipt
+			, retainedPackageSet: { path: `evidence/${route}`
+				, receiptSha256: retained.receiptSha256
+				, archives: retained.archives, files: retained.files }
 			, componentReceipts: Object.fromEntries(profiles.map(profile =>
 				[profile, evidence[profile].receipt]))
 			, observations: Object.fromEntries(profiles.map(profile => [profile, {
