@@ -204,7 +204,11 @@ test("reviewed owned callbacks preserve exact host and closure checked-record di
 			assert.match(generated.carriers.callbackSource
 				, /_reject\(size_t token, lean_object \*recovery\)[^}]+_state = 1;/u);
 			assert.match(generated.source
-				, /lb_native_callback_take_error\(\) \| lean_bridge_owned_callback_failure_[0-9a-f]{20}\(\)/u);
+				, /refinement_error = lean_bridge_owned_callback_failure_[0-9a-f]{20}\(\);/u);
+			assert.match(generated.source
+				, /if \(refinement_error && !status\) status = LB_OWNED_INVALID;/u);
+			assert.match(generated.source
+				, /else if \(callback_error && !status\) status = OV_CALLBACK;/u);
 			const values = generateOwnedCValues(document, {
 				hostCallbacks: true, publicPrefix: "checked_callback"
 			});

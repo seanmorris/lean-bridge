@@ -305,7 +305,10 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 			, `  lean_object *returned = ${symbol}(${declaration.parameters.length ? declaration.parameters.map((_, i) => `v${i}`).join(", ") : "lean_box(0)"});`
 			, ...options.hostCallbacks ? [
 				"  ov_active_callback_frame = frame.parent; status = frame.status;"
-				, `  if ((lb_native_callback_take_error() | ${callbackFailure}()) && !status) status = OV_CALLBACK;`
+				, "  int callback_error = lb_native_callback_take_error();"
+				, `  int refinement_error = ${callbackFailure}();`
+				, "  if (refinement_error && !status) status = LB_OWNED_INVALID;"
+				, "  else if (callback_error && !status) status = OV_CALLBACK;"
 				, "  if (!status) status = lb_owned_scope_ready(&transaction.scope);"
 			] : ["  status = lb_owned_scope_ready(&transaction.scope);"]
 			, "  if (status) { lean_dec(returned); return ov_abort(&transaction, status); }"
