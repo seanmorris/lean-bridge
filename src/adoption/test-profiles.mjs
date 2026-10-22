@@ -48,6 +48,7 @@ const profileManifest = Object.freeze({
 		, "owned-aggregate-metadata"
 		, "owned-checked-record-foundation"
 		, "owned-checked-record-javascript-packaging"
+		, "owned-checked-record-language-packaging"
 		, "owned-checked-record-native-packaging"
 		, "owned-checked-record-perl-packaging"
 		, "owned-subtype-host-registration-history"

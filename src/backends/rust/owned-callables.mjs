@@ -265,7 +265,7 @@ export const generateOwnedRustCallables = (ir, { dynamic = false, transferredInp
 		publicCalls.push(...copies.publicCalls); helpers.push(...copies.helpers);
 	}
 	const apiSource = [conversions.valuesSource
-		, ...((!receivers && !callbackAnchors) || (hostCallbacks && c.callbacks.length)) ? ["/// A typed failure-path value for Lean cleanup, never a successful callback reply."
+		, ...hostCallbacks && c.callbacks.length ? ["/// A typed failure-path value for Lean cleanup, never a successful callback reply."
 			, "pub struct WithRecovery<F, R> { function: F, recovery: R }"
 			, "pub fn with_recovery<F, R>(function: F, recovery: R) -> WithRecovery<F, R> { WithRecovery { function, recovery } }"] : []
 		, ...traits, ...publicCalls, ""].join("\n");

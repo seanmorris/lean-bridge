@@ -34,6 +34,7 @@ test("Rust input consumption requires explicit capability and mutable references
 	});
 	assert.ok(refined.c.copies?.some(copy => copy.id === "lean:Owned.Bundle"));
 	assert.equal(refined.c.callbacks.length, 0);
+	assert.doesNotMatch(refined.apiSource, /WithRecovery|with_recovery/u);
 });
 
 for(const mode of ["ordinary", "reviewed"]) test(`Rust inputs move atomically at the real Lean handoff (${mode})`, {
