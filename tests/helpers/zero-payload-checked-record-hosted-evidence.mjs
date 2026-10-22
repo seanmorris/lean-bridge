@@ -102,7 +102,9 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 			`${run.route}/${path}`)
 		, ...[...records.keys()].map(path => prefix + path));
 		expectedMembers.push(...retainedRoutePaths.map(path =>
-			`${contract.artifactRoot}/${run.route}/${path}`)
+			contract.artifactRetainedPath
+				? contract.artifactRetainedPath(run.route, path)
+				: `${contract.artifactRoot}/${run.route}/${path}`)
 		, ...[...records.keys()].map(path => contract.artifactRecordPath
 			? contract.artifactRecordPath(run.route, path)
 			: `${contract.artifactRoot}/${run.route}/records/${run.route}/${path}`));

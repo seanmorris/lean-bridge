@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53825548,
+          "path": "archives/dependentrecords-1.0.0-c.tar.gz",
+          "sha256": "ed1e4b14cad78ebb37b03402fbcdf3eb57b77c8abfda7e3d77f57c0acdad1fe5"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51753599,
+          "path": "archives/dependentrecords-1.0.0-cpp.tar.gz",
+          "sha256": "9e1aa7918085a69f75cf54b0f4e013d87d30a30e65082e17d9c43b29ed666e9a"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "f15b9797eac92faa334a9fe6a536c17a2232b356df00f2bb7eb44b92119353c0",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "001f6937c3e0521e502fcab875f4c0cc495cd7d5fd46afdc7a35dcc08d4f7308"
+  }
+}

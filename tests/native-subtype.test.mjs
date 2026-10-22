@@ -48,6 +48,7 @@ import "./helpers/nested-checked-record-regression-contract-source-history-tests
 import "./helpers/dependent-checked-record-hosted-failure-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-foundation-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-native-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-native-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-perl-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-perl-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-perl-archive-source-history-tests.mjs";

@@ -1,0 +1,89 @@
+{
+  "contracts": {
+    "DependentRecords.dependentResult": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "DependentRecords.dependentRoundtrip": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "DependentRecords.mkDependent",
+            "fields": [
+              {
+                "name": "bound",
+                "refinement": null
+              },
+              {
+                "name": "below",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "DependentRecords.Dependent"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "DependentRecords.dependentTotal": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy",
+          "refinement": {
+            "constructor": "DependentRecords.mkDependent",
+            "fields": [
+              {
+                "name": "bound",
+                "refinement": null
+              },
+              {
+                "name": "below",
+                "refinement": null
+              }
+            ],
+            "kind": "checked-record",
+            "name": "DependentRecords.Dependent"
+          }
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "DependentRecords.dependentTotal",
+    "DependentRecords.dependentRoundtrip",
+    "DependentRecords.dependentResult"
+  ],
+  "modules": [
+    "DependentRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    }
+  }
+}

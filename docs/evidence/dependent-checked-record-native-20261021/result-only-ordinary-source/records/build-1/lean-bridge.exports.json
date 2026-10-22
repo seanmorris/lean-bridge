@@ -1,0 +1,33 @@
+{
+  "contracts": {
+    "DependentRecords.dependentResult": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "DependentRecords.dependentResult"
+  ],
+  "modules": [
+    "DependentRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "c": {
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "cpp": {
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    }
+  }
+}
