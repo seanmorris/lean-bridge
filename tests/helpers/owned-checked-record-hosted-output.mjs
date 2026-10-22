@@ -44,6 +44,7 @@ export const parseOwnedCheckedRecordTap = text => {
 	for(const line of lines.slice(start + 1))
 	{
 		assert.doesNotMatch(line, /^\s*not ok\b/u, line);
+		assert.doesNotMatch(line, /^Bail out!/u, line);
 		const point = /^ok (\d+) - (.*)$/u.exec(line);
 		if(point)
 		{
@@ -61,7 +62,13 @@ export const parseOwnedCheckedRecordTap = text => {
 			continue;
 		}
 		const comment = /^# (.*)$/u.exec(line);
-		if(!comment || comment[1].startsWith("Subtest: ")) continue;
+		if(!comment)
+		{
+			if(line !== "") assert.equal(plan, null
+				, `Unexpected TAP line after the plan: ${line}`);
+			continue;
+		}
+		if(comment[1].startsWith("Subtest: ")) continue;
 		const counted = /^(\w+) (\d+(?:\.\d+)?)$/u.exec(comment[1]);
 		const totals = [...summaryKeys, "duration_ms"];
 		if(plan !== null && counted && totals.includes(counted[1]))

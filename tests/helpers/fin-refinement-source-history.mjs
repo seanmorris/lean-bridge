@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHostedArchiversChangedPaths } from "./owned-checked-record-hosted-archivers-source-history.mjs";
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
@@ -1925,7 +1926,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...zeroPayloadMatrixClosureChangedPaths
+	...ownedCheckedRecordHostedArchiversChangedPaths
+	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
 	, ...callbackSubtypeDocumentationReviewRepairChangedPaths
@@ -2633,8 +2635,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordHostedArchivers
+		= beforeOwnedCheckedRecordHostedArchiversSource(
+			path, text, expected
+		);
+	if(sha256(ownedCheckedRecordHostedArchivers) === expected)
+		return ownedCheckedRecordHostedArchivers;
 	const zeroPayloadMatrixClosure
-		= beforeZeroPayloadMatrixClosureSource(path, text, expected);
+		= beforeZeroPayloadMatrixClosureSource(
+			path, ownedCheckedRecordHostedArchivers, expected
+		);
 	if(sha256(zeroPayloadMatrixClosure) === expected)
 		return zeroPayloadMatrixClosure;
 	const ownedCheckedRecordPhpWasmRetainedHandoff

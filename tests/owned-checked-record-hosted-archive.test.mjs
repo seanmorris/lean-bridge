@@ -255,6 +255,8 @@ test("owned checked-record TAP parsing accepts only complete npm-prefixed stream
 	assert.throws(() => parseOwnedCheckedRecordTap(stream(["ok 1 - first"
 		, "not ok 2 - second"])));
 	assert.throws(() => parseOwnedCheckedRecordTap(stream(["ok 1 - first"
+		, "Bail out! runner stopped", "ok 2 - second"])));
+	assert.throws(() => parseOwnedCheckedRecordTap(stream(["ok 1 - first"
 		, "ok 3 - second"])));
 	assert.throws(() => parseOwnedCheckedRecordTap(stream(undefined, undefined
 		, ["# tests 2", "# suites 0", "# pass 1", "# fail 0", "# cancelled 0"
@@ -262,6 +264,8 @@ test("owned checked-record TAP parsing accepts only complete npm-prefixed stream
 	assert.throws(() => parseOwnedCheckedRecordTap(stream(undefined, undefined
 		, ["# tests 2", "# pass 2"])));
 	assert.throws(() => parseOwnedCheckedRecordTap(`${stream()}\nTAP version 13`));
+	assert.throws(() => parseOwnedCheckedRecordTap(`${stream()}\ngarbage`)
+		, /Unexpected TAP line after the plan/u);
 });
 
 test("every owned checked-record lane replays a synthetic retained hosted output", async t => {
