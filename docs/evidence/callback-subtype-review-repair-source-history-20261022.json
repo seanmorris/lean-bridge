@@ -1,0 +1,280 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c158d8bdbd6a2ccd3ed384e51ff99fc1633607814fc0a3a0b1b64e0534cb5327",
+      "path": "scripts/update-callback-subtype-review-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1019ba367eb7609f1c3a24354cb7394191e86143af20a66f3916bdcfe6653e48",
+      "path": "tests/callback-subtype-hosted-evidence.test.mjs"
+    },
+    {
+      "currentSha256": "18599c88b427fcafdd5d4ac5bd5983c69ca000bb016abea66357630fad80f021",
+      "path": "tests/helpers/callback-subtype-review-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f25634965476d524f75b5a1c7536454a29554cab9fcc57920f52d761da2035cb",
+      "path": "tests/helpers/callback-subtype-review-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "3eb6a6976f8e0da61fed1ed370cefbc0f08f94a7",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b04b2a85591f7c6f2891b3c3dae5c7fb78aaddc723eb782e40050abe930f54a5",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeReviewRepairSource, callbackSubtypeReviewRepairChangedPaths } from \"./callback-subtype-review-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeReviewRepairChangedPaths\n\t, ...callbackSubtypePromotionContractChangedPaths\n",
+          "previous": "\t...callbackSubtypePromotionContractChangedPaths\n",
+          "start": 146761
+        },
+        {
+          "current": "\tconst callbackSubtypeReviewRepair\n\t\t= beforeCallbackSubtypeReviewRepairSource(path, text, expected);\n\tif(sha256(callbackSubtypeReviewRepair) === expected)\n\t\treturn callbackSubtypeReviewRepair;\n",
+          "previous": "",
+          "start": 178599
+        },
+        {
+          "current": "\t\t\tpath, callbackSubtypeReviewRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 178883
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f01563d89c824dce7b340bb8156558e16910900861a308ad228e8498627ef094"
+    },
+    {
+      "currentSha256": "acbf178d932cad48a151dc443e33f89789e830c47ba6eb0ce7e37a2cc73ec5c6",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-review-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "d36c0f461a7912fe68f933aa2b17605d0bdf848d9a1203cbeb7145acc26b4c25"
+    }
+  ],
+  "milestone": "callback-subtype-review-repair-v1",
+  "predecessorCommit": "583415c670087eb6a2433518ff2ddce049fb6fc5",
+  "schemaVersion": 1,
+  "scope": "Close callback Subtype archive source inputs, bind retained API and output bytes, preserve exact promotion notes and baseline, and name all eight immutable replay gates.",
+  "updates": [
+    {
+      "currentSha256": "1f6aa1cb66c3b87283f77003033f9524798e8431ec5399230efa29c6ea188e72",
+      "edits": [
+        {
+          "current": "import { fileURLToPath } from \"node:url\";\n",
+          "previous": "",
+          "start": 450
+        },
+        {
+          "current": "const repository = fileURLToPath(new URL(\"..\", import.meta.url));\nprocess.chdir(repository);\n\n",
+          "previous": "",
+          "start": 1414
+        },
+        {
+          "current": "const statusArgs = [\"-C\", repository, \"status\", \"--porcelain=v1\"\n\t, \"--untracked-files=all\", \"--\", \".\"];\nconst status = execFileSync(\"git\", statusArgs, { encoding: \"utf8\" });\nassert.equal(status, \"\"\n\t, \"Archive generation requires a clean tracked and untracked source tree\");\nconst revisionArgs = [\"-C\", repository, \"rev-parse\", \"HEAD\"];\nconst archiveCommit = execFileSync(\n\t\"git\", revisionArgs, { encoding: \"utf8\" }\n).trim();\n",
+          "previous": "assert.doesNotThrow(() => execFileSync(\n\t\"git\", [\"diff\", \"--quiet\", \"HEAD\", \"--\"], { stdio: \"ignore\" }\n), \"Archive generation requires a clean tracked source tree\");\nconst archiveCommit = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], {\n\tencoding: \"utf8\"\n}).trim();\n",
+          "start": 5099
+        }
+      ],
+      "path": "scripts/archive-callback-subtype-evidence.mjs",
+      "previousSha256": "a49f4f65fa0d7984a43b887bc677faad4263d53cc2a3fdb6e13046012dca50cf"
+    },
+    {
+      "currentSha256": "6566dd808b1bda6d4c0147e178c70f04b968deb33d2087a2b65433cba2656f45",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "",
+          "start": 236
+        },
+        {
+          "current": "import { sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "",
+          "start": 403
+        },
+        {
+          "current": "import {\n\tassertCallbackSubtypeHostedApiBinding\n\t, assertCallbackSubtypeHostedOutputSet\n\t, callbackSubtypeHostedApiRecords\n\t, reconstructCallbackSubtypeHostedArtifact\n} from \"./helpers/callback-subtype-hosted-evidence.mjs\";\n",
+          "previous": "",
+          "start": 622
+        },
+        {
+          "current": "const commonSources = Object.freeze([\n\t[\"producer\", \"src/backends/c/gmp.source.tar.xz\"]\n\t, [\"producer\", \"src/build/ResolveLakeWorkspace.lean\"]\n\t, [\"checker\", \".github/actions/bounded-apt/action.yml\"]\n\t, [\"checker\", \"scripts/bootstrap-toolchains.sh\"]\n]);\nconst laneSources = Object.freeze({\n\tbrowser: [\n\t\t[\"checker\", \"flake.lock\"], [\"checker\", \"flake.nix\"]\n\t\t, [\"checker\", \"scripts/build-lean-link-spike.sh\"]\n\t\t, [\"checker\", \"scripts/install-playwright-browsers.sh\"]\n\t]\n\t, native: []\n\t, languages: [\n\t\t[\"producer\", \"src/backends/rust/dependencies.lock\"]\n\t\t, [\"checker\", \"scripts/bootstrap-rust-ci.sh\"]\n\t]\n\t, perl: [\n\t\t...[\"Build.pm\", \"BuildCallbackResults.pm\", \"Runtime.pm\", \"Runtime.xs\"\n\t\t\t, \"runtime.h\"].map(path => [\"producer\", `src/backends/perl/${path}`])\n\t\t, [\"checker\", \"scripts/build-perl-toolchains.mjs\"]\n\t]\n\t, dotnet: [], jvm: [], \"php-native\": []\n\t, \"wit-wasi\": [[\"checker\", \"flake.lock\"], [\"checker\", \"flake.nix\"]]\n});\n",
+          "previous": "",
+          "start": 1245
+        },
+        {
+          "current": "\t\tfor(const [role, path] of [...commonSources, ...laneSources[lane]])\n\t\t\tassert.ok(sources.some(item => item.role === role\n\t\t\t\t&& item.path === path), `${lane}/${role}/${path}`);\n",
+          "previous": "",
+          "start": 3107
+        },
+        {
+          "current": "\ntest(\"callback Subtype evidence binds its index to retained API bytes\", () => {\n\tconst api = {\n\t\trun: { bytes: Buffer.from(\"run\"), sha256: sha256(\"run\") }\n\t\t, job: { bytes: Buffer.from(\"job\"), sha256: sha256(\"job\") }\n\t\t, artifact: {\n\t\t\tbytes: Buffer.from(\"artifact\"), sha256: sha256(\"artifact\")\n\t\t}\n\t};\n\tconst hostedRun = {\n\t\trepository: \"seanmorris/lean-bridge\", workflow: \"workflow.yml\"\n\t\t, runId: 11, runAttempt: 2, event: \"push\", url: \"https://example/run\"\n\t\t, createdAt: \"created\", updatedAt: \"updated\"\n\t\t, job: { id: 12, name: \"job\", labels: [\"ubuntu-24.04\"]\n\t\t\t, runnerName: \"runner\", runnerGroup: \"group\"\n\t\t\t, startedAt: \"started\", completedAt: \"completed\" }\n\t\t, artifact: { id: 13, name: \"artifact\", bytes: 8\n\t\t\t, sha256: sha256(\"artifact\"), apiDigest: `sha256:${sha256(\"artifact\")}`\n\t\t\t, createdAt: \"created\", expiresAt: \"expires\" }\n\t};\n\tconst index = { hostedRun: {\n\t\t...hostedRun, apiRecords: callbackSubtypeHostedApiRecords(api)\n\t\t, artifact: { ...hostedRun.artifact, members: [], parts: [] }\n\t} };\n\tconst hosted = { hostedRun, api };\n\tassert.doesNotThrow(() =>\n\t\tassertCallbackSubtypeHostedApiBinding(index, hosted));\n\tconst runTamper = structuredClone(index);\n\trunTamper.hostedRun.runId++;\n\tassert.throws(() =>\n\t\tassertCallbackSubtypeHostedApiBinding(runTamper, hosted));\n\tconst apiTamper = structuredClone(index);\n\tapiTamper.hostedRun.apiRecords.run.bytes++;\n\tassert.throws(() =>\n\t\tassertCallbackSubtypeHostedApiBinding(apiTamper, hosted));\n});\n\ntest(\"callback Subtype evidence closes the retained output set\", () => {\n\tconst index = { files: [\n\t\t{ path: \"hosted/output/a.txt\" }, { path: \"hosted/output/b/c.txt\" }\n\t\t, { path: \"hosted/api/run.json\" }\n\t] };\n\tassert.doesNotThrow(() => assertCallbackSubtypeHostedOutputSet(\n\t\tindex, [\"b/c.txt\", \"a.txt\"]));\n\tassert.throws(() => assertCallbackSubtypeHostedOutputSet(\n\t\t{ files: [...index.files, { path: \"hosted/output/extra.txt\" }] }\n\t\t, [\"b/c.txt\", \"a.txt\"]));\n});\n\ntest(\"callback Subtype ZIP reconstruction rejects a changed part\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"callback-subtype-part-test-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst bytes = Buffer.from(\"authenticated artifact bytes\");\n\tawait writeFile(join(root, \"0000.part\"), bytes);\n\tconst part = {\n\t\tpath: \"0000.part\", offset: 0, bytes: bytes.length\n\t\t, sha256: sha256(bytes)\n\t};\n\tconst output = join(root, \"valid.zip\");\n\tassert.equal(await reconstructCallbackSubtypeHostedArtifact(\n\t\troot, [part], output), bytes.length);\n\tassert.deepEqual(await readFile(output), bytes);\n\tawait assert.rejects(reconstructCallbackSubtypeHostedArtifact(\n\t\troot, [{ ...part, sha256: \"0\".repeat(64) }], join(root, \"bad.zip\")));\n});\n",
+          "previous": "",
+          "start": 4038
+        }
+      ],
+      "path": "tests/callback-subtype-hosted-archive.test.mjs",
+      "previousSha256": "ad0700ceb33f85109814dacd87d5b9db2dabbe18f6e4b52cc11fcc883b80f47a"
+    },
+    {
+      "currentSha256": "310fc442d66c4fb8568fb2bb5a7b3ee6899b25e6b74d222ac69679ffca2486f1",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 134
+        },
+        {
+          "current": "const promotionPredecessor = \"9f5f9825ff48afa0e052a204f3dcd8bcdb0c47eb\";\nconst baselineArgs = [\"show\"\n\t, `${promotionPredecessor}:docs/type-surface.v1.json`];\nconst baseline = execFileSync(\n\t\"git\", baselineArgs, { encoding: \"utf8\", maxBuffer: 512 * 1024 ** 2 }\n);\nconst document = JSON.parse(baseline);\nconst [irSchema, consumers] = await Promise.all([\n\treadJson(\"schema/binding-ir.schema.json\")\n",
+          "previous": "const [document, irSchema, consumers] = await Promise.all([\n\treadJson(\"docs/type-surface.v1.json\")\n\t, readJson(\"schema/binding-ir.schema.json\")\n",
+          "start": 610
+        },
+        {
+          "current": "\t\t\t{\n",
+          "previous": "",
+          "start": 2456
+        },
+        {
+          "current": "\t\t\t\tassert.doesNotMatch(stage.note\n\t\t\t\t\t, /pending|not claimed|no complete/iu, cell.id);\n\t\t\t}\n",
+          "previous": "",
+          "start": 2511
+        },
+        {
+          "current": "\tassert.match(summary, /stops callback entry/u);\n\tassert.doesNotMatch(summary, /suppresses later callbacks/u);\n",
+          "previous": "",
+          "start": 4604
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "689f4046a340b1380aa1836771dab855e8b839b87a0148f66d18db3a3f84dfc2"
+    },
+    {
+      "currentSha256": "18d0bc2f70c213d8896564d9ffe42cd09221af33a4d9c5ae568d46e3768a3a3b",
+      "edits": [
+        {
+          "current": "\t, \"src/backends/c/gmp.source.tar.xz\"\n\t, \"src/build/ResolveLakeWorkspace.lean\"\n];\nconst checkerCommon = [\n\t\".github/actions/bounded-apt/action.yml\"\n\t, \"scripts/bootstrap-toolchains.sh\", \"scripts/env.sh\"\n",
+          "previous": "",
+          "start": 1625
+        },
+        {
+          "current": "\t\t, checkerAssets: [\"flake.lock\", \"flake.nix\"\n\t\t\t, \"scripts/build-lean-link-spike.sh\"\n\t\t\t, \"scripts/install-playwright-browsers.sh\"]\n",
+          "previous": "",
+          "start": 2173
+        },
+        {
+          "current": "\t\t, producerAssets: [\"src/backends/rust/dependencies.lock\"]\n\t\t, checkerAssets: [\"scripts/bootstrap-rust-ci.sh\"]\n",
+          "previous": "",
+          "start": 2959
+        },
+        {
+          "current": "\t\t, producerAssets: [\n\t\t\t\"src/backends/perl/Build.pm\"\n\t\t\t, \"src/backends/perl/BuildCallbackResults.pm\"\n\t\t\t, \"src/backends/perl/Runtime.pm\"\n\t\t\t, \"src/backends/perl/Runtime.xs\"\n\t\t\t, \"src/backends/perl/runtime.h\"\n\t\t]\n\t\t, checkerEntries: [\"scripts/build-perl-toolchains.mjs\"]\n",
+          "previous": "",
+          "start": 3348
+        },
+        {
+          "current": "\t\t, checkerAssets: [\"flake.lock\", \"flake.nix\"]\n",
+          "previous": "",
+          "start": 4860
+        },
+        {
+          "current": "\t\t\t\t, ...(selected.producerAssets ?? [])\n",
+          "previous": "",
+          "start": 6044
+        },
+        {
+          "current": "\t\t\t\t...closure(value.checker, [selected.checker\n\t\t\t\t\t, ...(selected.checkerEntries ?? [])])\n\t\t\t\t, selected.run, selected.workflow, ...checkerCommon\n\t\t\t\t, ...(selected.checkerAssets ?? [])\n",
+          "previous": "\t\t\t\t...closure(value.checker, [selected.checker])\n\t\t\t\t, selected.run, selected.workflow, \"scripts/env.sh\"\n",
+          "start": 6245
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-hosted-evidence-sources.mjs",
+      "previousSha256": "fc0df9e0cee9ec4ba1730668773931da966150c978de2c63754a0ae65800ec2b"
+    },
+    {
+      "currentSha256": "978cc1190e44df47b13b7a150e765bd07f90e64fda0e5f5e1ef2a67ef9d5b59a",
+      "edits": [
+        {
+          "current": "/**\n * Derive the exact retained API-byte receipt from inspected API records.\n *\n * @param api - Inspected GitHub API byte records.\n */\nexport const callbackSubtypeHostedApiRecords = api => Object.fromEntries(\n\tObject.entries(api).map(([name, item]) => [name, {\n\t\tbytes: item.bytes.length, sha256: item.sha256\n\t}])\n);\n\n/**\n * Bind the human-readable hosted-run receipt to the retained API bytes.\n *\n * @param index - Retained evidence index.\n * @param hosted - Independently inspected artifact and API selection.\n */\nexport const assertCallbackSubtypeHostedApiBinding = (index, hosted) => {\n\tconst { apiRecords, artifact: retainedArtifact, ...retainedRun }\n\t\t= index.hostedRun;\n\tconst { members, parts, ...artifact } = retainedArtifact;\n\tassert.ok(Array.isArray(members));\n\tassert.ok(Array.isArray(parts));\n\tassert.deepEqual({ ...retainedRun, artifact }, hosted.hostedRun);\n\tassert.deepEqual(apiRecords\n\t\t, callbackSubtypeHostedApiRecords(hosted.api));\n};\n\n/**\n * Require the retained output tree to equal the authenticated ZIP files.\n *\n * @param index - Retained evidence index.\n * @param paths - Regular files extracted from the original artifact ZIP.\n */\nexport const assertCallbackSubtypeHostedOutputSet = (index, paths) => {\n\tconst retained = index.files.filter(file =>\n\t\tfile.path.startsWith(\"hosted/output/\"))\n\t\t.map(file => file.path.slice(\"hosted/output/\".length)).sort();\n\tassert.deepEqual(retained, [...paths].sort());\n};\n\n",
+          "previous": "",
+          "start": 3307
+        },
+        {
+          "current": "/**\n * Reassemble an exact artifact ZIP from ordered authenticated parts.\n *\n * @param root - Evidence root containing every part.\n * @param parts - Ordered byte ranges from the evidence index.\n * @param target - Fresh output path.\n */\nexport const reconstructCallbackSubtypeHostedArtifact = async (\n\troot, parts, target\n) => {\n",
+          "previous": "const reconstruct = async (root, parts, target) => {\n",
+          "start": 5852
+        },
+        {
+          "current": "\t\tconst bytes = await reconstructCallbackSubtypeHostedArtifact(\n",
+          "previous": "\t\tconst bytes = await reconstruct(\n",
+          "start": 8894
+        },
+        {
+          "current": "\t\tassertCallbackSubtypeHostedApiBinding(index, hosted);\n",
+          "previous": "",
+          "start": 9565
+        },
+        {
+          "current": "\t\tconst extractedPaths = await nativeArtifactPaths(extracted.root);\n\t\tassertCallbackSubtypeHostedOutputSet(index, extractedPaths);\n\t\tfor(const path of extractedPaths)\n",
+          "previous": "\t\tfor(const path of await nativeArtifactPaths(extracted.root))\n",
+          "start": 9757
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-hosted-evidence.mjs",
+      "previousSha256": "436ef941e8f6267ac11415f43a83c72bc7c29b89a8ade4d8b951f7cadd14229b"
+    },
+    {
+      "currentSha256": "4b2b2bb8eb2b5730406f9362323ac9c1cc7175d8ebcc34b22d499b329574df9e",
+      "edits": [
+        {
+          "current": "const promotedStageSubjects = path => ({\n\tanalysis: `Fresh Lean analysis and the ${path} selection preserve every selected constructor in both callback directions.`\n\t, generation: \"Generated proof-free callback types preserve direction and exact typed recovery.\"\n\t, compilation: \"The selected package compiles the Lean callback mirror and host adapter at the recorded release floor.\"\n\t, packaging: \"Two author routes produce source-free packages that install offline before unchanged caller replay.\"\n\t, installedExecution: \"Independent consumers exercise valid values, exact rejection, unchanged caller values and recovery through public package APIs.\"\n});\n\n",
+          "previous": "",
+          "start": 4809
+        },
+        {
+          "current": "The fixture covers selected positive-\\`Nat\\` Subtypes, mixed refined and unrefined arguments, and the admitted option, result and array containers. Rejection preserves caller values, stops callback entry for missing or invalid recovery and leaves the synchronous callable usable for a later valid invocation.\n",
+          "previous": "The fixture covers selected positive-\\`Nat\\` Subtypes, mixed refined and unrefined arguments, and the admitted option, result and array containers. Rejection preserves caller values and the first error, suppresses later callbacks in the same call and leaves the synchronous callable usable for a later valid invocation.\n",
+          "start": 9325
+        },
+        {
+          "current": "\t\t\tconst notes = hostedStageNote(selected);\n\t\t\tconst subjects = promotedStageSubjects(observation.path);\n\t\t\tfor(const [name, stage] of Object.entries(observation.stages))\n",
+          "previous": "\t\t\tfor(const stage of Object.values(observation.stages))\n",
+          "start": 11691
+        },
+        {
+          "current": "\t\t\t\tconst prior = stage.state;\n",
+          "previous": "",
+          "start": 11929
+        },
+        {
+          "current": "\t\t\t\tstage.note = prior === \"passed\"\n\t\t\t\t\t? `${stage.note} ${notes}` : `${subjects[name]} ${notes}`;\n",
+          "previous": "\t\t\t\tstage.note += ` ${hostedStageNote(selected)}`;\n",
+          "start": 12044
+        },
+        {
+          "current": "\t\t\tconst subjects = promotedStageSubjects(path);\n\t\t\tconst stage = name => ({\n",
+          "previous": "\t\t\tconst stage = subject => ({\n",
+          "start": 12711
+        },
+        {
+          "current": "\t\t\t\t, note: `${subjects[name]} ${notes}`\n",
+          "previous": "\t\t\t\t, note: `${subject} ${notes}`\n",
+          "start": 12823
+        },
+        {
+          "current": "\t\t\t\t\tanalysis: stage(\"analysis\")\n\t\t\t\t\t, generation: stage(\"generation\")\n\t\t\t\t\t, compilation: stage(\"compilation\")\n\t\t\t\t\t, packaging: stage(\"packaging\")\n\t\t\t\t\t, installedExecution: stage(\"installedExecution\")\n",
+          "previous": "\t\t\t\t\tanalysis: stage(`Fresh Lean analysis and the ${path} selection preserve every selected constructor in both callback directions.`)\n\t\t\t\t\t, generation: stage(\"Generated proof-free callback types preserve direction and exact typed recovery.\")\n\t\t\t\t\t, compilation: stage(\"The selected package compiles the Lean callback mirror and host adapter at the recorded release floor.\")\n\t\t\t\t\t, packaging: stage(\"Two author routes produce source-free packages that install offline before unchanged caller replay.\")\n\t\t\t\t\t, installedExecution: stage(\"Independent consumers exercise valid values, exact rejection, unchanged caller values and recovery through public package APIs.\")\n",
+          "start": 13261
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-promotion.mjs",
+      "previousSha256": "2b295acca55fba305a1ec44d99c948badbde88f573f2e17d4bafe8dbf1742456"
+    }
+  ]
+}
