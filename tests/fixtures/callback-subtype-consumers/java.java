@@ -21,17 +21,21 @@ final class Consumer {
         catch (Throwable error) { if (kind.isInstance(error)) return kind.cast(error); throw error; }
         throw new AssertionError("expected " + kind.getName());
     }
+    private static boolean refusesInput(Runnable operation) {
+        return reject(IllegalArgumentException.class, operation).getMessage().equals("Invalid native copied input");
+    }
+    private static boolean refusesResult(Runnable operation) {
+        var error = reject(LeanBridgeException.class, operation);
+        return error.status() == 1 && error.getMessage().equals("Host callback result failed its Lean constructor");
+    }
     public static void main(String[] arguments) {
         FnNatToNatHost increment = value -> { calls++; return value.add(ONE); };
         check(Api.callHost(new WithRecovery<>(increment, ONE)).equals(n(2)), "valid host result");
         int before = calls;
-        var recovery = reject(LeanBridgeException.class,
-            () -> Api.callHost(new WithRecovery<>(increment, ZERO)));
-        check(recovery.status() == 1, "invalid recovery status");
+        check(refusesInput(() -> Api.callHost(new WithRecovery<>(increment, ZERO))), "invalid recovery status");
         check(calls == before, "invalid recovery stops callback");
-        var result = reject(LeanBridgeException.class,
-            () -> Api.callHost(new WithRecovery<>((FnNatToNatHost)(_value -> ZERO), ONE)));
-        check(result.status() == 1, "invalid host result status");
+        check(refusesResult(() -> Api.callHost(new WithRecovery<>((FnNatToNatHost)(_value -> ZERO), ONE))),
+            "invalid host result status");
         var sentinel = new IllegalStateException("callback failed");
         check(reject(IllegalStateException.class, () -> Api.callHost(
             new WithRecovery<>((FnNatToNatHost)(_value -> { throw sentinel; }), ONE))) == sentinel,
@@ -39,16 +43,18 @@ final class Consumer {
         check(Api.callHost(new WithRecovery<>((FnNatToNatHost)(value -> value), ONE)).equals(ONE), "host recovery reuse");
         check(Api.callHostMixed(new WithRecovery<>((FnNatNatToNatHost)(marker, value) -> marker.subtract(n(5)).add(value), ONE)).equals(n(3)), "mixed host result");
 
-        try (var closure = Api.makeClosure(n(9))) {
+        var closure = Api.makeClosure(n(9));
+        try {
             check(closure.invoke(n(2)).equals(n(2)), "closure result");
-            check(reject(LeanBridgeException.class, () -> closure.invoke(ZERO)).status() == 1, "closure argument status");
+            check(refusesInput(() -> closure.invoke(ZERO)), "closure argument status");
             check(closure.invoke(n(3)).equals(n(3)), "closure recovery");
             closure.close(); closure.close();
             check(closure.isClosed(), "closure closes idempotently");
         }
+        finally { closure.close(); }
         try (var mixed = Api.makeMixedClosure(ZERO)) {
             check(mixed.invoke(n(9), n(2)).equals(n(2)), "mixed closure result");
-            check(reject(LeanBridgeException.class, () -> mixed.invoke(n(9), ZERO)).status() == 1, "mixed closure argument status");
+            check(refusesInput(() -> mixed.invoke(n(9), ZERO)), "mixed closure argument status");
             check(mixed.invoke(n(9), n(3)).equals(n(3)), "mixed closure recovery");
         }
         System.out.println("callback-subtype-remaining-ok:" + checks);

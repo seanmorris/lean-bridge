@@ -20,6 +20,13 @@ static class Consumer
         catch (T error) { return error; }
         throw new InvalidOperationException("expected " + typeof(T).Name);
     }
+    private static bool RefusesInput(Action operation) =>
+        Reject<ArgumentException>(operation).Message == "Invalid native copied input";
+    private static bool RefusesResult(Action operation)
+    {
+        var error = Reject<LeanBridgeException>(operation);
+        return error.Status == 1 && error.Message == "Host callback result failed its Lean constructor";
+    }
 
     public static void Main()
     {
@@ -27,13 +34,11 @@ static class Consumer
         var increment = new Func<BigInteger, BigInteger>(value => { calls++; return value + 1; });
         Check(Api.CallHost(new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(increment, N(1))) == N(2), "valid host result");
         var before = calls;
-        var recovery = Reject<LeanBridgeException>(() => Api.CallHost(
-            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(increment, BigInteger.Zero)));
-        Check(recovery.Status == 1, "invalid recovery status");
+        Check(RefusesInput(() => Api.CallHost(
+            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(increment, BigInteger.Zero))), "invalid recovery status");
         Check(calls == before, "invalid recovery stops callback");
-        var result = Reject<LeanBridgeException>(() => Api.CallHost(
-            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(_ => BigInteger.Zero, BigInteger.One)));
-        Check(result.Status == 1, "invalid host result status");
+        Check(RefusesResult(() => Api.CallHost(
+            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(_ => BigInteger.Zero, BigInteger.One))), "invalid host result status");
         var sentinel = new InvalidOperationException("callback failed");
         Check(ReferenceEquals(Reject<InvalidOperationException>(() => Api.CallHost(
             new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(_ => throw sentinel, BigInteger.One))), sentinel), "callback exception identity");
@@ -44,7 +49,7 @@ static class Consumer
         using (var closure = Api.MakeClosure(N(9)))
         {
             Check(closure.Invoke(N(2)) == N(2), "closure result");
-            Check(Reject<LeanBridgeException>(() => closure.Invoke(BigInteger.Zero)).Status == 1, "closure argument status");
+            Check(RefusesInput(() => closure.Invoke(BigInteger.Zero)), "closure argument status");
             Check(closure.Invoke(N(3)) == N(3), "closure recovery");
             closure.Dispose(); closure.Dispose();
             Check(closure.IsClosed, "closure closes idempotently");
@@ -52,7 +57,7 @@ static class Consumer
         using (var mixed = Api.MakeMixedClosure(BigInteger.Zero))
         {
             Check(mixed.Invoke(N(9), N(2)) == N(2), "mixed closure result");
-            Check(Reject<LeanBridgeException>(() => mixed.Invoke(N(9), BigInteger.Zero)).Status == 1, "mixed closure argument status");
+            Check(RefusesInput(() => mixed.Invoke(N(9), BigInteger.Zero)), "mixed closure argument status");
             Check(mixed.Invoke(N(9), N(3)) == N(3), "mixed closure recovery");
         }
         Console.WriteLine($"callback-subtype-remaining-ok:{checks}");

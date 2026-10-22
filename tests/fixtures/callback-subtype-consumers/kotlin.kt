@@ -20,18 +20,22 @@ private inline fun <reified T : Throwable> reject(operation: () -> Unit): T {
     }
     error("expected ${T::class.java.name}")
 }
+private fun refusesInput(operation: () -> Unit) =
+    reject<IllegalArgumentException>(operation).message == "Invalid native copied input"
+private fun refusesResult(operation: () -> Unit): Boolean {
+    val error = reject<LeanBridgeException>(operation)
+    return error.status() == 1 && error.message == "Host callback result failed its Lean constructor"
+}
 
 fun main() {
     val increment = FnNatToNatHost { value -> calls++; value + BigInteger.ONE }
     check(Api.callHost(WithRecovery(increment, BigInteger.ONE)) == n(2), "valid host result")
     val before = calls
-    val recovery = reject<LeanBridgeException> { Api.callHost(WithRecovery(increment, BigInteger.ZERO)) }
-    check(recovery.status() == 1, "invalid recovery status")
+    check(refusesInput { Api.callHost(WithRecovery(increment, BigInteger.ZERO)) }, "invalid recovery status")
     check(calls == before, "invalid recovery stops callback")
-    val result = reject<LeanBridgeException> {
+    check(refusesResult {
         Api.callHost(WithRecovery(FnNatToNatHost { BigInteger.ZERO }, BigInteger.ONE))
-    }
-    check(result.status() == 1, "invalid host result status")
+    }, "invalid host result status")
     val sentinel = IllegalStateException("callback failed")
     check(reject<IllegalStateException> {
         Api.callHost(WithRecovery(FnNatToNatHost { throw sentinel }, BigInteger.ONE))
@@ -41,14 +45,14 @@ fun main() {
 
     Api.makeClosure(n(9)).use { closure ->
         check(closure.invoke(n(2)) == n(2), "closure result")
-        check(reject<LeanBridgeException> { closure.invoke(BigInteger.ZERO) }.status() == 1, "closure argument status")
+        check(refusesInput { closure.invoke(BigInteger.ZERO) }, "closure argument status")
         check(closure.invoke(n(3)) == n(3), "closure recovery")
         closure.close(); closure.close()
         check(closure.isClosed, "closure closes idempotently")
     }
     Api.makeMixedClosure(BigInteger.ZERO).use { mixed ->
         check(mixed.invoke(n(9), n(2)) == n(2), "mixed closure result")
-        check(reject<LeanBridgeException> { mixed.invoke(n(9), BigInteger.ZERO) }.status() == 1, "mixed closure argument status")
+        check(refusesInput { mixed.invoke(n(9), BigInteger.ZERO) }, "mixed closure argument status")
         check(mixed.invoke(n(9), n(3)) == n(3), "mixed closure recovery")
     }
     println("callback-subtype-remaining-ok:$checks")
