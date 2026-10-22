@@ -447,6 +447,23 @@ The native FFI adapter supports one to sixteen arguments and a result using prim
 
 The PHP-Wasm Zend adapter accepts the same primitive and finite copied signatures, including recursive values, and the same `arities` settings. It uses the 32-bit mappings in the [PHP conversion table](../php.md#type-conversions), including `BigInteger` for UInt32 and Int64. Both targets preserve the original callback `Throwable` after Lean cleanup. A combined build rejects signatures that any selected target cannot implement.
 
+When a synchronous host callback returns a selected `Subtype`, both targets
+generate `with_recovery($callback, $value)`. Supply a valid value for the exact
+callback result shape. The generated boundary checks that recovery before the
+callback can run, checks the callback's actual reply with the selected Lean
+constructor, and never treats the recovery as successful output. A returned
+Lean closure checks selected `Subtype` inputs before its body runs and remains
+usable after rejection. Host-only callback parameters do not acquire closure
+lease entry points.
+
+The [PHP-Wasm callback Subtype qualification](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md)
+covers ordinary source and independently reviewed Binding IR through reproduced
+Composer API, npm component and npm shared-runtime archives, source removal,
+offline installation, relocation, and twelve Node/Chromium executions per
+route. Publish those archives with the existing
+[PHP-Wasm npm and Composer flow](#php-wasm-with-npm); consumers do not need the
+author project or Lean toolchain.
+
 ### Export structured callbacks
 
 For native PHP and PHP-Wasm, use concrete copied types directly in the callback signature:

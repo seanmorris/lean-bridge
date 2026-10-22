@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "profile": "installed-callback-subtype-php-wasm-local-qualification",
+  "implementationCommit": "6249ba2f4018ecfd4997067806688dff5acfb028",
+  "command": "source scripts/env.sh && LEAN_BRIDGE_PHP_SOURCE=/app/build/php-wasm-sdk/php8.4-src LEAN_BRIDGE_PHP_EMSDK=/app/.toolchains/emsdk-php-wasm LEAN_BRIDGE_PHP_WASM_HOST=/app/build/php-wasm-host/node_modules/php-wasm LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=/app/build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_CALLBACK_SUBTYPE_PHP_WASM_OUTPUT=build/callback-subtype-php-wasm-local npm run test:callback-subtype-php-wasm",
+  "verifier": "node scripts/check-callback-subtype-php-wasm-reports.mjs --directory build/callback-subtype-php-wasm-local --producer 6249ba2f4018ecfd4997067806688dff5acfb028",
+  "scope": "Synchronous copied-value PHP-Wasm host callbacks returning selected Nat Subtypes and returned Lean closures accepting selected Nat Subtypes. Ordinary Lean source and independently reviewed Binding IR each produce two identical package sets, install offline after author-source removal, relocate physically, and execute through weak and strict PHP in startup and lazy Node and Chromium contexts. Scalar, mixed ordinary/checked and admitted Array/Option/Result carriers are covered. Retained or asynchronous host callbacks, arbitrary predicates, recursive or generic refined callback payloads, owned callback payloads, dispatch counts and memory bounds remain separate work. Hosted release-floor acceptance remains gated by the recurring workflow.",
+  "indexSha256": "ff6e50e3f0bd47a59c07c606e6467b043e6b7d97498ec7c6777d250d511db916",
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "runtimePins": {
+    "emscriptenCommit": "ceee49d2ecdab36a3feb85a684f8e5a453dde910",
+    "emscriptenVersion": "3.1.68",
+    "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+    "leanCommit": "f3b06c705e6c85f5314019d5d3baab0fec5b580c",
+    "patchSetSha256": "743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3",
+    "phpCommit": "0454901ed1518cfb42bc77ac91728591b58c3e6e",
+    "phpVersion": "8.4.1",
+    "phpWasmCommit": "bd9a46bf4984bfbdfef4bb6f5b04b7dcd6264c89",
+    "phpWasmVersion": "0.1.0"
+  },
+  "compiler": {
+    "emsdkCommit": "54ef088329e5a329614b3659a579d2ccd31fd621",
+    "files": {
+      "upstream/bin/clang": {
+        "bytes": 141971168,
+        "sha256": "cbac1be8f3026afc67c45beb7baab688a06d548e52ef5d010146160d46618860"
+      },
+      "upstream/bin/wasm-ld": {
+        "bytes": 73912360,
+        "sha256": "af23d9d3f6c30a496f566c817c954de3e9139fa7d2562579cdbbbff8f21caa72"
+      },
+      "upstream/emscripten/em++.py": {
+        "bytes": 506,
+        "sha256": "017f735c953318fdaaa4af68c8d4bf13936a787ddbd5dad804d532b0223b6c2f"
+      },
+      "upstream/emscripten/emcc": {
+        "bytes": 1065,
+        "sha256": "b0c9551f9155fa9c028efa24591acdfd30f02f32fb247cf9266f5f0f2ede7589"
+      },
+      "upstream/emscripten/emcc.py": {
+        "bytes": 62149,
+        "sha256": "16d0198f2a7a843199a886c4bffe4900849c43826a50ed905089bf018f93b190"
+      },
+      "upstream/emscripten/tools/link.py": {
+        "bytes": 133185,
+        "sha256": "20f5ae3672c1647059b887c256f304fe6af3ad314d440e9932d1c7e9042cd4c9"
+      }
+    },
+    "version": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 3.1.68 (ceee49d2ecdab36a3feb85a684f8e5a453dde910)"
+  },
+  "reports": [
+    {
+      "route": "ordinary",
+      "reportSha256": "e133b164cc3225fe08160cff8943cce332fc75092a5cb6e234678282b7b0c09f",
+      "bindingIrSha256": "b0d70a6fe4008305cdc2256ca99c58ba7e9781635b6758aead687a0afb667b9d",
+      "modelSha256": "a787c8a6c91d77edbf61893f06c12ceb7a60cb72ec601e7209a5ae560ac7e05d",
+      "receiptSha256": "548bc9b402a5de9cb825e574869d456d41f5f7d37e14f0b6ba0a932aff9baef8",
+      "packageSetSha256": "4a4e41a4be2288ae1806d6f90b0fc34945f9659bda9e8011a7f9f2e63de7ce32",
+      "independentBuilds": 2,
+      "reproducible": true,
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreeReplay": true,
+      "relocatedInstallation": true,
+      "nodeExecutions": 8,
+      "chromiumExecutions": 4,
+      "observation": {
+        "callback_calls": 8,
+        "checks": 28,
+        "php": "8.4.1",
+        "rejections": 9,
+        "word_bits": 32
+      },
+      "callbackBoundaries": {
+        "cleanup": true,
+        "closure": true,
+        "firstError": true,
+        "host": true,
+        "mixed": true,
+        "nestedContainers": true,
+        "recovery": true,
+        "scalar": true
+      },
+      "archives": [
+        {
+          "role": "api",
+          "ecosystem": "composer",
+          "path": "packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip",
+          "bytes": 85045,
+          "sha256": "0cfd9aec31310d5164949fa1d6ab9b948a1aa0a2a372d069961cc6d677fa8573"
+        },
+        {
+          "role": "runtime",
+          "ecosystem": "npm",
+          "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "role": "component",
+          "ecosystem": "npm",
+          "path": "packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz",
+          "bytes": 157774,
+          "sha256": "76fa22749640da26ae91528060f64c7ff1412b6460c7c2d84e308b396be6adad"
+        }
+      ]
+    },
+    {
+      "route": "reviewed",
+      "reportSha256": "3a733a427ea795f996972f115dae438b24877c43e0dc99b4d6b4e7fcddbfe560",
+      "bindingIrSha256": "924fe992b7960112dcdfbddadcbe1161d33430f1e88d5454d8d73ab0206077d0",
+      "modelSha256": "3851ae88b7519ef68b1f45689bb5511f9f88a91516934fb754b9955da60176fb",
+      "receiptSha256": "34af609f419fa505de7f0e181bbcbf8bf891d112ba19a974deb7f19dc6bb5971",
+      "packageSetSha256": "be6c1cd5327b00b49ceeebfc5246b1b289e64e5c52e1dfecd4c141827f7df2c0",
+      "independentBuilds": 2,
+      "reproducible": true,
+      "sourceRemovedBeforeInstallation": true,
+      "offlineInstall": true,
+      "compilerFreeReplay": true,
+      "relocatedInstallation": true,
+      "nodeExecutions": 8,
+      "chromiumExecutions": 4,
+      "observation": {
+        "callback_calls": 8,
+        "checks": 28,
+        "php": "8.4.1",
+        "rejections": 9,
+        "word_bits": 32
+      },
+      "callbackBoundaries": {
+        "cleanup": true,
+        "closure": true,
+        "firstError": true,
+        "host": true,
+        "mixed": true,
+        "nestedContainers": true,
+        "recovery": true,
+        "scalar": true
+      },
+      "archives": [
+        {
+          "role": "api",
+          "ecosystem": "composer",
+          "path": "packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip",
+          "bytes": 86257,
+          "sha256": "c7e85be4fe38df2be32ccb9bd7b1f98c1fd522224910d0c156783511d0c0f18c"
+        },
+        {
+          "role": "runtime",
+          "ecosystem": "npm",
+          "path": "packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "role": "component",
+          "ecosystem": "npm",
+          "path": "packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz",
+          "bytes": 162476,
+          "sha256": "9c71fa7163ee9b9094e21adc33b6b87cbfcf2e997a505d42b51756c4b2285a5e"
+        }
+      ]
+    }
+  ]
+}

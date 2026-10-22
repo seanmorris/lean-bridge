@@ -15,7 +15,7 @@ import { validateBrickMathInstall } from "./brick-math.mjs";
 import { callbackSubtypeReviewedIr } from "./callback-subtype-fixture.mjs";
 import {
 	adaptCallbackSubtypePhpWasm, callbackSubtypePhpWasmConfiguration
-	, callbackSubtypePhpWasmRequest, callbackSubtypePhpWasmSettings
+	, callbackSubtypePhpWasmRequest
 	, checkCallbackSubtypePhpWasmExecutions, checkCallbackSubtypePhpWasmModel
 } from "./callback-subtype-php-wasm-fixture.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
@@ -28,7 +28,11 @@ export const callbackSubtypePhpWasmDeploymentRecords = Object.freeze([
 	, "weak.php", "strict.php", "request-embedded.json", "request-composer.json"
 ]);
 
-/** Fixed originals required independently of any report claims. */
+/**
+ * Fixed originals required independently of any report claims.
+ *
+ * @param route - Ordinary-source or independently reviewed author route.
+ */
 export const callbackSubtypePhpWasmRecords = route => {
 	assert.ok(["ordinary", "reviewed"].includes(route));
 	return ["report.json", "configuration.json", "reviewed.binding-ir.json"
@@ -46,6 +50,8 @@ export const callbackSubtypePhpWasmRecords = route => {
  *
  * @param read - Route-relative original-record reader.
  * @param options - Expected route and exact producer revision.
+ * @param options.route - Ordinary-source or reviewed author route.
+ * @param options.producerCommit - Exact producer Git revision.
  */
 export const checkCallbackSubtypePhpWasmReport = async (read, { route, producerCommit }) => {
 	assert.ok(["ordinary", "reviewed"].includes(route));
@@ -68,12 +74,20 @@ export const checkCallbackSubtypePhpWasmReport = async (read, { route, producerC
 	assert.equal(report.producerCommit, producerCommit);
 	assert.deepEqual(report.configuration, configuration);
 	assert.deepEqual(json("configuration.json"), configuration);
-	for(const key of ["reproducible", "sourceRemovedBeforeInstallation", "offlineInstall"
+	for(const key of ["reproducible", "sourceRemovedBeforeInstallation"
+		, "offlineInstall"
 		, "compilerFreeReplay", "relocatedInstallation"])
 		assert.equal(report[key], true, key);
 	assert.equal(report.independentBuilds, 2);
-	assert.deepEqual(report.callbackBoundaries, { host: true, closure: true, scalar: true
-		, mixed: true, nestedContainers: true, firstError: true, cleanup: true, recovery: true });
+	assert.deepEqual(report.callbackBoundaries, {
+		host: true
+		, closure: true
+		, scalar: true
+		, mixed: true
+		, nestedContainers: true
+		, firstError: true
+		, cleanup: true
+		, recovery: true });
 	const review = json("reviewed.binding-ir.json");
 	assert.equal(report.reviewedBindingIrSha256, hashBindingIr(review));
 	assert.equal(review.producers.length, 1);
@@ -147,15 +161,24 @@ export const checkCallbackSubtypePhpWasmReport = async (read, { route, producerC
 	validateBrickMathInstall(evidence.composer, evidence.deployment);
 	checkCallbackSubtypePhpWasmExecutions(evidence);
 	assert.deepEqual(report.observation, evidence.executions[0].observation);
+	const browserLibraries = [evidence.component.library, evidence.runtime.library].map(library => {
+		const matches = Object.entries(evidence.deployment)
+			.filter(([path]) => path.endsWith("/" + library));
+		assert.equal(matches.length, 1, library);
+		return matches[0][1];
+	});
 	for(const [index, execution] of evidence.executions.entries())
 	{
 		assert.deepEqual(json(`executions/${index}.json`), execution);
 		if(execution.realm !== "chromium") continue;
 		for(const path of ["browser.mjs", "driver.mjs", "bundled/consumer.mjs"
-			, "node_modules/php-wasm/PhpWeb.mjs", "request-embedded.json", execution.mode + ".php"])
+			, "node_modules/php-wasm/PhpWeb.mjs"
+			, "request-embedded.json"
+			, execution.mode + ".php"])
 			assert.ok(execution.requests.some(request => request.path === path), path);
-		for(const library of [evidence.component.library, evidence.runtime.library])
-			assert.ok(execution.requests.some(request => request.path.endsWith("/" + library)), library);
+		for(const library of browserLibraries)
+			assert.ok(execution.requests.some(request => request.bytes === library.bytes
+				&& request.sha256 === library.sha256), library.sha256);
 	}
 	const handoffReceipt = await read("handoff/package-set-receipt.json");
 	assert.equal(handoffReceipt.toString(), canonicalJson(report.receipt));

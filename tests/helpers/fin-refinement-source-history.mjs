@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypePhpWasmSource, callbackSubtypePhpWasmChangedPaths } from "./callback-subtype-php-wasm-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmSource, ownedCheckedRecordPhpWasmChangedPaths } from "./owned-checked-record-php-wasm-source-history.mjs";
 import { beforeOwnedSubtypePhpWasmQualificationSource, ownedSubtypePhpWasmQualificationChangedPaths } from "./owned-subtype-php-wasm-qualification-source-history.mjs";
 import { beforeOwnedCheckedRecordManagedSource, ownedCheckedRecordManagedChangedPaths } from "./owned-checked-record-managed-source-history.mjs";
@@ -1894,7 +1895,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordPhpWasmChangedPaths
+	...callbackSubtypePhpWasmChangedPaths
+	, ...ownedCheckedRecordPhpWasmChangedPaths
 	, ...ownedSubtypePhpWasmQualificationChangedPaths
 	, ...ownedCheckedRecordManagedChangedPaths
 	, ...ownedCheckedRecordLanguageChangedPaths
@@ -2571,8 +2573,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypePhpWasm
+		= beforeCallbackSubtypePhpWasmSource(path, text, expected);
+	if(sha256(callbackSubtypePhpWasm) === expected)
+		return callbackSubtypePhpWasm;
 	const ownedCheckedRecordPhpWasm
-		= beforeOwnedCheckedRecordPhpWasmSource(path, text, expected);
+		= beforeOwnedCheckedRecordPhpWasmSource(
+			path, callbackSubtypePhpWasm, expected
+		);
 	if(sha256(ownedCheckedRecordPhpWasm) === expected)
 		return ownedCheckedRecordPhpWasm;
 	const ownedSubtypePhpWasmQualification

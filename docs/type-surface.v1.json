@@ -1260898,6 +1260898,89 @@
           "sha256": "a431796573d5626905fd42a0456379b3e926bf654f789c13eb6b928e950ad519"
         }
       ]
+    },
+    {
+      "id": "callback-subtype-php-wasm-local-installed",
+      "kind": "installed",
+      "revision": "6249ba2f4018ecfd4997067806688dff5acfb028",
+      "command": "source scripts/env.sh && LEAN_BRIDGE_PHP_SOURCE=/app/build/php-wasm-sdk/php8.4-src LEAN_BRIDGE_PHP_EMSDK=/app/.toolchains/emsdk-php-wasm LEAN_BRIDGE_PHP_WASM_HOST=/app/build/php-wasm-host/node_modules/php-wasm LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=/app/build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_CALLBACK_SUBTYPE_PHP_WASM_OUTPUT=build/callback-subtype-php-wasm-local npm run test:callback-subtype-php-wasm",
+      "scope": "Ordinary-source and independently reviewed PHP-Wasm packages reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots. Both source-free offline installations are physically relocated before eight Node and four Chromium startup/lazy, weak/strict executions. Every execution passes 28 checks, including exact typed recovery for host callback Subtype results, selected-constructor checks for returned Lean-closure inputs, nested copied containers, original Throwable identity, idempotent cleanup, rejection before callback entry and later-call recovery. This is local wasm32 PHP 8.4.1 acceptance; the recurring workflow remains the hosted release-floor gate.",
+      "files": [
+        {
+          "path": "docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.json",
+          "sha256": "fa3c440a8d38f437dc3f935473fa4df256445cd35b46229182fa948c33d3b100"
+        },
+        {
+          "path": "docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.md",
+          "sha256": "a1d28b3e65c3318e37a9d2f3eb70b60702c28dfb958fd8c6fe82ff8bb07a101b"
+        },
+        {
+          "path": ".github/workflows/callback-subtype-php-wasm.yml",
+          "sha256": "7c7ff2f6ae8ee17961526cfec604ef307060bad5865fc25a52176297f3a8f45a"
+        },
+        {
+          "path": "scripts/check-callback-subtype-php-wasm-reports.mjs",
+          "sha256": "f66e1f018c0cf2a7b648a56c51b89ae12ae717f3bfdb2c6aa62133c6c2699e4f"
+        },
+        {
+          "path": "tests/callback-subtype-php-wasm.test.mjs",
+          "sha256": "736d2a4cae045d9377dc9e2091961bdf6337a77f0fee94ddc9738757395675e0"
+        },
+        {
+          "path": "tests/fixtures/callback-subtype-consumers/php-wasm.php",
+          "sha256": "27cd871f5893b08677797e508c347044d5e262cd570a1b65e1a4b552b4cf1355"
+        },
+        {
+          "path": "tests/helpers/callback-subtype-php-wasm-fixture.mjs",
+          "sha256": "99fcdde7da53f5b19e9a7f1fdb8f8bb42bf908d89e93d2e8049bafb220965c27"
+        },
+        {
+          "path": "tests/helpers/callback-subtype-php-wasm-installed-tests.mjs",
+          "sha256": "6a38eded7ff7f735dce4af9a845d7e59bbc69acc59c46cf47526eb9247f72076"
+        },
+        {
+          "path": "tests/helpers/callback-subtype-php-wasm-report.mjs",
+          "sha256": "355a3836c76e3167c0e8a3cad571d864bcc55b213787cdd824e000b62cce2120"
+        },
+        {
+          "path": "tests/helpers/callback-subtype-php-wasm-tests.mjs",
+          "sha256": "20b7d45eb43cdd1cb2b65430c08a162128734f2bb2b8ee640fce26278ec72b94"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "callback-subtype-php-wasm-local/ordinary/report.json",
+          "sha256": "e133b164cc3225fe08160cff8943cce332fc75092a5cb6e234678282b7b0c09f"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip",
+          "sha256": "0cfd9aec31310d5164949fa1d6ab9b948a1aa0a2a372d069961cc6d677fa8573"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz",
+          "sha256": "76fa22749640da26ae91528060f64c7ff1412b6460c7c2d84e308b396be6adad"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/reviewed/report.json",
+          "sha256": "3a733a427ea795f996972f115dae438b24877c43e0dc99b4d6b4e7fcddbfe560"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip",
+          "sha256": "c7e85be4fe38df2be32ccb9bd7b1f98c1fd522224910d0c156783511d0c0f18c"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "path": "callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz",
+          "sha256": "9c71fa7163ee9b9094e21adc33b6b87cbfcf2e997a505d42b51756c4b2285a5e"
+        }
+      ]
     }
   ],
   "observations": [
@@ -1316334,6 +1316417,136 @@
       },
       "limitations": [
         "Hosted callback checked-record acceptance covers synchronous copied Interval and Weighted records, the Weighted field's selected Nat Subtype, the fixture's option/result/array containers, host callback replies and inputs to returned Lean closures. Retained or asynchronous callbacks, owned records, arbitrary indexed or recursive records, dispatch cost, peak memory and PHP-Wasm remain separate work. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs."
+      ]
+    },
+    {
+      "id": "callback-subtype-php-wasm-ordinary",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "subtype"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "ordinary-source",
+      "scope": "Checked inputs to returned Lean closures and checked results produced by synchronous host callbacks. Host-only callbacks do not expose closure lease functions. Generated PHP uses an exact checked recovery for host-produced selected results.",
+      "hostTypes": {
+        "subtype": {
+          "callback-parameter": "base values checked by the selected constructor in returned-closure inputs",
+          "callback-result": "base values from a host callback checked by Lean with an explicit typed recovery"
+        }
+      },
+      "conversionNotes": {
+        "subtype": "Wrap a host callback that returns a selected Subtype with the generated with_recovery(callback, value). The recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Fresh Lean analysis preserves the selected ordinary-source constructors and both callback directions for PHP-Wasm."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Generated PHP and Zend descriptors retain host-versus-closure direction, checked payloads and exact typed recovery without proof fields."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "The pinned Emscripten toolchain compiles the 32-bit Lean component and selected-constructor boundaries."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "The ordinary-source package set reproduces, installs offline after author-source removal and replays after physical relocation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Installed Node and Chromium callers check acceptance, exact rejection, exception identity, cleanup and recovery on the ordinary-source route."
+        }
+      },
+      "limitations": [
+        "Acceptance covers the fixture's selected Nat Subtypes in synchronous copied-value host callbacks and returned Lean closures on wasm32 PHP 8.4.1. Retained or asynchronous host callbacks, arbitrary predicates, recursive or generic refined callback payloads, owned callback payloads, dispatch cost and memory bounds remain separate work.",
+        "The exact local reports and archive identities are retained. The recurring workflow rebuilds and retains original package handoffs; hosted release-floor acceptance is not claimed by this local evidence."
+      ]
+    },
+    {
+      "id": "callback-subtype-php-wasm-reviewed",
+      "profiles": [
+        "php-wasm"
+      ],
+      "shapes": [
+        "subtype"
+      ],
+      "positions": [
+        "callback-parameter",
+        "callback-result"
+      ],
+      "path": "reviewed-ir",
+      "scope": "Checked inputs to returned Lean closures and checked results produced by synchronous host callbacks. Host-only callbacks do not expose closure lease functions. Generated PHP uses an exact checked recovery for host-produced selected results.",
+      "hostTypes": {
+        "subtype": {
+          "callback-parameter": "base values checked by the selected constructor in returned-closure inputs",
+          "callback-result": "base values from a host callback checked by Lean with an explicit typed recovery"
+        }
+      },
+      "conversionNotes": {
+        "subtype": "Wrap a host callback that returns a selected Subtype with the generated with_recovery(callback, value). The recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body."
+      },
+      "stages": {
+        "analysis": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Fresh Lean analysis preserves the selected reviewed-IR constructors and both callback directions for PHP-Wasm."
+        },
+        "generation": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Generated PHP and Zend descriptors retain host-versus-closure direction, checked payloads and exact typed recovery without proof fields."
+        },
+        "compilation": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "The pinned Emscripten toolchain compiles the 32-bit Lean component and selected-constructor boundaries."
+        },
+        "packaging": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "The reviewed-IR package set reproduces, installs offline after author-source removal and replays after physical relocation."
+        },
+        "installedExecution": {
+          "state": "passed",
+          "evidence": [
+            "callback-subtype-php-wasm-local-installed"
+          ],
+          "note": "Installed Node and Chromium callers check acceptance, exact rejection, exception identity, cleanup and recovery on the reviewed-IR route."
+        }
+      },
+      "limitations": [
+        "Acceptance covers the fixture's selected Nat Subtypes in synchronous copied-value host callbacks and returned Lean closures on wasm32 PHP 8.4.1. Retained or asynchronous host callbacks, arbitrary predicates, recursive or generic refined callback payloads, owned callback payloads, dispatch cost and memory bounds remain separate work.",
+        "The exact local reports and archive identities are retained. The recurring workflow rebuilds and retains original package handoffs; hosted release-floor acceptance is not claimed by this local evidence."
       ]
     }
   ]

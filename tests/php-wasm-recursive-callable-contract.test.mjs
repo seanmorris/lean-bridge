@@ -6,6 +6,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import "./helpers/callback-subtype-php-wasm-source-history-tests.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters, phpWasmGraphCarrierAbi } from "../src/build/php-wasm-graph-model.mjs";
 import { createNativeCallableGraphDescriptor } from "../src/build/native-callable-graph.mjs";

@@ -1,0 +1,383 @@
+{
+  "acceptanceEvidence": {
+    "path": "docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.json",
+    "sha256": "fa3c440a8d38f437dc3f935473fa4df256445cd35b46229182fa948c33d3b100"
+  },
+  "additions": [
+    {
+      "currentSha256": "7c7ff2f6ae8ee17961526cfec604ef307060bad5865fc25a52176297f3a8f45a",
+      "path": ".github/workflows/callback-subtype-php-wasm.yml"
+    },
+    {
+      "currentSha256": "fa3c440a8d38f437dc3f935473fa4df256445cd35b46229182fa948c33d3b100",
+      "path": "docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.json"
+    },
+    {
+      "currentSha256": "a1d28b3e65c3318e37a9d2f3eb70b60702c28dfb958fd8c6fe82ff8bb07a101b",
+      "path": "docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.md"
+    },
+    {
+      "currentSha256": "f66e1f018c0cf2a7b648a56c51b89ae12ae717f3bfdb2c6aa62133c6c2699e4f",
+      "path": "scripts/check-callback-subtype-php-wasm-reports.mjs"
+    },
+    {
+      "currentSha256": "da754c21394b02a86b3f343b1a749f7b5ae800a26de670ba7f36f31d8584aa27",
+      "path": "scripts/update-callback-subtype-php-wasm-inventory.mjs"
+    },
+    {
+      "currentSha256": "1e9a261b45af93a7e37a97c7bcffd513e7dce41dc192255591761cbac62ce9ac",
+      "path": "scripts/update-callback-subtype-php-wasm-source-history.mjs"
+    },
+    {
+      "currentSha256": "736d2a4cae045d9377dc9e2091961bdf6337a77f0fee94ddc9738757395675e0",
+      "path": "tests/callback-subtype-php-wasm.test.mjs"
+    },
+    {
+      "currentSha256": "27cd871f5893b08677797e508c347044d5e262cd570a1b65e1a4b552b4cf1355",
+      "path": "tests/fixtures/callback-subtype-consumers/php-wasm.php"
+    },
+    {
+      "currentSha256": "99fcdde7da53f5b19e9a7f1fdb8f8bb42bf908d89e93d2e8049bafb220965c27",
+      "path": "tests/helpers/callback-subtype-php-wasm-fixture.mjs"
+    },
+    {
+      "currentSha256": "6a38eded7ff7f735dce4af9a845d7e59bbc69acc59c46cf47526eb9247f72076",
+      "path": "tests/helpers/callback-subtype-php-wasm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "355a3836c76e3167c0e8a3cad571d864bcc55b213787cdd824e000b62cce2120",
+      "path": "tests/helpers/callback-subtype-php-wasm-report.mjs"
+    },
+    {
+      "currentSha256": "c3b2b1253897301673d1e1cff358cb31704a7947feaac671daade7155deab27a",
+      "path": "tests/helpers/callback-subtype-php-wasm-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a38812c640101b39340ec9d683ec5eb363d659918ce9cd9f8e228e5b097d9af4",
+      "path": "tests/helpers/callback-subtype-php-wasm-source-history.mjs"
+    },
+    {
+      "currentSha256": "20b7d45eb43cdd1cb2b65430c08a162128734f2bb2b8ee640fce26278ec72b94",
+      "path": "tests/helpers/callback-subtype-php-wasm-tests.mjs"
+    }
+  ],
+  "implementationCommit": "6249ba2f4018ecfd4997067806688dff5acfb028",
+  "milestone": "callback-subtype-php-wasm-v1",
+  "predecessorCommit": "6e1284253d4ab66b3f5c07d01216a7c82ac0011a",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm preserves callback direction, exact checked recovery for selected synchronous host replies, and selected-constructor checks for returned Lean closure inputs through reproduced source-free Composer and npm packages in Node and Chromium.",
+  "updates": [
+    {
+      "currentSha256": "c5b59498b6b2ee6415ee2142266b6a90ce40d1581f7458186c4da681edc4307e",
+      "edits": [
+        {
+          "current": "For native PHP and PHP-Wasm, a synchronous host callback returning a selected\n`Subtype` or checked record must be wrapped with the generated namespace's\n",
+          "previous": "For native PHP, a synchronous host callback returning a selected `Subtype` or\nchecked record must be wrapped with the generated namespace's\n",
+          "start": 41774
+        },
+        {
+          "current": "The [native PHP workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\n",
+          "previous": "The [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\n",
+          "start": 42432
+        },
+        {
+          "current": "and strict PHP callers before and after relocation. The\n[PHP-Wasm callback Subtype qualification](evidence/callback-subtype-php-wasm-local-qualification-20261022.md)\nreproduces Composer API, npm component and npm shared-runtime archives from two\nauthor roots, removes the source, installs offline, relocates the installation,\nand passes 28 checks in each of eight Node and four Chromium startup/lazy,\nweak/strict contexts per route. The\n[recurring PHP-Wasm workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-subtype-php-wasm.yml)\nretains the hosted handoffs. General copied checked-record callbacks in\nPHP-Wasm remain covered separately from this selected `Subtype` boundary.\n",
+          "previous": "and strict PHP callers before and after relocation. PHP-Wasm checked callbacks\nremain separate work.\n",
+          "start": 42712
+        },
+        {
+          "current": "| `Subtype / {x // p x}` | Native PHP: `Brick\\Math\\BigInteger, string and Bytes, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `corresponding native PHP primitive value in generated final readonly records and active variant cases across all nineteen tested bases; no proof field` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit typed recovery` (callback result); PHP-Wasm: `null, bool, PHP int, Brick\\Math\\BigInteger, float, string or generated Bytes, checked and constructed by the selected Lean constructor across all nineteen tested primitive bases; also in generated structural containers, acyclic records and active variant cases; generated recursive Chain values also check the selected constructor at every present value field and the Fin 3 bound at every digit field, including aliases and nested Array/Option carriers` (input); `the corresponding PHP-Wasm primitive value projected from the proof-backed Lean result across all nineteen tested bases; also in generated structural containers, acyclic records and active variant cases; generated recursive Chain values project constructor-free proof-backed payloads through aliases and nested Array/Option carriers` (result); `corresponding PHP-Wasm primitive value in generated final readonly copied records, active variant cases, and the tested acyclic owned Bundle; no proof field; selected Subtype fields are checked at their declared public site before a transfer consumes any resource` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit typed recovery` (callback result) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Generation tested; compilation unaudited (callback input, callback result); PHP-Wasm: Installed checks passed. Reviewed IR: Native PHP: Installed checks passed (input, result, field); Generation tested; compilation unaudited (callback input, callback result); PHP-Wasm: Installed checks passed | Native PHP: Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In native PHP, checked nominal values preserve all nineteen tested primitive representations: null for Unit; bool; int for the bounded integers through UInt32 and Int64; Brick\\Math\\BigInteger for UInt64, Nat, Int and USize; float for Float32 and Float64; string for String and Char; Bytes for ByteArray; and int for 64-bit ISize. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, invalid Unicode scalars, malformed Bytes, non-finite floats where the contract refuses them, wrong classes and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. In native PHP, checked nominal values preserve all nineteen tested primitive representations: null for Unit; bool; int for the bounded integers through UInt32 and Int64; Brick\\Math\\BigInteger for UInt64, Nat, Int and USize; float for Float32 and Float64; string for String and Char; Bytes for ByteArray; and int for 64-bit ISize. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, invalid Unicode scalars, malformed Bytes, non-finite floats where the contract refuses them, wrong classes and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. .NET and JVM use generated WithRecovery values; native PHP uses with_recovery(callback, value); WIT typed registration takes an owned copied recovery. Recovery is validated before application execution and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body. PHP-Wasm: Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In PHP-Wasm, checked nominal values preserve all nineteen tested primitive representations on wasm32: null for Unit; bool; PHP int for UInt8, UInt16, Int8, Int16, Int32 and ISize; Brick\\Math\\BigInteger for UInt32, UInt64, Int64, Nat, Int and USize; float for Float32 and Float; string for String and Char; and generated Bytes for ByteArray. USize and ISize use 32-bit ranges. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, wrong host types, invalid Unicode scalars, malformed Bytes, refused non-finite floats and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. Recursive Chain values use generated variant classes. PHP-Wasm traverses only the active case, checks each present Subtype with the constructor selected for that parameter, checks each Fin 3 digit, preserves shared caller graphs on rejection, and rejects cycles or values deeper than 128 copied levels. Results omit proof fields and input constructor choices. In PHP-Wasm, checked nominal values preserve all nineteen tested primitive representations on wasm32: null for Unit; bool; PHP int for UInt8, UInt16, Int8, Int16, Int32 and ISize; Brick\\Math\\BigInteger for UInt32, UInt64, Int64, Nat, Int and USize; float for Float32 and Float; string for String and Char; and generated Bytes for ByteArray. USize and ISize use 32-bit ranges. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, wrong host types, invalid Unicode scalars, malformed Bytes, refused non-finite floats and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. Recursive Chain values use generated variant classes. PHP-Wasm traverses only the active case, checks each present Subtype with the constructor selected for that parameter, checks each Fin 3 digit, preserves shared caller graphs on rejection, and rejects cycles or values deeper than 128 copied levels. Results omit proof fields and input constructor choices. In the tested owned Bundle, PHP-Wasm exposes the refined Int payload as Brick\\Math\\BigInteger inside the generated Payload and Bundle classes while resource fields retain their generated Ticket owners. Borrowed calls validate without consuming the input. A transferred call validates the complete refinement tree first, so rejection leaves every resource owner usable; success consumes the original owner and returns a fresh lease. Results contain the Int payload but no proof field. Wrap a host callback that returns a selected Subtype with the generated with_recovery(callback, value). The recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "previous": "| `Subtype / {x // p x}` | Native PHP: `Brick\\Math\\BigInteger, string and Bytes, checked by the exported Lean validator and constructed by the adapter before dispatch; also in generated structural containers; also in tested acyclic records and variants` (input); `the base value projected from the proof-backed Lean result; also in generated structural containers; also in tested acyclic records and variants` (result); `corresponding native PHP primitive value in generated final readonly records and active variant cases across all nineteen tested bases; no proof field` (field); `base values checked by the selected constructor in returned-closure inputs` (callback input); `base values from a host callback checked by Lean with an explicit typed recovery` (callback result); PHP-Wasm: `null, bool, PHP int, Brick\\Math\\BigInteger, float, string or generated Bytes, checked and constructed by the selected Lean constructor across all nineteen tested primitive bases; also in generated structural containers, acyclic records and active variant cases; generated recursive Chain values also check the selected constructor at every present value field and the Fin 3 bound at every digit field, including aliases and nested Array/Option carriers` (input); `the corresponding PHP-Wasm primitive value projected from the proof-backed Lean result across all nineteen tested bases; also in generated structural containers, acyclic records and active variant cases; generated recursive Chain values project constructor-free proof-backed payloads through aliases and nested Array/Option carriers` (result); `corresponding PHP-Wasm primitive value in generated final readonly copied records, active variant cases, and the tested acyclic owned Bundle; no proof field; selected Subtype fields are checked at their declared public site before a transfer consumes any resource` (field) | Ordinary source: Native PHP: Installed checks passed (input, result, field); Generation tested; compilation unaudited (callback input, callback result); PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result). Reviewed IR: Native PHP: Installed checks passed (input, result, field); Generation tested; compilation unaudited (callback input, callback result); PHP-Wasm: Installed checks passed (input, result, field); Not audited (callback input, callback result) | Native PHP: Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In native PHP, checked nominal values preserve all nineteen tested primitive representations: null for Unit; bool; int for the bounded integers through UInt32 and Int64; Brick\\Math\\BigInteger for UInt64, Nat, Int and USize; float for Float32 and Float64; string for String and Char; Bytes for ByteArray; and int for 64-bit ISize. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, invalid Unicode scalars, malformed Bytes, non-finite floats where the contract refuses them, wrong classes and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. In native PHP, checked nominal values preserve all nineteen tested primitive representations: null for Unit; bool; int for the bounded integers through UInt32 and Int64; Brick\\Math\\BigInteger for UInt64, Nat, Int and USize; float for Float32 and Float64; string for String and Char; Bytes for ByteArray; and int for 64-bit ISize. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, invalid Unicode scalars, malformed Bytes, non-finite floats where the contract refuses them, wrong classes and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. .NET and JVM use generated WithRecovery values; native PHP uses with_recovery(callback, value); WIT typed registration takes an owned copied recovery. Recovery is validated before application execution and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body. PHP-Wasm: Pass the primitive base value, including inside Array, List, Option, Prod and Except containers using their generated host representations. Each present Subtype leaf uses the selected checked Lean constructor; accepted normalization reaches the export. A rejected leaf fails the call without changing the input; later valid calls still work. Results expose the proof-backed base values. Transparent aliases and the tested closed List specialization keep their constructor choices. In PHP-Wasm, checked nominal values preserve all nineteen tested primitive representations on wasm32: null for Unit; bool; PHP int for UInt8, UInt16, Int8, Int16, Int32 and ISize; Brick\\Math\\BigInteger for UInt32, UInt64, Int64, Nat, Int and USize; float for Float32 and Float; string for String and Char; and generated Bytes for ByteArray. USize and ISize use 32-bit ranges. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, wrong host types, invalid Unicode scalars, malformed Bytes, refused non-finite floats and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. Recursive Chain values use generated variant classes. PHP-Wasm traverses only the active case, checks each present Subtype with the constructor selected for that parameter, checks each Fin 3 digit, preserves shared caller graphs on rejection, and rejects cycles or values deeper than 128 copied levels. Results omit proof fields and input constructor choices. In PHP-Wasm, checked nominal values preserve all nineteen tested primitive representations on wasm32: null for Unit; bool; PHP int for UInt8, UInt16, Int8, Int16, Int32 and ISize; Brick\\Math\\BigInteger for UInt32, UInt64, Int64, Nat, Int and USize; float for Float32 and Float; string for String and Char; and generated Bytes for ByteArray. USize and ISize use 32-bit ranges. Generated final readonly classes carry record and active-variant fields without proof fields. Each input site retains its selected checked constructor and accepted normalization; only the active variant branch is checked. Fixed-width overflow, wrong host types, invalid Unicode scalars, malformed Bytes, refused non-finite floats and invalid Fin siblings reject before Lean dispatch. Rejection preserves the complete caller value, including signed zero and embedded NUL data, and later valid calls succeed. Copied results project proof-backed payloads without input constructor selections, including standalone result-only packages. Recursive Chain values use generated variant classes. PHP-Wasm traverses only the active case, checks each present Subtype with the constructor selected for that parameter, checks each Fin 3 digit, preserves shared caller graphs on rejection, and rejects cycles or values deeper than 128 copied levels. Results omit proof fields and input constructor choices. In the tested owned Bundle, PHP-Wasm exposes the refined Int payload as Brick\\Math\\BigInteger inside the generated Payload and Bundle classes while resource fields retain their generated Ticket owners. Borrowed calls validate without consuming the input. A transferred call validates the complete refinement tree first, so rejection leaves every resource owner usable; success consumes the original owner and returns a fresh lease. Results contain the Int payload but no proof field. Required: Generate a checked constructor when validation is executable; require explicit decisions for non-decidable predicates. |\n",
+          "start": 115148
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "7cb64770dc431f030fa7e96f767d40d09f6e0f3fbdc333f31bcc700f0a548a99"
+    },
+    {
+      "currentSha256": "091d55824ac4e6922175b2cb55db40b38828cad3b9ff2380b9bd99e3212b5f46",
+      "edits": [
+        {
+          "current": "When a synchronous host callback returns a selected `Subtype`, both targets\ngenerate `with_recovery($callback, $value)`. Supply a valid value for the exact\ncallback result shape. The generated boundary checks that recovery before the\ncallback can run, checks the callback's actual reply with the selected Lean\nconstructor, and never treats the recovery as successful output. A returned\nLean closure checks selected `Subtype` inputs before its body runs and remains\nusable after rejection. Host-only callback parameters do not acquire closure\nlease entry points.\n\nThe [PHP-Wasm callback Subtype qualification](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md)\ncovers ordinary source and independently reviewed Binding IR through reproduced\nComposer API, npm component and npm shared-runtime archives, source removal,\noffline installation, relocation, and twelve Node/Chromium executions per\nroute. Publish those archives with the existing\n[PHP-Wasm npm and Composer flow](#php-wasm-with-npm); consumers do not need the\nauthor project or Lean toolchain.\n\n",
+          "previous": "",
+          "start": 23292
+        }
+      ],
+      "path": "docs/publish/php.md",
+      "previousSha256": "c441cc8713f79953d527646293f52b7e8aa17c60e24e86d834cced3f1f5515d1"
+    },
+    {
+      "currentSha256": "91b87cdc03ded5ad24214a775c47e0666d20c7572398afd4b85a48dfccc611a0",
+      "edits": [
+        {
+          "current": "[PHP-Wasm owned Subtype checks](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md) add one proof-erased `Int` field inside the tested acyclic `Bundle` owner on both source routes. Source-free offline packages are physically relocated before eight Node and eight Chromium executions per route cover borrowed and transferred inputs, leased results, exact constructor selection, rejection before transfer, explicit retain/close behavior, queued-finalizer cleanup and request recovery. [PHP-Wasm owned checked-record checks](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) add the tested copied `Window` inside `Booking` and the proof-backed `Claim` across `Ticket` owners, transfers, synchronous callbacks and returned Lean closures on both source routes. Invalid explicit recovery rejects before callback entry; standalone result-only packages retain no checked-input or callback metadata. Recursive owned graphs, retained or asynchronous callbacks and broader predicates remain separate work. [PHP-Wasm callback Subtype checks](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) add synchronous host callback replies and returned Lean closure inputs on both source routes. Two author roots reproduce the Composer API, npm component and npm shared-runtime archives before source removal, offline installation and relocation. Eight Node and four Chromium startup/lazy, weak/strict contexts per route check scalar, mixed and nested copied carriers, exact typed recovery, exception identity, cleanup and later-call recovery. Retained or asynchronous callbacks, arbitrary predicates, recursive or generic refined payloads, owned callback payloads, dispatch counts and memory bounds remain separate work.\n",
+          "previous": "[PHP-Wasm owned Subtype checks](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md) add one proof-erased `Int` field inside the tested acyclic `Bundle` owner on both source routes. Source-free offline packages are physically relocated before eight Node and eight Chromium executions per route cover borrowed and transferred inputs, leased results, exact constructor selection, rejection before transfer, explicit retain/close behavior, queued-finalizer cleanup and request recovery. [PHP-Wasm owned checked-record checks](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) add the tested copied `Window` inside `Booking` and the proof-backed `Claim` across `Ticket` owners, transfers, synchronous callbacks and returned Lean closures on both source routes. Invalid explicit recovery rejects before callback entry; standalone result-only packages retain no checked-input or callback metadata. Recursive owned graphs, retained or asynchronous callbacks and broader predicates remain separate work.\n",
+          "start": 12422
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "60d3efce1a5722210123be3ec76356907ede7b2d0eed623bdeca73c607338b46"
+    },
+    {
+      "currentSha256": "77d0da14ad23240b382e50b77a3d738967d0d216d30f30a543111d172b2655fe",
+      "edits": [
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-php-wasm-local-installed\",\n      \"kind\": \"installed\",\n      \"revision\": \"6249ba2f4018ecfd4997067806688dff5acfb028\",\n      \"command\": \"source scripts/env.sh && LEAN_BRIDGE_PHP_SOURCE=/app/build/php-wasm-sdk/php8.4-src LEAN_BRIDGE_PHP_EMSDK=/app/.toolchains/emsdk-php-wasm LEAN_BRIDGE_PHP_WASM_HOST=/app/build/php-wasm-host/node_modules/php-wasm LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=/app/build/php-wasm-subtype-entry-input/php-wasm-runtime LEAN_BRIDGE_CALLBACK_SUBTYPE_PHP_WASM_OUTPUT=build/callback-subtype-php-wasm-local npm run test:callback-subtype-php-wasm\",\n      \"scope\": \"Ordinary-source and independently reviewed PHP-Wasm packages reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots. Both source-free offline installations are physically relocated before eight Node and four Chromium startup/lazy, weak/strict executions. Every execution passes 28 checks, including exact typed recovery for host callback Subtype results, selected-constructor checks for returned Lean-closure inputs, nested copied containers, original Throwable identity, idempotent cleanup, rejection before callback entry and later-call recovery. This is local wasm32 PHP 8.4.1 acceptance; the recurring workflow remains the hosted release-floor gate.\",\n      \"files\": [\n        {\n          \"path\": \"docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.json\",\n          \"sha256\": \"fa3c440a8d38f437dc3f935473fa4df256445cd35b46229182fa948c33d3b100\"\n        },\n        {\n          \"path\": \"docs/evidence/callback-subtype-php-wasm-local-qualification-20261022.md\",\n          \"sha256\": \"a1d28b3e65c3318e37a9d2f3eb70b60702c28dfb958fd8c6fe82ff8bb07a101b\"\n        },\n        {\n          \"path\": \".github/workflows/callback-subtype-php-wasm.yml\",\n          \"sha256\": \"7c7ff2f6ae8ee17961526cfec604ef307060bad5865fc25a52176297f3a8f45a\"\n        },\n        {\n          \"path\": \"scripts/check-callback-subtype-php-wasm-reports.mjs\",\n          \"sha256\": \"f66e1f018c0cf2a7b648a56c51b89ae12ae717f3bfdb2c6aa62133c6c2699e4f\"\n        },\n        {\n          \"path\": \"tests/callback-subtype-php-wasm.test.mjs\",\n          \"sha256\": \"736d2a4cae045d9377dc9e2091961bdf6337a77f0fee94ddc9738757395675e0\"\n        },\n        {\n          \"path\": \"tests/fixtures/callback-subtype-consumers/php-wasm.php\",\n          \"sha256\": \"27cd871f5893b08677797e508c347044d5e262cd570a1b65e1a4b552b4cf1355\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-php-wasm-fixture.mjs\",\n          \"sha256\": \"99fcdde7da53f5b19e9a7f1fdb8f8bb42bf908d89e93d2e8049bafb220965c27\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-php-wasm-installed-tests.mjs\",\n          \"sha256\": \"6a38eded7ff7f735dce4af9a845d7e59bbc69acc59c46cf47526eb9247f72076\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-php-wasm-report.mjs\",\n          \"sha256\": \"355a3836c76e3167c0e8a3cad571d864bcc55b213787cdd824e000b62cce2120\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-php-wasm-tests.mjs\",\n          \"sha256\": \"20b7d45eb43cdd1cb2b65430c08a162128734f2bb2b8ee640fce26278ec72b94\"\n        }\n      ],\n      \"artifacts\": [\n        {\n          \"path\": \"callback-subtype-php-wasm-local/ordinary/report.json\",\n          \"sha256\": \"e133b164cc3225fe08160cff8943cce332fc75092a5cb6e234678282b7b0c09f\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"0cfd9aec31310d5164949fa1d6ab9b948a1aa0a2a372d069961cc6d677fa8573\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz\",\n          \"sha256\": \"1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/ordinary/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz\",\n          \"sha256\": \"76fa22749640da26ae91528060f64c7ff1412b6460c7c2d84e308b396be6adad\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/reviewed/report.json\",\n          \"sha256\": \"3a733a427ea795f996972f115dae438b24877c43e0dc99b4d6b4e7fcddbfe560\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0-php-wasm.zip\",\n          \"sha256\": \"c7e85be4fe38df2be32ccb9bd7b1f98c1fd522224910d0c156783511d0c0f18c\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz\",\n          \"sha256\": \"1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927\"\n        },\n        {\n          \"path\": \"callback-subtype-php-wasm-local/reviewed/handoff/packages/php-wasm/archives/lean-bridge-callbacksubtypes-wasm-1.0.0.tgz\",\n          \"sha256\": \"9c71fa7163ee9b9094e21adc33b6b87cbfcf2e997a505d42b51756c4b2285a5e\"\n        }\n      ]\n",
+          "previous": "",
+          "start": 75671451
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-subtype-php-wasm-ordinary\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by synchronous host callbacks. Host-only callbacks do not expose closure lease functions. Generated PHP uses an exact checked recovery for host-produced selected results.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Wrap a host callback that returns a selected Subtype with the generated with_recovery(callback, value). The recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected ordinary-source constructors and both callback directions for PHP-Wasm.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Generated PHP and Zend descriptors retain host-versus-closure direction, checked payloads and exact typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"The pinned Emscripten toolchain compiles the 32-bit Lean component and selected-constructor boundaries.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"The ordinary-source package set reproduces, installs offline after author-source removal and replays after physical relocation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Installed Node and Chromium callers check acceptance, exact rejection, exception identity, cleanup and recovery on the ordinary-source route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's selected Nat Subtypes in synchronous copied-value host callbacks and returned Lean closures on wasm32 PHP 8.4.1. Retained or asynchronous host callbacks, arbitrary predicates, recursive or generic refined callback payloads, owned callback payloads, dispatch cost and memory bounds remain separate work.\",\n        \"The exact local reports and archive identities are retained. The recurring workflow rebuilds and retains original package handoffs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n    },\n    {\n      \"id\": \"callback-subtype-php-wasm-reviewed\",\n      \"profiles\": [\n        \"php-wasm\"\n      ],\n      \"shapes\": [\n        \"subtype\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Checked inputs to returned Lean closures and checked results produced by synchronous host callbacks. Host-only callbacks do not expose closure lease functions. Generated PHP uses an exact checked recovery for host-produced selected results.\",\n      \"hostTypes\": {\n        \"subtype\": {\n          \"callback-parameter\": \"base values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"base values from a host callback checked by Lean with an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"subtype\": \"Wrap a host callback that returns a selected Subtype with the generated with_recovery(callback, value). The recovery is validated before callback entry and is never successful output. Returned Lean closures validate selected Subtype inputs before invoking their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected reviewed-IR constructors and both callback directions for PHP-Wasm.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Generated PHP and Zend descriptors retain host-versus-closure direction, checked payloads and exact typed recovery without proof fields.\"\n        },\n        \"compilation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"The pinned Emscripten toolchain compiles the 32-bit Lean component and selected-constructor boundaries.\"\n        },\n        \"packaging\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"The reviewed-IR package set reproduces, installs offline after author-source removal and replays after physical relocation.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-subtype-php-wasm-local-installed\"\n          ],\n          \"note\": \"Installed Node and Chromium callers check acceptance, exact rejection, exception identity, cleanup and recovery on the reviewed-IR route.\"\n        }\n      },\n      \"limitations\": [\n        \"Acceptance covers the fixture's selected Nat Subtypes in synchronous copied-value host callbacks and returned Lean closures on wasm32 PHP 8.4.1. Retained or asynchronous host callbacks, arbitrary predicates, recursive or generic refined callback payloads, owned callback payloads, dispatch cost and memory bounds remain separate work.\",\n        \"The exact local reports and archive identities are retained. The recurring workflow rebuilds and retains original package handoffs; hosted release-floor acceptance is not claimed by this local evidence.\"\n      ]\n",
+          "previous": "",
+          "start": 86998803
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "a50fed7cdbdee32e7ec06e02ebbbf6967546cec97a62c46698763a8fd287ea1b"
+    },
+    {
+      "currentSha256": "3a891b9adfe9a266d62845883454e7895bbf6d3e0d0595064a76b66e1bae6812",
+      "edits": [
+        {
+          "current": "    \"test:callback-subtype-php-wasm\": \"LEAN_BRIDGE_CALLBACK_SUBTYPE_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/callback-subtype-php-wasm.test.mjs\",\n",
+          "previous": "",
+          "start": 50219
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "777f4eceb283d86ca313b004d0ae7f206f6db3d6607649e521d8b87ecb045ef7"
+    },
+    {
+      "currentSha256": "ae1fd172a21194d37370161c5eff59e40ab4dd56a43265fdd4ba778e7fc30766",
+      "edits": [
+        {
+          "current": "const callbackSubtypePhpWasm = \"[PHP-Wasm callback Subtype checks](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) add synchronous host callback replies and returned Lean closure inputs on both source routes. Two author roots reproduce the Composer API, npm component and npm shared-runtime archives before source removal, offline installation and relocation. Eight Node and four Chromium startup/lazy, weak/strict contexts per route check scalar, mixed and nested copied carriers, exact typed recovery, exception identity, cleanup and later-call recovery. Retained or asynchronous callbacks, arbitrary predicates, recursive or generic refined payloads, owned callback payloads, dispatch counts and memory bounds remain separate work.\";\n",
+          "previous": "",
+          "start": 6412
+        },
+        {
+          "current": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}`)\n",
+          "previous": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm}`)\n",
+          "start": 48506
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "068d85cff15146c4a2f1279ecad6a434c3ab45d60c5f6cebf7c53a258e3449eb"
+    },
+    {
+      "currentSha256": "1e630244e133d43e53408cb5a768db0f765dbbaae551014a46dd7e30e94761b9",
+      "edits": [
+        {
+          "current": "\tconst lines = [\"#include <lean/lean.h>\", nativeCallableGraphHeader(abi), generated.source\n",
+          "previous": "\tconst lines = [generated.source, nativeCallableGraphHeader(abi)\n",
+          "start": 2448
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-calls.mjs",
+      "previousSha256": "b248c437893bb851ef2b0e6269395fc07dce2fea15bc3844f24f13f0f50cf57d"
+    },
+    {
+      "currentSha256": "4ceaf8d6b797a4777f0a79bfb55c03fdad5127d66542b59a7d1f1dc8bcaf7749",
+      "edits": [
+        {
+          "current": "\tfor(const cb of [...model.callbacks.values()].filter(item => item.direction !== \"host\")) functions.push({\n",
+          "previous": "\tfor(const cb of model.callbacks.values()) functions.push({\n",
+          "start": 389
+        },
+        {
+          "current": "\t\tconst recoveryFields = parameters.flatMap((site, index) => site.callback?.direction === \"host\"\n\t\t\t? [`  ${site.callback.result.name} recovery${index};\\n`] : []).join(\"\");\n\t\tconst inputs = parameters.map((site, index) => site.callback?.direction === \"host\" ? `  if (Z_TYPE(args[${index + offset}]) != IS_ARRAY || zend_hash_num_elements(Z_ARRVAL(args[${index + offset}])) != 2) { lb_fail(&call->walk.scope, \"Malformed checked callback\", 1); return; }\n  zval *callback${index} = zend_hash_index_find(Z_ARRVAL(args[${index + offset}]), 0);\n  zval *recovery${index} = zend_hash_index_find(Z_ARRVAL(args[${index + offset}]), 1);\n  if (!callback${index} || !recovery${index}) { lb_fail(&call->walk.scope, \"Malformed checked callback\", 1); return; }\n  ZVAL_DEREF(callback${index}); ZVAL_DEREF(recovery${index});\n  if (!lg_to(&call->walk, ${site.callback.result.index}, recovery${index}, &ctx->recovery${index})) return;\n  ctx->input${index}.call = lgc_callback${site.callback.index};\n  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, callback${index});\n  if (!ctx->input${index}.context) return;\n  ctx->input${index}.recovery = &ctx->recovery${index};` : site.callback ? `  ctx->input${index}.call = lgc_callback${site.callback.index};\n  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, &args[${index + offset}]);\n  if (!ctx->input${index}.context) return;` : `  if (!lg_to(&call->walk, ${site.node.index}, &args[${index + offset}], &ctx->input${index})) return;`).join(\"\\n\");\n",
+          "previous": "",
+          "start": 1028
+        },
+        {
+          "current": "${recoveryFields}  ${owned ? \"uint64_t\" : result.node.name} output;\n",
+          "previous": "  ${owned ? \"uint64_t\" : result.node.name} output;\n",
+          "start": 2721
+        },
+        {
+          "current": "${inputs}\n",
+          "previous": "${parameters.map((site, index) => site.callback ? `  ctx->input${index}.call = lgc_callback${site.callback.index};\n  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, &args[${index + offset}]);\n  if (!ctx->input${index}.context) return;` : `  if (!lg_to(&call->walk, ${site.node.index}, &args[${index + offset}], &ctx->input${index})) return;`).join(\"\\n\")}\n",
+          "start": 3313
+        },
+        {
+          "current": "  if (call->status == 10) call->status = 1;\n  else if (call->status == 4 || call->status > 6) { ${prefix}_graph_retire(); call->status = 4; }\n",
+          "previous": "  if (call->status == 4 || call->status > 6) { ${prefix}_graph_retire(); call->status = 4; }\n",
+          "start": 3600
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-calls.mjs",
+      "previousSha256": "4a9b1214aa405a1d38d88d6137af488f91a5cfd3b621b3910c79a7a23d83d71b"
+    },
+    {
+      "currentSha256": "4a83e89916d6a3eb87c61a80e979a577df39581471f32461232100ad28e4c534",
+      "edits": [
+        {
+          "current": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "previous": "",
+          "start": 161
+        },
+        {
+          "current": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n\t\tconst projected = { ...signature, index, direction, parameters, result\n",
+          "previous": "\t\tconst projected = { ...signature, index, parameters, result\n",
+          "start": 1622
+        },
+        {
+          "current": "\t\t\t, ...direction === \"host\" ? {} : {\n\t\t\t\tcall: `${prefix}_callback_${signature.key}_lease_call`\n\t\t\t\t, dispose: `${prefix}_callback_${signature.key}_lease_dispose`\n\t\t\t} };\n",
+          "previous": "\t\t\t, call: `${prefix}_callback_${signature.key}_lease_call`\n\t\t\t, dispose: `${prefix}_callback_${signature.key}_lease_dispose` };\n",
+          "start": 1946
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-model.mjs",
+      "previousSha256": "0015aa0a1a9fbb6141ba8e0fc9d7bf2efdea3178456beaec1bc4231510563315"
+    },
+    {
+      "currentSha256": "83733b79252c9875cb6f7cc2a5e715ca73ede938ee145c5759affa1919269d46",
+      "edits": [
+        {
+          "current": "                if (isset($site['callback'])) {\n                    $fn = self::CALLBACKS[$site['callback']];\n                    if ($fn['direction'] === 'host') {\n                        if (!$arguments[$index] instanceof GRAPH_NAMESPACE\\WithRecovery)\n                            throw new \\TypeError('This callback requires with_recovery(function, value)');\n                        CallableTransfers::check($fn['result'], $arguments[$index]->recovery, $frame->validation);\n                    }\n                }\n",
+          "previous": "                if (isset($site['callback'])) $inputs[$index] = self::borrow($site['callback'], $arguments[$index], $frame);\n",
+          "start": 7966
+        },
+        {
+          "current": "            foreach ($parameters as $index => $site) {\n                if (isset($site['callback'])) {\n                    $fn = self::CALLBACKS[$site['callback']];\n                    if ($fn['direction'] === 'host') $inputs[$index] = [\n                        self::borrow($site['callback'], $arguments[$index]->function, $frame),\n                        CallableTransfers::wire($fn['result'], $arguments[$index]->recovery, false, $frame->writing),\n                    ];\n                    else $inputs[$index] = self::borrow($site['callback'], $arguments[$index], $frame);\n                } else $inputs[$index] = CallableTransfers::wire($site['type'], $arguments[$index], false, $frame->writing);\n            }\n",
+          "previous": "            foreach ($parameters as $index => $site)\n                if (!isset($site['callback'])) $inputs[$index] = CallableTransfers::wire($site['type'], $arguments[$index], false, $frame->writing);\n",
+          "start": 8598
+        },
+        {
+          "current": "\tconst callbacks = [...model.callbacks.values()].map(cb => ({ direction: cb.direction\n\t\t, parameters: cb.parameters.map(node => node.index), result: cb.result.index }));\n",
+          "previous": "\tconst callbacks = [...model.callbacks.values()].map(cb => ({ parameters: cb.parameters.map(node => node.index), result: cb.result.index }));\n",
+          "start": 10963
+        },
+        {
+          "current": "\tconst recovery = [...model.callbacks.values()].some(callback => callback.direction === \"host\") ? `\nfinal readonly class WithRecovery\n{\n    public function __construct(public mixed $function, public mixed $recovery) {\n        if (\\\\func_num_args() !== 2) throw new \\\\ArgumentCountError('WithRecovery requires a callback and typed value');\n        if (!\\\\is_callable($function)) throw new \\\\TypeError('WithRecovery requires a synchronous callable');\n    }\n}\nfunction with_recovery(mixed $function, mixed $recovery): WithRecovery {\n    if (\\\\func_num_args() !== 2) throw new \\\\ArgumentCountError('with_recovery requires two arguments');\n    return new WithRecovery($function, $recovery);\n}\n` : \"\";\n\tfiles[\"src/Api.php\"] += `\\n${phpClosurePublic}${recovery}\\nrequire_once __DIR__ . '/Internal/Native.php';\\n\\n${model.functions.map(fn => `/**\n${fn.parameters.map((site, index) => ` * @param ${site.callback?.direction === \"host\" ? \"WithRecovery\" : doc(site)} $${fn.parameterNames[index]}`).join(\"\\n\")}\n",
+          "previous": "\tfiles[\"src/Api.php\"] += `\\n${phpClosurePublic}\\nrequire_once __DIR__ . '/Internal/Native.php';\\n\\n${model.functions.map(fn => `/**\n${fn.parameters.map((site, index) => ` * @param ${doc(site)} $${fn.parameterNames[index]}`).join(\"\\n\")}\n",
+          "start": 11329
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-php.mjs",
+      "previousSha256": "2c20411b2509675ad1256c394d3b93489b6afd951bbbc467d2bcab1434e3fa18"
+    },
+    {
+      "currentSha256": "7514f73d00a03945b117e97b20ef02aeef6e4981773343025ce706274e971afe",
+      "edits": [
+        {
+          "current": "${[...model.callbacks.values()].filter(cb => cb.direction !== \"host\").map(cb => `    case ${cb.index}: ${cb.dispose}(token); break;`).join(\"\\n\")}\n",
+          "previous": "${[...model.callbacks.values()].map(cb => `    case ${cb.index}: ${cb.dispose}(token); break;`).join(\"\\n\")}\n",
+          "start": 3510
+        },
+        {
+          "current": "export const zendGraphTrampolines = model => [...model.callbacks.values()].map(cb => {\n\tconst callback = `\n",
+          "previous": "export const zendGraphTrampolines = model => [...model.callbacks.values()].map(cb => `\n",
+          "start": 4215
+        },
+        {
+          "current": "`;\n\tconst close = `ZEND_BEGIN_ARG_INFO_EX(lgc_close_args${cb.index}, 0, 0, 1)\n",
+          "previous": "ZEND_BEGIN_ARG_INFO_EX(lgc_close_args${cb.index}, 0, 0, 1)\n",
+          "start": 5545
+        },
+        {
+          "current": "`;\n\treturn (cb.direction === \"closure\" ? \"\\n\" : callback)\n\t\t+ (cb.direction === \"host\" ? \"\" : close);\n}).join(\"\\n\");\n",
+          "previous": "`).join(\"\\n\");\n",
+          "start": 6091
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-runtime.mjs",
+      "previousSha256": "8a92fcc6101b4d145623915955cabd44b5b8a0ae4ce64b694ebc87efd5eaeb36"
+    },
+    {
+      "currentSha256": "5c215b08f2734c83fb9f2b37cfa7b72324e9338cead4924e9f5bbbad71511b0d",
+      "edits": [
+        {
+          "current": "${[...model.callbacks.values()].filter(cb => cb.direction !== \"host\").flatMap(cb => [\n",
+          "previous": "${[...model.callbacks.values()].flatMap(cb => [\n",
+          "start": 2917
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend.mjs",
+      "previousSha256": "93169abfe3845db7b983ae49fc81cdedbcd9337e07caea42530e74b9600661ae"
+    },
+    {
+      "currentSha256": "d1cfd6d513550a476c0a10b205a591886239979b56ff68fd2168aec4a095f37b",
+      "edits": [
+        {
+          "current": "import { containsCallbackSubtype } from \"./native-graph-model.mjs\";\n",
+          "previous": "",
+          "start": 951
+        },
+        {
+          "current": "\t// Directional Subtype/checked-record callbacks need the callable graph even\n\t// when their erased payloads are otherwise acyclic. The primitive copied\n\t// model cannot preserve constructor direction, recovery, or rejection.\n\tif(!elaborated.declarations.some(containsGraph)\n\t\t&& !elaborated.declarations.some(containsCallbackSubtype))\n\t\treturn createPhpWasmCopiedModel(options);\n",
+          "previous": "\tif(!elaborated.declarations.some(containsGraph)) return createPhpWasmCopiedModel(options);\n",
+          "start": 4490
+        }
+      ],
+      "path": "src/build/php-wasm-graph-model.mjs",
+      "previousSha256": "8dd61a57a2aee816d8a5213f74137752239e6e0064dcaea444d43345fbcd2b0b"
+    },
+    {
+      "currentSha256": "c0f05bbded4bd803c80ec90bbe1942b5e06fdbf4186b896cd762bc5bfb2c74df",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypePhpWasmSource, callbackSubtypePhpWasmChangedPaths } from \"./callback-subtype-php-wasm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypePhpWasmChangedPaths\n\t, ...ownedCheckedRecordPhpWasmChangedPaths\n",
+          "previous": "\t...ownedCheckedRecordPhpWasmChangedPaths\n",
+          "start": 143194
+        },
+        {
+          "current": "\tconst callbackSubtypePhpWasm\n\t\t= beforeCallbackSubtypePhpWasmSource(path, text, expected);\n\tif(sha256(callbackSubtypePhpWasm) === expected)\n\t\treturn callbackSubtypePhpWasm;\n",
+          "previous": "",
+          "start": 173952
+        },
+        {
+          "current": "\t\t= beforeOwnedCheckedRecordPhpWasmSource(\n\t\t\tpath, callbackSubtypePhpWasm, expected\n\t\t);\n",
+          "previous": "\t\t= beforeOwnedCheckedRecordPhpWasmSource(path, text, expected);\n",
+          "start": 174159
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ac20ed26f490963a11f0ed3f72689ad5609e3294154602281da53cd2081a6834"
+    },
+    {
+      "currentSha256": "242af7084e590a503b0995108ea0a633c7e14370aeef11337dc1aa1f6c406a83",
+      "edits": [
+        {
+          "current": "\tconst controls = `${descriptor.exports[0].symbol}_structured_callback_controls`;\n\tassert.ok(generated.source.indexOf(`typedef struct ${controls}`)\n\t\t< generated.source.indexOf(`${controls} controls;`));\n",
+          "previous": "",
+          "start": 7586
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "62ae8b51ba0b7d3b6ac96f1e567b8ea378e1797f8a079b59f066fef324c5361d"
+    },
+    {
+      "currentSha256": "bfc868886c37b0371f0c7f6905d4ae1d35245fe5f3781cb6025a73c5f9e0ab03",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-php-wasm-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 208
+        },
+        {
+          "current": "import { generateCallablePhpGraphZendAdapter } from \"../src/backends/php/callable-graph-zend.mjs\";\n",
+          "previous": "",
+          "start": 879
+        },
+        {
+          "current": "import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "previous": "import { structuredCallableReviewedIr } from \"./helpers/structured-callable-fixture.mjs\";\n",
+          "start": 1224
+        },
+        {
+          "current": "test(\"directional PHP-Wasm callbacks carry typed recovery and expose only closure leases\", () => {\n\tconst { ir, host, closure } = structuredCallableDirectionalSubtypeIr();\n\tconst model = compileCallablePhpGraphZendModel(ir);\n\tconst hostModel = model.callbacks.get(host.id), closureModel = model.callbacks.get(closure.id);\n\tassert.equal(hostModel.direction, \"host\"); assert.equal(hostModel.call, undefined);\n\tassert.equal(hostModel.dispose, undefined); assert.equal(closureModel.direction, \"closure\");\n\tassert.equal(typeof closureModel.call, \"string\"); assert.equal(typeof closureModel.dispose, \"string\");\n\tconst files = generateCallablePhpGraphZendAdapter(ir);\n\tconst extension = files[`extension/${model.stem}.c`];\n\tassert.doesNotMatch(extension, new RegExp(`${hostModel.borrowedType}_lease_(?:call|dispose)`, \"u\"));\n\tassert.match(extension, new RegExp(closureModel.call, \"u\"));\n\tassert.match(extension, new RegExp(closureModel.dispose, \"u\"));\n\tassert.match(extension, new RegExp(`lgc_callback${hostModel.index}\\\\(`, \"u\"));\n\tassert.doesNotMatch(extension, new RegExp(`lgc_callback${closureModel.index}\\\\(`, \"u\"));\n\tassert.match(extension, /Malformed checked callback/u);\n\tassert.match(extension, /\\.recovery = &ctx->recovery/u);\n\tassert.match(extension, /call->status == 10\\) call->status = 1/u);\n\tassert.match(files[\"src/Api.php\"], /final readonly class WithRecovery/u);\n\tassert.match(files[\"src/Api.php\"], /function with_recovery\\(/u);\n\tassert.match(files[\"src/Internal/Native.php\"], /'direction' => 'host'/u);\n\tassert.match(files[\"src/Internal/Native.php\"], /requires with_recovery\\(function, value\\)/u);\n});\n\n",
+          "previous": "",
+          "start": 6541
+        }
+      ],
+      "path": "tests/php-wasm-recursive-callable-contract.test.mjs",
+      "previousSha256": "1e41b96dcebf4a3f2751dccd181aac9f5a7cdb4efc1031e4da8a7eec115fff93"
+    }
+  ]
+}
