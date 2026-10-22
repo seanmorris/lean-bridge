@@ -5,6 +5,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
@@ -18,6 +19,9 @@ import {
 } from "./php-wasm-refinement-entry-hosted-summary.mjs";
 
 const producer = "a".repeat(40);
+const cliSource = readFileSync(new URL(
+	"../../scripts/summarize-php-wasm-refinement-entry-hosted.mjs", import.meta.url
+), "utf8");
 const tapName = item => item.kind === "callback"
 	? "instrumented PHP-Wasm callbacks close and execute every selected entry"
 	: item.kind === "owned"
@@ -28,7 +32,7 @@ const tap = name => `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n1..1\n`
 	+ "# skipped 0\n# todo 0\n# duration_ms 1\n";
 const verification = checkPhpWasmRefinementEntryVerifier(producer, {
 	verifierCommit: producer, modifiedSourcePaths: [], untrackedSourcePaths: []
-	, nodeVersion: "22.23.3"
+	, verifierNodeVersion: "22.23.3"
 });
 const result = (selection, paths, callback) => callback ? {
 	schemaVersion: 1, family: selection.family, route: selection.route
@@ -92,23 +96,35 @@ const run = (maps = artifactMaps(), verifier = checkers) =>
 		producer, artifacts(maps), verification, verifier
 	);
 
-test("hosted PHP-Wasm entry promotion closes the verifier checkout and Node reporter", () => {
+test("hosted PHP-Wasm entry promotion closes its source paths and verifier runtime", () => {
 	assert.deepEqual(verification, {
 		verifierCommit: producer, sourcePathsClean: true
 		, sourcePaths: ["src", "tests", "scripts"]
-		, nodeVersion: "22.23.3", nodeMajor: 22
+		, sourcePathClosure: "tracked-and-untracked-nonignored"
+		, verifierNodeVersion: "22.23.3", verifierNodeMajor: 22
 	});
 	for(const [change, pattern] of [
 		[state => { state.verifierCommit = "b".repeat(40); }, /producer revision/u]
 		, [state => { state.modifiedSourcePaths = ["src/changed.mjs"]; }, /unmodified/u]
 		, [state => { state.untrackedSourcePaths = ["tests/forged.mjs"]; }, /untracked/u]
-		, [state => { state.nodeVersion = "24.0.0"; }, /Node 22/u]
+		, [state => { state.verifierNodeVersion = "24.0.0"; }, /Node 22/u]
 	]) {
 		const state = { verifierCommit: producer, modifiedSourcePaths: []
-			, untrackedSourcePaths: [], nodeVersion: "22.23.3" };
+			, untrackedSourcePaths: [], verifierNodeVersion: "22.23.3" };
 		change(state);
 		assert.throws(() => checkPhpWasmRefinementEntryVerifier(producer, state), pattern);
 	}
+});
+
+test("hosted PHP-Wasm entry promotion anchors Git observations to its repository", () => {
+	assert.match(cliSource
+		, /const repositoryRoot = resolve\(fileURLToPath\(new URL\("\.\."/u);
+	assert.match(cliSource
+		, /execFileSync\("git", args, \{\n\tcwd: repositoryRoot, encoding: "utf8"/u);
+	assert.match(cliSource
+		, /assert\.equal\(resolve\(git\(\["rev-parse", "--show-toplevel"\]\)\), repositoryRoot/u);
+	assert.equal(cliSource.match(/execFileSync\("git"/gu)?.length, 1
+		, "all Git observations use the repository-root wrapper");
 });
 
 test("hosted PHP-Wasm entry promotion rechecks the complete closed artifact matrix", async () => {

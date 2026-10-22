@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, readdir } from "node:fs/promises";
 import { isAbsolute, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import {
@@ -30,15 +31,21 @@ for(let index = 0; index < args.length; index += 2)
 assert.match(selected["--producer"], /^[a-f0-9]{40}$/u);
 assert.ok(isAbsolute(selected["--directory"])
 	&& resolve(selected["--directory"]) === selected["--directory"], usage);
-const gitLines = args => execFileSync("git", args, { encoding: "utf8" }).trim()
+const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const git = args => execFileSync("git", args, {
+	cwd: repositoryRoot, encoding: "utf8"
+}).trim();
+assert.equal(resolve(git(["rev-parse", "--show-toplevel"])), repositoryRoot
+	, "hosted verifier script must belong to the checked repository root");
+const gitLines = args => git(args)
 	.split("\n").filter(Boolean);
 const verification = checkPhpWasmRefinementEntryVerifier(selected["--producer"], {
-	verifierCommit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+	verifierCommit: git(["rev-parse", "HEAD"])
 	, modifiedSourcePaths: gitLines(["diff", "--name-only", "HEAD", "--"
 		, "src", "tests", "scripts"])
 	, untrackedSourcePaths: gitLines(["ls-files", "--others", "--exclude-standard"
 		, "--", "src", "tests", "scripts"])
-	, nodeVersion: process.versions.node
+	, verifierNodeVersion: process.versions.node
 });
 const names = phpWasmRefinementEntryArtifactNames(selected["--producer"]);
 const entries = await readdir(selected["--directory"], { withFileTypes: true });
