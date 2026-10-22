@@ -96,8 +96,10 @@ const replay = async (lane, root, revision) => {
 	const tap = await readFile(join(output, "acceptance.tap"), "utf8");
 	if(lane === "browser")
 	{
-		const runtime = JSON.parse(await readFile(
-			join(output, "runtime-before.json"), "utf8"));
+		const runtimeBytes = await readFile(join(output, "runtime-before.json"));
+		assert.deepEqual(await readFile(join(output, "runtime-after.json"))
+			, runtimeBytes, "Browser runtime identity changed during acceptance");
+		const runtime = JSON.parse(runtimeBytes);
 		return {
 			...checkCallbackCheckedRecordBrowserCi({
 				producer: revision, tap: join(output, "acceptance.tap")

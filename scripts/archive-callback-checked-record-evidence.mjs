@@ -164,7 +164,7 @@ const partsRoot = await mkdtemp(join(
 try
 {
 	const required = lane === "browser"
-		? ["acceptance.tap", "records", "runtime-before.json"
+		? ["acceptance.tap", "records", "runtime-after.json", "runtime-before.json"
 			, "verification.json"]
 		: ["acceptance.tap", "report.json", "verification.json"];
 	assert.deepEqual((await readdir(extracted.root)).sort()
@@ -178,8 +178,11 @@ try
 	let accepted;
 	if(lane === "browser")
 	{
-		const runtime = JSON.parse(await readFile(
-			join(outputRoot, "runtime-before.json"), "utf8"));
+		const runtimeBytes = await readFile(
+			join(outputRoot, "runtime-before.json"));
+		assert.deepEqual(await readFile(join(outputRoot, "runtime-after.json"))
+			, runtimeBytes, "Browser runtime identity changed during acceptance");
+		const runtime = JSON.parse(runtimeBytes);
 		accepted = {
 			...checkCallbackCheckedRecordBrowserCi({
 				producer: revision, tap: join(outputRoot, "acceptance.tap")
