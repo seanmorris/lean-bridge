@@ -1,0 +1,70 @@
+{
+  "additions": [
+    {
+      "currentSha256": "f67f3ba3fe097c145e87d8bbece812d9b5c0ce8f23abe2228614fce12c23333a",
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix-tests.mjs"
+    },
+    {
+      "currentSha256": "2f314806897ad513764f95c400644f1e5d9ab0767ce7297be9fd2473f41a90e0",
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix.mjs"
+    },
+    {
+      "currentSha256": "30272274a53e169d0d3b2cf827a4f1b6a233124021daf54536bd82698392fa55",
+      "path": "scripts/update-php-wasm-refinement-entry-matrix-source-history.mjs"
+    },
+    {
+      "currentSha256": "e68ed953153e0d874753c8c21d7799f62a129f516d6a07edf5bb5987cc6eca77",
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "4879a7d6469fa6514d8b15802548a94e180b6878b5bbcdf54ad4459f52f548b4",
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "70eec0a2c0c51815cc48553ccb676391b30a9ffd",
+  "milestone": "php-wasm-refinement-entry-matrix-v1",
+  "predecessorCommit": "42ffbb8b6a1562241039f3c8ca7f48cdadfe0824",
+  "schemaVersion": 1,
+  "scope": "The PHP-Wasm refinement entry promotion surface is a closed ordered topology of twenty-eight ordinary or reviewed route cells across copied, owned, callback and indexed families. Twenty-six exact hosted artifact identities map to four workflows because each callback-family artifact contains both independently checked routes. The aggregate gate rejects missing, duplicate, reordered, widened or forged observations while preserving the distinction between instrumented entry probes and unmodified-package qualification.",
+  "updates": [
+    {
+      "currentSha256": "40d58702beab84d7e8e59c58ba7ad17f77285e87279ee5ad1eef15f0732fc9de",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-matrix-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-matrix-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3064
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "e78e33d385fd8889445ba6f4cba75926ef8e53e3e3f751a47202b1c0cc3a9ff2"
+    },
+    {
+      "currentSha256": "cce196ece14e9fdb212b5ade88ed7209415d8834ed2d95b38acda9af7bac3618",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryMatrixSource, phpWasmRefinementEntryMatrixChangedPaths } from \"./php-wasm-refinement-entry-matrix-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryMatrixChangedPaths\n\t, ...phpWasmRefinementCiMatrixChangedPaths\n",
+          "previous": "\t...phpWasmRefinementCiMatrixChangedPaths\n",
+          "start": 144987
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryMatrix\n\t\t= beforePhpWasmRefinementEntryMatrixSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryMatrix) === expected)\n\t\treturn phpWasmRefinementEntryMatrix;\n",
+          "previous": "",
+          "start": 176285
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementCiMatrixSource(\n\t\t\tpath, phpWasmRefinementEntryMatrix, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementCiMatrixSource(path, text, expected);\n",
+          "start": 176516
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "494ae461ba298159690ccf41b43d3f607f7128b9f84f5955b526042fdf3e4084"
+    }
+  ]
+}
