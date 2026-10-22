@@ -64,6 +64,7 @@ import "./helpers/owned-checked-record-javascript-retention-source-history-tests
 import "./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs";
 import "./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs";
 import "./helpers/recursive-php-wasm-evidence-replay-repair-source-history-tests.mjs";
+import "./helpers/callback-checked-record-retained-packages-source-history-tests.mjs";
 import "./helpers/owned-checked-record-hosted-archivers-source-history-tests.mjs";
 import "./helpers/owned-checked-record-php-wasm-retained-handoff-source-history-tests.mjs";
 import "./helpers/owned-subtype-php-wasm-package-gap-source-history-tests.mjs";

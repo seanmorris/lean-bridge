@@ -1,0 +1,355 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e9bd547b06102076dcd0589d03fbc4bfc60f78a7d6b6b112fc8778ccc60ff0ba",
+      "path": "tests/helpers/callback-checked-record-retained-packages.mjs"
+    },
+    {
+      "currentSha256": "44239dc8e5886bcf581e1283a0a854439155833dad4d813b846c140d6131ff13",
+      "path": "scripts/update-callback-checked-record-retained-packages-source-history.mjs"
+    },
+    {
+      "currentSha256": "8b0e769720a3483b0ff7cf775a45747407432fe6db02da21b659be68c3d1cc5a",
+      "path": "tests/helpers/callback-checked-record-retained-packages-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e9c4cda0bbf9d4887f0992486d89589b0be362aac77bf49f790ad8071628ef59",
+      "path": "tests/helpers/callback-checked-record-retained-packages-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "fc8ed53b543a20a25db19c340769cb59a56086fa",
+  "integrationUpdates": [
+    {
+      "currentSha256": "86f9410b82531f5b47b383533665e068e543340c4dec34541bef29a5e6fd6cc5",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordRetainedPackagesSource, callbackCheckedRecordRetainedPackagesChangedPaths } from \"./callback-checked-record-retained-packages-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackCheckedRecordRetainedPackagesChangedPaths\n\t, ...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
+          "previous": "\t...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
+          "start": 148692
+        },
+        {
+          "current": "\tconst callbackCheckedRecordRetainedPackages\n\t\t= beforeCallbackCheckedRecordRetainedPackagesSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordRetainedPackages) === expected)\n\t\treturn callbackCheckedRecordRetainedPackages;\n",
+          "previous": "",
+          "start": 181118
+        },
+        {
+          "current": "\t\t\tpath, callbackCheckedRecordRetainedPackages, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 181457
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e8b0d1e26bd22b10e475c9bdae04678cba1d3a8c9d712ba670e5fc6391c25fcf"
+    },
+    {
+      "currentSha256": "d4f09d1142d450627795e6b0cf6b86bc5bda0adee0d18c65042c8bdf71b8a041",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-retained-packages-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4356
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "494337cad55e98c9a26da835f7787d6d894945207247af300391ca4c9ea14bd2"
+    }
+  ],
+  "milestone": "callback-checked-record-retained-packages-v1",
+  "predecessorCommit": "921600792ed5c3dcddf2a0b7f1206aede4ed0acb",
+  "schemaVersion": 1,
+  "scope": "Retain every callback checked-record route's receipt-named package set beside its hosted report before installation, install from the retained copy, verify retained bytes in the CI checkers, refuse new archives from non-retaining producers, and keep existing immutable archives replayable.",
+  "updates": [
+    {
+      "currentSha256": "ff4559be0b32f3d060be930056c86f18f70b7d0596382be005efcec0e6555c45",
+      "edits": [
+        {
+          "current": "import {\n\tcallbackCheckedRecordRetainedPackagesName\n\t, callbackCheckedRecordRetentionRequired\n\t, verifyCallbackCheckedRecordRetainedPackages\n} from \"../tests/helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 987
+        },
+        {
+          "current": "\tif(lane !== \"browser\")\n\t\tassert.ok(callbackCheckedRecordRetentionRequired(\n\t\t\tconfig.nativeKind ?? \"remaining\"\n\t\t\t, path => callbackCheckedRecordHostedOriginal(revision, path))\n\t\t, \"New callback checked-record archives require a producer that retains its installed package sets\");\n",
+          "previous": "",
+          "start": 6931
+        },
+        {
+          "current": "\t\t: [\"acceptance.tap\", \"evidence\", \"report.json\"\n\t\t\t, callbackCheckedRecordRetainedPackagesName, \"verification.json\"];\n",
+          "previous": "\t\t: [\"acceptance.tap\", \"report.json\", \"verification.json\"];\n",
+          "start": 7354
+        },
+        {
+          "current": "\t\taccepted = {\n\t\t\t...config.nativeKind\n\t\t\t\t? callbackCheckedRecordNativeVerification(\n\t\t\t\t\tconfig.nativeKind, revision, tap, report)\n\t\t\t\t: callbackCheckedRecordRemainingVerification(\n\t\t\t\t\trevision, config.profiles, tap, report)\n\t\t\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\t\t\toutputRoot, report)\n\t\t};\n",
+          "previous": "\t\taccepted = config.nativeKind\n\t\t\t? callbackCheckedRecordNativeVerification(\n\t\t\t\tconfig.nativeKind, revision, tap, report)\n\t\t\t: callbackCheckedRecordRemainingVerification(\n\t\t\t\trevision, config.profiles, tap, report);\n",
+          "start": 8717
+        }
+      ],
+      "path": "scripts/archive-callback-checked-record-evidence.mjs",
+      "previousSha256": "ed0dcb05c7533008797c2af340797cb1cc5bf8112b23924f276e22c1c70c0c27"
+    },
+    {
+      "currentSha256": "897f68f8b4ed5c83027edfa414f510aeee686d04562088f2ae9aa257213ad9e1",
+      "edits": [
+        {
+          "current": "import { dirname } from \"node:path\";\n",
+          "previous": "",
+          "start": 168
+        },
+        {
+          "current": "import { verifyCallbackCheckedRecordRetainedPackages } from \"../tests/helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 262
+        },
+        {
+          "current": "const report = JSON.parse(await readFile(selected.report, \"utf8\"));\nprocess.stdout.write(canonicalJson({\n\t...callbackCheckedRecordNativeVerification(\"language\", selected.producer\n\t\t, await readFile(selected.tap, \"utf8\"), report)\n\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\tdirname(selected.report), report)\n}));\n",
+          "previous": "process.stdout.write(canonicalJson(callbackCheckedRecordNativeVerification(\"language\", selected.producer\n\t, await readFile(selected.tap, \"utf8\"), JSON.parse(await readFile(selected.report, \"utf8\")))));\n",
+          "start": 623
+        }
+      ],
+      "path": "scripts/check-callback-checked-record-languages-ci.mjs",
+      "previousSha256": "9f7bab4ad0f41db3195bddf45c02ee7470d5e5e008945883196c79eac520a5bc"
+    },
+    {
+      "currentSha256": "245b2ea9fff421b6f1c56d37cdda15b8cd537e46dd8d7d718883a6bb24000d7d",
+      "edits": [
+        {
+          "current": "import { dirname } from \"node:path\";\n",
+          "previous": "",
+          "start": 152
+        },
+        {
+          "current": "import { verifyCallbackCheckedRecordRetainedPackages } from \"../tests/helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 246
+        },
+        {
+          "current": "const report = JSON.parse(await readFile(selected.report, \"utf8\"));\nprocess.stdout.write(canonicalJson({\n\t...callbackCheckedRecordNativeVerification(\"native\", selected.producer\n\t\t, await readFile(selected.tap, \"utf8\"), report)\n\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\tdirname(selected.report), report)\n}));\n",
+          "previous": "process.stdout.write(canonicalJson(callbackCheckedRecordNativeVerification(\"native\", selected.producer\n\t, await readFile(selected.tap, \"utf8\"), JSON.parse(await readFile(selected.report, \"utf8\")))));\n",
+          "start": 607
+        }
+      ],
+      "path": "scripts/check-callback-checked-record-native-ci.mjs",
+      "previousSha256": "6c60ac6a488be4fbcc89215262a5af5f41b4c1f611cba4c117b859ae23059e16"
+    },
+    {
+      "currentSha256": "11d39e2a866b664558d143ad03730229de8307590f8bde5114cec3c1edfb030f",
+      "edits": [
+        {
+          "current": "import { dirname } from \"node:path\";\n",
+          "previous": "",
+          "start": 151
+        },
+        {
+          "current": "import { verifyCallbackCheckedRecordRetainedPackages } from \"../tests/helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 245
+        },
+        {
+          "current": "const report = JSON.parse(await readFile(selected.report, \"utf8\"));\nprocess.stdout.write(canonicalJson({\n\t...callbackCheckedRecordNativeVerification(\"perl\", selected.producer\n\t\t, await readFile(selected.tap, \"utf8\"), report)\n\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\tdirname(selected.report), report)\n}));\n",
+          "previous": "process.stdout.write(canonicalJson(callbackCheckedRecordNativeVerification(\"perl\", selected.producer\n\t, await readFile(selected.tap, \"utf8\"), JSON.parse(await readFile(selected.report, \"utf8\")))));\n",
+          "start": 606
+        }
+      ],
+      "path": "scripts/check-callback-checked-record-perl-ci.mjs",
+      "previousSha256": "7bad8f9e1e0a97417b310f283e2f452b7edaca06e9f4383194ba623f57315834"
+    },
+    {
+      "currentSha256": "052322f7b09086760db0473cbe891f524e2ecef9359d1ce0e7a6c79cd79d2569",
+      "edits": [
+        {
+          "current": "import { dirname } from \"node:path\";\n",
+          "previous": "",
+          "start": 146
+        },
+        {
+          "current": "import { verifyCallbackCheckedRecordRetainedPackages } from \"../tests/helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 240
+        },
+        {
+          "current": "process.stdout.write(canonicalJson({\n\t...callbackCheckedRecordRemainingVerification(\n\t\tselected.producer, selected.profiles, tap, report)\n\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\tdirname(selected.report), report)\n}));\n",
+          "previous": "process.stdout.write(canonicalJson(callbackCheckedRecordRemainingVerification(\n\tselected.producer, selected.profiles, tap, report\n)));\n",
+          "start": 734
+        }
+      ],
+      "path": "scripts/check-callback-checked-record-remaining-ci.mjs",
+      "previousSha256": "7a04e6ee7dee2234af445f869c2aaf37ec1882e0c86a1a3f313dde0006636cd9"
+    },
+    {
+      "currentSha256": "79d41fddcdabfdc9d628a697d8ea63817573b7a2ff3fcb71927a20dc88b396fc",
+      "edits": [
+        {
+          "current": "import {\n\tclearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute\n\t, writeCallbackCheckedRecordRetainedPackages\n} from \"./helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 992
+        },
+        {
+          "current": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_OUTPUT\n\t\t?? \"build/callback-checked-records/languages/report.json\");\n\tawait clearCallbackCheckedRecordRetainedPackages(output);\n\tconst retainedEntries = [];\n",
+          "previous": "",
+          "start": 2180
+        },
+        {
+          "current": "\t\tconst { receipt, entry } = await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: outputRoot, handoff });\n\t\tretainedEntries.push(entry);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "start": 3926
+        },
+        {
+          "current": "",
+          "previous": "\tconst output = resolve(process.env\n\t\t.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_OUTPUT\n\t\t?? \"build/callback-checked-records/languages.json\");\n",
+          "start": 5465
+        },
+        {
+          "current": "\tawait writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);\n",
+          "previous": "",
+          "start": 5570
+        }
+      ],
+      "path": "tests/callback-checked-record-language-installed.test.mjs",
+      "previousSha256": "ca94dc06fe4cccbc2460a461ef1f0c4b1027fb0af584df4b6c46f13bc86c01ca"
+    },
+    {
+      "currentSha256": "ac07db3d9b807b567eb6e8db97799d5aab7f23c0b547cb6fee94aef9ac38ffab",
+      "edits": [
+        {
+          "current": "import { readFileSync } from \"node:fs\";\nimport {\n\tappendFile, mkdtemp, readFile, rm, writeFile\n} from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join } from \"node:path\";\n",
+          "previous": "import { readFile } from \"node:fs/promises\";\n",
+          "start": 136
+        },
+        {
+          "current": "import { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\nimport {\n\tpackageSetReceiptName, writePackageSetReceipt\n} from \"../src/release/package-set-receipt.mjs\";\nimport {\n\tcallbackCheckedRecordRetentionRequired\n\t, clearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute\n\t, verifyCallbackCheckedRecordRetainedPackages\n\t, writeCallbackCheckedRecordRetainedPackages\n} from \"./helpers/callback-checked-record-retained-packages.mjs\";\nimport { saveLakeFile } from \"./helpers/lake-workspace.mjs\";\n",
+          "previous": "",
+          "start": 356
+        },
+        {
+          "current": "\nconst producedRelease = async (root, route) => {\n\tconst abi = { id: \"native-library-v1\", bindingIrSha256: sha(\"1\")\n\t\t, runtimeIdentity: sha(\"2\") };\n\tconst packages = [];\n\tfor(const target of [\"c\", \"cpp\"])\n\t{\n\t\tconst path = `archives/${target}/callbackcheckedrecords-${route}.fixture`;\n\t\tconst bytes = Buffer.from(`Inert ${target} archive for ${route}\\n`);\n\t\tawait saveLakeFile(root, path, bytes);\n\t\tconst artifacts = [{ path, bytes: bytes.length, sha256: sha256(bytes) }];\n\t\tpackages.push({ target, ecosystem: target, name: \"callbackcheckedrecords\"\n\t\t\t, version: \"1.0.0\", profile: abi.id, role: \"component\"\n\t\t\t, runtimeIdentity: abi.runtimeIdentity, runtimeDelivery: \"embedded\"\n\t\t\t, requires: [], artifacts });\n\t}\n\treturn writePackageSetReceipt({ root\n\t\t, component: { id: \"callbackcheckedrecords@1.0.0\"\n\t\t\t, name: \"callbackcheckedrecords\", version: \"1.0.0\" }\n\t\t, source: { treeSha256: sha(\"9\") }, profiles: [abi], packages });\n};\n\nconst retainedLane = async (t, { perl = false } = {}) => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-callback-checked-record-retained-\"));\n\tt.after(() => rm(root, { recursive: true, force: true }));\n\tconst output = join(root, \"lane-ci/report.json\");\n\tawait clearCallbackCheckedRecordRetainedPackages(output);\n\tconst entries = [], reports = [];\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t{\n\t\tconst release = join(root, `${route}-release`);\n\t\tawait producedRelease(release, route);\n\t\tconst handoff = join(root, `${route}-handoff`);\n\t\tconst { receipt, entry } = await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: release, handoff });\n\t\tentries.push(entry);\n\t\tconst installed = await readFile(join(handoff, packageSetReceiptName));\n\t\tassert.equal(sha256(installed), entry.receiptSha256);\n\t\treports.push(perl ? { route, packages: receipt.packages }\n\t\t\t: { route, receiptSha256: entry.receiptSha256 });\n\t}\n\tawait writeCallbackCheckedRecordRetainedPackages(output, entries.toReversed());\n\treturn { root, outputRoot: join(root, \"lane-ci\"), output\n\t\t, report: { schemaVersion: 1, reports } };\n};\n\ntest(\"callback checked-record lanes install from and verify their retained package sets\", async t => {\n\tfor(const perl of [false, true])\n\t{\n\t\tconst lane = await retainedLane(t, { perl });\n\t\tconst summary = await verifyCallbackCheckedRecordRetainedPackages(\n\t\t\tlane.outputRoot, lane.report);\n\t\tassert.deepEqual(summary.routes.map(route => route.route)\n\t\t\t, [\"ordinary\", \"reviewed\"]);\n\t\tfor(const route of summary.routes)\n\t\t\tassert.ok(route.archives === 2 && route.archiveBytes > 0);\n\t}\n\tconst exists = await retainedLane(t);\n\tawait assert.rejects(retainCallbackCheckedRecordRoute({ output: exists.output\n\t\t, route: \"ordinary\", source: join(exists.root, \"ordinary-release\")\n\t\t, handoff: join(exists.root, \"again\") }), /must not already exist/u);\n});\n\ntest(\"callback checked-record retained package verification rejects every tampering\", async t => {\n\tconst rejects = async (change, pattern) => {\n\t\tconst lane = await retainedLane(t);\n\t\tawait change(lane);\n\t\tawait assert.rejects(verifyCallbackCheckedRecordRetainedPackages(\n\t\t\tlane.outputRoot, lane.report), pattern);\n\t};\n\tawait rejects(({ outputRoot }) => appendFile(join(outputRoot\n\t\t, \"evidence/ordinary/handoff/archives/c/callbackcheckedrecords-ordinary.fixture\"), \"x\")\n\t, /Archive differs|archive-mismatch/u);\n\tawait rejects(({ outputRoot }) => writeFile(join(outputRoot\n\t\t, \"evidence/reviewed/handoff/CallbackCheckedRecords.lean\"), \"-- source\\n\")\n\t, /exactly the receipt-named set/u);\n\tawait rejects(({ outputRoot }) => saveLakeFile(outputRoot\n\t\t, \"evidence/stale/handoff/extra.fixture\", \"stale\\n\")\n\t, /only route package sets/u);\n\tawait rejects(async ({ outputRoot }) => {\n\t\tconst path = join(outputRoot, \"retained-packages.json\");\n\t\tawait writeFile(path, JSON.stringify(JSON.parse(await readFile(path, \"utf8\"))));\n\t}, /must be canonical/u);\n\tawait rejects(async ({ outputRoot }) => {\n\t\tconst path = join(outputRoot, \"retained-packages.json\");\n\t\tconst record = JSON.parse(await readFile(path, \"utf8\"));\n\t\trecord.routes[1].archiveBytes += 1;\n\t\tawait writeFile(path, canonicalJson(record));\n\t}, /retained package metadata/u);\n\tawait rejects(async ({ report }) => {\n\t\treport.reports[0].receiptSha256 = sha(\"0\");\n\t}, /reported receipt is the retained receipt/u);\n\tawait rejects(async ({ report }) => {\n\t\treport.reports = report.reports.slice(1);\n\t}, /report covers the route/u);\n\tconst perl = await retainedLane(t, { perl: true });\n\tperl.report.reports[1].packages[0].name = \"forged\";\n\tawait assert.rejects(verifyCallbackCheckedRecordRetainedPackages(perl.outputRoot\n\t\t, perl.report), /reported packages are the retained set/u);\n});\n\ntest(\"callback checked-record producers, checkers and archives require retained packages\", async () => {\n\tfor(const lane of [\"native\", \"language\", \"perl\", \"remaining\"])\n\t{\n\t\tconst source = await readFile(`tests/callback-checked-record-${lane}-installed.test.mjs`, \"utf8\");\n\t\tfor(const required of [\"await clearCallbackCheckedRecordRetainedPackages(output);\"\n\t\t\t, \"await retainCallbackCheckedRecordRoute({\\n\\t\\t\\toutput, route, source: outputRoot, handoff });\"\n\t\t\t, \"await writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);\"])\n\t\t\tassert.ok(source.includes(required), `${lane}: ${required}`);\n\t\tassert.doesNotMatch(source, /copyPackageSetHandoff\\(outputRoot/u, lane);\n\t}\n\tfor(const lane of [\"native\", \"languages\", \"perl\", \"remaining\"])\n\t\tassert.match(await readFile(`scripts/check-callback-checked-record-${lane}-ci.mjs`, \"utf8\")\n\t\t\t, /retainedPackages: await verifyCallbackCheckedRecordRetainedPackages\\(\\n\\t\\tdirname\\(selected\\.report\\), report\\)/u, lane);\n\tfor(const path of [\"scripts/archive-callback-checked-record-evidence.mjs\"\n\t\t, \"tests/helpers/callback-checked-record-hosted-evidence.mjs\"])\n\t\tassert.match(await readFile(path, \"utf8\")\n\t\t\t, /retainedPackages: await verifyCallbackCheckedRecordRetainedPackages\\(/u, path);\n});\n\ntest(\"callback checked-record retention is required exactly for retention-era producers\", async () => {\n\tconst legacy = () => Buffer.from(\"const receipt = await copyPackageSetHandoff(outputRoot, handoff);\\n\");\n\tfor(const kind of [\"native\", \"language\", \"perl\", \"remaining\"])\n\t{\n\t\tassert.equal(callbackCheckedRecordRetentionRequired(kind, legacy), false, kind);\n\t\tassert.equal(callbackCheckedRecordRetentionRequired(kind\n\t\t\t, path => readFileSync(path)), true, kind);\n\t}\n\tassert.throws(() => callbackCheckedRecordRetentionRequired(\"browser\", legacy));\n\tconst replay = await readFile(\"tests/helpers/callback-checked-record-hosted-evidence.mjs\", \"utf8\");\n\tassert.match(replay, /if\\(!callbackCheckedRecordRetentionRequired\\(/u);\n\tconst archiver = await readFile(\"scripts/archive-callback-checked-record-evidence.mjs\", \"utf8\");\n\tassert.match(archiver\n\t\t, /New callback checked-record archives require a producer that retains its installed package sets/u);\n});\n",
+          "previous": "",
+          "start": 16032
+        }
+      ],
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previousSha256": "9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b"
+    },
+    {
+      "currentSha256": "1f382900ea5f97205162ea70a164e1d02deb177ac85306179e516c44d0f7a1c0",
+      "edits": [
+        {
+          "current": "import {\n\tclearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute\n\t, writeCallbackCheckedRecordRetainedPackages\n} from \"./helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1266
+        },
+        {
+          "current": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_OUTPUT\n\t\t?? \"build/callback-checked-records/native/report.json\");\n\tawait clearCallbackCheckedRecordRetainedPackages(output);\n\tconst retainedEntries = [];\n",
+          "previous": "",
+          "start": 2960
+        },
+        {
+          "current": "\t\tconst { receipt, entry } = await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: outputRoot, handoff });\n\t\tretainedEntries.push(entry);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "start": 4341
+        },
+        {
+          "current": "",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_OUTPUT\n\t\t?? \"build/callback-checked-records/native.json\");\n",
+          "start": 5681
+        },
+        {
+          "current": "\tawait writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);\n",
+          "previous": "",
+          "start": 5783
+        }
+      ],
+      "path": "tests/callback-checked-record-native-installed.test.mjs",
+      "previousSha256": "fb89bc2b1959019d3b0d1ffdb239ceb3f20415d15d3103caadd37bd6915627bd"
+    },
+    {
+      "currentSha256": "2749ee9d963c1b60b0cb297c5dc27c745618ba02f325fac2f0aa9ca9df587f17",
+      "edits": [
+        {
+          "current": "import {\n\tclearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute\n\t, writeCallbackCheckedRecordRetainedPackages\n} from \"./helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1362
+        },
+        {
+          "current": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_OUTPUT\n\t\t?? \"build/callback-checked-records/perl/report.json\");\n\tawait clearCallbackCheckedRecordRetainedPackages(output);\n\tconst retainedEntries = [];\n",
+          "previous": "",
+          "start": 2347
+        },
+        {
+          "current": "\t\tconst { receipt, entry } = await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: outputRoot, handoff });\n\t\tretainedEntries.push(entry);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "start": 4295
+        },
+        {
+          "current": "",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_OUTPUT\n\t\t?? \"build/callback-checked-records/perl.json\");\n",
+          "start": 7289
+        },
+        {
+          "current": "\tawait writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);\n",
+          "previous": "",
+          "start": 7391
+        }
+      ],
+      "path": "tests/callback-checked-record-perl-installed.test.mjs",
+      "previousSha256": "63fde964b62dde33b23b416927ecc60eb9b918e17e1ab7b9cc83cdf4d15b7292"
+    },
+    {
+      "currentSha256": "46d67e328fae1778041efd6fdc192aea6092304a0332f594fab9ad5b9736f288",
+      "edits": [
+        {
+          "current": "import {\n\tclearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute\n\t, writeCallbackCheckedRecordRetainedPackages\n} from \"./helpers/callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1649
+        },
+        {
+          "current": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_REMAINING_OUTPUT\n\t\t?? \"build/callback-checked-records/remaining/report.json\");\n\tawait clearCallbackCheckedRecordRetainedPackages(output);\n\tconst retainedEntries = [];\n",
+          "previous": "",
+          "start": 3648
+        },
+        {
+          "current": "\t\tconst { receipt, entry } = await retainCallbackCheckedRecordRoute({\n\t\t\toutput, route, source: outputRoot, handoff });\n\t\tretainedEntries.push(entry);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "start": 5389
+        },
+        {
+          "current": "",
+          "previous": "\tconst output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_REMAINING_OUTPUT\n\t\t?? \"build/callback-checked-records/remaining.json\");\n",
+          "start": 9559
+        },
+        {
+          "current": "\tawait writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);\n",
+          "previous": "",
+          "start": 9661
+        }
+      ],
+      "path": "tests/callback-checked-record-remaining-installed.test.mjs",
+      "previousSha256": "b67d46fa89dfb42c8501ae52e72b4853ba53b7cb05bda2a582ec8cb20f43bb40"
+    },
+    {
+      "currentSha256": "0874d1e4658264d4ddd0174dc73669b8b7ce74b1831302d4ed8cf752367feb59",
+      "edits": [
+        {
+          "current": "import {\n\tcallbackCheckedRecordRetentionRequired\n\t, verifyCallbackCheckedRecordRetainedPackages\n} from \"./callback-checked-record-retained-packages.mjs\";\n",
+          "previous": "",
+          "start": 813
+        },
+        {
+          "current": "\tconst verified = contract.nativeKind\n",
+          "previous": "\treturn contract.nativeKind\n",
+          "start": 4697
+        },
+        {
+          "current": "\tif(!callbackCheckedRecordRetentionRequired(contract.nativeKind ?? \"remaining\"\n\t\t, path => callbackCheckedRecordHostedOriginal(revision, path)))\n\t\treturn verified;\n\treturn { ...verified\n\t\t, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(\n\t\t\toutput, report) };\n",
+          "previous": "",
+          "start": 4921
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-hosted-evidence.mjs",
+      "previousSha256": "19e4455fafc478f879ec4bc70b14902a295145cbc7e0aac5d9f2724d984c4dd2"
+    }
+  ]
+}
