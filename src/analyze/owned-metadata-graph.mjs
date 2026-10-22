@@ -98,7 +98,12 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 		charge(0);
 		const kind = kindOf(type);
 		if(!["alias", "record", "variant"].includes(kind)) fail("nominal table only admits aliases, records and variants");
-		keys(type, ["kind", "name", "lean", kind === "alias" ? "target" : kind === "record" ? "fields" : "cases", ...(kind === "record" ? ["constructor"] : [])]);
+		// A checked record keeps its erased proof names on the definition; the native validator
+		// checks them against the payload fields exactly as in a copied graph.
+		const members = kind === "alias" ? "target" : kind === "record" ? "fields" : "cases";
+		const recordKeys = kind !== "record" ? []
+			: ["constructor", ...Object.hasOwn(type, "erased") ? ["erased"] : []];
+		keys(type, ["kind", "name", "lean", members, ...recordKeys]);
 		name(type.name); name(type.lean);
 		if(table.has(type.name)) fail("duplicate nominal definition");
 		table.set(type.name, type);
@@ -146,8 +151,10 @@ export const validateOwnedMetadataGraph = (graph, policy, validate) => {
 			{ active.add(child); stack.push({ id: child, index: 0 }); }
 		}
 	}
-	validate(graph.root, table);
-	for(const type of graph.types) validate(type, table);
+	// Definitions are validated as nominal transports, so a proof-carrying record may sit in
+	// the table; its uses still choose a constructor or project it at their own sites.
+	validate(graph.root, table, { root: true, definition: false });
+	for(const type of graph.types) validate(type, table, { root: false, definition: true });
 	if(["cType", "box", "unbox", "heap"].some(field => graph.abi[field] !== graph.root.abi[field])) fail("graph representation differs from its root");
 	return graph;
 };

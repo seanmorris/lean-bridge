@@ -72,8 +72,11 @@ export const assertRefinement = (refinement, type, depth = 0, subtypeStructural 
 			const erased = definition?.source?.extensions?.["lean-lang.org/erased-proofs"];
 			const erasedFields = Array.isArray(erased) ? erased : erased?.fields;
 			const generic = definition?.source?.extensions?.["lean-lang.org/instantiation"] !== undefined;
+			// An owned record carrying erased proofs is admitted only at an explicitly
+			// ownership-aware boundary, exactly like owned plain records and variants.
 			if(!subtypeStructural || transport?.kind !== "named" || definition?.kind !== "record"
-				|| definition.representation !== "copied" || !Array.isArray(erasedFields) || !erasedFields.length) fail();
+				|| (definition.representation !== "copied" && !(ownedStructural && definition.representation === "owned"))
+				|| !Array.isArray(erasedFields) || !erasedFields.length) fail();
 			const rich = Object.hasOwn(value, "fields") || Object.hasOwn(value, "name");
 			if(!rich)
 			{

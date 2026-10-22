@@ -97,6 +97,50 @@ export const validateOwnedNativeType = (type, policy, site = undefined) => {
 	return validate(type, 0, false, undefined, policy, false, true, site, site !== undefined, site === "result");
 };
 
+/**
+ * Require every consumed occurrence of a proof-carrying record in an owned graph to sit
+ * under its checked-record refinement, directly or through aliases and structural
+ * containers, including inside the fields of enclosing records and active variant cases.
+ * Produced occurrences stay bare because Lean already holds their proofs. A recursive
+ * back-edge inherits the constructor already selected on the finite path to it.
+ *
+ * @param graph - Structurally validated owned graph.
+ * @param consumed - Whether the host produces this site's value.
+ */
+const assertOwnedCheckedRecordCoverage = (graph, consumed) => {
+	if(!consumed) return;
+	const table = new Map(graph.types.map(definition => [definition.name, definition]));
+	const erased = definition => definition?.kind === "record" && Object.hasOwn(definition, "erased");
+	const visit = (node, selected, seen) => {
+		if(node?.kind === "refinement")
+		{
+			if(node.predicate?.kind === "checked-record") return visit(node.base, true, seen);
+			return visit(node.base, false, seen);
+		}
+		if(node?.kind === "reference")
+		{
+			// A back-edge to a record already on this finite path inherits its selection.
+			if(seen.has(node.name)) return;
+			const definition = table.get(node.name), inner = new Set([...seen, node.name]);
+			// A transparent alias keeps the selection made on the reference that names it.
+			if(definition?.kind === "alias") return visit(definition.target, selected, inner);
+			if(erased(definition) && !selected) fail("checked records require a structural native parameter constructor");
+			return visitDefinition(definition, inner);
+		}
+		if(node?.kind === "alias") return visit(node.target, selected, seen);
+		if(node?.kind === "record" && erased(node) && !selected) fail("checked records require a structural native parameter constructor");
+		if(["array", "list", "option"].includes(node?.kind)) return visit(node.element, false, seen);
+		if(["result", "tuple"].includes(node?.kind)) return node.arguments.forEach(child => visit(child, false, seen));
+	};
+	const visitDefinition = (definition, seen) => {
+		if(definition?.kind === "alias") return visit(definition.target, false, seen);
+		const fields = definition?.kind === "variant" ? definition.cases.flatMap(branch => branch.fields)
+			: definition?.kind === "record" ? definition.fields : [];
+		for(const field of fields) visit(field.type, false, seen);
+	};
+	visit(graph.root, false, new Set());
+};
+
 // `structural` stays true while only arrays, lists, options, products, results and aliases separate a
 // position from its top-level parameter or result.
 const validate = (type, depth, copied, references, policy, owned = false, structural = true, site = undefined, subtypeStructural = false, subtypeResult = false, erasedTransport = false) => {
@@ -105,8 +149,14 @@ const validate = (type, depth, copied, references, policy, owned = false, struct
 	if(type.kind === "owned-graph")
 	{
 		if(!policy || references || copied) fail("owned aggregates require a separately authorized graph boundary");
-		return validateOwnedMetadataGraph(type, policy, (value, table) => validate(value, 0, true, table, policy, true
-			, true, site, subtypeStructural, subtypeResult));
+		validateOwnedMetadataGraph(type, policy, (value, table, context) => validate(value, 0, true, table, policy, true
+			, true, site, subtypeStructural, subtypeResult, erasedTransport || context?.definition === true));
+		// Definitions validate as nominal transports, so per-use constructor coverage is a
+		// separate pass over the occurrences reachable from this site's root.
+		// The direction bit, not the site label, decides coverage: inside a directional
+		// callback the site is cleared while subtypeResult carries who produces the value.
+		if(!erasedTransport) assertOwnedCheckedRecordCoverage(type, !subtypeResult);
+		return type;
 	}
 	const fields = { primitive: ["kind", "name", "lean", "abi"]
 		, graph: ["kind", "root", "types", "abi"]
