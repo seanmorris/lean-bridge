@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryDocumentationPrecisionSource, phpWasmRefinementEntryDocumentationPrecisionChangedPaths } from "./php-wasm-refinement-entry-documentation-precision-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from "./php-wasm-refinement-entry-documentation-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierRootSource, phpWasmRefinementEntryHostedVerifierRootChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs";
 import { beforePhpWasmRefinementEntryPromotionSource, phpWasmRefinementEntryPromotionChangedPaths } from "./php-wasm-refinement-entry-promotion-source-history.mjs";
@@ -1913,7 +1914,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryDocumentationChangedPaths
+	...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
+	, ...phpWasmRefinementEntryDocumentationChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierRootChangedPaths
 	, ...phpWasmRefinementEntryPromotionChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierClosureChangedPaths
@@ -2609,8 +2611,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryDocumentationPrecision
+		= beforePhpWasmRefinementEntryDocumentationPrecisionSource(
+			path, text, expected
+		);
+	if(sha256(phpWasmRefinementEntryDocumentationPrecision) === expected)
+		return phpWasmRefinementEntryDocumentationPrecision;
 	const phpWasmRefinementEntryDocumentation
-		= beforePhpWasmRefinementEntryDocumentationSource(path, text, expected);
+		= beforePhpWasmRefinementEntryDocumentationSource(
+			path, phpWasmRefinementEntryDocumentationPrecision, expected
+		);
 	if(sha256(phpWasmRefinementEntryDocumentation) === expected)
 		return phpWasmRefinementEntryDocumentation;
 	const phpWasmRefinementEntryHostedVerifierRoot
