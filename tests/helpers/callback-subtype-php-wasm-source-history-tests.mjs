@@ -22,6 +22,7 @@ import {
 	, reverseCallbackSubtypePhpWasmUpdate
 } from "./callback-subtype-php-wasm-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
+import { sourceAtFinHistoryMilestone } from "./source-at-fin-history-milestone.mjs";
 
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
@@ -43,7 +44,9 @@ test("PHP-Wasm callback Subtype history restores every source", async () => {
 		, sha256(await readFile(callbackSubtypePhpWasmEvidencePath)));
 	for(const update of record.updates)
 	{
-		const current = await readFile(update.path, "utf8");
+		const current = await sourceAtFinHistoryMilestone(
+			update.path, update.currentSha256
+			, beforeCallbackSubtypePhpWasmSource);
 		const previous = git(["show"
 			, `${callbackSubtypePhpWasmPredecessor}:${update.path}`]);
 		assert.equal(sha256(current), update.currentSha256, update.path);
@@ -55,7 +58,8 @@ test("PHP-Wasm callback Subtype history restores every source", async () => {
 			update.path, current, update.previousSha256), previous, update.path);
 	}
 	for(const addition of record.additions)
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 });
 

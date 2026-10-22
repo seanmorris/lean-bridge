@@ -1,0 +1,536 @@
+{
+  "additions": [
+    {
+      "currentSha256": "429977876cb940b5c7589884c8504dceb34cd922033789fd6bd5892df13d2372",
+      "path": ".github/workflows/callback-refinements-php-wasm.yml"
+    },
+    {
+      "currentSha256": "02b9807c6eb23f4df744368c039aedcd8dabf710e1829577e2bd55a6fdf2f25b",
+      "path": "scripts/check-callback-refinements-php-wasm-reports.mjs"
+    },
+    {
+      "currentSha256": "37b16a91375c239ac8e25cc297fd804009728757eb372f907ec0324af4a7cb3d",
+      "path": "scripts/update-callback-refinements-php-wasm-source-history.mjs"
+    },
+    {
+      "currentSha256": "6aa5703f4cb84bd7663f86b4cb1c7fa989b19aa31ee063d7836fd92b421e6d0a",
+      "path": "tests/callback-refinements-php-wasm.test.mjs"
+    },
+    {
+      "currentSha256": "9159a886b6b3148bf2a41ac9898cc5b9e3cfde8ff31bc6530e28a0170b7d413d",
+      "path": "tests/fixtures/reviewed-callback-fin-consumers/php-wasm.php"
+    },
+    {
+      "currentSha256": "434cf3bedff0ab7fb668eab64cb7c56d8cb7f974788bb2f53732f71a4b5bc3a4",
+      "path": "tests/helpers/callback-checked-record-php-wasm-fixture.mjs"
+    },
+    {
+      "currentSha256": "600546e62e998e492591dc117ea2672076d7402b116f7be32f540c42b3504bd3",
+      "path": "tests/helpers/callback-checked-record-php-wasm-tests.mjs"
+    },
+    {
+      "currentSha256": "24b711fcbb619ddf6aadbf460d03fb0048d1d98a2869b03a5704b63b3484dfc3",
+      "path": "tests/helpers/callback-fin-php-wasm-fixture.mjs"
+    },
+    {
+      "currentSha256": "c961e960bf819690d2d3e4f0580e9084c8cd4c9790187afff845a0ab9131274f",
+      "path": "tests/helpers/callback-fin-php-wasm-tests.mjs"
+    },
+    {
+      "currentSha256": "8c16ff13a9350d33920b000120321d9e401263ee5485a5c20141c87f89a2a2b8",
+      "path": "tests/helpers/callback-refinements-php-wasm-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "6f52fa218c9ea25b5a646059bee83776b92ce2ecc256a13f986b4101d82e7061",
+      "path": "tests/helpers/callback-refinements-php-wasm-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "26905c2a6f55e5f5dae1458227a65327c1728d7ddb5dcdfc55ee68883413249e",
+      "path": "tests/helpers/callback-refinements-php-wasm-report.mjs"
+    },
+    {
+      "currentSha256": "a1f5965a5ea7034ee43930c53f870d3c05ccf79500ad74d4ffd01c026c00f614",
+      "path": "tests/helpers/callback-refinements-php-wasm-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0b9909cfdfa0007ae0fb59dab25b1ca1f89fcfb4b4bec5ff602f204003c09075",
+      "path": "tests/helpers/callback-refinements-php-wasm-source-history.mjs"
+    }
+  ],
+  "historicalUpdates": [
+    {
+      "currentSha256": "50eaefad0f3a03282c03898c3eb2c748493656ca5bd720f51f92f50bd228a5dd",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-php-wasm-packaging\"\n",
+          "previous": "",
+          "start": 2187
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "8f015e9cd45a7066b310c51540f3bf15fce013318d09d72fa7be27f9e1d643de"
+    }
+  ],
+  "implementationCommit": "4ea703617b1f517cf6e6f713619daea187534cf8",
+  "milestone": "callback-refinements-php-wasm-v1",
+  "predecessorCommit": "8733612169685df4e1265bbad5bb3a3318013fc2",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm infers Fin-only callback roles only inside its authenticated callable graph, checks Fin and constructor-backed record values at host callbacks and returned closures, retains ordinary and independently reviewed installed Node and Chromium evidence, restores copied-build output for bare produced checked records, and repairs the previously unrecorded PHP-Wasm owned-value test-profile edge.",
+  "updates": [
+    {
+      "currentSha256": "2c8d528ccefc7130fa5f2cea2e1af175de8791a2f195ffc780ff150ea3168458",
+      "edits": [
+        {
+          "current": "    \"test:callback-refinements-php-wasm\": \"LEAN_BRIDGE_CALLBACK_REFINEMENTS_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/callback-refinements-php-wasm.test.mjs\",\n",
+          "previous": "",
+          "start": 50379
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "3a891b9adfe9a266d62845883454e7895bbf6d3e0d0595064a76b66e1bae6812"
+    },
+    {
+      "currentSha256": "2c65fe3392f6109f98647a9ee244d427b16c71cd0966bae47bd2d4484000291c",
+      "edits": [
+        {
+          "current": "/**\n * Recover the callback role that the public export table already authenticates.\n * Subtype and checked-record trees encode their direction in their constructors;\n * Fin-only trees do not, so their unique borrowed/leased use supplies it. An\n * unrefined callback deliberately remains bidirectional.\n *\n * @param abi - Closed callable carrier containing the export sites.\n * @param signature - One callback signature from that carrier.\n * @param inferFinDirection - Recover a Fin-only role from the export table.\n */\nexport const componentStructuredCallbackDirection = (abi, signature, inferFinDirection = false) => {\n\tconst selected = callbackSubtypeDirection(signature, signature.refinements, abi.types);\n\tif(selected !== null || signature.refinements === undefined || !inferFinDirection) return selected;\n\tconst roles = new Set();\n\tfor(const item of abi.exports)\n\t{\n\t\tif(item.parameters.some(type => type.kind === \"named\" && type.id === signature.id))\n\t\t\troles.add(\"host\");\n\t\tif(item.result.kind === \"named\" && item.result.id === signature.id)\n\t\t\troles.add(\"closure\");\n\t}\n\tif(roles.size !== 1)\n\t\tfail(`checked Fin callback ${signature.id} must have one host or closure role`);\n\treturn roles.values().next().value;\n};\n\n",
+          "previous": "",
+          "start": 2496
+        }
+      ],
+      "path": "src/abi/component-structured-callables.mjs",
+      "previousSha256": "e50e015f222e48747d21502a5103ee860d03a81ec32bfffd4edc76e58e76eaa0"
+    },
+    {
+      "currentSha256": "e04c6121eb0831b29f5cd933f928644b581c4e17b8620354281aff432c87a9cc",
+      "edits": [
+        {
+          "current": "\t\t, \"callback-refinements-php-wasm\"\n",
+          "previous": "",
+          "start": 806
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "ebd7cab0f4af8105c63904cb088a8f8221e97b168d57b292ecf8d399f0260304"
+    },
+    {
+      "currentSha256": "e0178e6d2b9ebbbcc56f4bac1633216b114129bb61b664fc5af788da9a84bbef",
+      "edits": [
+        {
+          "current": "\t\t\t// In owned builds the compiler owns this constructor-free projection decision\n\t\t\t// even when the erased record is the result root and none of its payload fields\n\t\t\t// is independently refined: owned carriers need that occurrence to erase the\n\t\t\t// proof-bearing Lean value into its transport mirror. Copied builds keep a bare\n\t\t\t// top-level produced record bare, as their reviewed contracts already pin.\n\t\t\treturn produced && (ownedAggregates || depth > 0 || fields.some(field => field.refinement !== null))\n",
+          "previous": "\t\t\t// The compiler owns this constructor-free projection decision even when\n\t\t\t// the erased record is the result root and none of its payload fields is\n\t\t\t// independently refined. Owned carriers still need that occurrence to\n\t\t\t// erase the proof-bearing Lean value into its transport mirror.\n\t\t\treturn produced\n",
+          "start": 16911
+        }
+      ],
+      "path": "src/analyze/semantic-model.mjs",
+      "previousSha256": "4692747341f7ef346d2179d6a976d7eab70fc34914bef4b330a952ad2290d74b"
+    },
+    {
+      "currentSha256": "148b6cef682de566389f7be63fa2970599992b538cc277120d8f5ab92a6c035e",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 287
+        },
+        {
+          "current": " * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 1041
+        },
+        {
+          "current": "export const generateNativeCallableGraphBorrows = (ir, descriptor, {\n\twordBits = 64, initializer = null, finDirections = false\n} = {}) => {\n",
+          "previous": "export const generateNativeCallableGraphBorrows = (ir, descriptor, { wordBits = 64, initializer = null } = {}) => {\n",
+          "start": 1125
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, signature, finDirections);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n",
+          "start": 2337
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-borrows.mjs",
+      "previousSha256": "72718a60292145b41d354ef47ae1023b1ec7661498960432093a713046958e1f"
+    },
+    {
+      "currentSha256": "b9b119ca531296e27ebca76668e5feb19c7e1a2a9141608bf0ef1f14ff4a7bc2",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 298
+        },
+        {
+          "current": " * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 1256
+        },
+        {
+          "current": "export const generateNativeCallableGraphCalls = (ir, descriptor, {\n\tinitializer, wordBits = 64, finDirections = false\n} = {}) => {\n",
+          "previous": "export const generateNativeCallableGraphCalls = (ir, descriptor, { initializer, wordBits = 64 } = {}) => {\n",
+          "start": 1340
+        },
+        {
+          "current": "\tconst generated = generateNativeCallableGraphBorrows(ir, descriptor, { wordBits, initializer, finDirections });\n",
+          "previous": "\tconst generated = generateNativeCallableGraphBorrows(ir, descriptor, { wordBits, initializer });\n",
+          "start": 1728
+        },
+        {
+          "current": "\tconst direction = signature => componentStructuredCallbackDirection(abi, signature, finDirections);\n",
+          "previous": "\tconst direction = signature => callbackSubtypeDirection(signature, signature.refinements, abi.types);\n",
+          "start": 2044
+        },
+        {
+          "current": "\tconst lines = [\"#include <lean/lean.h>\"\n\t\t, nativeCallableGraphHeader(abi, { finDirections }), generated.source\n",
+          "previous": "\tconst lines = [\"#include <lean/lean.h>\", nativeCallableGraphHeader(abi), generated.source\n",
+          "start": 2596
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-calls.mjs",
+      "previousSha256": "1e630244e133d43e53408cb5a768db0f765dbbaae551014a46dd7e30e94761b9"
+    },
+    {
+      "currentSha256": "c73a0b0983919bd0528c817548e97850203d2b3655d9b023d245a3e00714a42e",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection } from \"../../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { callbackSubtypeDirection } from \"../../abi/refinements.mjs\";\n",
+          "start": 161
+        },
+        {
+          "current": " * @param options - PHP-Wasm-only callback direction controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 843
+        },
+        {
+          "current": "export const compileCallablePhpGraphZendModel = (ir, { finDirections = false } = {}) => {\n",
+          "previous": "export const compileCallablePhpGraphZendModel = ir => {\n",
+          "start": 990
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(descriptor, signature, finDirections);\n\t\tconst projected = {\n\t\t\t...signature\n\t\t\t, index\n\t\t\t, direction\n\t\t\t, parameters\n\t\t\t, result\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);\n\t\tconst projected = { ...signature, index, direction, parameters, result\n",
+          "start": 1830
+        },
+        {
+          "current": "\t\t\t}\n\t\t};\n",
+          "previous": "\t\t\t} };\n",
+          "start": 2335
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-model.mjs",
+      "previousSha256": "4a83e89916d6a3eb87c61a80e979a577df39581471f32461232100ad28e4c534"
+    },
+    {
+      "currentSha256": "441c34ce060c8aab9a037007fda0c7e250743205e875d8a13674fef2709e1f83",
+      "edits": [
+        {
+          "current": " * @param options - PHP-Wasm-only callback direction controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 876
+        },
+        {
+          "current": "export const generateCallablePhpGraphZendAdapter = (ir, { finDirections = false } = {}) => {\n\tconst model = compileCallablePhpGraphZendModel(ir, { finDirections }), prefix = model.layout.prefix;\n",
+          "previous": "export const generateCallablePhpGraphZendAdapter = ir => {\n\tconst model = compileCallablePhpGraphZendModel(ir), prefix = model.layout.prefix;\n",
+          "start": 1023
+        },
+        {
+          "current": "\t\t, initializer: `initialize_LeanBridgeNative${sha256(ir.component.id).slice(0, 16)}`\n\t\t, finDirections });\n",
+          "previous": "\t\t, initializer: `initialize_LeanBridgeNative${sha256(ir.component.id).slice(0, 16)}` });\n",
+          "start": 1304
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend.mjs",
+      "previousSha256": "5c215b08f2734c83fb9f2b37cfa7b72324e9338cead4924e9f5bbbad71511b0d"
+    },
+    {
+      "currentSha256": "3f9d3fdcda0de3b24b740d24cb56de38996e015d16d07a472f509723a7779a04",
+      "edits": [
+        {
+          "current": "import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus, componentStructuredCallbackDirection } from \"../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { assertComponentStructuredCallableAbi, componentStructuredCallableRecoveryStatus } from \"../abi/component-structured-callables.mjs\";\n",
+          "start": 254
+        },
+        {
+          "current": "",
+          "previous": "import { callbackSubtypeDirection } from \"../abi/refinements.mjs\";\n",
+          "start": 787
+        },
+        {
+          "current": "\t\t, componentStructuredCallbackDirection(abi, type)]));\n",
+          "previous": "\t\t, callbackSubtypeDirection(type, type.refinements, abi.types)]));\n",
+          "start": 1844
+        }
+      ],
+      "path": "src/build/component-structured-callable-adapters.mjs",
+      "previousSha256": "f617308a9fa9a769a77f89a8cdedee83df042868a72b1f3092bde0b675f6b14a"
+    },
+    {
+      "currentSha256": "1f54e0bcb95f96f6c7be430098e0932845c3dffb645f0502008101560318d43a",
+      "edits": [
+        {
+          "current": "import { assertComponentStructuredCallableAbi, componentStructuredCallbackDirection } from \"../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { assertComponentStructuredCallableAbi } from \"../abi/component-structured-callables.mjs\";\n",
+          "start": 343
+        },
+        {
+          "current": "",
+          "previous": "import { callbackSubtypeDirection } from \"../abi/refinements.mjs\";\n",
+          "start": 856
+        },
+        {
+          "current": " * @param options - Backend-specific callback-role recovery controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 10705
+        },
+        {
+          "current": "export const componentStructuredCallableLeanSource = (abi, sourceExports, { finDirections = false } = {}) => {\n",
+          "previous": "export const componentStructuredCallableLeanSource = (abi, sourceExports) => {\n",
+          "start": 10859
+        },
+        {
+          "current": "\t\t, componentStructuredCallbackDirection(abi, type, finDirections)]));\n",
+          "previous": "\t\t, callbackSubtypeDirection(type, type.refinements, abi.types)]));\n",
+          "start": 11287
+        }
+      ],
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "9dcf41baeee4c57c20406c98012fad9eaec44dc7cf9fcb96a29a970015cfc795"
+    },
+    {
+      "currentSha256": "098b8591a6ac7c1e9e1ee7f124d59ce99bd71687fd528c8833fbcc0293c813cc",
+      "edits": [
+        {
+          "current": "\tcomponentStructuredCallableSignatureText, assertComponentStructuredCallableBindings\n\t, componentStructuredCallbackDirection } from \"../abi/component-structured-callables.mjs\";\n",
+          "previous": "\tcomponentStructuredCallableSignatureText, assertComponentStructuredCallableBindings } from \"../abi/component-structured-callables.mjs\";\n",
+          "start": 491
+        },
+        {
+          "current": "import { callbackDefinitionRefinement, nominalRefinementEntries } from \"../abi/refinements.mjs\";\n",
+          "previous": "import { callbackDefinitionRefinement, callbackSubtypeDirection, nominalRefinementEntries } from \"../abi/refinements.mjs\";\n",
+          "start": 762
+        },
+        {
+          "current": " * @param options - Backend-specific callback-role recovery controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 3398
+        },
+        {
+          "current": "export const nativeCallableGraphHeader = (abi, { finDirections = false } = {}) => {\n",
+          "previous": "export const nativeCallableGraphHeader = abi => {\n",
+          "start": 3552
+        },
+        {
+          "current": "\tif(abi.callbacks.some(signature => componentStructuredCallbackDirection(abi, signature, finDirections) === \"host\"))\n",
+          "previous": "\tif(abi.callbacks.some(signature => callbackSubtypeDirection(signature, signature.refinements, abi.types) === \"host\"))\n",
+          "start": 3655
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(abi, signature, finDirections);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);\n",
+          "start": 4270
+        },
+        {
+          "current": " * @param options - Backend-specific callback-role recovery controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n",
+          "previous": "",
+          "start": 5177
+        },
+        {
+          "current": "export const generateNativeCallableGraphTrampolines = (abi, { finDirections = false } = {}) => {\n",
+          "previous": "export const generateNativeCallableGraphTrampolines = abi => {\n",
+          "start": 5331
+        },
+        {
+          "current": "\t\tconst direction = componentStructuredCallbackDirection(abi, signature, finDirections);\n",
+          "previous": "\t\tconst direction = callbackSubtypeDirection(signature, signature.refinements, abi.types);\n",
+          "start": 5624
+        }
+      ],
+      "path": "src/build/native-callable-graph.mjs",
+      "previousSha256": "21e93fc8455b78b1c1c122c309bf08926f0dbf0292edec50d7b97372e35c0d9f"
+    },
+    {
+      "currentSha256": "96732da027eb1b75c7e860cf520c451fc2b0156e1fd30d6f92702e7cb0bbd155",
+      "edits": [
+        {
+          "current": " * sits inside a callback signature. PHP-Wasm may additionally opt Fin-only\n * callbacks into this carrier because it can recover their role from exports.\n",
+          "previous": " * sits inside a callback signature, even if every erased payload is otherwise\n * acyclic. The primitive native model predates directional callback\n * constructors and cannot represent their recovery protocol; a checked record\n * crosses a callback only as the erased payload mirror that carrier generates,\n * whether the site names its constructor or Lean produces the record bare.\n",
+          "start": 2364
+        },
+        {
+          "current": " * @param options - Backend-specific refinement routing controls.\n * @param options.fin - Include Fin-only callbacks in graph routing.\n",
+          "previous": "",
+          "start": 2596
+        },
+        {
+          "current": "export const containsCallbackSubtype = (value, { fin = false } = {}) => {\n",
+          "previous": "export const containsCallbackSubtype = value => {\n",
+          "start": 2735
+        },
+        {
+          "current": "\t\tif(inside && node.kind === \"refinement\"\n\t\t\t&& (fin || [\"subtype\", \"checked-record\"].includes(node.predicate?.kind))) return true;\n",
+          "previous": "\t\tif(inside && node.kind === \"refinement\" && [\"subtype\", \"checked-record\"].includes(node.predicate?.kind)) return true;\n",
+          "start": 2963
+        }
+      ],
+      "path": "src/build/native-graph-model.mjs",
+      "previousSha256": "92c596cb4fa34a473c2cc2aef615f8bcd76f79044e3d96725cb0d6c7af694303"
+    },
+    {
+      "currentSha256": "8924059e964ccbe47766d5e45a0c72f7729b504cfa8688796f27a1cdd224982d",
+      "edits": [
+        {
+          "current": "\t\t\telse if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true });\n",
+          "previous": "\t\t\telse if(model.copiedGraph?.callbacks) compileCallablePhpGraphZendModel(model.bindingIr);\n",
+          "start": 10255
+        }
+      ],
+      "path": "src/build/php-wasm-copied-component.mjs",
+      "previousSha256": "1820fa19a86f827e378334e847cebe9511863401b08a5e9c2e60c72bf09cc7ae"
+    },
+    {
+      "currentSha256": "943ea63cb9b212e23b5cebecb52e3845dcab2f188930da3dbf3e23cf7bf325f9",
+      "edits": [
+        {
+          "current": "\t\tmodel.bindingIr, model.copiedGraph, { initializer, wordBits: 32, finDirections: true }\n",
+          "previous": "\t\tmodel.bindingIr, model.copiedGraph, { initializer, wordBits: 32 }\n",
+          "start": 1645
+        },
+        {
+          "current": "\tconst zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr, { finDirections: true })\n",
+          "previous": "\tconst zend = callable ? generateCallablePhpGraphZendAdapter(model.bindingIr)\n",
+          "start": 1929
+        },
+        {
+          "current": "\tconst callbacks = callable ? generateNativeCallableGraphTrampolines(abi, { finDirections: true }) : null;\n",
+          "previous": "\tconst callbacks = callable ? generateNativeCallableGraphTrampolines(abi) : null;\n",
+          "start": 3347
+        }
+      ],
+      "path": "src/build/php-wasm-graph-component.mjs",
+      "previousSha256": "24712d3b46662a9598962a0abc981a5e0d72a75a9b2e5bc4e1218197926034e9"
+    },
+    {
+      "currentSha256": "7ffd92fb33e733f09540af819f958a40c8724670b41d9fa844b08137d9a25559",
+      "edits": [
+        {
+          "current": "\t// Checked callbacks need the callable graph even when their erased payloads\n\t// are otherwise acyclic. It preserves compiler-known host/closure direction,\n\t// explicit recovery, constructor/bound rejection, and cleanup.\n",
+          "previous": "\t// Directional Subtype/checked-record callbacks need the callable graph even\n\t// when their erased payloads are otherwise acyclic. The primitive copied\n\t// model cannot preserve constructor direction, recovery, or rejection.\n",
+          "start": 4490
+        },
+        {
+          "current": "\t\t&& !elaborated.declarations.some(value => containsCallbackSubtype(value, { fin: true })))\n",
+          "previous": "\t\t&& !elaborated.declarations.some(containsCallbackSubtype))\n",
+          "start": 4761
+        },
+        {
+          "current": "\t\t, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports, { finDirections: true })\n",
+          "previous": "\t\t, ...(abi.callbacks ? componentStructuredCallableLeanSource(abi, exports)\n",
+          "start": 8968
+        },
+        {
+          "current": "\t\t? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi, { finDirections: true })\n",
+          "previous": "\t\t? carrierHeader(componentStructuredCopiedView(abi), false) + nativeCallableGraphHeader(abi)\n",
+          "start": 9233
+        }
+      ],
+      "path": "src/build/php-wasm-graph-model.mjs",
+      "previousSha256": "d1cfd6d513550a476c0a10b205a591886239979b56ff68fd2168aec4a095f37b"
+    },
+    {
+      "currentSha256": "1f242a5f1e86fc6bf8b959f74c3215ef80605fa58bf639cc2a040ff7d801a4a7",
+      "edits": [
+        {
+          "current": "\t\t: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true })\n",
+          "previous": "\t\t: model.copiedGraph?.callbacks ? compileCallablePhpGraphZendModel(model.bindingIr)\n",
+          "start": 9617
+        }
+      ],
+      "path": "src/release/php-wasm-copied-package.mjs",
+      "previousSha256": "8adcb1162fdd26962ae4041e7c737acd47eda3f3ec82dbe36afb2a5d42e0fc4c"
+    },
+    {
+      "currentSha256": "950a6adfb81c1c64388e0f388525f5e998b2a4773817923c16e675e47ae40743",
+      "edits": [
+        {
+          "current": "import { finCallback, finCallbackBound, finCallbackCompilerInput, finCallbackNat } from \"./helpers/fin-callback-model.mjs\";\nimport { componentStructuredCallbackDirection } from \"../src/abi/component-structured-callables.mjs\";\n",
+          "previous": "",
+          "start": 1354
+        },
+        {
+          "current": "test(\"Fin-only PHP-Wasm callbacks derive host and closure roles from authenticated export sites\", () => {\n\tconst hostReply = finCallback([finCallbackNat], finCallbackBound(\"5\"));\n\tconst closureResult = finCallback([finCallbackNat], finCallbackBound(\"7\"));\n\tconst closureInput = finCallback([finCallbackBound(\"3\")], finCallbackNat);\n\tconst model = createCompiledPhpWasmModel(finCallbackCompilerInput({\n\t\treply: [hostReply, finCallbackNat]\n\t\t, make: [finCallbackNat, closureResult]\n\t\t, consume: [finCallbackNat, closureInput]\n\t}));\n\tassert.ok(model.copiedGraph?.callbacks);\n\tconst abi = phpWasmGraphCarrierAbi(model);\n\tconst declaration = name => model.bindingIr.declarations.find(item => item.name === name);\n\tconst callback = (name, result = false) => {\n\t\tconst item = declaration(name);\n\t\tconst reference = result ? item.result.type : item.parameters[0].type;\n\t\treturn abi.callbacks.find(entry => entry.id === reference.id);\n\t};\n\tassert.equal(componentStructuredCallbackDirection(abi, callback(\"reply\"), true), \"host\");\n\tassert.equal(componentStructuredCallbackDirection(abi, callback(\"make\", true), true), \"closure\");\n\tassert.equal(componentStructuredCallbackDirection(abi, callback(\"consume\", true), true), \"closure\");\n\tconst php = compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true });\n\tassert.equal(php.callbacks.get(callback(\"reply\").id).direction, \"host\");\n\tassert.equal(php.callbacks.get(callback(\"make\", true).id).direction, \"closure\");\n\tconst adapters = generateCompiledPhpWasmLeanAdapters(model);\n\tassert.match(adapters.leanSource, /opaque recovery_[a-f0-9]+/u);\n\tassert.match(adapters.leanSource, /opaque reject_[a-f0-9]+/u);\n\tassert.match(adapters.leanSource, /def apply_[a-f0-9]+/u);\n\tassert.doesNotMatch(adapters.leanSource, /\\b(?:sorry|axiom|unsafeCast)\\b/u);\n\tconst generated = generateCompiledPhpWasmGraph(model, adapters);\n\tassert.match(generated.files[\"src/Api.php\"], /function with_recovery\\(/u);\n\tassert.match(generated.files[\"src/Internal/Native.php\"], /'direction' => 'host'/u);\n\tassert.ok(generated.sources.includes(\"graph/callbacks.c\"));\n});\n\n",
+          "previous": "",
+          "start": 8381
+        }
+      ],
+      "path": "tests/php-wasm-recursive-callable-contract.test.mjs",
+      "previousSha256": "bfc868886c37b0371f0c7f6905d4ae1d35245fe5f3781cb6025a73c5f9e0ab03"
+    },
+    {
+      "currentSha256": "51aa0e2bd65796c3e1676ff0d63bfacdbfcc8daf2724c0cd6bfcdafa4ae536a4",
+      "edits": [
+        {
+          "current": "import {\n\tcreateElaboratedSemanticModel, createOwnedElaboratedSemanticModel, elaboratedComponent, sourceApiIdentity\n} from \"../src/analyze/semantic-model.mjs\";\n",
+          "previous": "import { createElaboratedSemanticModel, elaboratedComponent, sourceApiIdentity } from \"../src/analyze/semantic-model.mjs\";\n",
+          "start": 320
+        },
+        {
+          "current": "\ntest(\"a bare produced checked record stays bare in copied builds and explicit in owned builds\", () => {\n\tconst heap = { cType: \"lean_object*\", box: \"lean_box\", unbox: \"lean_unbox\", heap: true };\n\tconst policy = { ownership: \"lease\", disposal: \"required\", fallback: \"queued-finalizer\", cycles: \"reject\" };\n\tconst ticket = { kind: \"resource\", name: \"Sample.Ticket\", lean: \"Sample.Ticket\", module: \"Sample\", abi: heap };\n\tconst result = (input, owned) => {\n\t\tconst projection = input.metadata.modules[0].declarations[0].projection;\n\t\tconst claim = { kind: \"record\", name: \"Sample.Claim\", lean: \"Sample.Claim\"\n\t\t\t, constructor: \"Sample.Claim.mk\", abi: heap\n\t\t\t, fields: [...owned ? [{ name: \"holder\", projection: \"Sample.Claim.holder\", type: ticket }] : []\n\t\t\t\t, { name: \"value\", projection: \"Sample.Claim.value\", type: projection.result }]\n\t\t\t, erased: [\"bounded\"] };\n\t\tconst root = { kind: \"reference\", name: claim.name, lean: claim.lean, abi: heap };\n\t\tprojection.result = owned ? { kind: \"owned-graph\", root, types: [claim], policy, abi: heap }\n\t\t\t: { kind: \"graph\", root, types: [claim], abi: heap };\n\t\treturn claim.fields.map(field => ({ name: field.name, refinement: null }));\n\t};\n\t// A copied build keeps a top-level produced record bare: Lean already holds its proof and\n\t// the copied reviewed contracts pin that decision.\n\tconst copied = native();\n\tresult(copied, false);\n\tconst plain = lower(copied).document.declarations[0];\n\tassert.equal(Object.hasOwn(plain.source.extensions, \"lean-lang.org/refinements\"), false);\n\t// An owned build names the same occurrence explicitly so its carrier erases the record.\n\tconst owned = native();\n\tconst { metadata: context, ...selection } = owned.sourceIdentity.request;\n\towned.sourceIdentity.request = createMetadataRequest({ ...selection\n\t\t, resources: [\"Sample.Ticket\"], ownedAggregates: policy }, context);\n\towned.metadata.producer.invocationIdentitySha256 = owned.sourceIdentity.request.metadata.invocationIdentitySha256;\n\tconst fields = result(owned, true);\n\tconst explicit = createOwnedElaboratedSemanticModel({ metadata: owned.metadata\n\t\t, request: owned.sourceIdentity.request, component\n\t\t, elaborationSha256: \"9\".repeat(64) }).document.declarations[0];\n\tassert.deepEqual(explicit.source.extensions[\"lean-lang.org/refinements\"], {\n\t\tparameters: [null]\n\t\t, result: { kind: \"checked-record\", name: \"Sample.Claim\", constructor: null, fields }\n\t});\n});\n",
+          "previous": "",
+          "start": 5322
+        }
+      ],
+      "path": "tests/semantic-model.test.mjs",
+      "previousSha256": "d49852d51c97ceb8d6760a89f83c12b4dcfb57322d3e765fd90fd53b57fd8a6d"
+    },
+    {
+      "currentSha256": "a7984a46a04c7b106e16633b625cc76a03a9a4bca59a8133d85d4f2fa8db8169",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 906
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256\n\t\t\t, beforeCallbackSubtypePhpWasmSource);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1957
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 2607
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-php-wasm-source-history-tests.mjs",
+      "previousSha256": "c3b2b1253897301673d1e1cff358cb31704a7947feaac671daade7155deab27a"
+    },
+    {
+      "currentSha256": "0fcc99c77c1caac585114050b4d98d445d0fcd0f7e6835bd22b69703423d4ad3",
+      "edits": [
+        {
+          "current": "import { beforeCallbackRefinementsPhpWasmSource, callbackRefinementsPhpWasmChangedPaths } from \"./callback-refinements-php-wasm-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackRefinementsPhpWasmChangedPaths\n\t, ...callbackSubtypePhpWasmChangedPaths\n",
+          "previous": "\t...callbackSubtypePhpWasmChangedPaths\n",
+          "start": 143343
+        },
+        {
+          "current": "\tconst callbackRefinementsPhpWasm\n\t\t= beforeCallbackRefinementsPhpWasmSource(path, text, expected);\n\tif(sha256(callbackRefinementsPhpWasm) === expected)\n\t\treturn callbackRefinementsPhpWasm;\n",
+          "previous": "",
+          "start": 174146
+        },
+        {
+          "current": "\t\t= beforeCallbackSubtypePhpWasmSource(\n\t\t\tpath, callbackRefinementsPhpWasm, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackSubtypePhpWasmSource(path, text, expected);\n",
+          "start": 174366
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c0f05bbded4bd803c80ec90bbe1942b5e06fdbf4186b896cd762bc5bfb2c74df"
+    }
+  ]
+}
