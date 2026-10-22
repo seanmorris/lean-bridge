@@ -1,0 +1,158 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0c4006336ec8896b470384ec025d21366257cc879cb57a99e36f594f4aec80a3",
+      "path": "scripts/update-callback-subtype-documentation-readiness-source-history.mjs"
+    },
+    {
+      "currentSha256": "1026920df6748ba222902bdceff57ba8b7375f89d16116bc1bb476a5056d3a9f",
+      "path": "tests/helpers/callback-subtype-documentation.mjs"
+    },
+    {
+      "currentSha256": "67a965a17d174946ceda44b18187de2eecfb268b592597d3fd0dc6caaf3034da",
+      "path": "tests/helpers/callback-subtype-documentation-readiness-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "3adb33917913cb672342d51742967db8a8d090aa7269a96420adca9fd4b030a6",
+      "path": "tests/helpers/callback-subtype-documentation-readiness-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "9c86c096fe3c3f457c0175b0ff3fca641d2b44e5",
+  "implementationCommits": [
+    "4ba6bf439f8dbed3fe362f805effabc4d2b9328b",
+    "9c86c096fe3c3f457c0175b0ff3fca641d2b44e5"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "3ef04953163234413fad0c6b6aea83c2e94f751907c9ed669a821b57c145ca76",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocumentationReadinessChangedPaths } from \"./callback-subtype-documentation-readiness-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeDocumentationReadinessChangedPaths\n\t, ...callbackSubtypeTestRegistrationChangedPaths\n",
+          "previous": "\t...callbackSubtypeTestRegistrationChangedPaths\n",
+          "start": 147107
+        },
+        {
+          "current": "\tconst callbackSubtypeDocumentationReadiness\n\t\t= beforeCallbackSubtypeDocumentationReadinessSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackSubtypeDocumentationReadiness) === expected)\n\t\treturn callbackSubtypeDocumentationReadiness;\n",
+          "previous": "",
+          "start": 179051
+        },
+        {
+          "current": "\t\t= beforeCallbackSubtypeTestRegistrationSource(\n\t\t\tpath, callbackSubtypeDocumentationReadiness, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackSubtypeTestRegistrationSource(path, text, expected);\n",
+          "start": 179331
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d2f7097db7eec92d494cc53c835744c97dcca54e8db8afc552ed851f788d4bd5"
+    },
+    {
+      "currentSha256": "f40a2e7dba9f75811be0b0bf47e2a75b92a101898e23a2ff6ee41005379064bf",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-documentation-readiness-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "54b6793f6d45a6044a10a98ba543bf840500d370150f0be13d1cd315c0a228d7"
+    }
+  ],
+  "milestone": "callback-subtype-documentation-readiness-v1",
+  "predecessorCommit": "1ffffd2c385d695dd862fe43b60d6de74d054769",
+  "schemaVersion": 1,
+  "scope": "Gate every callback Subtype consumer and reference claim on all eight hosted evidence IDs, update both Lean-author boundaries and regenerate the checked documentation in the promotion command.",
+  "updates": [
+    {
+      "currentSha256": "d26d805643b920c854370e6a98019fc609f71d8c0194acc144c17b2d05b44249",
+      "edits": [
+        {
+          "current": "const callbackSubtypeHostedEvidenceIds = Object.freeze([\n\t\"callback-subtype-browser-hosted-installed\"\n\t, \"callback-subtype-native-hosted-installed\"\n\t, \"callback-subtype-languages-hosted-installed\"\n\t, \"callback-subtype-perl-hosted-installed\"\n\t, \"callback-subtype-dotnet-hosted-installed\"\n\t, \"callback-subtype-jvm-hosted-installed\"\n\t, \"callback-subtype-php-native-hosted-installed\"\n\t, \"callback-subtype-wit-wasi-hosted-installed\"\n]);\nconst callbackSubtypeHostedProfiles = new Set([\n\t\"node-javascript\", \"node-typescript\", \"browser-javascript\"\n\t, \"browser-react\", \"browser-worker\", \"c\", \"cpp\", \"python\", \"ruby\"\n\t, \"rust\", \"perl\", \"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"\n]);\nconst hasCallbackSubtypeHostedEvidence = document =>\n\tcallbackSubtypeHostedEvidenceIds.every(id =>\n\t\tdocument.evidence.some(item => item.id === id));\nconst callbackSubtypeHostedReference = \"[Hosted synchronous callback Subtype acceptance](../evidence/callback-subtype-promotion-20261022.md) establishes proof-erased selected Nat Subtypes in host callback replies and returned Lean closure inputs across all sixteen non-PHP-Wasm consumer profiles and both source routes. Lean-produced values cross as base values. Host-produced replies use the target's exact typed recovery wrapper; invalid or missing recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. Retained or asynchronous callbacks, checked-record and owned callback positions, arbitrary predicates, recursive or generic refined payloads, dispatch cost and peak memory remain separate work.\";\n\nconst callbackSubtypeHostedGuide = (document, profiles, reference) => {\n\tif(!hasCallbackSubtypeHostedEvidence(document)) return null;\n\tconst selected = profiles.filter(profile =>\n\t\tcallbackSubtypeHostedProfiles.has(profile));\n\tif(selected.length === 0) return null;\n\tconst evidence = reference.replace(/reference\\/types\\.md$/u\n\t\t, \"evidence/callback-subtype-promotion-20261022.md\");\n\treturn `[Hosted synchronous callback Subtype acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(\", \")} on ordinary-source and reviewed-IR packages. A selected Subtype produced by Lean crosses as its proof-erased base value. A host callback reply uses the generated exact typed recovery wrapper, and a returned Lean closure checks its selected Subtype input before entering the closure body. Missing or invalid recovery prevents callback entry, preserves caller values and does not prevent a later valid call. Retained or asynchronous callbacks, arbitrary predicates, checked-record or owned callback positions, recursive or generic refined payloads, dispatch cost and peak memory remain outside this evidence.`;\n};\n",
+          "previous": "",
+          "start": 7172
+        },
+        {
+          "current": "\tconst callbackSubtype = callbackSubtypeHostedGuide(\n\t\tdocument, profiles, reference);\n",
+          "previous": "",
+          "start": 26105
+        },
+        {
+          "current": "\t\t, ...(callbackSubtype ? [\"\", callbackSubtype] : [])\n",
+          "previous": "",
+          "start": 26778
+        },
+        {
+          "current": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : \"\"}`)\n",
+          "previous": "\t\t\t\t`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\\n\\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}`)\n",
+          "start": 51353
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "ae1fd172a21194d37370161c5eff59e40ab4dd56a43265fdd4ba778e7fc30766"
+    },
+    {
+      "currentSha256": "ad171d1bc8bf44cdb60cab1552e0bc5feef1306aed0b584e8ccc1c58bff105ff",
+      "edits": [
+        {
+          "current": "import { generateReferenceDocs } from \"./generate-reference-docs.mjs\";\n",
+          "previous": "",
+          "start": 210
+        },
+        {
+          "current": "import {\n\trenderCallbackSubtypeLeanAuthorDocs\n} from \"../tests/helpers/callback-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 477
+        },
+        {
+          "current": "const [inventory, irSchema, consumers, existingPackage, exportDecisions]\n\t= await Promise.all([\n\t\treadFile(path, \"utf8\").then(JSON.parse)\n\t\t, readFile(\"schema/binding-ir.schema.json\", \"utf8\").then(JSON.parse)\n\t\t, readFile(\"docs/consumer-support.v1.json\", \"utf8\").then(JSON.parse)\n\t\t, readFile(\"docs/lean/existing-package.md\", \"utf8\")\n\t\t, readFile(\"docs/lean/export-decisions.md\", \"utf8\")\n\t]);\n",
+          "previous": "const inventory = JSON.parse(await readFile(path, \"utf8\"));\n",
+          "start": 713
+        },
+        {
+          "current": "const authorDocs = renderCallbackSubtypeLeanAuthorDocs({\n\texistingPackage, exportDecisions\n});\n",
+          "previous": "",
+          "start": 1294
+        },
+        {
+          "current": "\t, writeFile(\"docs/lean/existing-package.md\", authorDocs.existingPackage)\n\t, writeFile(\"docs/lean/export-decisions.md\", authorDocs.exportDecisions)\n",
+          "previous": "",
+          "start": 1520
+        },
+        {
+          "current": "await generateReferenceDocs({\n\troot: process.cwd(), write: true\n\t, inventory: { document: promoted, irSchema, consumers }\n});\n",
+          "previous": "",
+          "start": 1672
+        }
+      ],
+      "path": "scripts/promote-callback-subtype-evidence.mjs",
+      "previousSha256": "39494cc784f4c4f64d7bf90b3458e0be74844453c756bceb98be3f7a2e9e0bf4"
+    },
+    {
+      "currentSha256": "abace23688b06f29d6c0107b75504992092ccf7c708883564391903ec40ecf3e",
+      "edits": [
+        {
+          "current": "import {\n\trenderTypeDocuments\n} from \"../scripts/generate-type-docs.mjs\";\n",
+          "previous": "",
+          "start": 351
+        },
+        {
+          "current": "import {\n\trenderCallbackSubtypeLeanAuthorDocs\n} from \"./helpers/callback-subtype-documentation.mjs\";\n",
+          "previous": "",
+          "start": 610
+        },
+        {
+          "current": "\ntest(\"callback Subtype promotion documents every affected consumer\", async () => {\n\tconst before = await renderTypeDocuments({\n\t\troot: \".\", inventory: { document, ...contracts }\n\t});\n\tconst promoted = promoteCallbackSubtypes(document, references);\n\tconst after = await renderTypeDocuments({\n\t\troot: \".\", inventory: { document: promoted, ...contracts }\n\t});\n\tconst evidence = /callback-subtype-promotion-20261022\\.md/u;\n\tfor(const [path, source] of Object.entries(after.documents))\n\t{\n\t\tassert.doesNotMatch(before.documents[path], evidence, path);\n\t\tassert.match(source, evidence, path);\n\t\tassert.match(source, /exact typed recovery wrapper/u, path);\n\t\tassert.match(source, /prevents callback entry/u, path);\n\t\tassert.match(source, /later valid call/u, path);\n\t}\n\tassert.doesNotMatch(before.reference, evidence);\n\tassert.match(after.reference, evidence);\n\tassert.match(after.reference, /sixteen non-PHP-Wasm consumer profiles/u);\n});\n\ntest(\"callback Subtype promotion replaces both stale Lean-author boundaries\", async () => {\n\tconst [existingPackage, exportDecisions] = await Promise.all([\n\t\treadFile(\"docs/lean/existing-package.md\", \"utf8\")\n\t\t, readFile(\"docs/lean/export-decisions.md\", \"utf8\")\n\t]);\n\tconst rendered = renderCallbackSubtypeLeanAuthorDocs({\n\t\texistingPackage, exportDecisions\n\t});\n\tfor(const source of Object.values(rendered))\n\t{\n\t\tassert.match(source, /callback-subtype-promotion-20261022\\.md/u);\n\t\tassert.match(source, /all sixteen non-PHP-Wasm/u);\n\t\tassert.match(source, /Missing or invalid recovery prevents callback entry/u);\n\t\tassert.match(source, /later valid call succeeds/u);\n\t\tassert.match(source, /callback-subtype-php-wasm-local-qualification/u);\n\t}\n\tassert.doesNotMatch(rendered.existingPackage\n\t\t, /\\.NET, JVM, native PHP and WIT\\/WASI remain separate work/u);\n\tassert.match(rendered.exportDecisions\n\t\t, /The result expires with the selected input owner/u);\n\tassert.throws(() => renderCallbackSubtypeLeanAuthorDocs({\n\t\texistingPackage: rendered.existingPackage\n\t\t, exportDecisions: rendered.exportDecisions\n\t}), /Expected one documentation marker/u);\n});\n",
+          "previous": "",
+          "start": 4894
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "310fc442d66c4fb8568fb2bb5a7b3ee6899b25e6b74d222ac69679ffca2486f1"
+    }
+  ]
+}

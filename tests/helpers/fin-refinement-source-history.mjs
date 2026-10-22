@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocumentationReadinessChangedPaths } from "./callback-subtype-documentation-readiness-source-history.mjs";
 import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from "./callback-subtype-test-registration-source-history.mjs";
 import { beforeCallbackSubtypeReviewRepairSource, callbackSubtypeReviewRepairChangedPaths } from "./callback-subtype-review-repair-source-history.mjs";
 import { beforeCallbackSubtypePromotionContractSource, callbackSubtypePromotionContractChangedPaths } from "./callback-subtype-promotion-contract-source-history.mjs";
@@ -1918,7 +1919,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeTestRegistrationChangedPaths
+	...callbackSubtypeDocumentationReadinessChangedPaths
+	, ...callbackSubtypeTestRegistrationChangedPaths
 	, ...callbackSubtypeReviewRepairChangedPaths
 	, ...callbackSubtypePromotionContractChangedPaths
 	, ...callbackSubtypeHostedArchiveFoundationChangedPaths
@@ -2619,8 +2621,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeDocumentationReadiness
+		= beforeCallbackSubtypeDocumentationReadinessSource(
+			path, text, expected
+		);
+	if(sha256(callbackSubtypeDocumentationReadiness) === expected)
+		return callbackSubtypeDocumentationReadiness;
 	const callbackSubtypeTestRegistration
-		= beforeCallbackSubtypeTestRegistrationSource(path, text, expected);
+		= beforeCallbackSubtypeTestRegistrationSource(
+			path, callbackSubtypeDocumentationReadiness, expected
+		);
 	if(sha256(callbackSubtypeTestRegistration) === expected)
 		return callbackSubtypeTestRegistration;
 	const callbackSubtypeReviewRepair
