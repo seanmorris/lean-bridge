@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: owned-checked-record-${{ matrix.profile }}-${{ github.ref }}
+  group: owned-checked-record-languages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
