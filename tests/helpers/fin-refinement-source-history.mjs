@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackPhpWasmStaticQualityRepairSource, callbackPhpWasmStaticQualityRepairIntegrationPaths, callbackPhpWasmStaticQualityRepairNormalizationPaths } from "./callback-php-wasm-static-quality-repair-source-history.mjs";
 import { beforePhpWasmCallbackEntrySuiteSplitSource, phpWasmCallbackEntrySuiteSplitChangedPaths, phpWasmCallbackEntrySuiteSplitIntegrationPaths } from "./php-wasm-callback-entry-suite-split-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionContractSource, dependentCheckedRecordPromotionContractChangedPaths, dependentCheckedRecordPromotionContractIntegrationPaths } from "./dependent-checked-record-promotion-contract-source-history.mjs";
 import { beforeHostedRefinementVerifierRepairSource, hostedRefinementVerifierRepairChangedPaths, hostedRefinementVerifierRepairIntegrationPaths } from "./hosted-refinement-verifier-repair-source-history.mjs";
@@ -1944,7 +1945,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmCallbackEntrySuiteSplitChangedPaths
+	...callbackPhpWasmStaticQualityRepairNormalizationPaths
+	, ...callbackPhpWasmStaticQualityRepairIntegrationPaths
+	, ...phpWasmCallbackEntrySuiteSplitChangedPaths
 	, ...phpWasmCallbackEntrySuiteSplitIntegrationPaths
 	, ...dependentCheckedRecordPhpArchiveImplementationPaths
 	, ...dependentCheckedRecordPhpArchiveIntegrationPaths
@@ -2685,9 +2688,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackPhpWasmStaticQualityRepair
+		= beforeCallbackPhpWasmStaticQualityRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackPhpWasmStaticQualityRepair) === expected)
+		return callbackPhpWasmStaticQualityRepair;
 	const phpWasmCallbackEntrySuiteSplit
 		= beforePhpWasmCallbackEntrySuiteSplitSource(
-			path, text, expected
+			path, callbackPhpWasmStaticQualityRepair, expected
 		);
 	if(sha256(phpWasmCallbackEntrySuiteSplit) === expected)
 		return phpWasmCallbackEntrySuiteSplit;

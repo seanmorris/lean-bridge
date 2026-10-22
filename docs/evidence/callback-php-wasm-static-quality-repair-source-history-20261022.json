@@ -1,0 +1,181 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b3074591c7e1e546e745d16ff1b1c1a848d2f6c22484404e68e4feed277b1954",
+      "path": "scripts/update-callback-php-wasm-static-quality-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "12c7053dcee867802b89893bbd356e48476eb137072c66ee1b445d355b730b61",
+      "path": "tests/helpers/callback-php-wasm-static-quality-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "274b6a5a436b556d1c67a1343cd61f60fe12aa596316a2fd25426637e4e1b19e",
+      "path": "tests/helpers/callback-php-wasm-static-quality-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "82249d63756ca7c90c373c45c88e11ebfadf4cb5",
+  "integrationUpdates": [
+    {
+      "currentSha256": "9b37e6813b76ae3dc7fefafa62bdde9b4764ea5c08ae4e273153ec76dcc01f04",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-php-wasm-static-quality-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "f8f6012f1765a5e9902680ccd7013dafce19eda12b6b36eba834957bc1bf3d5d"
+    },
+    {
+      "currentSha256": "764c7543e8ee987e021c48c392e54250dfeb31a503fda0a072cc77b786d0b7c1",
+      "edits": [
+        {
+          "current": "import { beforeCallbackPhpWasmStaticQualityRepairSource, callbackPhpWasmStaticQualityRepairIntegrationPaths, callbackPhpWasmStaticQualityRepairNormalizationPaths } from \"./callback-php-wasm-static-quality-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackPhpWasmStaticQualityRepairNormalizationPaths\n\t, ...callbackPhpWasmStaticQualityRepairIntegrationPaths\n\t, ...phpWasmCallbackEntrySuiteSplitChangedPaths\n",
+          "previous": "\t...phpWasmCallbackEntrySuiteSplitChangedPaths\n",
+          "start": 152718
+        },
+        {
+          "current": "\tconst callbackPhpWasmStaticQualityRepair\n\t\t= beforeCallbackPhpWasmStaticQualityRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackPhpWasmStaticQualityRepair) === expected)\n\t\treturn callbackPhpWasmStaticQualityRepair;\n",
+          "previous": "",
+          "start": 187054
+        },
+        {
+          "current": "\t\t\tpath, callbackPhpWasmStaticQualityRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 187369
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "df2f03ac085db36292e7bf4f1757e44521dde6b074c274a53c758e9db7aee07c"
+    }
+  ],
+  "milestone": "callback-php-wasm-static-quality-repair-source-v1",
+  "predecessorCommit": "387f1c1897230beb09c05f7eda17faf70a64b415",
+  "schemaVersion": 1,
+  "scope": "Restore the repository-wide zero-warning static-quality contract for callback Subtype PHP-Wasm sources without changing runtime behavior.",
+  "updates": [
+    {
+      "currentSha256": "3315b6fe531ce66b8105629779fc8939f7918514f12949ca2833d7d1349dcf2d",
+      "edits": [
+        {
+          "current": "/**\n * Verify original retained callback Subtype PHP-Wasm route records.\n *\n * @file\n */\n",
+          "previous": "/** Verify original retained callback Subtype PHP-Wasm route records. */\n",
+          "start": 20
+        }
+      ],
+      "path": "scripts/check-callback-subtype-php-wasm-reports.mjs",
+      "previousSha256": "f66e1f018c0cf2a7b648a56c51b89ae12ae717f3bfdb2c6aa62133c6c2699e4f"
+    },
+    {
+      "currentSha256": "079575863ad91c034f008c199821b3d90fcc991584ea361f73a09a788cac9ca4",
+      "edits": [
+        {
+          "current": "\t\t, parameters: cb.parameters.map(node => node.index)\n\t\t, result: cb.result.index }));\n",
+          "previous": "\t\t, parameters: cb.parameters.map(node => node.index), result: cb.result.index }));\n",
+          "start": 11049
+        }
+      ],
+      "path": "src/backends/php/callable-graph-zend-php.mjs",
+      "previousSha256": "83733b79252c9875cb6f7cc2a5e715ca73ede938ee145c5759affa1919269d46"
+    },
+    {
+      "currentSha256": "1ba598526d157eaff00cdd13f32e58f500b2ef42c554689b599b22a072e6fc99",
+      "edits": [
+        {
+          "current": "/**\n * Select one author route without changing the shared callback contract.\n *\n * @param route - Ordinary or reviewed author route.\n */\n",
+          "previous": "/** Select one author route without changing the shared callback contract. */\n",
+          "start": 913
+        },
+        {
+          "current": "/**\n * Bind only caller lexical strictness; package loading remains the driver's job.\n *\n * @param source - Generated PHP caller source.\n * @param mode - Weak or strict PHP caller mode.\n */\n",
+          "previous": "/** Bind only caller lexical strictness; package loading remains the driver's job. */\n",
+          "start": 1218
+        },
+        {
+          "current": "/**\n * Read the complete public caller and bind its lexical strictness.\n *\n * @param mode - Weak or strict PHP caller mode.\n */\n",
+          "previous": "/** Read the complete public caller and bind its lexical strictness. */\n",
+          "start": 1777
+        },
+        {
+          "current": "/**\n * Probe a callable parameter before a lazy component is initialized.\n *\n * @param arrangement - Embedded or Composer package arrangement.\n */\n",
+          "previous": "/** Probe a callable parameter before a lazy component is initialized. */\n",
+          "start": 2084
+        },
+        {
+          "current": "/**\n * Require exact compiler/review reconciliation and both callback directions.\n *\n * @param model - Generated PHP-Wasm component model.\n * @param review - Reviewed binding contract.\n * @param route - Ordinary or reviewed author route.\n */\n",
+          "previous": "/** Require exact compiler/review reconciliation and both callback directions. */\n",
+          "start": 2618
+        },
+        {
+          "current": "\t, [\"closure\", \"closure\", \"closure\", \"host\", \"host\", \"host\"]);\n",
+          "previous": "\t\t, [\"closure\", \"closure\", \"closure\", \"host\", \"host\", \"host\"]);\n",
+          "start": 3839
+        },
+        {
+          "current": "/**\n * Reject a missing host context, changed result or eager lazy-load boundary.\n *\n * @param evidence - Installed execution evidence to authenticate.\n */\n",
+          "previous": "/** Reject a missing host context, changed result or eager lazy-load boundary. */\n",
+          "start": 3970
+        },
+        {
+          "current": "\t, phpWasmExecutionTuples);\n",
+          "previous": "\t\t, phpWasmExecutionTuples);\n",
+          "start": 4319
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-php-wasm-fixture.mjs",
+      "previousSha256": "99fcdde7da53f5b19e9a7f1fdb8f8bb42bf908d89e93d2e8049bafb220965c27"
+    },
+    {
+      "currentSha256": "04b55874a720b0c4a57c147e2b8cdec92f68d006e1debb0df19e3127b8ccb7ad",
+      "edits": [
+        {
+          "current": "\t\t\t, builds\n\t\t\t, receipt\n\t\t\t, ...installed\n",
+          "previous": "\t\t\t, builds, receipt, ...installed\n",
+          "start": 8549
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-php-wasm-installed-tests.mjs",
+      "previousSha256": "6a38eded7ff7f735dce4af9a845d7e59bbc69acc59c46cf47526eb9247f72076"
+    },
+    {
+      "currentSha256": "08f13bcd72b7c3a25ec28daafa6cd324c706dbac5682afcc318b5a5515f0d012",
+      "edits": [
+        {
+          "current": "\tfor(const marker of [\"call_host(with_recovery\"\n\t\t, \"call_host_container(with_recovery\"\n",
+          "previous": "\tfor(const marker of [\"call_host(with_recovery\", \"call_host_container(with_recovery\"\n",
+          "start": 1544
+        },
+        {
+          "current": "\tconst evidence = { component: { library: libraries[0] }\n\t\t, runtime: { library: libraries[1] }\n",
+          "previous": "\tconst evidence = { component: { library: libraries[0] }, runtime: { library: libraries[1] }\n",
+          "start": 3237
+        },
+        {
+          "current": "\t\t\t\t, phases: [\"ready\", \"autoload\", \"invalid\", \"complete\"].map(\n\t\t\t\t\tstage => ({ stage\n\t\t\t\t\t\t, libraries: loading === \"startup\"\n\t\t\t\t\t\t\t|| stage === \"complete\" ? [...libraries] : [] })\n\t\t\t\t)\n\t\t\t};\n\t\t})\n\t};\n",
+          "previous": "\t\t\t\t, phases: [\"ready\", \"autoload\", \"invalid\", \"complete\"].map(stage => ({ stage\n\t\t\t\t\t, libraries: loading === \"startup\" || stage === \"complete\" ? [...libraries] : [] })) };\n\t\t}) };\n",
+          "start": 3555
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-php-wasm-tests.mjs",
+      "previousSha256": "20b7d45eb43cdd1cb2b65430c08a162128734f2bb2b8ee640fce26278ec72b94"
+    },
+    {
+      "currentSha256": "fec7c6dce73960e11a640f383d78c1165da293392eeac45deb7b8208dace179f",
+      "edits": [
+        {
+          "current": "\t, \"hosted verifier evidence\");\n",
+          "previous": "\t\t, \"hosted verifier evidence\");\n",
+          "start": 6177
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs",
+      "previousSha256": "631abd0800b98fc1550e6855471b12c720a01c0d1c962c263bc1b36570f18260"
+    }
+  ]
+}
