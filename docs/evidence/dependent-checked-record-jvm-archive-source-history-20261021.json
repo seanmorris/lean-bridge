@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7d787e052f21445993d1e395a45cbfcbb2dfa387e0aa75f98b12cfcd7d49b35a",
+      "path": "tests/helpers/dependent-checked-record-jvm-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "600006430f2009511a9fafc766ac53bedfa6ffee20bad8bc5d147909bcccbacf",
+      "path": "tests/helpers/dependent-checked-record-jvm-evidence.mjs"
+    },
+    {
+      "currentSha256": "679115b6453b6c7fe51647a48ae3c40a2d1f5a4042d687a6720c1a98b9342f42",
+      "path": "scripts/update-dependent-checked-record-jvm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "8a0fb2346b2ab3fa9b14e1cd3fbeff0d65cd755dccac1c01d5b0e900e4492c2c",
+      "path": "tests/helpers/dependent-checked-record-jvm-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "8a93bc3fde1c9a082bd9477943c5a0c8a258dd95c7892b5110f5b7537a016a7d",
+      "path": "tests/helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 941,
+    "archiveFileCount": 939,
+    "indexSha256": "99b84eee8602f98df6ccd842e4ca955f63f577a576643e088e4d29891b59162a",
+    "indexedFileCount": 938,
+    "root": "docs/evidence/dependent-checked-record-jvm-20261021"
+  },
+  "implementationCommit": "675c097dd13d3efe20e1b775a03b3981535cbfbb",
+  "implementationUpdates": [
+    {
+      "currentSha256": "82af01d5b929e61fb06ee0779045ce614610b32617ef4721bfcd5c36e1c9d563",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-jvm-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 4150
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "50820cc150b01c2357d63bd27c6e7db2211a09e45f4467072665099603f0f424",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "previous": "          \"sha256\": \"a900bec49747841f2b66d915376b9fdc1c8f97447c9a17270e536e63b7217a96\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "c0fb9f318b882a87881d74044914836121f2c14a538ae488199094bbb695db4a"
+    },
+    {
+      "currentSha256": "ade882afc5c7f36c44fc3f70cae5719d90ea69936a565fc2951ed07b33700e4b",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from \"./dependent-checked-record-jvm-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordJvmArchiveImplementationPaths\n\t, ...dependentCheckedRecordJvmArchiveIntegrationPaths\n\t, ...dependentCheckedRecordHostedArchiversChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordHostedArchiversChangedPaths\n",
+          "start": 127658
+        },
+        {
+          "current": "\tconst dependentCheckedRecordJvmArchive\n\t\t= beforeDependentCheckedRecordJvmArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordJvmArchive) === expected)\n\t\treturn dependentCheckedRecordJvmArchive;\n",
+          "previous": "",
+          "start": 157015
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordJvmArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 157336
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "12d7dcf0ec123237298c156d5106cc5ccb973acd583545d6bad1580c9614ea51"
+    },
+    {
+      "currentSha256": "567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4218
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "82af01d5b929e61fb06ee0779045ce614610b32617ef4721bfcd5c36e1c9d563"
+    }
+  ],
+  "milestone": "dependent-checked-record-jvm-archive-source-v1",
+  "predecessorCommit": "b05e78d1a8e9f02c1625109bac566b3127b735ea",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted JVM dependent checked-record evidence retains all four routes, exact Temurin and Kotlin tools, source roles, independent replay and the original GitHub artifact bytes."
+}

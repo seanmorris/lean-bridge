@@ -1,0 +1,39 @@
+{
+  "archiveSha256": "55880cdcdfc30be7603b3c43fa60108d87addabaa2cad86df81450c33ce82212",
+  "args": [
+    "--release",
+    "22",
+    "-Werror",
+    "-proc:none",
+    "-XDrawDiagnostics",
+    "-cp",
+    "component.jar",
+    "-d",
+    "classes",
+    "probe.java"
+  ],
+  "command": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64/bin/javac",
+  "cwd": "/tmp/lean-bridge-dependent-checked-record-jvm-installed-yTQulI/probes/java",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/unavailable"
+  },
+  "outputs": {
+    "Probe.class": {
+      "bytes": 553,
+      "sha256": "fe5656f66512ef25c3985ebd4c0896457d27bc6601900901f4bccc111d6a2369"
+    }
+  },
+  "profile": "java",
+  "route": "reviewed-ir",
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.dependentrecords.*;\nfinal class Probe {\n    static Object dependentTotal() { return Api.dependentTotal(null); }\n    static Object dependentRoundtrip() { return Api.dependentRoundtrip(null); }\n}\n",
+  "sourceSha256": "4edaaad9e6e3df1415f855f4691bbd54c9e17ab501c596218338da9210e50da5"
+}

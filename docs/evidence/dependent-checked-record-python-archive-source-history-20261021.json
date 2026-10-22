@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "de8b94b65895e3db20fd44bb9e5aba5e280a92a4075cbf4756abfa19e6b3b92f",
+      "path": "tests/helpers/dependent-checked-record-python-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "b26042fa9a3f33b9ace528fa40cc5f057b4fd00680e891ab934b4b63e54ef1dd",
+      "path": "tests/helpers/dependent-checked-record-python-evidence.mjs"
+    },
+    {
+      "currentSha256": "94aefa11c9afac02be2de5f2845b177df56db47f7eb145855877c4c25b99353f",
+      "path": "scripts/update-dependent-checked-record-python-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "8d807fc124e5f45664ebd1c92c381d83be73e6332f8079f510c2c49532abd8fd",
+      "path": "tests/helpers/dependent-checked-record-python-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "8e8c4f77a05692a74412aaf3111af63868289d9a1491d6d9a7fc42a8a16466d7",
+      "path": "tests/helpers/dependent-checked-record-python-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1478,
+    "archiveFileCount": 1476,
+    "indexSha256": "155bbc1b1ad4a2a2b24aef87d4683050e5fd3ecca051fd86a91a1d70f4a04d4a",
+    "indexedFileCount": 1475,
+    "root": "docs/evidence/dependent-checked-record-python-20261021"
+  },
+  "implementationCommit": "663ec2dc0ff064a1a1b75b126993736cb4ec1609",
+  "implementationUpdates": [
+    {
+      "currentSha256": "19bede981a9b12e3b298e4b5f8ba453b049dce90620e7399a5b85a5365ed59e9",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-python-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 3505
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "433bfd397ce0625d2a0ba869c408159539a4b6bb57961789ceec8c86f121e02f",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43\"\n",
+          "previous": "          \"sha256\": \"a6f6a6355e564858b03311383fd7cb5fd1d7c090aa0cf4a20b986deb5a197cb5\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "1edfc58f811b9493522b37679f2595746c33583fd757844126766dd911343150"
+    },
+    {
+      "currentSha256": "72c15d73bca7dd5de9e067a597c96f9a97f59f30b5306e9699b570f2032b5742",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPythonArchiveSource, dependentCheckedRecordPythonArchiveImplementationPaths, dependentCheckedRecordPythonArchiveIntegrationPaths } from \"./dependent-checked-record-python-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordPythonArchiveImplementationPaths\n\t, ...dependentCheckedRecordPythonArchiveIntegrationPaths\n\t, ...dependentCheckedRecordPerlArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordPerlArchiveImplementationPaths\n",
+          "start": 126957
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPythonArchive\n\t\t= beforeDependentCheckedRecordPythonArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPythonArchive) === expected)\n\t\treturn dependentCheckedRecordPythonArchive;\n",
+          "previous": "",
+          "start": 155969
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPythonArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 156294
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "12aba8d99e4c033e206d13a3a0e3e6586608b3fca2f53c55e653135fa563fe05"
+    },
+    {
+      "currentSha256": "ba09c94ffc7448cd530436fb8dc9072f83cc195c2a1e620958ba5c73aaadaa43",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-python-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3576
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "19bede981a9b12e3b298e4b5f8ba453b049dce90620e7399a5b85a5365ed59e9"
+    }
+  ],
+  "milestone": "dependent-checked-record-python-archive-source-v1",
+  "predecessorCommit": "7dd9083c276e904052cc44f774f7a19322175d5f",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted Python dependent checked-record evidence retains all four routes, two CPython floors, exact source roles, independent replay and the original GitHub artifact bytes."
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 50081280,
+          "path": "archives/dependentrecords-1.0.0-x86_64-linux.gem",
+          "sha256": "779d98e3e865511e254ba899e83b223ea6e6004ed5caad1fb0d1691eb062e07b"
+        }
+      ],
+      "ecosystem": "rubygems",
+      "name": "dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "rubygems",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "d43bb7dda1be40ebcf3fadfb267141f691ad4f6261033cdfae5741b5aec0b8ee",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "107ad8a188ca5e76f6fe2b993585c4422badc3807c5cc35408cb1634ffe4f83d"
+  }
+}

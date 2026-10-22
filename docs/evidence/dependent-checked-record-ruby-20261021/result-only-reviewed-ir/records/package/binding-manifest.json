@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "generator": "ruby-copied-v1",
+  "target": "ruby",
+  "component": "dependentrecords@1.0.0",
+  "bindingIrSha256": "b9aa2d401362242f43f678e011bf776d64deab5274a30ab4ae197bfc6e2a9c90",
+  "namespace": "LeanBridge::Dependentrecords",
+  "files": [
+    "lib/lean_bridge/dependentrecords.rb",
+    "lib/lean_bridge/dependentrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb",
+    "README.md"
+  ],
+  "publicFiles": [
+    "lib/lean_bridge/dependentrecords.rb"
+  ],
+  "internalFiles": [
+    "lib/lean_bridge/dependentrecords/native.rb",
+    "lib/lean_bridge/native_copied_runtime_v1.rb"
+  ],
+  "packageFiles": [],
+  "supportedFeatures": [
+    "direct-functions",
+    "copied-values",
+    "deterministic-close"
+  ],
+  "capabilityGaps": [
+    {
+      "feature": "identity-and-effects",
+      "reason": "Ordinary RubyGems admits copied values and synchronous primitive callables; resource identities, compound callables and async effects remain unsupported."
+    },
+    {
+      "feature": "additional-platforms",
+      "reason": "The compiled profile is MRI Ruby 3.3 on Linux x86-64."
+    }
+  ]
+}

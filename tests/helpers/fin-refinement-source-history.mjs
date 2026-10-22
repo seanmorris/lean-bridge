@@ -13,6 +13,13 @@ import { beforeCallbackCheckedRecordLanguageSource, callbackCheckedRecordLanguag
 import { beforeCallbackCheckedRecordNativeSource, callbackCheckedRecordNativeChangedPaths, callbackCheckedRecordNativeIntegrationPaths } from "./callback-checked-record-native-source-history.mjs";
 import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
+import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
+import { beforeDependentCheckedRecordHostedArchiversSource, dependentCheckedRecordHostedArchiversChangedPaths, dependentCheckedRecordHostedArchiversIntegrationPaths } from "./dependent-checked-record-hosted-archivers-source-history.mjs";
+import { beforeNestedCheckedRecordRegressionContractSource, nestedCheckedRecordRegressionContractChangedPaths, nestedCheckedRecordRegressionContractIntegrationPaths } from "./nested-checked-record-regression-contract-source-history.mjs";
+import { beforeDependentCheckedRecordPythonArchiveSource, dependentCheckedRecordPythonArchiveImplementationPaths, dependentCheckedRecordPythonArchiveIntegrationPaths } from "./dependent-checked-record-python-archive-source-history.mjs";
+import { beforeDependentCheckedRecordPerlArchiveSource, dependentCheckedRecordPerlArchiveImplementationPaths, dependentCheckedRecordPerlArchiveIntegrationPaths } from "./dependent-checked-record-perl-archive-source-history.mjs";
+import { beforeDependentCheckedRecordHostedFailureRepairSource, dependentCheckedRecordHostedFailureRepairChangedPaths, dependentCheckedRecordHostedFailureRepairIntegrationPaths } from "./dependent-checked-record-hosted-failure-repair-source-history.mjs";
+import { beforeDependentCheckedRecordRubyArchiveSource, dependentCheckedRecordRubyArchiveImplementationPaths, dependentCheckedRecordRubyArchiveIntegrationPaths } from "./dependent-checked-record-ruby-archive-source-history.mjs";
 import { beforeDependentCheckedRecordTypeSurfaceGapSource, dependentCheckedRecordTypeSurfaceGapHistoricalPaths, dependentCheckedRecordTypeSurfaceGapIntegrationPaths } from "./dependent-checked-record-type-surface-gap-source-history.mjs";
 import { beforeDependentCheckedRecordPhpWasmSource, dependentCheckedRecordPhpWasmChangedPaths, dependentCheckedRecordPhpWasmIntegrationPaths } from "./dependent-checked-record-php-wasm-source-history.mjs";
 import { beforeDependentCheckedRecordJvmSource, dependentCheckedRecordJvmChangedPaths, dependentCheckedRecordJvmIntegrationPaths } from "./dependent-checked-record-jvm-source-history.mjs";
@@ -1491,6 +1498,20 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackCheckedRecordNpmBrowserIntegrationPaths
 	, ...callbackCheckedRecordFoundationChangedPaths
 	, ...callbackCheckedRecordFoundationIntegrationPaths
+	, ...dependentCheckedRecordJvmArchiveImplementationPaths
+	, ...dependentCheckedRecordJvmArchiveIntegrationPaths
+	, ...dependentCheckedRecordHostedArchiversChangedPaths
+	, ...dependentCheckedRecordHostedArchiversIntegrationPaths
+	, ...nestedCheckedRecordRegressionContractChangedPaths
+	, ...nestedCheckedRecordRegressionContractIntegrationPaths
+	, ...dependentCheckedRecordPythonArchiveImplementationPaths
+	, ...dependentCheckedRecordPythonArchiveIntegrationPaths
+	, ...dependentCheckedRecordPerlArchiveImplementationPaths
+	, ...dependentCheckedRecordPerlArchiveIntegrationPaths
+	, ...dependentCheckedRecordHostedFailureRepairChangedPaths
+	, ...dependentCheckedRecordHostedFailureRepairIntegrationPaths
+	, ...dependentCheckedRecordRubyArchiveImplementationPaths
+	, ...dependentCheckedRecordRubyArchiveIntegrationPaths
 	, ...dependentCheckedRecordTypeSurfaceGapHistoricalPaths
 	, ...dependentCheckedRecordTypeSurfaceGapIntegrationPaths
 	, ...dependentCheckedRecordPhpWasmChangedPaths
@@ -2145,9 +2166,51 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(sha256(callbackCheckedRecordNpmBrowser) === expected) return callbackCheckedRecordNpmBrowser;
 	const callbackCheckedRecordFoundation = beforeCallbackCheckedRecordFoundationSource(path, callbackCheckedRecordNpmBrowser, expected);
 	if(sha256(callbackCheckedRecordFoundation) === expected) return callbackCheckedRecordFoundation;
+	const dependentCheckedRecordJvmArchive
+		= beforeDependentCheckedRecordJvmArchiveSource(
+			path, callbackCheckedRecordFoundation, expected
+		);
+	if(sha256(dependentCheckedRecordJvmArchive) === expected)
+		return dependentCheckedRecordJvmArchive;
+	const dependentCheckedRecordHostedArchivers
+		= beforeDependentCheckedRecordHostedArchiversSource(
+			path, dependentCheckedRecordJvmArchive, expected
+		);
+	if(sha256(dependentCheckedRecordHostedArchivers) === expected)
+		return dependentCheckedRecordHostedArchivers;
+	const nestedCheckedRecordRegressionContract
+		= beforeNestedCheckedRecordRegressionContractSource(
+			path, dependentCheckedRecordHostedArchivers, expected
+		);
+	if(sha256(nestedCheckedRecordRegressionContract) === expected)
+		return nestedCheckedRecordRegressionContract;
+	const dependentCheckedRecordPythonArchive
+		= beforeDependentCheckedRecordPythonArchiveSource(
+			path, nestedCheckedRecordRegressionContract, expected
+		);
+	if(sha256(dependentCheckedRecordPythonArchive) === expected)
+		return dependentCheckedRecordPythonArchive;
+	const dependentCheckedRecordPerlArchive
+		= beforeDependentCheckedRecordPerlArchiveSource(
+			path, dependentCheckedRecordPythonArchive, expected
+		);
+	if(sha256(dependentCheckedRecordPerlArchive) === expected)
+		return dependentCheckedRecordPerlArchive;
+	const dependentCheckedRecordHostedFailureRepair
+		= beforeDependentCheckedRecordHostedFailureRepairSource(
+			path, dependentCheckedRecordPerlArchive, expected
+		);
+	if(sha256(dependentCheckedRecordHostedFailureRepair) === expected)
+		return dependentCheckedRecordHostedFailureRepair;
+	const dependentCheckedRecordRubyArchive
+		= beforeDependentCheckedRecordRubyArchiveSource(
+			path, dependentCheckedRecordHostedFailureRepair, expected
+		);
+	if(sha256(dependentCheckedRecordRubyArchive) === expected)
+		return dependentCheckedRecordRubyArchive;
 	const dependentCheckedRecordTypeSurfaceGap
 		= beforeDependentCheckedRecordTypeSurfaceGapSource(
-			path, callbackCheckedRecordFoundation, expected
+			path, dependentCheckedRecordRubyArchive, expected
 		);
 	if(sha256(dependentCheckedRecordTypeSurfaceGap) === expected)
 		return dependentCheckedRecordTypeSurfaceGap;

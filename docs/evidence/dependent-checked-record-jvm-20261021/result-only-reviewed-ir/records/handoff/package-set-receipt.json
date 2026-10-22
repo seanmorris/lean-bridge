@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51379740,
+          "path": "archives/dependentrecords-1.0.0.jar",
+          "sha256": "c2b0164a262f6f9b49366bd0e175a8ec89ad02007ea4cb7a50a1c08d9b3c562a"
+        },
+        {
+          "bytes": 626,
+          "path": "archives/dependentrecords-1.0.0.pom",
+          "sha256": "148accf80eb5f137ff2960550cf33480613bfdb7256d37afb052461cc9ad34e4"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "927a11edc0f95a85cfe3607df763898dd1a6675c447cd162e5f9f20c6c9221f7",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "be751e4042966a523c1fd9b8e0878cea26c6ca4f00461ba6380fdb92e78e73b4"
+  }
+}

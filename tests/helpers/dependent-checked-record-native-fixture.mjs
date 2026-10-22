@@ -43,13 +43,18 @@ export const dependentCheckedRecordNativeSelection = route => {
  */
 export const dependentCheckedRecordNativeCaller = async (profile, route) => {
 	assert.ok(dependentCheckedRecordNativeProfiles.includes(profile));
-	const { resultOnly } = dependentCheckedRecordNativeSelection(route);
+	const { resultOnly, reviewed } = dependentCheckedRecordNativeSelection(route);
 	const extension = profile === "c" ? "c" : "cpp";
+	let source = await readFile(
+		`tests/fixtures/dependent-checked-record-consumers/${resultOnly
+			? "result-only-" : ""}${extension}.${extension}`, "utf8"
+	);
+	if(reviewed)
+		source = source.replaceAll(
+			'"arg0 was rejected by ', '"value0 was rejected by '
+		);
 	return {
-		source: await readFile(
-			`tests/fixtures/dependent-checked-record-consumers/${resultOnly
-				? "result-only-" : ""}${extension}.${extension}`, "utf8"
-		)
+		source
 		, checks: resultOnly ? 513 : 521
 	};
 };

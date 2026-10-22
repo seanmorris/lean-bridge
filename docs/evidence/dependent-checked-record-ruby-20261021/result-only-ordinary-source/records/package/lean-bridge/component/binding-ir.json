@@ -1,0 +1,191 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Lean produces the dependent proofs for a result-only API. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:DependentRecords.dependentResult",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "dependentResult",
+      "overloadKey": "DependentRecords.dependentResult",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "id": "lean:DependentRecords.Dependent",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "DependentRecords.dependentResult",
+        "extensions": {
+          "lean-lang.org/export-contract": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "bound",
+                  "refinement": null
+                },
+                {
+                  "name": "below",
+                  "refinement": {
+                    "field": "bound",
+                    "kind": "fin-field"
+                  }
+                }
+              ],
+              "kind": "checked-record",
+              "name": "DependentRecords.Dependent"
+            }
+          },
+          "lean-lang.org/source-position": {
+            "endColumn": 40,
+            "endLine": 22,
+            "path": "DependentRecords.lean",
+            "startColumn": 0,
+            "startLine": 20
+          },
+          "lean-lang.org/theorem-references": []
+        },
+        "producer": "lean"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiler-checked exports for dependentrecords."
+  },
+  "errors": [],
+  "producers": [
+    {
+      "adapter": "lean-bridge-elaborator",
+      "adapterVersion": 2,
+      "extensions": {
+        "lean-lang.org/elaboration-sha256": "6ecd6eb24dab588a1dc6e0629ce74e7170567c217c6ad05c0de52cdb7e506ddb",
+        "lean-lang.org/toolchain": "leanprover/lean4:v4.32.2"
+      },
+      "id": "lean",
+      "tool": "Lean",
+      "toolVersion": "4.32.2"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean DependentRecords.Dependent."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "bound"
+          },
+          "mutability": "immutable",
+          "name": "bound",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "below"
+          },
+          "mutability": "immutable",
+          "name": "below",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:DependentRecords.Dependent",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Dependent",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "DependentRecords.Dependent",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "valid"
+            ]
+          },
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              null,
+              {
+                "field": "bound",
+                "kind": "fin-field"
+              }
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "lean"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

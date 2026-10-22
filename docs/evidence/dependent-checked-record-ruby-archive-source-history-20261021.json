@@ -1,0 +1,139 @@
+{
+  "additions": [
+    {
+      "currentSha256": "141a2411f9d77563449bbc24409d81868427486ee7aee6962cb5bf0fa8493d62",
+      "path": "tests/helpers/dependent-checked-record-ruby-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "6e54d76a4ad0c2ae47c1ab4bd372eb81a8dc4b4a5c54312c8f7167a223d3d331",
+      "path": "tests/helpers/dependent-checked-record-ruby-evidence.mjs"
+    },
+    {
+      "currentSha256": "53ece6fbfb7d763e97f03752447a7fb1fb5886ce4d06be669c30b725ede1de91",
+      "path": "scripts/update-dependent-checked-record-ruby-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "73c68cf580c6a5a1c9f5fdfc9635b16d0b7baae13de8847344eb76d8e1fbd95a",
+      "path": "tests/helpers/dependent-checked-record-ruby-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "4e40fd9aec23e4548305a7491725b48130f1c585f4d84a04fa1b6aed44fa96a5",
+      "path": "tests/helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 1434,
+    "archiveFileCount": 1432,
+    "indexSha256": "b485f3c220d4d8996bcccc3a5e740687e90f4ec519bf5a302e98f8498872d20f",
+    "indexedFileCount": 1431,
+    "root": "docs/evidence/dependent-checked-record-ruby-20261021"
+  },
+  "implementationCommit": "b1a281a87e9ad3b6084ee9645da675ee0d0d4d93",
+  "implementationUpdates": [
+    {
+      "currentSha256": "d3415b1e8a757f5c9dfe8e3460483b82eff8c47b54f1f7c79d1bbc095e9c8526",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-ruby-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 4150
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "0e06b9b1954b00d6745349ac8da6ee2e4fe39728491e1fa15d0b879304e2b7ec"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "e43b354597b007c6d59bbd7898ca3198110df69e1edc20459a51d5e34cc0f12d",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f\"\n",
+          "previous": "          \"sha256\": \"cb6c927f4d0126f8e67a370735d2433cc4f3a524f2f1207f0a51aeee09ffaef1\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "e2b4b44964e2a1447a14761e3ecc078c784f80cee3c66c4472a4c34bfb753365"
+    },
+    {
+      "currentSha256": "96b9d25575f3fb54dd72c4e1089c1521d58302ec6287e2fe27fa995360eb2201",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordRubyArchiveSource, dependentCheckedRecordRubyArchiveImplementationPaths, dependentCheckedRecordRubyArchiveIntegrationPaths } from \"./dependent-checked-record-ruby-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...dependentCheckedRecordRubyArchiveImplementationPaths\n\t, ...dependentCheckedRecordRubyArchiveIntegrationPaths\n\t, ...dependentCheckedRecordTypeSurfaceGapHistoricalPaths\n",
+          "previous": "\t...dependentCheckedRecordTypeSurfaceGapHistoricalPaths\n",
+          "start": 126236
+        },
+        {
+          "current": "\tconst dependentCheckedRecordRubyArchive\n\t\t= beforeDependentCheckedRecordRubyArchiveSource(path, text, expected);\n\tif(sha256(dependentCheckedRecordRubyArchive) === expected)\n\t\treturn dependentCheckedRecordRubyArchive;\n",
+          "previous": "",
+          "start": 154890
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordRubyArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 155206
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "32f539e063b2962dfd9f6366f06c1feba4e5bcb158e040151a0b17e537a01b62"
+    },
+    {
+      "currentSha256": "3b592b5ec0c8758bedd43bc9bbead8d1d07086a57541e766ef2ea54e96c5b74f",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-ruby-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4219
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "d3415b1e8a757f5c9dfe8e3460483b82eff8c47b54f1f7c79d1bbc095e9c8526"
+    }
+  ],
+  "milestone": "dependent-checked-record-ruby-archive-source-v1",
+  "predecessorCommit": "ac48e11d740d7f7d17476d3543e22f1cd94b759a",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted Ruby dependent checked-record evidence retains all four routes, exact source roles, independent replay and the original GitHub artifact bytes."
+}

@@ -9,10 +9,18 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-	dependentCheckedRecordHostedOriginal
+	dependentCheckedRecordBrowserEvidenceSources
+	, dependentCheckedRecordDotnetEvidenceSources
+	, dependentCheckedRecordHostedOriginal
+	, dependentCheckedRecordJvmEvidenceSources
+	, dependentCheckedRecordNativeEvidenceSources
+	, dependentCheckedRecordPerlEvidenceSources
+	, dependentCheckedRecordPhpEvidenceSources
+	, dependentCheckedRecordPhpWasmEvidenceSources
 	, dependentCheckedRecordPythonEvidenceSources
 	, dependentCheckedRecordRubyEvidenceSources
 	, dependentCheckedRecordRustEvidenceSources
+	, dependentCheckedRecordWitEvidenceSources
 } from "./dependent-checked-record-hosted-evidence-sources.mjs";
 import {
 	dependentCheckedRecordHostedSafeZipPath
@@ -74,6 +82,103 @@ test("dependent Rust evidence closes crate production, consumption and checking 
 	, ["checker", "scripts/check-dependent-checked-record-rust-ci.mjs"]
 	, ["checker", "scripts/bootstrap-rust-ci.sh"]
 	, ["archiver", "scripts/archive-dependent-checked-record-rust-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent Perl evidence closes CPAN production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPerlEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/perl.pl"]
+	, ["checker", ".github/workflows/dependent-checked-record-perl.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-perl-ci.mjs"]
+	, ["checker", "scripts/build-perl-toolchains.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-perl-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent .NET evidence closes NuGet production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordDotnetEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/dotnet.cs"]
+	, ["checker", ".github/workflows/dependent-checked-record-dotnet.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-dotnet-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-dotnet-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent JVM evidence closes Maven production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordJvmEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/java.java"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/kotlin.kt"]
+	, ["checker", ".github/workflows/dependent-checked-record-jvm.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-jvm-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-jvm-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent native-PHP evidence closes Composer production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPhpEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/php.php"]
+	, ["checker", ".github/workflows/dependent-checked-record-php.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-php-ci.mjs"]
+	, ["checker", "scripts/select-nominal-subtype-php-ci-tools.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-php-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent WIT evidence closes component production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordWitEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/wit-wasi.c"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/wit-values.h"]
+	, ["checker", ".github/workflows/dependent-checked-record-wit.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-wit-ci.mjs"]
+	, ["checker", "scripts/select-nominal-subtype-wit-ci-tools.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-wit-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent browser evidence closes npm production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordBrowserEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-browser/browser.mjs"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-browser/javascript.mjs"]
+	, ["checker", ".github/workflows/dependent-checked-record-browser.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-browser-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-browser-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent native evidence closes C/C++ production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordNativeEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/c.c"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/cpp.cpp"]
+	, ["checker", ".github/workflows/dependent-checked-record-native.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-native-ci.mjs"]
+	, ["archiver", "scripts/archive-dependent-checked-record-native-evidence.mjs"]
+	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
+]));
+
+test("dependent PHP-Wasm evidence closes package-set production, consumption and checking sources", {
+	timeout: 120_000
+}, () => authenticate(select(dependentCheckedRecordPhpWasmEvidenceSources), [
+	["producer", "tests/fixtures/onboarding/dependent-checked-records/DependentRecords.lean"]
+	, ["consumer", "tests/fixtures/dependent-checked-record-consumers/php.php"]
+	, ["checker", ".github/workflows/dependent-checked-record-php-wasm.yml"]
+	, ["checker", "scripts/check-dependent-checked-record-php-wasm-ci.mjs"]
+	, ["checker", "scripts/check-dependent-checked-record-php-wasm-compiler-ci.mjs"]
+	, ["checker", "scripts/bootstrap-php-wasm-ci.sh"]
+	, ["archiver", "scripts/archive-dependent-checked-record-php-wasm-evidence.mjs"]
 	, ["archiver", "tests/helpers/dependent-checked-record-hosted-archive.mjs"]
 ]));
 

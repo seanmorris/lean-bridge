@@ -1,0 +1,107 @@
+{
+  "archiveSha256": "2e02b5f44e2ba7ab7e59f84ca4ab435ce70d540ea19d9fae97efa6fed5970bb9",
+  "arguments": [
+    "consumer.py",
+    "--reviewed"
+  ],
+  "baselineSha256": "e3d3aab8ef8a012b86dd0103c67fa6954975cba54319f9687784230b737c72a2",
+  "compilerFreeExecution": true,
+  "consumerSha256": "63e1eaf33538a01875d03db009d80e5a4ebc72cda9ddc4a3a9c862685342be17",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required"
+  },
+  "environmentSha256": "51800aa89aba1242b2f7e8dccd63e4c7838df66f46c62a0be28eceb7844d68fe",
+  "installedBytesUnchanged": true,
+  "interpreter": {
+    "binary": "/opt/hostedtoolcache/Python/3.12.15/x64/bin/python3.12",
+    "identity": {
+      "implementation": "cpython",
+      "pointerBits": 64,
+      "python": "3.12.15"
+    },
+    "interpreter": {
+      "bytes": 17752,
+      "kind": "file",
+      "sha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e"
+    },
+    "minor": "3.12",
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"implementation\": \"cpython\", \"pointerBits\": 64, \"python\": \"3.12.15\"}\n"
+    }
+  },
+  "minor": "3.12",
+  "observations": [
+    {
+      "arguments": [
+        "consumer.py",
+        "--reviewed"
+      ],
+      "closure": {
+        "baselineSha256": "e3d3aab8ef8a012b86dd0103c67fa6954975cba54319f9687784230b737c72a2",
+        "environmentSha256": "51800aa89aba1242b2f7e8dccd63e4c7838df66f46c62a0be28eceb7844d68fe",
+        "interpreterSha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e",
+        "python": "3.12.15"
+      },
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "environment": {
+        "CC": "/unavailable/compiler",
+        "CXX": "/unavailable/compiler",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+        "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+        "PATH": "/unavailable"
+      },
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\": 1289, \"checks\": 2326, \"recoveries\": 258, \"rejections\": 258, \"snapshots\": 1289}\n"
+      }
+    },
+    {
+      "arguments": [
+        "consumer.py",
+        "--reviewed"
+      ],
+      "closure": {
+        "baselineSha256": "e3d3aab8ef8a012b86dd0103c67fa6954975cba54319f9687784230b737c72a2",
+        "environmentSha256": "51800aa89aba1242b2f7e8dccd63e4c7838df66f46c62a0be28eceb7844d68fe",
+        "interpreterSha256": "53dab24bf9e0e9c490088a53d71770b6f027b057678b313648e75f7fc87a675e",
+        "python": "3.12.15"
+      },
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "environment": {
+        "CC": "/unavailable/compiler",
+        "CXX": "/unavailable/compiler",
+        "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+        "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+        "PATH": "/unavailable"
+      },
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\": 1289, \"checks\": 2326, \"recoveries\": 258, \"rejections\": 258, \"snapshots\": 1289}\n"
+      }
+    }
+  ],
+  "offlineInstall": true,
+  "receiptSha256": "856d79db3d8d7acde78a71288c1c7567ec240fa66e255b453d066a8b7e7c408d",
+  "relocatedInstallation": true,
+  "route": "reviewed-ir",
+  "sourceUnchangedAfterReplay": true
+}

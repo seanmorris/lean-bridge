@@ -1,0 +1,34 @@
+{
+  "archiveSha256": "c2b0164a262f6f9b49366bd0e175a8ec89ad02007ea4cb7a50a1c08d9b3c562a",
+  "args": [
+    "-Werror",
+    "-jvm-target",
+    "22",
+    "-Xrender-internal-diagnostic-names",
+    "-cp",
+    "component.jar",
+    "NullProbe.kt",
+    "-d",
+    "classes"
+  ],
+  "command": "/home/runner/work/lean-bridge/lean-bridge/build/kotlin-tools/kotlinc/bin/kotlinc",
+  "cwd": "/tmp/lean-bridge-dependent-checked-record-jvm-installed-sucshR/probes/nullability-true",
+  "environment": {
+    "CC": "/unavailable/compiler",
+    "CXX": "/unavailable/compiler",
+    "JAVA_HOME": "/opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/22.0.2-9/x64",
+    "LEAN_BRIDGE_LEAN_PREFIX": "/unavailable/lean",
+    "LEAN_BRIDGE_NATIVE_ROOT": "/unavailable/runtime",
+    "PATH": "/usr/bin:/bin"
+  },
+  "invalid": true,
+  "outputs": {},
+  "route": "result-only-reviewed-ir",
+  "run": {
+    "code": 1,
+    "stderr": "NullProbe.kt:2:49: error: [NULL_FOR_NONNULL_TYPE] Null cannot be a value of a non-null type 'BigInteger'.\nfun dependentResultNull() = Api.dependentResult(null)\n                                                ^^^^\n",
+    "stdout": ""
+  },
+  "source": "import org.leanbridge.dependentrecords.kotlin.*\nfun dependentResultNull() = Api.dependentResult(null)\n",
+  "sourceSha256": "99163181f8ee3e06feb01d7e2ccb9df425a9c5d81cb151474eb55156d8bfaee5"
+}
