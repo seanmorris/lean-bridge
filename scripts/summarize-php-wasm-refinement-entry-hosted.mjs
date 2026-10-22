@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+/**
+ * Recheck a complete directory of extracted hosted PHP-Wasm entry artifacts.
+ *
+ * @file
+ */
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFile, readdir } from "node:fs/promises";
+import { isAbsolute, join, resolve } from "node:path";
+import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
+import { canonicalJson } from "../src/capsule/node.mjs";
+import {
+	phpWasmRefinementEntryArtifactNames
+	, summarizePhpWasmRefinementEntryHostedArtifacts
+} from "../tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs";
+
+const usage = "Usage: summarize-php-wasm-refinement-entry-hosted.mjs --producer <full-commit> --directory <absolute-extracted-artifact-root>";
+const args = process.argv.slice(2), selected = {};
+assert.equal(args.length, 4, usage);
+for(let index = 0; index < args.length; index += 2)
+{
+	const option = args[index], value = args[index + 1];
+	assert.ok(["--producer", "--directory"].includes(option), usage);
+	assert.ok(typeof value === "string" && value.length > 0
+		&& !value.startsWith("--") && !Object.hasOwn(selected, option), usage);
+	selected[option] = value;
+}
+assert.match(selected["--producer"], /^[a-f0-9]{40}$/u);
+assert.ok(isAbsolute(selected["--directory"])
+	&& resolve(selected["--directory"]) === selected["--directory"], usage);
+assert.equal(execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+	, selected["--producer"], "artifact verification must run at the producer revision");
+const names = phpWasmRefinementEntryArtifactNames(selected["--producer"]);
+const entries = await readdir(selected["--directory"], { withFileTypes: true });
+assert.deepEqual(entries.map(item => item.name).sort(), [...names].sort()
+	, "extracted artifact directory closure");
+assert.ok(entries.every(item => item.isDirectory()), "every artifact must be a directory");
+const artifacts = [];
+for(const name of names)
+{
+	const root = join(selected["--directory"], name);
+	artifacts.push({
+		name, paths: await nativeArtifactPaths(root)
+		, read: path => readFile(join(root, path))
+	});
+}
+const summary = await summarizePhpWasmRefinementEntryHostedArtifacts(
+	selected["--producer"], artifacts
+);
+process.stdout.write(canonicalJson(summary));
