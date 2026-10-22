@@ -67,6 +67,7 @@ import { beforeCallbackCheckedRecordNativeSource, callbackCheckedRecordNativeCha
 import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
 import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
+import { beforeDependentCheckedRecordNativeArchiveSource, dependentCheckedRecordNativeArchiveImplementationPaths, dependentCheckedRecordNativeArchiveIntegrationPaths } from "./dependent-checked-record-native-archive-source-history.mjs";
 import { beforeDependentCheckedRecordHostedArchiversSource, dependentCheckedRecordHostedArchiversChangedPaths, dependentCheckedRecordHostedArchiversIntegrationPaths } from "./dependent-checked-record-hosted-archivers-source-history.mjs";
 import { beforeNestedCheckedRecordRegressionContractSource, nestedCheckedRecordRegressionContractChangedPaths, nestedCheckedRecordRegressionContractIntegrationPaths } from "./nested-checked-record-regression-contract-source-history.mjs";
 import { beforeDependentCheckedRecordPythonArchiveSource, dependentCheckedRecordPythonArchiveImplementationPaths, dependentCheckedRecordPythonArchiveIntegrationPaths } from "./dependent-checked-record-python-archive-source-history.mjs";
@@ -1935,7 +1936,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPromotionContractChangedPaths
+	...dependentCheckedRecordNativeArchiveImplementationPaths
+	, ...dependentCheckedRecordNativeArchiveIntegrationPaths
+	, ...dependentCheckedRecordPromotionContractChangedPaths
 	, ...dependentCheckedRecordPromotionContractIntegrationPaths
 	, ...hostedRefinementVerifierRepairChangedPaths
 	, ...hostedRefinementVerifierRepairIntegrationPaths
@@ -2658,9 +2661,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordNativeArchive
+		= beforeDependentCheckedRecordNativeArchiveSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordNativeArchive) === expected)
+		return dependentCheckedRecordNativeArchive;
 	const dependentCheckedRecordPromotionContract
 		= beforeDependentCheckedRecordPromotionContractSource(
-			path, text, expected
+			path, dependentCheckedRecordNativeArchive, expected
 		);
 	if(sha256(dependentCheckedRecordPromotionContract) === expected)
 		return dependentCheckedRecordPromotionContract;

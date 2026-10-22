@@ -1,0 +1,151 @@
+{
+  "additions": [
+    {
+      "currentSha256": "57a83a137bf8e09b1a1af1cae0fcb5244c8bbec54580838c4de450c26e909a06",
+      "path": "tests/helpers/dependent-checked-record-native-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "8a3f910383f9d1e20185ffaad1519b0c263e9ef90a14023dff62f09fc9f26ad5",
+      "path": "tests/helpers/dependent-checked-record-native-evidence.mjs"
+    },
+    {
+      "currentSha256": "2b01846ef6630a3e93ec2ab141547a494a75cbbb82e3373ad128caa5933889a5",
+      "path": "scripts/update-dependent-checked-record-native-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "36822ab8d51040d682315b25787e153bb9d31b1cf46b8859a605b317f607c908",
+      "path": "tests/helpers/dependent-checked-record-native-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "1751b4707c5382fb1c5514d1515bacf95ad2a4c4bd42f52cbb31bb3e565f1f7f",
+      "path": "tests/helpers/dependent-checked-record-native-archive-source-history-tests.mjs"
+    }
+  ],
+  "archive": {
+    "addedFileCount": 820,
+    "archiveFileCount": 818,
+    "indexSha256": "ba64efbdf0237ef967ed57ce752a9fd9c3157ecc00ac7b7ac98c27bc827d0ff7",
+    "indexedFileCount": 817,
+    "root": "docs/evidence/dependent-checked-record-native-20261021"
+  },
+  "implementationCommit": "3ae72d97e8dde408beb12120765190ff8d011a18",
+  "implementationUpdates": [
+    {
+      "currentSha256": "b83f4c99578a0b6a6caeed1e7edc765d1aae7558b93acbbff4628e03e7eb7a03",
+      "edits": [
+        {
+          "current": "\t\t\tcontract.artifactRetainedPath\n\t\t\t\t? contract.artifactRetainedPath(run.route, path)\n\t\t\t\t: `${contract.artifactRoot}/${run.route}/${path}`)\n",
+          "previous": "\t\t\t`${contract.artifactRoot}/${run.route}/${path}`)\n",
+          "start": 4201
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-hosted-evidence.mjs",
+      "previousSha256": "6719f5c38a715cd6dcd652e8c95a2c7162f9243ddd8016eef613b655f07c753d"
+    },
+    {
+      "currentSha256": "90a4900179c04efaaad0f65deedec04805ffb30694b0b9160d84fcfee6e920f9",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-native-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 3375
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "9d143316938efa72b2618116a84cd3b8b72613287eba9866b55a88a7094c9813"
+    }
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "0cc58f9e2775cd60d2790a4abd9628fc3fc8865b3e0a9bdaec4bbf0365e5b5ca",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1\"\n",
+          "previous": "          \"sha256\": \"567f7bf5c7ba6cb3359fb4c48dd43476db26cf2befbe943f2f442646b36e4719\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "673c302f64db2ce70c23251691bdb4ad32a0fddd333bd930a0c368fa98cc446c"
+    },
+    {
+      "currentSha256": "1a9a1bf90c3bb412cbbdb7b8aa5e1aa2b7e5a5f260999d790227d0627b3f635b",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordNativeArchiveSource, dependentCheckedRecordNativeArchiveImplementationPaths, dependentCheckedRecordNativeArchiveIntegrationPaths } from \"./dependent-checked-record-native-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordNativeArchiveImplementationPaths\n\t, ...dependentCheckedRecordNativeArchiveIntegrationPaths\n\t, ...dependentCheckedRecordPromotionContractChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPromotionContractChangedPaths\n",
+          "start": 150450
+        },
+        {
+          "current": "\tconst dependentCheckedRecordNativeArchive\n\t\t= beforeDependentCheckedRecordNativeArchiveSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordNativeArchive) === expected)\n\t\treturn dependentCheckedRecordNativeArchive;\n",
+          "previous": "",
+          "start": 183671
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordNativeArchive, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 184008
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "46a4f899941b10cb9a3047b8629371ae29f5bf974c3919674ef184a2d2dcb1bd"
+    },
+    {
+      "currentSha256": "4ed90f424af478c74229733cca34ed1f1ca192e3c1ee9321eb0860c88bcd51c1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-native-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3446
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "90a4900179c04efaaad0f65deedec04805ffb30694b0b9160d84fcfee6e920f9"
+    }
+  ],
+  "milestone": "dependent-checked-record-native-archive-source-v1",
+  "predecessorCommit": "f6c98627e7bf58fabbae4093636675ebb19ed8fe",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Immutable hosted C/C++ dependent checked-record evidence retains all four routes, exact native packages and independent consumers, source roles, independent replay and the original GitHub artifact bytes."
+}
