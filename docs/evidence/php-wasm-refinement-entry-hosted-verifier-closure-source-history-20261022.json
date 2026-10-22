@@ -1,0 +1,213 @@
+{
+  "additions": [
+    {
+      "currentSha256": "8e3ce42e5d8c5c187456b9c0ea2d6dd800b30730e8e9ad08b57e6723c43f71d9",
+      "path": "scripts/update-php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "75ba64b2260b008bb4bf4fe900cb681d570f91f555118693671a69566baed649",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-verifier-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a21e2a2786a157ec3da3aa2d6e5b01f950d7395a2b5d97d5e591a46ea118847c",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "777ae32e448c936912f93fcbde5697c65fd5f31e",
+  "milestone": "php-wasm-refinement-entry-hosted-verifier-closure-v1",
+  "predecessorCommit": "46df81614aefd5e6139808b54c5fc46b1ce30f77",
+  "schemaVersion": 1,
+  "scope": "The hosted PHP-Wasm entry aggregator now refuses modified or untracked verifier sources, records the exact verifier commit and supported Node 22 reporter version, and binds each retained TAP stream to its exact family and route test before authenticating records.",
+  "updates": [
+    {
+      "currentSha256": "ca97859a6d39b3bf5b087162765e8aee22baf3e0c535b07c2fc4cbdcebb4784f",
+      "edits": [
+        {
+          "current": "\tcheckPhpWasmRefinementEntryVerifier\n\t, phpWasmRefinementEntryArtifactNames\n",
+          "previous": "\tphpWasmRefinementEntryArtifactNames\n",
+          "start": 458
+        },
+        {
+          "current": "const gitLines = args => execFileSync(\"git\", args, { encoding: \"utf8\" }).trim()\n\t.split(\"\\n\").filter(Boolean);\nconst verification = checkPhpWasmRefinementEntryVerifier(selected[\"--producer\"], {\n\tverifierCommit: execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { encoding: \"utf8\" }).trim()\n\t, modifiedSourcePaths: gitLines([\"diff\", \"--name-only\", \"HEAD\", \"--\"\n\t\t, \"src\", \"tests\", \"scripts\"])\n\t, untrackedSourcePaths: gitLines([\"ls-files\", \"--others\", \"--exclude-standard\"\n\t\t, \"--\", \"src\", \"tests\", \"scripts\"])\n\t, nodeVersion: process.versions.node\n});\n",
+          "previous": "assert.equal(execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { encoding: \"utf8\" }).trim()\n\t, selected[\"--producer\"], \"artifact verification must run at the producer revision\");\n",
+          "start": 1400
+        },
+        {
+          "current": "\tselected[\"--producer\"], artifacts, verification\n",
+          "previous": "\tselected[\"--producer\"], artifacts\n",
+          "start": 2598
+        }
+      ],
+      "path": "scripts/summarize-php-wasm-refinement-entry-hosted.mjs",
+      "previousSha256": "11a3fcad72edbdac45717c01885107804d0f9a8128c9b43ffaf91b6f9f66390f"
+    },
+    {
+      "currentSha256": "ed610b56e04855ebefe3a3d8c73b1c76b1f49f87d8acda848a005ac33bf73eae",
+      "edits": [
+        {
+          "current": "\tcheckPhpWasmRefinementEntryVerifier\n\t, phpWasmRefinementEntryArtifactLayouts\n",
+          "previous": "\tphpWasmRefinementEntryArtifactLayouts\n",
+          "start": 442
+        },
+        {
+          "current": "const tapName = item => item.kind === \"callback\"\n\t? \"instrumented PHP-Wasm callbacks close and execute every selected entry\"\n\t: item.kind === \"owned\"\n\t\t? `instrumented owned PHP-Wasm package closes ${item.family} ${item.route} dispatch and transfer order`\n\t\t: `instrumented PHP-Wasm copied package closes ${item.family} ${item.route} compiler entries`;\nconst tap = name => `TAP version 13\\n# Subtest: ${name}\\nok 1 - ${name}\\n1..1\\n`\n",
+          "previous": "const tap = \"TAP version 13\\n# Subtest: selected\\nok 1 - selected\\n1..1\\n\"\n",
+          "start": 661
+        },
+        {
+          "current": "const verification = checkPhpWasmRefinementEntryVerifier(producer, {\n\tverifierCommit: producer, modifiedSourcePaths: [], untrackedSourcePaths: []\n\t, nodeVersion: \"22.23.3\"\n});\n",
+          "previous": "",
+          "start": 1206
+        },
+        {
+          "current": "\t\t\tfiles.set(support, support.endsWith(\".tap\") ? tap(tapName(item)) : \"retained\\n\");\n",
+          "previous": "\t\t\tfiles.set(support, support.endsWith(\".tap\") ? tap : \"retained\\n\");\n",
+          "start": 2448
+        },
+        {
+          "current": "\t\tproducer, artifacts(maps), verification, verifier\n",
+          "previous": "\t\tproducer, artifacts(maps), verifier\n",
+          "start": 3899
+        },
+        {
+          "current": "test(\"hosted PHP-Wasm entry promotion closes the verifier checkout and Node reporter\", () => {\n\tassert.deepEqual(verification, {\n\t\tverifierCommit: producer, sourcePathsClean: true\n\t\t, sourcePaths: [\"src\", \"tests\", \"scripts\"]\n\t\t, nodeVersion: \"22.23.3\", nodeMajor: 22\n\t});\n\tfor(const [change, pattern] of [\n\t\t[state => { state.verifierCommit = \"b\".repeat(40); }, /producer revision/u]\n\t\t, [state => { state.modifiedSourcePaths = [\"src/changed.mjs\"]; }, /unmodified/u]\n\t\t, [state => { state.untrackedSourcePaths = [\"tests/forged.mjs\"]; }, /untracked/u]\n\t\t, [state => { state.nodeVersion = \"24.0.0\"; }, /Node 22/u]\n\t]) {\n\t\tconst state = { verifierCommit: producer, modifiedSourcePaths: []\n\t\t\t, untrackedSourcePaths: [], nodeVersion: \"22.23.3\" };\n\t\tchange(state);\n\t\tassert.throws(() => checkPhpWasmRefinementEntryVerifier(producer, state), pattern);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 3956
+        },
+        {
+          "current": "\tassert.deepEqual(summary.verification, verification);\n",
+          "previous": "",
+          "start": 5056
+        },
+        {
+          "current": "\t\tproducer, list.slice(1), verification, checkers), /artifact order and identity/u);\n",
+          "previous": "\t\tproducer, list.slice(1), checkers), /artifact order and identity/u);\n",
+          "start": 5960
+        },
+        {
+          "current": "\t\tproducer, [list[1], list[0], ...list.slice(2)], verification, checkers)\n",
+          "previous": "\t\tproducer, [list[1], list[0], ...list.slice(2)], checkers)\n",
+          "start": 6124
+        },
+        {
+          "current": "\t\tproducer, [...list, list[0]], verification, checkers), /artifact order and identity/u);\n",
+          "previous": "\t\tproducer, [...list, list[0]], checkers), /artifact order and identity/u);\n",
+          "start": 6313
+        },
+        {
+          "current": "\t\treturn summarizePhpWasmRefinementEntryHostedArtifacts(producer, changed, verification, checkers);\n",
+          "previous": "\t\treturn summarizePhpWasmRefinementEntryHostedArtifacts(producer, changed, checkers);\n",
+          "start": 6687
+        },
+        {
+          "current": "\t\tconst path = phpWasmRefinementEntryArtifactLayouts[item.kind].support[0];\n\t\tfiles.set(path, files.get(path).replace(\"# fail 0\", \"# fail 1\"));\n",
+          "previous": "\t\tfiles.set(phpWasmRefinementEntryArtifactLayouts[item.kind].support[0]\n\t\t\t, tap.replace(\"# fail 0\", \"# fail 1\"));\n",
+          "start": 7943
+        },
+        {
+          "current": "\tawait refused(maps => {\n\t\tconst [name, files] = maps.entries().next().value;\n\t\tconst item = phpWasmRefinementEntryMatrix.find(value =>\n\t\t\tphpWasmRefinementEntryMatrixLocation(value, producer).artifact === name);\n\t\tconst path = phpWasmRefinementEntryArtifactLayouts[item.kind].support[0];\n\t\tfiles.set(path, files.get(path).replace(`ok 1 - ${tapName(item)}`\n\t\t\t, \"ok 1 - different passing cell\"));\n\t\treturn run(maps);\n\t}, /selected test/u);\n",
+          "previous": "",
+          "start": 8132
+        },
+        {
+          "current": "\tassert.equal(controls, 14);\n",
+          "previous": "\tassert.equal(controls, 13);\n",
+          "start": 9981
+        },
+        {
+          "current": "\t\tproducer, artifacts(maps), verification\n",
+          "previous": "\t\tproducer, artifacts(maps)\n",
+          "start": 10291
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs",
+      "previousSha256": "252cb08f9c0f348db9a6b44a2b3a4c3a7c3c4d1c4d1527310b0a1dfa2f30f697"
+    },
+    {
+      "currentSha256": "d37c0aafb4c6a86125a965ab85d1255e7b2b4c125c02a4224e005c3113fabfad",
+      "edits": [
+        {
+          "current": "const terminalTap = (source, expectedTest) => {\n",
+          "previous": "const terminalTap = source => {\n",
+          "start": 2655
+        },
+        {
+          "current": "\tassert.deepEqual(source.split(\"\\n\").filter(line => /^ok [0-9]+ - /u.test(line))\n\t\t, [`ok 1 - ${expectedTest}`], \"artifact TAP selected test\");\n",
+          "previous": "",
+          "start": 2777
+        },
+        {
+          "current": "const tapTestName = cells => cells[0].kind === \"callback\"\n\t? \"instrumented PHP-Wasm callbacks close and execute every selected entry\"\n\t: cells[0].kind === \"owned\"\n\t\t? `instrumented owned PHP-Wasm package closes ${cells[0].family} ${cells[0].route} dispatch and transfer order`\n\t\t: `instrumented PHP-Wasm copied package closes ${cells[0].family} ${cells[0].route} compiler entries`;\n\n/**\n * Close the verifier source checkout and supported Node reporter major before\n * any hosted artifact is read.\n *\n * @param producerCommit - Full common producer revision.\n * @param state - Git source-path observations and the active Node version.\n */\nexport const checkPhpWasmRefinementEntryVerifier = (producerCommit, state) => {\n\tassert.match(producerCommit, /^[a-f0-9]{40}$/u);\n\texact(state, [\"verifierCommit\", \"modifiedSourcePaths\", \"untrackedSourcePaths\"\n\t\t, \"nodeVersion\"], \"hosted verifier state\");\n\tassert.equal(state.verifierCommit, producerCommit\n\t\t, \"artifact verification must run at the producer revision\");\n\tassert.deepEqual(state.modifiedSourcePaths, [], \"verifier source paths are unmodified\");\n\tassert.deepEqual(state.untrackedSourcePaths, [], \"verifier source paths contain no untracked files\");\n\tassert.match(state.nodeVersion, /^22\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$/u\n\t\t, \"hosted verifier uses the supported Node 22 TAP reporter\");\n\treturn Object.freeze({\n\t\tverifierCommit: producerCommit, sourcePathsClean: true\n\t\t, sourcePaths: Object.freeze([\"src\", \"tests\", \"scripts\"])\n\t\t, nodeVersion: state.nodeVersion, nodeMajor: 22\n\t});\n};\n",
+          "previous": "",
+          "start": 3288
+        },
+        {
+          "current": " * @param verification - Clean source-checkout and Node reporter evidence.\n",
+          "previous": "",
+          "start": 5466
+        },
+        {
+          "current": "\tproducerCommit, artifacts, verification, checkers = defaultCheckers\n",
+          "previous": "\tproducerCommit, artifacts, checkers = defaultCheckers\n",
+          "start": 5698
+        },
+        {
+          "current": "\texact(verification, [\"verifierCommit\", \"sourcePathsClean\", \"sourcePaths\"\n\t\t, \"nodeVersion\", \"nodeMajor\"], \"hosted verifier evidence\");\n\tassert.equal(verification.verifierCommit, producerCommit);\n\tassert.equal(verification.sourcePathsClean, true);\n\tassert.deepEqual(verification.sourcePaths, [\"src\", \"tests\", \"scripts\"]);\n\tassert.equal(verification.nodeMajor, 22);\n\tassert.match(verification.nodeVersion, /^22\\./u);\n",
+          "previous": "",
+          "start": 5824
+        },
+        {
+          "current": "\t\tterminalTap((await bytes(tapPath)).toString(), tapTestName(cells));\n",
+          "previous": "\t\tterminalTap((await bytes(tapPath)).toString());\n",
+          "start": 8327
+        },
+        {
+          "current": "\t\t, producerCommit, verification, artifacts: retained, matrix\n",
+          "previous": "\t\t, producerCommit, artifacts: retained, matrix\n",
+          "start": 10207
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs",
+      "previousSha256": "d6c6ab94160c53ae0284aa5c0b66615382099256e82f566a072fd6f43a1e99ef"
+    },
+    {
+      "currentSha256": "dccfeaf9b008dcc6bf128fbb9b0ec258ddafe8364f1521473300c3cfce36b7b1",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryHostedVerifierClosureSource, phpWasmRefinementEntryHostedVerifierClosureChangedPaths } from \"./php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryHostedVerifierClosureChangedPaths\n\t, ...phpWasmRefinementCiClosureRepairChangedPaths\n",
+          "previous": "\t...phpWasmRefinementCiClosureRepairChangedPaths\n",
+          "start": 145515
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryHostedVerifierClosure\n\t\t= beforePhpWasmRefinementEntryHostedVerifierClosureSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(phpWasmRefinementEntryHostedVerifierClosure) === expected)\n\t\treturn phpWasmRefinementEntryHostedVerifierClosure;\n",
+          "previous": "",
+          "start": 176973
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementCiClosureRepairSource(\n\t\t\tpath, phpWasmRefinementEntryHostedVerifierClosure, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementCiClosureRepairSource(path, text, expected);\n",
+          "start": 177278
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5b246fe4c93653981cce62bd75f6af0f24253716921fef254b9dd615a75c4491"
+    },
+    {
+      "currentSha256": "4f7d281ee0d1915d5bf3994cdce3659e9c608d5afec6a4cfe52de456402d1e6c",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-verifier-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3437
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "ebd62564adb5c97786329858b5512e9e37d2b681ef25841e69cd38e4ce7958c8"
+    }
+  ]
+}
