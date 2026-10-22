@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51351523,
+          "path": "archives/example-dependentrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "45d611edefc6c635e6e4b4e9ed9c3e843beb365d110f0c7ca177be06ad4a2959"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "example/dependentrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e8be448f890eff9a05592b21a04090aa9f722bd4b1d591ff62e39c9c4ef8a090",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "5a2168f0e486dd98ab85a54896ac8a4a5f545a297d5b755a68e55a07c8deac74"
+  }
+}

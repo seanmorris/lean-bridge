@@ -1,0 +1,453 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/example-dependentrecords-1.0.0-linux-x86_64.zip": "45d611edefc6c635e6e4b4e9ed9c3e843beb365d110f0c7ca177be06ad4a2959"
+      },
+      "bindingIrSha256": "e8be448f890eff9a05592b21a04090aa9f722bd4b1d591ff62e39c9c4ef8a090",
+      "modelSha256": "56feabe3e166290b74a79a08e4e43f700cb8ebc25714a73ccfa6b9e162a9b670",
+      "receiptSha256": "cb0d9dffdc64e011d1b59ae05bebb18c1fee5f6fb4730648eef5395e2f3b909c"
+    },
+    {
+      "archives": {
+        "archives/example-dependentrecords-1.0.0-linux-x86_64.zip": "45d611edefc6c635e6e4b4e9ed9c3e843beb365d110f0c7ca177be06ad4a2959"
+      },
+      "bindingIrSha256": "e8be448f890eff9a05592b21a04090aa9f722bd4b1d591ff62e39c9c4ef8a090",
+      "modelSha256": "56feabe3e166290b74a79a08e4e43f700cb8ebc25714a73ccfa6b9e162a9b670",
+      "receiptSha256": "cb0d9dffdc64e011d1b59ae05bebb18c1fee5f6fb4730648eef5395e2f3b909c"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "configuration": {
+    "modules": [
+      "DependentRecords"
+    ],
+    "schemaVersion": 1,
+    "targets": {
+      "php-native": {
+        "name": "example/dependentrecords",
+        "version": "1.0.0"
+      }
+    }
+  },
+  "consumerSourceRequired": true,
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No PHP constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "7545422156ec73246f01154f09b0262990640f2f27649ae3b7ec7504f226c99f",
+  "independentBuilds": 2,
+  "loadCeiling": 8,
+  "observations": [
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php",
+        "--reviewed"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "122d7c49613904adf32cb88d01a19a56aebc320748da2dae8ff202af4f097d0a",
+        "packageFileSetSha256": "40b9047c00d818fd0b14f7b57a8215c24809e53a95841a83884ec7527994f910",
+        "receiptSha256": "5e23e4b0f24bc1273fd524c43c34982044d88a06ab78f805425bd786594aa3cb",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "d467ec8e8c1247da44f1b8be4da1b6f80939127ab240a9a3bb80ed9df7b6980e"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-php-TwmZ74/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php",
+        "--reviewed"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "122d7c49613904adf32cb88d01a19a56aebc320748da2dae8ff202af4f097d0a",
+        "packageFileSetSha256": "40b9047c00d818fd0b14f7b57a8215c24809e53a95841a83884ec7527994f910",
+        "receiptSha256": "5e23e4b0f24bc1273fd524c43c34982044d88a06ab78f805425bd786594aa3cb",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "d467ec8e8c1247da44f1b8be4da1b6f80939127ab240a9a3bb80ed9df7b6980e"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-php-TwmZ74/consumer",
+      "relocated": false,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "strictness": "strict"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "consumer.php",
+        "--reviewed"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "122d7c49613904adf32cb88d01a19a56aebc320748da2dae8ff202af4f097d0a",
+        "packageFileSetSha256": "40b9047c00d818fd0b14f7b57a8215c24809e53a95841a83884ec7527994f910",
+        "receiptSha256": "5e23e4b0f24bc1273fd524c43c34982044d88a06ab78f805425bd786594aa3cb",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "d467ec8e8c1247da44f1b8be4da1b6f80939127ab240a9a3bb80ed9df7b6980e"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-php-TwmZ74/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "strictness": "weak"
+    },
+    {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "ffi.enable=1",
+        "strict.php",
+        "--reviewed"
+      ],
+      "closure": {
+        "dependencyFilesSha256": "ff3be281223b1221b476ac57c55a474e75bd3732388d057d1f9cb659c4cdf32c",
+        "generatedFilesSha256": "122d7c49613904adf32cb88d01a19a56aebc320748da2dae8ff202af4f097d0a",
+        "packageFileSetSha256": "40b9047c00d818fd0b14f7b57a8215c24809e53a95841a83884ec7527994f910",
+        "receiptSha256": "5e23e4b0f24bc1273fd524c43c34982044d88a06ab78f805425bd786594aa3cb",
+        "toolsSha256": "a30625ebe058f79dd53e7c2531f4dcea280fb9e030ff126134ad131af262c1f7",
+        "vendorFilesSha256": "d467ec8e8c1247da44f1b8be4da1b6f80939127ab240a9a3bb80ed9df7b6980e"
+      },
+      "command": "/usr/bin/php8.3",
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-php-TwmZ74/consumer-relocated",
+      "relocated": true,
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "strictness": "strict"
+    }
+  ],
+  "offlineInstall": true,
+  "packageReceiptSha256": "5e23e4b0f24bc1273fd524c43c34982044d88a06ab78f805425bd786594aa3cb",
+  "producerCommit": "6cff3434bff38689ea6bda776ae143057a265ad5",
+  "receipt": {
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51351523,
+            "path": "archives/example-dependentrecords-1.0.0-linux-x86_64.zip",
+            "sha256": "45d611edefc6c635e6e4b4e9ed9c3e843beb365d110f0c7ca177be06ad4a2959"
+          }
+        ],
+        "ecosystem": "composer",
+        "name": "example/dependentrecords",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "php-native",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "e8be448f890eff9a05592b21a04090aa9f722bd4b1d591ff62e39c9c4ef8a090",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "5a2168f0e486dd98ab85a54896ac8a4a5f545a297d5b755a68e55a07c8deac74"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "observations": [
+        {
+          "availableBytes": 15506673664,
+          "freeBytes": 57660428288,
+          "load": 1.24
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15502819328,
+          "freeBytes": 57660387328,
+          "load": 1.24
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15286534144,
+          "freeBytes": 57608949760,
+          "load": 1.25
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15530725376,
+          "freeBytes": 57557508096,
+          "load": 1.16
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15139446784,
+          "freeBytes": 57294659584,
+          "load": 1.14
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15095603200,
+          "freeBytes": 57294655488,
+          "load": 1.14
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15190224896,
+          "freeBytes": 57294651392,
+          "load": 1.14
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "observations": [
+        {
+          "availableBytes": 15219056640,
+          "freeBytes": 57294647296,
+          "load": 1.13
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": "glibc 2.39",
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/usr/bin/php8.3",
+    "composer": "/usr/bin/composer",
+    "composerFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ctype.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/iconv.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/mbstring.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/phar.so",
+      "-d",
+      "extension=/usr/lib/php/20230831/tokenizer.so"
+    ],
+    "composerVersion": {
+      "args": [
+        "-n",
+        "-d",
+        "extension=/usr/lib/php/20230831/ctype.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/ffi.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/iconv.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/mbstring.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/phar.so",
+        "-d",
+        "extension=/usr/lib/php/20230831/tokenizer.so",
+        "/usr/bin/composer",
+        "--no-plugins",
+        "--no-scripts",
+        "--no-interaction",
+        "--version"
+      ],
+      "command": "/usr/bin/php8.3",
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "Composer version 2.7.1 2024-02-09 15:26:28\n"
+      }
+    },
+    "interpreter": {
+      "args": [
+        "-n",
+        "-r",
+        "echo json_encode([\"version\"=>PHP_VERSION,\"sapi\"=>PHP_SAPI,\"zts\"=>PHP_ZTS,\"integerBytes\"=>PHP_INT_SIZE,\"os\"=>PHP_OS_FAMILY,\"arch\"=>php_uname(\"m\"),\"directory\"=>ini_get(\"extension_dir\"),\"modules\"=>get_loaded_extensions()], JSON_THROW_ON_ERROR);"
+      ],
+      "command": "/usr/bin/php8.3",
+      "php": {
+        "arch": "x86_64",
+        "directory": "/usr/lib/php/20230831",
+        "integerBytes": 8,
+        "modules": [
+          "Core",
+          "date",
+          "libxml",
+          "openssl",
+          "pcre",
+          "zlib",
+          "filter",
+          "hash",
+          "json",
+          "pcntl",
+          "random",
+          "Reflection",
+          "SPL",
+          "session",
+          "standard",
+          "sodium"
+        ],
+        "os": "Linux",
+        "sapi": "cli",
+        "version": "8.3.6",
+        "zts": 0
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"version\":\"8.3.6\",\"sapi\":\"cli\",\"zts\":0,\"integerBytes\":8,\"os\":\"Linux\",\"arch\":\"x86_64\",\"directory\":\"\\/usr\\/lib\\/php\\/20230831\",\"modules\":[\"Core\",\"date\",\"libxml\",\"openssl\",\"pcre\",\"zlib\",\"filter\",\"hash\",\"json\",\"pcntl\",\"random\",\"Reflection\",\"SPL\",\"session\",\"standard\",\"sodium\"]}"
+      }
+    },
+    "runtimeFlags": [
+      "-n",
+      "-d",
+      "extension=/usr/lib/php/20230831/ffi.so",
+      "-d",
+      "ffi.enable=1"
+    ],
+    "selected": {
+      "composer": "/usr/bin/composer",
+      "composerVersion": "2.7.1",
+      "php": "/usr/bin/php8.3",
+      "phpVersion": "8.3.6"
+    },
+    "tools": {
+      "/usr/bin/composer": {
+        "bytes": 3156,
+        "sha256": "5cf51f9912671912136317d889df7a5b8219f2a77f2b311b9a100989106847e2"
+      },
+      "/usr/bin/php8.3": {
+        "bytes": 5784016,
+        "sha256": "1c564e6bafa56d03359c3774be6f4c77d0edecabd2075e18556940a56747c8d7"
+      },
+      "/usr/lib/php/20230831/ctype.so": {
+        "bytes": 14600,
+        "sha256": "2865fdd0589a6bf2029a1f436a06ac3072cdf50477f8384146181fe56ef5de51"
+      },
+      "/usr/lib/php/20230831/ffi.so": {
+        "bytes": 178440,
+        "sha256": "8202552d21044032e251383c3ffdc64cf2c5db3719a893dee0765d048a537263"
+      },
+      "/usr/lib/php/20230831/iconv.so": {
+        "bytes": 51464,
+        "sha256": "79ba2593b71ee8277b3a8e2a530c542f901129c78016b7a87d39fe4c2a50ea24"
+      },
+      "/usr/lib/php/20230831/mbstring.so": {
+        "bytes": 1209216,
+        "sha256": "a6086c078f33dfe34a25b2f9ceb33bae5e08e0d789f61af88c4298d2dbeb7a63"
+      },
+      "/usr/lib/php/20230831/phar.so": {
+        "bytes": 293128,
+        "sha256": "eec9a6756cfe51253b0aa53c7a2751236db2292c6ea4e7e599f3cbe7e930b3cb"
+      },
+      "/usr/lib/php/20230831/tokenizer.so": {
+        "bytes": 35080,
+        "sha256": "df382431be0c4ceb5cd99df184f40b7522b0718d6f9db1260097dd2c28fb95ee"
+      }
+    }
+  }
+}

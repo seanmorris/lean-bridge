@@ -1,0 +1,32 @@
+{
+  "bindingIrSha256": "27344865288a5dce0a65e5cc4f33af8df170521d9f2dafff5b27694060fae20b",
+  "component": "dependentrecords@1.0.0",
+  "exports": [
+    "LeanDependentrecords\\Bytes",
+    "LeanDependentrecords\\LeanBridgeError",
+    "LeanDependentrecords\\Dependent",
+    "LeanDependentrecords\\dependent_result"
+  ],
+  "files": [
+    "src/Api.php",
+    "src/Internal/Native.php",
+    "src/Internal/Runtime.php",
+    "README.md",
+    "binding-manifest.json"
+  ],
+  "filesSha256": {
+    "README.md": "eeaa5d2cb617ba6ad43897349143e2ed8a55f8068bb7c10d20d579bd2593b955",
+    "src/Api.php": "3732a9e8c21bd5451da3d87190a76b490eb77e6a006276f47a9f6938a0ead523",
+    "src/Internal/Native.php": "07e1e69870f2129a5bd1b718d2f419df598f26bd50d1fbab15f0e6351e541380",
+    "src/Internal/Runtime.php": "057d6f64a05c18766d6b10663de7aeb70714818ce06f96c74d3f3894644dfc14"
+  },
+  "generator": {
+    "id": "lean-wasm/php-copied",
+    "version": 1
+  },
+  "namespace": "LeanDependentrecords",
+  "publicFiles": [
+    "src/Api.php"
+  ],
+  "schemaVersion": 1
+}
