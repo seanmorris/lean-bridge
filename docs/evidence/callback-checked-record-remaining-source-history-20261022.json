@@ -1,0 +1,576 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d9108a83d08568b1f75bfba4a1a8dc836040effde22bdd0c78de5b759ba60a3c",
+      "path": ".github/workflows/callback-checked-record-remaining.yml"
+    },
+    {
+      "currentSha256": "7a04e6ee7dee2234af445f869c2aaf37ec1882e0c86a1a3f313dde0006636cd9",
+      "path": "scripts/check-callback-checked-record-remaining-ci.mjs"
+    },
+    {
+      "currentSha256": "2d78c38f554fbd01b1052c236606b11efecce64f4954439aca6f72357a263689",
+      "path": "scripts/run-callback-checked-record-remaining-ci.sh"
+    },
+    {
+      "currentSha256": "0a8fbdc4fc903fb868402603817376783d9a4df94b96181c095f44e38289add9",
+      "path": "scripts/update-callback-checked-record-remaining-source-history.mjs"
+    },
+    {
+      "currentSha256": "b67d46fa89dfb42c8501ae52e72b4853ba53b7cb05bda2a582ec8cb20f43bb40",
+      "path": "tests/callback-checked-record-remaining-installed.test.mjs"
+    },
+    {
+      "currentSha256": "3035ad9d3fa0c101076f42d98d3fd6376632d7e83ad07a83c1ab9a9eb0e139e4",
+      "path": "tests/fixtures/callback-checked-record-consumers/dotnet.cs"
+    },
+    {
+      "currentSha256": "cb7d18130b9904f31d3699e44ecfa7cf1ab4240a076af99645dbfd04d0d4971a",
+      "path": "tests/fixtures/callback-checked-record-consumers/java.java"
+    },
+    {
+      "currentSha256": "d6eee015c607211eec5fe407f914ba7e7eeb392b3f9a93872a300233dee0bdad",
+      "path": "tests/fixtures/callback-checked-record-consumers/kotlin.kt"
+    },
+    {
+      "currentSha256": "73aead54829c4be0c5fb13a73819e39775881fd9025dbf7f815e92d19446d682",
+      "path": "tests/fixtures/callback-checked-record-consumers/php-native.php"
+    },
+    {
+      "currentSha256": "df9c25e6ac0b11a9ae0fa252324c6566b34b552caec7517041fea1d57183cdb1",
+      "path": "tests/fixtures/callback-checked-record-consumers/wit-wasi.c"
+    },
+    {
+      "currentSha256": "2d984a5a8f106fb0bca3baec711e7d16bdc3425a964a7a59e695ad15a8934a0d",
+      "path": "tests/helpers/callback-checked-record-remaining-ci.mjs"
+    },
+    {
+      "currentSha256": "1b9c5c4b27e1ba00d108011ad1898499737afe6dc289ca97627848d7fd4e9990",
+      "path": "tests/helpers/callback-checked-record-remaining-source-history.mjs"
+    },
+    {
+      "currentSha256": "30925b4575e3584137a484caa3d6877e127a8f7228df92f155d4ab14649470f8",
+      "path": "tests/helpers/callback-checked-record-remaining-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "6a94d28ab1293387e367a35d1dd24962230209f1",
+  "milestone": "callback-checked-record-remaining-source-v1",
+  "predecessorCommit": "c0d4c8a608e4273c25b42a13bf9dafc960a8f16b",
+  "repairedTypeSurfacePointers": 49,
+  "schemaVersion": 1,
+  "scope": "Checked records cross synchronous copied callbacks and returned Lean closures in .NET, Java, Kotlin, native PHP and WIT/WASI through nominal proof-free values, exact typed recovery, selected nested constructors, source-free offline installations and independently checked ordinary-source and reviewed-IR evidence paths.",
+  "updates": [
+    {
+      "currentSha256": "fda9fb36e0e22f6bc6575197f366d3c523422527c75d7a9233282c56505266f4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f\"\n",
+          "previous": "          \"sha256\": \"8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d\"\n",
+          "start": 47352
+        },
+        {
+          "current": "          \"sha256\": \"957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea\"\n",
+          "previous": "          \"sha256\": \"f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791\"\n",
+          "start": 47502
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 47654
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 49820
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 67570
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 88478
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 104328
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 119929
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 133176
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 145336
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 165727
+        },
+        {
+          "current": "          \"sha256\": \"bf532917fc9213948c0b622822d7a2be38a395fa382a12ab190ffede70f0d34c\"\n",
+          "previous": "          \"sha256\": \"b6d79bdb4f70ae83458eb3499b79e148ad8781fd1dd7c8f44c84b4b30292cfe9\"\n",
+          "start": 168722
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 182032
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 196931
+        },
+        {
+          "current": "          \"sha256\": \"957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea\"\n",
+          "previous": "          \"sha256\": \"f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791\"\n",
+          "start": 209366
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 209518
+        },
+        {
+          "current": "          \"sha256\": \"988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f\"\n",
+          "previous": "          \"sha256\": \"8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d\"\n",
+          "start": 239551
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1048662
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1181646
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1203218
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1234895
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1267222
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1302002
+        },
+        {
+          "current": "          \"sha256\": \"957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea\"\n",
+          "previous": "          \"sha256\": \"f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791\"\n",
+          "start": 1325531
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 1325683
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 1329810
+        },
+        {
+          "current": "          \"sha256\": \"ec9dee9f47dbcc071d3008df24841d5ec70c951bdbf1b04a64d8c0723667980e\"\n",
+          "previous": "          \"sha256\": \"c48559cbc2d80cee52c0ddfaf40e44f49ddffb3ebc06c2ea83c6f420139869e8\"\n",
+          "start": 1332787
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1334789
+        },
+        {
+          "current": "          \"sha256\": \"988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f\"\n",
+          "previous": "          \"sha256\": \"8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d\"\n",
+          "start": 1352103
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 1355658
+        },
+        {
+          "current": "          \"sha256\": \"87a2567e024c97ac7a3bf90fd2ac0f279f76ffaf650f03115d45288d81d5b718\"\n",
+          "previous": "          \"sha256\": \"5f41b5b033a77b09935b3ab7dcba92387abef8fc0df23f1cd81ee279cb2913e8\"\n",
+          "start": 1356952
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1358772
+        },
+        {
+          "current": "          \"sha256\": \"988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f\"\n",
+          "previous": "          \"sha256\": \"8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d\"\n",
+          "start": 1374481
+        },
+        {
+          "current": "          \"sha256\": \"957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea\"\n",
+          "previous": "          \"sha256\": \"f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791\"\n",
+          "start": 1374631
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 1374783
+        },
+        {
+          "current": "          \"sha256\": \"ba0b06e10faf6527b4ae0d113bcff49e42e11b736182566255b95920d1bf17d9\"\n",
+          "previous": "          \"sha256\": \"7c4318772bc50b0e4fed7ad054d8e9cd305179e0098a15d9c0b51a85166f4ac6\"\n",
+          "start": 1379489
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1380642
+        },
+        {
+          "current": "          \"sha256\": \"988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f\"\n",
+          "previous": "          \"sha256\": \"8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d\"\n",
+          "start": 1394148
+        },
+        {
+          "current": "          \"sha256\": \"957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea\"\n",
+          "previous": "          \"sha256\": \"f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791\"\n",
+          "start": 1394298
+        },
+        {
+          "current": "          \"sha256\": \"85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77\"\n",
+          "previous": "          \"sha256\": \"d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1\"\n",
+          "start": 1394450
+        },
+        {
+          "current": "          \"sha256\": \"bf532917fc9213948c0b622822d7a2be38a395fa382a12ab190ffede70f0d34c\"\n",
+          "previous": "          \"sha256\": \"b6d79bdb4f70ae83458eb3499b79e148ad8781fd1dd7c8f44c84b4b30292cfe9\"\n",
+          "start": 1417538
+        },
+        {
+          "current": "          \"sha256\": \"df8cf54a81ff8ece89f3eb81416c8c6bdd04be5a88e18b0d4e0be1c4117e5b9e\"\n",
+          "previous": "          \"sha256\": \"2ee63f37be034068be3fa20d69e286df81bc9822b2c854f925f4cfabe4610206\"\n",
+          "start": 1419823
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 1420843
+        },
+        {
+          "current": "          \"sha256\": \"f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c\"\n",
+          "previous": "          \"sha256\": \"98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3\"\n",
+          "start": 1429038
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 53284539
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 53288244
+        },
+        {
+          "current": "          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n",
+          "previous": "          \"sha256\": \"a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d\"\n",
+          "start": 74241471
+        },
+        {
+          "current": "          \"sha256\": \"ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d\"\n",
+          "previous": "          \"sha256\": \"ddef6edfbfd4553e76752cc9a3395206fcabd2554bf0c790b8da7fc564183801\"\n",
+          "start": 74241836
+        },
+        {
+          "current": "          \"sha256\": \"411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6\"\n        }\n      ],\n      \"artifacts\": []\n    },\n    {\n      \"id\": \"callback-checked-record-remaining-generation\",\n      \"kind\": \"test\",\n      \"revision\": \"6a94d28ab1293387e367a35d1dd24962230209f1\",\n      \"command\": \"node --test tests/callback-checked-record-native.test.mjs tests/callback-checked-record-native-ci.test.mjs\",\n      \"scope\": \"Source, generator and checker tests admit directional callback checked records for .NET, Java, Kotlin, native PHP and WIT/WASI. Local installed acceptance completed ordinary-source and independently reviewed packages in all five profiles: 30 checks in each managed or PHP consumer and 64 checks in WIT, with offline installation, author-source removal, relocation or runtime-only replay as appropriate. The required hosted Ubuntu 24.04/glibc 2.38 workflow remains pending, so this entry does not promote the observations into closed hosted acceptance.\",\n      \"files\": [\n        {\n          \"path\": \".github/workflows/callback-checked-record-remaining.yml\",\n          \"sha256\": \"d9108a83d08568b1f75bfba4a1a8dc836040effde22bdd0c78de5b759ba60a3c\"\n        },\n        {\n          \"path\": \"scripts/check-callback-checked-record-remaining-ci.mjs\",\n          \"sha256\": \"7a04e6ee7dee2234af445f869c2aaf37ec1882e0c86a1a3f313dde0006636cd9\"\n        },\n        {\n          \"path\": \"scripts/run-callback-checked-record-remaining-ci.sh\",\n          \"sha256\": \"2d78c38f554fbd01b1052c236606b11efecce64f4954439aca6f72357a263689\"\n        },\n        {\n          \"path\": \"src/backends/dotnet/callable-graph-package.mjs\",\n          \"sha256\": \"ec9dee9f47dbcc071d3008df24841d5ec70c951bdbf1b04a64d8c0723667980e\"\n        },\n        {\n          \"path\": \"src/backends/jvm/callable-graph-package.mjs\",\n          \"sha256\": \"87a2567e024c97ac7a3bf90fd2ac0f279f76ffaf650f03115d45288d81d5b718\"\n        },\n        {\n          \"path\": \"src/backends/php/callable-graph-package.mjs\",\n          \"sha256\": \"ba0b06e10faf6527b4ae0d113bcff49e42e11b736182566255b95920d1bf17d9\"\n        },\n        {\n          \"path\": \"src/backends/wit/callable-graph-package.mjs\",\n          \"sha256\": \"df8cf54a81ff8ece89f3eb81416c8c6bdd04be5a88e18b0d4e0be1c4117e5b9e\"\n        },\n        {\n          \"path\": \"src/build/native-graph-projection.mjs\",\n          \"sha256\": \"3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7\"\n        },\n        {\n          \"path\": \"tests/callback-checked-record-native-ci.test.mjs\",\n          \"sha256\": \"ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d\"\n        },\n        {\n          \"path\": \"tests/callback-checked-record-native.test.mjs\",\n          \"sha256\": \"411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6\"\n        },\n        {\n          \"path\": \"tests/callback-checked-record-remaining-installed.test.mjs\",\n          \"sha256\": \"b67d46fa89dfb42c8501ae52e72b4853ba53b7cb05bda2a582ec8cb20f43bb40\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-checked-record-remaining-ci.mjs\",\n          \"sha256\": \"2d984a5a8f106fb0bca3baec711e7d16bdc3425a964a7a59e695ad15a8934a0d\"\n        },\n        {\n          \"path\": \"tests/helpers/callback-subtype-wit-install.mjs\",\n          \"sha256\": \"b9b211fe3fdc6bbba0ff437878a561fd9baabab7ac573e0310bfe736929d3e66\"\n",
+          "previous": "          \"sha256\": \"59f288651c437e0c25b1ab23b23fdab6f8ad5e80a51c0e1a4c3d2545c952b3b7\"\n",
+          "start": 74242011
+        },
+        {
+          "current": "    },\n    {\n      \"id\": \"callback-checked-record-remaining-ordinary\",\n      \"profiles\": [\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"php-native\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"checked-record\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"ordinary-source\",\n      \"scope\": \"Generated synchronous copied-value callbacks carry exact proof-free recovery records for checked-record host replies and validate checked-record returned-closure inputs. Nested checked fields run before their enclosing record constructor.\",\n      \"hostTypes\": {\n        \"checked-record\": {\n          \"callback-parameter\": \"generated proof-free record values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"generated proof-free record values from a host callback checked by Lean through an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"checked-record\": \".NET and JVM use generated WithRecovery values; native PHP uses with_recovery(callback, value); WIT typed registration owns a copied recovery record. Recovery is checked before callback entry or application execution and is never successful output. Returned Lean closures apply the selected record and nested field constructors before their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected ordinary-source record and nested field constructors in both callback directions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Generated .NET, Java, Kotlin, native PHP and WIT APIs retain direction, nominal proof-free records and exact typed recovery values.\"\n        },\n        \"compilation\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Local C#, Java 22, Kotlin 2.2, PHP and strict WIT C compilation passed for both source routes; the hosted release-floor matrix remains pending.\"\n        },\n        \"packaging\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Local NuGet, Maven, Composer and WIT packages installed offline after author-source removal and passed their authenticated package checks.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"All ten local route/profile cells passed, including SDK-free .NET, jlink JVM, weak/strict relocated PHP and relocated source-free WIT replays; no hosted report is claimed yet.\"\n        }\n      },\n      \"limitations\": [\n        \"The generated contract covers synchronous copied-value callbacks, Interval and Weighted records, the Weighted field's selected Nat Subtype, admitted option/result/array containers and returned closures. Retained or asynchronous host callbacks, owned checked records, arbitrary indexed or recursive checked records, dispatch cost and memory bounds remain separate work.\",\n        \"Compilation, packaging and installed execution remain inspected rather than passed until the dedicated Ubuntu 24.04 workflow retains and independently checks the ordinary and reviewed reports at the glibc 2.38 package floor.\"\n      ]\n    },\n    {\n      \"id\": \"callback-checked-record-remaining-reviewed\",\n      \"profiles\": [\n        \"dotnet\",\n        \"java\",\n        \"kotlin\",\n        \"php-native\",\n        \"wit-wasi\"\n      ],\n      \"shapes\": [\n        \"checked-record\"\n      ],\n      \"positions\": [\n        \"callback-parameter\",\n        \"callback-result\"\n      ],\n      \"path\": \"reviewed-ir\",\n      \"scope\": \"Generated synchronous copied-value callbacks carry exact proof-free recovery records for checked-record host replies and validate checked-record returned-closure inputs. Nested checked fields run before their enclosing record constructor.\",\n      \"hostTypes\": {\n        \"checked-record\": {\n          \"callback-parameter\": \"generated proof-free record values checked by the selected constructor in returned-closure inputs\",\n          \"callback-result\": \"generated proof-free record values from a host callback checked by Lean through an explicit typed recovery\"\n        }\n      },\n      \"conversionNotes\": {\n        \"checked-record\": \".NET and JVM use generated WithRecovery values; native PHP uses with_recovery(callback, value); WIT typed registration owns a copied recovery record. Recovery is checked before callback entry or application execution and is never successful output. Returned Lean closures apply the selected record and nested field constructors before their body.\"\n      },\n      \"stages\": {\n        \"analysis\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Fresh Lean analysis preserves the selected reviewed-ir record and nested field constructors in both callback directions.\"\n        },\n        \"generation\": {\n          \"state\": \"passed\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Generated .NET, Java, Kotlin, native PHP and WIT APIs retain direction, nominal proof-free records and exact typed recovery values.\"\n        },\n        \"compilation\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Local C#, Java 22, Kotlin 2.2, PHP and strict WIT C compilation passed for both source routes; the hosted release-floor matrix remains pending.\"\n        },\n        \"packaging\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"Local NuGet, Maven, Composer and WIT packages installed offline after author-source removal and passed their authenticated package checks.\"\n        },\n        \"installedExecution\": {\n          \"state\": \"inspected\",\n          \"evidence\": [\n            \"callback-checked-record-remaining-generation\"\n          ],\n          \"note\": \"All ten local route/profile cells passed, including SDK-free .NET, jlink JVM, weak/strict relocated PHP and relocated source-free WIT replays; no hosted report is claimed yet.\"\n        }\n      },\n      \"limitations\": [\n        \"The generated contract covers synchronous copied-value callbacks, Interval and Weighted records, the Weighted field's selected Nat Subtype, admitted option/result/array containers and returned closures. Retained or asynchronous host callbacks, owned checked records, arbitrary indexed or recursive checked records, dispatch cost and memory bounds remain separate work.\",\n        \"Compilation, packaging and installed execution remain inspected rather than passed until the dedicated Ubuntu 24.04 workflow retains and independently checks the ordinary and reviewed reports at the glibc 2.38 package floor.\"\n      ]\n",
+          "previous": "",
+          "start": 85464251
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "275c741160f8f541e3bfa305986ef0d02173cdfda04211de3e0a93f803aad128"
+    },
+    {
+      "currentSha256": "988b02e367c31ecd6f8954d58788be0c328266f9a131f5d7dc08be4a4d106a6f",
+      "edits": [
+        {
+          "current": "When a synchronous host callback returns a selected `Subtype` or checked record,\npass a generated `WithRecovery<TDelegate, TResult>` containing the delegate and\none valid proof-free result value. Checked records keep their generated nominal\nrecord type; no proof field crosses the boundary. The package validates the\nrecovery before application execution. Lean uses it only to finish cleanup when\nthe callback's actual reply fails the selected constructor; it is never returned\nas successful output. A returned `LeanClosure` validates selected `Subtype` and\nchecked-record arguments before invoking Lean and remains open after rejection.\n\nThe [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\nbuilds ordinary-source and independently reviewed NuGet packages, deletes the\nauthor source, installs the package offline, runs 30 independent C# checks, then\nreplays the deployed assembly on an SDK-free .NET 8 runtime.\n",
+          "previous": "When a synchronous host callback returns a selected `Subtype`, pass a generated\n`WithRecovery<TDelegate, TResult>` containing the delegate and one valid erased\nresult value. The package validates both before loading native code. Lean uses\nthe recovery only to finish cleanup when the callback's actual reply fails the\nselected constructor; it is never returned as successful output. A returned\n`LeanClosure` validates selected `Subtype` arguments before invoking Lean and\nremains open after a rejected argument. Source generation and exact C#\ncompilation cover this contract; installed-package acceptance remains pending.\n",
+          "start": 31545
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "8253ca6bf7e687624a1921cf5ec9a1589f7ad7971ea6687b17d7e0c3cf4c875d"
+    },
+    {
+      "currentSha256": "957439777e04f163ee83f153ada877a8e52c2cde317eedbd53643c48e4a4faea",
+      "edits": [
+        {
+          "current": "When a synchronous Java or Kotlin callback returns a selected `Subtype` or\nchecked record, pass a generated `WithRecovery<SAM, Result>` containing the\ncallback and one valid proof-free result value. Checked records keep their\ngenerated Java record or Kotlin class; no proof field crosses the boundary. The\npackage validates the recovery before application execution. Lean uses it only\nwhen the callback reply fails the selected constructor; it is not successful\noutput. Returned `LeanClosure` values validate selected `Subtype` and\nchecked-record arguments before invoking Lean and stay open after rejection.\n\nThe [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\nbuilds ordinary-source and independently reviewed Maven packages, removes the\nauthor source, installs them offline, compiles strict Java 22 and Kotlin 2.2\ncallers with 30 checks each, and repeats both callers on a `jlink` runtime.\n",
+          "previous": "When a synchronous Java or Kotlin callback returns a selected `Subtype`, pass a\ngenerated `WithRecovery<SAM, Result>` containing the callback and one valid\nerased result value. The package validates both before native loading. Lean uses\nthe recovery only when the callback reply fails the selected constructor; it is\nnot successful output. Returned `LeanClosure` values validate selected\n`Subtype` arguments before invoking Lean and stay open after rejection. Java 22\nand Kotlin 2.2 source compilation cover this contract; installed JAR acceptance\nremains pending.\n",
+          "start": 21550
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "f113860efdaa9687bf8de5f39c4e2c83699589074e892c0ebaa2ba4f200c1791"
+    },
+    {
+      "currentSha256": "85151b7a34ab310aee158a152ed84002a04a69c8700a6428a645edeac11c6e77",
+      "edits": [
+        {
+          "current": "Selected `Subtype` and checked-record callback results use the generated\n`WithRecovery` class described in the [Java callback rules](java.md#recursive-callback-values).\nKotlin uses the generated proof-free checked-record class for both the callback\nresult and its recovery. Returned Lean closures validate checked-record inputs\nbefore invocation and remain usable after rejection. The\n[remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\nruns the ordinary and reviewed Kotlin packages beside their Java projections.\n\n",
+          "previous": "",
+          "start": 18538
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "d3b9b6d3a00a00b4d7e3f3ca9c6d4b097d2c56b008ea7f74b7d5e1845ec992f1"
+    },
+    {
+      "currentSha256": "bf532917fc9213948c0b622822d7a2be38a395fa382a12ab190ffede70f0d34c",
+      "edits": [
+        {
+          "current": "For a host callback returning a selected `Subtype` or checked record, its\ngenerated typed `*_callbackN_create` helper takes an additional pointer to one\nvalid proof-free result value. A checked record uses its generated C record;\nthere is no proof field. Registration owns a copy. The constructor is checked\nbefore callback entry, so an invalid recovery cannot enter the callback. Lean\nuses the recovery only when the callback's actual reply fails the selected\n",
+          "previous": "For a host callback returning a selected `Subtype`, its generated typed\n`*_callbackN_create` helper takes an additional pointer to one valid erased\nresult value. Registration validates and owns a copy before application\nexecution. Lean uses it only when the callback's actual reply fails the selected\n",
+          "start": 49109
+        },
+        {
+          "current": "selected `Subtype` and checked-record arguments before entering Lean and keep\nthe token usable after rejection.\n\nThe [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\nbuilds ordinary-source and independently reviewed WIT packages, removes the\nauthor source, installs offline, compiles a 64-check public C caller, then\ndeletes its source and tools and repeats the relocated executable twice against\nthe authenticated library closure.\n",
+          "previous": "selected `Subtype` arguments before entering Lean and keep the token usable\nafter rejection. The generated host and headers pass strict C and C++ source\nchecks; installed archive acceptance remains pending.\n",
+          "start": 49647
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "b6d79bdb4f70ae83458eb3499b79e148ad8781fd1dd7c8f44c84b4b30292cfe9"
+    },
+    {
+      "currentSha256": "f57e777fdd3ddedfa0213a844712ba880f069b6c1e2b57d49ec33ec82bcc041c",
+      "edits": [
+        {
+          "current": "For native PHP, a synchronous host callback returning a selected `Subtype` or\nchecked record must be wrapped with the generated namespace's\n`with_recovery($callback, $value)` function. A checked-record recovery is the\ngenerated proof-free readonly value object. The package validates the callable\nand the recovery's exact result shape before application execution. Lean uses\nthat recovery only to finish a call whose actual callback reply fails the\nselected constructor; it is not successful output. Returned `LeanClosure`\nobjects validate selected `Subtype` and checked-record arguments before invoking\nLean and remain usable after rejection.\n\nThe [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)\nbuilds ordinary-source and independently reviewed Composer packages, removes\nthe author source, installs offline, and runs the same 30 checks through weak\nand strict PHP callers before and after relocation. PHP-Wasm checked callbacks\nremain separate work.\n",
+          "previous": "For native PHP, a synchronous host callback returning a selected `Subtype` must\nbe wrapped with the generated namespace's `with_recovery($callback, $value)`\nfunction. The package validates the callable and the recovery's exact erased result shape\nbefore loading native libraries. Lean uses that recovery only to finish a call\nwhose actual callback reply fails the selected constructor; it is not successful\noutput. Returned `LeanClosure` objects validate selected `Subtype` arguments\nbefore invoking Lean and remain usable after rejection. Generated PHP source and\nthe native carrier compile checks cover this contract; installed Composer\nacceptance remains pending. PHP-Wasm callback Subtypes remain separate work.\n",
+          "start": 41774
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "98abf8c70cb22f04ceb6997d488b19d1403f8a5c929e980641c204e9bf5752d3"
+    },
+    {
+      "currentSha256": "ec9dee9f47dbcc071d3008df24841d5ec70c951bdbf1b04a64d8c0723667980e",
+      "edits": [
+        {
+          "current": "${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record is passed as a typed\n",
+          "previous": "${recovery ? `A host callback returning a selected Lean Subtype is passed as a typed\n",
+          "start": 3358
+        },
+        {
+          "current": "Subtype and checked-record inputs before their body runs and remain usable after rejection.\n",
+          "previous": "Subtype inputs before their body runs and remain usable after rejection.\n",
+          "start": 3693
+        }
+      ],
+      "path": "src/backends/dotnet/callable-graph-package.mjs",
+      "previousSha256": "c48559cbc2d80cee52c0ddfaf40e44f49ddffb3ebc06c2ea83c6f420139869e8"
+    },
+    {
+      "currentSha256": "87a2567e024c97ac7a3bf90fd2ac0f279f76ffaf650f03115d45288d81d5b718",
+      "edits": [
+        {
+          "current": "${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record uses a typed WithRecovery\n",
+          "previous": "${recovery ? `A host callback returning a selected Lean Subtype uses a typed WithRecovery\n",
+          "start": 2515
+        },
+        {
+          "current": "values validate selected Subtype and checked-record inputs before their body runs and remain open\n",
+          "previous": "values validate selected Subtype inputs before their body runs and remain open\n",
+          "start": 2866
+        }
+      ],
+      "path": "src/backends/jvm/callable-graph-package.mjs",
+      "previousSha256": "5f41b5b033a77b09935b3ab7dcba92387abef8fc0df23f1cd81ee279cb2913e8"
+    },
+    {
+      "currentSha256": "ba0b06e10faf6527b4ae0d113bcff49e42e11b736182566255b95920d1bf17d9",
+      "edits": [
+        {
+          "current": "\tfiles['README.md'] = '# ' + model.namespace + '\\n\\nInstall this package with Composer and load vendor/autoload.php. The package\\nloads its bundled native libraries automatically. Native execution requires\\nPHP 8.2+ NTS CLI on Linux x86-64 with FFI enabled.\\n\\nSynchronous callbacks accept finite copied values, including recursive records\\nand variants. ' + (recovery ? 'A host callback whose result contains a checked Lean Subtype or checked record must be wrapped with with_recovery(function, value); the typed recovery value is validated before native libraries load and is used only if Lean rejects the callback reply. ' : '') + 'Returned LeanClosure objects are invokable; close them in a\\nfinally block. Destruction provides cleanup for abandoned closures. Callback\\nexceptions retain their Throwable identity.\\n\\nCopied conversion is bounded to 128 levels, 262144 visited values and separate\\n16 MiB host/native budgets per call. Lean working memory is not included.\\nCallback reply buffers remain alive through native copying. Malformed native\\noutput retires the shared runtime. Calls must use the main PHP execution\\ncontext in the originating process; start a fresh PHP process after fork.\\n';\n",
+          "previous": "\tfiles['README.md'] = '# ' + model.namespace + '\\n\\nInstall this package with Composer and load vendor/autoload.php. The package\\nloads its bundled native libraries automatically. Native execution requires\\nPHP 8.2+ NTS CLI on Linux x86-64 with FFI enabled.\\n\\nSynchronous callbacks accept finite copied values, including recursive records\\nand variants. ' + (recovery ? 'A host callback returning a selected Lean Subtype must be wrapped with with_recovery(function, value); the typed recovery value is validated before native libraries load and is used only if Lean rejects the callback reply. ' : '') + 'Returned LeanClosure objects are invokable; close them in a\\nfinally block. Destruction provides cleanup for abandoned closures. Callback\\nexceptions retain their Throwable identity.\\n\\nCopied conversion is bounded to 128 levels, 262144 visited values and separate\\n16 MiB host/native budgets per call. Lean working memory is not included.\\nCallback reply buffers remain alive through native copying. Malformed native\\noutput retires the shared runtime. Calls must use the main PHP execution\\ncontext in the originating process; start a fresh PHP process after fork.\\n';\n",
+          "start": 3539
+        }
+      ],
+      "path": "src/backends/php/callable-graph-package.mjs",
+      "previousSha256": "7c4318772bc50b0e4fed7ad054d8e9cd305179e0098a15d9c0b51a85166f4ac6"
+    },
+    {
+      "currentSha256": "df8cf54a81ff8ece89f3eb81416c8c6bdd04be5a88e18b0d4e0be1c4117e5b9e",
+      "edits": [
+        {
+          "current": "\t\t? \"A callback whose result contains a checked Lean Subtype or checked record must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only when the callback reply fails the selected constructor.\\n\\n\"\n",
+          "previous": "\t\t? \"A callback returning a selected Lean Subtype must be registered with its typed create helper's recovery argument. Registration makes an owned checked copy before application execution; Lean uses it only when the callback reply fails the selected constructor.\\n\\n\"\n",
+          "start": 5794
+        }
+      ],
+      "path": "src/backends/wit/callable-graph-package.mjs",
+      "previousSha256": "2ee63f37be034068be3fa20d69e286df81bc9822b2c854f925f4cfabe4610206"
+    },
+    {
+      "currentSha256": "3be24dda19c56c3835a75bb08562ba4d9fa34611e5041584203acd77885d80d7",
+      "edits": [
+        {
+          "current": "\t\tif(callbackCheckedRecords && targets.some(target => ![\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"].includes(target)))\n\t\t\tthrow Object.assign(new TypeError(\"Callback checked records require a native graph projection\"), { code: \"native-graph-projection-unavailable\" });\n",
+          "previous": "\t\tif(callbackCheckedRecords && targets.some(target => ![\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\"].includes(target)))\n\t\t\tthrow Object.assign(new TypeError(\"Callback checked records currently require C, C++, PyPI, Cargo, RubyGems or CPAN projections\"), { code: \"native-graph-projection-unavailable\" });\n",
+          "start": 4605
+        }
+      ],
+      "path": "src/build/native-graph-projection.mjs",
+      "previousSha256": "a57f1d6d8f0924a1c64739d83360835e8523511439b653854ac9af02ef896d0d"
+    },
+    {
+      "currentSha256": "ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d",
+      "edits": [
+        {
+          "current": "import {\n\tcallbackCheckedRecordRemainingChecks\n\t, callbackCheckedRecordRemainingTestName\n\t, callbackCheckedRecordRemainingVerification\n\t, checkCallbackCheckedRecordRemainingReport\n\t, parseCallbackCheckedRecordRemainingCiArgs\n} from \"./helpers/callback-checked-record-remaining-ci.mjs\";\n",
+          "previous": "",
+          "start": 717
+        },
+        {
+          "current": "const remainingReport = selectedProfiles => {\n\tconst reports = [];\n\tfor(const route of [\"ordinary\", \"reviewed\"])\n\t\tfor(const [index, profile] of selectedProfiles.entries())\n\t\t{\n\t\t\tconst item = {\n\t\t\t\tbindingIrSha256: sha(route === \"ordinary\" ? \"a\" : \"b\")\n\t\t\t\t, checks: callbackCheckedRecordRemainingChecks[profile]\n\t\t\t\t, compilerFreePath: true\n\t\t\t\t, consumerSha256: sha(String(index + 1))\n\t\t\t\t, offlineInstall: true, profile\n\t\t\t\t, receiptSha256: sha(route === \"ordinary\" ? \"c\" : \"d\")\n\t\t\t\t, route, sourceRemovedBeforeInstallation: true\n\t\t\t};\n\t\t\tif(profile === \"dotnet\") Object.assign(item, {\n\t\t\t\tinstalledAssemblySha256: sha(\"e\"), repeatExecution: true\n\t\t\t\t, runtimeVersion: \"8.0.24\", sdkFreeRuntime: true, sourceFreeExecution: true\n\t\t\t});\n\t\t\tif([\"java\", \"kotlin\"].includes(profile)) Object.assign(item, {\n\t\t\t\tcomponentSha256: sha(\"e\"), dependencyClosureSha256: sha(\"f\")\n\t\t\t\t, offlineMaven: true, repeatExecution: true, runtimeOnly: true\n\t\t\t});\n\t\t\tif(profile === \"php-native\") Object.assign(item, {\n\t\t\t\tclosedComposerInstall: true, packageFileSetSha256: sha(\"e\")\n\t\t\t\t, relocatedReplay: true, repeatExecution: true, vendorFilesSha256: sha(\"f\")\n\t\t\t});\n\t\t\tif(profile === \"wit-wasi\") Object.assign(item, {\n\t\t\t\thandoffRemovedBeforeReplay: true, libraryClosureSha256: sha(\"e\")\n\t\t\t\t, packageFileSetSha256: sha(\"f\"), relocatedReplay: true\n\t\t\t\t, repeatExecution: true, runtimeOnly: true, sourceFreeExecution: true\n\t\t\t});\n\t\t\treports.push(item);\n\t\t}\n\treturn { schemaVersion: 1, reports };\n};\n\n",
+          "previous": "",
+          "start": 3469
+        },
+        {
+          "current": "test(\"remaining callback checked-record checker requires exact route and host evidence\", () => {\n\tconst profiles = [\"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"];\n\tconst report = remainingReport(profiles), commit = \"e\".repeat(40);\n\tassert.deepEqual(checkCallbackCheckedRecordRemainingReport(report, profiles), {\n\t\tprofiles, routes: [\"ordinary\", \"reviewed\"], reports: 10\n\t});\n\tassert.equal(callbackCheckedRecordRemainingVerification(commit, profiles\n\t\t, tap(callbackCheckedRecordRemainingTestName), report).reports, 10);\n\tassert.deepEqual(parseCallbackCheckedRecordRemainingCiArgs([\n\t\t\"--producer\", commit, \"--profiles\", \"java,kotlin\"\n\t\t, \"--tap\", \"run.tap\", \"--report\", \"report.json\"\n\t]), {\n\t\tproducer: commit, profiles: [\"java\", \"kotlin\"]\n\t\t, tap: \"run.tap\", report: \"report.json\"\n\t});\n\tfor(const mutate of [\n\t\tvalue => { value.reports[0].checks -= 1; }\n\t\t, value => { value.reports[2].runtimeOnly = false; }\n\t\t, value => { value.reports[3].closedComposerInstall = false; }\n\t\t, value => { value.reports[4].sourceFreeExecution = false; }\n\t\t, value => { value.reports.pop(); }\n\t]) {\n\t\tconst changed = structuredClone(report); mutate(changed);\n\t\tassert.throws(() => checkCallbackCheckedRecordRemainingReport(changed, profiles));\n\t}\n\tassert.throws(() => parseCallbackCheckedRecordRemainingCiArgs([\n\t\t\"--producer\", commit, \"--profiles\", \"java,java\"\n\t\t, \"--tap\", \"run.tap\", \"--report\", \"report.json\"\n\t]));\n});\n\n",
+          "previous": "",
+          "start": 9053
+        },
+        {
+          "current": "\tconst remainingWorkflow = await readFile(\".github/workflows/callback-checked-record-remaining.yml\", \"utf8\");\n",
+          "previous": "",
+          "start": 10890
+        },
+        {
+          "current": "\tconst remainingShell = await readFile(\"scripts/run-callback-checked-record-remaining-ci.sh\", \"utf8\");\n\tconst remainingChecker = await readFile(\"scripts/check-callback-checked-record-remaining-ci.mjs\", \"utf8\");\n",
+          "previous": "",
+          "start": 12612
+        },
+        {
+          "current": "\tfor(const value of [\n\t\t\"group: callback-checked-record-remaining-${{ github.ref }}\"\n\t\t, \"lane: [dotnet, jvm, php-native, wit-wasi]\"\n\t\t, \"runs-on: ubuntu-24.04\"\n\t\t, \"bash scripts/run-callback-checked-record-remaining-ci.sh\"\n\t\t, \"build/callback-checked-record-remaining-ci-${{ matrix.lane }}/\"\n\t\t, \"if: always()\", \"steps.acceptance.outcome != 'success'\"\n\t]) assert.ok(remainingWorkflow.includes(value), value);\n\tfor(const value of [\n\t\t\"set -euo pipefail\", \"profiles=dotnet\", \"profiles=java,kotlin\"\n\t\t, \"profiles=php-native\", \"profiles=wit-wasi\"\n\t\t, \"LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38\", \"--test-concurrency=1\"\n\t\t, \"check-callback-checked-record-remaining-ci.mjs\"\n\t]) assert.ok(remainingShell.includes(value), value);\n\tassert.ok(remainingShell.includes(`name='${callbackCheckedRecordRemainingTestName}'`));\n\tfor(const value of [\n\t\t\"callbackCheckedRecordRemainingVerification\"\n\t\t, \"parseCallbackCheckedRecordRemainingCiArgs\"\n\t]) assert.ok(remainingChecker.includes(value), value);\n\tfor(const shell of [nativeShell, perlShell, languageShell, remainingShell])\n",
+          "previous": "\tfor(const shell of [nativeShell, perlShell, languageShell])\n",
+          "start": 14031
+        }
+      ],
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previousSha256": "ddef6edfbfd4553e76752cc9a3395206fcabd2554bf0c790b8da7fc564183801"
+    },
+    {
+      "currentSha256": "411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6",
+      "edits": [
+        {
+          "current": "import { generateCallableDotnetGraphPackage } from \"../src/backends/dotnet/callable-graph-package.mjs\";\nimport { generateCallableJvmGraphPackage } from \"../src/backends/jvm/callable-graph-package.mjs\";\n",
+          "previous": "",
+          "start": 672
+        },
+        {
+          "current": "import { generateCallablePhpGraphPackage } from \"../src/backends/php/callable-graph-package.mjs\";\nimport { compileCallableWitGraphPackageModel, witCallableGraphPackageReadme } from \"../src/backends/wit/callable-graph-package.mjs\";\n",
+          "previous": "",
+          "start": 1302
+        },
+        {
+          "current": "\t\t, [\"nuget\"], [\"maven\"], [\"php-native\"], [\"wit-wasi\"]\n\t\t, [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\", \"nuget\", \"maven\", \"php-native\", \"wit-wasi\"]])\n",
+          "previous": "\t\t, [\"c\", \"cpp\", \"pypi\", \"cargo\", \"rubygems\", \"cpan\"]])\n",
+          "start": 18219
+        },
+        {
+          "current": "});\n\ntest(\"managed, PHP and WIT callable packages expose proof-free checked-record recoveries\", () => {\n\tconst { ir } = structuredCallableDirectionalCheckedRecordIr();\n\tconst dotnet = generateCallableDotnetGraphPackage(ir);\n\tconst dotnetSource = Object.values(dotnet).join(\"\\n\");\n\tassert.match(dotnet[\"src/LeanBridge.Structured/Values.cs\"]\n\t\t, /public sealed record Interval\\([^)]*BigInteger Lo, [^)]*BigInteger Hi\\)/u);\n\tassert.doesNotMatch(dotnet[\"src/LeanBridge.Structured/Values.cs\"], /Ordered/u);\n\tassert.match(dotnetSource, /WithRecovery<[^\\n]+Interval[^\\n]+Interval>/u);\n\tassert.match(dotnet[\"README.md\"], /checked Lean Subtype or checked record/u);\n\n\tconst jvm = generateCallableJvmGraphPackage(ir);\n\tconst jvmSource = Object.values(jvm).join(\"\\n\");\n\tassert.match(jvm[\"src/main/java/org/leanbridge/structured/Interval.java\"]\n\t\t, /record Interval\\(java\\.math\\.BigInteger lo, java\\.math\\.BigInteger hi\\)/u);\n\tassert.doesNotMatch(jvm[\"src/main/java/org/leanbridge/structured/Interval.java\"], /ordered/iu);\n\tassert.match(jvmSource, /WithRecovery<[^\\n]+Interval/u);\n\tassert.match(jvm[\"README.md\"], /checked Lean Subtype or checked record/u);\n\n\tconst php = generateCallablePhpGraphPackage(ir);\n\tassert.match(php[\"src/Api.php\"], /final readonly class Interval[\\s\\S]+public \\\\Brick\\\\Math\\\\BigInteger \\$lo;[\\s\\S]+public \\\\Brick\\\\Math\\\\BigInteger \\$hi;/u);\n\tassert.doesNotMatch(php[\"src/Api.php\"], /\\$ordered/u);\n\tassert.match(php[\"src/Api.php\"], /function with_recovery\\(/u);\n\tassert.match(php[\"README.md\"], /checked Lean Subtype or checked record/u);\n\n\tconst wit = compileCallableWitGraphPackageModel(ir);\n\tassert.match(wit.hostHeader, /const structured_interval_t \\*recovery/u);\n\tassert.doesNotMatch(wit.hostHeader, /ordered/iu);\n\tassert.match(witCallableGraphPackageReadme(wit, \"2.38\")\n\t\t, /checked Lean Subtype or checked record/u);\n",
+          "previous": "\tfor(const target of [\"nuget\", \"maven\", \"php-native\", \"wit-wasi\"])\n\t\tassert.throws(() => compileNativeGraphProjection(ir, [target], moduleName)\n\t\t\t, { code: \"native-graph-projection-unavailable\", message: /Callback checked records currently require C, C\\+\\+, PyPI, Cargo, RubyGems or CPAN projections/u });\n",
+          "start": 18455
+        }
+      ],
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previousSha256": "59f288651c437e0c25b1ab23b23fdab6f8ad5e80a51c0e1a4c3d2545c952b3b7"
+    },
+    {
+      "currentSha256": "b9b211fe3fdc6bbba0ff437878a561fd9baabab7ac573e0310bfe736929d3e66",
+      "edits": [
+        {
+          "current": " * @param options.expectedChecks - Exact independent-consumer check count.\n",
+          "previous": "",
+          "start": 1035
+        },
+        {
+          "current": "export const closeCallbackSubtypeWit = async options => {\n\tconst { consumer, handoff, pkg, relocated, expectedChecks = 26 } = options;\n\tassert.ok(Number.isSafeInteger(expectedChecks) && expectedChecks > 0);\n",
+          "previous": "export const closeCallbackSubtypeWit = async ({ consumer, handoff, pkg, relocated }) => {\n",
+          "start": 1114
+        },
+        {
+          "current": "\t\tassert.equal(observation.checks, expectedChecks);\n",
+          "previous": "\t\tassert.equal(observation.checks, 26);\n",
+          "start": 3419
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-wit-install.mjs",
+      "previousSha256": "84b6546f01c4d718ef24476de64c2b5d9fa32813deaf06a65b2d1a66bdf46363"
+    },
+    {
+      "currentSha256": "89309ad96708202652113b7519833981da9050f632ccfe06adb492c4f8d2fd44",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordRemainingSource, callbackCheckedRecordRemainingChangedPaths } from \"./callback-checked-record-remaining-source-history.mjs\";\n",
+          "previous": "",
+          "start": 350
+        },
+        {
+          "current": "\t...callbackCheckedRecordRemainingChangedPaths\n\t, ...callbackCheckedRecordNativeChangedPaths\n",
+          "previous": "\t...callbackCheckedRecordNativeChangedPaths\n",
+          "start": 126950
+        },
+        {
+          "current": "\tconst callbackCheckedRecordRemaining\n\t\t= beforeCallbackCheckedRecordRemainingSource(path, text, expected);\n\tif(sha256(callbackCheckedRecordRemaining) === expected)\n\t\treturn callbackCheckedRecordRemaining;\n\tconst callbackCheckedRecordLanguage = beforeCallbackCheckedRecordLanguageSource(\n\t\tpath, callbackCheckedRecordRemaining, expected\n\t);\n",
+          "previous": "\tconst callbackCheckedRecordLanguage = beforeCallbackCheckedRecordLanguageSource(path, text, expected);\n",
+          "start": 155890
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "97e37a80d672edd9ff2947270f1529c0f346158eacfe33d3b598a7dca64ce844"
+    },
+    {
+      "currentSha256": "6cfb3edb44c9499bb18c213116835b0c06826647f1b04e26126778844b739aed",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-remaining-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 425
+        }
+      ],
+      "path": "tests/type-surface.test.mjs",
+      "previousSha256": "1bfc829f26ba8e90e1e593d43d7193b9f816850fc9bc2a1e7659a774043a0829"
+    }
+  ]
+}
