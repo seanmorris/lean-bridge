@@ -129,12 +129,15 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 		path: "hosted/logs/toolchain.log", artifact: contract.artifactToolchainLog
 	}];
 	const retainedFiles = contract.retainedFiles ?? [];
+	const artifactOnlyMembers = contract.artifactOnlyMembers ?? [];
+	assert.ok(Array.isArray(artifactOnlyMembers));
+	for(const path of artifactOnlyMembers) assert.ok(safePath(path), path);
 	assert.deepEqual(index.hostedRun.artifact.members.toSorted(), [
 		...expectedMembers, ...retainedLogs.map(log => log.artifact)
-		, ...retainedFiles.map(file => file.artifact)
+		, ...retainedFiles.map(file => file.artifact), ...artifactOnlyMembers
 	].sort());
 	const archiveHash = createHash("sha256");
-	let archiveBytes = 0;
+	let archiveBytes = 0; const artifactParts = [];
 	for(const part of index.hostedRun.artifact.parts)
 	{
 		assert.deepEqual(Object.keys(part).sort()
@@ -143,7 +146,8 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 		assert.equal(value.length, part.bytes, part.path);
 		assert.equal(sha256(value), part.sha256, part.path);
 		assert.equal(part.offset, archiveBytes, part.path);
-		archiveHash.update(value); archiveBytes += value.length;
+		archiveHash.update(value); artifactParts.push(value);
+		archiveBytes += value.length;
 		expectedPaths.push(part.path);
 	}
 	assert.equal(archiveBytes, contract.artifactBytes);
@@ -188,6 +192,10 @@ export const checkZeroPayloadHostedEvidenceArchive = async (
 	assert.equal(api.artifact.expires_at, index.hostedRun.artifact.expiresAt);
 	assert.equal(api.artifact.workflow_run.id, contract.runId);
 	assert.equal(api.artifact.workflow_run.head_sha, contract.revisions.producer);
+	if(contract.verifyArtifact)
+		await contract.verifyArtifact({
+			index, files, parts: artifactParts, api
+		});
 	for(const log of retainedLogs)
 	{
 		assert.deepEqual(Object.keys(log).sort(), ["artifact", "path"]);

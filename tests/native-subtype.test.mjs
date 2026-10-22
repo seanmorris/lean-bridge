@@ -76,6 +76,7 @@ import "./helpers/dependent-checked-record-browser-path-diagnostic-repair-source
 import "./helpers/dependent-checked-record-browser-diagnostic-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-export-count-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-wit-evidence-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs";
 import "./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs";
