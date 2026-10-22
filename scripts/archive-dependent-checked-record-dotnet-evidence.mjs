@@ -81,6 +81,15 @@ const putFile = async (path, source) => {
 		, sha256: await dependentCheckedRecordHostedDigest(source), source
 	});
 };
+const stableTools = tools => ({
+	...tools, measurements: tools.measurements.map(measurement => {
+		assert.match(measurement.cwd
+			, /^\/tmp\/lean-bridge-dependent checked-record-dotnet-[^/]+\/toolchain$/u);
+		const stable = { ...measurement };
+		Reflect.deleteProperty(stable, "cwd");
+		return stable;
+	})
+});
 
 const extracted = await extractDependentCheckedRecordHostedArtifact(
 	selected["artifact-zip"]);
@@ -127,10 +136,11 @@ try
 			, canonicalJson({ ...accepted, controls })
 			, `${route} checker replay`);
 		runtime ??= report.runtime;
-		toolchain ??= report.tools;
+		const toolIdentity = stableTools(report.tools);
+		toolchain ??= toolIdentity;
 		resourceCeiling ??= report.resourceChecks[0].maxLoad;
 		assert.deepEqual(report.runtime, runtime, `${route} runtime identity`);
-		assert.deepEqual(report.tools, toolchain, `${route} toolchain identity`);
+		assert.deepEqual(toolIdentity, toolchain, `${route} toolchain identity`);
 		assert.ok(report.resourceChecks.every(item =>
 			item.maxLoad === resourceCeiling), `${route} load ceiling`);
 		for(const path of paths)
