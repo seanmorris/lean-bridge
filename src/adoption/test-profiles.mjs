@@ -31,6 +31,7 @@ const profileManifest = Object.freeze({
 		, "callback-subtype-native-installed"
 		, "callback-subtype-npm-browser"
 		, "callback-subtype-perl-installed"
+		, "callback-subtype-php-wasm"
 		, "callback-subtype-remaining-installed"
 		, "nominal-primitive-subtype-supplement-ci"
 		, "nominal-primitive-subtype-supplement-evidence"
