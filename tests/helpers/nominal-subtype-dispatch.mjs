@@ -9,7 +9,9 @@
 import assert from "node:assert/strict";
 import { sha256 } from "../../src/capsule/node.mjs";
 
-export const nominalSubtypeDispatchComponent = "nominal-subtypes@1.0.0";
+// The compiler names the component from the fixture's Lake package (`nominalsubtypes`), so the
+// adapter symbols in the installed library hash this identity, not the onboarding directory name.
+export const nominalSubtypeDispatchComponent = "nominalsubtypes@1.0.0";
 export const nominalSubtypeDispatchRoles = Object.freeze(["public", "validator", "constructor", "adapter", "source"]);
 export const nominalSubtypeDispatchConstructors = Object.freeze(["plusOne", "plusTwo"]);
 

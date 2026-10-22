@@ -6,8 +6,10 @@
  */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
-import { assertNominalSubtypeDispatchPositiveControls, assertNominalSubtypeDispatchReport, nominalSubtypeDispatchProbe, classifyNominalSubtypeDispatchSymbols, nominalSubtypeAdapterSymbol, nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExpected, nominalSubtypeDispatchExports, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchRoles, nominalSubtypeDispatchSteps, parseNominalSubtypeDispatchRows } from "./nominal-subtype-dispatch.mjs";
+import { readFileSync } from "node:fs";
+import { elaboratedComponent } from "../../src/analyze/semantic-model.mjs";
+import { nominalSubtypeFixture, nominalSubtypeInstalledReview } from "./nominal-subtype-installed-fixture.mjs";
+import { assertNominalSubtypeDispatchPositiveControls, assertNominalSubtypeDispatchReport, nominalSubtypeDispatchProbe, classifyNominalSubtypeDispatchSymbols, nominalSubtypeAdapterSymbol, nominalSubtypeDispatchComponent, nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExpected, nominalSubtypeDispatchExports, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchRoles, nominalSubtypeDispatchSteps, parseNominalSubtypeDispatchRows } from "./nominal-subtype-dispatch.mjs";
 
 const table = symbols => symbols.map((symbol, index) => `${(0x1000 + index * 16).toString(16).padStart(16, "0")} T ${symbol}`).join("\n") + "\n";
 const completeSymbols = ({ boxedSource = false, specializePlusTwo = false } = {}) => {
@@ -45,6 +47,13 @@ test("nominal dispatch exports restate the fixture's own constructor selections 
 	}
 	assert.ok(nominalSubtypeDispatchExports.some(item => item.parameters.some(leaves => leaves.length > 1)), "a multi-leaf parameter is measured");
 	assert.ok(nominalSubtypeDispatchExports.some(item => item.parameters.length > 1), "a multi-parameter export is measured");
+});
+
+test("nominal dispatch adapter symbols hash the component identity the compiler derives from the fixture", () => {
+	const project = JSON.parse(readFileSync(`${nominalSubtypeFixture}/package.json`, "utf8"));
+	assert.equal(nominalSubtypeDispatchComponent, elaboratedComponent(project).id);
+	// The hosted c45304f model record names this adapter for NominalSubtypes.first.
+	assert.equal(nominalSubtypeAdapterSymbol("first"), "lb_bf4a2541d27b77f9e2561f26");
 });
 
 test("nominal dispatch classification names every adapter, validator, source and constructor from the symbol table", () => {

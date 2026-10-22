@@ -40,7 +40,11 @@ export const instrumentNominalSubtypeLean = lean => {
 		{
 			const header = /^def (\w+) : (\S+) → (\S+)$/u.exec(line);
 			assert.ok(header, `unsupported definition shape for ${name}: ${line}`);
-			lines.splice(index, 1, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`, `def ${name}Body : ${header[2]} → ${header[3]}`);
+			// Lean resolves names in order, so the renamed body keeps its equations in place and the
+			// marked wrapper follows its last equation, before any later definition that calls it.
+			lines[index] = `def ${name}Body : ${header[2]} → ${header[3]}`;
+			const end = lines.findIndex((value, position) => position > index && /^\S/u.test(value));
+			lines.splice(end < 0 ? lines.length : end, 0, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`);
 		}
 	}
 	return lines.join("\n");

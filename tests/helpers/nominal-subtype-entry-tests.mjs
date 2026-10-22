@@ -21,7 +21,10 @@ test("nominal entry instrumentation marks each selected constructor and measured
 	assert.deepEqual(markers.sort(), ["constructor plusOne", "constructor plusTwo", "source combine", "source echo", "source eventFirst", "source first", "source nested", "source second"]);
 	assert.ok(probe.includes('def plusOne (value : Nat) : Option Positive := dbgTrace "lean-bridge-nominal-entry constructor plusOne" fun _ =>\n  if value < 100'));
 	assert.ok(probe.includes('def first (value : Envelope) : Nat := dbgTrace "lean-bridge-nominal-entry source first" fun _ => value.payload.val'));
-	assert.ok(probe.includes('def eventFirst (value : Event) : Nat := dbgTrace "lean-bridge-nominal-entry source eventFirst" fun _ => eventFirstBody value\ndef eventFirstBody : Event → Nat\n  | .empty => 0'));
+	// The renamed body keeps its equations and precedes the wrapper, which precedes its first caller.
+	assert.ok(probe.includes("def eventFirstBody : Event → Nat\n  | .empty => 0"));
+	assert.ok(probe.includes('      | some (.error value) => value.val) 0\ndef eventFirst (value : Event) : Nat := dbgTrace "lean-bridge-nominal-entry source eventFirst" fun _ => eventFirstBody value\ndef eventSecond (value : Event) : Nat := eventFirst value'));
+	assert.ok(probe.indexOf("def eventFirstBody ") < probe.indexOf("def eventFirst ("));
 	// Every other line is byte-identical and the unmeasured definitions keep their bodies.
 	const originalLines = original.split("\n"), probeLines = probe.split("\n");
 	assert.equal(probeLines.length, originalLines.length + 1);
