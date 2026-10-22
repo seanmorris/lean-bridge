@@ -1,0 +1,311 @@
+{
+  "additions": [
+    {
+      "currentSha256": "141f961dbdcec13b421a1cf29e7b71dc38d2ff76977b9e46e333265e9dab20f1",
+      "path": "docs/evidence/zero-payload-checked-record-matrix-closure-20261022.json"
+    },
+    {
+      "currentSha256": "1966bd31cf4b5cb5c71dc7a794f4107665ba172d4832e2dbcd8ff95919c412c5",
+      "path": "docs/evidence/zero-payload-checked-record-matrix-closure-20261022.md"
+    },
+    {
+      "currentSha256": "9babd249c523868cfe30f820a63dbbdba9062be394c60fa30239672ad521436a",
+      "path": "scripts/update-zero-payload-matrix-closure-source-history.mjs"
+    },
+    {
+      "currentSha256": "299e216d19e53407ba875b874905577eae1ca129f34ad59b9f9da96b5486ed6a",
+      "path": "tests/helpers/zero-payload-matrix-closure-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e3bbc6af03f66f073d5b1dd10e03311e4ba67b2858bb86cb2669b8af089491aa",
+      "path": "tests/helpers/zero-payload-matrix-closure-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1321929be2abca4b2d75a351604c8d5770607e43",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d95c34dd8679a4c3eaeabd257e8ff1d058ddb6945358a415d060f421a8d2cbab",
+      "edits": [
+        {
+          "current": "import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from \"./zero-payload-matrix-closure-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...zeroPayloadMatrixClosureChangedPaths\n\t, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths\n",
+          "previous": "\t...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths\n",
+          "start": 148157
+        },
+        {
+          "current": "\tconst zeroPayloadMatrixClosure\n\t\t= beforeZeroPayloadMatrixClosureSource(path, text, expected);\n\tif(sha256(zeroPayloadMatrixClosure) === expected)\n\t\treturn zeroPayloadMatrixClosure;\n",
+          "previous": "",
+          "start": 180420
+        },
+        {
+          "current": "\t\t\tpath, zeroPayloadMatrixClosure, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 180708
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "80f438cddf2b2f8864e1712875fd8c645aa78d80672768e6d99dd2cf310c9fc7"
+    },
+    {
+      "currentSha256": "7020a9e71a483b043c60f7bd1305e1e4727633b29810848f3599b54792f8763d",
+      "edits": [
+        {
+          "current": "import \"./helpers/zero-payload-matrix-closure-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4024
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "60329a12511224c66d9946a57eb1ab74741776f0b35619ee30dfc8140e9bd5aa"
+    }
+  ],
+  "milestone": "zero-payload-checked-record-matrix-closure-v1",
+  "predecessorCommit": "fa0e876a08e808cb05412fda732bab5d705737e2",
+  "schemaVersion": 1,
+  "scope": "Bind eleven independent immutable host archives, 44 route evidence identities, seventeen profiles, 68 copied parameter/result cells, exact recurring workflows and explicit unsupported positions into one fail-closed documentation and audit ledger.",
+  "updates": [
+    {
+      "currentSha256": "6fddbdb55f53461301949c7cbe01e96491b7c6f5ad56c93795da0655cae59e3a",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 49363
+        }
+      ],
+      "path": "docs/consume/c.md",
+      "previousSha256": "da27a836e76405b55e2806ca63b74d1e79b7ac0dcc1c8eeaf65d01823905c6f6"
+    },
+    {
+      "currentSha256": "9ceefbe5e1a1598d4d541bf275510095186a76621e5b63e6bf6660f4e92836db",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C++ in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 39000
+        }
+      ],
+      "path": "docs/consume/cpp.md",
+      "previousSha256": "85f1f56dfb2cfe26a4efeea18855db2ab270057585eb83954da568cebf7aabf5"
+    },
+    {
+      "currentSha256": "a0089a79714aa36d34d1f58b2e5a57265b1c9b5c52c06c29777f37ccf409c53d",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers C# in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 47483
+        }
+      ],
+      "path": "docs/consume/dotnet.md",
+      "previousSha256": "ac5ba42b0b2e88500e062e0de2635944ffa4b06be8f122537d18b417eea899ae"
+    },
+    {
+      "currentSha256": "d24fa85f0cc38835f1104ad040a3025079f140740f8c9701af3c3101118cffef",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Java in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 53871
+        }
+      ],
+      "path": "docs/consume/java.md",
+      "previousSha256": "3496f456f817a554f4884c2ffe200e4facb241e0a68cfda42c6a2b5120c8594e"
+    },
+    {
+      "currentSha256": "9c0c701feda86de7b48ef65eec9e7ecdd5729ab42a813440cd5169945ff711ad",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Kotlin in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 46131
+        }
+      ],
+      "path": "docs/consume/kotlin.md",
+      "previousSha256": "565d902614fdd72e21c01d80e6146259cd858a378848b064f4b75c6b5316122f"
+    },
+    {
+      "currentSha256": "436647098459fbd8f9935db70e03229e3a4f2327d615516bcff1998e07cbce59",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Perl in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 42262
+        }
+      ],
+      "path": "docs/consume/perl.md",
+      "previousSha256": "0d5ac229c021386e283e695a3fb9f1f8359731e57bfe8fcfad40c0527fbfb11a"
+    },
+    {
+      "currentSha256": "31e67fbf0fddc50143ed15d0a2ee8c491b0446723db20577b4ebe839cd8d6746",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Python in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 46367
+        }
+      ],
+      "path": "docs/consume/python.md",
+      "previousSha256": "2228c81b137cac8507501c5a1a784c220f7a314eaaf6bd8b497a6f7d8c2dd484"
+    },
+    {
+      "currentSha256": "889ccd6d4a847599224d7b6317e426a742fef5d48bd6554c029229d767cede50",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Ruby in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 43388
+        }
+      ],
+      "path": "docs/consume/ruby.md",
+      "previousSha256": "42645b2c13e7261e71d65280cf63b10839f83a0fbcad929542025cc0508c156b"
+    },
+    {
+      "currentSha256": "04106b9fa916a663f6e152539a626243f08a8e98e302dc15f203ba65d885247a",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Rust in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 46463
+        }
+      ],
+      "path": "docs/consume/rust.md",
+      "previousSha256": "b986a1c317d5a268cac72e882460e54f10e5fcc9a049ae3aa28943c1939ae17b"
+    },
+    {
+      "currentSha256": "662ff2ad3fdc791191b961891dc01886d483670f83435b96d97ca0b9d3da9d04",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers WIT/WASI in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 61143
+        }
+      ],
+      "path": "docs/consume/wit-wasi.md",
+      "previousSha256": "be618ef97649223888d46293a61ab8703d8843cf6bf73a8a69f3c21d72bcb26a"
+    },
+    {
+      "currentSha256": "78670117f898679af0658dfa5d8be712323ee1983b7ffd72e3084b5d557a9d01",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Node JavaScript, TypeScript, Browser, React, Worker in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 28417
+        }
+      ],
+      "path": "docs/javascript-typescript.md",
+      "previousSha256": "87758c75f0a8dafdce96ba6c800b9869e5ba88dd8b9cfd0a0f5fc3feebce2a2f"
+    },
+    {
+      "currentSha256": "35383a6ecc2578eb31861e82cf5bc574ac46fb3217fcc6ace3481538acaaa513",
+      "edits": [
+        {
+          "current": "The [complete hosted zero-payload matrix](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) adds independently retained npm/browser, native PHP, Python, Ruby, Perl, WIT/WASI and PHP-Wasm archives to those four lanes. Together, the eleven archives establish all four ordinary/reviewed full/result-only routes across all seventeen consumer profiles. This acceptance is exact: it covers the tested `Witness`, `Token`, `Marker`, `Option`, array and `Mark` values only at copied parameter and result sites. It does not cover fields, callbacks, owned positions or other zero-payload shapes.\n\n",
+          "previous": "",
+          "start": 61731
+        }
+      ],
+      "path": "docs/lean/existing-package.md",
+      "previousSha256": "0c254b895444f5706a70018b121dd39b944c4a8da66678bb5238abd0b23778ed"
+    },
+    {
+      "currentSha256": "e815de241bfdf1efd69a1378271db2bf4f0a71ffb91dfb877bf1d1299e157a51",
+      "edits": [
+        {
+          "current": "For a record whose proofs relate its fields, use a [checked constructor over the payload fields](existing-package.md#export-a-record-with-proof-fields). The host supplies no proof. The compiler checks each input through the selected Lean constructor and erases proofs from Lean-produced results. Closed `Nat`, `Bool`, and `String` indices stay in authenticated type metadata and never become host fields; the [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) exercises all three closed forms at top-level copied checked-record parameters and results in all 17 consumer profiles. Top-level inputs and results have installed acceptance in C/C++, Node JavaScript/TypeScript, browser pages, React, workers, Python, Rust, Ruby, .NET, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI. npm has [installed nested acceptance](../evidence/nested-checked-record-browser-20261016/index.json), C/C++ have an [installed nested archive](../evidence/nested-checked-record-native-20261016/index.json), .NET has an [installed NuGet archive](../evidence/nested-checked-record-dotnet-20261016/index.json), Java/Kotlin have an [installed Maven archive](../evidence/nested-checked-record-jvm-20261016/index.json), Perl has an [installed CPAN archive](../evidence/nested-checked-record-perl-20261016/index.json), native PHP has an [installed Composer archive](../evidence/nested-checked-record-php-20261016/index.json), Python has an [installed wheel archive](../evidence/nested-checked-record-python-20261016/index.json), Ruby has an [installed gem archive](../evidence/nested-checked-record-ruby-20261016/index.json), WIT/WASI has an [installed component archive](../evidence/nested-checked-record-wit-20261016/index.json), PHP-Wasm has an [installed Node/Chromium archive](../evidence/nested-checked-record-php-wasm-20261016/index.json), and Rust has an [installed Cargo archive](../evidence/nested-checked-record-rust-20261016/index.json). They cover direct and repeated parameters, arrays, lists, options, products, `Except`/`Result`, enclosing record fields, active variant fields and constructor-free container results. [Installed inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) additionally covers the tested acyclic `Span → Ticket → Stamped` chain, with independently selected parent and child constructors and proof-free results. Select the record constructor and each nested checked field's constructor independently at every public input site; only an active variant branch runs. A record whose only fields are proofs is still a checked record: declare it with an explicit `: Type`, select a nullary constructor such as `def mkWitness : Option Witness`, and the host passes and receives an empty carrier that is distinct from an absent, null or default value; a record with one `Unit` field beside its proofs keeps that field. The [hosted C/C++ zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) validates that boundary through options, arrays and active/inactive variants in ordinary and reviewed full/result-only packages. The [hosted Java/Kotlin zero-payload archive](../evidence/zero-payload-checked-record-jvm-20261021.md) validates the same boundary through nominal non-null JVM objects in all four Maven routes. The [hosted .NET zero-payload archive](../evidence/zero-payload-checked-record-dotnet-20261021.md) validates nominal non-null zero-component C# records through the same four NuGet routes. The [hosted Rust zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) validates nominal empty Rust structs through all four Cargo routes. The [complete hosted zero-payload matrix](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) adds independent npm/browser, native PHP, Python, Ruby, Perl, WIT/WASI and PHP-Wasm evidence and closes all four routes across all seventeen profiles at copied parameter and result sites. It does not promote fields, callbacks, owned positions or other zero-payload shapes. The [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md) establishes synchronous host callbacks and returned Lean closures in all sixteen non-PHP-Wasm profiles on both author routes. Generic checked records, value-carrying receiver-dependent inherited fields, PHP-Wasm callback positions, retained or asynchronous callbacks, owned records and open dependent combinations remain separate work.\n",
+          "previous": "For a record whose proofs relate its fields, use a [checked constructor over the payload fields](existing-package.md#export-a-record-with-proof-fields). The host supplies no proof. The compiler checks each input through the selected Lean constructor and erases proofs from Lean-produced results. Closed `Nat`, `Bool`, and `String` indices stay in authenticated type metadata and never become host fields; the [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) exercises all three closed forms at top-level copied checked-record parameters and results in all 17 consumer profiles. Top-level inputs and results have installed acceptance in C/C++, Node JavaScript/TypeScript, browser pages, React, workers, Python, Rust, Ruby, .NET, Java/Kotlin, Perl, native PHP, PHP-Wasm and WIT/WASI. npm has [installed nested acceptance](../evidence/nested-checked-record-browser-20261016/index.json), C/C++ have an [installed nested archive](../evidence/nested-checked-record-native-20261016/index.json), .NET has an [installed NuGet archive](../evidence/nested-checked-record-dotnet-20261016/index.json), Java/Kotlin have an [installed Maven archive](../evidence/nested-checked-record-jvm-20261016/index.json), Perl has an [installed CPAN archive](../evidence/nested-checked-record-perl-20261016/index.json), native PHP has an [installed Composer archive](../evidence/nested-checked-record-php-20261016/index.json), Python has an [installed wheel archive](../evidence/nested-checked-record-python-20261016/index.json), Ruby has an [installed gem archive](../evidence/nested-checked-record-ruby-20261016/index.json), WIT/WASI has an [installed component archive](../evidence/nested-checked-record-wit-20261016/index.json), PHP-Wasm has an [installed Node/Chromium archive](../evidence/nested-checked-record-php-wasm-20261016/index.json), and Rust has an [installed Cargo archive](../evidence/nested-checked-record-rust-20261016/index.json). They cover direct and repeated parameters, arrays, lists, options, products, `Except`/`Result`, enclosing record fields, active variant fields and constructor-free container results. [Installed inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) additionally covers the tested acyclic `Span → Ticket → Stamped` chain, with independently selected parent and child constructors and proof-free results. Select the record constructor and each nested checked field's constructor independently at every public input site; only an active variant branch runs. A record whose only fields are proofs is still a checked record: declare it with an explicit `: Type`, select a nullary constructor such as `def mkWitness : Option Witness`, and the host passes and receives an empty carrier that is distinct from an absent, null or default value; a record with one `Unit` field beside its proofs keeps that field. The [hosted C/C++ zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) validates that boundary through options, arrays and active/inactive variants in ordinary and reviewed full/result-only packages. The [hosted Java/Kotlin zero-payload archive](../evidence/zero-payload-checked-record-jvm-20261021.md) validates the same boundary through nominal non-null JVM objects in all four Maven routes. The [hosted .NET zero-payload archive](../evidence/zero-payload-checked-record-dotnet-20261021.md) validates nominal non-null zero-component C# records through the same four NuGet routes. The [hosted Rust zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) validates nominal empty Rust structs through all four Cargo routes. The [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md) establishes synchronous host callbacks and returned Lean closures in all sixteen non-PHP-Wasm profiles on both author routes. Generic checked records, value-carrying receiver-dependent inherited fields, PHP-Wasm callback positions, retained or asynchronous callbacks, owned records and open dependent combinations remain separate work.\n",
+          "start": 25560
+        }
+      ],
+      "path": "docs/lean/export-decisions.md",
+      "previousSha256": "731e0693797e339336b9c18bcc16c2edba9940ff9f99f5ab68a8070f04274c72"
+    },
+    {
+      "currentSha256": "5f11056215780f0ddc1e47bf065d45a9f0dde01dd81bcae37f92cbefb54eedff",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers Native PHP, PHP-Wasm in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.\n\n",
+          "previous": "",
+          "start": 90583
+        }
+      ],
+      "path": "docs/php.md",
+      "previousSha256": "884aedb0a4106ba46f7667ba9cd89c8cc50f769ae9d9cbc58ceb8288a4572925"
+    },
+    {
+      "currentSha256": "34da098b26fb918b62a25d4b29dc497ef88fd2b185dcd9842ea5bddbdfb2ea6a",
+      "edits": [
+        {
+          "current": "[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The exact copied parameter and result cells distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive Mark branches. The matrix contains 44 route evidence identities and promotes 68 profile/path/position cells. It does not promote fields, callbacks, owned positions or other zero-payload shapes, and it never infers one host from another. [Checked-record browser packages](../evidence/checked-record-browser-promotion-20261011.md) have installed checks in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes, including standalone result-only packages. [Hosted npm/browser checked-record value-index acceptance](../evidence/checked-record-value-index-browser-promotion-20261019.md) adds closed Bool, String and Nat indices at top-level copied parameters and results across Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes. Full and standalone result-only packages are retained. The [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) establishes the same boundary in all 17 consumer profiles. Open or opaque indices, other index kinds, fields, callbacks, owned positions, value-carrying dependent payloads and zero-payload checked records remain separate work. [Nested checked-record npm/browser packages](../evidence/nested-checked-record-browser-20261016/index.json) add direct and repeated parameters, Array, List, Option, Product and Except copies, enclosing record and active variant fields, and constructor-free Array/Option results. [Nested checked-record C/C++ packages](../evidence/nested-checked-record-native-20261016/index.json) establish the same positions through independent C11/GMP and C++20 callers on both author routes and API modes, with reproduced packages, source-free offline installation and unchanged replay after relocation on Linux x64/glibc 2.36. [Nested checked-record .NET packages](../evidence/nested-checked-record-dotnet-20261016/index.json) establish the same copied positions through generated C# records, typed arrays and Result values in reproduced, source-free and relocated NuGet installations on .NET SDK 8.0.424 and shared framework 8.0.30. [Nested checked-record Java/Kotlin packages](../evidence/nested-checked-record-jvm-20261016/index.json) establish those positions through generated Java records and Kotlin classes in reproduced, source-free and relocated Maven installations on JDK 22.0.2 and Kotlin 2.2.0. The tested Packet carries Fin 10 and checked Nat Subtype fields; every selected constructor, exact rejection path, caller snapshot and recovery is checked. [Nested checked-record Perl packages](../evidence/nested-checked-record-perl-20261016/index.json) establish the same copied positions through generated blessed Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete CPAN component and runtime archives before source-free offline installation on threaded and unthreaded Perl 5.36.3 and 5.38.2 in prebuilt-only and build-XS modes. Unchanged callers run before and after moving each installation on Linux x64/glibc 2.36; exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record native PHP packages](../evidence/nested-checked-record-php-20261016/index.json) establish the same copied positions through generated final readonly Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer ZIPs before author and build removal and offline installation; unchanged weak and strict callers run before and after moving each installation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime. [Nested checked-record Python wheels](../evidence/nested-checked-record-python-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and ChoicePacket dataclasses on both author routes and API modes. Two author roots reproduce one complete wheel for both CPython floors before author removal and offline installation; the unchanged caller runs on CPython 3.11.16 and 3.12.14 before and after moving each installation on Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record Ruby gems](../evidence/nested-checked-record-ruby-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete native gems before author removal and offline installation; the unchanged caller runs before and after moving each installation on MRI 3.3.12 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record WIT/WASI components](../evidence/nested-checked-record-wit-20261016/index.json) establish the same copied positions through Component Model Packet and Holder records and the packet case of a Choice variant on both author routes and API modes. Two author roots reproduce complete component archives before author removal and offline installation; one public C caller is compiled, its source is removed, and the executable runs before and after moving each installation through Wasmtime 42.0.1 on Linux x64/glibc 2.36. Exact constructor failures preserve caller value trees and output sentinels, and later calls recover. The component requires its packaged native Lean host rather than running as a standalone WASI command. [PHP-Wasm checked-record packages](../evidence/checked-record-php-wasm-promotion-20261011.md) pass the earlier top-level forms in all four routes through weak/strict Node/Chromium callers on wasm32 PHP 8.4.1. [Nested checked-record PHP-Wasm packages](../evidence/nested-checked-record-php-wasm-20261016/index.json) establish the same copied positions through generated Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer API, npm component and npm shared-runtime archives before author and build removal, offline installation and physical relocation. Unchanged weak and strict callers run in eight Node embedded/Composer and four Chromium bundled startup/lazy contexts on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime. [Nested checked-record Rust crates](../evidence/nested-checked-record-rust-20261016/index.json) establish the same copied positions through generated Packet and Holder structs and the Packet case of a Choice enum on both author routes and API modes. Two author roots reproduce complete Cargo crates before author removal, offline installation from an authenticated vendored dependency closure and physical relocation. The unchanged compiled caller runs from the installed tree, after relocation and again with only its executable retained on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36 and a 2.36 package floor. Exact constructor failures preserve caller graphs and later calls recover. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) preserves the tested Span → Ticket → Stamped parent-subobject chain, its Ticket alias, repeated parameters, nested Fin field and proof-free results in installed packages across all seventeen profiles and both author routes. Full and result-only packages are separately retained. Generic or recursive inheritance, other index kinds, open dependent or zero-payload records, callbacks and owned positions remain separate work. [Recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers finite self-recursive Packet and mutually recursive Envelope/Step graphs across all seventeen profiles and both author routes. The retained packages preserve nominal identities and aliases, Array/Option carriers and active branches; validate selected checked fields and Fin bounds; erase proofs; preserve rejected inputs; recover on later valid calls; and return constructor-free copied results. Other recursive graph shapes, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload records, callbacks, owned positions, retained identity and cyclic host-object inputs remain separate work. All seventeen profiles have separate installed acceptance for this tested nested copied boundary. [Hosted synchronous callback checked-record acceptance](../evidence/callback-checked-record-promotion-20261022.md) adds proof-free host callback arguments and replies and returned Lean closure inputs and results in all sixteen non-PHP-Wasm profiles on both source routes. Host-produced values run the selected nested-field and record constructors with exact typed recovery; Lean-produced values project payloads without proof fields. [Local PHP-Wasm acceptance](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) establishes the tested owned `Claim` callback and returned closure in Node and Chromium on both source routes, including rejection of invalid explicit recovery before callback entry. Retained or asynchronous callbacks, recursive owned records and unarchived indexed or recursive callback combinations remain separate work.\n",
+          "previous": "[Hosted zero-payload C/C++ packages](../evidence/zero-payload-checked-record-native-20261021.md) distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive variant branches in all four ordinary/reviewed full/result-only routes. C uses one non-semantic storage byte for a legal nominal structure; C++ uses a nominal empty structure. Checked inputs run the selected nullary constructor, rejected values remain unchanged and later calls recover; Lean-produced results contain no proofs. [Hosted zero-payload Java/Kotlin packages](../evidence/zero-payload-checked-record-jvm-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only Maven routes. Java uses a nominal zero-component record and Kotlin a nominal zero-property class; neither is null or absence. Checked inputs run the selected nullary constructor, null and constructor failures preserve caller values, and later calls recover. [Hosted zero-payload .NET packages](../evidence/zero-payload-checked-record-dotnet-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only NuGet routes. C# uses a nominal non-null zero-component record for Witness; Token keeps its Unit property and Marker remains distinct. Checked inputs run the selected nullary constructor, null and constructor failures preserve caller values, and later calls recover. [Hosted zero-payload Rust crates](../evidence/zero-payload-checked-record-rust-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only Cargo routes. Rust uses a nominal empty struct for Witness, distinct from Unit, absence, Marker and Token. Checked inputs run the selected nullary constructor, rejected values remain unchanged, and later calls recover. [Checked-record browser packages](../evidence/checked-record-browser-promotion-20261011.md) have installed checks in Node, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes, including standalone result-only packages. [Hosted npm/browser checked-record value-index acceptance](../evidence/checked-record-value-index-browser-promotion-20261019.md) adds closed Bool, String and Nat indices at top-level copied parameters and results across Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes. Full and standalone result-only packages are retained. The [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) establishes the same boundary in all 17 consumer profiles. Open or opaque indices, other index kinds, fields, callbacks, owned positions, value-carrying dependent payloads and zero-payload checked records remain separate work. [Nested checked-record npm/browser packages](../evidence/nested-checked-record-browser-20261016/index.json) add direct and repeated parameters, Array, List, Option, Product and Except copies, enclosing record and active variant fields, and constructor-free Array/Option results. [Nested checked-record C/C++ packages](../evidence/nested-checked-record-native-20261016/index.json) establish the same positions through independent C11/GMP and C++20 callers on both author routes and API modes, with reproduced packages, source-free offline installation and unchanged replay after relocation on Linux x64/glibc 2.36. [Nested checked-record .NET packages](../evidence/nested-checked-record-dotnet-20261016/index.json) establish the same copied positions through generated C# records, typed arrays and Result values in reproduced, source-free and relocated NuGet installations on .NET SDK 8.0.424 and shared framework 8.0.30. [Nested checked-record Java/Kotlin packages](../evidence/nested-checked-record-jvm-20261016/index.json) establish those positions through generated Java records and Kotlin classes in reproduced, source-free and relocated Maven installations on JDK 22.0.2 and Kotlin 2.2.0. The tested Packet carries Fin 10 and checked Nat Subtype fields; every selected constructor, exact rejection path, caller snapshot and recovery is checked. [Nested checked-record Perl packages](../evidence/nested-checked-record-perl-20261016/index.json) establish the same copied positions through generated blessed Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete CPAN component and runtime archives before source-free offline installation on threaded and unthreaded Perl 5.36.3 and 5.38.2 in prebuilt-only and build-XS modes. Unchanged callers run before and after moving each installation on Linux x64/glibc 2.36; exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record native PHP packages](../evidence/nested-checked-record-php-20261016/index.json) establish the same copied positions through generated final readonly Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer ZIPs before author and build removal and offline installation; unchanged weak and strict callers run before and after moving each installation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime. [Nested checked-record Python wheels](../evidence/nested-checked-record-python-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and ChoicePacket dataclasses on both author routes and API modes. Two author roots reproduce one complete wheel for both CPython floors before author removal and offline installation; the unchanged caller runs on CPython 3.11.16 and 3.12.14 before and after moving each installation on Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record Ruby gems](../evidence/nested-checked-record-ruby-20261016/index.json) establish the same copied positions through generated frozen Packet, Holder and Choice::Packet classes on both author routes and API modes. Two author roots reproduce complete native gems before author removal and offline installation; the unchanged caller runs before and after moving each installation on MRI 3.3.12 with Linux x64/glibc 2.36. Exact constructor failures preserve caller graphs and later calls recover. [Nested checked-record WIT/WASI components](../evidence/nested-checked-record-wit-20261016/index.json) establish the same copied positions through Component Model Packet and Holder records and the packet case of a Choice variant on both author routes and API modes. Two author roots reproduce complete component archives before author removal and offline installation; one public C caller is compiled, its source is removed, and the executable runs before and after moving each installation through Wasmtime 42.0.1 on Linux x64/glibc 2.36. Exact constructor failures preserve caller value trees and output sentinels, and later calls recover. The component requires its packaged native Lean host rather than running as a standalone WASI command. [PHP-Wasm checked-record packages](../evidence/checked-record-php-wasm-promotion-20261011.md) pass the earlier top-level forms in all four routes through weak/strict Node/Chromium callers on wasm32 PHP 8.4.1. [Nested checked-record PHP-Wasm packages](../evidence/nested-checked-record-php-wasm-20261016/index.json) establish the same copied positions through generated Packet, Holder and ChoicePacket classes on both author routes and API modes. Two author roots reproduce complete Composer API, npm component and npm shared-runtime archives before author and build removal, offline installation and physical relocation. Unchanged weak and strict callers run in eight Node embedded/Composer and four Chromium bundled startup/lazy contexts on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Exact constructor failures preserve caller graphs and later calls recover; consumer PHP source remains required at runtime. [Nested checked-record Rust crates](../evidence/nested-checked-record-rust-20261016/index.json) establish the same copied positions through generated Packet and Holder structs and the Packet case of a Choice enum on both author routes and API modes. Two author roots reproduce complete Cargo crates before author removal, offline installation from an authenticated vendored dependency closure and physical relocation. The unchanged compiled caller runs from the installed tree, after relocation and again with only its executable retained on Rust and Cargo 1.90.0 with Linux x64/glibc 2.36 and a 2.36 package floor. Exact constructor failures preserve caller graphs and later calls recover. [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md) preserves the tested Span → Ticket → Stamped parent-subobject chain, its Ticket alias, repeated parameters, nested Fin field and proof-free results in installed packages across all seventeen profiles and both author routes. Full and result-only packages are separately retained. Generic or recursive inheritance, other index kinds, open dependent or zero-payload records, callbacks and owned positions remain separate work. [Recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers finite self-recursive Packet and mutually recursive Envelope/Step graphs across all seventeen profiles and both author routes. The retained packages preserve nominal identities and aliases, Array/Option carriers and active branches; validate selected checked fields and Fin bounds; erase proofs; preserve rejected inputs; recover on later valid calls; and return constructor-free copied results. Other recursive graph shapes, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload records, callbacks, owned positions, retained identity and cyclic host-object inputs remain separate work. All seventeen profiles have separate installed acceptance for this tested nested copied boundary. [Hosted synchronous callback checked-record acceptance](../evidence/callback-checked-record-promotion-20261022.md) adds proof-free host callback arguments and replies and returned Lean closure inputs and results in all sixteen non-PHP-Wasm profiles on both source routes. Host-produced values run the selected nested-field and record constructors with exact typed recovery; Lean-produced values project payloads without proof fields. [Local PHP-Wasm acceptance](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) establishes the tested owned `Claim` callback and returned closure in Node and Chromium on both source routes, including rejection of invalid explicit recovery before callback entry. Retained or asynchronous callbacks, recursive owned records and unarchived indexed or recursive callback combinations remain separate work.\n",
+          "start": 14185
+        }
+      ],
+      "path": "docs/reference/types.md",
+      "previousSha256": "e84919fb1dcfaaa7502fdd92f8d7f98e713d9aecc61cd7ddac356fa842633add"
+    },
+    {
+      "currentSha256": "87a937a7f584814fcf3cc8961a20c5ce7b67ddce9d74a4f6b2e10728145c3782",
+      "edits": [
+        {
+          "current": "const zeroPayloadMatrixLanes = Object.freeze([\n\t\"browser\", \"native\", \"dotnet\", \"jvm\", \"rust\", \"php\", \"python\"\n\t, \"ruby\", \"perl\", \"wit\", \"php-wasm\"\n]);\nconst zeroPayloadMatrixRoutes = Object.freeze([\n\t\"ordinary-source\", \"reviewed-ir\"\n\t, \"result-only-ordinary-source\", \"result-only-reviewed-ir\"\n]);\nexport const zeroPayloadMatrixEvidenceIds = Object.freeze(\n\tzeroPayloadMatrixLanes.flatMap(lane => zeroPayloadMatrixRoutes.map(route =>\n\t\t`zero-payload-${lane}-${route}-hosted-installed`))\n);\nexport const zeroPayloadMatrixProfiles = Object.freeze([\n\t\"node-javascript\", \"node-typescript\", \"browser-javascript\"\n\t, \"browser-react\", \"browser-worker\", \"c\", \"cpp\", \"dotnet\", \"java\"\n\t, \"kotlin\", \"rust\", \"php-native\", \"python\", \"ruby\", \"perl\"\n\t, \"wit-wasi\", \"php-wasm\"\n]);\nconst hasZeroPayloadMatrixEvidence = document =>\n\tzeroPayloadMatrixEvidenceIds.every(id =>\n\t\tdocument.evidence.some(item => item.id === id));\nconst zeroPayloadMatrixReference = \"[Hosted zero-payload checked-record acceptance](../evidence/zero-payload-checked-record-matrix-closure-20261022.md) covers all seventeen consumer profiles through eleven independently retained host archives and all four ordinary/reviewed full/result-only routes. The exact copied parameter and result cells distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive Mark branches. The matrix contains 44 route evidence identities and promotes 68 profile/path/position cells. It does not promote fields, callbacks, owned positions or other zero-payload shapes, and it never infers one host from another.\";\n",
+          "previous": "",
+          "start": 8750
+        },
+        {
+          "current": "const zeroPayloadMatrixGuide = (document, profiles, reference) => {\n\tif(!hasZeroPayloadMatrixEvidence(document)) return null;\n\tconst selected = profiles.filter(profile =>\n\t\tzeroPayloadMatrixProfiles.includes(profile));\n\tif(selected.length === 0) return null;\n\tconst evidence = reference.replace(/reference\\/types\\.md$/u\n\t\t, \"evidence/zero-payload-checked-record-matrix-closure-20261022.md\");\n\treturn `[Hosted zero-payload checked-record acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(\", \")} in all four ordinary/reviewed full/result-only package routes from the independently retained host archives that name those profiles. The tested copied parameters and results distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and both Mark branches. Fields, callback positions, owned positions and other zero-payload shapes remain outside this evidence.`;\n};\n",
+          "previous": "",
+          "start": 12220
+        },
+        {
+          "current": "",
+          "previous": "const zeroPayloadNative = \"[Hosted zero-payload C/C++ packages](../evidence/zero-payload-checked-record-native-20261021.md) distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive variant branches in all four ordinary/reviewed full/result-only routes. C uses one non-semantic storage byte for a legal nominal structure; C++ uses a nominal empty structure. Checked inputs run the selected nullary constructor, rejected values remain unchanged and later calls recover; Lean-produced results contain no proofs.\";\nconst zeroPayloadJvm = \"[Hosted zero-payload Java/Kotlin packages](../evidence/zero-payload-checked-record-jvm-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only Maven routes. Java uses a nominal zero-component record and Kotlin a nominal zero-property class; neither is null or absence. Checked inputs run the selected nullary constructor, null and constructor failures preserve caller values, and later calls recover.\";\nconst zeroPayloadDotnet = \"[Hosted zero-payload .NET packages](../evidence/zero-payload-checked-record-dotnet-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only NuGet routes. C# uses a nominal non-null zero-component record for Witness; Token keeps its Unit property and Marker remains distinct. Checked inputs run the selected nullary constructor, null and constructor failures preserve caller values, and later calls recover.\";\nconst zeroPayloadRust = \"[Hosted zero-payload Rust crates](../evidence/zero-payload-checked-record-rust-20261021.md) distinguish the same values in all four ordinary/reviewed full/result-only Cargo routes. Rust uses a nominal empty struct for Witness, distinct from Unit, absence, Marker and Token. Checked inputs run the selected nullary constructor, rejected values remain unchanged, and later calls recover.\";\n",
+          "start": 13292
+        },
+        {
+          "current": "\tconst zeroPayloadMatrix = zeroPayloadMatrixGuide(\n\t\tdocument, profiles, reference);\n",
+          "previous": "",
+          "start": 27549
+        },
+        {
+          "current": "\t\t, ...(zeroPayloadMatrix ? [\"\", zeroPayloadMatrix] : [])\n",
+          "previous": "",
+          "start": 28220
+        },
+        {
+          "current": "\t\t\t\t, `${hasZeroPayloadMatrixEvidence(document) ? `${zeroPayloadMatrixReference} ` : \"\"}${zeroPayloadNativeMarker}`)\n",
+          "previous": "\t\t\t\t, `${zeroPayloadNative} ${zeroPayloadJvm} ${zeroPayloadDotnet} ${zeroPayloadRust} ${zeroPayloadNativeMarker}`)\n",
+          "start": 50623
+        }
+      ],
+      "path": "scripts/generate-type-docs.mjs",
+      "previousSha256": "7cf971f237738c19f65ae0c20828fe4fe2d5ad5ffed86d19c98f528559661f1a"
+    },
+    {
+      "currentSha256": "c3f19ec5fe4a7ed3def303b982c7905095a975a163596b4ac13477f135fd8833",
+      "edits": [
+        {
+          "current": "import { createHash } from \"node:crypto\";\nimport { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 145
+        },
+        {
+          "current": "import {\n\tcellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection\n\t, typeGuideProfiles, zeroPayloadMatrixEvidenceIds\n\t, zeroPayloadMatrixProfiles\n} from \"../scripts/generate-type-docs.mjs\";\n",
+          "previous": "import { cellTypeCoverage, renderTypeDocuments, renderTypeTable, replaceTypeSection, typeGuideProfiles } from \"../scripts/generate-type-docs.mjs\";\n",
+          "start": 478
+        },
+        {
+          "current": "test(\"zero-payload matrix closure binds every lane, route and documented boundary\", async () => {\n\tconst receipt = JSON.parse(await readFile(\n\t\t\"docs/evidence/zero-payload-checked-record-matrix-closure-20261022.json\"\n\t\t, \"utf8\"));\n\tassert.equal(receipt.schemaVersion, 1);\n\tassert.equal(receipt.kind, \"zero-payload-checked-record-matrix-closure\");\n\tassert.equal(receipt.verifiedRevision\n\t\t, \"62f29794ea5f7fbaeeea21ac8e4f9876efdf5330\");\n\tassert.deepEqual(receipt.evidenceIdentities, zeroPayloadMatrixEvidenceIds);\n\tassert.deepEqual(receipt.matrix.profiles, zeroPayloadMatrixProfiles);\n\tassert.deepEqual(receipt.matrix, {\n\t\tlaneCount: 11, profileCount: 17, routeCountPerLane: 4\n\t\t, evidenceIdentityCount: 44, promotedCellCount: 68\n\t\t, shape: \"checked-record\", positions: [\"parameter\", \"result\"]\n\t\t, routes: [\"ordinary-source\", \"reviewed-ir\"\n\t\t\t, \"result-only-ordinary-source\", \"result-only-reviewed-ir\"]\n\t\t, profiles: [...zeroPayloadMatrixProfiles]\n\t});\n\tassert.equal(new Set(receipt.evidenceIdentities).size, 44);\n\tassert.ok(receipt.evidenceIdentities.every(id =>\n\t\tdocument.evidence.some(item => item.id === id)));\n\tconst evidence = new Set(receipt.evidenceIdentities);\n\tconst promoted = cells.filter(cell => Object.values(cell.stages)\n\t\t.some(stage => stage.evidence.some(id => evidence.has(id))));\n\tassert.equal(promoted.length, 68);\n\tassert.deepEqual(new Set(promoted.map(cell => cell.shape))\n\t\t, new Set([\"checked-record\"]));\n\tassert.deepEqual(new Set(promoted.map(cell => cell.position))\n\t\t, new Set([\"parameter\", \"result\"]));\n\tassert.deepEqual(new Set(promoted.map(cell => cell.profile))\n\t\t, new Set(zeroPayloadMatrixProfiles));\n\tassert.equal(receipt.archives.length, 11);\n\tassert.equal(new Set(receipt.archives.flatMap(item => item.profiles)).size\n\t\t, 17);\n\tfor(const archive of receipt.archives)\n\t{\n\t\tconst bytes = execFileSync(\"git\", [\"show\"\n\t\t\t, `HEAD:${archive.root}/index.json`], { maxBuffer: 16 * 1024 * 1024 });\n\t\tassert.equal(createHash(\"sha256\").update(bytes).digest(\"hex\")\n\t\t\t, archive.indexSha256, archive.lane);\n\t\tassert.ok(Number.isSafeInteger(archive.producerRunId));\n\t\tassert.ok(Number.isSafeInteger(archive.artifactId));\n\t}\n\tassert.equal(receipt.recurringRuns.length, 11);\n\tassert.deepEqual(new Set(receipt.recurringRuns.map(item => item.lane))\n\t\t, new Set(receipt.archives.map(item => item.lane)));\n\tassert.ok(receipt.recurringRuns.every(item =>\n\t\tNumber.isSafeInteger(item.runId) && item.workflow.length > 0));\n\tassert.deepEqual(receipt.boundaries.excludedPositions\n\t\t, [\"field\", \"callback-parameter\", \"callback-result\", \"owned\"]);\n\n\tconst rendered = await renderTypeDocuments({ root, inventory });\n\tconst link = /zero-payload-checked-record-matrix-closure-20261022\\.md/u;\n\tfor(const [path, source] of Object.entries(rendered.documents))\n\t{\n\t\tassert.match(source, link, path);\n\t\tassert.match(source\n\t\t\t, /Fields, callback positions, owned positions and other zero-payload shapes remain outside/u\n\t\t\t, path);\n\t}\n\tassert.match(rendered.reference, link);\n\tassert.match(rendered.reference, /44 route evidence identities/u);\n\tassert.match(rendered.reference, /68 profile\\/path\\/position cells/u);\n\tconst incomplete = {\n\t\tdocument: JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t\t, \"e434aaffaeda338c7abbb13c439466a4f7fb4a17:docs/type-surface.v1.json\"]\n\t\t, { encoding: \"utf8\", maxBuffer: 512 * 1024 * 1024 }))\n\t\t, ...contracts\n\t};\n\tconst refused = await renderTypeDocuments({ root, inventory: incomplete });\n\tassert.doesNotMatch(refused.reference, link);\n\tfor(const source of Object.values(refused.documents))\n\t\tassert.doesNotMatch(source, link);\n\tconst authorGuides = [\"docs/lean/existing-package.md\"\n\t\t, \"docs/lean/export-decisions.md\"];\n\tfor(const path of authorGuides)\n\t{\n\t\tconst source = await readFile(path, \"utf8\");\n\t\tassert.match(source, link, path);\n\t\tassert.match(source\n\t\t\t, /does not (?:cover|promote) fields, callbacks, owned positions or other zero-payload shapes/u\n\t\t\t, path);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 4816
+        }
+      ],
+      "path": "tests/type-surface-docs.test.mjs",
+      "previousSha256": "4cc3a1e31d9bbf20c5562d9d11d37024ddd6c48116ddeae33b0a82e264e8106e"
+    }
+  ]
+}

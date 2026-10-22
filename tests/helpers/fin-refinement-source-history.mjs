@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReviewRepairSource, callbackSubtypeDocumentationReviewRepairChangedPaths } from "./callback-subtype-documentation-review-repair-source-history.mjs";
@@ -1924,7 +1925,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
+	...zeroPayloadMatrixClosureChangedPaths
+	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
 	, ...callbackSubtypeDocumentationReviewRepairChangedPaths
 	, ...phpWasmRefinementEntryGeneratorClosureChangedPaths
@@ -2631,9 +2633,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const zeroPayloadMatrixClosure
+		= beforeZeroPayloadMatrixClosureSource(path, text, expected);
+	if(sha256(zeroPayloadMatrixClosure) === expected)
+		return zeroPayloadMatrixClosure;
 	const ownedCheckedRecordPhpWasmRetainedHandoff
 		= beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource(
-			path, text, expected
+			path, zeroPayloadMatrixClosure, expected
 		);
 	if(sha256(ownedCheckedRecordPhpWasmRetainedHandoff) === expected)
 		return ownedCheckedRecordPhpWasmRetainedHandoff;
