@@ -1,5 +1,9 @@
 #!/usr/bin/env node
-/** Verify original retained callback Subtype PHP-Wasm route records. */
+/**
+ * Verify original retained callback Subtype PHP-Wasm route records.
+ *
+ * @file
+ */
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";

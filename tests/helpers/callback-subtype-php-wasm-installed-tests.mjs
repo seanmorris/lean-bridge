@@ -153,7 +153,9 @@ test("installed callback Subtypes PHP-Wasm reproduce and relocate both author ro
 			await saveLakeFile(routeOutput, `executions/${index}.json`, canonicalJson(execution));
 		const report = { schemaVersion: 1, route, producerCommit, configuration
 			, reviewedBindingIrSha256: hashBindingIr(review)
-			, builds, receipt, ...installed
+			, builds
+			, receipt
+			, ...installed
 			, reproducible: true, independentBuilds: 2
 			, sourceRemovedBeforeInstallation: true, offlineInstall: true
 			, compilerFreeReplay: true, relocatedInstallation: true

@@ -132,7 +132,7 @@ export const summarizePhpWasmRefinementEntryHostedArtifacts = async (
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
 	exact(verification, ["verifierCommit", "sourcePathsClean", "sourcePaths"
 		, "sourcePathClosure", "verifierNodeVersion", "verifierNodeMajor"]
-		, "hosted verifier evidence");
+	, "hosted verifier evidence");
 	assert.equal(verification.verifierCommit, producerCommit);
 	assert.equal(verification.sourcePathsClean, true);
 	assert.deepEqual(verification.sourcePaths, ["src", "tests", "scripts"]);

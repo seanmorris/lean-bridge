@@ -190,7 +190,8 @@ export const phpZendGraphCalls = String.raw`
 export const generateCallablePhpGraphZendPhp = model => {
 	const files = { ...model.files }, value = site => site.callback ? { callback: site.callback.index } : { type: site.node.index };
 	const callbacks = [...model.callbacks.values()].map(cb => ({ direction: cb.direction
-		, parameters: cb.parameters.map(node => node.index), result: cb.result.index }));
+		, parameters: cb.parameters.map(node => node.index)
+		, result: cb.result.index }));
 	const functions = model.functions.map(fn => ({ parameters: fn.parameters.map(value), result: value(fn.result) }));
 	const doc = site => site.callback ? site.callback.docType : site.node.docType;
 	const recovery = [...model.callbacks.values()].some(callback => callback.direction === "host") ? `

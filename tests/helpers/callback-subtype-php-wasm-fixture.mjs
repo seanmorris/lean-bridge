@@ -21,13 +21,22 @@ export const callbackSubtypePhpWasmExpected = Object.freeze({
 	checks: 28, rejections: 9, callback_calls: 8, word_bits: 32, php: "8.4.1"
 });
 
-/** Select one author route without changing the shared callback contract. */
+/**
+ * Select one author route without changing the shared callback contract.
+ *
+ * @param route - Ordinary or reviewed author route.
+ */
 export const callbackSubtypePhpWasmConfiguration = route => ({
 	...callbackSubtypeConfiguration(route)
 	, targets: { "php-wasm": callbackSubtypePhpWasmSettings }
 });
 
-/** Bind only caller lexical strictness; package loading remains the driver's job. */
+/**
+ * Bind only caller lexical strictness; package loading remains the driver's job.
+ *
+ * @param source - Generated PHP caller source.
+ * @param mode - Weak or strict PHP caller mode.
+ */
 export const adaptCallbackSubtypePhpWasm = (source, mode) => {
 	assert.ok(["weak", "strict"].includes(mode));
 	const declaration = "declare(strict_types=0);";
@@ -36,12 +45,20 @@ export const adaptCallbackSubtypePhpWasm = (source, mode) => {
 	return source.replace(declaration, `declare(strict_types=${mode === "strict" ? 1 : 0});`);
 };
 
-/** Read the complete public caller and bind its lexical strictness. */
+/**
+ * Read the complete public caller and bind its lexical strictness.
+ *
+ * @param mode - Weak or strict PHP caller mode.
+ */
 export const callbackSubtypePhpWasmCaller = async mode => adaptCallbackSubtypePhpWasm(
 	await readFile("tests/fixtures/callback-subtype-consumers/php-wasm.php", "utf8"), mode
 );
 
-/** Probe a callable parameter before a lazy component is initialized. */
+/**
+ * Probe a callable parameter before a lazy component is initialized.
+ *
+ * @param arrangement - Embedded or Composer package arrangement.
+ */
 export const callbackSubtypePhpWasmRequest = arrangement => {
 	assert.ok(["embedded", "composer"].includes(arrangement));
 	const autoload = arrangement === "composer" ? "vendor/autoload.php"
@@ -50,7 +67,13 @@ export const callbackSubtypePhpWasmRequest = arrangement => {
 		, operations: { probe: "call_host" }, autoload }) + "\n";
 };
 
-/** Require exact compiler/review reconciliation and both callback directions. */
+/**
+ * Require exact compiler/review reconciliation and both callback directions.
+ *
+ * @param model - Generated PHP-Wasm component model.
+ * @param review - Reviewed binding contract.
+ * @param route - Ordinary or reviewed author route.
+ */
 export const checkCallbackSubtypePhpWasmModel = (model, review, route) => {
 	assert.ok(["ordinary", "reviewed"].includes(route));
 	assert.equal(model.profile, "php-wasm-copied-v1");
@@ -66,15 +89,19 @@ export const checkCallbackSubtypePhpWasmModel = (model, review, route) => {
 		parameters: type.callable.parameters.map(parameter => parameter.type)
 		, result: type.callable.result.type
 	}, type.source.extensions["lean-lang.org/refinements"], model.bindingIr.types)).sort()
-		, ["closure", "closure", "closure", "host", "host", "host"]);
+	, ["closure", "closure", "closure", "host", "host", "host"]);
 	assert.deepEqual(model.bindingIr.component, review.component);
 };
 
-/** Reject a missing host context, changed result or eager lazy-load boundary. */
+/**
+ * Reject a missing host context, changed result or eager lazy-load boundary.
+ *
+ * @param evidence - Installed execution evidence to authenticate.
+ */
 export const checkCallbackSubtypePhpWasmExecutions = evidence => {
 	assert.deepEqual(evidence.executions
 		.map(item => `${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort()
-		, phpWasmExecutionTuples);
+	, phpWasmExecutionTuples);
 	const libraries = [basename(evidence.component.library), basename(evidence.runtime.library)].sort();
 	assert.equal(new Set(libraries).size, 2);
 	for(const execution of evidence.executions)

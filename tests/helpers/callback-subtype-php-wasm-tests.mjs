@@ -31,7 +31,8 @@ test("callback Subtype PHP-Wasm preserves both author routes and the full caller
 	const weak = await callbackSubtypePhpWasmCaller("weak");
 	const strict = await callbackSubtypePhpWasmCaller("strict");
 	assert.equal(strict, weak.replace("declare(strict_types=0);", "declare(strict_types=1);"));
-	for(const marker of ["call_host(with_recovery", "call_host_container(with_recovery"
+	for(const marker of ["call_host(with_recovery"
+		, "call_host_container(with_recovery"
 		, "make_closure", "make_container_closure", "callback exception identity"
 		, "nested recovery stops callback", "nested closure closes idempotently"])
 		assert.ok(weak.includes(marker), marker);
@@ -68,14 +69,20 @@ test("callback Subtype PHP-Wasm caller parses in both lexical modes", {
 
 test("callback Subtype PHP-Wasm observations require every host context", () => {
 	const libraries = ["component.so", "runtime.so"];
-	const evidence = { component: { library: libraries[0] }, runtime: { library: libraries[1] }
+	const evidence = { component: { library: libraries[0] }
+		, runtime: { library: libraries[1] }
 		, executions: phpWasmExecutionTuples.map(tuple => {
 			const [realm, arrangement, loading, mode] = tuple.split("/");
 			return { realm, arrangement, loading, mode
 				, observation: { ...callbackSubtypePhpWasmExpected }
-				, phases: ["ready", "autoload", "invalid", "complete"].map(stage => ({ stage
-					, libraries: loading === "startup" || stage === "complete" ? [...libraries] : [] })) };
-		}) };
+				, phases: ["ready", "autoload", "invalid", "complete"].map(
+					stage => ({ stage
+						, libraries: loading === "startup"
+							|| stage === "complete" ? [...libraries] : [] })
+				)
+			};
+		})
+	};
 	checkCallbackSubtypePhpWasmExecutions(evidence);
 	for(const mutate of [
 		item => { item.executions.pop(); }
