@@ -1,0 +1,380 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c8b6ec06b1165aa6f1596d7c9646522c34fb6818dda17d7a91c688111b5b5042",
+      "path": "scripts/update-owned-checked-record-evidence-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "26f42f6b37a6f435d10361f49c04e7d38c6f6edc9d920513f18a73e1497eacab",
+      "path": "tests/helpers/owned-checked-record-evidence-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "50483a628eb7248e276f603245936dd96e887ae7a4087e8f894ba1b8e609a17f",
+      "path": "tests/helpers/owned-checked-record-evidence-contract-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f13b7c55db56692f2a262e6053fbbfec66d934db",
+  "implementationCommits": [
+    "43b98052b44081dda169f297e37c21cf6704aece",
+    "f13b7c55db56692f2a262e6053fbbfec66d934db"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "9ee90e48cd0408bf07e0c8c4fe17b337ee81d494c9b5d391830f7f492c0e04ef",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from \"./owned-checked-record-evidence-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...ownedCheckedRecordEvidenceContractChangedPaths\n\t, ...callbackSubtypeDocumentationReviewRepairChangedPaths\n",
+          "previous": "\t...callbackSubtypeDocumentationReviewRepairChangedPaths\n",
+          "start": 147660
+        },
+        {
+          "current": "\tconst ownedCheckedRecordEvidenceContract\n\t\t= beforeOwnedCheckedRecordEvidenceContractSource(path, text, expected);\n\tif(sha256(ownedCheckedRecordEvidenceContract) === expected)\n\t\treturn ownedCheckedRecordEvidenceContract;\n",
+          "previous": "",
+          "start": 179773
+        },
+        {
+          "current": "\t\t\tpath, ownedCheckedRecordEvidenceContract, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 180101
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "21c7c81b086b3909937422c0508cc5ab1699aa21ce7c2657f7102163cb34ee3d"
+    },
+    {
+      "currentSha256": "92f35bd1aeba86317413b7edb5d8373adefe688ff0fb4f001b1f938e924fd81a",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-evidence-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "7277d4e93f1e79007f253a400b5a866d74fa7ecee911d0b7273569889fbb21cb"
+    }
+  ],
+  "milestone": "owned-checked-record-evidence-contract-v1",
+  "predecessorCommit": "a3f8b08082a8e75b3b8f0b5b13070cc0193f9d0c",
+  "schemaVersion": 1,
+  "scope": "Retain and independently verify the exact receipt-named release archives used by every non-PHP-Wasm owned checked-record consumer lane, upload the complete evidence trees, and preserve the remaining synchronous Fin callback boundary in promotion documentation.",
+  "updates": [
+    {
+      "currentSha256": "44b10db89f1058a1d0614d5a28d1792dbd90eea85375296838152f892dc8bc18",
+      "edits": [
+        {
+          "current": "          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n            test -s \"build/owned-checked-record-language-packaging/evidence/${{ matrix.profile }}/$route/handoff/package-set-receipt.json\"\n          done\n",
+          "previous": "",
+          "start": 3973
+        },
+        {
+          "current": "            build/owned-checked-record-language-packaging/\n",
+          "previous": "            build/owned-checked-record-language-packaging/report.json\n",
+          "start": 4499
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-languages.yml",
+      "previousSha256": "fc228b447364eec4ded39904c3ebadd012a4383cb68f5d327faff5d1bf3d4e18"
+    },
+    {
+      "currentSha256": "38c4621087c443ac8ffdcaa4eae49c31d446bfef3b013d4174323fcfa3a8fbb9",
+      "edits": [
+        {
+          "current": "          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n            test -s \"build/owned-checked-record-managed-packaging/evidence/${{ matrix.group }}/$route/handoff/package-set-receipt.json\"\n          done\n",
+          "previous": "",
+          "start": 5003
+        },
+        {
+          "current": "            build/owned-checked-record-managed-packaging/\n",
+          "previous": "            build/owned-checked-record-managed-packaging/${{ matrix.group }}.json\n",
+          "start": 5530
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-managed.yml",
+      "previousSha256": "642a00a183d68305644985987a197fd9d0eb74795d4bd6c353b8ed1dea52933c"
+    },
+    {
+      "currentSha256": "ec209fe817265091e0d2d90179ed2deed2d2afb6d5412cfebeba50177a51408f",
+      "edits": [
+        {
+          "current": "          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n            test -s \"build/owned-checked-record-native-packaging/evidence/$route/handoff/package-set-receipt.json\"\n          done\n",
+          "previous": "",
+          "start": 1972
+        },
+        {
+          "current": "            build/owned-checked-record-native-packaging/\n",
+          "previous": "            build/owned-checked-record-native-packaging/report.json\n",
+          "start": 2455
+        },
+        {
+          "current": "          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n            test -s \"build/owned-checked-record-perl-packaging/evidence/$route/handoff/package-set-receipt.json\"\n          done\n",
+          "previous": "",
+          "start": 4944
+        },
+        {
+          "current": "            build/owned-checked-record-perl-packaging/\n",
+          "previous": "            build/owned-checked-record-perl-packaging/report.json\n",
+          "start": 5419
+        }
+      ],
+      "path": ".github/workflows/owned-checked-record-native-perl.yml",
+      "previousSha256": "7c7b9b5d72ce8f452fd4a788dc5e07c4aca1471ec2fd451be35c43c721fead90"
+    },
+    {
+      "currentSha256": "06e138adf275e22a0c983e32abf731213f3ae85b58ec8a7888cc604188da79ed",
+      "edits": [
+        {
+          "current": "\tfor(const source of [rendered.dotnet, rendered.java, rendered.witWasi])\n\t\tassert.match(source\n\t\t\t, /Synchronous `Fin` callbacks, retained or asynchronous refined callbacks/u);\n\tassert.match(rendered.exportDecisions\n\t\t, /Synchronous `Fin` callbacks outside C\\/C\\+\\+/u);\n",
+          "previous": "\tassert.match(rendered.dotnet\n\t\t, /Retained or asynchronous refined callbacks and owned Subtypes remain pending/u);\n\tassert.match(rendered.java\n\t\t, /Retained or asynchronous refined callbacks, owned, recursive/u);\n\tassert.match(rendered.witWasi\n\t\t, /Retained or asynchronous refined callbacks/u);\n",
+          "start": 8065
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "f9e5b2553c1a7e1269703abc2d8d8c5f10e5c2a5bbb831a3f521c337803e23fc"
+    },
+    {
+      "currentSha256": "8a2ae0879d194eaad8cb808439a31394042f2569ec7594777e9e3e6c7a9e8ff4",
+      "edits": [
+        {
+          "current": "\tconst offset = source.indexOf(current);\n\treturn source.slice(0, offset) + replacement\n\t\t+ source.slice(offset + current.length);\n",
+          "previous": "\treturn source.replace(current, replacement);\n",
+          "start": 990
+        },
+        {
+          "current": "\t, \"Synchronous `Fin` callbacks outside C/C++, retained or asynchronous refined\\ncallbacks, owned and recursive Subtypes, and Subtype fields in generic records\\nremain unfinished.\")\n",
+          "previous": "\t, \"Retained or asynchronous refined callbacks, owned and recursive Subtypes,\\nand Subtype fields in generic records remain unfinished.\")\n",
+          "start": 6734
+        },
+        {
+          "current": "\t\t, \"Synchronous `Fin` callbacks, retained or asynchronous refined callbacks and owned Subtypes remain pending. These local\")\n",
+          "previous": "\t\t, \"Retained or asynchronous refined callbacks and owned Subtypes remain pending. These local\")\n",
+          "start": 7051
+        },
+        {
+          "current": "\t, \"Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned,\\nrecursive, dependent and broader generic Subtypes still need separate acceptance.\")\n",
+          "previous": "\t, \"Retained or asynchronous refined callbacks, owned, recursive, dependent and\\nbroader generic Subtypes still need separate acceptance.\")\n",
+          "start": 7311
+        },
+        {
+          "current": "\t\t, \"Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned,\\nrecursive, dependent and broader generic Subtypes still need acceptance.\")\n",
+          "previous": "\t\t, \"Retained or asynchronous refined callbacks, owned, recursive, dependent and broader\\ngeneric Subtypes still need acceptance.\")\n",
+          "start": 7633
+        },
+        {
+          "current": "\t\t, \"Synchronous `Fin` callbacks, retained or asynchronous refined callbacks, owned\\nvalues, recursive graphs, dependent and broader generic Subtypes, plus\")\n",
+          "previous": "\t\t, \"Retained or asynchronous refined callbacks, owned values, recursive graphs,\\ndependent and broader generic Subtypes, plus\")\n",
+          "start": 7963
+        },
+        {
+          "current": "\t, \"Synchronous `Fin` callbacks, retained or asynchronous refined callbacks and owned\\nSubtypes remain unsupported.\")\n",
+          "previous": "\t, \"Retained or asynchronous refined callbacks and owned Subtypes remain unsupported.\")\n",
+          "start": 8251
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-documentation.mjs",
+      "previousSha256": "e20afd408406adb210794c1e02af979f58be442d5d7de1f510fb010e5e966e13"
+    },
+    {
+      "currentSha256": "17cb58f535389b2eb23ca36de10430da3b98399a0723026c56250954ecafd1d0",
+      "edits": [
+        {
+          "current": "import {\n\tcopyFile, lstat, mkdir, mkdtemp, readFile, readdir, rm\n} from \"node:fs/promises\";\nimport { dirname, isAbsolute, join, relative, resolve, sep } from \"node:path\";\n",
+          "previous": "import { copyFile, mkdir, mkdtemp, readFile, rm } from \"node:fs/promises\";\nimport { dirname, join, resolve } from \"node:path\";\n",
+          "start": 141
+        },
+        {
+          "current": "const packageSetFiles = receipt => [\n\tpackageSetReceiptName, `${packageSetReceiptName}.sha256`\n\t, ...receipt.packages.flatMap(pkg => pkg.artifacts.map(artifact => artifact.path))\n].toSorted();\n\nconst regularFiles = async (root, prefix = \"\") => {\n\tconst files = [];\n\tfor(const entry of await readdir(join(root, prefix), { withFileTypes: true }))\n\t{\n\t\tconst path = prefix ? `${prefix}/${entry.name}` : entry.name;\n\t\tif(entry.isDirectory()) files.push(...await regularFiles(root, path));\n\t\telse\n\t\t{\n\t\t\tassert.ok(entry.isFile(), `Retained package evidence must be regular: ${path}`);\n\t\t\tfiles.push(path);\n\t\t}\n\t}\n\treturn files.toSorted();\n};\n\n/**\n * Retain the exact closed package set as uploadable evidence.\n *\n * The destination is rebuilt from the receipt allowlist, independently\n * verified, and rejected if it contains anything except the canonical receipt,\n * its sidecar and the named release archives.\n *\n * @param source - Release root containing its package-set receipt.\n * @param destination - Stable evidence directory outside the consumer root.\n */\nexport const retainPackageSetEvidence = async (source, destination) => {\n\tconst sourceRoot = resolve(source), destinationRoot = resolve(destination);\n\tconst disjoint = (left, right) => {\n\t\tconst path = relative(left, right);\n\t\treturn path === \"..\" || path.startsWith(`..${sep}`) || isAbsolute(path);\n\t};\n\tassert.ok(disjoint(sourceRoot, destinationRoot)\n\t\t&& disjoint(destinationRoot, sourceRoot)\n\t, \"Package evidence and producer roots must be disjoint\");\n\ttry\n\t{\n\t\tawait lstat(destination);\n\t\tassert.fail(`Package evidence destination must not already exist: ${destination}`);\n\t}\n\tcatch(error)\n\t{\n\t\tif(error.code !== \"ENOENT\") throw error;\n\t}\n\tconst receipt = await copyPackageSetHandoff(source, destination);\n\tconst receiptPath = join(destination, packageSetReceiptName);\n\tconst receiptBytes = await readFile(receiptPath);\n\tassert.equal(receiptBytes.toString(\"utf8\"), canonicalJson(receipt)\n\t\t, \"Retained package receipt must preserve canonical bytes\");\n\tconst verified = await verifyPackageSetReceipt({ receiptPath });\n\tconst files = await regularFiles(destination);\n\tassert.deepEqual(files, packageSetFiles(receipt)\n\t\t, \"Retained evidence must contain exactly the receipt-named package set\");\n\tconst archiveBytes = receipt.packages.flatMap(pkg => pkg.artifacts)\n\t\t.reduce((total, artifact) => total + artifact.bytes, 0);\n\treturn { receipt, receiptSha256: sha256(receiptBytes), files\n\t\t, archives: verified.archives, archiveBytes };\n};\n\n",
+          "previous": "",
+          "start": 3981
+        }
+      ],
+      "path": "tests/helpers/package-set.mjs",
+      "previousSha256": "8613cb6fa1e7cb6bce93444160cf3a4503973064f52b644984637e909e5da82c"
+    },
+    {
+      "currentSha256": "eadf627203476c14a621c4d37565a9f269c7404830d92e0abf333107481c31da",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1783
+        },
+        {
+          "current": "const evidenceProfile = profiles.length === 1 ? profiles[0]\n\t: `combined-${sha256(canonicalJson(profiles.toSorted())).slice(0, 12)}`;\nconst packagingRoot = \"build/owned-checked-record-language-packaging\";\nconst evidenceRoot = join(packagingRoot, \"evidence\", evidenceProfile);\n",
+          "previous": "",
+          "start": 3031
+        },
+        {
+          "current": "test.before(async () => {\n\tif(enabled) await rm(packagingRoot, { recursive: true, force: true });\n});\n\n",
+          "previous": "",
+          "start": 3717
+        },
+        {
+          "current": "\tawait saveLakeFile(packagingRoot, name\n",
+          "previous": "\tawait saveLakeFile(\"build/owned-checked-record-language-packaging\", name\n",
+          "start": 4173
+        },
+        {
+          "current": "\t\t, \"for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\"\n\t\t, \"test -s \\\"build/owned-checked-record-language-packaging/evidence/${{ matrix.profile }}/$route/handoff/package-set-receipt.json\\\"\"\n\t\t, \"build/owned-checked-record-language-packaging/\"\n",
+          "previous": "",
+          "start": 6846
+        },
+        {
+          "current": "\t\tconst retainedRoot = join(evidenceRoot, route, \"handoff\");\n\t\tconst retained = await retainPackageSetEvidence(output, retainedRoot);\n\t\tconst receipt = await copyPackageSetHandoff(retainedRoot, handoff);\n\t\tassert.deepEqual(receipt, retained.receipt);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 14385
+        },
+        {
+          "current": "\t\t\t, retainedPackageSet: {\n\t\t\t\tpath: `evidence/${evidenceProfile}/${route}/handoff`\n\t\t\t\t, receiptSha256: retained.receiptSha256\n\t\t\t\t, archives: retained.archives\n\t\t\t\t, archiveBytes: retained.archiveBytes, files: retained.files }\n",
+          "previous": "",
+          "start": 17534
+        }
+      ],
+      "path": "tests/owned-checked-record-language-packaging.test.mjs",
+      "previousSha256": "3b0b0ef184857c89d595f2601652e7c4657d2093547f49d6e6f4f579741c3af4"
+    },
+    {
+      "currentSha256": "b3c363b07b8a9711c3e9e02bd74c4e3f2d1780dd0ec6bc2f8977db6153b52548",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1891
+        },
+        {
+          "current": "const packagingRoot = \"build/owned-checked-record-managed-packaging\";\nconst evidenceRoot = join(packagingRoot, \"evidence\");\n",
+          "previous": "",
+          "start": 2939
+        },
+        {
+          "current": "test.before(async () => {\n\tif(enabled) await rm(packagingRoot, { recursive: true, force: true });\n});\n\n",
+          "previous": "",
+          "start": 3180
+        },
+        {
+          "current": "\t\tawait saveLakeFile(packagingRoot\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-checked-record-managed-packaging\"\n",
+          "start": 3482
+        },
+        {
+          "current": "\t\t, \"for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\"\n\t\t, \"test -s \\\"build/owned-checked-record-managed-packaging/evidence/${{ matrix.group }}/$route/handoff/package-set-receipt.json\\\"\"\n\t\t, \"build/owned-checked-record-managed-packaging/\"\n",
+          "previous": "",
+          "start": 6210
+        },
+        {
+          "current": "\t\tconst retainedRoot = join(evidenceRoot, group, route, \"handoff\");\n\t\tconst retained = await retainPackageSetEvidence(output, retainedRoot);\n\t\tconst receipt = await copyPackageSetHandoff(retainedRoot, handoff);\n\t\tassert.deepEqual(receipt, retained.receipt);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 14692
+        },
+        {
+          "current": "\t\t\t, retainedPackageSet: { path: `evidence/${group}/${route}/handoff`\n\t\t\t\t, receiptSha256: retained.receiptSha256\n\t\t\t\t, archives: retained.archives\n\t\t\t\t, archiveBytes: retained.archiveBytes, files: retained.files }\n",
+          "previous": "",
+          "start": 16199
+        }
+      ],
+      "path": "tests/owned-checked-record-managed-packaging.test.mjs",
+      "previousSha256": "f9bf64e794de6532245ab3a240939173ab3105d75f4195c576c250b6a1bba635"
+    },
+    {
+      "currentSha256": "64af30d159ca2469464570d7f8423d124696be2bdf9bd0bec0e1f016249b48bc",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1250
+        },
+        {
+          "current": "const packagingRoot = \"build/owned-checked-record-native-packaging\";\nconst evidenceRoot = join(packagingRoot, \"evidence\");\n\ntest.before(async () => {\n\tif(enabled) await rm(packagingRoot, { recursive: true, force: true });\n});\n",
+          "previous": "",
+          "start": 1784
+        },
+        {
+          "current": "\t\t, \"for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\"\n\t\t, \"test -s \\\"build/owned-checked-record-native-packaging/evidence/$route/handoff/package-set-receipt.json\\\"\"\n\t\t, \"build/owned-checked-record-native-packaging/\"\n",
+          "previous": "",
+          "start": 3220
+        },
+        {
+          "current": "\tawait saveLakeFile(packagingRoot, name\n",
+          "previous": "\tawait saveLakeFile(\"build/owned-checked-record-native-packaging\", name\n",
+          "start": 3999
+        },
+        {
+          "current": "\t\tconst retainedRoot = join(evidenceRoot, route, \"handoff\");\n\t\tconst retained = await retainPackageSetEvidence(output, retainedRoot);\n\t\tconst receipt = await copyPackageSetHandoff(retainedRoot, handoff);\n\t\tassert.deepEqual(receipt, retained.receipt);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(output, handoff);\n",
+          "start": 10165
+        },
+        {
+          "current": "\t\t\t, retainedPackageSet: { path: `evidence/${route}/handoff`\n\t\t\t\t, receiptSha256: retained.receiptSha256\n\t\t\t\t, archives: retained.archives\n\t\t\t\t, archiveBytes: retained.archiveBytes, files: retained.files }\n",
+          "previous": "",
+          "start": 12281
+        }
+      ],
+      "path": "tests/owned-checked-record-native-packaging.test.mjs",
+      "previousSha256": "0527ebc793a5a942056a88de55624aee8480d45a18fdd94336a16021b1902b0b"
+    },
+    {
+      "currentSha256": "c2b99696e184e1f62091a166c92565d3a5253bf024c8bf51ec4bd33b2b608d23",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 1375
+        },
+        {
+          "current": "const packagingRoot = \"build/owned-checked-record-perl-packaging\";\nconst evidenceRoot = join(packagingRoot, \"evidence\");\n",
+          "previous": "",
+          "start": 1905
+        },
+        {
+          "current": "test.before(async () => {\n\tif(enabled) await rm(packagingRoot, { recursive: true, force: true });\n});\n\n",
+          "previous": "",
+          "start": 2156
+        },
+        {
+          "current": "\t\t, \"for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\"\n\t\t, \"test -s \\\"build/owned-checked-record-perl-packaging/evidence/$route/handoff/package-set-receipt.json\\\"\"\n\t\t, \"build/owned-checked-record-perl-packaging/\"\n",
+          "previous": "",
+          "start": 3654
+        },
+        {
+          "current": "\tawait saveLakeFile(packagingRoot, name\n",
+          "previous": "\tawait saveLakeFile(\"build/owned-checked-record-perl-packaging\", name\n",
+          "start": 4427
+        },
+        {
+          "current": "\t\tconst retainedRoot = join(evidenceRoot, route, \"handoff\");\n\t\tconst retained = await retainPackageSetEvidence(producer, retainedRoot);\n\t\tconst receipt = await copyPackageSetHandoff(retainedRoot, handoff);\n\t\tassert.deepEqual(receipt, retained.receipt);\n",
+          "previous": "\t\tconst receipt = await copyPackageSetHandoff(producer, handoff);\n",
+          "start": 7216
+        },
+        {
+          "current": "\t\t\t, retainedPackageSet: { path: `evidence/${route}/handoff`\n\t\t\t\t, receiptSha256: retained.receiptSha256\n\t\t\t\t, archives: retained.archives\n\t\t\t\t, archiveBytes: retained.archiveBytes, files: retained.files }\n",
+          "previous": "",
+          "start": 11449
+        }
+      ],
+      "path": "tests/owned-checked-record-perl-packaging.test.mjs",
+      "previousSha256": "4a8ca69ec52c1baa42caf83e0d566901adedfd86a48314d547c5c636c469b458"
+    },
+    {
+      "currentSha256": "e9b906fa8a8bfbc84c23c5427653136b1cda2bc314eccaeb45303c106125432b",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, createPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff, createPackageSetHandoff } from \"./helpers/package-set.mjs\";\n",
+          "start": 801
+        },
+        {
+          "current": "test(\"retained package evidence is canonical, verified and closed over original archives\", async t => {\n\tconst handoff = await createPackageSetHandoff(t);\n\tawait assert.rejects(retainPackageSetEvidence(handoff.root\n\t\t, join(handoff.root, \"nested-evidence\")), /must be disjoint/u);\n\tawait assert.rejects(retainPackageSetEvidence(handoff.root\n\t\t, join(handoff.root, \"..\")), /must be disjoint/u);\n\tconst retained = `${handoff.root}-retained-evidence`;\n\tt.after(() => rm(retained, { recursive: true, force: true }));\n\tawait mkdir(retained, { recursive: true });\n\tawait writeFile(join(retained, \"stale.txt\"), \"must not survive\\n\");\n\tawait assert.rejects(retainPackageSetEvidence(handoff.root, retained)\n\t\t, /must not already exist/u);\n\tawait rm(retained, { recursive: true });\n\tconst evidence = await retainPackageSetEvidence(handoff.root, retained);\n\tassert.deepEqual(evidence.receipt, handoff.receipt);\n\tassert.equal(evidence.receiptSha256\n\t\t, sha256(await readFile(handoff.receiptPath)));\n\tassert.equal(evidence.archives, 17);\n\tassert.equal(evidence.archiveBytes, handoff.receipt.packages\n\t\t.flatMap(pkg => pkg.artifacts)\n\t\t.reduce((total, artifact) => total + artifact.bytes, 0));\n\tassert.equal(evidence.files.length, evidence.archives + 2);\n\tassert.ok(evidence.files.includes(packageSetReceiptName));\n\tassert.ok(evidence.files.includes(`${packageSetReceiptName}.sha256`));\n\tassert.ok(!evidence.files.includes(\"stale.txt\"));\n\tfor(const pkg of handoff.receipt.packages) for(const artifact of pkg.artifacts)\n\t\tassert.deepEqual(await readFile(join(retained, artifact.path))\n\t\t\t, await readFile(join(handoff.root, artifact.path)));\n});\n\n",
+          "previous": "",
+          "start": 2252
+        }
+      ],
+      "path": "tests/package-set-receipt.test.mjs",
+      "previousSha256": "867adb645c858c451dce0df4d31d003dd12e8294a304c862b2e3afafefcc220b"
+    }
+  ]
+}
