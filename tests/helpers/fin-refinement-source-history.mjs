@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeManagedConsumerRepairSource, callbackSubtypeManagedConsumerRepairChangedPaths } from "./callback-subtype-managed-consumer-repair-source-history.mjs";
 import { beforePhpWasmIndexedRefinementEntrySource, phpWasmIndexedRefinementEntryChangedPaths } from "./php-wasm-indexed-refinement-entry-source-history.mjs";
 import { beforeCallableClosureRefusalSource, callableClosureRefusalChangedPaths } from "./callable-closure-refusal-source-history.mjs";
 import { beforePhpWasmCallbackEntrySource, phpWasmCallbackEntryChangedPaths } from "./php-wasm-callback-entry-source-history.mjs";
@@ -1904,7 +1905,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmIndexedRefinementEntryChangedPaths
+	...callbackSubtypeManagedConsumerRepairChangedPaths
+	, ...phpWasmIndexedRefinementEntryChangedPaths
 	, ...callableClosureRefusalChangedPaths
 	, ...phpWasmCallbackEntryChangedPaths
 	, ...phpWasmOwnedRefinementEntryChangedPaths
@@ -2591,8 +2593,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeManagedConsumerRepair
+		= beforeCallbackSubtypeManagedConsumerRepairSource(path, text, expected);
+	if(sha256(callbackSubtypeManagedConsumerRepair) === expected)
+		return callbackSubtypeManagedConsumerRepair;
 	const phpWasmIndexedRefinementEntry
-		= beforePhpWasmIndexedRefinementEntrySource(path, text, expected);
+		= beforePhpWasmIndexedRefinementEntrySource(
+			path, callbackSubtypeManagedConsumerRepair, expected
+		);
 	if(sha256(phpWasmIndexedRefinementEntry) === expected)
 		return phpWasmIndexedRefinementEntry;
 	const callableClosureRefusal

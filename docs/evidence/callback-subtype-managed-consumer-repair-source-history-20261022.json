@@ -1,0 +1,173 @@
+{
+  "additions": [
+    {
+      "currentSha256": "eefb469f2fd3c96fbeeb9f44ea21c295eaaaebfbc1f7f4ad17eec95048f63440",
+      "path": "scripts/update-callback-subtype-managed-consumer-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "673691c59b2b960b7a767cf9b7d9adc8e20a672b194d640ac621746b7d17aeb1",
+      "path": "tests/helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c00540614dc71cfa4a135b8d6c4de1faae5294053018848b69136d4d0ba6148f",
+      "path": "tests/helpers/callback-subtype-managed-consumer-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "1fc7e424677bfb2a3fb5af7b839944fe9055f3e2",
+  "milestone": "callback-subtype-managed-consumer-repair-v1",
+  "predecessorCommit": "1890afe06bc708f681db3f9c429f6551f6868437",
+  "schemaVersion": 1,
+  "scope": "The .NET, Java and Kotlin callback Subtype consumers now distinguish native input refusal from a refused host reply using the established managed runtime contract. Invalid recovery and returned-closure arguments require the exact managed invalid-input exception, while invalid host results retain LeanBridgeException status 1 and its constructor diagnostic. The Java fixture preserves explicit idempotent double-close coverage without triggering javac's try-with-resources lint under -Werror. Hosted installation remains the acceptance boundary.",
+  "updates": [
+    {
+      "currentSha256": "15fd49e24f07b8ebfb90521659409d88d30175eccf6be87542665d3eaa54df1b",
+      "edits": [
+        {
+          "current": "    private static bool RefusesInput(Action operation) =>\n        Reject<ArgumentException>(operation).Message == \"Invalid native copied input\";\n    private static bool RefusesResult(Action operation)\n    {\n        var error = Reject<LeanBridgeException>(operation);\n        return error.Status == 1 && error.Message == \"Host callback result failed its Lean constructor\";\n    }\n",
+          "previous": "",
+          "start": 601
+        },
+        {
+          "current": "        Check(RefusesInput(() => Api.CallHost(\n            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(increment, BigInteger.Zero))), \"invalid recovery status\");\n",
+          "previous": "        var recovery = Reject<LeanBridgeException>(() => Api.CallHost(\n            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(increment, BigInteger.Zero)));\n        Check(recovery.Status == 1, \"invalid recovery status\");\n",
+          "start": 1325
+        },
+        {
+          "current": "        Check(RefusesResult(() => Api.CallHost(\n            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(_ => BigInteger.Zero, BigInteger.One))), \"invalid host result status\");\n",
+          "previous": "        var result = Reject<LeanBridgeException>(() => Api.CallHost(\n            new WithRecovery<Func<BigInteger, BigInteger>, BigInteger>(_ => BigInteger.Zero, BigInteger.One)));\n        Check(result.Status == 1, \"invalid host result status\");\n",
+          "start": 1569
+        },
+        {
+          "current": "            Check(RefusesInput(() => closure.Invoke(BigInteger.Zero)), \"closure argument status\");\n",
+          "previous": "            Check(Reject<LeanBridgeException>(() => closure.Invoke(BigInteger.Zero)).Status == 1, \"closure argument status\");\n",
+          "start": 2566
+        },
+        {
+          "current": "            Check(RefusesInput(() => mixed.Invoke(N(9), BigInteger.Zero)), \"mixed closure argument status\");\n",
+          "previous": "            Check(Reject<LeanBridgeException>(() => mixed.Invoke(N(9), BigInteger.Zero)).Status == 1, \"mixed closure argument status\");\n",
+          "start": 3015
+        }
+      ],
+      "path": "tests/fixtures/callback-subtype-consumers/dotnet.cs",
+      "previousSha256": "b1b7f7889fbb1f9299a6ef5016ad68481693cff5649e447b9fd43206b696546b"
+    },
+    {
+      "currentSha256": "fae4c7c2e221cb812dbc45d118ccaab067972a8a8d873ef6cee257ab1121f52b",
+      "edits": [
+        {
+          "current": "    private static boolean refusesInput(Runnable operation) {\n        return reject(IllegalArgumentException.class, operation).getMessage().equals(\"Invalid native copied input\");\n    }\n    private static boolean refusesResult(Runnable operation) {\n        var error = reject(LeanBridgeException.class, operation);\n        return error.status() == 1 && error.getMessage().equals(\"Host callback result failed its Lean constructor\");\n    }\n",
+          "previous": "",
+          "start": 1078
+        },
+        {
+          "current": "        check(refusesInput(() -> Api.callHost(new WithRecovery<>(increment, ZERO))), \"invalid recovery status\");\n",
+          "previous": "        var recovery = reject(LeanBridgeException.class,\n            () -> Api.callHost(new WithRecovery<>(increment, ZERO)));\n        check(recovery.status() == 1, \"invalid recovery status\");\n",
+          "start": 1773
+        },
+        {
+          "current": "        check(refusesResult(() -> Api.callHost(new WithRecovery<>((FnNatToNatHost)(_value -> ZERO), ONE))),\n            \"invalid host result status\");\n",
+          "previous": "        var result = reject(LeanBridgeException.class,\n            () -> Api.callHost(new WithRecovery<>((FnNatToNatHost)(_value -> ZERO), ONE)));\n        check(result.status() == 1, \"invalid host result status\");\n",
+          "start": 1953
+        },
+        {
+          "current": "        var closure = Api.makeClosure(n(9));\n        try {\n",
+          "previous": "        try (var closure = Api.makeClosure(n(9))) {\n",
+          "start": 2676
+        },
+        {
+          "current": "            check(refusesInput(() -> closure.invoke(ZERO)), \"closure argument status\");\n",
+          "previous": "            check(reject(LeanBridgeException.class, () -> closure.invoke(ZERO)).status() == 1, \"closure argument status\");\n",
+          "start": 2807
+        },
+        {
+          "current": "        finally { closure.close(); }\n",
+          "previous": "",
+          "start": 3095
+        },
+        {
+          "current": "            check(refusesInput(() -> mixed.invoke(n(9), ZERO)), \"mixed closure argument status\");\n",
+          "previous": "            check(reject(LeanBridgeException.class, () -> mixed.invoke(n(9), ZERO)).status() == 1, \"mixed closure argument status\");\n",
+          "start": 3269
+        }
+      ],
+      "path": "tests/fixtures/callback-subtype-consumers/java.java",
+      "previousSha256": "437a9a45c1e742a7166878ccc01bc9441706619380f5142b6de9d122ccb1880a"
+    },
+    {
+      "currentSha256": "6665a1afbf450e6fd084968a7030751929d469d9461ddca53421d2e231760e8a",
+      "edits": [
+        {
+          "current": "private fun refusesInput(operation: () -> Unit) =\n    reject<IllegalArgumentException>(operation).message == \"Invalid native copied input\"\nprivate fun refusesResult(operation: () -> Unit): Boolean {\n    val error = reject<LeanBridgeException>(operation)\n    return error.status() == 1 && error.message == \"Host callback result failed its Lean constructor\"\n}\n",
+          "previous": "",
+          "start": 800
+        },
+        {
+          "current": "    check(refusesInput { Api.callHost(WithRecovery(increment, BigInteger.ZERO)) }, \"invalid recovery status\")\n",
+          "previous": "    val recovery = reject<LeanBridgeException> { Api.callHost(WithRecovery(increment, BigInteger.ZERO)) }\n    check(recovery.status() == 1, \"invalid recovery status\")\n",
+          "start": 1369
+        },
+        {
+          "current": "    check(refusesResult {\n",
+          "previous": "    val result = reject<LeanBridgeException> {\n",
+          "start": 1541
+        },
+        {
+          "current": "    }, \"invalid host result status\")\n",
+          "previous": "    }\n    check(result.status() == 1, \"invalid host result status\")\n",
+          "start": 1654
+        },
+        {
+          "current": "        check(refusesInput { closure.invoke(BigInteger.ZERO) }, \"closure argument status\")\n",
+          "previous": "        check(reject<LeanBridgeException> { closure.invoke(BigInteger.ZERO) }.status() == 1, \"closure argument status\")\n",
+          "start": 2304
+        },
+        {
+          "current": "        check(refusesInput { mixed.invoke(n(9), BigInteger.ZERO) }, \"mixed closure argument status\")\n",
+          "previous": "        check(reject<LeanBridgeException> { mixed.invoke(n(9), BigInteger.ZERO) }.status() == 1, \"mixed closure argument status\")\n",
+          "start": 2698
+        }
+      ],
+      "path": "tests/fixtures/callback-subtype-consumers/kotlin.kt",
+      "previousSha256": "bea278bf8966721a3210abf0936c65fe62e85374de9095b6e67b573f22b00d09"
+    },
+    {
+      "currentSha256": "e1064dd244e9630b528b91f79a4e2335e054698b8326b39cfd2e398a88f68ca2",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeManagedConsumerRepairSource, callbackSubtypeManagedConsumerRepairChangedPaths } from \"./callback-subtype-managed-consumer-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeManagedConsumerRepairChangedPaths\n\t, ...phpWasmIndexedRefinementEntryChangedPaths\n",
+          "previous": "\t...phpWasmIndexedRefinementEntryChangedPaths\n",
+          "start": 144684
+        },
+        {
+          "current": "\tconst callbackSubtypeManagedConsumerRepair\n\t\t= beforeCallbackSubtypeManagedConsumerRepairSource(path, text, expected);\n\tif(sha256(callbackSubtypeManagedConsumerRepair) === expected)\n\t\treturn callbackSubtypeManagedConsumerRepair;\n",
+          "previous": "",
+          "start": 175891
+        },
+        {
+          "current": "\t\t= beforePhpWasmIndexedRefinementEntrySource(\n\t\t\tpath, callbackSubtypeManagedConsumerRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmIndexedRefinementEntrySource(path, text, expected);\n",
+          "start": 176158
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "4549735882ebf4fec5b8ff2490af93b925269397f90fcd4ffdce3389db7fc406"
+    },
+    {
+      "currentSha256": "9d143316938efa72b2618116a84cd3b8b72613287eba9866b55a88a7094c9813",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-managed-consumer-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4532
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "3321ab5963ac2b233918ec15efe338ee35e159168142077f174c120cd884cf86"
+    }
+  ]
+}
