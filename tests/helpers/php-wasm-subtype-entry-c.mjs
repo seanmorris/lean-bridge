@@ -49,8 +49,15 @@ export const instrumentSubtypeCEntries = (original, selected) => {
 	const masked = maskedC(original), insertions = [];
 	for(const item of selected)
 	{
-		const pattern = new RegExp(`^[A-Za-z_][A-Za-z0-9_* \\t]*\\b${item.symbol}\\([^{};]*\\)\\s*\\{`, "gmu");
-		const matches = [...masked.matchAll(pattern)];
+		const direct = new RegExp(`^[A-Za-z_][A-Za-z0-9_* \\t]*\\b${item.symbol}\\([^{};]*\\)\\s*\\{`, "gmu");
+		// Zend names a public function through a source macro. The compiled symbol is
+		// zif_<name>, but the only honest preprocessor input we can instrument is the
+		// macro argument itself. Keep that spelling explicit rather than pretending a
+		// generated linker name occurred in the retained C input.
+		const zend = item.kind === "public"
+			? new RegExp(`^static[ \\t]+ZEND_FUNCTION\\(${item.symbol}\\)[ \\t]*\\{`, "gmu") : null;
+		const matches = [...masked.matchAll(direct), ...(zend ? masked.matchAll(zend) : [])]
+			.sort((left, right) => left.index - right.index);
 		assert.ok(matches.length <= 1, `duplicate selected definition: ${item.symbol}`);
 		if(matches.length === 0) continue;
 		const text = item.kind === "public"
