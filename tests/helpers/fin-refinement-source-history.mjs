@@ -6,7 +6,9 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentRecordConstructorAuthoritySource, dependentRecordConstructorAuthorityChangedPaths, dependentRecordConstructorAuthorityIntegrationPaths } from "./dependent-record-constructor-authority-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionSource, callbackCheckedRecordPromotionChangedPaths, callbackCheckedRecordPromotionIntegrationPaths } from "./callback-checked-record-promotion-source-history.mjs";
 import { beforeCallbackDependentIntegrationSource, callbackDependentIntegrationChangedPaths } from "./callback-dependent-integration-source-history.mjs";
 import { beforeCallbackCheckedRecordNativeErrorRepairSource, callbackCheckedRecordNativeErrorRepairChangedPaths } from "./callback-checked-record-native-error-repair-source-history.mjs";
@@ -553,7 +555,7 @@ import { phpWasmSubtypeEntryChangedPaths } from "./php-wasm-subtype-entry-histor
 import { phpWasmEntryHarnessChangedPaths } from "./php-wasm-entry-harness-history.mjs";
 import { phpWasmEntryCiChangedPaths } from "./php-wasm-entry-ci-history.mjs";
 import { reviewedSubtypeHostChangedPaths } from "./reviewed-subtype-host-history.mjs";
-import { exactSourceHistoryCheckpoints, memoizeSourceHistory } from "./source-history-memo.mjs";
+import { memoizeSourceHistory } from "./source-history-memo.mjs";
 
 const extractorPath = "src/analyze/NativeExports.lean";
 const previousExtractorSha256 = "9d39776bae35a6a4c0074e45dc710e17d4e4d7a74103b2b39ec9dfdd84818764";
@@ -582,53 +584,287 @@ const typeSurfaceHashes = new Map(Object.entries({
 	, "tests/unlocked-component.test.mjs": ["b4f2fc8701dc311ca9252fa29facab79a8ee1365760f007691712ac7c634318c", "ddb9a9e934605f8b16161639b15ff92ed3334b470ac0c638cad04d09c8c3fe51"]
 }));
 let typeSurfaceHistoryTransitions;
+let typeSurfaceHistoryBranches;
+let typeSurfaceBranchTransitions;
+const sourceHistorySha256Pattern = /^[0-9a-f]{64}$/u;
+const typeSurfacePathPattern
+	= /"path"\s*:\s*"docs\/type-surface\.v1\.json"/gu;
+
+const exactTypeSurfaceUpdateRanges = (raw, evidenceName) => {
+	const targets = [...raw.matchAll(typeSurfacePathPattern)]
+		.map(match => match.index);
+	if(targets.length === 0) return [];
+	const kinds = [], starts = [], selected = new Set(), ranges = [];
+	let escaped = false, inString = false, target = 0;
+	for(let index = 0; index < raw.length; ++index)
+	{
+		if(!inString && target < targets.length && index === targets[target])
+		{
+			assert.equal(kinds.at(-1), "object"
+				, `${evidenceName} type-surface object`);
+			selected.add(starts.at(-1));
+			++target;
+		}
+		const character = raw[index];
+		if(inString)
+		{
+			if(escaped) escaped = false;
+			else if(character === "\\") escaped = true;
+			else if(character === '"') inString = false;
+			continue;
+		}
+		if(character === '"') inString = true;
+		else if(character === "{")
+		{
+			kinds.push("object");
+			starts.push(index);
+		}
+		else if(character === "[")
+		{
+			kinds.push("array");
+			starts.push(index);
+		}
+		else if(character === "}")
+		{
+			if(kinds.pop() !== "object")
+				assert.fail(`${evidenceName} JSON object`);
+			const start = starts.pop();
+			if(selected.has(start)) ranges.push({ start, end: index + 1 });
+		}
+		else if(character === "]")
+		{
+			if(kinds.pop() !== "array")
+				assert.fail(`${evidenceName} JSON array`);
+			starts.pop();
+		}
+	}
+	assert.equal(target, targets.length, `${evidenceName} type-surface paths`);
+	assert.ok(ranges.length <= targets.length
+		, `${evidenceName} type-surface update objects`);
+	assert.equal(kinds.length, 0, `${evidenceName} balanced JSON objects`);
+	assert.equal(starts.length, 0, `${evidenceName} balanced JSON offsets`);
+	return ranges.sort((left, right) => left.start - right.start);
+};
+
+const jsonStringEnd = (source, start) => {
+	assert.equal(source[start], '"');
+	let escaped = false;
+	for(let index = start + 1; index < source.length; ++index)
+	{
+		if(escaped) escaped = false;
+		else if(source[index] === "\\") escaped = true;
+		else if(source[index] === '"') return index + 1;
+	}
+	assert.fail("Unterminated JSON string");
+};
+
+const skipJsonValue = (source, start, end) => {
+	if(source[start] === '"') return jsonStringEnd(source, start);
+	if(source[start] !== "{" && source[start] !== "[")
+	{
+		let index = start;
+		while(index < end && source[index] !== "," && source[index] !== "}")
+			++index;
+		return index;
+	}
+	const opening = source[start], closing = opening === "{" ? "}" : "]";
+	let depth = 0, escaped = false, inString = false;
+	for(let index = start; index < end; ++index)
+	{
+		const character = source[index];
+		if(inString)
+		{
+			if(escaped) escaped = false;
+			else if(character === "\\") escaped = true;
+			else if(character === '"') inString = false;
+		}
+		else if(character === '"') inString = true;
+		else if(character === opening) ++depth;
+		else if(character === closing && --depth === 0) return index + 1;
+	}
+	assert.fail("Unterminated JSON value");
+};
+
+const exactTypeSurfaceTopLevelFields = (raw, range, evidenceName) => {
+	const fields = new Map();
+	let index = range.start + 1;
+	while(index < range.end - 1)
+	{
+		while(/\s|,/u.test(raw[index])) ++index;
+		if(index >= range.end - 1 || raw[index] === "}") break;
+		assert.equal(raw[index], '"', `${evidenceName} update key`);
+		const keyEnd = jsonStringEnd(raw, index);
+		const key = JSON.parse(raw.slice(index, keyEnd));
+		index = keyEnd;
+		while(/\s/u.test(raw[index])) ++index;
+		assert.equal(raw[index], ":", `${evidenceName} update separator`);
+		++index;
+		while(/\s/u.test(raw[index])) ++index;
+		const valueStart = index;
+		index = skipJsonValue(raw, index, range.end);
+		fields.set(key, raw[valueStart] === '"'
+			? JSON.parse(raw.slice(valueStart, index)) : undefined);
+	}
+	return fields;
+};
+
+const exactTypeSurfaceUpdateMetadata = (raw, range, evidenceName) => {
+	const fields = exactTypeSurfaceTopLevelFields(raw, range, evidenceName);
+	assert.equal(fields.get("path"), typeSurfacePath
+		, `${evidenceName} type-surface path`);
+	const currentSha256 = fields.get("currentSha256");
+	if(currentSha256 === undefined) return { ignored: true };
+	assert.ok(sourceHistorySha256Pattern.test(currentSha256)
+		, `${evidenceName} current type-surface digest`);
+	const previousSha256 = fields.get("previousSha256");
+	if(previousSha256 === undefined)
+	{
+		assert.ok(fields.has("left") && fields.has("right")
+			, `${evidenceName} branched type-surface sides`);
+		const update = JSON.parse(raw.slice(range.start, range.end));
+		const left = sourceHistorySha256Pattern.test(update.left?.previousSha256);
+		const right = sourceHistorySha256Pattern.test(update.right?.previousSha256);
+		assert.ok(left && right
+			, `${evidenceName} branched type-surface update`);
+		return {
+			branched: true
+			, currentSha256
+			, leftPreviousSha256: update.left.previousSha256
+			, rightPreviousSha256: update.right.previousSha256
+		};
+	}
+	assert.ok(sourceHistorySha256Pattern.test(previousSha256)
+		, `${evidenceName} previous type-surface digest`);
+	return {
+		branched: false
+		, currentSha256
+		, previousSha256
+	};
+};
 
 const exactTypeSurfaceHistoryTransitions = () => {
 	if(typeSurfaceHistoryTransitions) return typeSurfaceHistoryTransitions;
-	const transitions = [];
+	const transitions = [], branches = [];
 	for(const name of readdirSync(typeSurfaceEvidenceDirectory).sort())
 	{
 		if(!name.endsWith(".json") || !name.includes("history")) continue;
 		const raw = readFileSync(new URL(name, typeSurfaceEvidenceDirectory), "utf8");
-		if(!raw.includes(`"${typeSurfacePath}"`) || !raw.includes('"updates"'))
-			continue;
-		const evidence = JSON.parse(raw);
-		const historical = evidence.historicalTransitions ?? [];
-		assert.ok(Array.isArray(historical), `${name} historical transitions`);
-		const updateGroups = [evidence.updates
-			, ...historical.map(item => item?.updates)];
-		for(const updates of updateGroups)
+		if(!raw.includes(`"${typeSurfacePath}"`)) continue;
+		for(const range of exactTypeSurfaceUpdateRanges(raw, name))
 		{
-			if(updates === undefined) continue;
-			assert.ok(Array.isArray(updates), `${name} source updates`);
-			for(const update of updates)
-				if(update?.path === typeSurfacePath)
-					transitions.push({
-						evidenceName: name
-						, currentSha256: update.currentSha256
-						, previousSha256: update.previousSha256
-					});
+			const metadata = exactTypeSurfaceUpdateMetadata(raw, range, name);
+			if(metadata.ignored) continue;
+			if(metadata.branched)
+			{
+				branches.push({
+					evidenceName: name
+					, currentSha256: metadata.currentSha256
+					, leftPreviousSha256: metadata.leftPreviousSha256
+					, rightPreviousSha256: metadata.rightPreviousSha256
+				});
+				continue;
+			}
+			transitions.push({ evidenceName: name
+				, currentSha256: metadata.currentSha256
+				, previousSha256: metadata.previousSha256 });
 		}
 	}
 	assert.ok(transitions.length > 0, "Type-surface source history is recorded");
+	typeSurfaceHistoryBranches = branches.length;
+	typeSurfaceBranchTransitions = Object.freeze(branches);
 	typeSurfaceHistoryTransitions = Object.freeze(transitions);
 	return typeSurfaceHistoryTransitions;
 };
 
 const exactTypeSurfaceUpdate = transition => {
-	const evidence = JSON.parse(readFileSync(new URL(
+	const raw = readFileSync(new URL(
 		transition.evidenceName, typeSurfaceEvidenceDirectory
-	), "utf8"));
-	const groups = [evidence.updates
-		, ...(evidence.historicalTransitions ?? []).map(item => item?.updates)];
-	const matches = groups.flatMap(updates => updates ?? []).filter(update =>
-		update?.path === typeSurfacePath
-		&& update.currentSha256 === transition.currentSha256
-		&& update.previousSha256 === transition.previousSha256
-	);
-	assert.equal(matches.length, 1
+	), "utf8");
+	const matches = [];
+	for(const range of exactTypeSurfaceUpdateRanges(
+		raw, transition.evidenceName
+	)) {
+		const metadata = exactTypeSurfaceUpdateMetadata(
+			raw, range, transition.evidenceName
+		);
+		const linearMatch = !metadata.branched
+			&& metadata.previousSha256 === transition.previousSha256;
+		const branchMatch = metadata.branched && transition.branchSide
+			&& metadata[`${transition.branchSide}PreviousSha256`]
+				=== transition.previousSha256;
+		if(!metadata.ignored
+			&& metadata.currentSha256 === transition.currentSha256
+			&& (linearMatch || branchMatch))
+			matches.push(JSON.parse(raw.slice(range.start, range.end)));
+	}
+	assert.ok(matches.length > 0
 		, `${transition.evidenceName} exact type-surface transition`);
-	return matches[0];
+	if(transition.branchSide !== undefined) return matches[0];
+	const reversible = matches.filter(directlyReversibleTypeSurfaceUpdate);
+	assert.ok(reversible.length > 0
+		, `${transition.evidenceName} reversible type-surface transition`);
+	return reversible.find(update => update.edits !== undefined) ?? reversible[0];
+};
+
+/** Return the bounded reader's authenticated linear and merge transition counts. */
+export const exactTypeSurfaceSourceHistoryStatistics = () => {
+	const transitions = exactTypeSurfaceHistoryTransitions();
+	return Object.freeze({
+		linearTransitions: transitions.length
+		, branchedTransitions: typeSurfaceHistoryBranches
+	});
+};
+
+const exactTypeSurfaceHistoryPlan = (current, expected) => {
+	const edges = new Map();
+	const append = transition => {
+		const outgoing = edges.get(transition.currentSha256) ?? [];
+		if(!outgoing.some(item =>
+			item.previousSha256 === transition.previousSha256
+			&& item.branchSide === transition.branchSide)) outgoing.push(transition);
+		edges.set(transition.currentSha256, outgoing);
+	};
+	for(const transition of exactTypeSurfaceHistoryTransitions())
+		append(transition);
+	for(const transition of typeSurfaceBranchTransitions)
+	{
+		append({ evidenceName: transition.evidenceName
+			, currentSha256: transition.currentSha256
+			, previousSha256: transition.leftPreviousSha256
+			, branchSide: "left" });
+		append({ evidenceName: transition.evidenceName
+			, currentSha256: transition.currentSha256
+			, previousSha256: transition.rightPreviousSha256
+			, branchSide: "right" });
+	}
+	const find = (digest, seen) => {
+		if(digest === expected) return [];
+		if(seen.has(digest)) return undefined;
+		const nextSeen = new Set(seen).add(digest);
+		for(const transition of edges.get(digest) ?? [])
+		{
+			const rest = find(transition.previousSha256, nextSeen);
+			if(rest) return [transition, ...rest];
+		}
+		return undefined;
+	};
+	if(expected !== undefined)
+	{
+		const selected = find(current, new Set());
+		if(selected) return selected;
+	}
+	const plan = [], seen = new Set();
+	while(edges.has(current))
+	{
+		assert.ok(!seen.has(current), `Cyclic type-surface history ${current}`);
+		seen.add(current);
+		const transition = edges.get(current).find(item =>
+			item.branchSide !== "right"
+		) ?? edges.get(current)[0];
+		plan.push(transition);
+		current = transition.previousSha256;
+	}
+	return plan;
 };
 
 const directlyReversibleTypeSurfaceUpdate = update =>
@@ -643,35 +879,219 @@ const directlyReversibleTypeSurfaceUpdate = update =>
 		Object.keys(item).sort().join(",") === "current,previous,start"
 	);
 
-const reverseExactTypeSurfaceTransition = (source, transition, update) => {
-	assert.equal(sha256(source), transition.currentSha256
+const selectedExactTypeSurfaceUpdate = (transition, update) => {
+	if(transition.branchSide === undefined) return update;
+	const endpoint = update[transition.branchSide];
+	assert.deepEqual(Object.keys(endpoint).sort(), ["edits", "previousSha256"]);
+	assert.equal(endpoint.previousSha256, transition.previousSha256);
+	return {
+		path: update.path
+		, currentSha256: update.currentSha256
+		, previousSha256: endpoint.previousSha256
+		, edits: endpoint.edits
+	};
+};
+
+const appendTypeSurfacePiece = (pieces, text, start = 0, end = text.length) => {
+	if(start === end) return;
+	const previous = pieces.at(-1);
+	if(previous?.text === text && previous.end === start) previous.end = end;
+	else pieces.push({ text, start, end });
+};
+
+const detachedTypeSurfaceText = source =>
+	Buffer.from(source, "utf8").toString("utf8");
+
+const typeSurfacePieceOffsets = pieces => {
+	const offsets = [0];
+	for(const piece of pieces)
+		offsets.push(offsets.at(-1) + piece.end - piece.start);
+	return offsets;
+};
+
+const typeSurfacePieceIndex = (offsets, position) => {
+	let lower = 0, upper = offsets.length - 1;
+	while(lower < upper)
+	{
+		const middle = Math.floor((lower + upper) / 2);
+		if(offsets[middle + 1] <= position) lower = middle + 1;
+		else upper = middle;
+	}
+	return lower;
+};
+
+const appendTypeSurfaceRange = (
+	target, pieces, offsets, start, end
+) => {
+	if(start === end) return;
+	assert.ok(start >= 0 && end >= start && end <= offsets.at(-1));
+	let index = typeSurfacePieceIndex(offsets, start);
+	let position = start;
+	while(position < end)
+	{
+		const piece = pieces[index];
+		const pieceStart = offsets[index];
+		const localStart = piece.start + position - pieceStart;
+		const localEnd = Math.min(piece.end
+			, piece.start + end - pieceStart);
+		appendTypeSurfacePiece(target, piece.text, localStart, localEnd);
+		position += localEnd - localStart;
+		++index;
+	}
+};
+
+const typeSurfaceRangeEquals = (
+	pieces, offsets, start, expected
+) => {
+	if(start < 0 || start + expected.length > offsets.at(-1)) return false;
+	let index = typeSurfacePieceIndex(offsets, start);
+	let position = start, expectedOffset = 0;
+	while(expectedOffset < expected.length)
+	{
+		const piece = pieces[index];
+		const pieceStart = offsets[index];
+		const localStart = piece.start + position - pieceStart;
+		const length = Math.min(piece.end - localStart
+			, expected.length - expectedOffset);
+		if(piece.text.slice(localStart, localStart + length)
+			!== expected.slice(expectedOffset, expectedOffset + length)) return false;
+		position += length;
+		expectedOffset += length;
+		++index;
+	}
+	return true;
+};
+
+const sha256TypeSurfacePieces = pieces => {
+	const digest = createHash("sha256");
+	let fragments = [], length = 0;
+	const flush = () => {
+		if(fragments.length === 0) return;
+		digest.update(fragments.join(""), "utf8");
+		fragments = [];
+		length = 0;
+	};
+	for(const piece of pieces)
+	{
+		fragments.push(piece.text.slice(piece.start, piece.end));
+		length += piece.end - piece.start;
+		if(length >= 1024 * 1024) flush();
+	}
+	flush();
+	return digest.digest("hex");
+};
+
+const typeSurfacePiecesText = pieces => pieces.map(piece =>
+	piece.text.slice(piece.start, piece.end)
+).join("");
+
+const exactTypeSurfaceReplacementPositions = (pieces, current) => {
+	const positions = [];
+	let processed = 0, tail = "", lastEnd = 0;
+	const retained = Math.max(0, current.length - 1);
+	for(const piece of pieces)
+	{
+		const fragment = piece.text.slice(piece.start, piece.end);
+		if(tail.length > 0)
+		{
+			const bridge = tail + fragment.slice(0, retained);
+			let found = bridge.indexOf(current);
+			while(found >= 0)
+			{
+				const position = processed - tail.length + found;
+				if(found < tail.length && found + current.length > tail.length
+					&& position >= lastEnd) {
+					positions.push(position);
+					lastEnd = position + current.length;
+					}
+				found = bridge.indexOf(current, found + current.length);
+			}
+		}
+		let found = fragment.indexOf(current);
+		while(found >= 0)
+		{
+			const position = processed + found;
+			if(position >= lastEnd)
+			{
+				positions.push(position);
+				lastEnd = position + current.length;
+			}
+			found = fragment.indexOf(current, found + current.length);
+		}
+		tail = retained === 0 ? "" : fragment.length >= retained
+			? fragment.slice(-retained) : (tail + fragment).slice(-retained);
+		processed += fragment.length;
+	}
+	return positions;
+};
+
+const reverseExactTypeSurfaceEdits = (pieces, update, transition) => {
+	const offsets = typeSurfacePieceOffsets(pieces);
+	let cursor = 0;
+	const previous = [];
+	for(const edit of update.edits)
+	{
+		assert.deepEqual(Object.keys(edit).sort()
+			, ["current", "previous", "start"]);
+		assert.ok(Number.isSafeInteger(edit.start)
+			&& edit.start >= cursor && edit.start <= offsets.at(-1));
+		assert.equal(typeof edit.current, "string");
+		assert.equal(typeof edit.previous, "string");
+		assert.notEqual(edit.current, edit.previous);
+		assert.ok(typeSurfaceRangeEquals(
+			pieces, offsets, edit.start, edit.current
+		), transition.evidenceName);
+		appendTypeSurfaceRange(previous, pieces, offsets, cursor, edit.start);
+		appendTypeSurfacePiece(previous
+			, detachedTypeSurfaceText(edit.previous));
+		cursor = edit.start + edit.current.length;
+	}
+	appendTypeSurfaceRange(previous, pieces, offsets, cursor, offsets.at(-1));
+	return previous;
+};
+
+const reverseExactTypeSurfaceReplacement = (
+	pieces, replacement, transition
+) => {
+	assert.deepEqual(Object.keys(replacement).sort()
+		, ["count", "current", "previous"]);
+	assert.equal(typeof replacement.current, "string");
+	assert.equal(typeof replacement.previous, "string");
+	assert.notEqual(replacement.current, replacement.previous);
+	assert.ok(Number.isSafeInteger(replacement.count)
+		&& replacement.count > 0);
+	const positions = exactTypeSurfaceReplacementPositions(
+		pieces, replacement.current
+	);
+	assert.equal(positions.length, replacement.count
 		, transition.evidenceName);
+	const offsets = typeSurfacePieceOffsets(pieces);
+	const previous = [];
+	let cursor = 0;
+	for(const position of positions)
+	{
+		appendTypeSurfaceRange(previous, pieces, offsets, cursor, position);
+		appendTypeSurfacePiece(previous
+			, detachedTypeSurfaceText(replacement.previous));
+		cursor = position + replacement.current.length;
+	}
+	appendTypeSurfaceRange(previous, pieces, offsets, cursor, offsets.at(-1));
+	return previous;
+};
+
+const reverseExactTypeSurfaceTransition = (pieces, transition, update) => {
 	assert.ok(directlyReversibleTypeSurfaceUpdate(update)
 		, `${transition.evidenceName} direct type-surface transition`);
-	const optionalPreviousCommit = update.previousCommit === undefined
-		? [] : ["previousCommit"];
 	if(update.replacements !== undefined)
 	{
 		assert.deepEqual(Object.keys(update).sort(), [
 			"currentSha256", "path", "previousSha256", "replacements"
 		]);
-		assert.ok(Array.isArray(update.replacements)
-			&& update.replacements.length > 0);
+		assert.ok(Array.isArray(update.replacements) && update.replacements.length > 0);
 		for(const replacement of [...update.replacements].reverse())
-		{
-			assert.deepEqual(Object.keys(replacement).sort()
-				, ["count", "current", "previous"]);
-			assert.equal(typeof replacement.current, "string");
-			assert.equal(typeof replacement.previous, "string");
-			assert.notEqual(replacement.current, replacement.previous);
-			assert.ok(Number.isSafeInteger(replacement.count)
-				&& replacement.count > 0);
-			assert.equal(source.split(replacement.current).length - 1
-				, replacement.count, transition.evidenceName);
-			source = source.split(replacement.current).join(
-				replacement.previous
+			pieces = reverseExactTypeSurfaceReplacement(
+				pieces, replacement, transition
 			);
-		}
 	}
 	else
 	{
@@ -679,11 +1099,20 @@ const reverseExactTypeSurfaceTransition = (source, transition, update) => {
 		assert.ok(new Set([
 			"currentSha256,edits,path,previousSha256"
 			, "currentSha256,edits,path,previousCommit,previousSha256"
+			, "currentCommit,currentSha256,edits,path,previousCommit,previousSha256"
+			, "commit,currentSha256,edits,parent,path,previousSha256"
 			, "currentSha256,edits,path,previousSha256,strategy"
 			, "category,currentSha256,edits,path,previousSha256,strategy"
 		]).has(keys), `${transition.evidenceName} type-surface update keys`);
-		if(optionalPreviousCommit.length > 0)
+		if(update.previousCommit !== undefined)
 			assert.match(update.previousCommit, /^[0-9a-f]{40}$/u);
+		if(update.currentCommit !== undefined)
+			assert.match(update.currentCommit, /^[0-9a-f]{40}$/u);
+		if(update.commit !== undefined)
+		{
+			assert.match(update.commit, /^[0-9a-f]{40}$/u);
+			assert.match(update.parent, /^[0-9a-f]{40}$/u);
+		}
 		if(update.category === undefined)
 		{
 			if(update.strategy !== undefined)
@@ -696,29 +1125,11 @@ const reverseExactTypeSurfaceTransition = (source, transition, update) => {
 				.includes(update.strategy));
 		}
 		assert.ok(Array.isArray(update.edits) && update.edits.length > 0);
-		let cursor = 0;
-		const parts = [];
-		for(const edit of update.edits)
-		{
-			assert.deepEqual(Object.keys(edit).sort()
-				, ["current", "previous", "start"]);
-			assert.ok(Number.isSafeInteger(edit.start)
-				&& edit.start >= cursor && edit.start <= source.length);
-			assert.equal(typeof edit.current, "string");
-			assert.equal(typeof edit.previous, "string");
-			assert.notEqual(edit.current, edit.previous);
-			assert.equal(source.slice(edit.start
-				, edit.start + edit.current.length), edit.current
-			, transition.evidenceName);
-			parts.push(source.slice(cursor, edit.start), edit.previous);
-			cursor = edit.start + edit.current.length;
-		}
-		parts.push(source.slice(cursor));
-		source = parts.join("");
+		pieces = reverseExactTypeSurfaceEdits(pieces, update, transition);
 	}
-	assert.equal(sha256(source), transition.previousSha256
+	assert.equal(sha256TypeSurfacePieces(pieces), transition.previousSha256
 		, transition.evidenceName);
-	return source;
+	return pieces;
 };
 const verifierPath = "tests/helpers/test-registration-history.mjs";
 const verifierEdits = {
@@ -1456,43 +1867,28 @@ const normalizeFinRefinementSource = memoizeSourceHistory((path, source, expecte
 });
 
 const normalizeExactTypeSurfaceHistory = (source, expected) => {
-	const historyTransitions = exactTypeSurfaceHistoryTransitions();
-	const plan = exactSourceHistoryCheckpoints(
-		historyTransitions, sha256(source), expected, 1
-	);
-	const transitions = new Map();
-	for(const transition of historyTransitions)
+	const initial = sha256(source);
+	const plan = exactTypeSurfaceHistoryPlan(initial, expected);
+	let pieces = [{ text: source, start: 0, end: source.length }];
+	for(const transition of plan)
 	{
-		const previous = transitions.get(transition.currentSha256);
-		if(previous !== undefined)
-			assert.equal(previous.previousSha256, transition.previousSha256
-				, `Type-surface history branch ${transition.currentSha256}`);
-		else transitions.set(transition.currentSha256, transition);
-	}
-	for(const checkpoint of plan.checkpoints)
-	{
-		const current = sha256(source);
-		const transition = transitions.get(current);
-		assert.ok(transition, `Type-surface transition ${current}`);
-		assert.equal(transition.previousSha256, checkpoint
-			, `Type-surface checkpoint ${checkpoint}`);
-		const update = exactTypeSurfaceUpdate(transition);
+		const update = selectedExactTypeSurfaceUpdate(
+			transition, exactTypeSurfaceUpdate(transition)
+		);
 		if(!directlyReversibleTypeSurfaceUpdate(update))
-			return normalizeFinRefinementSource(
-				typeSurfacePath, source, expected
-			);
-		source = reverseExactTypeSurfaceTransition(source, transition, update);
-		const flattened = Buffer.from(source, "utf8").toString("utf8");
-		assert.equal(flattened, source
-			, `Type-surface transition bytes ${checkpoint}`);
-		source = flattened;
+			return typeSurfacePiecesText(pieces);
+		pieces = reverseExactTypeSurfaceTransition(
+			pieces, transition, update
+		);
 	}
-	if(expected !== undefined && sha256(source) === expected) return source;
-	return normalizeFinRefinementSource(typeSurfacePath, source, expected);
+	source = typeSurfacePiecesText(pieces);
+	return source;
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordPromotionChangedPaths
+	...dependentRecordConstructorAuthorityChangedPaths
+	, ...dependentRecordConstructorAuthorityIntegrationPaths
+	, ...callbackCheckedRecordPromotionChangedPaths
 	, ...callbackCheckedRecordPromotionIntegrationPaths
 	, ...callbackDependentIntegrationChangedPaths
 	, ...callbackCheckedRecordNativeErrorRepairChangedPaths
@@ -2147,10 +2543,25 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
  */
 export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
-	const text = source.toString();
+	let text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	if(path === typeSurfacePath)
+	{
+		const exact = normalizeExactTypeSurfaceHistory(text, expected);
+		if(exact !== text)
+		{
+			if(expected === undefined || sha256(exact) === expected) return exact;
+			text = exact;
+		}
+	}
+	const dependentRecordConstructorAuthority
+		= beforeDependentRecordConstructorAuthoritySource(path, text, expected);
+	if(sha256(dependentRecordConstructorAuthority) === expected)
+		return dependentRecordConstructorAuthority;
 	const callbackCheckedRecordPromotion
-		= beforeCallbackCheckedRecordPromotionSource(path, text, expected);
+		= beforeCallbackCheckedRecordPromotionSource(
+			path, dependentRecordConstructorAuthority, expected
+		);
 	if(sha256(callbackCheckedRecordPromotion) === expected)
 		return callbackCheckedRecordPromotion;
 	const callbackDependentIntegration
