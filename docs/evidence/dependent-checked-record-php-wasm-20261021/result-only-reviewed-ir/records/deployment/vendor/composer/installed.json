@@ -1,0 +1,96 @@
+{
+    "packages": [
+        {
+            "name": "brick/math",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-dependent-php-wasm-installed-NAVaSC/consumer/project/feed/brick-math-1.0.0.zip",
+                "shasum": "e20e8331979e666b341940339c75f2fb0e9244ea"
+            },
+            "require": {
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "2.2.13",
+                "phpstan/phpstan-phpunit": "2.0.18",
+                "phpunit/phpunit": "^11.5"
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Brick\\Math\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Brick\\Math\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Arbitrary-precision arithmetic library",
+            "keywords": [
+                "Arbitrary-precision",
+                "Arithmetic",
+                "BigDecimal",
+                "BigInteger",
+                "BigNumber",
+                "BigRational",
+                "Bignum",
+                "Brick",
+                "Decimal",
+                "Integer",
+                "Math",
+                "Mathematics",
+                "Rational"
+            ],
+            "install-path": "../brick/math"
+        },
+        {
+            "name": "lean-bridge-dependentrecords/wasm",
+            "version": "1.0.0",
+            "version_normalized": "1.0.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "file:///home/runner/work/_temp/lean-bridge-dependent-php-wasm-installed-NAVaSC/consumer/project/feed/api.zip",
+                "shasum": "8d3b33895b46c3e3184580657c95531503852375"
+            },
+            "require": {
+                "brick/math": "1.0.0",
+                "php": ">=8.4 <8.5"
+            },
+            "type": "library",
+            "extra": {
+                "lean-bridge": {
+                    "component": {
+                        "id": "dependentrecords@1.0.0",
+                        "name": "dependentrecords",
+                        "version": "1.0.0"
+                    },
+                    "componentIdentity": "c15684f96a528d04378816ec7a6faf8101efe5c2636a2a9c104e307b596be38b",
+                    "namespace": "LeanDependentrecords",
+                    "npm": {
+                        "name": "lean-bridge-dependentrecords-wasm",
+                        "version": "1.0.0"
+                    },
+                    "profile": "php-wasm-copied-loading-v1",
+                    "runtimeIdentity": "fbc32dc75641fc5d381ab6bddd05671cb59cad725d631e433cda14469ae1f25a"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/Api.php"
+                ]
+            },
+            "description": "Compiled Lean copied API for PHP-Wasm: dependentrecords",
+            "install-path": "../lean-bridge-dependentrecords/wasm"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

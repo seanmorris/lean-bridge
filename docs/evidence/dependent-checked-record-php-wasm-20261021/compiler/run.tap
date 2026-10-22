@@ -1,0 +1,38 @@
+TAP version 13
+# Subtest: fresh Lean PHP-Wasm dependent checked-record ordinary-source
+ok 1 - fresh Lean PHP-Wasm dependent checked-record ordinary-source
+  ---
+  duration_ms: 39285.24079
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"ordinary-source","module":"DependentRecords","pointerBits":32,"exports":3,"generatedCSha256":"5c6f51e99f0f01a991f75237b78fb0243da746fcff1b0f47d06b3a4fa8b62c39","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm dependent checked-record reviewed-ir
+ok 2 - fresh Lean PHP-Wasm dependent checked-record reviewed-ir
+  ---
+  duration_ms: 28690.85751
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"reviewed-ir","module":"DependentRecords","pointerBits":32,"exports":3,"generatedCSha256":"5c6f51e99f0f01a991f75237b78fb0243da746fcff1b0f47d06b3a4fa8b62c39","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm dependent checked-record result-only-ordinary-source
+ok 3 - fresh Lean PHP-Wasm dependent checked-record result-only-ordinary-source
+  ---
+  duration_ms: 27860.585149
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"result-only-ordinary-source","module":"DependentRecords","pointerBits":32,"exports":1,"generatedCSha256":"a7f6f47cc5bb935b87db2fdebf2a77b39edfb3b8dbee4075965301081c7b5f8b","installedAcceptance":false}
+# Subtest: fresh Lean PHP-Wasm dependent checked-record result-only-reviewed-ir
+ok 4 - fresh Lean PHP-Wasm dependent checked-record result-only-reviewed-ir
+  ---
+  duration_ms: 27915.598383
+  type: 'test'
+  ...
+# {"sourceCompilationOnly":true,"route":"result-only-reviewed-ir","module":"DependentRecords","pointerBits":32,"exports":1,"generatedCSha256":"a7f6f47cc5bb935b87db2fdebf2a77b39edfb3b8dbee4075965301081c7b5f8b","installedAcceptance":false}
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 124600.421567

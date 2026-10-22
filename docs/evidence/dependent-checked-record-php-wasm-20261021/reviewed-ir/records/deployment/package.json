@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@lean-bridge/php-wasm-copied-runtime": "file:./feed/runtime.tgz",
+    "lean-bridge-dependentrecords-wasm": "file:./feed/component.tgz",
+    "php-wasm": "file:./feed/host.tgz"
+  },
+  "private": true,
+  "type": "module"
+}
