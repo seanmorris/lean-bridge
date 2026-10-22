@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9700d2951f8c31c96221a6688839d1810d2f9616a1cc356b64606948bfbbb9eb",
+      "path": "scripts/update-nominal-entry-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2017d5aecbaa575f71c87c92ea41f5dce7e401bffb29973240d5662b7fbb7961",
+      "path": "tests/helpers/nominal-entry-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "aa9a9668bced3ba0b1ff16e75fabaaa5fa6aa6d4788da22f6054dbf1df522372",
+      "path": "tests/helpers/nominal-entry-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f533a697bebc703b43b62be8650ccf8cdd1a3488",
+  "milestone": "nominal-entry-repair-v1",
+  "predecessorCommit": "bc90cdc1c2a2c36b4099df2d2d6347201c02e1a4",
+  "schemaVersion": 1,
+  "scope": "The native nominal dispatch classifier hashes adapter symbols with the component identity the compiler derives from the fixture's Lake package, nominalsubtypes@1.0.0, and the wasm entry probe keeps a pattern-matching definition's equations under its renamed body before the marked wrapper, so Lean resolves the body. No installed measurement is claimed.",
+  "updates": [
+    {
+      "currentSha256": "eab3d612072e29b4c6ce87c6f9586cd925941b653b3b32e344f72571ce7d61b6",
+      "edits": [
+        {
+          "current": "import { readFileSync } from \"node:fs\";\nimport { elaboratedComponent } from \"../../src/analyze/semantic-model.mjs\";\nimport { nominalSubtypeFixture, nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\nimport { assertNominalSubtypeDispatchPositiveControls, assertNominalSubtypeDispatchReport, nominalSubtypeDispatchProbe, classifyNominalSubtypeDispatchSymbols, nominalSubtypeAdapterSymbol, nominalSubtypeDispatchComponent, nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExpected, nominalSubtypeDispatchExports, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchRoles, nominalSubtypeDispatchSteps, parseNominalSubtypeDispatchRows } from \"./nominal-subtype-dispatch.mjs\";\n",
+          "previous": "import { nominalSubtypeInstalledReview } from \"./nominal-subtype-installed-fixture.mjs\";\nimport { assertNominalSubtypeDispatchPositiveControls, assertNominalSubtypeDispatchReport, nominalSubtypeDispatchProbe, classifyNominalSubtypeDispatchSymbols, nominalSubtypeAdapterSymbol, nominalSubtypeDispatchConstructors, nominalSubtypeDispatchExpected, nominalSubtypeDispatchExports, nominalSubtypeDispatchInterposer, nominalSubtypeDispatchRoles, nominalSubtypeDispatchSteps, parseNominalSubtypeDispatchRows } from \"./nominal-subtype-dispatch.mjs\";\n",
+          "start": 284
+        },
+        {
+          "current": "test(\"nominal dispatch adapter symbols hash the component identity the compiler derives from the fixture\", () => {\n\tconst project = JSON.parse(readFileSync(`${nominalSubtypeFixture}/package.json`, \"utf8\"));\n\tassert.equal(nominalSubtypeDispatchComponent, elaboratedComponent(project).id);\n\t// The hosted c45304f model record names this adapter for NominalSubtypes.first.\n\tassert.equal(nominalSubtypeAdapterSymbol(\"first\"), \"lb_bf4a2541d27b77f9e2561f26\");\n});\n\n",
+          "previous": "",
+          "start": 3539
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch-tests.mjs",
+      "previousSha256": "bba351b7d1fd3365e503dd3574c87524ed3abfca841b3c3e453e26aae0437c6d"
+    },
+    {
+      "currentSha256": "b00753e95b18174b1b006b9447fdf1e1956f05712619bda45d47331c58b36947",
+      "edits": [
+        {
+          "current": "// The compiler names the component from the fixture's Lake package (`nominalsubtypes`), so the\n// adapter symbols in the installed library hash this identity, not the onboarding directory name.\nexport const nominalSubtypeDispatchComponent = \"nominalsubtypes@1.0.0\";\n",
+          "previous": "export const nominalSubtypeDispatchComponent = \"nominal-subtypes@1.0.0\";\n",
+          "start": 517
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-dispatch.mjs",
+      "previousSha256": "8ff31438ce6582e3910f41d0634bbff12d9444a5a2031f22973dd1da04b58a59"
+    },
+    {
+      "currentSha256": "e2f31177de4e59f83f73030fff1f4fdb5d223e658c43a1d5a14f27d642f82735",
+      "edits": [
+        {
+          "current": "\t// The renamed body keeps its equations and precedes the wrapper, which precedes its first caller.\n\tassert.ok(probe.includes(\"def eventFirstBody : Event → Nat\\n  | .empty => 0\"));\n\tassert.ok(probe.includes('      | some (.error value) => value.val) 0\\ndef eventFirst (value : Event) : Nat := dbgTrace \"lean-bridge-nominal-entry source eventFirst\" fun _ => eventFirstBody value\\ndef eventSecond (value : Event) : Nat := eventFirst value'));\n\tassert.ok(probe.indexOf(\"def eventFirstBody \") < probe.indexOf(\"def eventFirst (\"));\n",
+          "previous": "\tassert.ok(probe.includes('def eventFirst (value : Event) : Nat := dbgTrace \"lean-bridge-nominal-entry source eventFirst\" fun _ => eventFirstBody value\\ndef eventFirstBody : Event → Nat\\n  | .empty => 0'));\n",
+          "start": 2066
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry-tests.mjs",
+      "previousSha256": "855a7712fe774d097824dc20b18197c666ca37567eb68ece7e80a6ab6b50f32f"
+    },
+    {
+      "currentSha256": "111000c8cad8150db449ca4b20caf9bfbf4c9fc13854359d40ad66f9a4c4d0d7",
+      "edits": [
+        {
+          "current": "\t\t\t// Lean resolves names in order, so the renamed body keeps its equations in place and the\n\t\t\t// marked wrapper follows its last equation, before any later definition that calls it.\n\t\t\tlines[index] = `def ${name}Body : ${header[2]} → ${header[3]}`;\n\t\t\tconst end = lines.findIndex((value, position) => position > index && /^\\S/u.test(value));\n\t\t\tlines.splice(end < 0 ? lines.length : end, 0, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`);\n",
+          "previous": "\t\t\tlines.splice(index, 1, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`, `def ${name}Body : ${header[2]} → ${header[3]}`);\n",
+          "start": 2747
+        }
+      ],
+      "path": "tests/helpers/nominal-subtype-entry.mjs",
+      "previousSha256": "2e703408e7412f535cbc439a9954d551437868fdec9bbb6e48416d3912fa1525"
+    },
+    {
+      "currentSha256": "9d5271ba5529b8e9768ffd4415bf10cd49b27bd6ca126d832ad2bf165b67f087",
+      "edits": [
+        {
+          "current": "import \"./nominal-entry-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2040
+        }
+      ],
+      "path": "tests/helpers/component-nominal-subtype-tests.mjs",
+      "previousSha256": "b8c33a3a21da3f38ed8647fc8984be7815ec8ca6b6be8f78b224136811c3ff7d"
+    },
+    {
+      "currentSha256": "a9ad1a2fe940969f30ce1551f6522eb426ec39a77cfd577843916efe3040ee9f",
+      "edits": [
+        {
+          "current": "import { beforeNominalEntryRepairSource, nominalEntryRepairChangedPaths } from \"./nominal-entry-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...nominalEntryRepairChangedPaths\n\t, ...callbackRefinementsPhpWasmChangedPaths\n",
+          "previous": "\t...callbackRefinementsPhpWasmChangedPaths\n",
+          "start": 143467
+        },
+        {
+          "current": "\tconst nominalEntryRepair = beforeNominalEntryRepairSource(path, text, expected);\n\tif(sha256(nominalEntryRepair) === expected) return nominalEntryRepair;\n",
+          "previous": "",
+          "start": 174307
+        },
+        {
+          "current": "\t\t= beforeCallbackRefinementsPhpWasmSource(path, nominalEntryRepair, expected);\n",
+          "previous": "\t\t= beforeCallbackRefinementsPhpWasmSource(path, text, expected);\n",
+          "start": 174495
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0fcc99c77c1caac585114050b4d98d445d0fcd0f7e6835bd22b69703423d4ad3"
+    }
+  ]
+}
