@@ -1,0 +1,160 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b206189daf30808bbc1c1185e207383a2589ad7491c9d261ecaef1ae072318c7",
+      "path": "scripts/update-owned-checked-record-php-wasm-retained-handoff-source-history.mjs"
+    },
+    {
+      "currentSha256": "4b4c6b96c7e0dafe72fc97b07f7b3413d6b9e250936aec71121670e86ab7f6dd",
+      "path": "tests/helpers/owned-checked-record-php-wasm-retained-handoff-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "592a9ca075f603bd701e3a91c835fdab34c5876724a6cef5158000ce5e0f80a1",
+      "path": "tests/helpers/owned-checked-record-php-wasm-retained-handoff-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "9f0282bd95841d1bc5fe6ccfc878613e533c5978",
+  "integrationUpdates": [
+    {
+      "currentSha256": "78b0d8c99b47cfb4ad442604cfc29e5fdb6a5949a95b3ed79a9ead6f7f3fa261",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from \"./owned-checked-record-php-wasm-retained-handoff-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths\n\t, ...ownedCheckedRecordEvidenceContractChangedPaths\n",
+          "previous": "\t...ownedCheckedRecordEvidenceContractChangedPaths\n",
+          "start": 147854
+        },
+        {
+          "current": "\tconst ownedCheckedRecordPhpWasmRetainedHandoff\n\t\t= beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(ownedCheckedRecordPhpWasmRetainedHandoff) === expected)\n\t\treturn ownedCheckedRecordPhpWasmRetainedHandoff;\n",
+          "previous": "",
+          "start": 180026
+        },
+        {
+          "current": "\t\t= beforeOwnedCheckedRecordEvidenceContractSource(\n\t\t\tpath, ownedCheckedRecordPhpWasmRetainedHandoff, expected\n\t\t);\n",
+          "previous": "\t\t= beforeOwnedCheckedRecordEvidenceContractSource(path, text, expected);\n",
+          "start": 180321
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "9ee90e48cd0408bf07e0c8c4fe17b337ee81d494c9b5d391830f7f492c0e04ef"
+    },
+    {
+      "currentSha256": "5caa4f312c9a4c8fd5a62513945cb1c14a622e9c7ab46697f95c009a70a75e8e",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-php-wasm-retained-handoff-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4196
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "92f35bd1aeba86317413b7edb5d8373adefe688ff0fb4f001b1f938e924fd81a"
+    }
+  ],
+  "milestone": "owned-checked-record-php-wasm-retained-handoff-v1",
+  "predecessorCommit": "2c6b6e71f8083e9e1acbcd530272073e966747a9",
+  "schemaVersion": 1,
+  "scope": "Install owned PHP-Wasm package archives from the receipt-only handoff derived from retained evidence, and bind both copies to the verified package report by exact file set and bytes.",
+  "updates": [
+    {
+      "currentSha256": "cd8d2c8c672babfc1f601f7008ddf479913f6b6d6550198f016ff2f7795dbee0",
+      "edits": [
+        {
+          "current": "import { cp, readFile, readdir, rm } from \"node:fs/promises\";\nimport { isAbsolute, join, relative, resolve } from \"node:path\";\n",
+          "previous": "import { cp, mkdir, readFile, readdir, rm } from \"node:fs/promises\";\nimport { join, resolve } from \"node:path\";\n",
+          "start": 141
+        },
+        {
+          "current": "import { bindPhpWasmReceiptArchives, installPhpWasmGraphPackages } from \"./php-wasm-graph-packages.mjs\";\n",
+          "previous": "import { installPhpWasmGraphPackages } from \"./php-wasm-graph-packages.mjs\";\n",
+          "start": 764
+        },
+        {
+          "current": "import { copyPackageSetHandoff, retainPackageSetEvidence } from \"./package-set.mjs\";\n",
+          "previous": "import { copyPackageSetHandoff } from \"./package-set.mjs\";\n",
+          "start": 1502
+        },
+        {
+          "current": "\tif(evidenceRoot !== null)\n\t{\n\t\tconst inside = relative(resolve(directory), resolve(evidenceRoot));\n\t\tconst outside = relative(resolve(evidenceRoot), resolve(directory));\n\t\tassert.ok((inside === \"..\" || inside.startsWith(\"../\") || isAbsolute(inside))\n\t\t\t&& (outside === \"..\" || outside.startsWith(\"../\") || isAbsolute(outside))\n\t\t, \"Retained PHP-Wasm evidence must stay outside the test-owned author and consumer root\");\n\t}\n",
+          "previous": "",
+          "start": 12764
+        },
+        {
+          "current": "\t\tconst retainedRoot = evidenceRoot === null ? null\n\t\t\t: join(evidenceRoot, reviewed ? \"reviewed\" : \"ordinary\", \"handoff\");\n\t\tconst retained = retainedRoot === null ? null : await retainPackageSetEvidence(buildRoot, retainedRoot);\n\t\tconst handoff = join(root, \"handoff\"), packageSetReceipt = await copyPackageSetHandoff(retainedRoot ?? buildRoot, handoff);\n\t\tif(retained !== null) assert.deepEqual(packageSetReceipt, retained.receipt);\n\t\tconst archiveRoot = await bindPhpWasmReceiptArchives(handoff, release.report);\n\t\tif(retainedRoot !== null) await bindPhpWasmReceiptArchives(retainedRoot, release.report);\n",
+          "previous": "\t\tconst handoff = join(root, \"handoff\"), packageSetReceipt = await copyPackageSetHandoff(buildRoot, handoff);\n",
+          "start": 23903
+        },
+        {
+          "current": "\t\t\t, release: { ...release, output: sourceFree ? packageHandoff : releaseRoot, archiveRoot }\n",
+          "previous": "\t\t\t, release: sourceFree ? { ...release, output: packageHandoff } : release\n",
+          "start": 25342
+        },
+        {
+          "current": "\t\tif(retainedRoot !== null) await bindPhpWasmReceiptArchives(retainedRoot, release.report);\n",
+          "previous": "\t\tif(evidenceRoot !== null)\n\t\t{\n\t\t\tconst evidence = join(evidenceRoot, reviewed ? \"reviewed\" : \"ordinary\", \"handoff\");\n\t\t\tawait mkdir(join(evidenceRoot, reviewed ? \"reviewed\" : \"ordinary\"), { recursive: true });\n\t\t\tawait cp(handoff, evidence, { recursive: true, errorOnExist: true, force: false });\n\t\t}\n",
+          "start": 25847
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-packages.mjs",
+      "previousSha256": "3e8df2d57706cddc19af0c8aaa83ba4236749e9adca580a5dd3e7e0f852477db"
+    },
+    {
+      "currentSha256": "13352398aae559bccdbd57608a3eb4eda720b98eeaeb4019ed32c91e114acfc3",
+      "edits": [
+        {
+          "current": "import { packageSetReceiptName } from \"../../src/release/package-set-receipt.mjs\";\n",
+          "previous": "",
+          "start": 997
+        },
+        {
+          "current": "const phpWasmReceiptArchives = \"packages/php-wasm/archives\";\n\nconst regularFiles = async (root, prefix = \"\") => {\n\tconst files = [];\n\tfor(const entry of await readdir(join(root, prefix), { withFileTypes: true }))\n\t{\n\t\tconst path = prefix ? `${prefix}/${entry.name}` : entry.name;\n\t\tif(entry.isDirectory()) files.push(...await regularFiles(root, path));\n\t\telse\n\t\t{\n\t\t\tassert.ok(entry.isFile(), `Receipt handoff entries must be regular files: ${path}`);\n\t\t\tfiles.push(path);\n\t\t}\n\t}\n\treturn files.toSorted();\n};\n\n/**\n * Bind a receipt-only PHP-Wasm handoff to the verified package report.\n *\n * The handoff must contain only the canonical receipt, its sidecar and the\n * receipt-named archives, and every archive must be the report's exact bytes.\n * Installing from the returned directory therefore executes the same bytes\n * that a retained copy of the handoff records.\n *\n * @param handoff - Directory written from a package-set receipt.\n * @param report - Verified PHP-Wasm package report.\n */\nexport const bindPhpWasmReceiptArchives = async (handoff, report) => {\n\tconst receiptBytes = await readFile(join(handoff, packageSetReceiptName));\n\tconst receipt = JSON.parse(receiptBytes);\n\tassert.equal(receiptBytes.toString(\"utf8\"), canonicalJson(receipt)\n\t\t, \"PHP-Wasm handoff receipt must be canonical\");\n\tassert.equal(await readFile(join(handoff, `${packageSetReceiptName}.sha256`), \"utf8\")\n\t\t, `${sha256(receiptBytes)}  ${packageSetReceiptName}\\n`\n\t\t, \"PHP-Wasm handoff receipt sidecar must match\");\n\tconst artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);\n\tconst named = artifacts.map(artifact => artifact.path);\n\tconst expected = [packageSetReceiptName\n\t\t, `${packageSetReceiptName}.sha256`, ...named].toSorted();\n\tassert.deepEqual(await regularFiles(handoff), expected\n\t\t, \"PHP-Wasm handoff must contain exactly the receipt-named package set\");\n\tconst verified = report.archives.map(item =>\n\t\t`${phpWasmReceiptArchives}/${item.archive}`);\n\tassert.deepEqual(named.toSorted(), verified.toSorted()\n\t\t, \"PHP-Wasm receipt must name exactly the verified package archives\");\n\tfor(const item of report.archives)\n\t{\n\t\tconst path = `${phpWasmReceiptArchives}/${item.archive}`;\n\t\tconst artifact = artifacts.find(entry => entry.path === path);\n\t\tconst bytes = await readFile(join(handoff, path));\n\t\tassert.deepEqual({ bytes: artifact.bytes, sha256: artifact.sha256 }\n\t\t\t, { bytes: item.bytes, sha256: item.sha256 }, path);\n\t\tassert.deepEqual({ bytes: bytes.length, sha256: sha256(bytes) }\n\t\t\t, { bytes: item.bytes, sha256: item.sha256 }, path);\n\t}\n\treturn join(handoff, phpWasmReceiptArchives);\n};\n\n",
+          "previous": "",
+          "start": 5201
+        },
+        {
+          "current": " * Archives are read from `release.archiveRoot` when it is present, so a\n * caller can install from a receipt-only handoff while the verified package\n * tree still supplies the Composer metadata and installed-file oracles.\n *\n",
+          "previous": "",
+          "start": 7890
+        },
+        {
+          "current": "\t\tconst path = join(feed, item.archive), bytes = await readFile(join(entry.archiveRoot ?? join(entry.output, \"archives\"), item.archive));\n",
+          "previous": "\t\tconst path = join(feed, item.archive), bytes = await readFile(join(entry.output, \"archives\", item.archive));\n",
+          "start": 9188
+        }
+      ],
+      "path": "tests/helpers/php-wasm-graph-packages.mjs",
+      "previousSha256": "ff9b1d821bb9c9806be969d5bb670093dca8faf370ebc9094205c2631cd176bc"
+    },
+    {
+      "currentSha256": "f6ca6ea5118059d63bc2c21b1f42b03070f458d7a8180819908c01e2a78760c6",
+      "edits": [
+        {
+          "current": "import { mkdtemp, readFile, rm, symlink } from \"node:fs/promises\";\n",
+          "previous": "import { mkdtemp, readFile, rm } from \"node:fs/promises\";\n",
+          "start": 167
+        },
+        {
+          "current": "import { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\n",
+          "previous": "import { canonicalJson } from \"../src/capsule/node.mjs\";\n",
+          "start": 341
+        },
+        {
+          "current": "import { bindPhpWasmReceiptArchives } from \"./helpers/php-wasm-graph-packages.mjs\";\n",
+          "previous": "",
+          "start": 489
+        },
+        {
+          "current": "\nconst writeReceiptHandoff = async (root, archives) => {\n\tconst receipt = { packages: archives.map(item => ({ artifacts: [{\n\t\tpath: `packages/php-wasm/archives/${item.archive}`\n\t\t, bytes: item.content.length, sha256: sha256(item.content)\n\t}] })) };\n\tconst bytes = canonicalJson(receipt);\n\tawait saveLakeFile(root, \"package-set-receipt.json\", bytes);\n\tawait saveLakeFile(root, \"package-set-receipt.json.sha256\"\n\t\t, `${sha256(bytes)}  package-set-receipt.json\\n`);\n\tfor(const item of archives)\n\t\tawait saveLakeFile(root, `packages/php-wasm/archives/${item.archive}`, item.content);\n\treturn { archives: archives.map(item => ({ archive: item.archive\n\t\t, bytes: item.content.length, sha256: sha256(item.content) })) };\n};\n\ntest(\"PHP-Wasm receipt handoff binds exactly the verified archive bytes\", async t => {\n\tconst parent = await mkdtemp(join(tmpdir(), \"lean-php-wasm-receipt-handoff-\"));\n\tt.after(() => rm(parent, { recursive: true, force: true }));\n\tconst archives = [\n\t\t{ archive: \"component.tgz\", content: Buffer.from(\"component archive\") }\n\t\t, { archive: \"api.zip\", content: Buffer.from(\"composer archive\") }\n\t];\n\tlet index = 0;\n\tconst handoff = async () => {\n\t\tconst root = join(parent, `handoff-${index++}`);\n\t\treturn { root, report: await writeReceiptHandoff(root, archives) };\n\t};\n\tconst valid = await handoff();\n\tassert.equal(await bindPhpWasmReceiptArchives(valid.root, valid.report)\n\t\t, join(valid.root, \"packages/php-wasm/archives\"));\n\n\tconst source = await handoff();\n\tawait saveLakeFile(source.root, \"OwnedCheckedRecords.lean\", \"-- author source\\n\");\n\tawait assert.rejects(bindPhpWasmReceiptArchives(source.root, source.report)\n\t\t, /exactly the receipt-named package set/u);\n\tconst extra = await handoff();\n\tawait saveLakeFile(extra.root, \"packages/php-wasm/archives/extra.tgz\", \"extra\");\n\tawait assert.rejects(bindPhpWasmReceiptArchives(extra.root, extra.report)\n\t\t, /exactly the receipt-named package set/u);\n\tconst missing = await handoff();\n\tawait rm(join(missing.root, \"packages/php-wasm/archives/api.zip\"));\n\tawait assert.rejects(bindPhpWasmReceiptArchives(missing.root, missing.report)\n\t\t, /exactly the receipt-named package set/u);\n\tconst changed = await handoff();\n\tawait saveLakeFile(changed.root, \"packages/php-wasm/archives/api.zip\", \"composer archivE\");\n\tawait assert.rejects(bindPhpWasmReceiptArchives(changed.root, changed.report)\n\t\t, /packages\\/php-wasm\\/archives\\/api\\.zip/u);\n\tconst linked = await handoff();\n\tawait rm(join(linked.root, \"packages/php-wasm/archives/api.zip\"));\n\tawait symlink(join(valid.root, \"packages/php-wasm/archives/api.zip\")\n\t\t, join(linked.root, \"packages/php-wasm/archives/api.zip\"));\n\tawait assert.rejects(bindPhpWasmReceiptArchives(linked.root, linked.report)\n\t\t, /must be regular files/u);\n\tconst unlisted = await handoff();\n\tawait assert.rejects(bindPhpWasmReceiptArchives(unlisted.root\n\t\t, { archives: unlisted.report.archives.slice(1) })\n\t, /exactly the verified package archives/u);\n\tconst pretty = await handoff();\n\tconst receipt = JSON.parse(await readFile(join(pretty.root, \"package-set-receipt.json\"), \"utf8\"));\n\tawait saveLakeFile(pretty.root, \"package-set-receipt.json\", JSON.stringify(receipt, null, 2));\n\tawait assert.rejects(bindPhpWasmReceiptArchives(pretty.root, pretty.report)\n\t\t, /receipt must be canonical/u);\n\tconst sidecar = await handoff();\n\tawait saveLakeFile(sidecar.root, \"package-set-receipt.json.sha256\"\n\t\t, `${\"0\".repeat(64)}  package-set-receipt.json\\n`);\n\tawait assert.rejects(bindPhpWasmReceiptArchives(sidecar.root, sidecar.report)\n\t\t, /sidecar must match/u);\n});\n\ntest(\"owned PHP-Wasm consumers install the same receipt-only bytes that are retained\", async t => {\n\tconst helper = await readFile(\"tests/helpers/owned-php-wasm-packages.mjs\", \"utf8\");\n\tfor(const required of [\n\t\t\"await retainPackageSetEvidence(buildRoot, retainedRoot)\"\n\t\t, \"await copyPackageSetHandoff(retainedRoot ?? buildRoot, handoff)\"\n\t\t, \"const archiveRoot = await bindPhpWasmReceiptArchives(handoff, release.report)\"\n\t\t, \"release: { ...release, output: sourceFree ? packageHandoff : releaseRoot, archiveRoot }\"\n\t]) assert.ok(helper.includes(required), required);\n\tassert.doesNotMatch(helper, /cp\\(handoff/u);\n\tconst installer = await readFile(\"tests/helpers/php-wasm-graph-packages.mjs\", \"utf8\");\n\tassert.ok(installer.includes(\n\t\t\"readFile(join(entry.archiveRoot ?? join(entry.output, \\\"archives\\\"), item.archive))\"));\n\n\tconst directory = await mkdtemp(join(tmpdir(), \"lean-php-wasm-evidence-root-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tfor(const evidenceRoot of [join(directory, \"evidence\"), directory, join(directory, \"..\")])\n\t\tawait assert.rejects(checkOwnedPhpWasmPackages(directory, () => {}, {\n\t\t\tcheckedRecords: true, evidenceRoot\n\t\t}), /outside the test-owned author and consumer root/u);\n});\n",
+          "previous": "",
+          "start": 4100
+        }
+      ],
+      "path": "tests/owned-checked-record-php-wasm-packaging.test.mjs",
+      "previousSha256": "64b2ba5cb448ae5b4f9fe2f7bf6bec9103d2b41963368561b4a1db35cb6c2ade"
+    }
+  ]
+}

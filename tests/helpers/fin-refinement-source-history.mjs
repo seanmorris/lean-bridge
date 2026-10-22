@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReviewRepairSource, callbackSubtypeDocumentationReviewRepairChangedPaths } from "./callback-subtype-documentation-review-repair-source-history.mjs";
 import { beforePhpWasmRefinementEntryGeneratorClosureSource, phpWasmRefinementEntryGeneratorClosureChangedPaths } from "./php-wasm-refinement-entry-generator-closure-source-history.mjs";
@@ -1922,7 +1923,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordEvidenceContractChangedPaths
+	...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
+	, ...ownedCheckedRecordEvidenceContractChangedPaths
 	, ...callbackSubtypeDocumentationReviewRepairChangedPaths
 	, ...phpWasmRefinementEntryGeneratorClosureChangedPaths
 	, ...callbackSubtypeDocumentationReadinessChangedPaths
@@ -2627,8 +2629,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordPhpWasmRetainedHandoff
+		= beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource(
+			path, text, expected
+		);
+	if(sha256(ownedCheckedRecordPhpWasmRetainedHandoff) === expected)
+		return ownedCheckedRecordPhpWasmRetainedHandoff;
 	const ownedCheckedRecordEvidenceContract
-		= beforeOwnedCheckedRecordEvidenceContractSource(path, text, expected);
+		= beforeOwnedCheckedRecordEvidenceContractSource(
+			path, ownedCheckedRecordPhpWasmRetainedHandoff, expected
+		);
 	if(sha256(ownedCheckedRecordEvidenceContract) === expected)
 		return ownedCheckedRecordEvidenceContract;
 	const callbackSubtypeDocumentationReviewRepair
