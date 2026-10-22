@@ -660,9 +660,10 @@ whether a callback argument or a returned closure's result, crosses as the
 same generated record without proof fields. A returned Lean closure runs the
 selected constructors on its checked-record arguments before its body, and a
 record inside `Option`, `Array` or `Except` keeps the direction of its site.
-The generated README and the `callback-checked-record-native` workflow
-describe the installed C and C++ acceptance; other native hosts still refuse
-checked records in callbacks at projection time.
+The generated README and the [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md)
+describe the installed C and C++ acceptance and the separately executed
+managed, language, CPAN, native PHP and WIT/WASI packages. PHP-Wasm remains
+separate.
 
 ### Checked records and fixed indices
 
@@ -676,7 +677,7 @@ Those four ordinary/reviewed and full/result-only selections reproduce complete 
 
 The [hosted zero-payload archive](../evidence/zero-payload-checked-record-native-20261021.md) covers proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, arrays and active/inactive variant branches at copied parameters and results. `Witness` uses a named generated structure with one non-semantic `uint8_t` storage byte because C structures cannot have zero size. That byte is not a Lean field or proof. Full packages run the selected nullary Lean constructor, preserve rejected inputs and recover; result-only packages return the same proof-erased carriers without input-constructor metadata. The run passed on glibc 2.39 with a glibc 2.38 package floor.
 
-Generic checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, zero-payload fields and callbacks, owned positions and other zero-payload shapes remain unreviewed.
+Generic checked records, value-carrying receiver-dependent inherited fields, other index kinds, open dependent records, zero-payload callback forms, owned positions and other zero-payload shapes remain unreviewed.
 
 ### Recursive callbacks
 

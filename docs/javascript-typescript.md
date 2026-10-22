@@ -845,7 +845,29 @@ The [hosted value-index archive](evidence/checked-record-value-index-browser-pro
 
 The [nested checked-record archive](evidence/nested-checked-record-browser-20261016/index.json) extends both author routes through direct and repeated parameters, `Array`, `List`, `Option`, products, `Except`, an enclosing record field, an active variant field, and constructor-free `Array` and `Option` results. Its `Packet` object has `digit: bigint` for `Fin 10` and `word: bigint` for a checked `Nat` subtype. Each input site retains its own `Packet` and nested `word` constructor, including normalizing choices. All four full/result-only selections reproduce both npm archives, install offline after author removal, replay after relocation, and run in Node, strict TypeScript, pages, React, and workers. The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-browser.yml) rebuilds that matrix.
 
-The npm mapping is established for those exact acyclic shapes. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Other index kinds inside nested, inherited, or recursive checked-record shapes; generic recursive records; value-carrying receiver-dependent fields; open dependent or zero-payload records; callbacks; and owned positions remain unverified. Every other consumer profile has its own installed archive for the same tested copied boundary; no host's evidence is borrowed for npm. The [cross-target author guide](lean/existing-package.md#export-a-record-with-proof-fields) links each archive and keeps their runtime-specific limits separate.
+The npm mapping is established for those exact acyclic shapes. [Inherited checked-record acceptance](evidence/inherited-checked-record-promotion-20261018.md) separately covers the tested proof-free `Span → Ticket → Stamped` chain. Other index kinds inside nested, inherited, or recursive checked-record shapes; generic recursive records; value-carrying receiver-dependent fields; open dependent or zero-payload records; and owned positions remain unverified. Every other consumer profile has its own installed archive for the same tested copied boundary; no host's evidence is borrowed for npm. The [cross-target author guide](lean/existing-package.md#export-a-record-with-proof-fields) links each archive and keeps their runtime-specific limits separate.
+
+### Checked records across callback boundaries
+
+Synchronous callbacks use the same proof-free objects and generated TypeScript
+types. Wrap a host callback whose result contains a checked record with
+`withRecovery(callback, value)`. The recovery has the callback's exact result
+shape and is validated before Lean or the callback runs. Lean applies the
+selected nested-field and record constructors to the actual reply. A rejected
+reply preserves the first error, suppresses later callbacks in that call and
+leaves later calls usable; the recovery is never successful output.
+
+Records Lean supplies to a host callback, or returns from a leased Lean
+closure, contain payload fields only. A returned closure validates
+host-supplied checked-record arguments before its body. The tested option,
+result and array containers retain that direction, and `Weighted` runs its
+selected positive-`Nat` field constructor before its record constructor.
+
+The [hosted callback checked-record matrix](evidence/callback-checked-record-promotion-20261022.md)
+covers ordinary-source and independently reviewed Node JavaScript, strict
+TypeScript, browser-page, React and worker packages in Chromium, Firefox and
+WebKit. Retained or asynchronous callbacks, owned checked records and
+PHP-Wasm callback positions remain separate work.
 
 ### Tagged variants
 
