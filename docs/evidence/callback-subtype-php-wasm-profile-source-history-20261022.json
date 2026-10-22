@@ -1,0 +1,84 @@
+{
+  "additions": [
+    {
+      "currentSha256": "bb67cd57a4f0e8faa5bc8a4c92068c91ebfbf7047cb4e35a8e2d61ff2c00653b",
+      "path": "scripts/update-callback-subtype-php-wasm-profile-source-history.mjs"
+    },
+    {
+      "currentSha256": "bdd4f982d031501cb84f2e5583a491f28f07e8706f76c4fe32ebdffac2c1ef27",
+      "path": "tests/helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "cc0cab105e81e7aa6da997ef89f1a81709532dd32c9fb1aee28888a8dbc6155c",
+      "path": "tests/helpers/callback-subtype-php-wasm-profile-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "b38cbf5b44de3a35ace44f3652d0252d1b82d502",
+  "milestone": "callback-subtype-php-wasm-profile-v1",
+  "predecessorCommit": "85b48b5a804a294517ca649405f108a74c994458",
+  "schemaVersion": 1,
+  "scope": "Register the committed callback-Subtype PHP-Wasm aggregate in the closed Core contract profile and pin that classification in the profile test. This repairs test discovery only; it changes no package, runtime or support claim.",
+  "updates": [
+    {
+      "addedTests": [
+        "callback-subtype-php-wasm"
+      ],
+      "currentSha256": "c05af81cea84da0593a28cbcedb7062c23ec770d82a0cfac521a9ac45f4eb53b",
+      "edits": [
+        {
+          "current": "\t\t, \"callback-subtype-php-wasm\"\n",
+          "previous": "",
+          "start": 1183
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "e04c6121eb0831b29f5cd933f928644b581c4e17b8620354281aff432c87a9cc"
+    },
+    {
+      "currentSha256": "8fcf7890181330cecb5985da7a2da0f991d7f506133e0a6657c5f25ee5f24e37",
+      "edits": [
+        {
+          "current": "\tassert.ok(grouped.contract.includes(\"tests/callback-subtype-php-wasm.test.mjs\"));\n",
+          "previous": "",
+          "start": 3396
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "7435ae8e1cac7251efed39a35381523c3d8cef69677e2d5d8c127974910eaf2d"
+    },
+    {
+      "currentSha256": "952d12ef0ba21a4a5f4cf634b7528ede66eb6e78a573c7fc227b58750a4a5d6a",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypePhpWasmProfileSource, callbackSubtypePhpWasmProfileChangedPaths } from \"./callback-subtype-php-wasm-profile-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypePhpWasmProfileChangedPaths\n\t, ...witConsumerRootRepairChangedPaths\n",
+          "previous": "\t...witConsumerRootRepairChangedPaths\n",
+          "start": 143760
+        },
+        {
+          "current": "\tconst callbackSubtypePhpWasmProfile\n\t\t= beforeCallbackSubtypePhpWasmProfileSource(path, text, expected);\n\tif(sha256(callbackSubtypePhpWasmProfile) === expected)\n\t\treturn callbackSubtypePhpWasmProfile;\n\tconst witConsumerRootRepair\n\t\t= beforeWitConsumerRootRepairSource(path, callbackSubtypePhpWasmProfile, expected);\n",
+          "previous": "\tconst witConsumerRootRepair = beforeWitConsumerRootRepairSource(path, text, expected);\n",
+          "start": 174688
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "af16045ab1c19d71bd324a8e93470a901285906c163cb1d8126ac3497724a1ea"
+    },
+    {
+      "currentSha256": "bf7fd68f2659d6c58fffe57fd2c92241f160f085ab357d7b232c0f55e1700c11",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4521
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "020c1de7e33126f155846398d6207797beb08c0c29b9b38e2d9c4779c42b00ee"
+    }
+  ]
+}
