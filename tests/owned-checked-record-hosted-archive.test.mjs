@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
+import "./helpers/owned-checked-record-javascript-evidence-tests.mjs";
 import {
 	packageSetReceiptName, readVerifiedPackageSetReceipt, writePackageSetReceipt
 } from "../src/release/package-set-receipt.mjs";

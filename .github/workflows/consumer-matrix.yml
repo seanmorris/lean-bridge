@@ -177,6 +177,14 @@ jobs:
           rg '^# skipped 0$' build/owned-javascript-wasm/installed.log
           test -s build/owned-subtype-javascript-packaging/report.json
           test -s build/owned-checked-record-javascript-packaging/report.json
+          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do
+            test -s "build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json"
+            test -s "build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json.sha256"
+          done
+          node scripts/check-owned-checked-record-javascript-ci.mjs \
+            --report build/owned-checked-record-javascript-packaging/report.json \
+            > build/owned-checked-record-javascript-packaging/verification.json
+          test -s build/owned-checked-record-javascript-packaging/verification.json
       - name: Verify consuming JavaScript input ownership
         shell: bash
         run: |
@@ -268,7 +276,7 @@ jobs:
             build/owned-javascript-wasm/execution.log
             build/owned-javascript-wasm/installed.log
             build/owned-subtype-javascript-packaging/report.json
-            build/owned-checked-record-javascript-packaging/report.json
+            build/owned-checked-record-javascript-packaging/
             build/owned-javascript-wasm/transfers.log
             build/owned-javascript-transfers/ordinary.json
             build/owned-javascript-transfers/reviewed.json

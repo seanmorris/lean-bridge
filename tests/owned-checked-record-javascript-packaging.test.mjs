@@ -28,6 +28,9 @@ import {
 	, ownedCheckedRecordJavaScriptSelection
 } from "./helpers/owned-checked-record-javascript-fixture.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import {
+	copyPackageSetHandoff, retainPackageSetEvidence
+} from "./helpers/package-set.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_JS_TEST === "1";
 const browserEnabled
@@ -42,7 +45,12 @@ const target = resolve(process.env.LEAN_BRIDGE_JS_TARGET_RUNTIME
 	?? "/app/build/lean-runtime/f3b06c705e6c85f5314019d5d3baab0fec5b580c-743765bf566f43ec2f7b4eb84a85686880b3797efe83bf244d6fc7281e4f85a3-browser");
 const prepared = resolve(process.env.LEAN_BRIDGE_OWNED_JS_WASM_PREPARED_ROOT
 	?? "/app/build/lean-link-spike", "lazy");
+const packagingRoot = resolve("build/owned-checked-record-javascript-packaging");
 const reports = [];
+
+test.before(async () => {
+	if(enabled) await rm(packagingRoot, { recursive: true, force: true });
+});
 
 test("ordinary and reviewed JavaScript authors select the same full and result-only boundaries", () => {
 	for(const mode of ["full", "result-only"])
@@ -87,8 +95,7 @@ test.after(async () => {
 			&& ownedCheckedRecordJavaScriptRoutes.every(route => routes.includes(route));
 		const reportName = complete ? "report.json"
 			: `partial-${sha256(canonicalJson(routes.toSorted())).slice(0, 12)}.json`;
-		await saveLakeFile("build/owned-checked-record-javascript-packaging"
-			, reportName, canonicalJson(
+		await saveLakeFile(packagingRoot, reportName, canonicalJson(
 				{
 					schemaVersion: 1
 					, profile: "installed-owned-checked-record-javascript"
@@ -96,7 +103,7 @@ test.after(async () => {
 						left.route.localeCompare(right.route)
 					)
 				}
-			)
+		)
 		);
 	}
 });
@@ -277,16 +284,18 @@ for(const route of routes)
 			runtime: sha256(await readFile(first.runtimeArchive))
 			, component: sha256(await readFile(first.componentArchive))
 		};
+		const retainedPath = `evidence/${route}/handoff`;
+		const retained = await retainPackageSetEvidence(first.output
+			, join(packagingRoot, retainedPath));
 		let consumer = join(scratch, "consumer");
 		const handoff = join(consumer, "handoff");
 		await saveLakeFile(consumer, "package.json", canonicalJson({
 			name: "owned-checked-record-consumer", version: "1.0.0"
 			, private: true, type: "module"
 		}));
-		await saveLakeFile(handoff, "runtime.tgz"
-			, await readFile(first.runtimeArchive));
-		await saveLakeFile(handoff, "component.tgz"
-			, await readFile(first.componentArchive));
+		const handoffReceipt = await copyPackageSetHandoff(
+			join(packagingRoot, retainedPath), handoff);
+		assert.deepEqual(handoffReceipt, retained.receipt);
 		await rm(project, { recursive: true });
 		await rm(componentRoot, { recursive: true });
 		await rm(first.output, { recursive: true });
@@ -298,8 +307,9 @@ for(const route of routes)
 			throw error;
 		});
 		await run("npm", ["install", "--offline", "--ignore-scripts"
-			, "--no-audit", "--no-fund", "./handoff/runtime.tgz"
-			, "./handoff/component.tgz"]);
+			, "--no-audit", "--no-fund"
+			, ...handoffReceipt.packages.flatMap(pkg => pkg.artifacts.map(
+				artifact => join(handoff, artifact.path))) ]);
 		await rm(handoff, { recursive: true });
 		const probeSource = (resultOnly ? resultOnlyProbe : fullProbe)(
 			first.coordinate.name
@@ -346,6 +356,10 @@ ticket.dispose(); api.close();
 			, bindingIrSha256: verified.model.bindingIrSha256
 			, sourceIdentity: verified.receipt.sourceIdentity
 			, packageSetReceipt: receipt.receipt, archives, observed
+			, retainedPackageSet: { path: retainedPath
+				, receiptSha256: retained.receiptSha256
+				, archives: retained.archives
+				, archiveBytes: retained.archiveBytes, files: retained.files }
 			, installedNode: true, installedTypeScript: true
 			, sourceRemovedBeforeInstall: true, relocatedInstallation: true
 			, archiveReproduction: true, browser
