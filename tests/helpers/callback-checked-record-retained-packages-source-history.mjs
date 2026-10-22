@@ -38,7 +38,8 @@ export const callbackCheckedRecordRetainedPackagesImplementationPaths
 	]);
 export const callbackCheckedRecordRetainedPackagesIntegrationPaths
 	= Object.freeze([
-		"tests/callback-checked-record-native-ci.test.mjs"
+		"tests/callback-checked-record-promotion.test.mjs"
+		, "tests/callback-checked-record-native-ci.test.mjs"
 		, "tests/helpers/callback-checked-record-retained-packages.mjs"
 		, "tests/helpers/fin-refinement-source-history.mjs"
 		, "tests/php-wasm-fin.test.mjs"

@@ -26,7 +26,7 @@ import {
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 assert.equal(git(["rev-parse", "HEAD"]).trim()
-	, "d37781d49535b7da9205a68377e0b331b23bc18a"
+	, "f623c1ca2e4fe3645c3267f610a41f47614b67aa"
 	, "Callback checked-record retained package history requires its integration staging commit after the implementation commit");
 assert.equal(git(["rev-parse"
 	, `${callbackCheckedRecordRetainedPackagesImplementation}^`]).trim()

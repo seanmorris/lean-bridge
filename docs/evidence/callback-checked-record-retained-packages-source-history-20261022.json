@@ -1,7 +1,7 @@
 {
   "additions": [
     {
-      "currentSha256": "1b734e6b01ad1fb92774c3c9b9b3ee5bcddd08976934c7511863b2e5e959d020",
+      "currentSha256": "64278fef3bf37b9d307630036ed253a98b68deaa01d9669047b8c59c20a68a49",
       "path": "scripts/update-callback-checked-record-retained-packages-source-history.mjs"
     },
     {
@@ -9,7 +9,7 @@
       "path": "tests/helpers/callback-checked-record-retained-packages-source-history-tests.mjs"
     },
     {
-      "currentSha256": "f65f44e17fb556e7904126607ecbb1aa7b9028ea0e6982879da40b0e94800add",
+      "currentSha256": "3587aa2c76c29f0c5629ee02acb4d80ba8448651d50ca66e384457cb59485952",
       "path": "tests/helpers/callback-checked-record-retained-packages-source-history.mjs"
     }
   ],
@@ -311,6 +311,33 @@
   "historyParentCommit": "052d9c080451641c5a564e4059642c2a88d24f67",
   "implementationCommit": "fc8ed53b543a20a25db19c340769cb59a56086fa",
   "integrationUpdates": [
+    {
+      "currentSha256": "4fd35864f456e3dafa48b374332cd53f3f4ced4c05129da3af5579ab47fc2dc1",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\n",
+          "previous": "",
+          "start": 141
+        },
+        {
+          "current": "\tcallbackCheckedRecordPromotionPredecessor\n",
+          "previous": "\tbeforeCallbackCheckedRecordPromotionSource\n",
+          "start": 583
+        },
+        {
+          "current": "const baseline = execFileSync(\"git\", [\"show\"\n\t, `${callbackCheckedRecordPromotionPredecessor}:docs/type-surface.v1.json`]\n, { encoding: \"utf8\", maxBuffer: 512 * 1024 ** 2 });\nconst document = JSON.parse(baseline);\nconst [irSchema, consumers] = await Promise.all([\n\treadJson(\"schema/binding-ir.schema.json\")\n",
+          "previous": "const [surfaceSource, irSchema, consumers] = await Promise.all([\n\treadFile(\"docs/type-surface.v1.json\", \"utf8\")\n\t, readJson(\"schema/binding-ir.schema.json\")\n",
+          "start": 773
+        },
+        {
+          "current": "",
+          "previous": "const document = JSON.parse(beforeCallbackCheckedRecordPromotionSource(\n\t\"docs/type-surface.v1.json\", surfaceSource\n));\n",
+          "start": 1129
+        }
+      ],
+      "path": "tests/callback-checked-record-promotion.test.mjs",
+      "previousSha256": "da180003f6b5479831a5de8961ff73e592c73b7d1f79a59b82b5ca78fa26ac72"
+    },
     {
       "currentSha256": "49e7383be6ea5627da330d6aca8cef99732c688b1a25ff8a672856deb68f582a",
       "edits": [

@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -16,18 +17,18 @@ import {
 	, renderCallbackCheckedRecordPromotion
 } from "./helpers/callback-checked-record-promotion.mjs";
 import {
-	beforeCallbackCheckedRecordPromotionSource
+	callbackCheckedRecordPromotionPredecessor
 } from "./helpers/callback-checked-record-promotion-source-history.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const [surfaceSource, irSchema, consumers] = await Promise.all([
-	readFile("docs/type-surface.v1.json", "utf8")
-	, readJson("schema/binding-ir.schema.json")
+const baseline = execFileSync("git", ["show"
+	, `${callbackCheckedRecordPromotionPredecessor}:docs/type-surface.v1.json`]
+, { encoding: "utf8", maxBuffer: 512 * 1024 ** 2 });
+const document = JSON.parse(baseline);
+const [irSchema, consumers] = await Promise.all([
+	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
-const document = JSON.parse(beforeCallbackCheckedRecordPromotionSource(
-	"docs/type-surface.v1.json", surfaceSource
-));
 const contracts = { irSchema, consumers };
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = callbackCheckedRecordPromotionLanes.map(item => ({
