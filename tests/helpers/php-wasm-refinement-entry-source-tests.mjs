@@ -6,42 +6,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { nominalPrimitiveSubtypeFields } from "./nominal-primitive-subtype-fixture.mjs";
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
+import {
+	phpWasmRefinementEntryHostedSelection
+	, phpWasmRefinementEntrySourceFamilies, phpWasmRefinementEntrySourceFixture
+} from "./php-wasm-refinement-entry-source-fixtures.mjs";
 
-const nominalConstructors = [
-	...nominalPrimitiveSubtypeFields.flatMap(item => [item.constructor + "A", item.constructor + "B"])
-	, "unitReject"
-];
-const nominalSources = [
-	"echoA", "echoB", "refuseUnit", "combine", "echoPair"
-	, "echoEventA", "echoEventB", "aliases", "produce", "produceGroup"
-	, "producePair", "produceEvent", "produceChoices", "wordBits"
-];
-const fixtureRoot = "tests/fixtures/onboarding/";
-const fixtures = [{
-	path: fixtureRoot + "nominal-primitive-subtypes/NominalPrimitiveSubtypes.lean"
-	, namespace: "NominalPrimitiveSubtypes", prefix: "lb_nominal_primitive_probe"
-	, constructors: nominalConstructors, sources: nominalSources, wrappers: {}
-}
-, {
-	path: fixtureRoot + "recursive-subtypes/RecursiveSubtypes.lean"
-	, namespace: "RecursiveSubtypes", prefix: "lb_recursive_subtype_probe"
-	, constructors: ["plusOne", "plusTwo"]
-	, sources: ["first", "second", "echo", "groups", "echoGroups", "produce"]
-	, wrappers: {
-		first: "(value : Chain) : Nat := firstBody value"
-		, second: "(value : Chain) : Nat := secondBody value"
-	}
-}
-, {
-	path: fixtureRoot + "recursive-checked-records/RecursiveCheckedRecords.lean"
-	, namespace: "RecursiveCheckedRecords"
-	, prefix: "lb_recursive_checked_record_probe"
-	, constructors: ["plusOne", "plusTwo", "mkPacket", "normalizePacket"]
-	, sources: ["first", "second", "echo", "groups", "echoGroups", "produce"]
-	, wrappers: {}
-}];
+const fixtures = phpWasmRefinementEntrySourceFamilies.map(phpWasmRefinementEntrySourceFixture);
 
 test("nominal and recursive entry probes name every authored boundary reversibly", async () => {
 	for(const fixture of fixtures)
@@ -61,7 +32,8 @@ test("nominal and recursive entry probes name every authored boundary reversibly
 });
 
 test("recursive match equations remain before their exported wrappers", async () => {
-	const fixture = fixtures[1], original = await readFile(fixture.path, "utf8");
+	const fixture = phpWasmRefinementEntrySourceFixture("recursive-subtype");
+	const original = await readFile(fixture.path, "utf8");
 	const { source } = phpWasmRefinementEntrySource(original, fixture);
 	for(const name of ["first", "second"])
 	{
@@ -71,4 +43,25 @@ test("recursive match equations remain before their exported wrappers", async ()
 		assert.ok(body >= 0 && equation > body && wrapper > equation, name);
 	}
 	assert.ok(source.indexOf("def first (value") < source.indexOf("def secondBody"));
+});
+
+test("hosted source selection cannot narrow unless the producer is enabled", () => {
+	assert.equal(phpWasmRefinementEntryHostedSelection({}).enabled, false);
+	assert.throws(() => phpWasmRefinementEntryHostedSelection({
+		LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES: "recursive-subtype"
+	}), /requires TEST=1/u);
+	const selected = phpWasmRefinementEntryHostedSelection({
+		LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_TEST: "1"
+		, LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES: "recursive-subtype,nominal-full"
+		, LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES: "reviewed"
+	});
+	assert.deepEqual(selected, {
+		enabled: true
+		, families: ["recursive-subtype", "nominal-full"]
+		, routes: ["reviewed"]
+	});
+	assert.throws(() => phpWasmRefinementEntryHostedSelection({
+		LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_TEST: "1"
+		, LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES: "ordinary,ordinary"
+	}), /Duplicate/u);
 });
