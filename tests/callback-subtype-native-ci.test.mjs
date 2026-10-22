@@ -16,6 +16,11 @@ import {
 	, checkCallbackSubtypePerlReport
 	, parseCallbackSubtypeNativeCiArgs
 } from "./helpers/callback-subtype-native-ci.mjs";
+import {
+	callbackSubtypeRemainingTestName
+	, callbackSubtypeRemainingVerification
+	, parseCallbackSubtypeRemainingCiArgs
+} from "./helpers/callback-subtype-remaining-ci.mjs";
 
 const sha = character => character.repeat(64);
 const tap = name => `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n  ---\n  duration_ms: 1\n  type: 'test'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 2\n`;
@@ -94,6 +99,42 @@ const languageReport = () => {
 	return { schemaVersion: 1, reports };
 };
 
+const remainingReport = profiles => {
+	const reports = ["ordinary", "reviewed"].flatMap(route => profiles.map(
+		profile => ({
+			bindingIrSha256: sha(route === "ordinary" ? "a" : "b")
+			, checks: profile === "wit-wasi" ? 26 : 14
+			, compilerFreePath: true
+			, consumerSha256: sha("1")
+			, offlineInstall: true
+			, profile
+			, receiptSha256: sha("2")
+			, route
+			, sourceRemovedBeforeInstallation: true
+			, ...["java", "kotlin"].includes(profile) ? {
+				componentSha256: sha("3"), dependencyClosureSha256: sha("4")
+				, offlineMaven: true, repeatExecution: true, runtimeOnly: true
+			} : {}
+			, ...profile === "dotnet" ? {
+				installedAssemblySha256: sha("3"), repeatExecution: true
+				, runtimeVersion: "8.0.21", sdkFreeRuntime: true
+				, sourceFreeExecution: true
+			} : {}
+			, ...profile === "php-native" ? {
+				closedComposerInstall: true, packageFileSetSha256: sha("3")
+				, relocatedReplay: true, repeatExecution: true
+				, vendorFilesSha256: sha("4")
+			} : {}
+			, ...profile === "wit-wasi" ? {
+				handoffRemovedBeforeReplay: true, libraryClosureSha256: sha("3")
+				, packageFileSetSha256: sha("4"), relocatedReplay: true
+				, repeatExecution: true, runtimeOnly: true
+				, sourceFreeExecution: true
+			} : {}})
+	));
+	return { schemaVersion: 1, reports };
+};
+
 test("callback Subtype CI checkers require the closed native and Perl matrices", () => {
 	const native = nativeReport(), perl = perlReport(), language = languageReport();
 	assert.deepEqual(checkCallbackSubtypeNativeReport(native), {
@@ -130,6 +171,28 @@ test("callback Subtype CI checkers require the closed native and Perl matrices",
 	assert.throws(() => parseCallbackSubtypeNativeCiArgs([
 		"--producer", commit, "--tap", "run.tap", "--tap", "again.tap"
 	]));
+});
+
+test("callback Subtype remaining checker is reusable by hosted archival", () => {
+	const commit = "e".repeat(40);
+	for(const profiles of [
+		["dotnet"], ["java", "kotlin"], ["php-native"], ["wit-wasi"]
+	]) {
+		const report = remainingReport(profiles);
+		const checked = callbackSubtypeRemainingVerification(
+			commit, profiles, tap(callbackSubtypeRemainingTestName), report);
+		assert.deepEqual(checked.profiles, [...profiles].sort());
+		assert.equal(checked.reports, profiles.length * 2);
+	}
+	assert.deepEqual(parseCallbackSubtypeRemainingCiArgs([
+		"--producer", commit, "--profiles", "kotlin,java"
+		, "--tap", "run.tap", "--report", "report.json"
+	]), { producer: commit, profiles: ["java", "kotlin"]
+		, tap: "run.tap", report: "report.json" });
+	const changed = remainingReport(["wit-wasi"]);
+	changed.reports[0].handoffRemovedBeforeReplay = false;
+	assert.throws(() => callbackSubtypeRemainingVerification(
+		commit, ["wit-wasi"], tap(callbackSubtypeRemainingTestName), changed));
 });
 
 test("callback Subtype native workflows preserve failures and cannot narrow the matrix", async () => {
@@ -200,7 +263,7 @@ test("callback Subtype native workflows preserve failures and cannot narrow the 
 		"scripts/run-callback-subtype-remaining-ci.sh", "utf8"
 	);
 	const remainingChecker = await readFile(
-		"scripts/check-callback-subtype-remaining-ci.mjs", "utf8"
+		"tests/helpers/callback-subtype-remaining-ci.mjs", "utf8"
 	);
 	const witClosure = await readFile(
 		"tests/helpers/callback-subtype-wit-install.mjs", "utf8"
