@@ -227,12 +227,13 @@ export const checkPhpWasmCallbackEntryReport = async (records, selection) => {
 	assert.equal(report.receipt.profiles.length, 1);
 	assert.equal(report.receipt.profiles[0].id, "php-wasm-copied-v1");
 	assert.equal(report.receipt.profiles[0].bindingIrSha256, builds[0].model.bindingIrSha256);
-	const expected = phpWasmCallbackEntryExpected(report.entryPlan.cases);
+	const authoritativePlan = builds[0].plan;
+	const expected = phpWasmCallbackEntryExpected(authoritativePlan.cases);
 	assert.deepEqual(report.observation, expected);
 	const tuples = phpWasm.executions.map(item =>
 		`${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort();
 	assert.deepEqual(tuples, phpWasmExecutionTuples);
-	const controls = report.entryPlan.cases.map(item => item.control);
+	const controls = authoritativePlan.cases.map(item => item.control);
 	let retainedCases = null;
 	for(const execution of phpWasm.executions)
 	{
@@ -247,14 +248,14 @@ export const checkPhpWasmCallbackEntryReport = async (records, selection) => {
 		assert.equal(execution.entryProbe.scope, report.scope);
 		assert.equal(execution.entryProbe.family, family);
 		assert.deepEqual(execution.entryProbe.controls, controls);
-		assert.equal(execution.entryProbe.cases.length, report.entryPlan.cases.length);
+		assert.equal(execution.entryProbe.cases.length, authoritativePlan.cases.length);
 		for(const [index, observed] of execution.entryProbe.cases.entries())
 		{
 			exact(observed, ["control", "outcome", "trace", "calls"], "callback control evidence");
-			const planned = report.entryPlan.cases[index];
+			const planned = authoritativePlan.cases[index];
 			assert.equal(observed.control, planned.control); assert.equal(observed.outcome, planned.outcome);
 			assert.deepEqual(parsePhpWasmCallbackEntryTrace(observed.trace
-				, report.entryPlan.selected), planned.calls);
+				, authoritativePlan.selected), planned.calls);
 			assert.deepEqual(observed.calls, planned.calls);
 		}
 		if(retainedCases === null) retainedCases = execution.entryProbe.cases;
@@ -280,8 +281,9 @@ export const checkPhpWasmCallbackEntryReport = async (records, selection) => {
 	}
 	for(const arrangement of ["embedded", "composer"])
 	{
-		const request = phpWasmCallbackEntryRequest(family, arrangement, report.entryPlan);
-		assert.equal(phpWasm.requests[arrangement], sha256(request));
+		const request = phpWasmCallbackEntryRequest(family, arrangement, authoritativePlan);
+		assert.equal(phpWasm.requests[arrangement], sha256(request)
+			, `${family}/${route}/${arrangement} request identity`);
 		deployed(`request-${arrangement}.json`, Buffer.from(request));
 	}
 	return { schemaVersion: 1, family, route, producerCommit
