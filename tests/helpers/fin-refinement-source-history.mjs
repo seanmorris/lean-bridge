@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPromotionContractSource, dependentCheckedRecordPromotionContractChangedPaths, dependentCheckedRecordPromotionContractIntegrationPaths } from "./dependent-checked-record-promotion-contract-source-history.mjs";
 import { beforeHostedRefinementVerifierRepairSource, hostedRefinementVerifierRepairChangedPaths, hostedRefinementVerifierRepairIntegrationPaths } from "./hosted-refinement-verifier-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmNominalRefusalRepairSource, callbackFinPhpWasmNominalRefusalRepairChangedPaths, callbackFinPhpWasmNominalRefusalRepairIntegrationPaths } from "./callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPhpSpacePathRepairSource, dependentCheckedRecordPhpSpacePathRepairChangedPaths, dependentCheckedRecordPhpSpacePathRepairIntegrationPaths } from "./dependent-checked-record-php-space-path-repair-source-history.mjs";
@@ -1934,7 +1935,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...hostedRefinementVerifierRepairChangedPaths
+	...dependentCheckedRecordPromotionContractChangedPaths
+	, ...dependentCheckedRecordPromotionContractIntegrationPaths
+	, ...hostedRefinementVerifierRepairChangedPaths
 	, ...hostedRefinementVerifierRepairIntegrationPaths
 	, ...callbackFinPhpWasmNominalRefusalRepairChangedPaths
 	, ...callbackFinPhpWasmNominalRefusalRepairIntegrationPaths
@@ -2655,8 +2658,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordPromotionContract
+		= beforeDependentCheckedRecordPromotionContractSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordPromotionContract) === expected)
+		return dependentCheckedRecordPromotionContract;
 	const hostedRefinementVerifierRepair
-		= beforeHostedRefinementVerifierRepairSource(path, text, expected);
+		= beforeHostedRefinementVerifierRepairSource(
+			path, dependentCheckedRecordPromotionContract, expected
+		);
 	if(sha256(hostedRefinementVerifierRepair) === expected)
 		return hostedRefinementVerifierRepair;
 	const callbackFinPhpWasmNominalRefusalRepair

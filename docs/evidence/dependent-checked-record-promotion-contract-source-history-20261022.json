@@ -1,0 +1,88 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c580330590241f10e822323537bb822f0c91db5eb538d1c44f2cb1788ecc5d12",
+      "path": "scripts/promote-dependent-checked-record-evidence.mjs"
+    },
+    {
+      "currentSha256": "abd1bf0d9da1df9ad0de8fc05e5555c29fe40b3de632b59557363165f085ae24",
+      "path": "tests/dependent-checked-record-promotion.test.mjs"
+    },
+    {
+      "currentSha256": "4b219a7927620b24d76892f2eab7b315592e52993ccdeb9d94d97f9847bcac31",
+      "path": "tests/helpers/dependent-checked-record-promotion.mjs"
+    },
+    {
+      "currentSha256": "00916b28686555258e7e3b18ce7e926e8625f5721222f3ea13255ec65b19900e",
+      "path": "scripts/update-dependent-checked-record-promotion-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "c6a4dac58cc8b4c370b35c934323f58ae7f69734ee183daec7ad4a84cc194493",
+      "path": "tests/helpers/dependent-checked-record-promotion-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0a3ae9017e69584011672080d798fc9ebb087de92469b7da0c6b878f6ee4e2a5",
+      "path": "tests/helpers/dependent-checked-record-promotion-contract-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "52bfa85c58f5e0b6f3641f639f619a9be0a8904f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "52b2b834ca178fbfe1dbe35c6320a375d87b08edf95efa188163c5cf409c6f7b",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-promotion-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "4b8f94cec42710b8bbbc18cbcfa86b2d9171e5a6d36c0271d82e24a443f1f9ae"
+    },
+    {
+      "currentSha256": "46a4f899941b10cb9a3047b8629371ae29f5bf974c3919674ef184a2d2dcb1bd",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPromotionContractSource, dependentCheckedRecordPromotionContractChangedPaths, dependentCheckedRecordPromotionContractIntegrationPaths } from \"./dependent-checked-record-promotion-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...dependentCheckedRecordPromotionContractChangedPaths\n\t, ...dependentCheckedRecordPromotionContractIntegrationPaths\n\t, ...hostedRefinementVerifierRepairChangedPaths\n",
+          "previous": "\t...hostedRefinementVerifierRepairChangedPaths\n",
+          "start": 150213
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPromotionContract\n\t\t= beforeDependentCheckedRecordPromotionContractSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPromotionContract) === expected)\n\t\treturn dependentCheckedRecordPromotionContract;\n",
+          "previous": "",
+          "start": 183315
+        },
+        {
+          "current": "\t\t= beforeHostedRefinementVerifierRepairSource(\n\t\t\tpath, dependentCheckedRecordPromotionContract, expected\n\t\t);\n",
+          "previous": "\t\t= beforeHostedRefinementVerifierRepairSource(path, text, expected);\n",
+          "start": 183602
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1c110397941703e0bcb1d7237e97be4da008cc4cbf6ea3a3d7b98baebc083938"
+    }
+  ],
+  "milestone": "dependent-checked-record-promotion-contract-source-v1",
+  "predecessorCommit": "6cff3434bff38689ea6bda776ae143057a265ad5",
+  "schemaVersion": 1,
+  "scope": "Authenticate eleven immutable dependent checked-record archives before promoting exactly 68 copied parameter/result cells across seventeen profiles; refuse missing verifiers, transitive loader failures, substituted artifacts, widened file sets and inferred host coverage.",
+  "updates": [
+    {
+      "currentSha256": "93b1b72cbe5604e7c6ab7dee0a5f0be1aaa7e71cc9783e18dad55f2223af1dad",
+      "edits": [
+        {
+          "current": "\t\t, \"dependent-checked-record-promotion\"\n",
+          "previous": "",
+          "start": 14216
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "accce8909cc98261cce7f92c44633114e2cec2e47c8c9547545c49db93983418"
+    }
+  ]
+}
