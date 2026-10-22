@@ -9,15 +9,21 @@ import { execFileSync } from "node:child_process";
 import { extname, posix } from "node:path";
 import { moduleSpecifiers } from "./module-closure.mjs";
 
+const sourceCache = new Map();
+
 /**
  * Read a tracked path exactly as it existed at one revision.
  *
  * @param revision - Full Git commit identity.
  * @param path - Repository-relative tracked path.
  */
-const original = (revision, path) => execFileSync(
-	"git", ["show", `${revision}:${path}`], { maxBuffer: 256 * 1024 ** 2 }
-);
+const original = (revision, path) => {
+	const key = `${revision}:${path}`;
+	if(!sourceCache.has(key)) sourceCache.set(key, execFileSync(
+		"git", ["show", key], { maxBuffer: 256 * 1024 ** 2 }
+	));
+	return sourceCache.get(key);
+};
 
 const closure = (revision, entries) => {
 	const paths = new Set();
