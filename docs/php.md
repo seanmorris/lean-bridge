@@ -840,15 +840,21 @@ Zend resource for each owned function, so its 64-bit identity never passes
 through a 32-bit PHP integer. Its borrowed callback identities expire with the
 call and cannot be reused after exhaustion.
 
-For native PHP, a synchronous host callback returning a selected `Subtype` must
-be wrapped with the generated namespace's `with_recovery($callback, $value)`
-function. The package validates the callable and the recovery's exact erased result shape
-before loading native libraries. Lean uses that recovery only to finish a call
-whose actual callback reply fails the selected constructor; it is not successful
-output. Returned `LeanClosure` objects validate selected `Subtype` arguments
-before invoking Lean and remain usable after rejection. Generated PHP source and
-the native carrier compile checks cover this contract; installed Composer
-acceptance remains pending. PHP-Wasm callback Subtypes remain separate work.
+For native PHP, a synchronous host callback returning a selected `Subtype` or
+checked record must be wrapped with the generated namespace's
+`with_recovery($callback, $value)` function. A checked-record recovery is the
+generated proof-free readonly value object. The package validates the callable
+and the recovery's exact result shape before application execution. Lean uses
+that recovery only to finish a call whose actual callback reply fails the
+selected constructor; it is not successful output. Returned `LeanClosure`
+objects validate selected `Subtype` and checked-record arguments before invoking
+Lean and remain usable after rejection.
+
+The [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)
+builds ordinary-source and independently reviewed Composer packages, removes
+the author source, installs offline, and runs the same 30 checks through weak
+and strict PHP callers before and after relocation. PHP-Wasm checked callbacks
+remain separate work.
 
 ### Bounded integers
 

@@ -20,8 +20,11 @@ const digest = async path => sha256(await readFile(path));
  * @param options.handoff - Authenticated release handoff removed before replay.
  * @param options.pkg - Package-set component entry consumed by the installation.
  * @param options.relocated - New source-free deployment root.
+ * @param options.expectedChecks - Exact independent-consumer check count.
  */
-export const closeCallbackSubtypeWit = async ({ consumer, handoff, pkg, relocated }) => {
+export const closeCallbackSubtypeWit = async options => {
+	const { consumer, handoff, pkg, relocated, expectedChecks = 26 } = options;
+	assert.ok(Number.isSafeInteger(expectedChecks) && expectedChecks > 0);
 	const root = join(consumer, "wit-wasi");
 	const packageName = `${pkg.name}-${pkg.version}-wit-wasi`;
 	const installed = join(root, packageName);
@@ -57,7 +60,7 @@ export const closeCallbackSubtypeWit = async ({ consumer, handoff, pkg, relocate
 		const result = await runCopied(join(relocated, "consumer"), [], relocated, copiedCleanEnvironment);
 		assert.equal(result.stderr, "");
 		const observation = JSON.parse(result.stdout);
-		assert.equal(observation.checks, 26);
+		assert.equal(observation.checks, expectedChecks);
 		const expected = Object.keys(libraries).map(path => join(relocated, packageName, path)).sort();
 		assert.deepEqual(observation.loadedLibraries.filter(path => path.startsWith(`${relocated}/`)).sort(), expected);
 		observations.push(observation);

@@ -369,14 +369,19 @@ results retire the runtime; conversion limits and allocation failures allow
 later calls. Resources or callable identities inside copied aggregates,
 retained host callbacks and asynchronous delivery remain unsupported.
 
-When a synchronous Java or Kotlin callback returns a selected `Subtype`, pass a
-generated `WithRecovery<SAM, Result>` containing the callback and one valid
-erased result value. The package validates both before native loading. Lean uses
-the recovery only when the callback reply fails the selected constructor; it is
-not successful output. Returned `LeanClosure` values validate selected
-`Subtype` arguments before invoking Lean and stay open after rejection. Java 22
-and Kotlin 2.2 source compilation cover this contract; installed JAR acceptance
-remains pending.
+When a synchronous Java or Kotlin callback returns a selected `Subtype` or
+checked record, pass a generated `WithRecovery<SAM, Result>` containing the
+callback and one valid proof-free result value. Checked records keep their
+generated Java record or Kotlin class; no proof field crosses the boundary. The
+package validates the recovery before application execution. Lean uses it only
+when the callback reply fails the selected constructor; it is not successful
+output. Returned `LeanClosure` values validate selected `Subtype` and
+checked-record arguments before invoking Lean and stay open after rejection.
+
+The [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)
+builds ordinary-source and independently reviewed Maven packages, removes the
+author source, installs them offline, compiles strict Java 22 and Kotlin 2.2
+callers with 30 checks each, and repeats both callers on a `jlink` runtime.
 
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths, typed callers, failure cleanup and runtime-only execution.

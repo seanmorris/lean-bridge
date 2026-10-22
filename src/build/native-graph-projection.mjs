@@ -55,8 +55,8 @@ export const compileNativeGraphProjection = (ir, targets, moduleName) => {
 			const refinements = callbackDefinitionRefinement(type, ir.types);
 			return refinements !== null && [...refinements.parameters, refinements.result].some(containsCheckedRecord);
 		});
-		if(callbackCheckedRecords && targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan"].includes(target)))
-			throw Object.assign(new TypeError("Callback checked records currently require C, C++, PyPI, Cargo, RubyGems or CPAN projections"), { code: "native-graph-projection-unavailable" });
+		if(callbackCheckedRecords && targets.some(target => !["c", "cpp", "pypi", "cargo", "rubygems", "cpan", "nuget", "maven", "php-native", "wit-wasi"].includes(target)))
+			throw Object.assign(new TypeError("Callback checked records require a native graph projection"), { code: "native-graph-projection-unavailable" });
 		const cTargets = targets.filter(target => ["c", "cpp"].includes(target));
 		const c = cTargets.length ? compileCallableGraphPackageModel(ir, cTargets) : null;
 		const python = targets.includes("pypi") ? compileCallablePythonGraphPackageModel(ir) : null;

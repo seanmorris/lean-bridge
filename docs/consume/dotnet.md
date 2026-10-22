@@ -608,14 +608,19 @@ depth/node limits raise `ArgumentException`; native allocation or identity-arena
 exhaustion raises `OutOfMemoryException`. Those errors allow subsequent calls.
 Malformed native output retires the runtime.
 
-When a synchronous host callback returns a selected `Subtype`, pass a generated
-`WithRecovery<TDelegate, TResult>` containing the delegate and one valid erased
-result value. The package validates both before loading native code. Lean uses
-the recovery only to finish cleanup when the callback's actual reply fails the
-selected constructor; it is never returned as successful output. A returned
-`LeanClosure` validates selected `Subtype` arguments before invoking Lean and
-remains open after a rejected argument. Source generation and exact C#
-compilation cover this contract; installed-package acceptance remains pending.
+When a synchronous host callback returns a selected `Subtype` or checked record,
+pass a generated `WithRecovery<TDelegate, TResult>` containing the delegate and
+one valid proof-free result value. Checked records keep their generated nominal
+record type; no proof field crosses the boundary. The package validates the
+recovery before application execution. Lean uses it only to finish cleanup when
+the callback's actual reply fails the selected constructor; it is never returned
+as successful output. A returned `LeanClosure` validates selected `Subtype` and
+checked-record arguments before invoking Lean and remains open after rejection.
+
+The [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)
+builds ordinary-source and independently reviewed NuGet packages, deletes the
+author source, installs the package offline, runs 30 independent C# checks, then
+replays the deployed assembly on an SDK-free .NET 8 runtime.
 
 Resource-containing aggregates, callable identities inside copied containers,
 retained host callbacks, asynchronous delivery and post-fork calls are not part

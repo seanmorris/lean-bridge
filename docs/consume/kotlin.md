@@ -350,6 +350,14 @@ host callbacks and asynchronous delivery remain unsupported.
 [Installed recursive callback checks](../evidence/jvm-recursive-callables-20260926.md)
 cover both authoring paths and compile this example against the original JAR.
 
+Selected `Subtype` and checked-record callback results use the generated
+`WithRecovery` class described in the [Java callback rules](java.md#recursive-callback-values).
+Kotlin uses the generated proof-free checked-record class for both the callback
+result and its recovery. Returned Lean closures validate checked-record inputs
+before invocation and remain usable after rejection. The
+[remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)
+runs the ordinary and reviewed Kotlin packages beside their Java projections.
+
 ### Owned resources and aggregates
 
 Import the companion `.kotlin` API and value types from the prepared owned-value

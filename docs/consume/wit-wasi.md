@@ -960,14 +960,21 @@ invalidates its aliases and defers active cleanup. The [recursive limits](#recur
 also apply to callback arguments, replies and captured values. Limits leave the
 session usable; malformed native outputs retire the shared runtime.
 
-For a host callback returning a selected `Subtype`, its generated typed
-`*_callbackN_create` helper takes an additional pointer to one valid erased
-result value. Registration validates and owns a copy before application
-execution. Lean uses it only when the callback's actual reply fails the selected
+For a host callback returning a selected `Subtype` or checked record, its
+generated typed `*_callbackN_create` helper takes an additional pointer to one
+valid proof-free result value. A checked record uses its generated C record;
+there is no proof field. Registration owns a copy. The constructor is checked
+before callback entry, so an invalid recovery cannot enter the callback. Lean
+uses the recovery only when the callback's actual reply fails the selected
 constructor; it is not successful output. Returned function helpers validate
-selected `Subtype` arguments before entering Lean and keep the token usable
-after rejection. The generated host and headers pass strict C and C++ source
-checks; installed archive acceptance remains pending.
+selected `Subtype` and checked-record arguments before entering Lean and keep
+the token usable after rejection.
+
+The [required remaining-host workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-remaining.yml)
+builds ordinary-source and independently reviewed WIT packages, removes the
+author source, installs offline, compiles a 64-check public C caller, then
+deletes its source and tools and repeats the relocated executable twice against
+the authenticated library closure.
 
 ### Bounded integers
 

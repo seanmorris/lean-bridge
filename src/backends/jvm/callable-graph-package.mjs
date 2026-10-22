@@ -43,11 +43,11 @@ defers release until that call returns. Cleaner reclamation is a fallback, not
 a substitute for explicit close. Host exceptions keep their original identity
 after native cleanup. Borrowed callbacks expire when the exporting call ends.
 
-${recovery ? `A host callback returning a selected Lean Subtype uses a typed WithRecovery
+${recovery ? `A host callback whose result contains a checked Lean Subtype or checked record uses a typed WithRecovery
 record containing its SAM and one value of the exact erased result type. The
 recovery is validated before Lean or the callback runs, is used only to finish
 a rejected native call and is never successful output. Returned LeanClosure
-values validate selected Subtype inputs before their body runs and remain open
+values validate selected Subtype and checked-record inputs before their body runs and remain open
 after rejection. Java and Kotlin expose the same directional contract.
 
 ` : ''}
