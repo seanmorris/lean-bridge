@@ -38,6 +38,7 @@ test("nominal native entry workflow keeps measurement separate and mandatory", a
 	for(const source of ["export LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH=1"
 		, "export LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38"
 		, "for route in ordinary reviewed; do", "for mode in full result-only; do"
+		, "mkdir -p \"$output_root/$route\""
 		, "check-nominal-subtype-entry-native-ci.mjs"])
 		assert.ok(shell.includes(source), source);
 	assert.doesNotMatch(workflow, /continue-on-error:|if-no-files-found: ignore/u);

@@ -29,6 +29,7 @@ export LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_PROFILES=c,cpp
 export LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH=1
 export LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38
 for route in ordinary reviewed; do
+  mkdir -p "$output_root/$route"
   for mode in full result-only; do
     output="$output_root/$route/$mode"
     mkdir "$output"
