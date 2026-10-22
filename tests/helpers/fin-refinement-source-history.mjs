@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackFinPhpWasmNominalRefusalRepairSource, callbackFinPhpWasmNominalRefusalRepairChangedPaths, callbackFinPhpWasmNominalRefusalRepairIntegrationPaths } from "./callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPhpSpacePathRepairSource, dependentCheckedRecordPhpSpacePathRepairChangedPaths, dependentCheckedRecordPhpSpacePathRepairIntegrationPaths } from "./dependent-checked-record-php-space-path-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmValidatorRepairSource, callbackFinPhpWasmValidatorRepairChangedPaths, callbackFinPhpWasmValidatorRepairIntegrationPaths } from "./callback-fin-php-wasm-validator-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptRetentionSource, ownedCheckedRecordJavaScriptRetentionChangedPaths } from "./owned-checked-record-javascript-retention-source-history.mjs";
@@ -1932,7 +1933,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPhpSpacePathRepairChangedPaths
+	...callbackFinPhpWasmNominalRefusalRepairChangedPaths
+	, ...callbackFinPhpWasmNominalRefusalRepairIntegrationPaths
+	, ...dependentCheckedRecordPhpSpacePathRepairChangedPaths
 	, ...dependentCheckedRecordPhpSpacePathRepairIntegrationPaths
 	, ...callbackFinPhpWasmValidatorRepairChangedPaths
 	, ...callbackFinPhpWasmValidatorRepairIntegrationPaths
@@ -2649,9 +2652,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackFinPhpWasmNominalRefusalRepair
+		= beforeCallbackFinPhpWasmNominalRefusalRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackFinPhpWasmNominalRefusalRepair) === expected)
+		return callbackFinPhpWasmNominalRefusalRepair;
 	const dependentCheckedRecordPhpSpacePathRepair
 		= beforeDependentCheckedRecordPhpSpacePathRepairSource(
-			path, text, expected
+			path, callbackFinPhpWasmNominalRefusalRepair, expected
 		);
 	if(sha256(dependentCheckedRecordPhpSpacePathRepair) === expected)
 		return dependentCheckedRecordPhpSpacePathRepair;

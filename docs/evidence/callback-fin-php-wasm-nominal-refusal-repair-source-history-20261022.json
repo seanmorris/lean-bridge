@@ -1,0 +1,157 @@
+{
+  "additions": [
+    {
+      "currentSha256": "2de803d43e86f6fedbfd169f7e0977af585b9e04bdf4552aa6e80dc9b05ae93e",
+      "path": "scripts/update-callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "dbbd48a5f437d48978735638016e97a180452ccdf940054610b405efda41f9e9",
+      "path": "tests/helpers/callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "a500feb46e929095aac96468f0dc5b96061e7d4e39120746c4447da3638b8186",
+      "path": "tests/helpers/callback-fin-php-wasm-nominal-refusal-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "10f0fe2989e63ff3043e199a468122e572cef18c",
+  "integrationBaseCommit": "10f0fe2989e63ff3043e199a468122e572cef18c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2f20dc30af2de19fc64406191dd7b5da8b8c07278d54e543ff9e94a6449a3489",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-php-wasm-nominal-refusal-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "5802d3df4edf08a2acd66203e97af2bc03df755d4fb81077c3b040ed118db8c1"
+    },
+    {
+      "currentSha256": "984a68e6bb1bf764baf099bf2f332815e0f70b97628813ff6306bcb9cfbea94c",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPhpWasmNominalRefusalRepairSource, callbackFinPhpWasmNominalRefusalRepairChangedPaths, callbackFinPhpWasmNominalRefusalRepairIntegrationPaths } from \"./callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackFinPhpWasmNominalRefusalRepairChangedPaths\n\t, ...callbackFinPhpWasmNominalRefusalRepairIntegrationPaths\n\t, ...dependentCheckedRecordPhpSpacePathRepairChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPhpSpacePathRepairChangedPaths\n",
+          "start": 149758
+        },
+        {
+          "current": "\tconst callbackFinPhpWasmNominalRefusalRepair\n\t\t= beforeCallbackFinPhpWasmNominalRefusalRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackFinPhpWasmNominalRefusalRepair) === expected)\n\t\treturn callbackFinPhpWasmNominalRefusalRepair;\n",
+          "previous": "",
+          "start": 182638
+        },
+        {
+          "current": "\t\t\tpath, callbackFinPhpWasmNominalRefusalRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 182989
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "1d6898b919fc85cef39f97470821b2bb0c1af78abfd8121490ce3b2f75d0f37b"
+    }
+  ],
+  "milestone": "callback-fin-php-wasm-nominal-refusal-repair-source-v1",
+  "predecessorCommit": "c3b62a586f24a2ad97efd304b6b4380be3da8e45",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm returned closures locate shared nominal Fin-field refusals without changing reusable callback direction, report them as invalid arguments instead of runtime corruption, recover for later calls, and exercise Unit arguments and exact callback accounting.",
+  "updates": [
+    {
+      "currentSha256": "652368511f5018308d8b5544fb6543b4e6a36ea3a25d722951c02458d0c28a15",
+      "edits": [
+        {
+          "current": "/**\n * Whether a copied root reaches a compiler-owned nominal refinement. Nominal\n * field bounds live on the shared definition rather than on each callback use,\n * but they still make that callback directional and capable of refusing input.\n *\n * @param abi - Closed callable carrier containing copied definitions.\n * @param root - Copied value root to inspect.\n */\nconst componentStructuredNominallyConstrained = (abi, root) => {\n\tconst constraints = new Set((abi.nominalRefinements ?? []).map(entry => entry.id));\n\tif(!constraints.size) return false;\n\tconst definitions = new Map(abi.types.map(type => [type.id, type]));\n\tconst visit = (type, seen = new Set()) => {\n\t\tif(type.kind === \"primitive\") return false;\n\t\tif(type.kind === \"apply\") return type.arguments.some(child => visit(child, seen));\n\t\tif(constraints.has(type.id)) return true;\n\t\tif(seen.has(type.id)) return false;\n\t\tconst definition = definitions.get(type.id);\n\t\tif(!definition) return false;\n\t\tconst inner = new Set([...seen, type.id]);\n\t\tif(definition.kind === \"alias\") return visit(definition.target, inner);\n\t\tif(definition.kind === \"record\") return definition.fields.some(field => visit(field.type, inner));\n\t\treturn definition.cases.some(branch => branch.fields.some(field => visit(field.type, inner)));\n\t};\n\treturn visit(root);\n};\n\n",
+          "previous": "",
+          "start": 2496
+        },
+        {
+          "current": "export const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) => {\n\tconst direction = componentStructuredCallbackDirection(abi, signature, inferFinDirection);\n\tconst nominal = signature.parameters.some(type => componentStructuredNominallyConstrained(abi, type));\n\t// Nominal Fin bounds live on the copied definition, so they deliberately do not\n\t// turn an otherwise reusable callback identity into a directional one. A backend\n\t// that recovers Fin roles may still identify its actual returned-closure use and\n\t// classify that lease's empty carrier as an argument refusal.\n\tconst leasedNominal = direction === null && inferFinDirection && nominal\n\t\t&& abi.exports.some(item => item.result.kind === \"named\" && item.result.id === signature.id);\n\treturn (direction === \"closure\" || leasedNominal)\n\t\t&& Boolean(signature.refinements?.parameters.some(Boolean) || nominal);\n};\n",
+          "previous": "export const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) =>\n\tcomponentStructuredCallbackDirection(abi, signature, inferFinDirection) === \"closure\"\n\t&& Boolean(signature.refinements?.parameters.some(Boolean));\n",
+          "start": 5520
+        }
+      ],
+      "path": "src/abi/component-structured-callables.mjs",
+      "previousSha256": "82320577a0e89e7781343b85d5e40d631d92215fa39bddc5754a5fd072f5d6ee"
+    },
+    {
+      "currentSha256": "e283fbc6d1fcb9003bfc52dea8dcb7a26b882110935a4a8dd9c3df590996ef0d",
+      "edits": [
+        {
+          "current": "\t\tconst rejectsInput = lease && (direction(lease) === \"closure\" || refuses(lease))\n",
+          "previous": "\t\tconst rejectsInput = lease && direction(lease) === \"closure\"\n",
+          "start": 9115
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-calls.mjs",
+      "previousSha256": "e94062bec0c6e24e90959c8241c363bc61fe945f83139d91495a41a93be36502"
+    },
+    {
+      "currentSha256": "8d00407af17709821582911d5235112d7ee009390e0a232502b4877967fa0a98",
+      "edits": [
+        {
+          "current": "$array = digits(null);\n",
+          "previous": "$array = digits($n(0));\n",
+          "start": 2053
+        },
+        {
+          "current": "$rows = tiles(null);\n",
+          "previous": "$rows = tiles($n(0));\n",
+          "start": 2339
+        },
+        {
+          "current": "$check($calls === 8, 'callback call count');\n",
+          "previous": "$check($calls === 7, 'callback call count');\n",
+          "start": 3676
+        }
+      ],
+      "path": "tests/fixtures/reviewed-callback-fin-consumers/php-wasm.php",
+      "previousSha256": "9159a886b6b3148bf2a41ac9898cc5b9e3cfde8ff31bc6530e28a0170b7d413d"
+    },
+    {
+      "currentSha256": "2202d32d1550f9157a8c68bd0b76e1bdda7ed1bea94bca023e0582c32bdd5e31",
+      "edits": [
+        {
+          "current": "\tchecks: 23, rejections: 7, callback_calls: 8, word_bits: 32, php: \"8.4.1\"\n",
+          "previous": "\tchecks: 25, rejections: 8, callback_calls: 7, word_bits: 32, php: \"8.4.1\"\n",
+          "start": 1097
+        }
+      ],
+      "path": "tests/helpers/callback-fin-php-wasm-fixture.mjs",
+      "previousSha256": "24b711fcbb619ddf6aadbf460d03fb0048d1d98a2869b03a5704b63b3484dfc3"
+    },
+    {
+      "currentSha256": "8e332c3e5af1a00384728981a22ab97d07a891a471a01a0044ab419be6628762",
+      "edits": [
+        {
+          "current": "\tassert.match(weak, /\\$array = digits\\(null\\);/u);\n\tassert.match(weak, /\\$rows = tiles\\(null\\);/u);\n\tassert.doesNotMatch(weak, /(?:digits|tiles)\\(\\$n\\(0\\)\\)/u);\n",
+          "previous": "",
+          "start": 1549
+        }
+      ],
+      "path": "tests/helpers/callback-fin-php-wasm-tests.mjs",
+      "previousSha256": "c961e960bf819690d2d3e4f0580e9084c8cd4c9790187afff845a0ab9131274f"
+    },
+    {
+      "currentSha256": "6ae412d749b70e57f0e33a50f668298981c6ab8f8c8ea9b61d47fc3c2a1620dd",
+      "edits": [
+        {
+          "current": "import { componentStructuredCallbackDirection, componentStructuredClosureRefuses } from \"../src/abi/component-structured-callables.mjs\";\nimport { componentStructuredClosureRefusals } from \"../src/build/component-structured-callable-lean.mjs\";\n",
+          "previous": "",
+          "start": 2159
+        },
+        {
+          "current": "test(\"nominal callback bounds make returned closure refusals recoverable without changing reusable direction\", () => {\n\tconst ir = reviewedCallbackFinReview({ hostReply: true });\n\tconst copiedGraph = createNativeCallableGraphDescriptor(ir);\n\tconst abi = nativeCallableGraphCarrierAbi(copiedGraph, ir);\n\tconst callback = name => {\n\t\tconst declaration = ir.declarations.find(item => item.id === `lean:ReviewedCallbacks.${name}`);\n\t\tassert.equal(declaration.result.type.kind, \"named\");\n\t\treturn abi.callbacks.find(item => item.id === declaration.result.type.id);\n\t};\n\tconst tiles = callback(\"tiles\"), tileMaker = callback(\"tileMaker\");\n\tconst apply = abi.callbacks.find(item => item.id === ir.declarations\n\t\t.find(entry => entry.id === \"lean:ReviewedCallbacks.apply\").parameters[0].type.id);\n\tassert.equal(componentStructuredCallbackDirection(abi, tiles, true), null);\n\tassert.equal(componentStructuredCallbackDirection(abi, tileMaker, true), null);\n\tassert.equal(componentStructuredCallbackDirection(abi, apply, true), null);\n\tassert.equal(componentStructuredClosureRefuses(abi, tiles, true), true);\n\tassert.equal(componentStructuredClosureRefuses(abi, tileMaker, true), false);\n\tassert.equal(componentStructuredClosureRefuses(abi, apply, true), false);\n\tconst refusals = componentStructuredClosureRefusals(abi, { finDirections: true });\n\tconst site = refusals.sites.find(item => item.bindingId === tiles.id);\n\tassert.equal(site.refinements.parameters[0].kind, \"list\");\n\tassert.equal(site.refinements.parameters[0].arguments[0].kind, \"record\");\n\tassert.equal(site.refinements.parameters[0].arguments[0].arguments[0].bound, \"5\");\n\n\tconst generated = generateNativeCallableGraphCalls(ir, copiedGraph,\n\t\t{ initializer: \"initialize_LeanBridgeNative0123456789abcdef\", finDirections: true });\n\tconst call = signature => {\n\t\tconst start = generated.source.indexOf(`uint32_t ${generated.layout.prefix}_callback_${signature.key}_lease_call(`);\n\t\treturn generated.source.slice(start, generated.source.indexOf(\"\\n}\\n\", start));\n\t};\n\tassert.match(call(tiles), new RegExp(`int refused = 0;[\\\\s\\\\S]+ng_closure_refusal_${tiles.key}\\\\(a0\\\\) == NG_INVALID`, \"u\"));\n\tassert.doesNotMatch(call(tileMaker), /int refused = 0|ng_closure_refusal_/u);\n\tassert.match(generated.source, /ng_refinement_text\\(\"\\.digit\"[\\s\\S]+is not below its Fin 5 bound/u);\n});\n\n",
+          "previous": "",
+          "start": 8220
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "9b27aa7ba5f9c73965089d722b0a16cdd0ccc9bfe446b1531f86dfdcac1eed7b"
+    }
+  ]
+}
