@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeHostedArchiveFoundationSource, callbackSubtypeHostedArchiveFoundationChangedPaths } from "./callback-subtype-hosted-archive-foundation-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationPrecisionSource, phpWasmRefinementEntryDocumentationPrecisionChangedPaths } from "./php-wasm-refinement-entry-documentation-precision-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from "./php-wasm-refinement-entry-documentation-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierRootSource, phpWasmRefinementEntryHostedVerifierRootChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs";
@@ -1914,7 +1915,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
+	...callbackSubtypeHostedArchiveFoundationChangedPaths
+	, ...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
 	, ...phpWasmRefinementEntryDocumentationChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierRootChangedPaths
 	, ...phpWasmRefinementEntryPromotionChangedPaths
@@ -2611,9 +2613,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeHostedArchiveFoundation
+		= beforeCallbackSubtypeHostedArchiveFoundationSource(
+			path, text, expected
+		);
+	if(sha256(callbackSubtypeHostedArchiveFoundation) === expected)
+		return callbackSubtypeHostedArchiveFoundation;
 	const phpWasmRefinementEntryDocumentationPrecision
 		= beforePhpWasmRefinementEntryDocumentationPrecisionSource(
-			path, text, expected
+			path, callbackSubtypeHostedArchiveFoundation, expected
 		);
 	if(sha256(phpWasmRefinementEntryDocumentationPrecision) === expected)
 		return phpWasmRefinementEntryDocumentationPrecision;

@@ -1,0 +1,137 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a49f4f65fa0d7984a43b887bc677faad4263d53cc2a3fdb6e13046012dca50cf",
+      "path": "scripts/archive-callback-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "c171cdd5495a3ad1351663cb7faea4d43f588343f75d96d3a896b3a5aff1cbb5",
+      "path": "scripts/update-callback-subtype-hosted-archive-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "ad0700ceb33f85109814dacd87d5b9db2dabbe18f6e4b52cc11fcc883b80f47a",
+      "path": "tests/callback-subtype-hosted-archive.test.mjs"
+    },
+    {
+      "currentSha256": "6fa9b687cde0e6996ece79e2f7551a211f7bfe9d013b338ca016598c286d98e6",
+      "path": "tests/helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "69be8b55d84fb43420e460881d89e0001812075dacea4949f512292d31da1391",
+      "path": "tests/helpers/callback-subtype-hosted-archive-foundation-source-history.mjs"
+    },
+    {
+      "currentSha256": "acd95fe149a581f99e04d3f0eab4fc3430693d40c74c4247d322a4f1d3382732",
+      "path": "tests/helpers/callback-subtype-hosted-archive.mjs"
+    },
+    {
+      "currentSha256": "fc0df9e0cee9ec4ba1730668773931da966150c978de2c63754a0ae65800ec2b",
+      "path": "tests/helpers/callback-subtype-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "436ef941e8f6267ac11415f43a83c72bc7c29b89a8ade4d8b951f7cadd14229b",
+      "path": "tests/helpers/callback-subtype-hosted-evidence.mjs"
+    },
+    {
+      "currentSha256": "ea2d2c68a402fff11250a1c964c335a7a4cc47a44176cc6689d4ab6e21dce888",
+      "path": "tests/helpers/callback-subtype-remaining-ci.mjs"
+    }
+  ],
+  "implementationCommit": "fe90a7fa3170f1633a3a657d95e27e62dfde001f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3531a2c6f6248f95551dc4198f0b81ee758a4c60ce92923191e3d71a2be3d93e",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeHostedArchiveFoundationSource, callbackSubtypeHostedArchiveFoundationChangedPaths } from \"./callback-subtype-hosted-archive-foundation-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeHostedArchiveFoundationChangedPaths\n\t, ...phpWasmRefinementEntryDocumentationPrecisionChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryDocumentationPrecisionChangedPaths\n",
+          "start": 146442
+        },
+        {
+          "current": "\tconst callbackSubtypeHostedArchiveFoundation\n\t\t= beforeCallbackSubtypeHostedArchiveFoundationSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackSubtypeHostedArchiveFoundation) === expected)\n\t\treturn callbackSubtypeHostedArchiveFoundation;\n",
+          "previous": "",
+          "start": 178183
+        },
+        {
+          "current": "\t\t\tpath, callbackSubtypeHostedArchiveFoundation, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 178542
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "aa688bb19b91057aa81f2917ed21e49edfd0f4f109e154500702d95c7d46090a"
+    },
+    {
+      "currentSha256": "8d6341ed6312e97eb7064491c5e37cee5c8f07149ff30c2b9d426d8c20ac064e",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-hosted-archive-foundation-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4024
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "fcb55bfa975d8c0362ed0963df21af1312f37cde8c01418da92a47e701645b68"
+    }
+  ],
+  "milestone": "callback-subtype-hosted-archive-foundation-v1",
+  "predecessorCommit": "46dd16641b6a7fcb756553cb13eea70bef3614d4",
+  "schemaVersion": 1,
+  "scope": "Callback Subtype hosted evidence can independently replay all eight producer artifacts, including a reusable exact verifier for the four managed-host lanes and the exact producer, checker, consumer and archiver source closures.",
+  "updates": [
+    {
+      "currentSha256": "448650e5c3e32df6433c195d61438951c4726e4667389fdba5d31e00c5f9e5be",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import assert from \"node:assert/strict\";\n",
+          "start": 94
+        },
+        {
+          "current": "import { canonicalJson } from \"../src/capsule/node.mjs\";\nimport {\n\tcallbackSubtypeRemainingVerification\n\t, parseCallbackSubtypeRemainingCiArgs\n} from \"../tests/helpers/callback-subtype-remaining-ci.mjs\";\n",
+          "previous": "import { canonicalJson, sha256 } from \"../src/capsule/node.mjs\";\nimport { assertCallbackSubtypeNativeTap } from \"../tests/helpers/callback-subtype-native-ci.mjs\";\n",
+          "start": 139
+        },
+        {
+          "current": "const selected = parseCallbackSubtypeRemainingCiArgs(process.argv.slice(2));\nprocess.stdout.write(canonicalJson(callbackSubtypeRemainingVerification(\n\tselected.producer, selected.profiles\n\t, await readFile(selected.tap, \"utf8\")\n\t, JSON.parse(await readFile(selected.report, \"utf8\"))\n)));\n",
+          "previous": "const usage = \"Usage: check-callback-subtype-remaining-ci.mjs --producer <commit> --profiles <profile,...> --tap <tap> --report <json>\";\nconst keys = [\"producer\", \"profiles\", \"tap\", \"report\"], selected = {};\nassert.equal(process.argv.length, 2 + keys.length * 2, usage);\nfor(let index = 2; index < process.argv.length; index += 2)\n{\n\tconst flag = process.argv[index], key = flag?.slice(2), value = process.argv[index + 1];\n\tassert.ok(flag?.startsWith(\"--\") && keys.includes(key) && !Object.hasOwn(selected, key)\n\t\t&& value && !value.startsWith(\"--\") && !/[\\0\\r\\n]/u.test(value), usage);\n\tselected[key] = value;\n}\nassert.match(selected.producer, /^[a-f0-9]{40}$/u);\nconst profiles = selected.profiles.split(\",\").sort(), allowed = [\"dotnet\", \"java\", \"kotlin\", \"php-native\", \"wit-wasi\"];\nassert.ok(profiles.length > 0 && profiles.length === new Set(profiles).size\n\t&& profiles.every(profile => allowed.includes(profile)), usage);\nconst testName = \"ordinary and reviewed remaining managed callback Subtypes install offline\";\nassertCallbackSubtypeNativeTap(await readFile(selected.tap, \"utf8\"), testName);\nconst report = JSON.parse(await readFile(selected.report, \"utf8\"));\nassert.deepEqual(Object.keys(report).sort(), [\"reports\", \"schemaVersion\"]);\nassert.equal(report.schemaVersion, 1); assert.equal(report.reports.length, profiles.length * 2);\nconst exact = [\"bindingIrSha256\", \"checks\", \"compilerFreePath\", \"consumerSha256\"\n\t, \"offlineInstall\"\n\t, \"profile\"\n\t, \"receiptSha256\"\n\t, \"route\"\n\t, \"sourceRemovedBeforeInstallation\"];\nconst cells = new Set();\nfor(const item of report.reports)\n{\n\tconst jvmKeys = [\"componentSha256\", \"dependencyClosureSha256\", \"offlineMaven\", \"repeatExecution\", \"runtimeOnly\"];\n\tconst dotnetKeys = [\"installedAssemblySha256\", \"repeatExecution\", \"runtimeVersion\", \"sdkFreeRuntime\", \"sourceFreeExecution\"];\n\tconst phpKeys = [\"closedComposerInstall\", \"packageFileSetSha256\", \"relocatedReplay\", \"repeatExecution\", \"vendorFilesSha256\"];\n\tconst witKeys = [\"handoffRemovedBeforeReplay\"\n\t\t, \"libraryClosureSha256\", \"packageFileSetSha256\", \"relocatedReplay\"\n\t\t, \"repeatExecution\", \"runtimeOnly\", \"sourceFreeExecution\"];\n\tassert.deepEqual(Object.keys(item).sort(), [\n\t\t...exact\n\t\t, ...[\"java\", \"kotlin\"].includes(item.profile) ? jvmKeys : []\n\t\t, ...item.profile === \"dotnet\" ? dotnetKeys : []\n\t\t, ...item.profile === \"php-native\" ? phpKeys : []\n\t\t, ...item.profile === \"wit-wasi\" ? witKeys : []\n\t].sort());\n\tassert.ok(profiles.includes(item.profile)); assert.ok([\"ordinary\", \"reviewed\"].includes(item.route));\n\tassert.equal(item.checks, item.profile === \"wit-wasi\" ? 26 : 14);\n\tfor(const flag of [\"compilerFreePath\", \"offlineInstall\", \"sourceRemovedBeforeInstallation\"])\n\t\tassert.equal(item[flag], true);\n\tif([\"java\", \"kotlin\"].includes(item.profile))\n\t{\n\t\tfor(const flag of [\"offlineMaven\", \"repeatExecution\", \"runtimeOnly\"]) assert.equal(item[flag], true);\n\t\tfor(const field of [\"componentSha256\", \"dependencyClosureSha256\"])\n\t\t\tassert.match(item[field], /^[a-f0-9]{64}$/u);\n\t}\n\tif(item.profile === \"dotnet\")\n\t{\n\t\tfor(const flag of [\"repeatExecution\", \"sdkFreeRuntime\", \"sourceFreeExecution\"])\n\t\t\tassert.equal(item[flag], true);\n\t\tassert.match(item.installedAssemblySha256, /^[a-f0-9]{64}$/u);\n\t\tassert.match(item.runtimeVersion, /^8\\.0\\./u);\n\t}\n\tif(item.profile === \"php-native\")\n\t{\n\t\tfor(const flag of [\"closedComposerInstall\", \"relocatedReplay\", \"repeatExecution\"])\n\t\t\tassert.equal(item[flag], true);\n\t\tfor(const field of [\"packageFileSetSha256\", \"vendorFilesSha256\"])\n\t\t\tassert.match(item[field], /^[a-f0-9]{64}$/u);\n\t}\n\tif(item.profile === \"wit-wasi\")\n\t{\n\t\tfor(const flag of [\"handoffRemovedBeforeReplay\", \"relocatedReplay\", \"repeatExecution\", \"runtimeOnly\", \"sourceFreeExecution\"])\n\t\t\tassert.equal(item[flag], true);\n\t\tfor(const field of [\"libraryClosureSha256\", \"packageFileSetSha256\"])\n\t\t\tassert.match(item[field], /^[a-f0-9]{64}$/u);\n\t}\n\tfor(const field of [\"bindingIrSha256\", \"consumerSha256\", \"receiptSha256\"])\n\t\tassert.match(item[field], /^[a-f0-9]{64}$/u);\n\tconst cell = `${item.route}/${item.profile}`; assert.equal(cells.has(cell), false); cells.add(cell);\n}\nassert.deepEqual([...cells].sort(), [\"ordinary\", \"reviewed\"].flatMap(route => profiles.map(profile => `${route}/${profile}`)).sort());\nprocess.stdout.write(canonicalJson({ schemaVersion: 1\n\t, producerCommit: selected.producer\n\t, kind: \"callback-subtype-remaining\"\n\t, profiles\n\t, routes: [\"ordinary\", \"reviewed\"]\n\t, reports: report.reports.length\n\t, reportSha256: sha256(canonicalJson(report)) }));\n",
+          "start": 344
+        }
+      ],
+      "path": "scripts/check-callback-subtype-remaining-ci.mjs",
+      "previousSha256": "c4639a0912a95199aff9823bce888c9c9d058035eb9abef7c93c1d014d75e0ae"
+    },
+    {
+      "currentSha256": "eb7b6bd1bbb02bc4a851ca63636dd867a1982aeebadbf1fa6f06f412911d2f8b",
+      "edits": [
+        {
+          "current": "import {\n\tcallbackSubtypeRemainingTestName\n\t, callbackSubtypeRemainingVerification\n\t, parseCallbackSubtypeRemainingCiArgs\n} from \"./helpers/callback-subtype-remaining-ci.mjs\";\n",
+          "previous": "",
+          "start": 542
+        },
+        {
+          "current": "const remainingReport = profiles => {\n\tconst reports = [\"ordinary\", \"reviewed\"].flatMap(route => profiles.map(\n\t\tprofile => ({\n\t\t\tbindingIrSha256: sha(route === \"ordinary\" ? \"a\" : \"b\")\n\t\t\t, checks: profile === \"wit-wasi\" ? 26 : 14\n\t\t\t, compilerFreePath: true\n\t\t\t, consumerSha256: sha(\"1\")\n\t\t\t, offlineInstall: true\n\t\t\t, profile\n\t\t\t, receiptSha256: sha(\"2\")\n\t\t\t, route\n\t\t\t, sourceRemovedBeforeInstallation: true\n\t\t\t, ...[\"java\", \"kotlin\"].includes(profile) ? {\n\t\t\t\tcomponentSha256: sha(\"3\"), dependencyClosureSha256: sha(\"4\")\n\t\t\t\t, offlineMaven: true, repeatExecution: true, runtimeOnly: true\n\t\t\t} : {}\n\t\t\t, ...profile === \"dotnet\" ? {\n\t\t\t\tinstalledAssemblySha256: sha(\"3\"), repeatExecution: true\n\t\t\t\t, runtimeVersion: \"8.0.21\", sdkFreeRuntime: true\n\t\t\t\t, sourceFreeExecution: true\n\t\t\t} : {}\n\t\t\t, ...profile === \"php-native\" ? {\n\t\t\t\tclosedComposerInstall: true, packageFileSetSha256: sha(\"3\")\n\t\t\t\t, relocatedReplay: true, repeatExecution: true\n\t\t\t\t, vendorFilesSha256: sha(\"4\")\n\t\t\t} : {}\n\t\t\t, ...profile === \"wit-wasi\" ? {\n\t\t\t\thandoffRemovedBeforeReplay: true, libraryClosureSha256: sha(\"3\")\n\t\t\t\t, packageFileSetSha256: sha(\"4\"), relocatedReplay: true\n\t\t\t\t, repeatExecution: true, runtimeOnly: true\n\t\t\t\t, sourceFreeExecution: true\n\t\t\t} : {}})\n\t));\n\treturn { schemaVersion: 1, reports };\n};\n\n",
+          "previous": "",
+          "start": 3160
+        },
+        {
+          "current": "test(\"callback Subtype remaining checker is reusable by hosted archival\", () => {\n\tconst commit = \"e\".repeat(40);\n\tfor(const profiles of [\n\t\t[\"dotnet\"], [\"java\", \"kotlin\"], [\"php-native\"], [\"wit-wasi\"]\n\t]) {\n\t\tconst report = remainingReport(profiles);\n\t\tconst checked = callbackSubtypeRemainingVerification(\n\t\t\tcommit, profiles, tap(callbackSubtypeRemainingTestName), report);\n\t\tassert.deepEqual(checked.profiles, [...profiles].sort());\n\t\tassert.equal(checked.reports, profiles.length * 2);\n\t}\n\tassert.deepEqual(parseCallbackSubtypeRemainingCiArgs([\n\t\t\"--producer\", commit, \"--profiles\", \"kotlin,java\"\n\t\t, \"--tap\", \"run.tap\", \"--report\", \"report.json\"\n\t]), { producer: commit, profiles: [\"java\", \"kotlin\"]\n\t\t, tap: \"run.tap\", report: \"report.json\" });\n\tconst changed = remainingReport([\"wit-wasi\"]);\n\tchanged.reports[0].handoffRemovedBeforeReplay = false;\n\tassert.throws(() => callbackSubtypeRemainingVerification(\n\t\tcommit, [\"wit-wasi\"], tap(callbackSubtypeRemainingTestName), changed));\n});\n\n",
+          "previous": "",
+          "start": 6132
+        },
+        {
+          "current": "\t\t\"tests/helpers/callback-subtype-remaining-ci.mjs\", \"utf8\"\n",
+          "previous": "\t\t\"scripts/check-callback-subtype-remaining-ci.mjs\", \"utf8\"\n",
+          "start": 9330
+        }
+      ],
+      "path": "tests/callback-subtype-native-ci.test.mjs",
+      "previousSha256": "56d653bf59be10bd4209d9a8ccff6fad2895c4cb1ca9d0169228723fd57c345a"
+    }
+  ]
+}
