@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeDocumentationReviewRepairSource, callbackSubtypeDocumentationReviewRepairChangedPaths } from "./callback-subtype-documentation-review-repair-source-history.mjs";
 import { beforePhpWasmRefinementEntryGeneratorClosureSource, phpWasmRefinementEntryGeneratorClosureChangedPaths } from "./php-wasm-refinement-entry-generator-closure-source-history.mjs";
 import { beforeCallbackSubtypeDocumentationReadinessSource, callbackSubtypeDocumentationReadinessChangedPaths } from "./callback-subtype-documentation-readiness-source-history.mjs";
 import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from "./callback-subtype-test-registration-source-history.mjs";
@@ -1920,7 +1921,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryGeneratorClosureChangedPaths
+	...callbackSubtypeDocumentationReviewRepairChangedPaths
+	, ...phpWasmRefinementEntryGeneratorClosureChangedPaths
 	, ...callbackSubtypeDocumentationReadinessChangedPaths
 	, ...callbackSubtypeTestRegistrationChangedPaths
 	, ...callbackSubtypeReviewRepairChangedPaths
@@ -2623,9 +2625,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeDocumentationReviewRepair
+		= beforeCallbackSubtypeDocumentationReviewRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackSubtypeDocumentationReviewRepair) === expected)
+		return callbackSubtypeDocumentationReviewRepair;
 	const phpWasmRefinementEntryGeneratorClosure
 		= beforePhpWasmRefinementEntryGeneratorClosureSource(
-			path, text, expected
+			path, callbackSubtypeDocumentationReviewRepair, expected
 		);
 	if(sha256(phpWasmRefinementEntryGeneratorClosure) === expected)
 		return phpWasmRefinementEntryGeneratorClosure;

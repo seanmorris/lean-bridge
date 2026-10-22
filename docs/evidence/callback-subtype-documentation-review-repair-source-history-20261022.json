@@ -1,0 +1,180 @@
+{
+  "additions": [
+    {
+      "currentSha256": "70971160a44882aaa241ccc7d4412504b849f6ed226372f3f35efe0e00ef0fd9",
+      "path": "scripts/update-callback-subtype-documentation-review-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "48f8e221e5b2a00ef1cfa505ded8d1c1caa79c7ccb35f93e32359c8a14f0e538",
+      "path": "tests/helpers/callback-subtype-documentation-review-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "8c6f0bff59cf123b8ff493465f6b43d57634d1c85eafcd3473710ad039304c39",
+      "path": "tests/helpers/callback-subtype-documentation-review-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cde076a384b75212696ee2c94a80e96da69e60d9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "21c7c81b086b3909937422c0508cc5ab1699aa21ce7c2657f7102163cb34ee3d",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeDocumentationReviewRepairSource, callbackSubtypeDocumentationReviewRepairChangedPaths } from \"./callback-subtype-documentation-review-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeDocumentationReviewRepairChangedPaths\n\t, ...phpWasmRefinementEntryGeneratorClosureChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryGeneratorClosureChangedPaths\n",
+          "start": 147486
+        },
+        {
+          "current": "\tconst callbackSubtypeDocumentationReviewRepair\n\t\t= beforeCallbackSubtypeDocumentationReviewRepairSource(\n",
+          "previous": "\tconst phpWasmRefinementEntryGeneratorClosure\n\t\t= beforePhpWasmRefinementEntryGeneratorClosureSource(\n",
+          "start": 179546
+        },
+        {
+          "current": "\tif(sha256(callbackSubtypeDocumentationReviewRepair) === expected)\n\t\treturn callbackSubtypeDocumentationReviewRepair;\n\tconst phpWasmRefinementEntryGeneratorClosure\n\t\t= beforePhpWasmRefinementEntryGeneratorClosureSource(\n\t\t\tpath, callbackSubtypeDocumentationReviewRepair, expected\n\t\t);\n",
+          "previous": "",
+          "start": 179681
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "81accf910162d02750166c2e82fcd065094e4d40f0887638eabe1e6540de7fb0"
+    },
+    {
+      "currentSha256": "7277d4e93f1e79007f253a400b5a866d74fa7ecee911d0b7273569889fbb21cb",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-documentation-review-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "aa22ac11f7a29b0e2010dbd867c6ae3b6723c8cca9495f097b3a92b2baae412d"
+    }
+  ],
+  "milestone": "callback-subtype-documentation-review-repair-v1",
+  "predecessorCommit": "e35f6c0b7c7915b8b74b6c6f1ad1abe6457b3c15",
+  "schemaVersion": 1,
+  "scope": "Preserve the complete Lean-author and hand-written consumer context while promoting the exact hosted callback Subtype boundary, including the directional support row and remaining limitations.",
+  "updates": [
+    {
+      "currentSha256": "b8f152846261f1a167d403d71e62e44ab828f62909f44861d94be77e4756df9a",
+      "edits": [
+        {
+          "current": "const [inventory, irSchema, consumers, existingPackage, exportDecisions\n\t, dotnet, java, witWasi]\n",
+          "previous": "const [inventory, irSchema, consumers, existingPackage, exportDecisions]\n",
+          "start": 713
+        },
+        {
+          "current": "\t\t, readFile(\"docs/consume/dotnet.md\", \"utf8\")\n\t\t, readFile(\"docs/consume/java.md\", \"utf8\")\n\t\t, readFile(\"docs/consume/wit-wasi.md\", \"utf8\")\n",
+          "previous": "",
+          "start": 1126
+        },
+        {
+          "current": "\texistingPackage, exportDecisions, dotnet, java, witWasi\n",
+          "previous": "\texistingPackage, exportDecisions\n",
+          "start": 1517
+        },
+        {
+          "current": "\t, writeFile(\"docs/consume/dotnet.md\", authorDocs.dotnet)\n\t, writeFile(\"docs/consume/java.md\", authorDocs.java)\n\t, writeFile(\"docs/consume/wit-wasi.md\", authorDocs.witWasi)\n",
+          "previous": "",
+          "start": 1857
+        }
+      ],
+      "path": "scripts/promote-callback-subtype-evidence.mjs",
+      "previousSha256": "ad171d1bc8bf44cdb60cab1552e0bc5feef1306aed0b584e8ccc1c58bff105ff"
+    },
+    {
+      "currentSha256": "f9e5b2553c1a7e1269703abc2d8d8c5f10e5c2a5bbb831a3f521c337803e23fc",
+      "edits": [
+        {
+          "current": "test(\"callback Subtype promotion repairs stale Lean-author and consumer boundaries\", async () => {\n\tconst [existingPackage, exportDecisions, dotnet, java, witWasi]\n\t\t= await Promise.all([\n",
+          "previous": "test(\"callback Subtype promotion replaces both stale Lean-author boundaries\", async () => {\n\tconst [existingPackage, exportDecisions] = await Promise.all([\n",
+          "start": 6091
+        },
+        {
+          "current": "\t\t, readFile(\"docs/consume/dotnet.md\", \"utf8\")\n\t\t, readFile(\"docs/consume/java.md\", \"utf8\")\n\t\t, readFile(\"docs/consume/wit-wasi.md\", \"utf8\")\n\t\t]);\n",
+          "previous": "\t]);\n",
+          "start": 6385
+        },
+        {
+          "current": "\t\texistingPackage, exportDecisions, dotnet, java, witWasi\n",
+          "previous": "\t\texistingPackage, exportDecisions\n",
+          "start": 6588
+        },
+        {
+          "current": "\tfor(const source of [rendered.existingPackage, rendered.exportDecisions])\n",
+          "previous": "\tfor(const source of Object.values(rendered))\n",
+          "start": 6651
+        },
+        {
+          "current": "\tassert.match(rendered.existingPackage\n\t\t, /Directional `Subtype` inside callback signatures \\| Node, TypeScript, Chromium, Firefox, WebKit, React and workers installed/u);\n\tassert.match(rendered.existingPackage, /for `Fin` and selected `Subtype`/u);\n\tassert.match(rendered.existingPackage, /with_recovery\\(callback, value\\)/u);\n\tassert.match(rendered.existingPackage, /Runtime::Callback/u);\n\tassert.match(rendered.existingPackage, /Nested callbacks/u);\n\tassert.match(rendered.existingPackage\n\t\t, /PHP-Wasm callback positions, retained or asynchronous callbacks and owned checked records remain separate/u);\n",
+          "previous": "",
+          "start": 7174
+        },
+        {
+          "current": "\tfor(const source of Object.values(rendered))\n\t{\n\t\tassert.doesNotMatch(source, /Installed refined-callback acceptance/u);\n\t\tassert.doesNotMatch(source, /Refined\\ncallbacks, owned/u);\n\t}\n\tassert.match(rendered.dotnet\n\t\t, /Retained or asynchronous refined callbacks and owned Subtypes remain pending/u);\n\tassert.match(rendered.java\n\t\t, /Retained or asynchronous refined callbacks, owned, recursive/u);\n\tassert.match(rendered.witWasi\n\t\t, /Retained or asynchronous refined callbacks/u);\n",
+          "previous": "",
+          "start": 7879
+        },
+        {
+          "current": "\t\t, dotnet: rendered.dotnet, java: rendered.java\n\t\t, witWasi: rendered.witWasi\n\t}), /Expected one documentation (?:marker|statement)/u);\n",
+          "previous": "\t}), /Expected one documentation marker/u);\n",
+          "start": 8511
+        }
+      ],
+      "path": "tests/callback-subtype-promotion.test.mjs",
+      "previousSha256": "19d88e312482d7791865a1b1b3a2732e1090bfaddb58f71cf91a42fc6dd4493c"
+    },
+    {
+      "currentSha256": "e20afd408406adb210794c1e02af979f58be442d5d7de1f510fb010e5e966e13",
+      "edits": [
+        {
+          "current": "const replaceExact = (source, current, replacement) => {\n\tassert.equal(source.split(current).length, 2\n\t\t, `Expected one documentation statement: ${current}`);\n\treturn source.replace(current, replacement);\n};\n\n",
+          "previous": "",
+          "start": 830
+        },
+        {
+          "current": "\t= \"C/C++ execute closure inputs, Lean-produced results and arguments sent to host callbacks for `Fin` and selected `Subtype` values, including supported copied containers and mixed refined and unrefined arguments. The [hosted synchronous callback Subtype matrix](../evidence/callback-subtype-promotion-20261022.md) extends the two selected-Subtype directions to all sixteen non-PHP-Wasm consumer profiles on ordinary-source and reviewed-IR packages. A selected Subtype produced by Lean crosses a host callback argument or returned-closure result as its proof-erased base value. A base value produced by the host is checked by the selected Lean constructor when it is returned from a callback or passed into a returned Lean closure. For a host callback result containing a selected Subtype, the host supplies one typed recovery value before the call: the C callback descriptor's `recovery` pointer, the generated `with_recovery(callback, value)` API in C++, Python, Ruby and Rust, `Runtime::Callback` in CPAN, or the corresponding generated typed wrapper in the other installed profiles. The public wrapper validates and copies recovery before Lean or the callback runs. Recovery exists only for Lean's failure path and is never successful output. Missing or invalid recovery prevents callback entry; rejection preserves caller values, and a later valid call succeeds. The separate C/C++ `Fin` host-reply checks record first-error preservation and suppression of later callbacks. [PHP-Wasm callback Subtypes](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) have a separate local Node/Chromium qualification on both source routes. Nested callbacks, retained or asynchronous callbacks, arbitrary predicates, owned callback Subtypes, recursive or generic refined payloads, dispatch cost and peak memory remain separate work. The [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md) separately establishes synchronous proof-free checked records in all sixteen non-PHP-Wasm profiles on both source routes; PHP-Wasm callback positions, retained or asynchronous callbacks and owned checked records remain separate.\";\n\nconst existingPackageRow\n\t= \"| Directional `Subtype` inside callback signatures | npm implementation; hosted acceptance tracked separately | C/C++ installed locally; other native hosts pending | Installed locally on both source routes, four ABIs and both install modes | Rejected | Ordinary/reviewed C, C++ and CPAN installed locally; other native hosts pending |\";\nconst promotedExistingPackageRow\n\t= \"| Directional `Subtype` inside callback signatures | Node, TypeScript, Chromium, Firefox, WebKit, React and workers installed, both source routes | C/C++, Python, Ruby, Rust, .NET, Java, Kotlin, native PHP and WIT/WASI installed, both source routes | Installed on both source routes, four ABIs and both install modes | Node and Chromium installed locally, both source routes | Ordinary/reviewed installed across all seventeen profiles; hosted in every non-PHP-Wasm profile and locally qualified in PHP-Wasm |\";\n",
+          "previous": "\t= \"The [hosted synchronous callback Subtype matrix](../evidence/callback-subtype-promotion-20261022.md) establishes selected `Nat` Subtypes in all sixteen non-PHP-Wasm consumer profiles on ordinary-source and reviewed-IR packages. A selected Subtype produced by Lean crosses a host callback argument or returned-closure result as its proof-erased base value. A base value produced by the host is checked by the selected Lean constructor when it is returned from a callback or passed into a returned Lean closure. Host callback replies use the target's generated exact typed recovery value. Missing or invalid recovery prevents callback entry; rejection preserves caller values, and a later valid call succeeds. Recovery exists only for Lean's failure path and is never successful output. The matrix covers admitted copied containers and mixed refined and unrefined arguments. Retained or asynchronous callbacks, arbitrary predicates, checked-record or owned callback positions, recursive or generic refined payloads, dispatch cost and peak memory remain separate work. [PHP-Wasm callback Subtypes](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) have a separate local Node/Chromium qualification on both source routes. The [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md) separately establishes synchronous proof-free checked records in all sixteen non-PHP-Wasm profiles.\";\n",
+          "start": 1195
+        },
+        {
+          "current": " * Replace only the stale Lean-author and hand-written consumer boundaries after\n * evidence promotion.\n",
+          "previous": " * Replace only the two stale Lean-author paragraphs after evidence promotion.\n",
+          "start": 5671
+        },
+        {
+          "current": " * @param docs.dotnet - .NET consumer guide source.\n * @param docs.java - Java consumer guide source.\n * @param docs.witWasi - WIT/WASI consumer guide source.\n",
+          "previous": "",
+          "start": 5960
+        },
+        {
+          "current": "\texistingPackage, exportDecisions, dotnet, java, witWasi\n",
+          "previous": "\texistingPackage, exportDecisions\n",
+          "start": 6177
+        },
+        {
+          "current": "\texistingPackage: replaceExact(replaceParagraph(existingPackage\n",
+          "previous": "\texistingPackage: replaceParagraph(existingPackage\n",
+          "start": 6243
+        },
+        {
+          "current": "\t, existingPackageRow, promotedExistingPackageRow)\n\t, exportDecisions: replaceExact(insertBeforeParagraph(exportDecisions\n",
+          "previous": "\t, exportDecisions: insertBeforeParagraph(exportDecisions\n",
+          "start": 6361
+        },
+        {
+          "current": "\t, \"Refined\\ncallbacks, owned and recursive Subtypes, and Subtype fields in generic records\\nremain unfinished.\"\n\t, \"Retained or asynchronous refined callbacks, owned and recursive Subtypes,\\nand Subtype fields in generic records remain unfinished.\")\n\t, dotnet: replaceExact(replaceExact(dotnet\n\t\t, \"Installed refined-callback acceptance and owned Subtypes remain pending. These local\"\n\t\t, \"Retained or asynchronous refined callbacks and owned Subtypes remain pending. These local\")\n\t, \"Installed refined-callback acceptance, owned, recursive,\\ndependent and broader generic Subtypes still need separate acceptance.\"\n\t, \"Retained or asynchronous refined callbacks, owned, recursive, dependent and\\nbroader generic Subtypes still need separate acceptance.\")\n\t, java: replaceExact(java\n\t\t, \"Installed refined-callback acceptance, owned, recursive, dependent and broader\\ngeneric Subtypes still need acceptance.\"\n\t\t, \"Retained or asynchronous refined callbacks, owned, recursive, dependent and broader\\ngeneric Subtypes still need acceptance.\")\n\t, witWasi: replaceExact(replaceExact(witWasi\n\t\t, \"Installed refined-callback acceptance,\\nowned values, recursive graphs, dependent and broader generic Subtypes, plus\"\n\t\t, \"Retained or asynchronous refined callbacks, owned values, recursive graphs,\\ndependent and broader generic Subtypes, plus\")\n\t, \"Subtype fields in nominal records or variants, installed refined-callback acceptance and\\nowned Subtypes remain unsupported.\"\n\t, \"Retained or asynchronous refined callbacks and owned Subtypes remain unsupported.\")\n",
+          "previous": "",
+          "start": 6537
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-documentation.mjs",
+      "previousSha256": "1026920df6748ba222902bdceff57ba8b7375f89d16116bc1bb476a5056d3a9f"
+    }
+  ]
+}
