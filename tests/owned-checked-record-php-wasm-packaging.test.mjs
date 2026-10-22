@@ -5,12 +5,13 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { canonicalJson } from "../src/capsule/node.mjs";
+import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { checkOwnedPhpWasmPackages } from "./helpers/owned-php-wasm-packages.mjs";
+import { bindPhpWasmReceiptArchives } from "./helpers/php-wasm-graph-packages.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST === "1";
@@ -101,4 +102,94 @@ test("owned checked-record PHP-Wasm acceptance remains a separate recurring gate
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(workflow.includes(required), required);
 	assert.doesNotMatch(workflow, /continue-on-error:\s*true/u);
+});
+
+const writeReceiptHandoff = async (root, archives) => {
+	const receipt = { packages: archives.map(item => ({ artifacts: [{
+		path: `packages/php-wasm/archives/${item.archive}`
+		, bytes: item.content.length, sha256: sha256(item.content)
+	}] })) };
+	const bytes = canonicalJson(receipt);
+	await saveLakeFile(root, "package-set-receipt.json", bytes);
+	await saveLakeFile(root, "package-set-receipt.json.sha256"
+		, `${sha256(bytes)}  package-set-receipt.json\n`);
+	for(const item of archives)
+		await saveLakeFile(root, `packages/php-wasm/archives/${item.archive}`, item.content);
+	return { archives: archives.map(item => ({ archive: item.archive
+		, bytes: item.content.length, sha256: sha256(item.content) })) };
+};
+
+test("PHP-Wasm receipt handoff binds exactly the verified archive bytes", async t => {
+	const parent = await mkdtemp(join(tmpdir(), "lean-php-wasm-receipt-handoff-"));
+	t.after(() => rm(parent, { recursive: true, force: true }));
+	const archives = [
+		{ archive: "component.tgz", content: Buffer.from("component archive") }
+		, { archive: "api.zip", content: Buffer.from("composer archive") }
+	];
+	let index = 0;
+	const handoff = async () => {
+		const root = join(parent, `handoff-${index++}`);
+		return { root, report: await writeReceiptHandoff(root, archives) };
+	};
+	const valid = await handoff();
+	assert.equal(await bindPhpWasmReceiptArchives(valid.root, valid.report)
+		, join(valid.root, "packages/php-wasm/archives"));
+
+	const source = await handoff();
+	await saveLakeFile(source.root, "OwnedCheckedRecords.lean", "-- author source\n");
+	await assert.rejects(bindPhpWasmReceiptArchives(source.root, source.report)
+		, /exactly the receipt-named package set/u);
+	const extra = await handoff();
+	await saveLakeFile(extra.root, "packages/php-wasm/archives/extra.tgz", "extra");
+	await assert.rejects(bindPhpWasmReceiptArchives(extra.root, extra.report)
+		, /exactly the receipt-named package set/u);
+	const missing = await handoff();
+	await rm(join(missing.root, "packages/php-wasm/archives/api.zip"));
+	await assert.rejects(bindPhpWasmReceiptArchives(missing.root, missing.report)
+		, /exactly the receipt-named package set/u);
+	const changed = await handoff();
+	await saveLakeFile(changed.root, "packages/php-wasm/archives/api.zip", "composer archivE");
+	await assert.rejects(bindPhpWasmReceiptArchives(changed.root, changed.report)
+		, /packages\/php-wasm\/archives\/api\.zip/u);
+	const linked = await handoff();
+	await rm(join(linked.root, "packages/php-wasm/archives/api.zip"));
+	await symlink(join(valid.root, "packages/php-wasm/archives/api.zip")
+		, join(linked.root, "packages/php-wasm/archives/api.zip"));
+	await assert.rejects(bindPhpWasmReceiptArchives(linked.root, linked.report)
+		, /must be regular files/u);
+	const unlisted = await handoff();
+	await assert.rejects(bindPhpWasmReceiptArchives(unlisted.root
+		, { archives: unlisted.report.archives.slice(1) })
+	, /exactly the verified package archives/u);
+	const pretty = await handoff();
+	const receipt = JSON.parse(await readFile(join(pretty.root, "package-set-receipt.json"), "utf8"));
+	await saveLakeFile(pretty.root, "package-set-receipt.json", JSON.stringify(receipt, null, 2));
+	await assert.rejects(bindPhpWasmReceiptArchives(pretty.root, pretty.report)
+		, /receipt must be canonical/u);
+	const sidecar = await handoff();
+	await saveLakeFile(sidecar.root, "package-set-receipt.json.sha256"
+		, `${"0".repeat(64)}  package-set-receipt.json\n`);
+	await assert.rejects(bindPhpWasmReceiptArchives(sidecar.root, sidecar.report)
+		, /sidecar must match/u);
+});
+
+test("owned PHP-Wasm consumers install the same receipt-only bytes that are retained", async t => {
+	const helper = await readFile("tests/helpers/owned-php-wasm-packages.mjs", "utf8");
+	for(const required of [
+		"await retainPackageSetEvidence(buildRoot, retainedRoot)"
+		, "await copyPackageSetHandoff(retainedRoot ?? buildRoot, handoff)"
+		, "const archiveRoot = await bindPhpWasmReceiptArchives(handoff, release.report)"
+		, "release: { ...release, output: sourceFree ? packageHandoff : releaseRoot, archiveRoot }"
+	]) assert.ok(helper.includes(required), required);
+	assert.doesNotMatch(helper, /cp\(handoff/u);
+	const installer = await readFile("tests/helpers/php-wasm-graph-packages.mjs", "utf8");
+	assert.ok(installer.includes(
+		"readFile(join(entry.archiveRoot ?? join(entry.output, \"archives\"), item.archive))"));
+
+	const directory = await mkdtemp(join(tmpdir(), "lean-php-wasm-evidence-root-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	for(const evidenceRoot of [join(directory, "evidence"), directory, join(directory, "..")])
+		await assert.rejects(checkOwnedPhpWasmPackages(directory, () => {}, {
+			checkedRecords: true, evidenceRoot
+		}), /outside the test-owned author and consumer root/u);
 });
