@@ -11,7 +11,7 @@ import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 import { browserPhpWasmCorpus } from "./type-corpus-php-wasm-browser.mjs";
 
-const browserSource = (arrangement, anchoredResults = false) => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';
+const browserSource = (arrangement, anchoredResults = false, phpNamespace = "LeanOwnedAggregates") => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';
 import descriptor from './bundled/consumer.mjs';
 const query=new URL(location.href).searchParams,loading=query.get('loading'),mode=query.get('mode');
 const arrangement=${JSON.stringify(arrangement)},api=loading==='lazy'?descriptor.lazy:descriptor;
@@ -35,7 +35,7 @@ try{
   }
   const autoload=arrangement==='composer'?'/app-vendor/autoload.php':api.autoload;
   await run("<?php require '"+autoload+"';");phases.push({stage:'autoload',libraries:[...libraries]});
-  await run("<?php try { LeanOwnedAggregates\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}");
+  await run("<?php try { ${phpNamespace}\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}");
   phases.push({stage:'invalid',libraries:[...libraries]});
   const caller=(await(await fetch('./consumer.php')).text()).replace('strict_types=1','strict_types='+(mode==='strict'?'1':'0'));
   await php.writeFile('/consumer.php',caller);await run("<?php require '/consumer.php';");
@@ -44,8 +44,8 @@ try{
     const value=JSON.parse(stdout);if(value.runtimeState!==2||value.runtimeInitRuns!==1||value.liveIdentities!==0)throw Error('Unexpected live broker state: '+stdout);return value;};
   const cleaned=await snapshot();
   await php.refresh();stdout='';stderr='';
-  await run("<?php require '"+autoload+"'; $ticket=LeanOwnedAggregates\\\\new_ticket(Brick\\\\Math\\\\BigInteger::of(77),'fresh'); "+
-    "if((string)LeanOwnedAggregates\\\\serial($ticket${anchoredResults ? "->get()" : ""})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';");
+  await run("<?php require '"+autoload+"'; $ticket=${phpNamespace}\\\\new_ticket(Brick\\\\Math\\\\BigInteger::of(77),'fresh'); "+
+    "if((string)${phpNamespace}\\\\serial($ticket${anchoredResults ? "->get()" : ""})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';");
   if(stdout!=='recovered')throw Error('Missing recovery output');
   phases.push({stage:'recovered',libraries:[...libraries]});
   const refreshed=await snapshot();
@@ -62,14 +62,15 @@ try{
  * @param options - Public whole-owner result profile.
  * @param options.anchoredResults - Require Value.get() on resource results.
  * @param options.minimumChecks - Minimum assertions for a smaller public API.
+ * @param options.phpNamespace - Generated namespace used by the installed component.
  */
-export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false, minimumChecks = 101 } = {}) => {
+export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false, minimumChecks = 101, phpNamespace = "LeanOwnedAggregates" } = {}) => {
 	await saveLakeFile(deployment, "vendor-files.json", canonicalJson(await nativeArtifactPaths(join(deployment, "vendor"))));
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	const observations = [];
 	for(const arrangement of ["embedded", "composer"])
 	{
-		const source = browserSource(arrangement, anchoredResults);
+		const source = browserSource(arrangement, anchoredResults, phpNamespace);
 		await saveLakeFile(deployment, "browser.mjs", source);
 		const browser = await browserPhpWasmCorpus({ t: { diagnostic }
 			, library: { id: "owned/" + arrangement }, deployment

@@ -57,6 +57,7 @@ const profileManifest = Object.freeze({
 		, "owned-subtype-language-packaging"
 		, "owned-subtype-native-packaging"
 		, "owned-subtype-perl-packaging"
+		, "owned-subtype-php-wasm-packaging"
 		, "owned-subtype-remaining-packaging"
 		, "owned-callback-result-contract", "owned-callback-result-metadata"
 		, "owned-callback-result-layout"
