@@ -1260981,6 +1260981,32 @@
           "sha256": "9c71fa7163ee9b9094e21adc33b6b87cbfcf2e997a505d42b51756c4b2285a5e"
         }
       ]
+    },
+    {
+      "id": "php-wasm-refinement-entry-instrumented-probe-contract",
+      "kind": "test",
+      "revision": "4553a2910f10725118b532b480820ad7907afc3e",
+      "command": "node --test tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs",
+      "scope": "This is a source-level contract for separate instrumented PHP-Wasm fixture packages, not installed consumer-package evidence. The closed promotion topology expects 28 ordinary/reviewed routes in 26 retained artifacts at one revision and reruns their exact verifiers. It does not change the support states established by unmodified prepared packages and does not claim hosted entry counts until a completed promotion run publishes a verified summary.",
+      "files": [
+        {
+          "path": ".github/workflows/php-wasm-refinement-entry-promotion.yml",
+          "sha256": "e3921d7f1dde5b9056e15da772b7b8afd0e3d0ec93b82d94a667b46b7145dcc8"
+        },
+        {
+          "path": "tests/helpers/php-wasm-refinement-entry-matrix.mjs",
+          "sha256": "feb9a25749a40c63f5e79d716039d26e7bf439f9b17a659ff56aa0a2583599ab"
+        },
+        {
+          "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs",
+          "sha256": "631abd0800b98fc1550e6855471b12c720a01c0d1c962c263bc1b36570f18260"
+        },
+        {
+          "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci.mjs",
+          "sha256": "eeb2eaf1f5b5caffea67bfa83a7f03c0b9ec906ca0f058f171755ace62b5cbeb"
+        }
+      ],
+      "artifacts": []
     }
   ],
   "observations": [

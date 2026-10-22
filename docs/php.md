@@ -863,6 +863,21 @@ weak/strict contexts per route. The
 retains the hosted handoffs. General copied checked-record callbacks in
 PHP-Wasm remain covered separately from this selected `Subtype` boundary.
 
+### Refinement support and entry measurements
+
+The support statements on this page come from unmodified prepared packages.
+Those packages contain the generated checks that enforce `Fin`, `Subtype` and
+checked-record contracts, but they do not contain diagnostic entry counters.
+
+Entry measurements use separate instrumented fixture packages. They count the
+named validator, constructor, adapter and Lean-source entries for 28
+ordinary/reviewed routes in 26 retained artifacts. The counters do not change a
+consumer package or widen its supported types. The [promotion
+workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
+is configured to rebuild the complete matrix at one revision and recheck the
+retained artifacts. Until a completed run publishes that verified summary, the
+documentation makes no hosted entry-count claim.
+
 ### Bounded integers
 
 In native PHP packages, a Lean `Fin n` parameter or result is a `Brick\Math\BigInteger`, the same as `Nat`. For `Library.mirror (value : Fin 10) : Fin 10`, `mirror(BigInteger::of(3))` returns 6. `mirror(BigInteger::of(10))` throws `LeanBridgeError` with code 1 and the message `arg0 is not below its Fin 10 bound`. A negative value throws `ValueError` and a non-BigInteger argument throws `TypeError`, as they do for `Nat`. The package checks the bound before it calls Lean, so caller data is unchanged and a later valid call still works. `Fin 0` parameters reject every value, and bounds wider than 64 bits are compared exactly. PHPDoc on each function and the package README state the bound. Top-level parameters and results are supported, including inside `Array`, `List` and `Option` (for example `Array (Fin 10)` or `Option (List (Fin 10))`): every element is checked before Lean is called, an empty array or `none` is valid even for `Fin 0`, and a rejection names the parameter and the bound of the element that failed. See the [installed scalar checks](evidence/native-fin-hosts-20261006.md) and the [container checks](evidence/native-fin-containers-20261006.md). Both ordinary-source and independently reviewed native PHP packages also check Fin inside pairs, active `Except` branches and plain record or variant fields, including Array/List/Option compositions. The [hosted product and field checks](evidence/fin-native-hosted-20261010/receipt.json) exercise those shapes through installed Composer packages. These reports do not add PHP-Wasm or Fin callback coverage.
@@ -895,7 +910,9 @@ weak or strict) and four Chromium bundled configurations. These runs use
 Node 22.23.3, Chromium 154.0.8037.57, PHP 8.4.1 and php-wasm 0.1.0.
 Those earlier fixtures do not execute bare top-level `Fin` or direct
 `Array (Fin n)`, `List (Fin n)` or `Option (Fin n)` exports.
-Source-dispatch counters were not measured. Refined callbacks and refinements
+Source-dispatch counters were not measured in these unmodified package runs.
+The separate instrumented matrix described above measures named fixture entries
+without changing the consumer packages. Refined callbacks and refinements
 combined with graph or owned transports remain unsupported.
 
 ### Checked records in native PHP
@@ -1016,7 +1033,9 @@ run twelve exports in twelve Node/Chromium configurations per source route, with
 Node loading, bundled Chromium loading, startup/lazy loading, rejection recovery,
 input preservation and two constructor choices for one generic function. These
 local runs use Node 22.23.2, Chromium 152.0.7977.75 and PHP 8.4.1 on wasm32.
-Constructor and dispatch counts were not measured. The later structural checks
+Constructor and dispatch counts were not measured in these unmodified package
+runs. The separate instrumented matrix described above measures named fixture
+entries without changing the consumer packages. The later structural checks
 below add containers. Refined callback and owned transports remain rejected.
 
 PHP-Wasm copied-graph packages also accept selected `Subtype` constructors and

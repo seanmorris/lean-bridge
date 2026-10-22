@@ -17,6 +17,21 @@ Generated copied-value Composer packages declare `brick/math: 1.0.0`; the 32-bit
 
 PHP-Wasm npm packages bundle the pinned Brick Math sources and MIT license for hosts without Composer. The CLI includes those sources, so authors need no network access to assemble them. The bundled version and the Composer dependency are identical. No GMP or BCMath extension is required.
 
+## Refinement checks and measurement probes
+
+Unmodified prepared PHP-Wasm packages enforce supported `Fin`, `Subtype` and
+checked-record contracts with their ordinary generated adapters. They do not
+ship validator, constructor, adapter or Lean-source entry counters.
+
+Lean Bridge measures those entries in separate instrumented fixture packages.
+The closed matrix has 28 ordinary/reviewed routes in 26 retained artifacts; it
+does not widen the prepared-package type surface or become part of a consumer
+release. The [promotion
+workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
+is configured to rebuild all four producer groups at one revision and verify
+their retained bytes. Do not describe its counts as hosted evidence until a
+completed promotion run publishes the verified summary.
+
 ## Build an ordinary Lean project
 
 Install the [C author toolchain](c.md#build-an-ordinary-lean-project) and PHP 8.2 or newer. Set `LEAN_BRIDGE_PHP` only if PHP is not on `PATH`. The package targets NTS CLI on Linux x86-64 with glibc 2.38 or newer and FFI enabled. PHP headers, `phpize` and a package-specific Zend extension are not required for this path.
