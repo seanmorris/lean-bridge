@@ -20,7 +20,10 @@ import { checkInstalledDotnetValues } from "./helpers/dotnet-copied-install.mjs"
 import { installFinContainerEdgePhp, runFinContainerEdgePhp
 	, verifyFinContainerEdgePhpEnvironment } from "./helpers/fin-container-edge-php-closure.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackSubtypeRetainedPackages, retainCallbackSubtypeRoute
+	, writeCallbackSubtypeRetainedPackages
+} from "./helpers/callback-subtype-retained-packages.mjs";
 import { prepareJvmCorpusDependencies } from "./helpers/type-corpus-jvm-tools.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_PROFILES?.split(",").sort() ?? [];
@@ -51,6 +54,10 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback Subtype remaining inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_OUTPUT
+		?? "build/callback-subtypes/remaining/report.json");
+	await clearCallbackSubtypeRetainedPackages(output);
+	const retainedEntries = [];
 	const environment = nativeFixtureEnvironment(profiles), reports = [];
 	let review;
 	for(const route of ["ordinary", "reviewed"])
@@ -73,7 +80,9 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		if(route === "ordinary") review = callbackSubtypeReviewedIr(model.bindingIr);
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackSubtypeRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		const receiptSha256 = sha256(await readFile(join(handoff, "package-set-receipt.json")));
 		let installJvm;
@@ -163,8 +172,7 @@ test("ordinary and reviewed remaining managed callback Subtypes install offline"
 			await rm(consumer, { recursive: true, force: true });
 		}
 	}
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_REMAINING_OUTPUT
-		?? "build/callback-subtypes/remaining.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackSubtypeRetainedPackages(output, retainedEntries);
 	complete = true;
 });
