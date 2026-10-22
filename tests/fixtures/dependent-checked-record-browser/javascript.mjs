@@ -43,7 +43,7 @@ export const checkDependentRecords = (
 		catch(error)
 		{
 			const parameter = reviewed ? "value0" : "arg0";
-			if(error?.message !== `${parameter} was rejected by `
+			if(error?.message !== `dependentTotal.${parameter} was rejected by `
 				+ "DependentRecords.mkDependent")
 				throw new Error(`wrong refusal: ${label}: ${error?.message}`
 					, { cause: error });

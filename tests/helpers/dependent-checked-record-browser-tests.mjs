@@ -34,7 +34,7 @@ const fields = value => {
 	if(Object.keys(value).sort().join() !== "below,bound")
 		throw new TypeError("dependent record shape");
 };
-const checked = (value, parameter = "arg0") => {
+const checked = (value, parameter) => {
 	fields(value);
 	if(value.below >= value.bound)
 		throw new Error(`${parameter} was rejected by DependentRecords.mkDependent`);
@@ -42,10 +42,12 @@ const checked = (value, parameter = "arg0") => {
 };
 const model = {
 	dependentTotal: value => {
-		checked(value);
+		checked(value, "dependentTotal.arg0");
 		return value.bound + value.below;
 	}
-	, dependentRoundtrip: value => ({ ...checked(value) })
+	, dependentRoundtrip: value => ({
+		...checked(value, "dependentRoundtrip.arg0")
+	})
 	, dependentResult: seed => ({ bound: seed + 1n, below: seed })
 };
 
@@ -54,15 +56,24 @@ test("the dependent checked-record caller covers bounds, recovery and results", 
 		, dependentCheckedRecordExpected("ordinary-source"));
 	assert.deepEqual(checkDependentRecords({
 		dependentTotal: value => {
-			checked(value, "value0");
+			checked(value, "dependentTotal.value0");
 			return value.bound + value.below;
 		}
-		, dependentRoundtrip: value => ({ ...checked(value, "value0") })
+		, dependentRoundtrip: value => ({
+			...checked(value, "dependentRoundtrip.value0")
+		})
 		, dependentResult: model.dependentResult
 	}, false, true), dependentCheckedRecordExpected("reviewed-ir"));
 	assert.deepEqual(checkDependentRecords({
 		dependentResult: model.dependentResult
 	}, true), dependentCheckedRecordExpected("result-only-reviewed-ir"));
+	assert.throws(() => checkDependentRecords({
+		...model
+		, dependentTotal: value => {
+			checked(value, "arg0");
+			return value.bound + value.below;
+		}
+	}), /wrong refusal: equal bound: arg0 was rejected/u);
 	for(const mutate of [
 		{ dependentTotal: () => 0n }
 		, { dependentRoundtrip: () => ({ bound: 3n, below: 3n }) }
