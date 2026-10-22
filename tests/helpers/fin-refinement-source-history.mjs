@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordNativePerlSource, ownedCheckedRecordNativePerlChangedPaths } from "./owned-checked-record-native-perl-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptSource, ownedCheckedRecordJavaScriptChangedPaths } from "./owned-checked-record-javascript-source-history.mjs";
 import { beforeOwnedCheckedRecordCallableSource, ownedCheckedRecordCallableChangedPaths } from "./owned-checked-record-callable-source-history.mjs";
 import { beforeOwnedCheckedRecordFoundationSource, ownedCheckedRecordFoundationChangedPaths, ownedCheckedRecordFoundationIntegrationPaths } from "./owned-checked-record-foundation-source-history.mjs";
@@ -1889,7 +1890,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordJavaScriptChangedPaths
+	...ownedCheckedRecordNativePerlChangedPaths
+	, ...ownedCheckedRecordJavaScriptChangedPaths
 	, ...ownedCheckedRecordCallableChangedPaths
 	, ...ownedCheckedRecordFoundationChangedPaths
 	, ...ownedCheckedRecordFoundationIntegrationPaths
@@ -2561,8 +2563,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordNativePerl
+		= beforeOwnedCheckedRecordNativePerlSource(path, text, expected);
+	if(sha256(ownedCheckedRecordNativePerl) === expected)
+		return ownedCheckedRecordNativePerl;
 	const ownedCheckedRecordJavaScript
-		= beforeOwnedCheckedRecordJavaScriptSource(path, text, expected);
+		= beforeOwnedCheckedRecordJavaScriptSource(
+			path, ownedCheckedRecordNativePerl, expected
+		);
 	if(sha256(ownedCheckedRecordJavaScript) === expected)
 		return ownedCheckedRecordJavaScript;
 	const ownedCheckedRecordCallable

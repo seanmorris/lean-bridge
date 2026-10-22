@@ -1,0 +1,1052 @@
+{
+  "commands": {
+    "native": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_NATIVE_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_NATIVE_ROUTES=<ordinary-full|ordinary-result-only> node --test --test-concurrency=1 tests/owned-checked-record-native-packaging.test.mjs",
+    "perl": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_PERL_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_PERL_ROUTES=<ordinary-full|ordinary-result-only> node --test --test-concurrency=1 tests/owned-checked-record-perl-packaging.test.mjs"
+  },
+  "implementationCommit": "162f6aafa07f6f3221e67079a9f92f2b874d1f6a",
+  "nativeReports": [
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "800187978f9f754b017c4edad39e7c7feccec965ce7fc40c630710154b39e2e5",
+      "callbackRecovery": true,
+      "componentReceiptSha256": "a90cfe60e4f9ccc07ac48c65be4b164be1d3c14b167a15006ad3ddc088c2050d",
+      "consumers": {
+        "c": {
+          "checks": 261,
+          "compilerFreePath": true,
+          "consumerSha256": "7a79317cb29509ea28e3a63cea98d85895cdd798e4648180b834fb7d29ea7dcc",
+          "offlineInstall": true,
+          "relocatedSourceSha256": "7a79317cb29509ea28e3a63cea98d85895cdd798e4648180b834fb7d29ea7dcc",
+          "sanitizer": null
+        },
+        "cpp": {
+          "checks": 125,
+          "compilerFreePath": true,
+          "consumerSha256": "49e3fa1367ce31d9f13139896c083176ea0473d8c63af1e24afda06345384a3c",
+          "offlineInstall": true,
+          "relocatedSourceSha256": "49e3fa1367ce31d9f13139896c083176ea0473d8c63af1e24afda06345384a3c",
+          "sanitizer": {
+            "coldStdout": "cold\n",
+            "startupStderr": "\n=================================================================\n==PID==ERROR: LeakSanitizer: detected memory leaks\n\nDirect leak of 128 byte(s) in 12 object(s) allocated from:\n    #0 ADDRESS in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69\n    #1 ADDRESS in __gmp_default_allocate (<consumer>/relocated-package/lib/pkgconfig/../../lib/libleanshared.so+ADDRESS)\n\nSUMMARY: AddressSanitizer: 128 byte(s) leaked in 12 allocation(s).\n",
+            "stdout": "owned-checked-record-cpp:125\n"
+          }
+        }
+      },
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "lifecycle": {
+        "c": "manual-owner-release",
+        "cpp": "raii-plus-sanitizers"
+      },
+      "mode": "full",
+      "outputAtomicity": true,
+      "packageSetReceiptSha256": "a9cbe66b76db4103ac2284ff29e1087c57be1d4adfae1707b16312ca19a146f6",
+      "rawReportSha256": "a4ee555557175bce3e5e467cc004d65f0625e87300f8e8f73d3ae1c75c743596",
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "57f289e56b88ff35002546aea706b308c1857e407776d667455abeef9738bd74",
+      "callbackRecovery": false,
+      "componentReceiptSha256": "bcbce6bf6278d79f0d8d36320b8677faf7f6dee6286cadb39a06e09cb49c2854",
+      "consumers": {
+        "c": {
+          "checks": 14,
+          "compilerFreePath": true,
+          "consumerSha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f",
+          "offlineInstall": true,
+          "relocatedSourceSha256": "d63e0f4fc99b804abcdf53582f29bd66cbbc81a737d57896b370bc78d1b9340f",
+          "sanitizer": null
+        },
+        "cpp": {
+          "checks": 3,
+          "compilerFreePath": true,
+          "consumerSha256": "c97173d1b8c82cc061b67c50c242a9c8bab4dac302f480833a53ff5b8dd7ba03",
+          "offlineInstall": true,
+          "relocatedSourceSha256": "c97173d1b8c82cc061b67c50c242a9c8bab4dac302f480833a53ff5b8dd7ba03",
+          "sanitizer": null
+        }
+      },
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "lifecycle": {
+        "c": "manual-owner-release",
+        "cpp": "raii"
+      },
+      "mode": "result-only",
+      "outputAtomicity": false,
+      "packageSetReceiptSha256": "06e197ea2fff73cf9f9151b37dc4948d479aad52b60c027f43909682b5af1010",
+      "rawReportSha256": "64fb0a7a493c23b9e27b9afc4c4bafc75c4bc9d73d8cf2c442cfe074bbac1c42",
+      "relocatedInstallation": true,
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": false
+    }
+  ],
+  "perlReports": [
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "9718ef3267bd6310c84b544a12a9339166fab121a2293f618d6c9c89fbd477a4",
+      "callbackRecovery": true,
+      "componentReceiptSha256": "7ce72dfc91ee2e1cd4fcd7ee8a02f6cb7010423fcbc99392319afdc058a2c351",
+      "consumerSha256": "189e5fd13efff72dd8eac4beee838e04e0e0d0c01d55bc9836d167b674d5737a",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "full",
+      "observations": [
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "81a502cd74914f330e31da4cef1b56ac63f8049fc389ba8f46f8d7fa2da005c8"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "81a502cd74914f330e31da4cef1b56ac63f8049fc389ba8f46f8d7fa2da005c8"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.36.3-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "fb15c72f6ba343eaca163375360a43a97b8f0112169ff70250b058116ace61c6"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "fb15c72f6ba343eaca163375360a43a97b8f0112169ff70250b058116ace61c6"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.36.3-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "10867529be82607011e90c427bf828fcdce9ca3a05bf12350131c48098ab96d5"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "10867529be82607011e90c427bf828fcdce9ca3a05bf12350131c48098ab96d5"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.36.3-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "ee0f098f6ef570a4a2917c88389c6a7290bf76381f40b46b5357fb028a0a4eb3"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "ee0f098f6ef570a4a2917c88389c6a7290bf76381f40b46b5357fb028a0a4eb3"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.36.3-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "59a3a9f8380c87d6dd78ef7aa0381e068579bec32e46c8965a6ed76e899c9320"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "59a3a9f8380c87d6dd78ef7aa0381e068579bec32e46c8965a6ed76e899c9320"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.38.2-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "c9b668a55b9a7bd482a3cb18d98ce2ab59ef5f6ac0f13fbef5df4ecf58e78621"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "c9b668a55b9a7bd482a3cb18d98ce2ab59ef5f6ac0f13fbef5df4ecf58e78621"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.38.2-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "f7152105666d7b7082db3b4e292c5c84ea0d212eac5b7e364db1cefcbb706fc9"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "f7152105666d7b7082db3b4e292c5c84ea0d212eac5b7e364db1cefcbb706fc9"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.38.2-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e258b71f82326ddbc02d25765eebae664a1effe6b8b2c92e74f3110adf9ffca5"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e258b71f82326ddbc02d25765eebae664a1effe6b8b2c92e74f3110adf9ffca5"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "e2a6651ff7a8c0b176f9a3031280d69cc825b47dcdb60378624e2e598d2ecbf1"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "borrowed_rejection_preserved": true,
+            "callback_calls": 2,
+            "callback_recovered": true,
+            "checks": 63,
+            "closure_reused": true,
+            "live_identities": 1,
+            "successful_transfer_consumed": true,
+            "transfer_rejection_preserved": true
+          },
+          "runtime": "5.38.2-unthreaded",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceiptSha256": "306e278e215314cdb44e9fb3e2ba9b42627ba1c0704074a63e47cf8d75f0a56f",
+      "rawReportSha256": "9745b34a0683472851fadbd8797d625efefae7afc8f3b3f8e03ea5e862917da5",
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "21fe7ca8e072aeeed9c12d550e31f8367620f77fe70acf9a7f15624ab896fc3f",
+      "callbackRecovery": false,
+      "componentReceiptSha256": "904ed4cb8dcbc7fe066626c59712e82195245e3a06f1d65ae9919ccc49c1b1b6",
+      "consumerSha256": "ae9402cc4d05ba4809c3605490d11216310d5bd31c6030f1a27485dd20d39c7d",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "immutableConsumer": true,
+      "independentlyVerified": true,
+      "lifecycle": "perl-destruction-plus-explicit-close",
+      "mode": "result-only",
+      "observations": [
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "2dfc1dcc98dbe1a7f30fbc1a40e7ba1db4ad7e253c9b352ed8df61f368fdaa95"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "2dfc1dcc98dbe1a7f30fbc1a40e7ba1db4ad7e253c9b352ed8df61f368fdaa95"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.36.3-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "c52e9a0d801e8534c126e3780d4950a9ba61fe4899606c8a39d970eb034d860f"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "c52e9a0d801e8534c126e3780d4950a9ba61fe4899606c8a39d970eb034d860f"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.36.3-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "91315737b353351f5d47a84f2cb5864058dc700eb8a80de3b37afe9e8de86625"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "91315737b353351f5d47a84f2cb5864058dc700eb8a80de3b37afe9e8de86625"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.36.3-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "12e2c6eddc7d8686c71a685636c890780a3d44e6c1341f6d93ff3c2ba3c70e9d"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "12e2c6eddc7d8686c71a685636c890780a3d44e6c1341f6d93ff3c2ba3c70e9d"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.36.3-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "c4b6b4001b865abff3b0c1bc8347a0e8dd2227ba5c5f54493f869f62e7fae0d5"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "c4b6b4001b865abff3b0c1bc8347a0e8dd2227ba5c5f54493f869f62e7fae0d5"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.38.2-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "d1466ee6512f7ded36ab374e1dbfd1b85b469017f1a7097ec60cb533d9075644"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "d1466ee6512f7ded36ab374e1dbfd1b85b469017f1a7097ec60cb533d9075644"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.38.2-threaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "9f8f32a1066514a34a36eec7f9de04188226e807cc9bf808cfd8450cd128b8ef"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "9f8f32a1066514a34a36eec7f9de04188226e807cc9bf808cfd8450cd128b8ef"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "prebuilt-only",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.38.2-unthreaded",
+          "runtimeOnlyRuns": 2
+        },
+        {
+          "assetInspectorSha256": "c19aeddf9e5acfa8415ef583ab2513a13a9eaf59f4916fc68e3e60c804bfb152",
+          "assets": [
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "af31434acfb35e1afd5ae1aaac3771a8ffd648dc166eaa205dea7db532a96bc5"
+            },
+            {
+              "asset": "OwnedCheckedRecords.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "af31434acfb35e1afd5ae1aaac3771a8ffd648dc166eaa205dea7db532a96bc5"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libgmp-lean-bridge.so.10",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "313daf49b48d98568911e795373d22eeaf440fa2ad2c7b5480da601de335992a"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "cold",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            },
+            {
+              "asset": "libcomponent_161bdaa35ee11fef40c6.so",
+              "brokerIdentities": 0,
+              "checks": 7,
+              "mode": "warm",
+              "originalSha256": "381d55810354bd13c9c2428d9c02f70db8cc358f307b5da9b7e4c4418fac8728"
+            }
+          ],
+          "mode": "build-xs",
+          "observed": {
+            "checks": 9,
+            "result_only": true
+          },
+          "runtime": "5.38.2-unthreaded",
+          "runtimeOnlyRuns": 2
+        }
+      ],
+      "packageSetReceiptSha256": "39e5dd7564c85ae7f55a4d4c7bf25adc1d463a2608e37e458abb1de44afab007",
+      "rawReportSha256": "10ff84209cd0f3a3586ce645cdc2ff35c80e1fdd21d7e4aac527d8dfb1b9b944",
+      "relocatedInstallation": true,
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "unchangedRejectedInputs": false
+    }
+  ],
+  "profile": "installed-owned-checked-record-native-perl-local-qualification",
+  "schemaVersion": 1,
+  "scope": "ordinary full and result-only local qualification; recurring CI retains the complete ordinary/reviewed matrix"
+}
