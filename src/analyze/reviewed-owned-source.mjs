@@ -160,8 +160,8 @@ const checkReview = document => {
 	}
 	// Every consumed occurrence of a checked record, copied or owned, names its exact
 	// constructor; a produced occurrence names none. A null tree is valid only for a top-level
-	// result, where Lean already holds the proof. Owned callbacks and receivers keep their
-	// established boundary and never carry a checked record in a reviewed owned build.
+	// produced position, where Lean already holds the proof. Receivers keep their established
+	// boundary and never carry a checked record in a reviewed owned build.
 	const erasedProofsKey = "lean-lang.org/erased-proofs";
 	const checked = definition => Object.hasOwn(definition?.source?.extensions ?? {}, erasedProofsKey);
 	const reachesChecked = (type, seen = new Set()) => {
@@ -211,11 +211,27 @@ const checkReview = document => {
 		return definition.cases.every((branch, index) => branch.fields.every((field, position) =>
 			checkedRecordCoverage(field.type, cases[index]?.fields[position]?.refinement ?? null, produced, depth + 1, inner)));
 	};
+	// A callback reaching a checked record needs an authenticated direction; each of its
+	// positions then follows the declaration rule for whoever produces it there. Host
+	// callbacks receive Lean-produced parameters and return a consumed result; returned
+	// closures are the reverse.
 	for(const definition of callbacks.values())
-		reject(reachesChecked({ kind: "named", id: definition.id })
-			&& callbackDefinitionRefinement(
-				definition, document.types, { ownedStructural: true }
-			) === null, `${definition.id}.callable`);
+	{
+		if(!reachesChecked({ kind: "named", id: definition.id })) continue;
+		const refinement = callbackDefinitionRefinement(
+			definition, document.types, { ownedStructural: true }
+		);
+		const direction = refinement === null ? null : callbackSubtypeDirection({
+			parameters: definition.callable.parameters.map(parameter => parameter.type)
+			, result: definition.callable.result.type
+		}, refinement, document.types, { ownedStructural: true });
+		reject(direction === null, `${definition.id}.callable`);
+		for(const [index, value] of definition.callable.parameters.entries())
+			reject(!checkedRecordCoverage(value.type, refinement.parameters[index]
+				, direction === "host"), `${definition.id}.parameters[${index}]`);
+		reject(!checkedRecordCoverage(definition.callable.result.type, refinement.result
+			, direction === "closure"), `${definition.id}.result`);
+	}
 	for(const declaration of document.declarations)
 	{
 		const refinements = declaration.source.extensions["lean-lang.org/refinements"];

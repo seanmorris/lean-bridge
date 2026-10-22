@@ -77,25 +77,28 @@ test("reviewed side: full and result-only owned builds admit checked records onl
 	assert.deepEqual(validateReviewedOwnedSource(capture(bare)), bare);
 });
 
-const ownedCheckedCallbackIr = role => {
+const ownedCheckedCallbackIr = (role, shape = undefined) => {
 	const document = ownedCheckedRecordReviewedIr();
 	const claim = { kind: "named", id: `lean:${q("Claim")}` };
 	const host = role === "host";
-	const refinements = {
+	// The default shape is Claim -> Claim with every checked position decided.
+	const parameterTypes = shape?.parameters ?? [claim], resultType = shape?.result ?? claim;
+	const refinements = shape?.refinements ?? {
 		parameters: [ownedCheckedRecordTrees.claim(
 			host ? null : q("mkClaim")
 		)]
 		, result: ownedCheckedRecordTrees.claim(host ? q("mkClaim") : null)
 	};
-	const signature = { parameters: [claim], result: claim, refinements };
+	const signature = { parameters: parameterTypes, result: resultType, refinements };
 	const name = `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
 	const failure = { mode: "declared", errors: ["error:native-callback"]
 		, unexpected: "poison-runtime" };
 	const callable = {
-		parameters: [{ name: "arg0", type: claim, ownership: "borrow"
+		parameters: parameterTypes.map((value, index) => ({ name: `arg${index}`
+			, type: value, ownership: "borrow"
 			, lifetime: { scope: "call", anchor: null }, mutability: "immutable"
-			, optional: false, default: null }]
-		, result: { type: claim, ownership: "lease"
+			, optional: false, default: null }))
+		, result: { type: resultType, ownership: "lease"
 			, lifetime: { scope: "explicit", anchor: null } }
 		, effects: ["host-call", "fails"], failure, resultMode: "value"
 		, invocation: "many", reentry: "same-agent", selfDisposal: "defer"
@@ -315,6 +318,74 @@ test("owned checked-record receivers and incomplete callback decisions have loca
 	reversed.operation.parameters[0].type.id = reversedDefinition.id;
 	assert.throws(() => validateReviewedOwnedSource(capture(reversed.document))
 		, unsupported(`${reversed.operation.id}.parameters[0].type`));
+});
+
+test("owned checked-record callbacks follow the declaration rule at every callable position", () => {
+	const claim = { kind: "named", id: `lean:${q("Claim")}` };
+	const booking = { kind: "named", id: `lean:${q("Booking")}` };
+	const { claim: tree } = ownedCheckedRecordTrees, mk = q("mkClaim");
+	const build = (role, parameters, result, refinements) =>
+		ownedCheckedCallbackIr(role, { parameters, result, refinements });
+	// A consumed position names its constructor at its own located path, before any model is built.
+	const refused = (role, parameters, result, refinements, position) => {
+		const { document, name } = build(role, parameters, result, refinements);
+		assert.throws(() => validateReviewedOwnedSource(capture(document))
+			, unsupported(`bridge:${name}.${position}`));
+	};
+	refused("host", [claim, claim], claim
+		, { parameters: [tree(null), tree(null)], result: null }, "result");
+	refused("closure", [claim, claim], claim
+		, { parameters: [tree(mk), null], result: tree(null) }, "parameters[1]");
+	// A nested produced record still needs its projection tree; only a top-level one may stay bare.
+	refused("host", [claim, booking], claim
+		, { parameters: [tree(null), null], result: tree(mk) }, "parameters[1]");
+	refused("closure", [claim], booking
+		, { parameters: [tree(mk)], result: null }, "result");
+	// A bare top-level produced position passes review, the model and the carriers, and
+	// only the decided positions get adapters.
+	const accepted = (role, parameters, result, refinements, expected) => {
+		const { document, name, operation } = build(role, parameters, result, refinements);
+		assert.deepEqual(validateReviewedOwnedSource(capture(document)), document);
+		const model = compileOwnedAggregateModel(document);
+		assert.equal(model.types.find(item => item.id === `bridge:${name}`).callable.direction, role);
+		assert.deepEqual(model.refinementModel.sites.map(item => ({
+			position: item.position, direction: item.direction
+		})), expected.sites);
+		const generated = generateOwnedNativeBindingAdapters({
+			document, sourceIdentity: {}
+			, declarations: [{ name: operation.source.declaration, module }]
+			, metadataSha256: "b".repeat(64), hostCallbacks: true
+		});
+		assert.deepEqual(Object.keys(generated.carriers.refinementValidators)
+			, expected.validators.map(([kind, index]) => `bridge:${name}\0${kind}\0${index}`));
+		if(role === "host")
+			assert.ok(ownedCCallbacks(generateOwnedCValues(document, {
+				hostCallbacks: true, publicPrefix: "checked_callback"
+			}), generated.carriers));
+	};
+	accepted("host", [claim, claim], claim
+		, { parameters: [tree(null), null], result: tree(mk) }, {
+			sites: [{ position: { kind: "parameter", index: 0 }, direction: "result" }
+				, { position: { kind: "result" }, direction: "input" }]
+			, validators: [["result", -1]] });
+	accepted("closure", [claim, claim], claim
+		, { parameters: [tree(mk), tree(mk)], result: null }, {
+			sites: [{ position: { kind: "parameter", index: 0 }, direction: "input" }
+				, { position: { kind: "parameter", index: 1 }, direction: "input" }]
+			, validators: [["parameter", 0], ["parameter", 1]] });
+	// Fully decided trees stay accepted in both directions.
+	accepted("host", [claim, claim], claim
+		, { parameters: [tree(null), tree(null)], result: tree(mk) }, {
+			sites: [{ position: { kind: "parameter", index: 0 }, direction: "result" }
+				, { position: { kind: "parameter", index: 1 }, direction: "result" }
+				, { position: { kind: "result" }, direction: "input" }]
+			, validators: [["result", -1]] });
+	accepted("closure", [claim, claim], claim
+		, { parameters: [tree(mk), tree(mk)], result: tree(null) }, {
+			sites: [{ position: { kind: "parameter", index: 0 }, direction: "input" }
+				, { position: { kind: "parameter", index: 1 }, direction: "input" }
+				, { position: { kind: "result" }, direction: "result" }]
+			, validators: [["parameter", 0], ["parameter", 1]] });
 });
 
 test("owned checked-record refinement trees require the explicit ownership-aware boundary", () => {

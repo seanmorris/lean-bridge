@@ -106,14 +106,18 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 			&& !byPosition.has(siteKey(declaration.id, "result")))
 			fail(`${declaration.id} result is missing its per-use refinement`);
 	}
+	// A top-level position that Lean produces may stay bare, as at declarations, because
+	// Lean already holds its proof; reviewed coverage keeps nested produced occurrences out.
+	// Every consumed position needs its adapter, and an unknown direction admits nothing bare.
 	for(const node of model.types.filter(type => type.kind === "callback"))
 	{
+		const direction = node.callable.direction;
 		node.callable.parameters.forEach((parameter, index) => {
-			if(reachesMirror(parameter.type)
+			if(reachesMirror(parameter.type) && direction !== "host"
 				&& !byPosition.has(siteKey(node.id, "parameter", index)))
 				fail(`${node.id} parameter ${index} requires a directional callback refinement adapter`);
 		});
-		if(reachesMirror(node.callable.result.type)
+		if(reachesMirror(node.callable.result.type) && direction !== "closure"
 			&& !byPosition.has(siteKey(node.id, "result")))
 			fail(`${node.id} result requires a directional callback refinement adapter`);
 	}
