@@ -23,6 +23,7 @@ const profileManifest = Object.freeze({
 		, "callback-checked-record-perl-installed"
 		, "callback-checked-record-remaining-installed"
 		, "callback-refinements-php-wasm"
+		, "php-wasm-callback-entry-installed"
 		, "callback-dependent-integration-source-history"
 		, "callback-subtype-browser-ci"
 		, "callback-subtype-extractor"

@@ -35,7 +35,7 @@ fi
 mkdir -p "$(dirname "$output")"
 name='instrumented PHP-Wasm callbacks close and execute every selected entry'
 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="^$name$" \
-  tests/helpers/php-wasm-callback-entry-installed-tests.mjs 2>&1 | tee "$output.tap"
+  tests/php-wasm-callback-entry-installed.test.mjs 2>&1 | tee "$output.tap"
 test "$(git rev-parse HEAD)" = "$revision"
 for route in ordinary reviewed; do
   records="$output/$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES/$route"
