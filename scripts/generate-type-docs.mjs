@@ -52,6 +52,35 @@ const primitiveNominalPhpWasm = "[Nineteen-base PHP-Wasm checks](../evidence/nom
 const recursiveSubtypePhpWasm = "[Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover.";
 const ownedSubtypePhpWasm = "[PHP-Wasm owned Subtype checks](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md) add one proof-erased `Int` field inside the tested acyclic `Bundle` owner on both source routes. Source-free offline packages are physically relocated before eight Node and eight Chromium executions per route cover borrowed and transferred inputs, leased results, exact constructor selection, rejection before transfer, explicit retain/close behavior, queued-finalizer cleanup and request recovery. [PHP-Wasm owned checked-record checks](../evidence/owned-checked-record-php-wasm-local-qualification-20261022.md) add the tested copied `Window` inside `Booking` and the proof-backed `Claim` across `Ticket` owners, transfers, synchronous callbacks and returned Lean closures on both source routes. Invalid explicit recovery rejects before callback entry; standalone result-only packages retain no checked-input or callback metadata. Recursive owned graphs, retained or asynchronous callbacks and broader predicates remain separate work.";
 const callbackSubtypePhpWasm = "[PHP-Wasm callback Subtype checks](../evidence/callback-subtype-php-wasm-local-qualification-20261022.md) add synchronous host callback replies and returned Lean closure inputs on both source routes. Two author roots reproduce the Composer API, npm component and npm shared-runtime archives before source removal, offline installation and relocation. Eight Node and four Chromium startup/lazy, weak/strict contexts per route check scalar, mixed and nested copied carriers, exact typed recovery, exception identity, cleanup and later-call recovery. Retained or asynchronous callbacks, arbitrary predicates, recursive or generic refined payloads, owned callback payloads, dispatch counts and memory bounds remain separate work.";
+const callbackSubtypeHostedEvidenceIds = Object.freeze([
+	"callback-subtype-browser-hosted-installed"
+	, "callback-subtype-native-hosted-installed"
+	, "callback-subtype-languages-hosted-installed"
+	, "callback-subtype-perl-hosted-installed"
+	, "callback-subtype-dotnet-hosted-installed"
+	, "callback-subtype-jvm-hosted-installed"
+	, "callback-subtype-php-native-hosted-installed"
+	, "callback-subtype-wit-wasi-hosted-installed"
+]);
+const callbackSubtypeHostedProfiles = new Set([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "c", "cpp", "python", "ruby"
+	, "rust", "perl", "dotnet", "java", "kotlin", "php-native", "wit-wasi"
+]);
+const hasCallbackSubtypeHostedEvidence = document =>
+	callbackSubtypeHostedEvidenceIds.every(id =>
+		document.evidence.some(item => item.id === id));
+const callbackSubtypeHostedReference = "[Hosted synchronous callback Subtype acceptance](../evidence/callback-subtype-promotion-20261022.md) establishes proof-erased selected Nat Subtypes in host callback replies and returned Lean closure inputs across all sixteen non-PHP-Wasm consumer profiles and both source routes. Lean-produced values cross as base values. Host-produced replies use the target's exact typed recovery wrapper; invalid or missing recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. Retained or asynchronous callbacks, checked-record and owned callback positions, arbitrary predicates, recursive or generic refined payloads, dispatch cost and peak memory remain separate work.";
+
+const callbackSubtypeHostedGuide = (document, profiles, reference) => {
+	if(!hasCallbackSubtypeHostedEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		callbackSubtypeHostedProfiles.has(profile));
+	if(selected.length === 0) return null;
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/callback-subtype-promotion-20261022.md");
+	return `[Hosted synchronous callback Subtype acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} on ordinary-source and reviewed-IR packages. A selected Subtype produced by Lean crosses as its proof-erased base value. A host callback reply uses the generated exact typed recovery wrapper, and a returned Lean closure checks its selected Subtype input before entering the closure body. Missing or invalid recovery prevents callback entry, preserves caller values and does not prevent a later valid call. Retained or asynchronous callbacks, arbitrary predicates, checked-record or owned callback positions, recursive or generic refined payloads, dispatch cost and peak memory remain outside this evidence.`;
+};
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const zeroPayloadNativeMarker = "[Checked-record browser packages]";
 const zeroPayloadNative = "[Hosted zero-payload C/C++ packages](../evidence/zero-payload-checked-record-native-20261021.md) distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive variant branches in all four ordinary/reviewed full/result-only routes. C uses one non-semantic storage byte for a legal nominal structure; C++ uses a nominal empty structure. Checked inputs run the selected nullary constructor, rejected values remain unchanged and later calls recover; Lean-produced results contain no proofs.";
@@ -174,12 +203,15 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 			.replaceAll(/(?<!`)list<u32>(?!`)/gu, "`list<u32>`");
 		return [inline(shape.lean), hostText(selected, profiles), coverageText(selected, profiles), `${notes ? notes + " " : ""}Required: ${shape.bounds}`];
 	});
+	const callbackSubtype = callbackSubtypeHostedGuide(
+		document, profiles, reference);
 	return [
 		"### Type conversions"
 		, ""
 		, `Profiles: ${profiles.map(profile => names[profile]).join(", ")}. Installed checks apply only to the named positions and package path. Generator inspection records syntax without compiled acceptance. Not audited means type-specific evidence is missing.`
 		, ""
 		, `The [conversion rules](${reference}#full-type-surface) cover ranges, copying, ownership, nulls and errors. The [audit inventory](${reference.replace(/reference\/types\.md$/u, "type-surface.v1.json")}) records commands, source hashes, limitations and implementation owners.`
+		, ...(callbackSubtype ? ["", callbackSubtype] : [])
 		, ""
 		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
 		, ""
@@ -286,7 +318,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 			.replace(inheritedCheckedRecordMarker, inheritedCheckedRecord)
 			.replace(recursiveCheckedRecordMarker, recursiveCheckedRecord)
 			.replace(primitiveNominalMarker,
-				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\n\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}`)
+				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\n\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : ""}`)
 			.replace(callbackCheckedRecordMarker
 				, `${callbackCheckedRecordMarker} ${callbackCheckedRecord}`)
 	};

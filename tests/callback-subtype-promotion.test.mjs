@@ -11,6 +11,9 @@ import {
 	typeSurfaceCells, validateTypeSurface
 } from "../src/adoption/type-surface.mjs";
 import {
+	renderTypeDocuments
+} from "../scripts/generate-type-docs.mjs";
+import {
 	callbackSubtypePromotionLanes
 	, callbackSubtypePromotionLimit
 	, promoteCallbackSubtypes
@@ -118,4 +121,26 @@ test("callback Subtype promotion renders the exact hosted boundary", () => {
 	assert.match(summary, /owned Subtypes/u);
 	assert.match(summary, /stops callback entry/u);
 	assert.doesNotMatch(summary, /suppresses later callbacks/u);
+});
+
+test("callback Subtype promotion documents every affected consumer", async () => {
+	const before = await renderTypeDocuments({
+		root: ".", inventory: { document, ...contracts }
+	});
+	const promoted = promoteCallbackSubtypes(document, references);
+	const after = await renderTypeDocuments({
+		root: ".", inventory: { document: promoted, ...contracts }
+	});
+	const evidence = /callback-subtype-promotion-20261022\.md/u;
+	for(const [path, source] of Object.entries(after.documents))
+	{
+		assert.doesNotMatch(before.documents[path], evidence, path);
+		assert.match(source, evidence, path);
+		assert.match(source, /exact typed recovery wrapper/u, path);
+		assert.match(source, /prevents callback entry/u, path);
+		assert.match(source, /later valid call/u, path);
+	}
+	assert.doesNotMatch(before.reference, evidence);
+	assert.match(after.reference, evidence);
+	assert.match(after.reference, /sixteen non-PHP-Wasm consumer profiles/u);
 });
