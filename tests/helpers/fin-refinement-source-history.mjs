@@ -7,6 +7,7 @@
  */
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackDependentIntegrationSource, callbackDependentIntegrationChangedPaths } from "./callback-dependent-integration-source-history.mjs";
 import { beforeCallbackCheckedRecordNativeErrorRepairSource, callbackCheckedRecordNativeErrorRepairChangedPaths } from "./callback-checked-record-native-error-repair-source-history.mjs";
 import { beforeCallbackCheckedRecordRemainingSource, callbackCheckedRecordRemainingChangedPaths } from "./callback-checked-record-remaining-source-history.mjs";
 import { beforeCallbackCheckedRecordLanguageSource, callbackCheckedRecordLanguageChangedPaths } from "./callback-checked-record-language-source-history.mjs";
@@ -1490,7 +1491,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordNativeErrorRepairChangedPaths
+	...callbackDependentIntegrationChangedPaths
+	, ...callbackCheckedRecordNativeErrorRepairChangedPaths
 	, ...callbackCheckedRecordRemainingChangedPaths
 	, ...callbackCheckedRecordNativeChangedPaths
 	, ...callbackCheckedRecordNativeIntegrationPaths
@@ -2144,9 +2146,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	if(!finRefinementNormalizationPaths.includes(path)) return source;
 	const text = source.toString();
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const callbackDependentIntegration
+		= beforeCallbackDependentIntegrationSource(path, text, expected);
+	if(sha256(callbackDependentIntegration) === expected)
+		return callbackDependentIntegration;
 	const callbackCheckedRecordNativeErrorRepair
 		= beforeCallbackCheckedRecordNativeErrorRepairSource(
-			path, text, expected
+			path, callbackDependentIntegration, expected
 		);
 	if(sha256(callbackCheckedRecordNativeErrorRepair) === expected)
 		return callbackCheckedRecordNativeErrorRepair;
