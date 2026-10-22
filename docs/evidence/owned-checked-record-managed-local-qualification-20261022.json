@@ -1,0 +1,147 @@
+{
+  "commands": {
+    "dotnet": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS=dotnet LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_ROUTES=ordinary-result-only node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs",
+    "jvm": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS=jvm LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_ROUTES=ordinary-full node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs",
+    "php": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS=php LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_ROUTES=ordinary-full node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs",
+    "wit": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_GROUPS=wit LEAN_BRIDGE_OWNED_CHECKED_RECORD_MANAGED_ROUTES=ordinary-full node --test --test-concurrency=1 tests/owned-checked-record-managed-packaging.test.mjs"
+  },
+  "implementationCommit": "edee8e14ecdc7f0e2febab98b740d523940f28d7",
+  "profile": "installed-owned-checked-record-managed-local-qualification",
+  "reports": [
+    {
+      "archives": [
+        {
+          "archive": "LeanBridge.OwnedCheckedRecords.ResultOnly.1.0.0.nupkg",
+          "sha256": "90fe04c293b7025506027d73e19d0aa8079d2c575150e6420ed92ede1e447ccf"
+        }
+      ],
+      "authorRoute": "ordinary",
+      "checks": 4,
+      "componentReceiptSha256": "132ca44bbf5c32829fc4aefb23e3508d68a16ec985faf4321875998aa4a4ebc6",
+      "consumerSha256": "499f93bc714b3d30fabc7b76feea7aaf357585328f7130babccf12222fd16f01",
+      "deterministicReassembly": true,
+      "group": "dotnet",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "result-only",
+      "packageSetReceiptSha256": "c5c6f28965d05c5522d1e4e4163e0190d66250907a5d8b370fdef0bfe893112f",
+      "profile": "dotnet",
+      "rawReportSha256": "04a6b907f038de2bc0a35448b41e5cd099987de87b71e7de89b023cb1ede90a7",
+      "relocatedChecks": 4,
+      "relocatedInstallation": true,
+      "route": "ordinary-result-only",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "owned-checked-records-1.0.0.jar",
+          "sha256": "44dd94f1a05ce1d921feba2f82614fe705d338a0fb5f412fb06b1ca40294a2e8"
+        },
+        {
+          "archive": "owned-checked-records-1.0.0.pom",
+          "sha256": "5d51fa437372d63161a44500d61f6d177e164f0008a21d00d818082914b2cc2f"
+        }
+      ],
+      "authorRoute": "ordinary",
+      "checks": 121,
+      "componentReceiptSha256": "237c45ba9b6c91635c39eddbc6dce00f8c44e614ca2dd38123582fa46ce1c48f",
+      "consumerSha256": "0084e6ffa552c8277692cb7a52e7cc44bf96563a6e60712ccfa73269a98e26e2",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "527f3313e0240fcd35514e3b76918e76d8c5db1892a5c1f7c5e24d4087685cf9",
+      "profile": "java",
+      "rawReportSha256": "4d5727819d7a6bbc2d868a4270f0bd2394618311b1c6878abc3d674da26104c3",
+      "relocatedChecks": 121,
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "owned-checked-records-1.0.0.jar",
+          "sha256": "44dd94f1a05ce1d921feba2f82614fe705d338a0fb5f412fb06b1ca40294a2e8"
+        },
+        {
+          "archive": "owned-checked-records-1.0.0.pom",
+          "sha256": "5d51fa437372d63161a44500d61f6d177e164f0008a21d00d818082914b2cc2f"
+        }
+      ],
+      "authorRoute": "ordinary",
+      "checks": 119,
+      "componentReceiptSha256": "237c45ba9b6c91635c39eddbc6dce00f8c44e614ca2dd38123582fa46ce1c48f",
+      "consumerSha256": "6f6e341a5c6e124f156b38dd78ab4bddbdc9f30bbc55ac9d47ac7a1122887ac6",
+      "deterministicReassembly": true,
+      "group": "jvm",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "527f3313e0240fcd35514e3b76918e76d8c5db1892a5c1f7c5e24d4087685cf9",
+      "profile": "kotlin",
+      "rawReportSha256": "4d5727819d7a6bbc2d868a4270f0bd2394618311b1c6878abc3d674da26104c3",
+      "relocatedChecks": 119,
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "leanbridge-owned-checked-records-1.0.0-linux-x86_64.zip",
+          "sha256": "d72510bbaf17a003819d991f368f740680aa0e20d20815a298f50b873c7f779c"
+        }
+      ],
+      "authorRoute": "ordinary",
+      "checks": 120,
+      "componentReceiptSha256": "a4b85e41bda52cc038cf369314f07c5b0416ddc68802d5794f35b8b5e70e9789",
+      "consumerSha256": "2fa22fdab0831387f2b340cf3b88df00976cf302078e5d81a52428d33ea6e2ea",
+      "deterministicReassembly": true,
+      "group": "php",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "010bdc5665fce0c9c87fe78b120b41c6e34f20dfdbccedbea4f81b0242061b84",
+      "profile": "php-native",
+      "rawReportSha256": "4fc05ac0bb6173266e5657fe6ec38e520254d5a6ca35e5aa729fc710a3544894",
+      "relocatedChecks": 120,
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "owned-checked-records-1.0.0-wit-wasi.tar.gz",
+          "sha256": "932372ae640035f987dab957ff80e1344437c8afd4314bc9917e6ea59fb9ee5d"
+        }
+      ],
+      "authorRoute": "ordinary",
+      "checks": 261,
+      "componentReceiptSha256": "316b2d58f9ac0d1b71e2d3969a909f5c8dc5f15b5fe05d9c6461437169c51b71",
+      "consumerSha256": "69e5d70aefd2451b7a531ee04d8ca1ee54d2f06be3d12c510e09f049baabaa08",
+      "deterministicReassembly": true,
+      "group": "wit",
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "immutableInstalledInputs": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "016aebd9aa6dcb72999edf9827abc452a0900a6533fddc217da93f935bf0e52c",
+      "profile": "wit-wasi",
+      "rawReportSha256": "eb874d4059a207df6663b8c0ebc28c591aa1696ff154a94878ead7200c9569f1",
+      "relocatedChecks": 261,
+      "relocatedInstallation": true,
+      "route": "ordinary-full",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "bounded local qualification with one source-free relocated package per host family; recurring CI retains the complete ordinary/reviewed and full/result-only matrix"
+}

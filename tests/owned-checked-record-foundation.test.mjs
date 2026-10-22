@@ -27,6 +27,7 @@ import { generateOwnedNativeBindingAdapters } from "../src/backends/native/owned
 import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedCheckedRecordModule, ownedCheckedRecordReviewedIr, ownedCheckedRecordTrees } from "./helpers/owned-checked-record-fixture.mjs";
 import "./helpers/owned-checked-record-language-source-history-tests.mjs";
+import "./helpers/owned-checked-record-managed-source-history-tests.mjs";
 import "./helpers/owned-checked-record-native-perl-source-history-tests.mjs";
 import "./helpers/owned-checked-record-callable-source-history-tests.mjs";
 import "./helpers/owned-checked-record-foundation-source-history-tests.mjs";
