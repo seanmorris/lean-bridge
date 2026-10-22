@@ -62,6 +62,7 @@ import "./helpers/dependent-checked-record-jvm-evidence-tests.mjs";
 import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
+import "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs";
 import "./helpers/wit-consumer-root-repair-source-history-tests.mjs";
 import "./helpers/callback-subtype-php-wasm-profile-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-php-source-history-tests.mjs";

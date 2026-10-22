@@ -1,0 +1,250 @@
+{
+  "additions": [
+    {
+      "currentSha256": "cd6bc53e89c0f4f80f8baebe8c4ee78278b51d2700a7afb9c26577ce31fbb1a0",
+      "path": "scripts/check-php-wasm-refinement-entry-records.mjs"
+    },
+    {
+      "currentSha256": "6f9fe84403c06e4bd645676f74002f29b9985e660558ffff425ead47c7304418",
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs"
+    },
+    {
+      "currentSha256": "d24151de774846fc84925f2a28d93a0a7e908c820f87f09a0db4f881d1400f7e",
+      "path": "tests/fixtures/php-wasm-refinement-entry/nominal-full.php"
+    },
+    {
+      "currentSha256": "e46cf811a2969b63adc0a2e4738373b3ec4b056dc90298e26b7395404c00086a",
+      "path": "tests/fixtures/php-wasm-refinement-entry/nominal-result-only.php"
+    },
+    {
+      "currentSha256": "4f389a891639efb8fbe997698ce2cec61794cb95d912355aea6e9aa89b10aa39",
+      "path": "tests/fixtures/php-wasm-refinement-entry/recursive-checked-record.php"
+    },
+    {
+      "currentSha256": "75c9a0fabd658fb7f5a4829ef4b87e9bdb96dc4831995f203d33d05cf8391ec0",
+      "path": "tests/fixtures/php-wasm-refinement-entry/recursive-subtype.php"
+    },
+    {
+      "currentSha256": "018ffcf6433b35187c949a5f786ab86a2d7bbe65ec943466790b3ba479534357",
+      "path": "tests/helpers/php-wasm-entry-probe-deployment-tests.mjs"
+    },
+    {
+      "currentSha256": "7eae146a21361b92b8d6ae061e1f81289af65af2291e9c000989e4fc97312134",
+      "path": "tests/helpers/php-wasm-refinement-entry-callers-tests.mjs"
+    },
+    {
+      "currentSha256": "22fe7de3b5e9bd3bac855127f7e7707f3f337e11ac80f6e243edaeb771628a7d",
+      "path": "tests/helpers/php-wasm-refinement-entry-callers.mjs"
+    },
+    {
+      "currentSha256": "1952bd0b4053d7ef2ca3df1ba20fefd43ac0d663275d99b5b5a5f40a340c78bc",
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs"
+    },
+    {
+      "currentSha256": "888381eb3767266641bcb9730fbe0eafe5653152d5fc6bb741e7bdabfe1e495c",
+      "path": "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs"
+    },
+    {
+      "currentSha256": "1f307ae57187c7affca5fbd309665cc17bfaec7592e52288cabdba3efbbc1301",
+      "path": "tests/helpers/php-wasm-refinement-entry-plan.mjs"
+    },
+    {
+      "currentSha256": "8fba4669bc94c8e605bc3813e833d5d4ce6d87472e151100f189ae6c88f0fb54",
+      "path": "tests/helpers/php-wasm-refinement-entry-report-tests.mjs"
+    },
+    {
+      "currentSha256": "6fbf20e3508e3c04db40934b1920b5211743abe0adb309523ae9fdac576defaf",
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs"
+    },
+    {
+      "currentSha256": "522b784ba07382666e155f098d1da7be580db59627fffcc780b921a9dc4f98e9",
+      "path": "scripts/update-php-wasm-refinement-entry-installed-source-history.mjs"
+    },
+    {
+      "currentSha256": "c7d8457a7a7bdf1686584f5cf1cde925aaa77336175c5701617f61daa80e909b",
+      "path": "tests/helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "dcc61dc31630046a6a95b523fb312e6ece4e8f9899f0bf1d5d382621bcb2131f",
+      "path": "tests/helpers/php-wasm-refinement-entry-installed-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "85a7550e71888303b196a34d9be9f0682305874d",
+  "milestone": "php-wasm-refinement-entry-installed-v1",
+  "predecessorCommit": "d64a5a06c1f94f14dd6d0c2ed1d25ca0a297d776",
+  "schemaVersion": 1,
+  "scope": "Four nominal and recursive copied-graph families run from two reproduced PHP-Wasm package handoffs in weak and strict PHP across embedded, Composer, eager, lazy, Node and Chromium routes. Compiler-derived marker identities are bound to independently authored call plans; retained compiler inputs and all twelve installed traces are rechecked by a closed adversarial verifier. The probe remains a separate instrumented build and makes no unmodified-package dispatch claim.",
+  "updates": [
+    {
+      "currentSha256": "117c1724ccd791b2583d312c08fc5a8ae4171be7aa229bcccf9cf04c103a3680",
+      "edits": [
+        {
+          "current": "    timeout-minutes: 240\n",
+          "previous": "    timeout-minutes: 180\n",
+          "start": 345
+        },
+        {
+          "current": "      - name: Disable host PHP debugging instrumentation\n        run: |\n          if /usr/bin/php -r 'exit(extension_loaded(\"xdebug\") ? 0 : 1);'; then\n            sudo phpdismod -s cli xdebug\n          fi\n          env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded(\"xdebug\")) { fwrite(STDERR, \"Consumer PHP must run without Xdebug.\\n\"); exit(1); }'\n      - name: Install Chromium\n        timeout-minutes: 20\n        run: bash scripts/install-playwright-browsers.sh chromium\n",
+          "previous": "",
+          "start": 2269
+        },
+        {
+          "current": "            tests/helpers/php-wasm-entry-probe-deployment-tests.mjs \\\n            tests/helpers/php-wasm-refinement-entry-callers-tests.mjs \\\n",
+          "previous": "",
+          "start": 2882
+        },
+        {
+          "current": "            tests/helpers/php-wasm-refinement-entry-driver-tests.mjs \\\n            tests/helpers/php-wasm-refinement-entry-plan-tests.mjs \\\n            tests/helpers/php-wasm-refinement-entry-report-tests.mjs \\\n",
+          "previous": "",
+          "start": 3239
+        },
+        {
+          "current": "      - name: Reproduce, install and execute the selected graph probe\n",
+          "previous": "      - name: Reproduce the selected graph probe twice\n",
+          "start": 4334
+        },
+        {
+          "current": "        timeout-minutes: 180\n",
+          "previous": "        timeout-minutes: 60\n",
+          "start": 4427
+        }
+      ],
+      "path": ".github/workflows/php-wasm-refinement-entry.yml",
+      "previousSha256": "a8a402eb57663b4fae9f6b91a52cc57acfe849fd17d2b28dfb6adf4194e388bf"
+    },
+    {
+      "currentSha256": "13f703385d016d77cd4be0e32d426bfad65effc7d04fdbb594b491d7ed19a728",
+      "edits": [
+        {
+          "current": "test -s \"$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES/report.json\"\nrecords=\"$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\"\ncheck=\"$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES.check.json\"\nnode scripts/check-php-wasm-refinement-entry-records.mjs \\\n  --family \"$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\" \\\n  --route \"$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\" \\\n  --producer \"$revision\" \\\n  --directory \"$records\" | tee \"$check\"\ntest -s \"$check\"\n",
+          "previous": "",
+          "start": 1714
+        }
+      ],
+      "path": "scripts/run-php-wasm-refinement-entry-ci.sh",
+      "previousSha256": "11c4a391cd4ccf8dbce9279de42b70181a8196396c863b4062c54f5827b7d0bc"
+    },
+    {
+      "currentSha256": "9cfb94b753ee323d5effb1579b180cafe4af9ae5b3b7d9ce37ec24f3b1c14423",
+      "edits": [
+        {
+          "current": "\tassert.match(workflow, /timeout-minutes: 240/u);\n\tassert.match(workflow, /run: bash scripts\\/install-playwright-browsers\\.sh chromium/u);\n\tassert.match(workflow, /Consumer PHP must run without Xdebug/u);\n\tassert.match(workflow, /tests\\/helpers\\/php-wasm-refinement-entry-report-tests\\.mjs/u);\n",
+          "previous": "",
+          "start": 823
+        },
+        {
+          "current": "\tassert.match(shell, /test -s \"\\$output\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\\/report\\.json\"/u);\n\tassert.match(shell, /node scripts\\/check-php-wasm-refinement-entry-records\\.mjs/u);\n\tassert.match(shell, /--producer \"\\$revision\"/u);\n\tassert.match(shell, /test -s \"\\$check\"/u);\n",
+          "previous": "",
+          "start": 1770
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-ci-tests.mjs",
+      "previousSha256": "15e5d00415a928b408d36b0bf2a0a21fd42dfbf5730c72b87571addc0cd8cf5d"
+    },
+    {
+      "currentSha256": "f5805f385a9f1af43b3d8c3ce70d373e738bbe121ddd389369e773bd6b3e5e02",
+      "edits": [
+        {
+          "current": "import { copiedCleanEnvironment, nativeFixtureEnvironment } from \"./copied-fixture-install.mjs\";\nimport {\n\tphpWasmRefinementEntryCaller, phpWasmRefinementEntryCallerSpec\n\t, phpWasmRefinementEntryExpected, phpWasmRefinementEntryRequest\n} from \"./php-wasm-refinement-entry-callers.mjs\";\n",
+          "previous": "import { nativeFixtureEnvironment } from \"./copied-fixture-install.mjs\";\n",
+          "start": 1529
+        },
+        {
+          "current": "import { phpWasmRefinementEntryPlan } from \"./php-wasm-refinement-entry-plan.mjs\";\nimport { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "",
+          "start": 1904
+        },
+        {
+          "current": "import { phpWasmExecutionTuples } from \"./php-wasm-fin-fixtures.mjs\";\nimport { copyPackageSetHandoff } from \"./package-set.mjs\";\nimport { installedPhpWasmCorpus } from \"./type-corpus-php-wasm-install.mjs\";\n",
+          "previous": "",
+          "start": 2315
+        },
+        {
+          "current": "\tconst consumer = await mkdtemp(join(tmpdir(), `lean-bridge-${family}-${route}-consumer-`));\n\tconst handoff = join(consumer, \"handoff\"), roots = [consumer], builds = []; let complete = false;\n",
+          "previous": "\tconst roots = [], builds = []; let complete = false;\n",
+          "start": 5617
+        },
+        {
+          "current": "\t\tif(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);\n",
+          "previous": "",
+          "start": 7095
+        },
+        {
+          "current": "\tconst selection = phpWasmGraphRefinementEntrySelection(builds[0].model, sourceProbe.entries);\n\tassert.deepEqual(selection.selected, builds[0].observation.selected);\n\tconst entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);\n\tconst sources = Object.fromEntries(await Promise.all([\"weak\", \"strict\"].map(async mode => [\n\t\tmode, await phpWasmRefinementEntryCaller(family, mode)\n\t])));\n\tconst caller = phpWasmRefinementEntryCallerSpec(family);\n\tconst clean = {\n\t\t...copiedCleanEnvironment\n\t\t, LEAN_BRIDGE_PHP_SOURCE: \"/unavailable/php\"\n\t\t, LEAN_BRIDGE_PHP_EMSDK: \"/unavailable/compiler\"\n\t\t, LEAN_BRIDGE_PHP_COPIED_RUNTIME: \"/unavailable/runtime\"\n\t};\n\tconst installed = await installedPhpWasmCorpus({\n\t\tt, library: { id: `${family}-${route}-entry-probe` }\n\t\t, consumer, handoff, receipt: builds[0].receipt\n\t\t, packageSet: builds[0].packageSet, environment, clean\n\t\t, fixture: {\n\t\t\tsettings: caller.settings, source: mode => sources[mode]\n\t\t\t, request: arrangement => phpWasmRefinementEntryRequest(family, arrangement, entryPlan)\n\t\t\t, removeHandoff: true\n\t\t\t, entryProbe: {\n\t\t\t\tdriver: \"tests/fixtures/php-wasm-refinement-entry/driver.mjs\"\n\t\t\t\t, support: [{\n\t\t\t\t\tsource: \"tests/helpers/php-wasm-subtype-entry-trace.mjs\"\n\t\t\t\t\t, destination: \"entry-trace.mjs\"\n\t\t\t\t}]\n\t\t\t}\n\t\t}\n\t});\n\tassert.deepEqual(installed.phpWasm.executions.map(item =>\n\t\t`${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort(), phpWasmExecutionTuples);\n\tconst expected = phpWasmRefinementEntryExpected(family, entryPlan.cases);\n\tfor(const execution of installed.phpWasm.executions)\n\t{\n\t\tassert.deepEqual(execution.observation, expected);\n\t\tassert.equal(execution.entryProbe.scope, entryPlan.scope);\n\t\tassert.equal(execution.entryProbe.family, family);\n\t\tassert.equal(execution.entryProbe.calls, entryPlan.cases.length);\n\t\tassert.deepEqual(execution.entryProbe.controls, entryPlan.cases.map(item => item.control));\n\t}\n\tawait saveLakeFile(output, \"report.json\", canonicalJson({\n\t\tschemaVersion: 1, scope: \"separate-instrumented-probe\"\n\t\t, producerCommit, family, route, entryPlan\n\t\t, ...installed\n\t\t, reproducible: true, independentBuilds: 2\n\t\t, sourceRemovedBeforeInstallation: true, compilerFreeReplay: true\n\t\t, offlineInstall: true, relocatedInstallation: true\n\t}));\n",
+          "previous": "",
+          "start": 7569
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-installed-tests.mjs",
+      "previousSha256": "3dc64eceec972e72380dab7bef9c85fd0e8cadb188e694e51a5014b2a37771b0"
+    },
+    {
+      "currentSha256": "f4edf1e0ab1de52a9943d01f52d969cee162bda3f03b9cedc13bc303a10c77b9",
+      "edits": [
+        {
+          "current": "const legacyEntryProbeFiles = Object.freeze([\n\tObject.freeze({ source: \"tests/fixtures/php-wasm-subtype-entry/driver.mjs\", destination: \"driver.mjs\" })\n\t, Object.freeze({ source: \"tests/helpers/php-wasm-subtype-entry-trace.mjs\", destination: \"entry-trace.mjs\" })\n\t, Object.freeze({ source: \"tests/helpers/php-wasm-subtype-entry-cases.mjs\", destination: \"entry-cases.mjs\" })\n]);\n\n/**\n * Close the files that may replace the ordinary installed PHP-Wasm driver.\n * A probe is a separate test deployment and cannot overwrite package inputs.\n *\n * @param probe - Legacy Subtype probe flag or an explicit driver/support closure.\n */\nexport const phpWasmEntryProbeDeploymentFiles = probe => {\n\tif(probe === true) return legacyEntryProbeFiles.map(item => ({ ...item }));\n\tassert.deepEqual(Object.keys(probe ?? {}).sort(), [\"driver\", \"support\"]);\n\tassert.match(probe.driver, /^tests\\/(?:fixtures|helpers)\\/[A-Za-z0-9_./-]+\\.mjs$/u);\n\tassert.ok(Array.isArray(probe.support));\n\tconst files = [{ source: probe.driver, destination: \"driver.mjs\" }, ...probe.support];\n\tfor(const [index, item] of files.entries())\n\t{\n\t\tassert.deepEqual(Object.keys(item).sort(), [\"destination\", \"source\"]);\n\t\tassert.match(item.source, /^tests\\/(?:fixtures|helpers)\\/[A-Za-z0-9_./-]+\\.mjs$/u);\n\t\tassert.match(item.destination, index === 0 ? /^driver\\.mjs$/u : /^(?!driver\\.mjs$)[A-Za-z0-9_-]+\\.mjs$/u);\n\t}\n\tassert.equal(new Set(files.map(item => item.destination)).size, files.length);\n\treturn files.map(item => ({ ...item }));\n};\n\n",
+          "previous": "",
+          "start": 1356
+        },
+        {
+          "current": "\t\tfor(const file of phpWasmEntryProbeDeploymentFiles(fixture.entryProbe))\n\t\t\tawait cp(join(repository, file.source), join(deployment, file.destination));\n",
+          "previous": "\t\tassert.equal(fixture.entryProbe, true);\n\t\tawait cp(join(repository, \"tests/fixtures/php-wasm-subtype-entry/driver.mjs\"), join(deployment, \"driver.mjs\"));\n\t\tfor(const [source, destination] of [[\"trace\", \"entry-trace\"], [\"cases\", \"entry-cases\"]])\n\t\t\tawait cp(join(repository, `tests/helpers/php-wasm-subtype-entry-${source}.mjs`), join(deployment, destination + \".mjs\"));\n",
+          "start": 13539
+        }
+      ],
+      "path": "tests/helpers/type-corpus-php-wasm-install.mjs",
+      "previousSha256": "09e04f1fb6b914a58a529382ac1d888b6559c63406e4d546cd578a806b8de8b7"
+    },
+    {
+      "currentSha256": "081a1b9a1d02750751a3c0f28f87cad123ddcb2deca27fd31cdbc4a293d7e71a",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-probe-deployment-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-driver-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-plan-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-callers-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-report-tests.mjs\";\n",
+          "previous": "",
+          "start": 467
+        }
+      ],
+      "path": "tests/recursive-subtype-php-wasm.test.mjs",
+      "previousSha256": "6431a25e4312d63575ceb00512295744b4902c6251f8e352bb550d14f2929e3a"
+    },
+    {
+      "currentSha256": "f48f88ff83da2f9ab0b6ec62f2e7917c11a54ddf8114e570775a566570a5c959",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryInstalledSource, phpWasmRefinementEntryInstalledChangedPaths } from \"./php-wasm-refinement-entry-installed-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryInstalledChangedPaths\n\t, ...callbackSubtypePhpWasmProfileChangedPaths\n",
+          "previous": "\t...callbackSubtypePhpWasmProfileChangedPaths\n",
+          "start": 143925
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryInstalled\n\t\t= beforePhpWasmRefinementEntryInstalledSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryInstalled) === expected)\n\t\treturn phpWasmRefinementEntryInstalled;\n",
+          "previous": "",
+          "start": 174903
+        },
+        {
+          "current": "\t\t= beforeCallbackSubtypePhpWasmProfileSource(\n\t\t\tpath, phpWasmRefinementEntryInstalled, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackSubtypePhpWasmProfileSource(path, text, expected);\n",
+          "start": 175150
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "952d12ef0ba21a4a5f4cf634b7528ede66eb6e78a573c7fc227b58750a4a5d6a"
+    },
+    {
+      "currentSha256": "071ecf935c7a4c2ce40fce60c9b0ec07021b61bd2535a378546ecd2cd08bb907",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4451
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "bf7fd68f2659d6c58fffe57fd2c92241f160f085ab357d7b232c0f55e1700c11"
+    }
+  ]
+}

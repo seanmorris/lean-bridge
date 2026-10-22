@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryInstalledSource, phpWasmRefinementEntryInstalledChangedPaths } from "./php-wasm-refinement-entry-installed-source-history.mjs";
 import { beforeCallbackSubtypePhpWasmProfileSource, callbackSubtypePhpWasmProfileChangedPaths } from "./callback-subtype-php-wasm-profile-source-history.mjs";
 import { beforeWitConsumerRootRepairSource, witConsumerRootRepairChangedPaths } from "./wit-consumer-root-repair-source-history.mjs";
 import { beforeNominalEntryRepairSource, nominalEntryRepairChangedPaths } from "./nominal-entry-repair-source-history.mjs";
@@ -1899,7 +1900,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypePhpWasmProfileChangedPaths
+	...phpWasmRefinementEntryInstalledChangedPaths
+	, ...callbackSubtypePhpWasmProfileChangedPaths
 	, ...witConsumerRootRepairChangedPaths
 	, ...nominalEntryRepairChangedPaths
 	, ...callbackRefinementsPhpWasmChangedPaths
@@ -2581,8 +2583,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryInstalled
+		= beforePhpWasmRefinementEntryInstalledSource(path, text, expected);
+	if(sha256(phpWasmRefinementEntryInstalled) === expected)
+		return phpWasmRefinementEntryInstalled;
 	const callbackSubtypePhpWasmProfile
-		= beforeCallbackSubtypePhpWasmProfileSource(path, text, expected);
+		= beforeCallbackSubtypePhpWasmProfileSource(
+			path, phpWasmRefinementEntryInstalled, expected
+		);
 	if(sha256(callbackSubtypePhpWasmProfile) === expected)
 		return callbackSubtypePhpWasmProfile;
 	const witConsumerRootRepair
