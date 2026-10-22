@@ -31,6 +31,7 @@ import { compileNativeGraphProjection } from "../src/build/native-graph-projecti
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { structuredCallableDirectionalCheckedRecordIr } from "./helpers/structured-callable-fixture.mjs";
+import "./helpers/callback-checked-record-native-error-repair-source-history-tests.mjs";
 import "./helpers/callback-checked-record-native-source-history-tests.mjs";
 
 const moduleName = "LeanBridge::Structured";

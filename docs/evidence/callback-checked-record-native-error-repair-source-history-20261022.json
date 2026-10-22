@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "milestone": "callback-checked-record-native-error-repair-source-v1",
+  "predecessorCommit": "90141cafeea08e6cfd0260a7b2bb15d5bcb78359",
+  "implementationCommit": "b51d39171aedc534eee6ee6479b866501c8d0d45",
+  "repairedTypeSurfacePointers": 10,
+  "pointerUpdates": [
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previous": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "current": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712"
+    },
+    {
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previous": "ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d",
+      "current": "9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b"
+    },
+    {
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previous": "411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6",
+      "current": "d83bb25e81d04dc5ff42c77f50a86b08705e8f558ea52de9cee32c8e2a48374d"
+    },
+    {
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previous": "ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d",
+      "current": "9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b"
+    },
+    {
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previous": "411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6",
+      "current": "d83bb25e81d04dc5ff42c77f50a86b08705e8f558ea52de9cee32c8e2a48374d"
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-callback-checked-record-native-error-repair-source-history.mjs",
+      "currentSha256": "a13ab5db73d183f230f095a46de362702e757000ab102bfbd57b7d7b4b4f3cdf"
+    },
+    {
+      "path": "tests/helpers/callback-checked-record-native-error-repair-source-history.mjs",
+      "currentSha256": "b30f423c6bdc5bf7c4f64ee8f11aea92c7f5c47a5a12a81f38fb9f44cd7b785a"
+    },
+    {
+      "path": "tests/helpers/callback-checked-record-native-error-repair-source-history-tests.mjs",
+      "currentSha256": "751801d8f82edbee2c7a649562876ba243bb51d7f703ebd573c5998a0ef5228c"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "fda9fb36e0e22f6bc6575197f366d3c523422527c75d7a9233282c56505266f4",
+      "currentSha256": "04821c132c04cbdd5fc89d0fa0f963d6aa5d2a7c5ee4ea832a5e9418469de78d",
+      "edits": [
+        {
+          "start": 1179791,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 1194695,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 1227239,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 1257521,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 1290642,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 1331225,
+          "previous": "          \"sha256\": \"c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6\"\n",
+          "current": "          \"sha256\": \"38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712\"\n"
+        },
+        {
+          "start": 74241836,
+          "previous": "          \"sha256\": \"ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d\"\n",
+          "current": "          \"sha256\": \"9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b\"\n"
+        },
+        {
+          "start": 74242011,
+          "previous": "          \"sha256\": \"411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6\"\n",
+          "current": "          \"sha256\": \"d83bb25e81d04dc5ff42c77f50a86b08705e8f558ea52de9cee32c8e2a48374d\"\n"
+        },
+        {
+          "start": 74244502,
+          "previous": "          \"sha256\": \"ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d\"\n",
+          "current": "          \"sha256\": \"9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b\"\n"
+        },
+        {
+          "start": 74244677,
+          "previous": "          \"sha256\": \"411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6\"\n",
+          "current": "          \"sha256\": \"d83bb25e81d04dc5ff42c77f50a86b08705e8f558ea52de9cee32c8e2a48374d\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "89309ad96708202652113b7519833981da9050f632ccfe06adb492c4f8d2fd44",
+      "currentSha256": "e77252b10b25e9aafe8cd9a1d31056449ac0fc9fcd03a4ad0c4f3b3e6a0f5acd",
+      "edits": [
+        {
+          "start": 350,
+          "previous": "",
+          "current": "import { beforeCallbackCheckedRecordNativeErrorRepairSource, callbackCheckedRecordNativeErrorRepairChangedPaths } from \"./callback-checked-record-native-error-repair-source-history.mjs\";\n"
+        },
+        {
+          "start": 127137,
+          "previous": "\t...callbackCheckedRecordRemainingChangedPaths\n",
+          "current": "\t...callbackCheckedRecordNativeErrorRepairChangedPaths\n\t, ...callbackCheckedRecordRemainingChangedPaths\n"
+        },
+        {
+          "start": 156134,
+          "previous": "",
+          "current": "\tconst callbackCheckedRecordNativeErrorRepair\n\t\t= beforeCallbackCheckedRecordNativeErrorRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordNativeErrorRepair) === expected)\n\t\treturn callbackCheckedRecordNativeErrorRepair;\n"
+        },
+        {
+          "start": 156417,
+          "previous": "\t\t= beforeCallbackCheckedRecordRemainingSource(path, text, expected);\n",
+          "current": "\t\t= beforeCallbackCheckedRecordRemainingSource(\n\t\t\tpath, callbackCheckedRecordNativeErrorRepair, expected\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/callable-graph-package.mjs",
+      "previousSha256": "c38e2d0538be41c49fd4c4431a48e4aae93c8f4a50d3165a38dfc4b6e575a1b6",
+      "currentSha256": "38a0f72169fa511b647ee3f4824208647e64b3599faed2b3e30164c96ce64712",
+      "edits": [
+        {
+          "start": 3513,
+          "previous": "    ${p}_error error; state->status = ${p}_graph_finish(status, &error);\n",
+          "current": "    ${p}_error error;\n    if (status == 10) {\n      static const char message[] = \"Host callback result failed its Lean constructor\";\n      state->status = ${m}_STATUS_INVALID_ARGUMENT;\n      error = (${p}_error){${m}_ERROR_INVALID_ARGUMENT, message, sizeof(message) - 1};\n    } else state->status = ${p}_graph_finish(status, &error);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previousSha256": "ee2afc02f8e21bb7e101b74f611057ea6adae2de01aa3b26ac18ce21a6f70e7d",
+      "currentSha256": "9c953cfebecd305c040bfc68d95a39abb048c680e7339356430265f62fcc557b",
+      "edits": [
+        {
+          "start": 5149,
+          "previous": "\t\t.split(\"\\n\").filter(line => /^\\s*CHECK\\(/u.test(line)).length;\n",
+          "current": "\t\t.split(\"\\n\").filter(line => !/^\\s*#define\\s+CHECK\\b/u.test(line))\n\t\t.reduce((total, line) => total + (line.match(/\\bCHECK\\(/gu)?.length ?? 0), 0);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/callback-checked-record-native.test.mjs",
+      "previousSha256": "411220d64ae1debdea37bc3dcffb3e2fbb9760bb00196828552e7b3a698620f6",
+      "currentSha256": "d83bb25e81d04dc5ff42c77f50a86b08705e8f558ea52de9cee32c8e2a48374d",
+      "edits": [
+        {
+          "start": 2361,
+          "previous": "",
+          "current": "import \"./helpers/callback-checked-record-native-error-repair-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 12319,
+          "previous": "",
+          "current": "\tassert.match(source, /if \\(status == 10\\) \\{/u);\n\tassert.match(source, /Host callback result failed its Lean constructor/u);\n\tassert.match(source, /state->status = STRUCTURED_STATUS_INVALID_ARGUMENT;/u);\n\tassert.match(source, /STRUCTURED_ERROR_INVALID_ARGUMENT, message/u);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/callback-checked-record-native-ci.mjs",
+      "previousSha256": "3e4217a1efe29699f5164f48ad692f890d85c59598296021231a222d5232bd81",
+      "currentSha256": "94fe0eb652f7314fe4347688effba08eb96b124e518be70f81c31d8f3bf9d9e7",
+      "edits": [
+        {
+          "start": 766,
+          "previous": "export const callbackCheckedRecordNativeChecks = Object.freeze({ c: 24, cpp: 20 });\n",
+          "current": "export const callbackCheckedRecordNativeChecks = Object.freeze({ c: 27, cpp: 23 });\n"
+        }
+      ]
+    }
+  ]
+}
