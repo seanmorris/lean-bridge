@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmIndexedRefinementEntrySource, phpWasmIndexedRefinementEntryChangedPaths } from "./php-wasm-indexed-refinement-entry-source-history.mjs";
 import { beforeCallableClosureRefusalSource, callableClosureRefusalChangedPaths } from "./callable-closure-refusal-source-history.mjs";
 import { beforePhpWasmCallbackEntrySource, phpWasmCallbackEntryChangedPaths } from "./php-wasm-callback-entry-source-history.mjs";
 import { beforePhpWasmOwnedRefinementEntrySource, phpWasmOwnedRefinementEntryChangedPaths } from "./php-wasm-owned-refinement-entry-source-history.mjs";
@@ -1903,7 +1904,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callableClosureRefusalChangedPaths
+	...phpWasmIndexedRefinementEntryChangedPaths
+	, ...callableClosureRefusalChangedPaths
 	, ...phpWasmCallbackEntryChangedPaths
 	, ...phpWasmOwnedRefinementEntryChangedPaths
 	, ...phpWasmRefinementEntryInstalledChangedPaths
@@ -2589,8 +2591,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmIndexedRefinementEntry
+		= beforePhpWasmIndexedRefinementEntrySource(path, text, expected);
+	if(sha256(phpWasmIndexedRefinementEntry) === expected)
+		return phpWasmIndexedRefinementEntry;
 	const callableClosureRefusal
-		= beforeCallableClosureRefusalSource(path, text, expected);
+		= beforeCallableClosureRefusalSource(
+			path, phpWasmIndexedRefinementEntry, expected
+		);
 	if(sha256(callableClosureRefusal) === expected)
 		return callableClosureRefusal;
 	const phpWasmCallbackEntry

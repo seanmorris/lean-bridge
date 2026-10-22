@@ -1,0 +1,528 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ea9abf51d7465cf7a57f120ee53e201194f29ad9cfa4de93b54ce0fe47e153f2",
+      "path": ".github/workflows/php-wasm-indexed-refinement-entry.yml"
+    },
+    {
+      "currentSha256": "c492a9fdc709ad00f87296e5e8799d380d371c8b389d1acad080b4da2841ebbf",
+      "path": "tests/fixtures/php-wasm-refinement-entry/dependent-full.php"
+    },
+    {
+      "currentSha256": "b1ea1bb94723961b053ec8f37ed3e9f656fc29b490373a00bcc2ba8d227be652",
+      "path": "tests/fixtures/php-wasm-refinement-entry/dependent-result-only.php"
+    },
+    {
+      "currentSha256": "1abb19382911da434ba861733abfdb07e96a44748672a469000773be080f466b",
+      "path": "tests/fixtures/php-wasm-refinement-entry/value-index-full.php"
+    },
+    {
+      "currentSha256": "b7cc90745c985bde2ce836870e7bb0d96093716628921c5962316d5e60c69171",
+      "path": "tests/fixtures/php-wasm-refinement-entry/value-index-result-only.php"
+    },
+    {
+      "currentSha256": "95ab5c992b6efd9aeb9799e6b9c2006f949a02838c000e152b1ce13c1cc60326",
+      "path": "tests/fixtures/php-wasm-refinement-entry/zero-payload-full.php"
+    },
+    {
+      "currentSha256": "ca5fddf4d1efbc84d3836751ef42f1b139369d05d99c41ade87dd87700f162df",
+      "path": "tests/fixtures/php-wasm-refinement-entry/zero-payload-result-only.php"
+    },
+    {
+      "currentSha256": "953fe3bcd59d9569c6d46614e193800ccfcad3c92dc73eef2ca0168ab35b6188",
+      "path": "tests/helpers/php-wasm-indexed-refinement-entry-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "ff8bf28d7896e9af9278282361ad870cba5247baa83df68803b80e9a4a3a4ef8",
+      "path": "tests/helpers/php-wasm-indexed-refinement-entry-fixtures.mjs"
+    },
+    {
+      "currentSha256": "f2857f1c8bb68e00b09e067d681485f6c37d6fc11ea474ff3bb07fbfd6c91ea3",
+      "path": "scripts/update-php-wasm-indexed-refinement-entry-source-history.mjs"
+    },
+    {
+      "currentSha256": "58a2313eea5b9062f266950892822c642db25e154371467382a081bfe525d3ab",
+      "path": "tests/helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6b04cf236591ecbb05dd3642d65efa03eeef8f6e633600d0a3f74c058602ba2a",
+      "path": "tests/helpers/php-wasm-indexed-refinement-entry-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "40b78afb4bd292d96bc7b15844b65aac346005ae",
+  "milestone": "php-wasm-indexed-refinement-entry-v1",
+  "predecessorCommit": "650a34434da144ae283ac499c24c38a19c40c52c",
+  "schemaVersion": 1,
+  "scope": "Dependent, closed Bool/String/Nat-indexed and zero-payload checked records run through six compact PHP-Wasm probes, with input-checking and result-only proof-erasure packages kept distinct. Compiler-generated flat copied adapters supply public, validator and adapter identities; authored wrappers supply constructor and source identities. Independent plans cover valid calls, first refusal, recovery, wide indices, repeated results and active versus inactive variant branches. A dedicated twelve-cell hosted matrix reproduces ordinary and reviewed packages twice, installs them offline in embedded and Composer layouts, executes weak and strict callers eagerly and lazily in Node and Chromium, and retains closed adversarially rechecked records. The probe is a separate instrumented build and makes no unmodified-package dispatch-count claim.",
+  "updates": [
+    {
+      "currentSha256": "9eb67f6675e78a04ea290b7be89758a87681c0d325ec6fbb567b713710dda113",
+      "edits": [
+        {
+          "current": "# Reproduce one explicitly selected copied entry-probe package pair.\n",
+          "previous": "# Reproduce one explicitly selected nominal/recursive graph entry-probe package pair.\n",
+          "start": 20
+        },
+        {
+          "current": "  nominal-full|nominal-result-only|recursive-subtype|recursive-checked-record|\\\ndependent-full|dependent-result-only|value-index-full|value-index-result-only|\\\nzero-payload-full|zero-payload-result-only) ;;\n",
+          "previous": "  nominal-full|nominal-result-only|recursive-subtype|recursive-checked-record) ;;\n",
+          "start": 633
+        },
+        {
+          "current": "name=\"instrumented PHP-Wasm copied package closes $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES compiler entries\"\n",
+          "previous": "name=\"instrumented PHP-Wasm graph package closes $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES compiler entries\"\n",
+          "start": 1321
+        }
+      ],
+      "path": "scripts/run-php-wasm-refinement-entry-ci.sh",
+      "previousSha256": "13f703385d016d77cd4be0e32d426bfad65effc7d04fdbb594b491d7ed19a728"
+    },
+    {
+      "currentSha256": "df02ba4dd446718ce2641e73db291abece0d57891430db563730e8ae9ee9951a",
+      "edits": [
+        {
+          "current": "\t\t, \"dependent-full\", \"dependent-result-only\"\n\t\t, \"value-index-full\", \"value-index-result-only\"\n\t\t, \"zero-payload-full\", \"zero-payload-result-only\"\n",
+          "previous": "",
+          "start": 936
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "2bb3be722a32c8c31a451ef6f0445a69ec6f3aef2fad2def278cfa5ea82373c8"
+    },
+    {
+      "currentSha256": "f5feba2e38ee21a5a40797de23975863dead8bc35e9a2b5ae164becfb9be7322",
+      "edits": [
+        {
+          "current": "import { phpWasmRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "import { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "start": 929
+        },
+        {
+          "current": "\t\t, selectEntries = phpWasmRefinementEntrySelection\n",
+          "previous": "\t\t, selectEntries = phpWasmGraphRefinementEntrySelection\n",
+          "start": 7201
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build.mjs",
+      "previousSha256": "5ee9ce6dc111721c32e519e1a2023a0696a1f33fee77a93b550457525e6ea69f"
+    },
+    {
+      "currentSha256": "4cd90e503fb03098eeb4ac0f79a8b68f676d2094c94bc1c16d847cde59c16eec",
+      "edits": [
+        {
+          "current": " * Source-only controls for compact installed copied-entry callers.\n",
+          "previous": " * Source-only controls for compact installed graph-entry callers.\n",
+          "start": 4
+        },
+        {
+          "current": "import {\n\tphpWasmRefinementEntrySourceFamilies\n} from \"./php-wasm-refinement-entry-source-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 525
+        },
+        {
+          "current": "const families = phpWasmRefinementEntrySourceFamilies;\n",
+          "previous": "const families = [\n\t\"nominal-full\", \"nominal-result-only\", \"recursive-subtype\"\n\t, \"recursive-checked-record\"\n];\n",
+          "start": 631
+        },
+        {
+          "current": "test(\"compact copied-entry callers are syntax-valid and differ only by strictness\", async t => {\n",
+          "previous": "test(\"compact graph-entry callers are syntax-valid and differ only by strictness\", async t => {\n",
+          "start": 687
+        },
+        {
+          "current": "test(\"compact copied-entry requests close arrangement, operation and call plan\", () => {\n",
+          "previous": "test(\"compact graph-entry requests close arrangement, operation and call plan\", () => {\n",
+          "start": 1501
+        },
+        {
+          "current": "test(\"compact copied-entry caller selectors reject open choices\", async () => {\n",
+          "previous": "test(\"compact graph-entry caller selectors reject open choices\", async () => {\n",
+          "start": 2450
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-callers-tests.mjs",
+      "previousSha256": "7eae146a21361b92b8d6ae061e1f81289af65af2291e9c000989e4fc97312134"
+    },
+    {
+      "currentSha256": "2062cb9f6c8b19fba1657f58704c88646eec1a97926def4a977756416c33af54",
+      "edits": [
+        {
+          "current": "import {\n\tphpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec\n} from \"./php-wasm-indexed-refinement-entry-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 241
+        },
+        {
+          "current": "\t, ...Object.fromEntries(phpWasmIndexedRefinementEntryFamilies.map(family => {\n\t\tconst spec = phpWasmIndexedRefinementEntrySpec(family, \"ordinary\");\n\t\treturn [\n\t\t\tfamily\n\t\t\t, Object.freeze({\n\t\t\tmodule: spec.namespace, probe: spec.probe, settings: spec.settings\n\t\t\t})\n\t\t];\n\t}))\n",
+          "previous": "",
+          "start": 1400
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-callers.mjs",
+      "previousSha256": "22fe7de3b5e9bd3bac855127f7e7707f3f337e11ac80f6e243edaeb771628a7d"
+    },
+    {
+      "currentSha256": "8cac2f77b6c94924f79322470bcc3139bc536ebdee89322623f752bfcd107350",
+      "edits": [
+        {
+          "current": " * Hosted producer for separately instrumented copied PHP-Wasm packages. This\n * gate proves compiler-input closure and reproducibility;\n",
+          "previous": " * Hosted producer for separately instrumented nominal and recursive PHP-Wasm\n * graph packages. This gate proves compiler-input closure and reproducibility;\n",
+          "start": 4
+        },
+        {
+          "current": "import {\n\tphpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec\n} from \"./php-wasm-indexed-refinement-entry-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 963
+        },
+        {
+          "current": "import { phpWasmRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "import { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "start": 2108
+        },
+        {
+          "current": "\tif(phpWasmIndexedRefinementEntryFamilies.includes(family))\n\t{\n\t\tconst spec = phpWasmIndexedRefinementEntrySpec(family, route);\n\t\treturn {\n\t\t\troot: spec.root, module: spec.module, settings: spec.settings\n\t\t\t, configuration: spec.configuration, review: spec.review\n\t\t\t, verify: spec.verify\n\t\t};\n\t}\n",
+          "previous": "",
+          "start": 3004
+        },
+        {
+          "current": "test(`instrumented PHP-Wasm copied package closes ${family} ${route} compiler entries`, {\n",
+          "previous": "test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler entries`, {\n",
+          "start": 4782
+        },
+        {
+          "current": "\t\tassert.equal(built.model.schemaVersion, route === \"reviewed\"\n\t\t\t? (built.model.copiedGraph ? 5 : 3) : (built.model.copiedGraph ? 4 : 2));\n",
+          "previous": "\t\tassert.equal(built.model.schemaVersion, route === \"reviewed\" ? 5 : 4);\n",
+          "start": 7414
+        },
+        {
+          "current": "\tconst selection = phpWasmRefinementEntrySelection(builds[0].model, sourceProbe.entries);\n",
+          "previous": "\tconst selection = phpWasmGraphRefinementEntrySelection(builds[0].model, sourceProbe.entries);\n",
+          "start": 8050
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-installed-tests.mjs",
+      "previousSha256": "f5805f385a9f1af43b3d8c3ce70d373e738bbe121ddd389369e773bd6b3e5e02"
+    },
+    {
+      "currentSha256": "6fe65599a8d720bf33bfff0a3631794bb40c9e578c0409f79d484d8db8f4e039",
+      "edits": [
+        {
+          "current": " * Independent plan controls for graph and flat copied entry families.\n",
+          "previous": " * Independent plan controls for all #1824 graph entry families.\n",
+          "start": 4
+        },
+        {
+          "current": "import {\n\tphpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec\n} from \"./php-wasm-indexed-refinement-entry-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 507
+        },
+        {
+          "current": "\tconst indexed = phpWasmIndexedRefinementEntryFamilies.includes(family);\n\tconst indexedSpec = indexed ? phpWasmIndexedRefinementEntrySpec(family, \"reviewed\") : null;\n\tconst bindingIr = indexed ? indexedSpec.review : nominal\n",
+          "previous": "\tconst bindingIr = nominal\n",
+          "start": 1221
+        },
+        {
+          "current": "\tconst module = indexed ? indexedSpec.module : nominal ? \"NominalPrimitiveSubtypes\"\n",
+          "previous": "\tconst module = nominal ? \"NominalPrimitiveSubtypes\"\n",
+          "start": 1662
+        },
+        {
+          "current": "const flatPlanSelection = (family, sourceEntries) => {\n\tconst ir = phpWasmIndexedRefinementEntrySpec(family, \"reviewed\").review;\n\tconst selected = structuredClone(sourceEntries), lean = [];\n\tconst checked = value => {\n\t\tconst values = [];\n\t\tconst visit = item => {\n\t\t\tif(!item || typeof item !== \"object\") return;\n\t\t\tif(item.kind === \"checked-record\" && typeof item.constructor === \"string\")\n\t\t\t\tvalues.push(item.constructor);\n\t\t\telse for(const child of Object.values(item))\n\t\t\t\tif(Array.isArray(child)) child.forEach(visit); else visit(child);\n\t\t};\n\t\tvisit(value); return values;\n\t};\n\tfor(const [index, declaration] of ir.declarations.entries())\n\t{\n\t\tselected.push({ symbol: `lb_call${index}`, kind: \"public\", label: declaration.name });\n\t\tconst adapter = `lb_flat_adapter_${index}`;\n\t\tselected.push({ symbol: adapter, kind: \"adapter\", label: declaration.source.declaration });\n\t\tlean.push(`@[export ${adapter}]`, `def adapter${index} := _root_.${declaration.source.declaration}`);\n\t\tconst trees = declaration.source.extensions[\"lean-lang.org/refinements\"]?.parameters ?? [];\n\t\tfor(const [parameter, tree] of trees.entries()) for(const [leaf, constructor] of checked(tree).entries())\n\t\t{\n\t\t\tconst suffix = leaf || tree?.kind !== \"checked-record\" ? `_${leaf}` : \"\";\n\t\t\tconst symbol = `lb_flat_adapter_${index}_refinement_${parameter}${suffix}`;\n\t\t\tselected.push({ symbol, kind: \"validator\"\n\t\t\t\t, label: `${declaration.source.declaration}:refinement_${parameter}${suffix}` });\n\t\t\tlean.push(`@[export ${symbol}]`, `def validator${index}_${parameter}_${leaf} := _root_.${constructor}`);\n\t\t}\n\t}\n\treturn { selected, generated: { leanSource: lean.join(\"\\n\") + \"\\n\" } };\n};\n\n",
+          "previous": "",
+          "start": 2798
+        },
+        {
+          "current": "\tconst selection = phpWasmIndexedRefinementEntryFamilies.includes(family)\n\t\t? flatPlanSelection(family, source.entries)\n\t\t: phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);\n",
+          "previous": "\tconst selection = phpWasmGraphRefinementEntrySelection(fixtureModel(family), source.entries);\n",
+          "start": 4649
+        },
+        {
+          "current": "test(\"dependent, indexed and zero-payload plans separate checks from proof-erased results\", async () => {\n\tfor(const family of phpWasmIndexedRefinementEntryFamilies)\n\t{\n\t\tconst value = await plan(family);\n\t\tassert.equal(value.family, family);\n\t\tassert.ok(value.cases.every(item => item.call.counts.source > 0\n\t\t\t=== (item.outcome === \"accepted\")));\n\t\tassert.ok(value.cases.every(item => item.call.counts.adapter\n\t\t\t=== (item.outcome === \"accepted\" ? 1 : 0)));\n\t\tif(family.endsWith(\"-result-only\"))\n\t\t\tassert.ok(value.cases.every(item => item.call.counts.constructor === 0));\n\t\telse\n\t\t{\n\t\t\tassert.ok(value.cases.some(item => item.outcome === \"refused\"));\n\t\t\tassert.ok(value.cases.some(item => item.call.counts.constructor > 0));\n\t\t}\n\t}\n\tconst dependent = await plan(\"dependent-full\");\n\tconst dependentRefusal = dependent.cases.find(item => item.control === \"first-refusal\");\n\tassert.ok(dependentRefusal.call.entries.some(item => item.label.includes(\":refinement_0\")));\n\tassert.ok(dependentRefusal.call.entries.every(item => !item.label.includes(\":graph_refinement_\")));\n\tconst indexed = await plan(\"value-index-full\");\n\tfor(const control of [\"bool-refusal\", \"string-refusal\", \"nat-refusal\"])\n\t\tassert.ok(indexed.cases.find(item => item.control === control)\n\t\t\t.call.entries.some(item => item.label.includes(\":refinement_0\")), control);\n\tconst empty = await plan(\"zero-payload-full\");\n\tassert.ok(empty.cases.find(item => item.control === \"first-refusal\")\n\t\t.call.entries.some(item => item.kind === \"constructor\"\n\t\t\t&& item.label.endsWith(\".mkAbsent\")));\n\tassert.equal(empty.cases.find(item => item.control === \"inactive-branch\")\n\t\t.call.entries.filter(item => item.kind === \"validator\").length, 0);\n\tassert.equal(empty.cases.find(item => item.control === \"active-branch\")\n\t\t.call.entries.filter(item => item.kind === \"validator\").length, 1);\n});\n\n",
+          "previous": "",
+          "start": 6882
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan-tests.mjs",
+      "previousSha256": "888381eb3767266641bcb9730fbe0eafe5653152d5fc6bb741e7bdabfe1e495c"
+    },
+    {
+      "currentSha256": "88e01f9e62bf10fac330f2a14956349caef596453528ee6a2fc83a8c1a21d95a",
+      "edits": [
+        {
+          "current": "\t\t: family === \"recursive-subtype\" ? \"RecursiveSubtypes\"\n\t\t\t: family === \"recursive-checked-record\" ? \"RecursiveCheckedRecords\"\n\t\t\t\t: family.startsWith(\"dependent-\") ? \"DependentRecords\"\n\t\t\t\t\t: family.startsWith(\"value-index-\") ? \"CheckedRecordValueIndices\"\n\t\t\t\t\t\t: family.startsWith(\"zero-payload-\") ? \"ZeroPayloadCheckedRecords\"\n\t\t\t\t\t\t\t: null;\n\tassert.ok(namespace, `unknown entry family: ${family}`);\n",
+          "previous": "\t\t: family === \"recursive-subtype\" ? \"RecursiveSubtypes\" : \"RecursiveCheckedRecords\";\n",
+          "start": 1135
+        },
+        {
+          "current": "\tconst refinement = (name, constructorName = null) => {\n\t\tconst candidates = selected.filter(item => item.kind === \"validator\"\n\t\t\t&& item.label.startsWith(`${namespace}.${name}:refinement_0`)\n\t\t\t&& !item.label.includes(\":graph_refinement_\"));\n\t\tif(constructorName === null) return candidates\n\t\t\t.filter(item => item.label === `${namespace}.${name}:refinement_0`)\n\t\t\t.map(item => ({ kind: item.kind, label: item.label }));\n\t\tif(candidates.length <= 1) return candidates.map(item => ({ kind: item.kind, label: item.label }));\n\t\tconst matches = candidates.filter(item => {\n\t\t\tconst start = generatedLeanSource.indexOf(`@[export ${item.symbol}]`);\n\t\t\tassert.ok(start >= 0, item.symbol);\n\t\t\tconst next = generatedLeanSource.indexOf(\"\\n@[export \", start + 9);\n\t\t\treturn generatedLeanSource.slice(start, next < 0 ? undefined : next)\n\t\t\t\t.includes(`_root_.${namespace}.${constructorName}`);\n\t\t});\n\t\tassert.equal(matches.length, 1, `${name} refinement validator for ${constructorName}`);\n\t\treturn [{ kind: \"validator\", label: matches[0].label }];\n\t};\n",
+          "previous": "\tconst refinement = name => optional(\"validator\", `${namespace}.${name}:refinement_0`);\n",
+          "start": 2159
+        },
+        {
+          "current": "\t\tif(candidates.length === 0) return [];\n",
+          "previous": "",
+          "start": 3390
+        },
+        {
+          "current": "\t\treturn [{ kind: \"validator\", label: matches[0].item.label }, constructor(constructorName)];\n",
+          "previous": "\t\treturn { kind: \"validator\", label: matches[0].item.label };\n",
+          "start": 4633
+        },
+        {
+          "current": "\t\t\t...fin(name), ...refinement(name, names[0] ?? null), ...values\n",
+          "previous": "\t\t\t...fin(name), ...refinement(name), ...values\n",
+          "start": 5008
+        },
+        {
+          "current": "\t\t\t...fin(name), ...refinement(name, names[0] ?? null), ...constructors(names)\n\t\t\t, ...diagnosis.flatMap(constructorName => graph(name, constructorName))\n",
+          "previous": "\t\t\t...fin(name), ...refinement(name), ...constructors(names)\n\t\t\t, ...diagnosis.flatMap(constructorName => [graph(name, constructorName), constructor(constructorName)])\n",
+          "start": 5292
+        },
+        {
+          "current": "\telse if(family === \"recursive-checked-record\")\n",
+          "previous": "\telse\n",
+          "start": 6791
+        },
+        {
+          "current": "",
+          "previous": "\t\tassert.equal(family, \"recursive-checked-record\");\n",
+          "start": 6842
+        },
+        {
+          "current": "\telse if(family === \"dependent-full\") cases = [\n\t\taccepted(\"direct\", \"dependentTotal\", [\"mkDependent\"])\n\t\t, refused(\"first-refusal\", \"dependentTotal\", [\"mkDependent\"], [\"mkDependent\"])\n\t\t, accepted(\"recovery\", \"dependentTotal\", [\"mkDependent\"])\n\t\t, accepted(\"roundtrip\", \"dependentRoundtrip\", [\"mkDependent\"])\n\t\t, accepted(\"constructor-free\", \"dependentResult\")\n\t];\n\telse if(family === \"dependent-result-only\") cases = [\n\t\taccepted(\"constructor-free\", \"dependentResult\")\n\t\t, accepted(\"repeated-result\", \"dependentResult\")\n\t];\n\telse if(family === \"value-index-full\") cases = [\n\t\taccepted(\"direct-bool\", \"trueBoolIndex\", [\"mkOn\"])\n\t\t, accepted(\"direct-string\", \"abStringIndex\", [\"mkAb\"])\n\t\t, accepted(\"direct-nat\", \"emptySizedIndex\", [\"mkEmptySized\"])\n\t\t, refused(\"bool-refusal\", \"trueBoolIndex\", [\"mkOn\"])\n\t\t, accepted(\"bool-recovery\", \"zeroNatIndex\", [\"mkZeroToken\"])\n\t\t, refused(\"string-refusal\", \"abStringIndex\", [\"mkAb\"])\n\t\t, accepted(\"string-recovery\", \"zeroNatIndex\", [\"mkZeroToken\"])\n\t\t, refused(\"nat-refusal\", \"emptySizedIndex\", [\"mkEmptySized\"])\n\t\t, accepted(\"nat-recovery\", \"zeroNatIndex\", [\"mkZeroToken\"])\n\t\t, accepted(\"wide-index\", \"wideNatIndex\", [\"mkWideToken\"])\n\t\t, accepted(\"constructor-free\", \"produceWideNat\")\n\t];\n\telse if(family === \"value-index-result-only\") cases = [\n\t\taccepted(\"bool-true-result\", \"produceTrueBool\")\n\t\t, accepted(\"bool-false-result\", \"produceFalseBool\")\n\t\t, accepted(\"string-result\", \"produceAb\")\n\t\t, accepted(\"empty-string-result\", \"produceEmptyString\")\n\t\t, accepted(\"unicode-string-result\", \"produceUnicodeString\")\n\t\t, accepted(\"empty-nat-result\", \"produceEmptySized\")\n\t\t, accepted(\"zero-nat-result\", \"produceZeroNat\")\n\t\t, accepted(\"constructor-free\", \"produceWideNat\")\n\t];\n\telse if(family === \"zero-payload-full\") cases = [\n\t\taccepted(\"direct\", \"witnessCount\", [\"mkWitness\"])\n\t\t, refused(\"first-refusal\", \"absentCount\", [\"mkAbsent\"], [\"mkAbsent\"])\n\t\t, accepted(\"recovery\", \"witnessCount\", [\"mkWitness\"])\n\t\t, accepted(\"unit-payload\", \"tokenTag\", [\"mkToken\"])\n\t\t, accepted(\"inactive-branch\", \"markCount\")\n\t\t, accepted(\"active-branch\", \"markCount\", [\"mkWitness\"])\n\t\t, accepted(\"constructor-free\", \"produceWitness\")\n\t\t, accepted(\"array-result\", \"witnesses\")\n\t\t, accepted(\"absent-result\", \"maybeWitness\")\n\t\t, accepted(\"variant-result\", \"produceMark\")\n\t];\n\telse\n\t{\n\t\tassert.equal(family, \"zero-payload-result-only\");\n\t\tcases = [\n\t\t\taccepted(\"constructor-free\", \"produceWitness\")\n\t\t\t, accepted(\"unit-result\", \"produceToken\")\n\t\t\t, accepted(\"array-result\", \"witnesses\")\n\t\t\t, accepted(\"present-result\", \"maybeWitness\")\n\t\t\t, accepted(\"plain-empty-result\", \"produceMarker\")\n\t\t\t, accepted(\"variant-result\", \"produceMark\")\n\t\t];\n\t}\n",
+          "previous": "",
+          "start": 7334
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-plan.mjs",
+      "previousSha256": "1f307ae57187c7affca5fbd309665cc17bfaec7592e52288cabdba3efbbc1301"
+    },
+    {
+      "currentSha256": "83a50d7e52a0e8b23ff1e3eb28060a81fec47616e3cd8260001c4b000f026d1b",
+      "edits": [
+        {
+          "current": " * Adversarial controls for retained installed copied-entry evidence.\n",
+          "previous": " * Adversarial controls for retained installed graph-entry evidence.\n",
+          "start": 4
+        },
+        {
+          "current": "import {\n\tphpWasmGraphRefinementEntrySelection, phpWasmRefinementEntrySelection\n} from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "import { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "start": 1054
+        },
+        {
+          "current": "\tif(family === \"zero-payload-full\")\n\t{\n\t\tconst native = JSON.parse(execFileSync(\"git\", [\"show\"\n\t\t\t, \"HEAD:docs/evidence/zero-payload-checked-record-native-20261021/ordinary-source/records/build-0/model.json\"]));\n\t\treturn { ...native, profile: \"php-wasm-copied-v1\", pointerBits: 32 };\n\t}\n",
+          "previous": "",
+          "start": 1771
+        },
+        {
+          "current": "\tconst selection = model.copiedGraph\n\t\t? phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries)\n\t\t: phpWasmRefinementEntrySelection(model, sourceProbe.entries);\n",
+          "previous": "\tconst selection = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries);\n",
+          "start": 5632
+        },
+        {
+          "current": "test(\"installed flat copied report reconstructs zero-payload branch dispatch\", async () => {\n\tconst fixture = await makeRecords(\"zero-payload-full\");\n\tconst checked = await checkPhpWasmRefinementEntryReport(fixture.records(), fixture.options);\n\tassert.deepEqual([checked.family, checked.route, checked.executions]\n\t\t, [\"zero-payload-full\", \"ordinary\", 12]);\n\tassert.ok(checked.counts.validator > 0); assert.ok(checked.counts.constructor > 0);\n});\n\n",
+          "previous": "",
+          "start": 12607
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report-tests.mjs",
+      "previousSha256": "bc74b7e614b6306bb8e38c6b13b4fca005286a68f87616c1d21262f57f457ece"
+    },
+    {
+      "currentSha256": "354676331ea2f44055e38f7c61e3469b0e967235016086161038caf2f1e46508",
+      "edits": [
+        {
+          "current": " * Authenticate retained installed call traces for copied PHP-Wasm entry probes.\n * Compiler output supplies marker identities; the verifier\n",
+          "previous": " * Authenticate retained installed call traces for nominal and recursive PHP-Wasm\n * graph entry probes. Compiler output supplies marker identities; the verifier\n",
+          "start": 4
+        },
+        {
+          "current": "import { phpWasmRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "import { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "start": 768
+        },
+        {
+          "current": "\t: phpWasmRefinementEntrySelection(model, sourceEntries);\n",
+          "previous": "\t: phpWasmGraphRefinementEntrySelection(model, sourceEntries);\n",
+          "start": 3121
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-report.mjs",
+      "previousSha256": "011d1da1ae9757edc1e7d26154df1e3ef2dfff1253dd288a159cb447d6ba1828"
+    },
+    {
+      "currentSha256": "4cd0c280a5f45469d44302059b125761d924e4f9da993873c258fc115b9e3b7f",
+      "edits": [
+        {
+          "current": "import { createPhpWasmCopiedModel } from \"../../src/build/native-model.mjs\";\n",
+          "previous": "",
+          "start": 298
+        },
+        {
+          "current": "import { generateCopiedPhpZendAdapter } from \"../../src/backends/php/copied-zend.mjs\";\nimport { nominalSubtypeNativeFixture } from \"./nominal-subtype-native-fixture.mjs\";\n",
+          "previous": "",
+          "start": 473
+        },
+        {
+          "current": "import {\n\tphpWasmGraphRefinementEntrySelection, phpWasmRefinementEntrySelection\n} from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "previous": "import { phpWasmGraphRefinementEntrySelection } from \"./php-wasm-refinement-entry-selection.mjs\";\n",
+          "start": 744
+        },
+        {
+          "current": "\ntest(\"acyclic entry selection follows the actual flat copied model and Zend boundary\", () => {\n\tconst model = createPhpWasmCopiedModel(nominalSubtypeNativeFixture());\n\tassert.equal(model.schemaVersion, 2); assert.equal(model.copiedGraph, undefined);\n\tconst { selected, generated } = phpWasmRefinementEntrySelection(model);\n\tassert.deepEqual(selected.filter(item => item.kind === \"public\").map(item => item.symbol)\n\t\t, model.exports.map((_, index) => `lb_call${index}`));\n\tassert.deepEqual(selected.filter(item => item.kind === \"adapter\").map(item => item.symbol)\n\t\t, model.exports.map(item => item.symbol));\n\tassert.ok(selected.some(item => item.kind === \"validator\"));\n\tfor(const item of selected.filter(value => [\"adapter\", \"validator\"].includes(value.kind)))\n\t\tassert.ok(generated.leanSource.includes(`@[export ${item.symbol}]`), item.symbol);\n\tconst files = generateCopiedPhpZendAdapter(model.bindingIr, { integerBits: 32 });\n\tconst original = Object.entries(files).find(([name]) => name.startsWith(\"extension/\"))[1];\n\tconst publicEntries = selected.filter(item => item.kind === \"public\");\n\tconst { source, receipt } = instrumentSubtypeCEntries(original, publicEntries);\n\tassert.equal(receipt.insertions.filter(item => item.kind === \"public\").length, model.exports.length);\n\tassert.equal(restoreSubtypeCEntries(source, receipt), original);\n\tassert.throws(() => phpWasmGraphRefinementEntrySelection(model), /graph transport/u);\n});\n",
+          "previous": "",
+          "start": 3694
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-selection-tests.mjs",
+      "previousSha256": "499c537f487af10de28a33183722b5be51e106e231bcd6edbc029b368b517332"
+    },
+    {
+      "currentSha256": "856285dcd4ca7cba3ca28fca496a52286157624af3a51276e56c12967f3fe6bf",
+      "edits": [
+        {
+          "current": "import { compileCopiedPhpModel } from \"../../src/backends/php/copied-model.mjs\";\n",
+          "previous": "",
+          "start": 424
+        },
+        {
+          "current": "export const phpWasmRefinementEntrySelection = (model, sourceEntries = []) => {\n",
+          "previous": "export const phpWasmGraphRefinementEntrySelection = (model, sourceEntries = []) => {\n",
+          "start": 1394
+        },
+        {
+          "current": "",
+          "previous": "\tassert.ok(model.copiedGraph && !model.copiedGraph.callbacks, \"entry selection requires the copied graph transport\");\n\tphpWasmGraphCarrierAbi(model);\n",
+          "start": 1606
+        },
+        {
+          "current": "\tconst graph = model.copiedGraph !== undefined;\n\tif(graph)\n\t{\n\t\tassert.ok(!model.copiedGraph.callbacks, \"entry selection requires a copied transport without callbacks\");\n\t\tphpWasmGraphCarrierAbi(model);\n\t}\n\telse assert.ok([2, 3].includes(model.schemaVersion), \"flat entry selection requires an acyclic copied model\");\n\tconst zend = graph ? compileCopiedPhpGraphZendModel(model.bindingIr)\n\t\t: compileCopiedPhpModel(model.bindingIr, {\n\t\t\tintegerBits: 32, structuredCallables: true, lists: true, variants: true\n\t\t});\n\tconst functions = graph ? zend.functions : zend.surface.functions;\n\tassert.equal(functions.length, model.exports.length);\n",
+          "previous": "\tconst zend = compileCopiedPhpGraphZendModel(model.bindingIr);\n\tassert.equal(zend.functions.length, model.exports.length);\n",
+          "start": 1722
+        },
+        {
+          "current": "\tfor(const [index, fn] of functions.entries())\n",
+          "previous": "\tfor(const [index, fn] of zend.functions.entries())\n",
+          "start": 2483
+        },
+        {
+          "current": "\t\tconst declaration = fn.declaration;\n\t\tassert.equal(model.bindingIr.declarations.filter(item => item.id === declaration.id).length, 1);\n\t\tconst matches = model.exports.filter(item => graph\n\t\t\t? item.bindingId === declaration.id : item.name === declaration.source.declaration);\n\t\tassert.equal(matches.length, 1, `one compiled export for ${declaration.id}`);\n\t\tselected.push({ symbol: `${graph ? \"lg\" : \"lb\"}_call${index}`, kind: \"public\", label: declaration.name });\n",
+          "previous": "\t\tconst declaration = model.bindingIr.declarations[index], item = model.exports[index];\n\t\tassert.equal(item.bindingId, declaration.id); assert.equal(fn.declaration.id, declaration.id);\n\t\tselected.push({ symbol: `lg_call${index}`, kind: \"public\", label: declaration.name });\n",
+          "start": 2533
+        },
+        {
+          "current": "\t\tif(graph) assert.ok(item.symbol.endsWith(\"_lean\"), `graph adapter symbol names its Lean boundary: ${item.symbol}`);\n",
+          "previous": "\t\tassert.ok(item.symbol.endsWith(\"_lean\"), `graph adapter symbol names its Lean boundary: ${item.symbol}`);\n",
+          "start": 3040
+        },
+        {
+          "current": "\t\tconst base = graph ? item.symbol.slice(0, -\"_lean\".length) : item.symbol;\n\t\tconst prefixes = graph ? [\n",
+          "previous": "\t\tconst base = item.symbol.slice(0, -\"_lean\".length), prefixes = [\n",
+          "start": 3333
+        },
+        {
+          "current": "\t\t] : [`${base}_refinement_`];\n",
+          "previous": "\t\t];\n",
+          "start": 3514
+        },
+        {
+          "current": "\n/**\n * Retain the graph-only entry point for callers whose contract specifically\n * requires a copied graph carrier.\n *\n * @param model - Fresh compiler-authenticated copied-graph model.\n * @param sourceEntries - Explicit authored source and constructor markers.\n */\nexport const phpWasmGraphRefinementEntrySelection = (model, sourceEntries = []) => {\n\tassert.ok(model?.copiedGraph, \"graph entry selection requires the copied graph transport\");\n\treturn phpWasmRefinementEntrySelection(model, sourceEntries);\n};\n",
+          "previous": "",
+          "start": 3845
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-selection.mjs",
+      "previousSha256": "dccad6aed84da2ce7a032712e5b7710d96be872453064b83604df74b1ed5b675"
+    },
+    {
+      "currentSha256": "0a5f2e9c91f62b21d8b997b154f5e1c363beef4aa5743ac369f8698cae0bbb9b",
+      "edits": [
+        {
+          "current": "import {\n\tphpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec\n} from \"./php-wasm-indexed-refinement-entry-fixtures.mjs\";\n",
+          "previous": "",
+          "start": 221
+        },
+        {
+          "current": "\t, ...phpWasmIndexedRefinementEntryFamilies\n",
+          "previous": "",
+          "start": 970
+        },
+        {
+          "current": "\tif(phpWasmIndexedRefinementEntryFamilies.includes(family))\n\t{\n\t\tconst spec = phpWasmIndexedRefinementEntrySpec(family, \"ordinary\");\n\t\tconst constructors = {\n\t\t\tdependent: [\"mkDependent\"]\n\t\t\t, \"value-index\": [\n\t\t\t\t\"mkOn\", \"mkOff\", \"mkAb\", \"mkEmptySized\", \"mkZeroToken\"\n\t\t\t\t, \"mkWideToken\", \"mkEmptyToken\", \"mkUnicodeToken\"\n\t\t\t]\n\t\t\t, \"zero-payload\": [\"mkWitness\", \"mkToken\", \"mkAbsent\"]\n\t\t}[spec.name];\n\t\tconst sources = {\n\t\t\tdependent: [\"dependentTotal\", \"dependentRoundtrip\", \"dependentResult\"]\n\t\t\t, \"value-index\": [\n\t\t\t\t\"trueBoolIndex\", \"falseBoolIndex\", \"abStringIndex\", \"emptyStringIndex\"\n\t\t\t\t, \"unicodeStringIndex\", \"emptySizedIndex\", \"zeroNatIndex\", \"wideNatIndex\"\n\t\t\t\t, \"produceTrueBool\", \"produceFalseBool\", \"produceAb\"\n\t\t\t\t, \"produceEmptyString\", \"produceUnicodeString\", \"produceEmptySized\"\n\t\t\t\t, \"produceZeroNat\", \"produceWideNat\"\n\t\t\t]\n\t\t\t, \"zero-payload\": [\n\t\t\t\t\"witnessCount\", \"absentCount\", \"tokenTag\", \"produceWitness\"\n\t\t\t\t, \"produceToken\", \"witnesses\", \"maybeWitness\", \"markerCount\"\n\t\t\t\t, \"produceMarker\", \"markCount\", \"produceMark\"\n\t\t\t]\n\t\t}[spec.name].filter(name => !spec.resultOnly || name.startsWith(\"produce\")\n\t\t\t|| name === \"dependentResult\" || [\"witnesses\", \"maybeWitness\"].includes(name));\n\t\treturn {\n\t\t\tpath: `${spec.root}/${spec.module}.lean`, namespace: spec.module\n\t\t\t, prefix: `lb_${family.replaceAll(\"-\", \"_\")}_probe`\n\t\t\t// Constructors remain instrumented in result-only packages: their zero\n\t\t\t// runtime count is part of the proof-erasure measurement.\n\t\t\t, constructors, sources, wrappers: {}\n\t\t};\n\t}\n",
+          "previous": "",
+          "start": 2529
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-source-fixtures.mjs",
+      "previousSha256": "0ead5cdca83ff3fbb6234b7f13118764caf227a598dc3cc2cc6708dfc8525a42"
+    },
+    {
+      "currentSha256": "2ee6c61be26901f53225f90b960497d4e3bc7d45c2a84d1ec53bf7d1a1e34498",
+      "edits": [
+        {
+          "current": " * Fixture controls for reversible copied-component Lean entry markers.\n",
+          "previous": " * Fixture controls for reversible nominal and recursive Lean entry markers.\n",
+          "start": 4
+        },
+        {
+          "current": "test(\"copied entry probes name every authored boundary reversibly\", async () => {\n",
+          "previous": "test(\"nominal and recursive entry probes name every authored boundary reversibly\", async () => {\n",
+          "start": 576
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-source-tests.mjs",
+      "previousSha256": "3a447c8bbc853b95ebdfa90dbcfd4dbeeb31f20666a46cbf13e732cf94df68e4"
+    },
+    {
+      "currentSha256": "78918787ed07d2488017f41ab5030f6a33e350651d30194f95805dc705361b32",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-indexed-refinement-entry-ci-tests.mjs\";\n",
+          "previous": "",
+          "start": 467
+        }
+      ],
+      "path": "tests/recursive-subtype-php-wasm.test.mjs",
+      "previousSha256": "081a1b9a1d02750751a3c0f28f87cad123ddcb2deca27fd31cdbc4a293d7e71a"
+    },
+    {
+      "currentSha256": "4549735882ebf4fec5b8ff2490af93b925269397f90fcd4ffdce3389db7fc406",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmIndexedRefinementEntrySource, phpWasmIndexedRefinementEntryChangedPaths } from \"./php-wasm-indexed-refinement-entry-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmIndexedRefinementEntryChangedPaths\n\t, ...callableClosureRefusalChangedPaths\n",
+          "previous": "\t...callableClosureRefusalChangedPaths\n",
+          "start": 144504
+        },
+        {
+          "current": "\tconst phpWasmIndexedRefinementEntry\n\t\t= beforePhpWasmIndexedRefinementEntrySource(path, text, expected);\n\tif(sha256(phpWasmIndexedRefinementEntry) === expected)\n\t\treturn phpWasmIndexedRefinementEntry;\n",
+          "previous": "",
+          "start": 175656
+        },
+        {
+          "current": "\t\t= beforeCallableClosureRefusalSource(\n\t\t\tpath, phpWasmIndexedRefinementEntry, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallableClosureRefusalSource(path, text, expected);\n",
+          "start": 175888
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "61bd022b356ed649f0337cee07a508eaa2fdcb6b86f475cba06527d7500ad23a"
+    },
+    {
+      "currentSha256": "3321ab5963ac2b233918ec15efe338ee35e159168142077f174c120cd884cf86",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4532
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "609241779b55224b0d996189970c0b8f90c9791edb7d9c5c3139d4eed281683a"
+    }
+  ]
+}

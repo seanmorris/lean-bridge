@@ -63,6 +63,7 @@ import "./helpers/dependent-checked-record-jvm-archive-source-history-tests.mjs"
 import "./helpers/dependent-checked-record-dotnet-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-wit-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-installed-source-history-tests.mjs";
+import "./helpers/php-wasm-indexed-refinement-entry-source-history-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-source-history-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-selection-tests.mjs";
 import "./helpers/php-wasm-owned-refinement-entry-source-tests.mjs";
