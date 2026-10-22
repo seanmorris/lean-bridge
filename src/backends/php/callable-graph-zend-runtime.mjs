@@ -92,7 +92,7 @@ static void lgc_owned_close(lgc_owned *owner) {
   if (!owner || !owner->token) return;
   uint64_t token = owner->token; owner->token = 0;
   switch (owner->signature) {
-${[...model.callbacks.values()].map(cb => `    case ${cb.index}: ${cb.dispose}(token); break;`).join("\n")}
+${[...model.callbacks.values()].filter(cb => cb.direction !== "host").map(cb => `    case ${cb.index}: ${cb.dispose}(token); break;`).join("\n")}
   }
 }
 static void lgc_owned_destroy(zend_resource *resource) {
@@ -110,7 +110,8 @@ static int lgc_from(lgc_call *call, unsigned type, const void *input, zval *outp
  *
  * @param model - Original signatures and matching wasm32 payloads.
  */
-export const zendGraphTrampolines = model => [...model.callbacks.values()].map(cb => `
+export const zendGraphTrampolines = model => [...model.callbacks.values()].map(cb => {
+	const callback = `
 static uint32_t lgc_callback${cb.index}(void *context, ${[...cb.parameters.map((node, index) => `const ${node.name} *arg${index}`), `${cb.result.name} *output`].join(", ")}) {
   lgc_borrow *borrow = lgc_lookup(context, ${cb.index});
   if (!borrow) return 6;
@@ -131,7 +132,8 @@ ${cb.parameters.map((node, index) => `      if (!lgc_from(call, ${node.index}, a
   } zend_catch { call->bailout = 1; } zend_end_try();
   return success && !call->bailout && !EG(exception) ? 0 : 6;
 }
-ZEND_BEGIN_ARG_INFO_EX(lgc_close_args${cb.index}, 0, 0, 1)
+`;
+	const close = `ZEND_BEGIN_ARG_INFO_EX(lgc_close_args${cb.index}, 0, 0, 1)
   ZEND_ARG_INFO(0, token)
 ZEND_END_ARG_INFO()
 static ZEND_FUNCTION(lgc_close${cb.index}) {
@@ -141,4 +143,7 @@ static ZEND_FUNCTION(lgc_close${cb.index}) {
   if (owner->signature != ${cb.index}) { zend_type_error("Lean closure signature differs"); RETURN_THROWS(); }
   lgc_owned_close(owner); RETURN_NULL();
 }
-`).join("\n");
+`;
+	return (cb.direction === "closure" ? "\n" : callback)
+		+ (cb.direction === "host" ? "" : close);
+}).join("\n");

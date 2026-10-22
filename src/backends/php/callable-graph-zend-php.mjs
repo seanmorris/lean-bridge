@@ -140,11 +140,26 @@ export const phpZendGraphCalls = String.raw`
             $inputs = [];
             // Validate the entire public call before loading a native extension.
             foreach ($parameters as $index => $site) {
-                if (isset($site['callback'])) $inputs[$index] = self::borrow($site['callback'], $arguments[$index], $frame);
+                if (isset($site['callback'])) {
+                    $fn = self::CALLBACKS[$site['callback']];
+                    if ($fn['direction'] === 'host') {
+                        if (!$arguments[$index] instanceof GRAPH_NAMESPACE\WithRecovery)
+                            throw new \TypeError('This callback requires with_recovery(function, value)');
+                        CallableTransfers::check($fn['result'], $arguments[$index]->recovery, $frame->validation);
+                    }
+                }
                 else CallableTransfers::check($site['type'], $arguments[$index], $frame->validation);
             }
-            foreach ($parameters as $index => $site)
-                if (!isset($site['callback'])) $inputs[$index] = CallableTransfers::wire($site['type'], $arguments[$index], false, $frame->writing);
+            foreach ($parameters as $index => $site) {
+                if (isset($site['callback'])) {
+                    $fn = self::CALLBACKS[$site['callback']];
+                    if ($fn['direction'] === 'host') $inputs[$index] = [
+                        self::borrow($site['callback'], $arguments[$index]->function, $frame),
+                        CallableTransfers::wire($fn['result'], $arguments[$index]->recovery, false, $frame->writing),
+                    ];
+                    else $inputs[$index] = self::borrow($site['callback'], $arguments[$index], $frame);
+                } else $inputs[$index] = CallableTransfers::wire($site['type'], $arguments[$index], false, $frame->writing);
+            }
             ksort($inputs);
             $symbol = self::TRANSPORT . '\\' . $entry;
             if (!function_exists($symbol)) {
@@ -174,11 +189,25 @@ export const phpZendGraphCalls = String.raw`
  */
 export const generateCallablePhpGraphZendPhp = model => {
 	const files = { ...model.files }, value = site => site.callback ? { callback: site.callback.index } : { type: site.node.index };
-	const callbacks = [...model.callbacks.values()].map(cb => ({ parameters: cb.parameters.map(node => node.index), result: cb.result.index }));
+	const callbacks = [...model.callbacks.values()].map(cb => ({ direction: cb.direction
+		, parameters: cb.parameters.map(node => node.index), result: cb.result.index }));
 	const functions = model.functions.map(fn => ({ parameters: fn.parameters.map(value), result: value(fn.result) }));
 	const doc = site => site.callback ? site.callback.docType : site.node.docType;
-	files["src/Api.php"] += `\n${phpClosurePublic}\nrequire_once __DIR__ . '/Internal/Native.php';\n\n${model.functions.map(fn => `/**
-${fn.parameters.map((site, index) => ` * @param ${doc(site)} $${fn.parameterNames[index]}`).join("\n")}
+	const recovery = [...model.callbacks.values()].some(callback => callback.direction === "host") ? `
+final readonly class WithRecovery
+{
+    public function __construct(public mixed $function, public mixed $recovery) {
+        if (\\func_num_args() !== 2) throw new \\ArgumentCountError('WithRecovery requires a callback and typed value');
+        if (!\\is_callable($function)) throw new \\TypeError('WithRecovery requires a synchronous callable');
+    }
+}
+function with_recovery(mixed $function, mixed $recovery): WithRecovery {
+    if (\\func_num_args() !== 2) throw new \\ArgumentCountError('with_recovery requires two arguments');
+    return new WithRecovery($function, $recovery);
+}
+` : "";
+	files["src/Api.php"] += `\n${phpClosurePublic}${recovery}\nrequire_once __DIR__ . '/Internal/Native.php';\n\n${model.functions.map(fn => `/**
+${fn.parameters.map((site, index) => ` * @param ${site.callback?.direction === "host" ? "WithRecovery" : doc(site)} $${fn.parameterNames[index]}`).join("\n")}
  * @return ${fn.result.callback ? "LeanClosure&" : ""}${doc(fn.result)}
  */
 function ${fn.publicName}(${fn.parameterNames.map(name => `mixed $${name}`).join(", ")}): ${fn.result.callback ? "LeanClosure" : fn.result.node.publicType} {

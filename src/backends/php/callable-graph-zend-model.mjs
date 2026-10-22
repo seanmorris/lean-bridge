@@ -4,6 +4,7 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../../capsule/node.mjs";
+import { callbackSubtypeDirection } from "../../abi/refinements.mjs";
 import { hashBindingIr } from "../../binding-ir/canonical.mjs";
 import { createNativeCallableGraphDescriptor } from "../../build/native-callable-graph.mjs";
 import { compileNativeCallableGraphPayloads } from "../c/native-callable-graph-payloads.mjs";
@@ -29,11 +30,14 @@ export const compileCallablePhpGraphZendModel = ir => {
 	};
 	const callbacks = new Map(descriptor.callbacks.map((signature, index) => {
 		const parameters = signature.parameters.map(copy), result = copy(signature.result);
-		const projected = { ...signature, index, parameters, result
+		const direction = callbackSubtypeDirection(signature, signature.refinements, descriptor.types);
+		const projected = { ...signature, index, direction, parameters, result
 			, docType: `callable(${parameters.map(node => node.docType).join(", ")}): ${result.docType}`
 			, borrowedType: `${prefix}_callback_${signature.key}`
-			, call: `${prefix}_callback_${signature.key}_lease_call`
-			, dispose: `${prefix}_callback_${signature.key}_lease_dispose` };
+			, ...direction === "host" ? {} : {
+				call: `${prefix}_callback_${signature.key}_lease_call`
+				, dispose: `${prefix}_callback_${signature.key}_lease_dispose`
+			} };
 		return [signature.id, projected];
 	}));
 	const value = ref => callbacks.has(ref.id) ? { callback: callbacks.get(ref.id) } : { node: copy(ref) };

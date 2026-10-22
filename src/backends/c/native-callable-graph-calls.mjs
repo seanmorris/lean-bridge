@@ -37,7 +37,7 @@ export const generateNativeCallableGraphCalls = (ir, descriptor, { initializer, 
 	const kind = signature => JSON.stringify(`${ir.component.id}:graph-callback:${signature.key}`);
 	const header = ["#pragma once", `#include "${p}-callable-borrows.h"`
 		, "#ifdef __cplusplus", 'extern "C" {', "#endif"];
-	const lines = [generated.source, nativeCallableGraphHeader(abi)
+	const lines = ["#include <lean/lean.h>", nativeCallableGraphHeader(abi), generated.source
 		, `
 #include <pthread.h>
 #include <unistd.h>

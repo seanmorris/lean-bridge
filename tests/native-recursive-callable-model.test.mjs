@@ -122,6 +122,9 @@ test("native callback Subtype trampolines require typed recovery and report cons
 		{ initializer: "initialize_LeanBridgeNative0123456789abcdef" });
 	const hostSignature = descriptor.callbacks.find(type => type.id === host.id);
 	const closureSignature = descriptor.callbacks.find(type => type.id === closure.id);
+	const controls = `${descriptor.exports[0].symbol}_structured_callback_controls`;
+	assert.ok(generated.source.indexOf(`typedef struct ${controls}`)
+		< generated.source.indexOf(`${controls} controls;`));
 	assert.match(generated.borrowsHeader, new RegExp(`${hostSignature.key}[^}]+recovery`, "su"));
 	assert.match(generated.source, new RegExp(`ng_recovery_${hostSignature.key}`, "u"));
 	assert.match(generated.source, new RegExp(`ng_reject_${hostSignature.key}`, "u"));

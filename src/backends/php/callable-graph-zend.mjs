@@ -53,7 +53,7 @@ static ZEND_FUNCTION(lgc_retire) {
 }
 static const zend_function_entry lgc_functions[] = {
 ${model.functions.map(fn => `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, call${fn.index}, zif_lgc_call${fn.index}, lgc_args_call${fn.index})`).join("\n")}
-${[...model.callbacks.values()].flatMap(cb => [
+${[...model.callbacks.values()].filter(cb => cb.direction !== "host").flatMap(cb => [
 	`  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, invoke${cb.index}, zif_lgc_invoke${cb.index}, lgc_args_invoke${cb.index})`
 	, `  ZEND_NS_NAMED_FE(${JSON.stringify(model.transport)}, close${cb.index}, zif_lgc_close${cb.index}, lgc_close_args${cb.index})`
 ]).join("\n")}

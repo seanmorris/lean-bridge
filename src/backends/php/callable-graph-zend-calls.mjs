@@ -11,7 +11,7 @@
  */
 export const zendGraphCalls = model => {
 	const functions = model.functions.map(fn => ({ ...fn, entry: `call${fn.index}` }));
-	for(const cb of model.callbacks.values()) functions.push({
+	for(const cb of [...model.callbacks.values()].filter(item => item.direction !== "host")) functions.push({
 		entry: `invoke${cb.index}`, native: cb.call
 		, parameters: cb.parameters.map(node => ({ node }))
 		, result: { node: cb.result }, closure: cb
@@ -21,10 +21,24 @@ export const zendGraphCalls = model => {
 		const prefix = model.layout.prefix;
 		const dispose = owned ? `${result.callback.dispose}(ctx->output); ctx->output = 0;`
 			: result.node.aggregate ? `${result.node.name}_clear(&ctx->output);` : "";
+		const recoveryFields = parameters.flatMap((site, index) => site.callback?.direction === "host"
+			? [`  ${site.callback.result.name} recovery${index};\n`] : []).join("");
+		const inputs = parameters.map((site, index) => site.callback?.direction === "host" ? `  if (Z_TYPE(args[${index + offset}]) != IS_ARRAY || zend_hash_num_elements(Z_ARRVAL(args[${index + offset}])) != 2) { lb_fail(&call->walk.scope, "Malformed checked callback", 1); return; }
+  zval *callback${index} = zend_hash_index_find(Z_ARRVAL(args[${index + offset}]), 0);
+  zval *recovery${index} = zend_hash_index_find(Z_ARRVAL(args[${index + offset}]), 1);
+  if (!callback${index} || !recovery${index}) { lb_fail(&call->walk.scope, "Malformed checked callback", 1); return; }
+  ZVAL_DEREF(callback${index}); ZVAL_DEREF(recovery${index});
+  if (!lg_to(&call->walk, ${site.callback.result.index}, recovery${index}, &ctx->recovery${index})) return;
+  ctx->input${index}.call = lgc_callback${site.callback.index};
+  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, callback${index});
+  if (!ctx->input${index}.context) return;
+  ctx->input${index}.recovery = &ctx->recovery${index};` : site.callback ? `  ctx->input${index}.call = lgc_callback${site.callback.index};
+  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, &args[${index + offset}]);
+  if (!ctx->input${index}.context) return;` : `  if (!lg_to(&call->walk, ${site.node.index}, &args[${index + offset}], &ctx->input${index})) return;`).join("\n");
 		return `typedef struct {
   lgc_call call;
   ${parameters.map((site, index) => `${site.callback ? site.callback.borrowedType : site.node.name} input${index};`).join("\n  ")}
-  ${owned ? "uint64_t" : result.node.name} output;
+${recoveryFields}  ${owned ? "uint64_t" : result.node.name} output;
 } lgc_context_${entry};
 static void lgc_cleanup_${entry}(lgc_context_${entry} *ctx) {
   ${dispose}
@@ -35,15 +49,14 @@ static void lgc_execute_${entry}(lgc_context_${entry} *ctx, zval *args) {
   ${closure ? `lgc_owned *owner = zend_fetch_resource_ex(&args[0], "Lean graph closure", lgc_owned_type);
   if (!owner) return;
   if (owner->signature != ${closure.index} || !owner->token) { lb_fail(&call->walk.scope, "Closed or wrong-signature Lean closure", 1); return; }` : ""}
-${parameters.map((site, index) => site.callback ? `  ctx->input${index}.call = lgc_callback${site.callback.index};
-  ctx->input${index}.context = lgc_register(call, ${site.callback.index}, &args[${index + offset}]);
-  if (!ctx->input${index}.context) return;` : `  if (!lg_to(&call->walk, ${site.node.index}, &args[${index + offset}], &ctx->input${index})) return;`).join("\n")}
+${inputs}
   call->status = ${prefix}_graph_initialize();
   if (!call->status) {
     uint32_t status = ${native}(${[...closure ? ["owner->token"] : [], ...parameters.map((_, index) => `&ctx->input${index}`), "&ctx->output"].join(", ")});
     if (!call->status) call->status = status;
   }
-  if (call->status == 4 || call->status > 6) { ${prefix}_graph_retire(); call->status = 4; }
+  if (call->status == 10) call->status = 1;
+  else if (call->status == 4 || call->status > 6) { ${prefix}_graph_retire(); call->status = 4; }
   if (call->status || EG(exception) || call->bailout || call->walk.scope.error) return;
   ${owned ? `if (!ctx->output) { ${prefix}_graph_retire(); call->status = 4; return; }
   if (!lb_charge(&call->walk.scope, 1, sizeof(lgc_owned))) return;

@@ -13,6 +13,7 @@ import { nominalRefinementEntries } from "../abi/refinements.mjs";
 import { assertComponentRecursiveBindings, componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
 import { componentRecursiveHelper, componentRecursiveLeanSource, componentRecursiveTypes } from "./component-recursive-lean.mjs";
 import { createPhpWasmCopiedModel, generateNativeLeanAdapters } from "./native-model.mjs";
+import { containsCallbackSubtype } from "./native-graph-model.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "./native-callable-graph.mjs";
 import { componentStructuredCopiedView, componentStructuredCallableLeanSource } from "./component-structured-callable-lean.mjs";
 import { createOwnedPhpWasmModel, generateOwnedPhpWasmLeanAdapters } from "./php-wasm-owned-model.mjs";
@@ -74,7 +75,12 @@ export const createCompiledPhpWasmModel = options => {
 	const { metadata, component, sourceIdentity } = options;
 	if(sourceIdentity.request.ownedAggregates !== undefined) return createOwnedPhpWasmModel(options);
 	const elaborated = projectNativeMetadata(metadata, sourceIdentity, { copiedGraphs: true, refinements: true });
-	if(!elaborated.declarations.some(containsGraph)) return createPhpWasmCopiedModel(options);
+	// Directional Subtype/checked-record callbacks need the callable graph even
+	// when their erased payloads are otherwise acyclic. The primitive copied
+	// model cannot preserve constructor direction, recovery, or rejection.
+	if(!elaborated.declarations.some(containsGraph)
+		&& !elaborated.declarations.some(containsCallbackSubtype))
+		return createPhpWasmCopiedModel(options);
 	const semantic = createElaboratedSemanticModel({ metadata
 		, request: sourceIdentity.request
 		, component, elaborationSha256: elaborated.sha256 });
