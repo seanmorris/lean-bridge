@@ -140,7 +140,8 @@ const remainingReport = selectedProfiles => {
 
 test("callback checked-record consumers pin their success-path counts", async () => {
 	const count = async name => (await readFile(`tests/fixtures/callback-checked-record-consumers/${name}`, "utf8"))
-		.split("\n").filter(line => /^\s*CHECK\(/u.test(line)).length;
+		.split("\n").filter(line => !/^\s*#define\s+CHECK\b/u.test(line))
+		.reduce((total, line) => total + (line.match(/\bCHECK\(/gu)?.length ?? 0), 0);
 	assert.equal(await count("c.c"), callbackCheckedRecordNativeChecks.c);
 	assert.equal(await count("cpp.cpp"), callbackCheckedRecordNativeChecks.cpp);
 	const perl = await readFile("tests/fixtures/callback-checked-record-consumers/perl.pl", "utf8");

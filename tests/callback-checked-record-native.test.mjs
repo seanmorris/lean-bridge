@@ -167,6 +167,10 @@ test("C/GMP callback checked records expose a typed record recovery and compile 
 	assert.match(source, new RegExp(closureType.call, "u"));
 	assert.match(source, /_check\(a\d+->recovery, 0, 1, &state\.budget\)/u);
 	assert.match(source, /_to\(a\d+->recovery, &recovery\d+, &views\)/u);
+	assert.match(source, /if \(status == 10\) \{/u);
+	assert.match(source, /Host callback result failed its Lean constructor/u);
+	assert.match(source, /state->status = STRUCTURED_STATUS_INVALID_ARGUMENT;/u);
+	assert.match(source, /STRUCTURED_ERROR_INVALID_ARGUMENT, message/u);
 	const files = { ...generated.files
 		, "include/detail/structured-graph-types.h": native.typesHeader
 		, "include/detail/structured-callable-borrows.h": native.borrowsHeader

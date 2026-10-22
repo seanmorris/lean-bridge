@@ -15,7 +15,7 @@ export const callbackCheckedRecordLanguageTestName
 	= "ordinary and reviewed Python, Ruby and Rust callback checked records install offline";
 
 /** Exact success-path counts the independent C11/GMP and C++20 consumers print. */
-export const callbackCheckedRecordNativeChecks = Object.freeze({ c: 24, cpp: 20 });
+export const callbackCheckedRecordNativeChecks = Object.freeze({ c: 27, cpp: 23 });
 /** Exact counts the independent Perl consumer reports on a faithful package. */
 export const callbackCheckedRecordPerlExpected = Object.freeze({ checks: 61, calls: 10, rejected: 12 });
 /** Exact success-path counts the independent language consumers print. */

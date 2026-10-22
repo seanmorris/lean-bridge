@@ -64,7 +64,12 @@ static inline uint32_t lb_gc_fail(lb_gc_state *state, uint32_t status) {
   if (status == 4) ${p}_graph_retire();
   if (!state->native_status && status) {
     state->native_status = status;
-    ${p}_error error; state->status = ${p}_graph_finish(status, &error);
+    ${p}_error error;
+    if (status == 10) {
+      static const char message[] = "Host callback result failed its Lean constructor";
+      state->status = ${m}_STATUS_INVALID_ARGUMENT;
+      error = (${p}_error){${m}_ERROR_INVALID_ARGUMENT, message, sizeof(message) - 1};
+    } else state->status = ${p}_graph_finish(status, &error);
     lb_gc_message_copy(state, error);
   }
   return state->native_status;
