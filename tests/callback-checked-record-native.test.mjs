@@ -21,6 +21,7 @@ import { generateCallablePerlGraphXs } from "../src/backends/perl/callable-graph
 import { componentStructuredCallableLeanSource } from "../src/build/component-structured-callable-lean.mjs";
 import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } from "../src/build/native-callable-graph.mjs";
 import { generateCompiledCallbacks } from "../src/build/native-component.mjs";
+import { nativeArtifactRefinementRequirements } from "../src/build/native-artifacts.mjs";
 import { containsCallbackSubtype } from "../src/build/native-graph-model.mjs";
 import { compileNativeGraphProjection } from "../src/build/native-graph-projection.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
@@ -52,6 +53,25 @@ test("native callable descriptors retain directional callback checked records in
 	const hostTrees = host.source.extensions["lean-lang.org/refinements"];
 	movedHost.source.extensions["lean-lang.org/refinements"] = { parameters: [hostTrees.result], result: null };
 	assert.throws(() => createNativeCallableGraphDescriptor(moved), /direction/u);
+});
+
+test("native artifact readers distinguish callback checked records from raw callback Fin", () => {
+	const model = refinement => ({ exports: []
+		, copiedGraph: { callbacks: [
+			{ refinements: { parameters: [null], result: refinement } }
+		]
+		, nominalRefinements: [] } });
+	const checked = { kind: "checked-record", constructor: "Example.mk"
+		, fields: [{ name: "bound", refinement: { kind: "fin", bound: "5" } }] };
+	assert.deepEqual(nativeArtifactRefinementRequirements(model(checked)), {
+		refined: true, checkedRecords: true, callbackFin: false
+	});
+	assert.deepEqual(nativeArtifactRefinementRequirements(model({ kind: "fin", bound: "5" })), {
+		refined: true, checkedRecords: false, callbackFin: true
+	});
+	assert.deepEqual(nativeArtifactRefinementRequirements(model(null)), {
+		refined: false, checkedRecords: false, callbackFin: false
+	});
 });
 
 test("callback checked records select the callable-graph carrier whether named or bare", () => {
@@ -222,9 +242,11 @@ test("Perl callback checked records copy a typed record recovery and keep the pr
 	await runCopied("/usr/bin/perl", ["-MExtUtils::ParseXS", "-e"
 		, 'ExtUtils::ParseXS::process_file(filename => "Component.xs", output => "Component.c", prototypes => 0)']
 		, directory, { ...copiedCleanEnvironment, PATH: "/usr/bin:/bin" });
-	for(const targets of [["c"], ["cpp"], ["cpan"], ["c", "cpp", "cpan"]])
+	for(const targets of [
+		["c"], ["cpp"], ["pypi"], ["cargo"], ["rubygems"], ["cpan"]
+		, ["c", "cpp", "pypi", "cargo", "rubygems", "cpan"]])
 		assert.ok(compileNativeGraphProjection(ir, targets, moduleName).layoutSha256);
-	for(const target of ["pypi", "cargo", "rubygems", "nuget", "maven", "php-native", "wit-wasi"])
+	for(const target of ["nuget", "maven", "php-native", "wit-wasi"])
 		assert.throws(() => compileNativeGraphProjection(ir, [target], moduleName)
-			, { code: "native-graph-projection-unavailable", message: /Callback checked records currently require C, C\+\+ or CPAN projections/u });
+			, { code: "native-graph-projection-unavailable", message: /Callback checked records currently require C, C\+\+, PyPI, Cargo, RubyGems or CPAN projections/u });
 });

@@ -13,6 +13,45 @@ import { verifyPackageMetadataSource } from "../analyze/package-metadata.mjs";
 import { verifyReviewedSourceInputs } from "../analyze/reviewed-source.mjs";
 import { nativeAllocationGuardHeader } from "./native-allocation-guard.mjs";
 
+const refinementChildren = tree => {
+	if(tree === null || typeof tree !== "object") return [];
+	if(tree.kind === "callback") return [...tree.parameters, tree.result];
+	if(["array", "list", "option", "tuple", "result"].includes(tree.kind)) return tree.arguments;
+	if(["checked-record", "record"].includes(tree.kind)) return tree.fields?.map(field => field.refinement) ?? [];
+	if(tree.kind === "variant") return tree.cases.flatMap(branch => branch.fields.map(field => field.refinement));
+	return [];
+};
+const containsRefinement = (tree, predicate) => tree !== null && typeof tree === "object"
+	&& (predicate(tree) || refinementChildren(tree).some(child => containsRefinement(child, predicate)));
+// A checked record owns every proof below its selected constructor. Its Fin and
+// Subtype fields are checked by Lean while reconstructing that record, not by a
+// host's raw callback-bound adapter.
+const containsUnownedFin = tree => tree !== null && typeof tree === "object"
+	&& (!["checked-record", "subtype"].includes(tree.kind)
+		&& (["fin", "fin-field"].includes(tree.kind)
+			|| refinementChildren(tree).some(containsUnownedFin)));
+/**
+ * Recover reader capabilities from both export refinements and callable-graph
+ * type refinements. Checked-record constructors own their nested proof checks;
+ * only raw Fin leaves require the older callback-Fin host capability.
+ *
+ * @param model - Serialized native component model.
+ */
+export const nativeArtifactRefinementRequirements = model => {
+	const exports = (model.exports ?? []).flatMap(item => item.refinements === undefined
+		? [] : [...item.refinements.parameters, item.refinements.result]);
+	const callbacks = (model.copiedGraph?.callbacks ?? []).flatMap(item => item.refinements === undefined
+		? [] : [...item.refinements.parameters, item.refinements.result]);
+	const nominal = (model.copiedGraph?.nominalRefinements ?? []).map(item => item.refinement);
+	const all = [...exports, ...callbacks, ...nominal];
+	const exportCallbacks = exports.filter(tree => tree?.kind === "callback");
+	return {
+		refined: all.some(tree => tree !== null)
+		, checkedRecords: all.some(tree => containsRefinement(tree, item => item.kind === "checked-record"))
+		, callbackFin: [...callbacks, ...exportCallbacks].some(containsUnownedFin)
+	};
+};
+
 /**
  * List regular payload files and reject symlinks and special filesystem entries.
  *
@@ -123,12 +162,12 @@ export async function readVerifiedNativeComponent(root, runtimeIdentity, { copie
 		throw Object.assign(new TypeError("This native component requires an owned input-transfer consumer adapter"), { code: "native-owned-transfers-unavailable" });
 	if(hostCallbacks && (!ownedGraphs || !ownedHostCallbacks))
 		throw Object.assign(new TypeError("This native component requires an owned host-callback consumer adapter"), { code: "native-owned-callbacks-unavailable" });
-	const refined = Array.isArray(model.exports) && model.exports.some(item => item?.refinements !== undefined);
+	const requirements = nativeArtifactRefinementRequirements(model), refined = requirements.refined;
 	if(refined && nativeRefinements !== true)
 		throw Object.assign(new TypeError("This native component requires a checked Fin consumer adapter"), { code: "native-refinements-unavailable" });
-	const callbackRefined = refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "callback"));
+	const callbackRefined = requirements.callbackFin;
 	// Every enabled consumer must use the verified payload-mirror C adapter, never source record layout.
-	if(refined && model.exports.some(item => [...(item.refinements?.parameters ?? []), item.refinements?.result].some(tree => tree?.kind === "checked-record")) && nativeCheckedRecords !== true)
+	if(requirements.checkedRecords && nativeCheckedRecords !== true)
 		throw Object.assign(new TypeError("This native component requires a checked-record consumer adapter"), { code: "native-checked-records-unavailable" });
 	if(callbackRefined && nativeCallbackRefinements !== true)
 		throw Object.assign(new TypeError("This native component requires a consumer adapter that checks Fin in callbacks"), { code: "native-refinements-unavailable" });
