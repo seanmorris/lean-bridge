@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryHostedSource, phpWasmRefinementEntryHostedChangedPaths } from "./php-wasm-refinement-entry-hosted-source-history.mjs";
 import { beforePhpWasmRefinementEntryMatrixSource, phpWasmRefinementEntryMatrixChangedPaths } from "./php-wasm-refinement-entry-matrix-source-history.mjs";
 import { beforePhpWasmRefinementCiMatrixSource, phpWasmRefinementCiMatrixChangedPaths } from "./php-wasm-refinement-ci-matrix-source-history.mjs";
 import { beforeCallbackSubtypeManagedConsumerRepairSource, callbackSubtypeManagedConsumerRepairChangedPaths } from "./callback-subtype-managed-consumer-repair-source-history.mjs";
@@ -1907,7 +1908,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryMatrixChangedPaths
+	...phpWasmRefinementEntryHostedChangedPaths
+	, ...phpWasmRefinementEntryMatrixChangedPaths
 	, ...phpWasmRefinementCiMatrixChangedPaths
 	, ...callbackSubtypeManagedConsumerRepairChangedPaths
 	, ...phpWasmIndexedRefinementEntryChangedPaths
@@ -2597,8 +2599,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryHosted
+		= beforePhpWasmRefinementEntryHostedSource(path, text, expected);
+	if(sha256(phpWasmRefinementEntryHosted) === expected)
+		return phpWasmRefinementEntryHosted;
 	const phpWasmRefinementEntryMatrix
-		= beforePhpWasmRefinementEntryMatrixSource(path, text, expected);
+		= beforePhpWasmRefinementEntryMatrixSource(
+			path, phpWasmRefinementEntryHosted, expected
+		);
 	if(sha256(phpWasmRefinementEntryMatrix) === expected)
 		return phpWasmRefinementEntryMatrix;
 	const phpWasmRefinementCiMatrix

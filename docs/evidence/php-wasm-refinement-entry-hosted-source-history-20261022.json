@@ -1,0 +1,74 @@
+{
+  "additions": [
+    {
+      "currentSha256": "11a3fcad72edbdac45717c01885107804d0f9a8128c9b43ffaf91b6f9f66390f",
+      "path": "scripts/summarize-php-wasm-refinement-entry-hosted.mjs"
+    },
+    {
+      "currentSha256": "252cb08f9c0f348db9a6b44a2b3a4c3a7c3c4d1c4d1527310b0a1dfa2f30f697",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs"
+    },
+    {
+      "currentSha256": "d6c6ab94160c53ae0284aa5c0b66615382099256e82f566a072fd6f43a1e99ef",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs"
+    },
+    {
+      "currentSha256": "683617eb18cf516ff6afb159adca805429e9209c81895b50453b57810d255690",
+      "path": "scripts/update-php-wasm-refinement-entry-hosted-source-history.mjs"
+    },
+    {
+      "currentSha256": "bbe10ed4d95c91e42599f6ebaede99989d089725aeae35bf61e1fd1accd315eb",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ac227f1c7aa92f85ea37318c314adfe736fc919264ee6f42933ebcba65b8c239",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0e564bf4c378ab106e490d51685ebfdf7f765d7c",
+  "milestone": "php-wasm-refinement-entry-hosted-verifier-v1",
+  "predecessorCommit": "84482ac0034142e6905a17655e2a5e376c83e497",
+  "schemaVersion": 1,
+  "scope": "The complete PHP-Wasm refinement entry artifact verifier accepts exactly twenty-six producer-bound hosted artifacts and independently rechecks all twenty-eight ordinary or reviewed route cells from their original retained records. It rejects partial or widened artifact inventories, nonterminal TAP, forged callback indexes and retained check output that differs from a fresh per-route verifier result before closing the aggregate topology. Instrumented probe evidence remains separate from unmodified-package qualification.",
+  "updates": [
+    {
+      "currentSha256": "b92de8da4965f2da596f3d487234c84426b8fbb5f455896c94d53383cd1996f5",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-hosted-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3205
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "40d58702beab84d7e8e59c58ba7ad17f77285e87279ee5ad1eef15f0732fc9de"
+    },
+    {
+      "currentSha256": "594f34608cb2f566277669d9fc8122f8814662766f33af328bbb4fab5e3c3a2e",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryHostedSource, phpWasmRefinementEntryHostedChangedPaths } from \"./php-wasm-refinement-entry-hosted-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryHostedChangedPaths\n\t, ...phpWasmRefinementEntryMatrixChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryMatrixChangedPaths\n",
+          "start": 145143
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryHosted\n\t\t= beforePhpWasmRefinementEntryHostedSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryHosted) === expected)\n\t\treturn phpWasmRefinementEntryHosted;\n",
+          "previous": "",
+          "start": 176488
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementEntryMatrixSource(\n\t\t\tpath, phpWasmRefinementEntryHosted, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementEntryMatrixSource(path, text, expected);\n",
+          "start": 176722
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "cce196ece14e9fdb212b5ade88ed7209415d8834ed2d95b38acda9af7bac3618"
+    }
+  ]
+}
