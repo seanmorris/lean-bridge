@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordJavaScriptRetentionSource, ownedCheckedRecordJavaScriptRetentionChangedPaths } from "./owned-checked-record-javascript-retention-source-history.mjs";
 import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from "./callback-subtype-retained-packages-source-history.mjs";
 import { beforeRecursivePhpWasmEvidenceReplayRepairSource, recursivePhpWasmEvidenceReplayRepairChangedPaths } from "./recursive-php-wasm-evidence-replay-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHostedArchiversChangedPaths } from "./owned-checked-record-hosted-archivers-source-history.mjs";
@@ -1928,7 +1929,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeRetainedPackagesChangedPaths
+	...ownedCheckedRecordJavaScriptRetentionChangedPaths
+	, ...callbackSubtypeRetainedPackagesChangedPaths
 	, ...recursivePhpWasmEvidenceReplayRepairChangedPaths
 	, ...ownedCheckedRecordHostedArchiversChangedPaths
 	, ...zeroPayloadMatrixClosureChangedPaths
@@ -2639,9 +2641,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordJavaScriptRetention
+		= beforeOwnedCheckedRecordJavaScriptRetentionSource(
+			path, text, expected
+		);
+	if(sha256(ownedCheckedRecordJavaScriptRetention) === expected)
+		return ownedCheckedRecordJavaScriptRetention;
 	const callbackSubtypeRetainedPackages
 		= beforeCallbackSubtypeRetainedPackagesSource(
-			path, text, expected
+			path, ownedCheckedRecordJavaScriptRetention, expected
 		);
 	if(sha256(callbackSubtypeRetainedPackages) === expected)
 		return callbackSubtypeRetainedPackages;

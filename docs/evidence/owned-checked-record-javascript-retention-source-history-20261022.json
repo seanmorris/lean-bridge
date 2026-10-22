@@ -1,0 +1,157 @@
+{
+  "additions": [
+    {
+      "currentSha256": "6a015684f341a1e1509b2d6371a109267167192d47acd23818a0d0c962bce250",
+      "path": "scripts/check-owned-checked-record-javascript-ci.mjs"
+    },
+    {
+      "currentSha256": "47d95392f5c6423966d5d8ca586b75f660946560f94f09590fc640422efa6dcd",
+      "path": "tests/helpers/owned-checked-record-javascript-evidence-tests.mjs"
+    },
+    {
+      "currentSha256": "980c54c86e588d1cd8e53ee7212cada7830353494f7f7132eac0d3d48c8899ee",
+      "path": "tests/helpers/owned-checked-record-javascript-evidence.mjs"
+    },
+    {
+      "currentSha256": "50ad434f5943a8b7f83e75a97eadc2a08073370291c0974fd8ef223a96640dd7",
+      "path": "scripts/update-owned-checked-record-javascript-retention-source-history.mjs"
+    },
+    {
+      "currentSha256": "6870e7d8db7386c829f9f659488ebf70ba044b5d9c28c3bb8734dcbb08a19c23",
+      "path": "tests/helpers/owned-checked-record-javascript-retention-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "ce63e5953adcc73e4b5e9d73152bd59c3ef2098afc7dddaf8bb6ad235edb1fe8",
+      "path": "tests/helpers/owned-checked-record-javascript-retention-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "2d54ab1d148beac7ce3a211e72a9369f5705e7f6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c57018c3e4f743f8c98b4222092d510e293c33ca8f37c74ed09bcdc90446ce3e",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRecordJavaScriptRetentionSource, ownedCheckedRecordJavaScriptRetentionChangedPaths } from \"./owned-checked-record-javascript-retention-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...ownedCheckedRecordJavaScriptRetentionChangedPaths\n\t, ...callbackSubtypeRetainedPackagesChangedPaths\n",
+          "previous": "\t...callbackSubtypeRetainedPackagesChangedPaths\n",
+          "start": 148856
+        },
+        {
+          "current": "\tconst ownedCheckedRecordJavaScriptRetention\n\t\t= beforeOwnedCheckedRecordJavaScriptRetentionSource(\n",
+          "previous": "\tconst callbackSubtypeRetainedPackages\n\t\t= beforeCallbackSubtypeRetainedPackagesSource(\n",
+          "start": 181332
+        },
+        {
+          "current": "\tif(sha256(ownedCheckedRecordJavaScriptRetention) === expected)\n\t\treturn ownedCheckedRecordJavaScriptRetention;\n\tconst callbackSubtypeRetainedPackages\n\t\t= beforeCallbackSubtypeRetainedPackagesSource(\n\t\t\tpath, ownedCheckedRecordJavaScriptRetention, expected\n\t\t);\n",
+          "previous": "",
+          "start": 181461
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0256caa6313c0e4f8be3dff50e9220599eb8451229d0fcafd8c4ca5147da19f3"
+    },
+    {
+      "currentSha256": "351d346f5a664a56285b231b5f475828089b5289f467e7e97b8efd5d1007ea65",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-javascript-retention-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4177
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "dd4175fc1aac72facc5d1162818496a00e0ff6266f13c6530738320738ca1f06"
+    }
+  ],
+  "milestone": "owned-checked-record-javascript-retention-v1",
+  "predecessorCommit": "e1e7de539d12105cbde3347b011534544a5e0b41",
+  "schemaVersion": 1,
+  "scope": "Retain every npm/browser owned checked-record package set before installation, install from those exact bytes, upload the complete sets, and independently verify every route, receipt, archive and browser cell.",
+  "updates": [
+    {
+      "currentSha256": "24d9440e397774f04a34deb07876ea7020d9f3b1f1736c0b18b908b1aea65e49",
+      "edits": [
+        {
+          "current": "          for route in ordinary-full ordinary-result-only reviewed-full reviewed-result-only; do\n            test -s \"build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json\"\n            test -s \"build/owned-checked-record-javascript-packaging/evidence/$route/handoff/package-set-receipt.json.sha256\"\n          done\n          node scripts/check-owned-checked-record-javascript-ci.mjs \\\n            --report build/owned-checked-record-javascript-packaging/report.json \\\n            > build/owned-checked-record-javascript-packaging/verification.json\n          test -s build/owned-checked-record-javascript-packaging/verification.json\n",
+          "previous": "",
+          "start": 7105
+        },
+        {
+          "current": "            build/owned-checked-record-javascript-packaging/\n",
+          "previous": "            build/owned-checked-record-javascript-packaging/report.json\n",
+          "start": 12575
+        }
+      ],
+      "path": ".github/workflows/consumer-matrix.yml",
+      "previousSha256": "aa45fc83b135e5f61f285f034a3c8c9a6406f5cf6d5a916f6d5b364d8ba4cafd"
+    },
+    {
+      "currentSha256": "f874fbf69a9662ac5cd13a7240930e9615c6a02d467145b4b7eba81d33c8fe05",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-javascript-evidence-tests.mjs\";\n",
+          "previous": "",
+          "start": 512
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "23f44ecd8e9f78acf99b7c3bd4f221da5f506adc48c0c45e5aabe664f3831f18"
+    },
+    {
+      "currentSha256": "c38363930348a9683983633aeadebdef4874d8ffaa654bcffb835d7e77413066",
+      "edits": [
+        {
+          "current": "import {\n\tcopyPackageSetHandoff, retainPackageSetEvidence\n} from \"./helpers/package-set.mjs\";\n",
+          "previous": "",
+          "start": 1639
+        },
+        {
+          "current": "const packagingRoot = resolve(\"build/owned-checked-record-javascript-packaging\");\n",
+          "previous": "",
+          "start": 2506
+        },
+        {
+          "current": "test.before(async () => {\n\tif(enabled) await rm(packagingRoot, { recursive: true, force: true });\n});\n\n",
+          "previous": "",
+          "start": 2609
+        },
+        {
+          "current": "\t\tawait saveLakeFile(packagingRoot, reportName, canonicalJson(\n",
+          "previous": "\t\tawait saveLakeFile(\"build/owned-checked-record-javascript-packaging\"\n\t\t\t, reportName, canonicalJson(\n",
+          "start": 4949
+        },
+        {
+          "current": "\t\t)\n",
+          "previous": "\t\t\t)\n",
+          "start": 5207
+        },
+        {
+          "current": "\t\tconst retainedPath = `evidence/${route}/handoff`;\n\t\tconst retained = await retainPackageSetEvidence(first.output\n\t\t\t, join(packagingRoot, retainedPath));\n",
+          "previous": "",
+          "start": 13663
+        },
+        {
+          "current": "\t\tconst handoffReceipt = await copyPackageSetHandoff(\n\t\t\tjoin(packagingRoot, retainedPath), handoff);\n\t\tassert.deepEqual(handoffReceipt, retained.receipt);\n",
+          "previous": "\t\tawait saveLakeFile(handoff, \"runtime.tgz\"\n\t\t\t, await readFile(first.runtimeArchive));\n\t\tawait saveLakeFile(handoff, \"component.tgz\"\n\t\t\t, await readFile(first.componentArchive));\n",
+          "start": 14072
+        },
+        {
+          "current": "\t\t\t, \"--no-audit\", \"--no-fund\"\n\t\t\t, ...handoffReceipt.packages.flatMap(pkg => pkg.artifacts.map(\n\t\t\t\tartifact => join(handoff, artifact.path))) ]);\n",
+          "previous": "\t\t\t, \"--no-audit\", \"--no-fund\", \"./handoff/runtime.tgz\"\n\t\t\t, \"./handoff/component.tgz\"]);\n",
+          "start": 14700
+        },
+        {
+          "current": "\t\t\t, retainedPackageSet: { path: retainedPath\n\t\t\t\t, receiptSha256: retained.receiptSha256\n\t\t\t\t, archives: retained.archives\n\t\t\t\t, archiveBytes: retained.archiveBytes, files: retained.files }\n",
+          "previous": "",
+          "start": 17354
+        }
+      ],
+      "path": "tests/owned-checked-record-javascript-packaging.test.mjs",
+      "previousSha256": "34382c74357e62d49163a186ce33a731eecc20fd02f2efff9cacad667cd718da"
+    }
+  ]
+}
