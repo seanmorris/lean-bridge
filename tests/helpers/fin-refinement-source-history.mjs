@@ -39,6 +39,7 @@ import { beforeCallbackRefinementsPhpWasmSource, callbackRefinementsPhpWasmChang
 import { beforeCallbackSubtypePhpWasmSource, callbackSubtypePhpWasmChangedPaths } from "./callback-subtype-php-wasm-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmSource, ownedCheckedRecordPhpWasmChangedPaths } from "./owned-checked-record-php-wasm-source-history.mjs";
 import { beforeOwnedSubtypePhpWasmQualificationSource, ownedSubtypePhpWasmQualificationChangedPaths } from "./owned-subtype-php-wasm-qualification-source-history.mjs";
+import { beforeOwnedSubtypePhpWasmPackageGapSource, ownedSubtypePhpWasmPackageGapChangedPaths } from "./owned-subtype-php-wasm-package-gap-source-history.mjs";
 import { beforeOwnedCheckedRecordManagedSource, ownedCheckedRecordManagedChangedPaths } from "./owned-checked-record-managed-source-history.mjs";
 import { beforeOwnedCheckedRecordLanguageSource, ownedCheckedRecordLanguageChangedPaths } from "./owned-checked-record-language-source-history.mjs";
 import { beforeOwnedCheckedRecordNativePerlSource, ownedCheckedRecordNativePerlChangedPaths } from "./owned-checked-record-native-perl-source-history.mjs";
@@ -1954,6 +1955,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...callbackSubtypePhpWasmChangedPaths
 	, ...ownedCheckedRecordPhpWasmChangedPaths
 	, ...ownedSubtypePhpWasmQualificationChangedPaths
+	, ...ownedSubtypePhpWasmPackageGapChangedPaths
 	, ...ownedCheckedRecordManagedChangedPaths
 	, ...ownedCheckedRecordLanguageChangedPaths
 	, ...ownedCheckedRecordNativePerlChangedPaths
@@ -2802,9 +2804,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 		);
 	if(sha256(ownedSubtypePhpWasmQualification) === expected)
 		return ownedSubtypePhpWasmQualification;
+	const ownedSubtypePhpWasmPackageGap
+		= beforeOwnedSubtypePhpWasmPackageGapSource(
+			path, ownedSubtypePhpWasmQualification, expected
+		);
+	if(sha256(ownedSubtypePhpWasmPackageGap) === expected)
+		return ownedSubtypePhpWasmPackageGap;
 	const ownedCheckedRecordManaged
 		= beforeOwnedCheckedRecordManagedSource(
-			path, ownedSubtypePhpWasmQualification, expected
+			path, ownedSubtypePhpWasmPackageGap, expected
 		);
 	if(sha256(ownedCheckedRecordManaged) === expected)
 		return ownedCheckedRecordManaged;

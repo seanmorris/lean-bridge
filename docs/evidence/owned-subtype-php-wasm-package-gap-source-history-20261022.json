@@ -1,0 +1,281 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0c769d313e6613ab63c79ae7fd5e67a5a707777f092cd9971a80f09870a4da85",
+      "path": "scripts/update-owned-subtype-php-wasm-package-gap-source-history.mjs"
+    },
+    {
+      "currentSha256": "34a2e3e5e95edf0b4635504bb49f66fc75f0be0e9ba015e92b0a87fcd684b0b2",
+      "path": "tests/helpers/owned-subtype-php-wasm-package-gap-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6747afff620bc95457399f66c2dc7574a4032413cf08f4782f76a75f5e9f97a4",
+      "path": "tests/helpers/owned-subtype-php-wasm-package-gap-source-history.mjs"
+    }
+  ],
+  "historicalAdditions": [
+    {
+      "currentSha256": "adff6cd32e2d066fe90902fae1abf972f332837ac5b87c935917b37bc698bf85",
+      "path": ".github/workflows/owned-subtype-php-wasm.yml"
+    },
+    {
+      "currentSha256": "55fda51f3c0124907bdb5acd728ae91c4bfcbb3e974be788b77dc4f341310419",
+      "path": "tests/fixtures/structured-types/owned-subtype-php-wasm.php"
+    },
+    {
+      "currentSha256": "9d6f4ba76748977f091aace78b6ebf94f5062e0b9b53fa8880af6f1ff6fc7ec0",
+      "path": "tests/owned-subtype-php-wasm-packaging.test.mjs"
+    }
+  ],
+  "historicalUpdates": [
+    {
+      "currentSha256": "d69f86f8f3f684c0c97d59eee8e88efe601d710360a0e4efd04a3f6b14b6119a",
+      "edits": [
+        {
+          "current": "    \"src/abi/owned-refinement-model.mjs\",\n",
+          "previous": "",
+          "start": 6639
+        },
+        {
+          "current": "    \"src/build/owned-refinement-carriers.mjs\",\n",
+          "previous": "",
+          "start": 27355
+        }
+      ],
+      "path": "config/cli-package.v1.json",
+      "previousSha256": "0125415702805b53f850dbb239fbc0dbfc7daa966c3e1e805961ab8cc536b1bb"
+    },
+    {
+      "currentSha256": "c1cb908992488ba1d62286e9a5df32396e001b2a5f74a97f74b1056df73566f3",
+      "edits": [
+        {
+          "current": "",
+          "previous": "    \"src/build/owned-refinement-carriers.mjs\",\n",
+          "start": 27022
+        },
+        {
+          "current": "    \"src/build/owned-refinement-carriers.mjs\",\n",
+          "previous": "",
+          "start": 27234
+        },
+        {
+          "current": "    \"test:owned-subtype-php-wasm\": \"LEAN_BRIDGE_OWNED_SUBTYPE_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/owned-subtype-php-wasm-packaging.test.mjs\",\n",
+          "previous": "",
+          "start": 50363
+        }
+      ],
+      "path": "package.json",
+      "previousSha256": "d387958b8ffa96545e9263502db089888b14fdc85cab0b3f63246dacdde5a564"
+    },
+    {
+      "currentSha256": "50eaefad0f3a03282c03898c3eb2c748493656ca5bd720f51f92f50bd228a5dd",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-php-wasm-packaging\"\n",
+          "previous": "",
+          "start": 2187
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "8f015e9cd45a7066b310c51540f3bf15fce013318d09d72fa7be27f9e1d643de"
+    },
+    {
+      "currentSha256": "a208ad1c7e2938bcb71f3574b383814454ec468d17a10298eb43f0861c572dfa",
+      "edits": [
+        {
+          "current": "const browserSource = (arrangement, anchoredResults = false, phpNamespace = \"LeanOwnedAggregates\") => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';\n",
+          "previous": "const browserSource = (arrangement, anchoredResults = false) => `import {PhpWeb} from './node_modules/php-wasm/PhpWeb.mjs';\n",
+          "start": 497
+        },
+        {
+          "current": "  await run(\"<?php try { ${phpNamespace}\\\\\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}\");\n",
+          "previous": "  await run(\"<?php try { LeanOwnedAggregates\\\\\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}\");\n",
+          "start": 2469
+        },
+        {
+          "current": "  await run(\"<?php require '\"+autoload+\"'; $ticket=${phpNamespace}\\\\\\\\new_ticket(Brick\\\\\\\\Math\\\\\\\\BigInteger::of(77),'fresh'); \"+\n    \"if((string)${phpNamespace}\\\\\\\\serial($ticket${anchoredResults ? \"->get()\" : \"\"})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';\");\n",
+          "previous": "  await run(\"<?php require '\"+autoload+\"'; $ticket=LeanOwnedAggregates\\\\\\\\new_ticket(Brick\\\\\\\\Math\\\\\\\\BigInteger::of(77),'fresh'); \"+\n    \"if((string)LeanOwnedAggregates\\\\\\\\serial($ticket${anchoredResults ? \"->get()\" : \"\"})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';\");\n",
+          "start": 3448
+        },
+        {
+          "current": " * @param options.phpNamespace - Generated namespace used by the installed component.\n",
+          "previous": "",
+          "start": 4552
+        },
+        {
+          "current": "export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false, minimumChecks = 101, phpNamespace = \"LeanOwnedAggregates\" } = {}) => {\n",
+          "previous": "export const checkOwnedPhpWasmBrowser = async (deployment, diagnostic, expected = { scalars: 19, structured: 23 }, { anchoredResults = false, minimumChecks = 101 } = {}) => {\n",
+          "start": 4642
+        },
+        {
+          "current": "\t\tconst source = browserSource(arrangement, anchoredResults, phpNamespace);\n",
+          "previous": "\t\tconst source = browserSource(arrangement, anchoredResults);\n",
+          "start": 5247
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-browser.mjs",
+      "previousSha256": "567ca1049dba35af36c0d4b3068b49bb222ab0ff10ecb69e7b9178ca97b7dea2"
+    },
+    {
+      "currentSha256": "69d78b9277c13c60e289f7dc6564f3f8ce3526b685907336a3339fa161b7cd23",
+      "edits": [
+        {
+          "current": "import { ownedSubtypePackageReviewedIr } from \"./owned-aggregate-fixture.mjs\";\n",
+          "previous": "",
+          "start": 663
+        },
+        {
+          "current": " * @param phpNamespace - Generated namespace used by the installed component.\n",
+          "previous": "",
+          "start": 2873
+        },
+        {
+          "current": "const hostSource = (name, wholeOwners = false, phpNamespace = \"LeanOwnedAggregates\") => `import assert from 'node:assert/strict';\n",
+          "previous": "const hostSource = (name, wholeOwners = false) => `import assert from 'node:assert/strict';\n",
+          "start": 2955
+        },
+        {
+          "current": "await run(\"<?php try { ${phpNamespace}\\\\\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}\");\n",
+          "previous": "await run(\"<?php try { LeanOwnedAggregates\\\\\\\\new_ticket(42,'invalid'); throw new Exception('Missing rejection'); } catch(TypeError $error) {}\");\n",
+          "start": 4836
+        },
+        {
+          "current": "await run(\"<?php require '\"+autoload+\"'; $ticket=${phpNamespace}\\\\\\\\new_ticket(Brick\\\\\\\\Math\\\\\\\\BigInteger::of(77),'fresh'); \"+\n  \"if((string)${phpNamespace}\\\\\\\\serial($ticket${wholeOwners ? \"->get()\" : \"\"})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';\");\n",
+          "previous": "await run(\"<?php require '\"+autoload+\"'; $ticket=LeanOwnedAggregates\\\\\\\\new_ticket(Brick\\\\\\\\Math\\\\\\\\BigInteger::of(77),'fresh'); \"+\n  \"if((string)LeanOwnedAggregates\\\\\\\\serial($ticket${wholeOwners ? \"->get()\" : \"\"})!=='77')throw new Exception('Request recovery failed'); $ticket->close(); echo 'recovered';\");\n",
+          "start": 5856
+        },
+        {
+          "current": " * @param options.checkedRefinements - Run checked fields inside borrowed and transferred owners.\n",
+          "previous": "",
+          "start": 10630
+        },
+        {
+          "current": "export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackVariant = null, checkedRefinements = false } = {}) => {\n",
+          "previous": "export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackVariant = null } = {}) => {\n",
+          "start": 10732
+        },
+        {
+          "current": "\tif(checkedRefinements && callbackVariant !== null) throw new TypeError(\"Checked-refinement ownership acceptance is callback-independent\");\n",
+          "previous": "",
+          "start": 11103
+        },
+        {
+          "current": "\tif(checkedRefinements) transferredInputs = true;\n",
+          "previous": "",
+          "start": 11398
+        },
+        {
+          "current": "\tlet consumer = checkedRefinements ? await readFile(\"tests/fixtures/structured-types/owned-subtype-php-wasm.php\", \"utf8\")\n\t\t: callbackResultAnchors ? await ownedPhpInstalledCallbackProbe() : receiverExports ? await ownedPhpInstalledReceiverProbe() : await readFile(anchoredResults ? \"tests/fixtures/structured-types/owned-installed-php-borrows.php\"\n\t\t\t: transferredInputs ? \"tests/fixtures/structured-types/owned-installed-php-wasm-transfers.php\" : \"tests/fixtures/structured-types/owned-php-wasm-installed.php\", \"utf8\");\n",
+          "previous": "\tlet consumer = callbackResultAnchors ? await ownedPhpInstalledCallbackProbe() : receiverExports ? await ownedPhpInstalledReceiverProbe() : await readFile(anchoredResults ? \"tests/fixtures/structured-types/owned-installed-php-borrows.php\"\n\t\t: transferredInputs ? \"tests/fixtures/structured-types/owned-installed-php-wasm-transfers.php\" : \"tests/fixtures/structured-types/owned-php-wasm-installed.php\", \"utf8\");\n",
+          "start": 12406
+        },
+        {
+          "current": "\t\tconst fixture = checkedRefinements ? \"tests/fixtures/onboarding/owned-subtypes\"\n\t\t\t: transferredInputs || callbackResultAnchors ? \"tests/fixtures/onboarding/owned-aggregates\" : \"tests/fixtures/onboarding/owned-dotnet-callables\";\n",
+          "previous": "\t\tconst fixture = transferredInputs || callbackResultAnchors ? \"tests/fixtures/onboarding/owned-aggregates\" : \"tests/fixtures/onboarding/owned-dotnet-callables\";\n",
+          "start": 13630
+        },
+        {
+          "current": "\t\tconst config = checkedRefinements\n\t\t\t? JSON.parse(await readFile(join(fixture, \"lean-bridge.exports.json\"), \"utf8\"))\n\t\t\t: callbackResultAnchors\n\t\t\t\t? await (callbackVariant === \"combined\" ? ownedDotnetCallbackResultCombinedConfiguration : ownedDotnetCallbackResultConfiguration)()\n\t\t\t\t: receiverExports ? await ownedRustReceiverConfiguration() : anchoredResults ? await ownedRustBorrowConfiguration() : transferredInputs ? await ownedRustTransferConfiguration() : JSON.parse(await readFile(join(fixture, \"lean-bridge.exports.json\"), \"utf8\"));\n",
+          "previous": "\t\tconst config = callbackResultAnchors\n\t\t\t? await (callbackVariant === \"combined\" ? ownedDotnetCallbackResultCombinedConfiguration : ownedDotnetCallbackResultConfiguration)()\n\t\t\t: receiverExports ? await ownedRustReceiverConfiguration() : anchoredResults ? await ownedRustBorrowConfiguration() : transferredInputs ? await ownedRustTransferConfiguration() : JSON.parse(await readFile(join(fixture, \"lean-bridge.exports.json\"), \"utf8\"));\n",
+          "start": 14328
+        },
+        {
+          "current": "\t\tif(reviewed) await saveLakeFile(projectRoot, \"reviewed.binding-ir.json\", canonicalJson(checkedRefinements\n\t\t\t? ownedSubtypePackageReviewedIr()\n\t\t\t: callbackResultAnchors\n\t\t\t\t? (callbackVariant === \"combined\" ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)()\n\t\t\t\t: receiverExports ? ownedRustReceiverReviewedIr() : anchoredResults ? ownedRustBorrowReviewedIr() : transferredInputs ? ownedRustTransferReviewedIr() : ownedDotnetCallbacksReviewedIr()));\n",
+          "previous": "\t\tif(reviewed) await saveLakeFile(projectRoot, \"reviewed.binding-ir.json\", canonicalJson(callbackResultAnchors\n\t\t\t? (callbackVariant === \"combined\" ? ownedDotnetCallbackResultCombinedReviewedIr : ownedDotnetCallbackResultReviewedIr)()\n\t\t\t: receiverExports ? ownedRustReceiverReviewedIr() : anchoredResults ? ownedRustBorrowReviewedIr() : transferredInputs ? ownedRustTransferReviewedIr() : ownedDotnetCallbacksReviewedIr()));\n",
+          "start": 15407
+        },
+        {
+          "current": "\t\tassert.equal(model.ownedGraph.transport, \"owned-zend-v1\"); assert.equal(model.exports.length, checkedRefinements ? 5 : callbackResultAnchors ? callbackVariant === \"combined\" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);\n\t\tif(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, checkedRefinements ? 1 : callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);\n",
+          "previous": "\t\tassert.equal(model.ownedGraph.transport, \"owned-zend-v1\"); assert.equal(model.exports.length, callbackResultAnchors ? callbackVariant === \"combined\" ? 30 : 27 : receiverExports ? 27 : transferredInputs ? 26 : 51);\n\t\tif(transferredInputs) assert.equal(model.ownedGraph.inputTransfers.exports.length, callbackResultAnchors ? 2 : anchoredResults ? 4 : 20);\n",
+          "start": 16458
+        },
+        {
+          "current": "\t\tif(checkedRefinements)\n\t\t{\n\t\t\tconst declaration = name => model.bindingIr.declarations.find(item => item.name === name)\n\t\t\t\t.source.extensions[\"lean-lang.org/refinements\"];\n\t\t\tconst constructor = name => declaration(name).parameters[0]\n\t\t\t\t.fields[4].refinement.fields[0].refinement.constructor;\n\t\t\tassert.equal(constructor(\"echoRecord\"), \"Owned.checkedCount\");\n\t\t\tassert.equal(constructor(\"echoRecordAlternate\"), \"Owned.checkedCountAlternate\");\n\t\t\tassert.equal(constructor(\"transferRecord\"), \"Owned.checkedCount\");\n\t\t}\n",
+          "previous": "",
+          "start": 17506
+        },
+        {
+          "current": "\t\tconst expected = checkedRefinements ? { ownedSubtype: true }\n\t\t\t: callbackResultAnchors ? { ...Object.fromEntries([\"checks\", \"phases\", \"variant\", \"actualLean\", \"installedPackage\", \"ordinaryAutoload\"].map(key => [key, callbackExpected[key]])), iniDisabled: false }\n\t\t\t\t: transferredInputs ? { functions: compileOwnedPhpZendModel(model.bindingIr, { transferredInputs, anchoredResults, receiverExports }).functions.map(fn => fn.publicName).sort(), heldOriginalError: true }\n\t\t\t\t\t: { scalars: 19, structured: 23 };\n",
+          "previous": "\t\tconst expected = callbackResultAnchors ? { ...Object.fromEntries([\"checks\", \"phases\", \"variant\", \"actualLean\", \"installedPackage\", \"ordinaryAutoload\"].map(key => [key, callbackExpected[key]])), iniDisabled: false }\n\t\t\t: transferredInputs ? { functions: compileOwnedPhpZendModel(model.bindingIr, { transferredInputs, anchoredResults, receiverExports }).functions.map(fn => fn.publicName).sort(), heldOriginalError: true }\n\t\t\t\t: { scalars: 19, structured: 23 };\n",
+          "start": 18147
+        },
+        {
+          "current": "\t\tconst runner = hostSource(npmSettings.name, wholeOwners, checkedRefinements ? \"LeanOwnedSubtypes\" : \"LeanOwnedAggregates\"); await saveLakeFile(installed.deployment, \"run.mjs\", runner);\n",
+          "previous": "\t\tconst runner = hostSource(npmSettings.name, wholeOwners); await saveLakeFile(installed.deployment, \"run.mjs\", runner);\n",
+          "start": 21949
+        },
+        {
+          "current": "\t\tconst browser = await checkOwnedPhpWasmBrowser(installed.deployment, diagnostic, expected, {\n\t\t\tanchoredResults: wholeOwners\n\t\t\t, phpNamespace: checkedRefinements ? \"LeanOwnedSubtypes\" : \"LeanOwnedAggregates\"\n\t\t});\n",
+          "previous": "\t\tconst browser = await checkOwnedPhpWasmBrowser(installed.deployment, diagnostic, expected, { anchoredResults: wholeOwners });\n",
+          "start": 22870
+        },
+        {
+          "current": "\t\t, profile: checkedRefinements ? \"installed-owned-subtype-php-wasm\" : callbackResultAnchors ? \"installed-owned-php-wasm-callback-results\" : receiverExports ? \"installed-owned-php-wasm-receivers\" : anchoredResults ? \"installed-owned-php-wasm-borrows\" : transferredInputs ? \"installed-owned-php-wasm-transfers\" : \"installed-owned-php-wasm\"\n",
+          "previous": "\t\t, profile: callbackResultAnchors ? \"installed-owned-php-wasm-callback-results\" : receiverExports ? \"installed-owned-php-wasm-receivers\" : anchoredResults ? \"installed-owned-php-wasm-borrows\" : transferredInputs ? \"installed-owned-php-wasm-transfers\" : \"installed-owned-php-wasm\"\n",
+          "start": 24215
+        }
+      ],
+      "path": "tests/helpers/owned-php-wasm-packages.mjs",
+      "previousSha256": "0b4cce1a22d5fe9b7a100bd93b284e7c1e5e43bcae047d00f40cb7a953241c80"
+    },
+    {
+      "currentSha256": "e8bbdf561ff6fda8a95b6ed6d6418778ea3395376715bd27e7a5e024214acd10",
+      "edits": [
+        {
+          "current": "\t\t, \"owned-subtype-php-wasm-packaging\"\n",
+          "previous": "",
+          "start": 4197
+        }
+      ],
+      "path": "tests/test-profiles.test.mjs",
+      "previousSha256": "4efb59ffdcbe6a99c1372294cfa9ba53e3be0b51edf4b7a0cfde2a2a07a2bc4d"
+    }
+  ],
+  "implementationCommit": "22c1efd6c9c66c42ba438a07ca6adff6fbc7f2c5",
+  "integrationPredecessorCommit": "8817a06c962fbae28acaac2fbdcb45afe2b043ce",
+  "integrationUpdates": [
+    {
+      "currentSha256": "80f438cddf2b2f8864e1712875fd8c645aa78d80672768e6d99dd2cf310c9fc7",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePhpWasmPackageGapSource, ownedSubtypePhpWasmPackageGapChangedPaths } from \"./owned-subtype-php-wasm-package-gap-source-history.mjs\";\n",
+          "previous": "",
+          "start": 5504
+        },
+        {
+          "current": "\t, ...ownedSubtypePhpWasmPackageGapChangedPaths\n",
+          "previous": "",
+          "start": 149562
+        },
+        {
+          "current": "\tconst ownedSubtypePhpWasmPackageGap\n\t\t= beforeOwnedSubtypePhpWasmPackageGapSource(\n\t\t\tpath, ownedSubtypePhpWasmQualification, expected\n\t\t);\n\tif(sha256(ownedSubtypePhpWasmPackageGap) === expected)\n\t\treturn ownedSubtypePhpWasmPackageGap;\n",
+          "previous": "",
+          "start": 187729
+        },
+        {
+          "current": "\t\t\tpath, ownedSubtypePhpWasmPackageGap, expected\n",
+          "previous": "\t\t\tpath, ownedSubtypePhpWasmQualification, expected\n",
+          "start": 188042
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "78b0d8c99b47cfb4ad442604cfc29e5fdb6a5949a95b3ed79a9ead6f7f3fa261"
+    },
+    {
+      "currentSha256": "60329a12511224c66d9946a57eb1ab74741776f0b35619ee30dfc8140e9bd5aa",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-php-wasm-package-gap-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4288
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "5caa4f312c9a4c8fd5a62513945cb1c14a622e9c7ab46697f95c009a70a75e8e"
+    }
+  ],
+  "milestone": "owned-subtype-php-wasm-package-gap-v1",
+  "predecessorCommit": "209b13b86b8d23a10a76de73bbf1c1f095d5fe31",
+  "schemaVersion": 1,
+  "scope": "Restore the exact owned-Subtype PHP-Wasm package implementation transition omitted before its later qualification history. This changes no runtime or support claim."
+}
