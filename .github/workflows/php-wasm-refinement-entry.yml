@@ -16,7 +16,7 @@ jobs:
   entry-probe:
     name: ${{ matrix.family }} ${{ matrix.route }} graph entries
     runs-on: ubuntu-24.04
-    timeout-minutes: 180
+    timeout-minutes: 240
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -67,12 +67,26 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential autoconf automake bison flex gperf libtool re2c cmake pkg-config php-cli php-dev php-common php-zip php-mbstring composer zstd ripgrep
           bash scripts/bootstrap-php-wasm-ci.sh --check-prerequisites
+      - name: Disable host PHP debugging instrumentation
+        run: |
+          if /usr/bin/php -r 'exit(extension_loaded("xdebug") ? 0 : 1);'; then
+            sudo phpdismod -s cli xdebug
+          fi
+          env -i PATH=/usr/bin:/bin /usr/bin/php -r 'if (extension_loaded("xdebug")) { fwrite(STDERR, "Consumer PHP must run without Xdebug.\n"); exit(1); }'
+      - name: Install Chromium
+        timeout-minutes: 20
+        run: bash scripts/install-playwright-browsers.sh chromium
       - name: Check the observer before provisioning the runtime
         run: |
           node --test --test-concurrency=1 \
+            tests/helpers/php-wasm-entry-probe-deployment-tests.mjs \
+            tests/helpers/php-wasm-refinement-entry-callers-tests.mjs \
             tests/helpers/php-wasm-refinement-entry-selection-tests.mjs \
             tests/helpers/php-wasm-refinement-entry-source-tests.mjs \
             tests/helpers/php-wasm-refinement-entry-build-tests.mjs \
+            tests/helpers/php-wasm-refinement-entry-driver-tests.mjs \
+            tests/helpers/php-wasm-refinement-entry-plan-tests.mjs \
+            tests/helpers/php-wasm-refinement-entry-report-tests.mjs \
             tests/helpers/php-wasm-refinement-entry-ci-tests.mjs
       - name: Build the pinned PHP-Wasm runtime inputs
         timeout-minutes: 100
@@ -87,9 +101,9 @@ jobs:
           source scripts/env.sh
           node --input-type=module -e 'import {prepareOwnedPhpWasmRuntime} from "./tests/helpers/owned-php-wasm-runtime.mjs"; await prepareOwnedPhpWasmRuntime("build/php-wasm-refinement-entry-input");'
           test -s build/php-wasm-refinement-entry-input/php-wasm-runtime/runtime.json
-      - name: Reproduce the selected graph probe twice
+      - name: Reproduce, install and execute the selected graph probe
         id: acceptance
-        timeout-minutes: 60
+        timeout-minutes: 180
         env:
           LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME: build/php-wasm-refinement-entry-input/php-wasm-runtime
           LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_TEST: "1"

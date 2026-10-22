@@ -33,12 +33,21 @@ import {
 	, recursiveCheckedRecordPhpWasmPackage
 	, recursiveCheckedRecordPhpWasmReview
 } from "./recursive-checked-record-php-wasm-fixture.mjs";
-import { nativeFixtureEnvironment } from "./copied-fixture-install.mjs";
+import { copiedCleanEnvironment, nativeFixtureEnvironment } from "./copied-fixture-install.mjs";
+import {
+	phpWasmRefinementEntryCaller, phpWasmRefinementEntryCallerSpec
+	, phpWasmRefinementEntryExpected, phpWasmRefinementEntryRequest
+} from "./php-wasm-refinement-entry-callers.mjs";
 import { buildPhpWasmRefinementEntryProbe } from "./php-wasm-refinement-entry-build.mjs";
+import { phpWasmRefinementEntryPlan } from "./php-wasm-refinement-entry-plan.mjs";
+import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
 import {
 	phpWasmRefinementEntryHostedSelection, phpWasmRefinementEntrySourceFixture
 } from "./php-wasm-refinement-entry-source-fixtures.mjs";
+import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
+import { copyPackageSetHandoff } from "./package-set.mjs";
+import { installedPhpWasmCorpus } from "./type-corpus-php-wasm-install.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
 
 const prefix = "LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_";
@@ -99,7 +108,8 @@ test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler ent
 		?? environment.LEAN_BRIDGE_PHP_COPIED_RUNTIME ?? "build/type-corpus/php-wasm-current-runtime");
 	const emsdkRoot = resolve(environment.LEAN_BRIDGE_PHP_EMSDK ?? ".toolchains/emsdk-php-wasm");
 	const phpSource = resolve(environment.LEAN_BRIDGE_PHP_SOURCE ?? "build/php-wasm-sdk/php8.4-src");
-	const roots = [], builds = []; let complete = false;
+	const consumer = await mkdtemp(join(tmpdir(), `lean-bridge-${family}-${route}-consumer-`));
+	const handoff = join(consumer, "handoff"), roots = [consumer], builds = []; let complete = false;
 	t.after(async () => {
 		if(complete) await Promise.all(roots.map(root => rm(root, { recursive: true, force: true })));
 		else t.diagnostic("Retained failed refinement-entry roots: " + JSON.stringify(roots));
@@ -122,12 +132,62 @@ test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler ent
 		await verifyPackageSetReceipt({ receiptPath: join(outputRoot, "package-set-receipt.json") });
 		assert.equal(built.model.schemaVersion, route === "reviewed" ? 5 : 4);
 		builds.push(built);
+		if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
 		await rm(author, { recursive: true });
 	}
 	assert.deepEqual(builds[1].receipt, builds[0].receipt, "independent probe packages reproduce");
 	assert.deepEqual(builds[1].observation.library, builds[0].observation.library);
 	assert.deepEqual(builds[1].observation.selected, builds[0].observation.selected);
 	assert.deepEqual(builds[1].observation.definitionCounts, builds[0].observation.definitionCounts);
+	const selection = phpWasmGraphRefinementEntrySelection(builds[0].model, sourceProbe.entries);
+	assert.deepEqual(selection.selected, builds[0].observation.selected);
+	const entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
+	const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [
+		mode, await phpWasmRefinementEntryCaller(family, mode)
+	])));
+	const caller = phpWasmRefinementEntryCallerSpec(family);
+	const clean = {
+		...copiedCleanEnvironment
+		, LEAN_BRIDGE_PHP_SOURCE: "/unavailable/php"
+		, LEAN_BRIDGE_PHP_EMSDK: "/unavailable/compiler"
+		, LEAN_BRIDGE_PHP_COPIED_RUNTIME: "/unavailable/runtime"
+	};
+	const installed = await installedPhpWasmCorpus({
+		t, library: { id: `${family}-${route}-entry-probe` }
+		, consumer, handoff, receipt: builds[0].receipt
+		, packageSet: builds[0].packageSet, environment, clean
+		, fixture: {
+			settings: caller.settings, source: mode => sources[mode]
+			, request: arrangement => phpWasmRefinementEntryRequest(family, arrangement, entryPlan)
+			, removeHandoff: true
+			, entryProbe: {
+				driver: "tests/fixtures/php-wasm-refinement-entry/driver.mjs"
+				, support: [{
+					source: "tests/helpers/php-wasm-subtype-entry-trace.mjs"
+					, destination: "entry-trace.mjs"
+				}]
+			}
+		}
+	});
+	assert.deepEqual(installed.phpWasm.executions.map(item =>
+		`${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort(), phpWasmExecutionTuples);
+	const expected = phpWasmRefinementEntryExpected(family, entryPlan.cases);
+	for(const execution of installed.phpWasm.executions)
+	{
+		assert.deepEqual(execution.observation, expected);
+		assert.equal(execution.entryProbe.scope, entryPlan.scope);
+		assert.equal(execution.entryProbe.family, family);
+		assert.equal(execution.entryProbe.calls, entryPlan.cases.length);
+		assert.deepEqual(execution.entryProbe.controls, entryPlan.cases.map(item => item.control));
+	}
+	await saveLakeFile(output, "report.json", canonicalJson({
+		schemaVersion: 1, scope: "separate-instrumented-probe"
+		, producerCommit, family, route, entryPlan
+		, ...installed
+		, reproducible: true, independentBuilds: 2
+		, sourceRemovedBeforeInstallation: true, compilerFreeReplay: true
+		, offlineInstall: true, relocatedInstallation: true
+	}));
 	await saveLakeFile(output, "summary.json", canonicalJson({
 		schemaVersion: 1, scope: "separate-instrumented-probe"
 		, producerCommit, family, route

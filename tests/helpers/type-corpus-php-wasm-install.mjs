@@ -24,6 +24,34 @@ const run = (command, args, cwd, env) => processBuildRunner.capture({ command, a
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const digest = async path => sha256(await readFile(path));
 
+const legacyEntryProbeFiles = Object.freeze([
+	Object.freeze({ source: "tests/fixtures/php-wasm-subtype-entry/driver.mjs", destination: "driver.mjs" })
+	, Object.freeze({ source: "tests/helpers/php-wasm-subtype-entry-trace.mjs", destination: "entry-trace.mjs" })
+	, Object.freeze({ source: "tests/helpers/php-wasm-subtype-entry-cases.mjs", destination: "entry-cases.mjs" })
+]);
+
+/**
+ * Close the files that may replace the ordinary installed PHP-Wasm driver.
+ * A probe is a separate test deployment and cannot overwrite package inputs.
+ *
+ * @param probe - Legacy Subtype probe flag or an explicit driver/support closure.
+ */
+export const phpWasmEntryProbeDeploymentFiles = probe => {
+	if(probe === true) return legacyEntryProbeFiles.map(item => ({ ...item }));
+	assert.deepEqual(Object.keys(probe ?? {}).sort(), ["driver", "support"]);
+	assert.match(probe.driver, /^tests\/(?:fixtures|helpers)\/[A-Za-z0-9_./-]+\.mjs$/u);
+	assert.ok(Array.isArray(probe.support));
+	const files = [{ source: probe.driver, destination: "driver.mjs" }, ...probe.support];
+	for(const [index, item] of files.entries())
+	{
+		assert.deepEqual(Object.keys(item).sort(), ["destination", "source"]);
+		assert.match(item.source, /^tests\/(?:fixtures|helpers)\/[A-Za-z0-9_./-]+\.mjs$/u);
+		assert.match(item.destination, index === 0 ? /^driver\.mjs$/u : /^(?!driver\.mjs$)[A-Za-z0-9_-]+\.mjs$/u);
+	}
+	assert.equal(new Set(files.map(item => item.destination)).size, files.length);
+	return files.map(item => ({ ...item }));
+};
+
 /**
  * Hash a closed regular-file deployment, rejecting links outside it.
  *
@@ -181,10 +209,8 @@ export const installedPhpWasmCorpus = async options => {
 	// Only an explicitly selected test probe accepts entry markers. The normal driver stays byte-identical.
 	if(fixture && Object.hasOwn(fixture, "entryProbe"))
 	{
-		assert.equal(fixture.entryProbe, true);
-		await cp(join(repository, "tests/fixtures/php-wasm-subtype-entry/driver.mjs"), join(deployment, "driver.mjs"));
-		for(const [source, destination] of [["trace", "entry-trace"], ["cases", "entry-cases"]])
-			await cp(join(repository, `tests/helpers/php-wasm-subtype-entry-${source}.mjs`), join(deployment, destination + ".mjs"));
+		for(const file of phpWasmEntryProbeDeploymentFiles(fixture.entryProbe))
+			await cp(join(repository, file.source), join(deployment, file.destination));
 	}
 	await saveLakeFile(deployment, "index.html", '<!doctype html><html><head><link rel="icon" href="data:,"></head><body><script type="module" src="./browser.mjs"></script></body></html>');
 	for(const mode of ["weak", "strict"]) await saveLakeFile(deployment, mode + ".php", source(mode));

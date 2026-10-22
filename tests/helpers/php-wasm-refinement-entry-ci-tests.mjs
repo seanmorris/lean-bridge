@@ -17,6 +17,10 @@ test("hosted graph entry workflow covers every family and source route", async (
 	for(const route of ["ordinary", "reviewed"])
 		assert.ok(workflow.includes(`          - ${route}\n`), route);
 	assert.match(workflow, /max-parallel: 2/u);
+	assert.match(workflow, /timeout-minutes: 240/u);
+	assert.match(workflow, /run: bash scripts\/install-playwright-browsers\.sh chromium/u);
+	assert.match(workflow, /Consumer PHP must run without Xdebug/u);
+	assert.match(workflow, /tests\/helpers\/php-wasm-refinement-entry-report-tests\.mjs/u);
 	assert.match(workflow, /if: always\(\)\n {8}uses: actions\/upload-artifact@v7/u);
 	assert.match(workflow, /if: always\(\) && steps\.acceptance\.outcome != 'success'/u);
 	assert.match(workflow, /LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES: \$\{\{ matrix\.family \}\}/u);
@@ -24,6 +28,10 @@ test("hosted graph entry workflow covers every family and source route", async (
 	assert.match(shell, /test "\$\(git rev-parse HEAD\)" = "\$revision"/u);
 	assert.match(shell, /--test-concurrency=1/u);
 	assert.match(shell, /test -s "\$output\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\/summary\.json"/u);
+	assert.match(shell, /test -s "\$output\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\/\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\/report\.json"/u);
+	assert.match(shell, /node scripts\/check-php-wasm-refinement-entry-records\.mjs/u);
+	assert.match(shell, /--producer "\$revision"/u);
+	assert.match(shell, /test -s "\$check"/u);
 });
 
 test("hosted graph entry shell refuses ambiguous or incomplete selection", async () => {

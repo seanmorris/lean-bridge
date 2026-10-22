@@ -38,3 +38,12 @@ node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="^$name
   tests/helpers/php-wasm-refinement-entry-installed-tests.mjs 2>&1 | tee "$output.tap"
 test "$(git rev-parse HEAD)" = "$revision"
 test -s "$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES/summary.json"
+test -s "$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES/report.json"
+records="$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES"
+check="$output/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES/$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES.check.json"
+node scripts/check-php-wasm-refinement-entry-records.mjs \
+  --family "$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES" \
+  --route "$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES" \
+  --producer "$revision" \
+  --directory "$records" | tee "$check"
+test -s "$check"
