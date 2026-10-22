@@ -45,6 +45,7 @@ import "./helpers/php-wasm-subtype-promotion-tests.mjs";
 import "./helpers/php-wasm-subtype-promotion-history-tests.mjs";
 import "./helpers/php-wasm-refinement-readme-tests.mjs";
 import "./helpers/php-wasm-refinement-ci-matrix-tests.mjs";
+import "./helpers/php-wasm-refinement-ci-matrix-source-history-tests.mjs";
 import "./helpers/php-wasm-subtype-entry-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-history-tests.mjs";

@@ -1,0 +1,70 @@
+{
+  "additions": [
+    {
+      "currentSha256": "543b4dd1af42de2a194136b7e9e588f0399d4b6304c456f62d6dc8109ecd0432",
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-tests.mjs"
+    },
+    {
+      "currentSha256": "016b474d57ef0605f7e03119239588c8d75f13fa05cb073de1f33323a096a3c0",
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix.mjs"
+    },
+    {
+      "currentSha256": "5414e7d7b7a808c3d4c46b5f3dd7944059a5ec3f18337cbaee9f637bee41030a",
+      "path": "scripts/update-php-wasm-refinement-ci-matrix-source-history.mjs"
+    },
+    {
+      "currentSha256": "27c0cc07502a2f7bb3f683baffa53f8e7419b6db72ecbdb1deffb881de56530f",
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "650652190988a843be01d40338da6b2e140d302b01d0cc92af1ee4d91f95df42",
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "107b6d94b484382b442b1662a729ee2854427a22",
+  "milestone": "php-wasm-refinement-ci-matrix-v1",
+  "predecessorCommit": "fe5424900e0ebaa6717a0f1a00be8e5d77c3a8a1",
+  "schemaVersion": 1,
+  "scope": "The dedicated PHP-Wasm refinement CI surface is a closed eighteen-workflow inventory tied to its owning #1220 requirement nodes. Fourteen serial acceptance workflows and four bounded measurement matrices retain exact triggers, immutable history checkout, pinned toolchain setup, partial/original artifact uploads and terminal failure enforcement. Twenty-six instrumented cells run with at most two cells per measurement workflow and remain explicitly separate from unmodified-package acceptance. The existing consumer-matrix corpus remains governed by its independent partition contract.",
+  "updates": [
+    {
+      "currentSha256": "e78e33d385fd8889445ba6f4cba75926ef8e53e3e3f751a47202b1c0cc3a9ff2",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-ci-matrix-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-ci-matrix-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 2929
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "7d1ffc409c23d0501d9e8be8775213738b0c7320f1c81bb7d402b557913f11b0"
+    },
+    {
+      "currentSha256": "494ae461ba298159690ccf41b43d3f607f7128b9f84f5955b526042fdf3e4084",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementCiMatrixSource, phpWasmRefinementCiMatrixChangedPaths } from \"./php-wasm-refinement-ci-matrix-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementCiMatrixChangedPaths\n\t, ...callbackSubtypeManagedConsumerRepairChangedPaths\n",
+          "previous": "\t...callbackSubtypeManagedConsumerRepairChangedPaths\n",
+          "start": 144831
+        },
+        {
+          "current": "\tconst phpWasmRefinementCiMatrix\n\t\t= beforePhpWasmRefinementCiMatrixSource(path, text, expected);\n\tif(sha256(phpWasmRefinementCiMatrix) === expected)\n\t\treturn phpWasmRefinementCiMatrix;\n",
+          "previous": "",
+          "start": 176082
+        },
+        {
+          "current": "\t\t= beforeCallbackSubtypeManagedConsumerRepairSource(\n\t\t\tpath, phpWasmRefinementCiMatrix, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackSubtypeManagedConsumerRepairSource(path, text, expected);\n",
+          "start": 176312
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e1064dd244e9630b528b91f79a4e2335e054698b8326b39cfd2e398a88f68ca2"
+    }
+  ]
+}
