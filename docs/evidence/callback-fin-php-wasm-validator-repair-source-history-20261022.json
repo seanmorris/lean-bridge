@@ -1,0 +1,99 @@
+{
+  "additions": [
+    {
+      "currentSha256": "478186f866c023c447be987385391e67cb2c2c8588cc13529e8e55fb087b2213",
+      "path": "scripts/update-callback-fin-php-wasm-validator-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1916b8cce808925671d0851208c21cd7cf7a994db92bf19e0ddced9cba796e35",
+      "path": "tests/helpers/callback-fin-php-wasm-validator-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "0f71114099a111259d90ed21a5caefd2e10510eb932720174c470069d60e54b0",
+      "path": "tests/helpers/callback-fin-php-wasm-validator-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "d054ca5a09c880c7161788fdc6859e27096b4961",
+  "integrationBaseCommit": "d054ca5a09c880c7161788fdc6859e27096b4961",
+  "integrationUpdates": [
+    {
+      "currentSha256": "3d51c80509876c26e95889a2ed0674a591657c404ef5875da1e04679a3d56123",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-fin-php-wasm-validator-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "6d8be3fe28aa940499afc9762c7d6c621b4fd64452e38b93bad1d67996312576"
+    },
+    {
+      "currentSha256": "fa3af5182b2400e6b20484e53607eb5cd777d94ab6ab10892687ed963c011d1e",
+      "edits": [
+        {
+          "current": "import { beforeCallbackFinPhpWasmValidatorRepairSource, callbackFinPhpWasmValidatorRepairChangedPaths, callbackFinPhpWasmValidatorRepairIntegrationPaths } from \"./callback-fin-php-wasm-validator-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackFinPhpWasmValidatorRepairChangedPaths\n\t, ...callbackFinPhpWasmValidatorRepairIntegrationPaths\n\t, ...callbackCheckedRecordRetainedPackagesChangedPaths\n",
+          "previous": "\t...callbackCheckedRecordRetainedPackagesChangedPaths\n",
+          "start": 149262
+        },
+        {
+          "current": "\tconst callbackFinPhpWasmValidatorRepair\n\t\t= beforeCallbackFinPhpWasmValidatorRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackFinPhpWasmValidatorRepair) === expected)\n\t\treturn callbackFinPhpWasmValidatorRepair;\n",
+          "previous": "",
+          "start": 181902
+        },
+        {
+          "current": "\t\t\tpath, callbackFinPhpWasmValidatorRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 182227
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e0f16825edb216de85e4b879ca0103167eae7d8e3df05c9889c2b6f58a9ad099"
+    }
+  ],
+  "milestone": "callback-fin-php-wasm-validator-repair-source-v1",
+  "predecessorCommit": "b869fb3f1cbf320c3cb453058f4a7bdf095a49c1",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm callback Fin validator carrier types come from the authenticated callable ABI instead of optional compiler-adapter projection metadata, preserving ordinary and reviewed callback direction semantics.",
+  "updates": [
+    {
+      "currentSha256": "b3631800c37fce635ce1a22a047c553d682bf548b2d004a85ced59119ddce883",
+      "edits": [
+        {
+          "current": "\t\t// Compiler-adapter exports carry rendered Lean parameter types, while native and\n\t\t// PHP-Wasm projections deliberately retain only compiler metadata. Validators\n\t\t// must therefore derive their carrier types from the authenticated private ABI,\n\t\t// not from an optional host-projection field.\n\t\tconst base = { ...sourceItem\n\t\t\t, parameters: signature.parameters.map(type => ({ leanType: wire(type) })) };\n",
+          "previous": "\t\tconst base = { ...sourceItem };\n",
+          "start": 21141
+        },
+        {
+          "current": "",
+          "previous": "\t\tif(conversion) base.parameters = conversion.siteFor(signature.bindingId).parameters;\n",
+          "start": 21577
+        }
+      ],
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "fbf532e603354032cb519675cd478df605cb5da81e3a05bf60ca56c70c5677cc"
+    },
+    {
+      "currentSha256": "9b27aa7ba5f9c73965089d722b0a16cdd0ccc9bfe446b1531f86dfdcac1eed7b",
+      "edits": [
+        {
+          "current": "import { reviewedCallbackFinReview } from \"./helpers/reviewed-callback-fin-fixture.mjs\";\n",
+          "previous": "",
+          "start": 756
+        },
+        {
+          "current": "test(\"native Fin callback validators derive carrier types from the authenticated descriptor\", () => {\n\tconst ir = reviewedCallbackFinReview({ hostReply: true });\n\tconst copiedGraph = createNativeCallableGraphDescriptor(ir);\n\tfor(const schemaVersion of [4, 5])\n\t{\n\t\tconst model = {\n\t\t\tschemaVersion\n\t\t\t, profile: \"native-library-v1\"\n\t\t\t, pointerBits: 64\n\t\t\t, byteOrder: \"little\"\n\t\t\t, component: ir.component, bindingIr: ir, copiedGraph\n\t\t\t, exports: ir.declarations.map(declaration => {\n\t\t\t\tconst entry = copiedGraph.exports.find(item => item.bindingId === declaration.id);\n\t\t\t\tconst refinements = declaration.source.extensions[\"lean-lang.org/refinements\"];\n\t\t\t\treturn {\n\t\t\t\t\tmodule: \"ReviewedCallbacks\", name: declaration.source.declaration\n\t\t\t\t\t, bindingId: declaration.id, symbol: `${entry.symbol}_lean`\n\t\t\t\t\t// Native projections do not carry compiler-adapter `leanType` fields.\n\t\t\t\t\t, parameters: declaration.parameters.map(parameter => ({ name: parameter.name }))\n\t\t\t\t\t, ...refinements ? { refinements } : {}\n\t\t\t\t};\n\t\t\t})\n\t\t};\n\t\tconst source = generateCompiledNativeLeanAdapters(model).leanSource;\n\t\tconst three = copiedGraph.exports.find(item => item.bindingId === \"lean:ReviewedCallbacks.three\");\n\t\tassert.doesNotMatch(source, /\\bundefined\\b/u);\n\t\tassert.match(source, new RegExp(`@\\\\[export ${three.symbol}_refinement_1\\\\][\\\\s\\\\S]+carrier : _root_\\\\.Array _root_\\\\.Nat`, \"u\"));\n\t\tassert.match(source, /match \\(if proof : \\(value\\) < 3 then/u);\n\t}\n});\n\n",
+          "previous": "",
+          "start": 6517
+        }
+      ],
+      "path": "tests/native-recursive-callable-model.test.mjs",
+      "previousSha256": "242af7084e590a503b0995108ea0a633c7e14370aeef11337dc1aa1f6c406a83"
+    }
+  ]
+}

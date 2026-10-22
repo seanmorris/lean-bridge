@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackFinPhpWasmValidatorRepairSource, callbackFinPhpWasmValidatorRepairChangedPaths, callbackFinPhpWasmValidatorRepairIntegrationPaths } from "./callback-fin-php-wasm-validator-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptRetentionSource, ownedCheckedRecordJavaScriptRetentionChangedPaths } from "./owned-checked-record-javascript-retention-source-history.mjs";
 import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from "./callback-subtype-retained-packages-source-history.mjs";
 import { beforeCallbackCheckedRecordRetainedPackagesSource, callbackCheckedRecordRetainedPackagesChangedPaths } from "./callback-checked-record-retained-packages-source-history.mjs";
@@ -1930,7 +1931,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackCheckedRecordRetainedPackagesChangedPaths
+	...callbackFinPhpWasmValidatorRepairChangedPaths
+	, ...callbackFinPhpWasmValidatorRepairIntegrationPaths
+	, ...callbackCheckedRecordRetainedPackagesChangedPaths
 	, ...ownedCheckedRecordJavaScriptRetentionChangedPaths
 	, ...callbackSubtypeRetainedPackagesChangedPaths
 	, ...recursivePhpWasmEvidenceReplayRepairChangedPaths
@@ -2643,9 +2646,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackFinPhpWasmValidatorRepair
+		= beforeCallbackFinPhpWasmValidatorRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackFinPhpWasmValidatorRepair) === expected)
+		return callbackFinPhpWasmValidatorRepair;
 	const callbackCheckedRecordRetainedPackages
 		= beforeCallbackCheckedRecordRetainedPackagesSource(
-			path, text, expected
+			path, callbackFinPhpWasmValidatorRepair, expected
 		);
 	if(sha256(callbackCheckedRecordRetainedPackages) === expected)
 		return callbackCheckedRecordRetainedPackages;
