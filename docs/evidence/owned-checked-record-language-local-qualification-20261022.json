@@ -1,0 +1,123 @@
+{
+  "commands": {
+    "python": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_PROFILES=python LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_ROUTES=reviewed-full node --test --test-concurrency=1 tests/owned-checked-record-language-packaging.test.mjs",
+    "ruby": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_PROFILES=ruby LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_ROUTES=ordinary-full node --test --test-concurrency=1 tests/owned-checked-record-language-packaging.test.mjs",
+    "rust": "LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_TEST=1 LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_PROFILES=rust LEAN_BRIDGE_OWNED_CHECKED_RECORD_LANGUAGE_ROUTES=ordinary-result-only node --test --test-concurrency=1 tests/owned-checked-record-language-packaging.test.mjs"
+  },
+  "implementationCommit": "a74c9476dcac286a4e0f9db5cf5283d36c9dc51e",
+  "profile": "installed-owned-checked-record-language-local-qualification",
+  "reports": [
+    {
+      "archive": {
+        "archive": "lean_owned_checked_records-1.0.0-py3-none-manylinux_2_36_x86_64.whl",
+        "sha256": "c17a461c84e47e2d18bc12914113a7c0b998d7dc023feb5863f3a0afa7be738f"
+      },
+      "authorRoute": "reviewed",
+      "bindingIrSha256": "cb0aabec70d3a462774b98588718d36cdf6371c0fcbf9651671304f9f1214b43",
+      "checks": 138,
+      "componentReceiptSha256": "4256d0c81e2db29b1ce5c85c939f6efaf11080e920a7aaf088529f4de35ea004",
+      "constructorRejectionAndRecovery": true,
+      "consumerSha256": "477081cb2bc4776d7ab50a6f46dd2d2c95e3afc6622e28fdd5e764fc651d9cff",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": true,
+      "installation": {
+        "dependency": {
+          "archive": "typing_extensions-4.16.0-py3-none-any.whl",
+          "bytes": 45571,
+          "name": "typing_extensions",
+          "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+          "version": "4.16.0"
+        },
+        "python": "3.11.16",
+        "requires": [
+          "typing_extensions (<5,>=4.6); python_version < \"3.12\""
+        ],
+        "resolvedOffline": true
+      },
+      "language": "python",
+      "lifecycle": "gc-finalizer-plus-explicit-close",
+      "mixedOwnedAndCopiedTransport": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "fd52a4fac9bc2d778e6facf8c4208bfd6f7e8bc9415572e0292a4899d7a64d78",
+      "rawReportSha256": "00bef72ddf67c6d57abe2bf38b1e69540d73e14944c159935eb9103e3a503b00",
+      "relocatedChecks": 138,
+      "relocatedInstallation": true,
+      "returnedClosureRecovery": true,
+      "route": "reviewed-full",
+      "runtime": "Python 3.11.16",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "archive": {
+        "archive": "lean_bridge_owned_checked_records-1.0.0-x86_64-linux.gem",
+        "sha256": "1f228dac533313210bd7203e591287c46df73dcf955258b7009934dce96b1a20"
+      },
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "fedef5042cdc254a16dc7475d9e6335fa211aa22dafc4f025e16d5ed22205e85",
+      "checks": 138,
+      "componentReceiptSha256": "386fe4ead71f05721a7e01b42ff3646ef8aacf48c86ccb40a6a1151d86373d81",
+      "constructorRejectionAndRecovery": true,
+      "consumerSha256": "a27069f56ba97061ae5cada1678e17ff08d24b23e9670e6f682d1be7f9b7ba5a",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": true,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": true,
+      "language": "ruby",
+      "lifecycle": "gc-finalizer-plus-explicit-close",
+      "mixedOwnedAndCopiedTransport": true,
+      "mode": "full",
+      "packageSetReceiptSha256": "6a09bc05c5d7a913d738f1389f39d120f734fb2f9fa7177121a6f460bbff19aa",
+      "rawReportSha256": "c7a0d1152d7d6b96f1ef602f6fc142e3b81e6a407c36e8d2fe88be2b7962c9b6",
+      "relocatedChecks": 138,
+      "relocatedInstallation": true,
+      "returnedClosureRecovery": true,
+      "route": "ordinary-full",
+      "runtime": "ruby 3.3.12 (2026-07-16 revision 0581089df9) [x86_64-linux]",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": true,
+      "unchangedRejectedInputs": true
+    },
+    {
+      "archive": {
+        "archive": "owned-checked-records-result-only-1.0.0.crate",
+        "sha256": "8264656aa809d9203284a0935fc621a07bb9a626414ce476d4748b064eaee19a"
+      },
+      "authorRoute": "ordinary",
+      "bindingIrSha256": "eb5cb7e11177907ae8aa936d55b6fe9624fbbaa34b7dc1ed7d0dea907a4fef3a",
+      "checks": 3,
+      "componentReceiptSha256": "0bcce12e655fe7755532baf941d243dc7b0c766d2dc35b59fc230ccf0ed91a7e",
+      "constructorRejectionAndRecovery": false,
+      "consumerSha256": "18ca2ec119059cc5a590e885dea66620352baefad4390559815a6e8c557639cc",
+      "deterministicReassembly": true,
+      "earlyAndLateRejection": false,
+      "exactApiMode": true,
+      "handoffRemovedBeforeRelocatedExecution": true,
+      "hostCallbackRecovery": false,
+      "language": "rust",
+      "lifecycle": "drop-plus-explicit-close",
+      "mixedOwnedAndCopiedTransport": false,
+      "mode": "result-only",
+      "packageSetReceiptSha256": "1b194d82b103aed5c7ee8f72f00f11f1136f3b75835c75a9a734f05ea71f945f",
+      "rawReportSha256": "d34cc43447059c92ae9d07a05948bcee32191c0e2a103c8b62389ce463b01a78",
+      "relocatedChecks": 3,
+      "relocatedInstallation": true,
+      "returnedClosureRecovery": false,
+      "route": "ordinary-result-only",
+      "runtime": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+      "sourceFreeInstallation": true,
+      "sourceUnchanged": true,
+      "transferredInputCheckedBeforeHandoff": false,
+      "unchangedRejectedInputs": false
+    }
+  ],
+  "schemaVersion": 1,
+  "scope": "bounded local qualification with one source-free relocated package per language; recurring CI retains the complete ordinary/reviewed and full/result-only matrix"
+}
