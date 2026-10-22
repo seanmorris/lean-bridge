@@ -132,7 +132,13 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 			if([...signature.parameters, signature.result].some(mirror)) throw new TypeError("Checked-record mirrors require per-parameter export sites");
 			return { ...item, ...refinements ? { refinements } : {} };
 		}
-		return { ...item, parameters: item.parameters.map((parameter, index) => mirror(signature.parameters[index]) ? { ...parameter, leanType: mirror(signature.parameters[index]) } : parameter)
+		// Native and PHP-Wasm graph projections do not promise compiler-adapter
+		// `leanType` fields. Derive every validator carrier from the authenticated
+		// private signature, exactly as the export wrapper itself does.
+		return { ...item, parameters: item.parameters.map((parameter, index) => ({
+			...parameter
+			, leanType: mirror(signature.parameters[index]) ?? sourceType(signature.parameters[index])
+		}))
 			, ...refinements ? { refinements } : {} };
 	});
 	for(const [id, type] of conversion ? [] : checkedRecords)

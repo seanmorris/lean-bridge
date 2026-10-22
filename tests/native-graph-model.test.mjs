@@ -12,8 +12,10 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { validateBindingIr } from "../src/binding-ir/contract.mjs";
 import { createNativeModel, generateNativeLeanAdapters } from "../src/build/native-model.mjs";
 import { createCompiledNativeModel, generateCompiledNativeLeanAdapters, nativeGraphCarrierAbi } from "../src/build/native-graph-model.mjs";
+import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../src/build/php-wasm-graph-model.mjs";
 import { createComponentPrivateAbi } from "../src/build/component-callable-adapters.mjs";
 import { componentRecursiveLeanSource } from "../src/build/component-recursive-lean.mjs";
+import { componentCarrierRefinementValidators } from "../src/build/component-refinements.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
 import { checkedRecordReview } from "./helpers/checked-record-fixture.mjs";
 import { checkNativeRecursiveTransport } from "./helpers/native-recursive-transport.mjs";
@@ -30,6 +32,19 @@ const fixture = () => {
 	const graph = { kind: "graph", root: reference, types: [tree], abi };
 	projection.parameters[0].type = graph; projection.result = graph;
 	return { ...input, component: { id: "sample@1.0.0", name: "sample", version: "1.0.0" } };
+};
+
+const refinedFixture = () => {
+	const input = fixture(), declaration = input.metadata.modules[0].declarations[0];
+	const abi = { cType: "lean_object*", box: "lean_box", unbox: "lean_unbox", heap: true };
+	const nat = { kind: "primitive", name: "nat", lean: "Nat", abi };
+	const checked = { kind: "refinement", base: nat
+		, predicate: { kind: "subtype", constructor: "Sample.checked" }, abi };
+	declaration.parameters.push({ name: "extra", binderInfo: "explicit"
+		, typeExpression: "{ value : Nat // 0 < value }" });
+	declaration.typeExpression = "Sample.Tree → { value : Nat // 0 < value } → Sample.Tree";
+	declaration.projection.parameters.push({ name: "extra", type: checked });
+	return input;
 };
 
 test("the independent native graph review selects eighteen distinct exports", () => {
@@ -87,6 +102,35 @@ test("copied-graph export sites without parameter types refuse checked-record mi
 	const abi = createComponentPrivateAbi(checkedRecordReview());
 	const exports = abi.exports.map((item, index) => ({ bindingId: item.bindingId, symbol: item.symbol, wrapper: `export${index}`, sourceDeclaration: "CheckedRecords.f" }));
 	assert.throws(() => componentRecursiveLeanSource(abi, exports, () => "_root_.Nat"), { name: "TypeError", message: "Checked-record mirrors require per-parameter export sites" });
+});
+
+test("recursive graph refinement validators derive every carrier from the authenticated signature", () => {
+	const input = refinedFixture();
+	const outputs = [
+		generateCompiledNativeLeanAdapters(createCompiledNativeModel(input
+			, { nativeRefinements: true })).leanSource
+		, generateCompiledPhpWasmLeanAdapters(createCompiledPhpWasmModel(input)).leanSource
+	];
+	for(const source of outputs)
+	{
+		assert.doesNotMatch(source, /\bundefined\b/u);
+		assert.match(source, /def export0_refinement_1 \(carrier : _root_\.Array _root_\.Nat\) : _root_\.UInt8 :=/u);
+		assert.match(source, /def export0 \(a0 : \(_root_\.Array _root_\.Sample\.Tree\)\) \(a1 : \(_root_\.Array _root_\.Nat\)\)/u);
+		assert.match(source, /_root_\.Sample\.checked value/u);
+	}
+
+	const item = {
+		symbol: "checked", wrapper: "checked"
+		, parameters: [{ name: "value" }]
+		, refinements: {
+			parameters: [{ kind: "fin", bound: "3" }], result: null
+		}
+	};
+	assert.throws(() => componentCarrierRefinementValidators(item, true)
+		, /Refinement validator 0 has no carrier Lean type/u);
+	assert.throws(() => componentCarrierRefinementValidators({ ...item
+		, parameters: [{ leanType: "" }] }, true), /no carrier Lean type/u);
+	assert.deepEqual(componentCarrierRefinementValidators(item, false), []);
 });
 
 test("non-graph native models and emitted adapters are unchanged", () => {

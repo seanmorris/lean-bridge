@@ -268,11 +268,14 @@ export const componentRefinementGuards = (guards, success, rejected) => {
  */
 export const componentCarrierRefinementValidators = (item, includeFin = false, inputGuard) => (item.refinements?.parameters ?? []).flatMap((refinement, index) => {
 	if(!refinement || (!includeFin && refinement.kind === "fin")) return [];
+	const carrier = item.parameters?.[index]?.leanType;
+	if(typeof carrier !== "string" || carrier.length === 0)
+		throw new TypeError(`Refinement validator ${index} has no carrier Lean type`);
 	const guard = inputGuard?.(refinement, "value");
 	const body = [`match ${componentRefinementConversion(refinement, "value")} with`, "| .some _ => 1", "| .none => 0"];
 	return [
 		`@[export ${item.symbol}_refinement_${index}]`
-		, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${item.parameters[index].leanType}) : _root_.UInt8 :=`
+		, `def ${item.wrapper}_refinement_${index} (carrier : _root_.Array ${carrier}) : _root_.UInt8 :=`
 		, "  match carrierValue carrier with"
 		, "  | .none => 0"
 		, "  | .some value =>"
