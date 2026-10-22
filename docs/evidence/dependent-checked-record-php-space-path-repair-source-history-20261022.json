@@ -1,0 +1,121 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c119740c515009098b8b6653ad52162de353877a0b8147967c73fc9d25742504",
+      "path": "scripts/update-dependent-checked-record-php-space-path-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1172afc75de12d9fbfc82cffe1994edcb48a638e93cd6b6d7690ab027c3ee914",
+      "path": "tests/helpers/dependent-checked-record-php-space-path-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "c3cf7e4e44f6e2d408d8921d77494d88d488bb317062981347e85572941bf2aa",
+      "path": "tests/helpers/dependent-checked-record-php-space-path-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "f03735645237400bef3a1ec23c87ebc142880941",
+  "integrationBaseCommit": "f03735645237400bef3a1ec23c87ebc142880941",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5802d3df4edf08a2acd66203e97af2bc03df755d4fb81077c3b040ed118db8c1",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-php-space-path-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "3d51c80509876c26e95889a2ed0674a591657c404ef5875da1e04679a3d56123"
+    },
+    {
+      "currentSha256": "1d6898b919fc85cef39f97470821b2bb0c1af78abfd8121490ce3b2f75d0f37b",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPhpSpacePathRepairSource, dependentCheckedRecordPhpSpacePathRepairChangedPaths, dependentCheckedRecordPhpSpacePathRepairIntegrationPaths } from \"./dependent-checked-record-php-space-path-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...dependentCheckedRecordPhpSpacePathRepairChangedPaths\n\t, ...dependentCheckedRecordPhpSpacePathRepairIntegrationPaths\n\t, ...callbackFinPhpWasmValidatorRepairChangedPaths\n",
+          "previous": "\t...callbackFinPhpWasmValidatorRepairChangedPaths\n",
+          "start": 149514
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPhpSpacePathRepair\n\t\t= beforeDependentCheckedRecordPhpSpacePathRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPhpSpacePathRepair) === expected)\n\t\treturn dependentCheckedRecordPhpSpacePathRepair;\n",
+          "previous": "",
+          "start": 182276
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPhpSpacePathRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 182621
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "fa3af5182b2400e6b20484e53607eb5cd777d94ab6ab10892687ed963c011d1e"
+    }
+  ],
+  "milestone": "dependent-checked-record-php-space-path-repair-source-v1",
+  "predecessorCommit": "0f64af672343756b05f54f1debe24550770f715d",
+  "schemaVersion": 1,
+  "scope": "Offline native PHP Composer installations preserve literal filesystem characters in local distribution URLs, including paths with spaces, while retaining authenticated package and dependency archives.",
+  "updates": [
+    {
+      "currentSha256": "70a3e7718bae8bd939b5b7c4b073c09f2800f02a1960b70f88b154193edbc131",
+      "edits": [
+        {
+          "current": "test(\"Composer guard closes original payloads and generated autoloaders in paths with spaces\", { skip: !enabled }, async t => {\n\tconst fixture = await finContainerEdgePhpFixture(t), result = await install(fixture, \"consumer with space\");\n",
+          "previous": "test(\"Composer guard closes original payloads and generated autoloaders before weak, strict and relocated calls\", { skip: !enabled }, async t => {\n\tconst fixture = await finContainerEdgePhpFixture(t), result = await install(fixture, \"consumer\");\n",
+          "start": 3106
+        },
+        {
+          "current": "\tconst lock = JSON.parse(await readFile(join(context.root, \"composer.lock\")));\n\tfor(const pkg of lock.packages)\n\t{\n\t\tassert.match(pkg.dist.url, /^file:\\/\\//u);\n\t\tassert.match(pkg.dist.url, /consumer with space/u);\n\t\tassert.doesNotMatch(pkg.dist.url, /%20/u);\n\t}\n",
+          "previous": "",
+          "start": 3415
+        }
+      ],
+      "path": "tests/fin-container-edge-php-closure.test.mjs",
+      "previousSha256": "842a0b8b0d6990e709dc319117eeeda342c4be60dded77daada074c4c2ed5f01"
+    },
+    {
+      "currentSha256": "49a4fa58b1140141bb82bf77e767e45b5e996d706827c2936be081413e05a0c2",
+      "edits": [
+        {
+          "current": "/**\n * Preserve filesystem characters that PHP's file stream wrapper consumes\n * literally. Composer does not URL-decode an encoded local distribution path.\n *\n * @param path - Absolute local distribution path.\n */\nexport const composerFileUrl = path => decodeURI(pathToFileURL(path).href);\n\n",
+          "previous": "",
+          "start": 537
+        },
+        {
+          "current": "\t\t\t, dist: { type: \"zip\", url: composerFileUrl(join(root, archive)), shasum: createHash(\"sha1\").update(bytes).digest(\"hex\") } } };\n",
+          "previous": "\t\t\t, dist: { type: \"zip\", url: pathToFileURL(join(root, archive)).href, shasum: createHash(\"sha1\").update(bytes).digest(\"hex\") } } };\n",
+          "start": 1453
+        }
+      ],
+      "path": "tests/helpers/brick-math.mjs",
+      "previousSha256": "ca360a3ecce5717a4d495459cfb09d6dba0f075393a28c91d2f725a2c8691eb6"
+    },
+    {
+      "currentSha256": "4a25983c646b851afe1f402fe4fb2453a4ee6c4e72df19bc6599932e62953de5",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { pathToFileURL } from \"node:url\";\n",
+          "start": 347
+        },
+        {
+          "current": "import { brickMathRepository, composerFileUrl } from \"./brick-math.mjs\";\n",
+          "previous": "import { brickMathRepository } from \"./brick-math.mjs\";\n",
+          "start": 565
+        },
+        {
+          "current": "\tconst component = { type: \"package\", package: { ...original.metadata, dist: { type: \"zip\", url: composerFileUrl(join(feed, \"component.zip\")) } } };\n",
+          "previous": "\tconst component = { type: \"package\", package: { ...original.metadata, dist: { type: \"zip\", url: pathToFileURL(join(feed, \"component.zip\")).href } } };\n",
+          "start": 9203
+        }
+      ],
+      "path": "tests/helpers/fin-container-edge-php-closure.mjs",
+      "previousSha256": "d4642ee615ae47af2d150aee3984c3ed4edc87d08396197f6cbd30e577396b0d"
+    }
+  ]
+}

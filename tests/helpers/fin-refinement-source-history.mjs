@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordPhpSpacePathRepairSource, dependentCheckedRecordPhpSpacePathRepairChangedPaths, dependentCheckedRecordPhpSpacePathRepairIntegrationPaths } from "./dependent-checked-record-php-space-path-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmValidatorRepairSource, callbackFinPhpWasmValidatorRepairChangedPaths, callbackFinPhpWasmValidatorRepairIntegrationPaths } from "./callback-fin-php-wasm-validator-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptRetentionSource, ownedCheckedRecordJavaScriptRetentionChangedPaths } from "./owned-checked-record-javascript-retention-source-history.mjs";
 import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from "./callback-subtype-retained-packages-source-history.mjs";
@@ -1931,7 +1932,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackFinPhpWasmValidatorRepairChangedPaths
+	...dependentCheckedRecordPhpSpacePathRepairChangedPaths
+	, ...dependentCheckedRecordPhpSpacePathRepairIntegrationPaths
+	, ...callbackFinPhpWasmValidatorRepairChangedPaths
 	, ...callbackFinPhpWasmValidatorRepairIntegrationPaths
 	, ...callbackCheckedRecordRetainedPackagesChangedPaths
 	, ...ownedCheckedRecordJavaScriptRetentionChangedPaths
@@ -2646,9 +2649,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordPhpSpacePathRepair
+		= beforeDependentCheckedRecordPhpSpacePathRepairSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordPhpSpacePathRepair) === expected)
+		return dependentCheckedRecordPhpSpacePathRepair;
 	const callbackFinPhpWasmValidatorRepair
 		= beforeCallbackFinPhpWasmValidatorRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordPhpSpacePathRepair, expected
 		);
 	if(sha256(callbackFinPhpWasmValidatorRepair) === expected)
 		return callbackFinPhpWasmValidatorRepair;
