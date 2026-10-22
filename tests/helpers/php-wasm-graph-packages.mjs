@@ -14,6 +14,7 @@ import { nativeAllocationGuardHeader } from "../../src/build/native-allocation-g
 import { phpWasmCopiedPins as pins, readVerifiedPhpWasmCopiedComponent } from "../../src/build/php-wasm-copied-artifacts.mjs";
 import { buildPhpWasmCopiedPackages, readVerifiedPhpWasmCopiedPackageSet } from "../../src/release/php-wasm-copied-package.mjs";
 import { createDeterministicTarGz } from "../../src/release/deterministic-archive.mjs";
+import { packageSetReceiptName } from "../../src/release/package-set-receipt.mjs";
 import { nativeRecursiveSource } from "./native-recursive-transport.mjs";
 import { nativeRecursiveReviewedIr } from "./native-recursive-reviewed.mjs";
 import { lakeInputState, saveLakeFile } from "./lake-workspace.mjs";
@@ -87,8 +88,71 @@ const rejectArtifactDrift = async (root, runtimeIdentity) => {
 	return rejected;
 };
 
+const phpWasmReceiptArchives = "packages/php-wasm/archives";
+
+const regularFiles = async (root, prefix = "") => {
+	const files = [];
+	for(const entry of await readdir(join(root, prefix), { withFileTypes: true }))
+	{
+		const path = prefix ? `${prefix}/${entry.name}` : entry.name;
+		if(entry.isDirectory()) files.push(...await regularFiles(root, path));
+		else
+		{
+			assert.ok(entry.isFile(), `Receipt handoff entries must be regular files: ${path}`);
+			files.push(path);
+		}
+	}
+	return files.toSorted();
+};
+
+/**
+ * Bind a receipt-only PHP-Wasm handoff to the verified package report.
+ *
+ * The handoff must contain only the canonical receipt, its sidecar and the
+ * receipt-named archives, and every archive must be the report's exact bytes.
+ * Installing from the returned directory therefore executes the same bytes
+ * that a retained copy of the handoff records.
+ *
+ * @param handoff - Directory written from a package-set receipt.
+ * @param report - Verified PHP-Wasm package report.
+ */
+export const bindPhpWasmReceiptArchives = async (handoff, report) => {
+	const receiptBytes = await readFile(join(handoff, packageSetReceiptName));
+	const receipt = JSON.parse(receiptBytes);
+	assert.equal(receiptBytes.toString("utf8"), canonicalJson(receipt)
+		, "PHP-Wasm handoff receipt must be canonical");
+	assert.equal(await readFile(join(handoff, `${packageSetReceiptName}.sha256`), "utf8")
+		, `${sha256(receiptBytes)}  ${packageSetReceiptName}\n`
+		, "PHP-Wasm handoff receipt sidecar must match");
+	const artifacts = receipt.packages.flatMap(pkg => pkg.artifacts);
+	const named = artifacts.map(artifact => artifact.path);
+	const expected = [packageSetReceiptName
+		, `${packageSetReceiptName}.sha256`, ...named].toSorted();
+	assert.deepEqual(await regularFiles(handoff), expected
+		, "PHP-Wasm handoff must contain exactly the receipt-named package set");
+	const verified = report.archives.map(item =>
+		`${phpWasmReceiptArchives}/${item.archive}`);
+	assert.deepEqual(named.toSorted(), verified.toSorted()
+		, "PHP-Wasm receipt must name exactly the verified package archives");
+	for(const item of report.archives)
+	{
+		const path = `${phpWasmReceiptArchives}/${item.archive}`;
+		const artifact = artifacts.find(entry => entry.path === path);
+		const bytes = await readFile(join(handoff, path));
+		assert.deepEqual({ bytes: artifact.bytes, sha256: artifact.sha256 }
+			, { bytes: item.bytes, sha256: item.sha256 }, path);
+		assert.deepEqual({ bytes: bytes.length, sha256: sha256(bytes) }
+			, { bytes: item.bytes, sha256: item.sha256 }, path);
+	}
+	return join(handoff, phpWasmReceiptArchives);
+};
+
 /**
  * Install the original graph package archives offline and relocate the consumer.
+ *
+ * Archives are read from `release.archiveRoot` when it is present, so a
+ * caller can install from a receipt-only handoff while the verified package
+ * tree still supplies the Composer metadata and installed-file oracles.
  *
  * @param options - Release coordinates and a test-owned consumer workspace.
  * @param options.root - Test-owned installation parent.
@@ -107,7 +171,7 @@ export const installPhpWasmGraphPackages = async ({ root, release, host, diagnos
 	{
 		assert.equal(entry.report.runtimeIdentity, release.report.runtimeIdentity);
 		assert.equal(entry.report.loaderIdentity, release.report.loaderIdentity);
-		const path = join(feed, item.archive), bytes = await readFile(join(entry.output, "archives", item.archive));
+		const path = join(feed, item.archive), bytes = await readFile(join(entry.archiveRoot ?? join(entry.output, "archives"), item.archive));
 		assert.equal(bytes.length, item.bytes); assert.equal(sha256(bytes), item.sha256);
 		const previous = archives.find(archive => archive.archive === item.archive);
 		if(previous)
