@@ -243,6 +243,11 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 		const transfers = declaration.transfers ?? [];
 		const callback = !carriers.symbols.exports[declaration.id];
 		const refinementValidators = carriers.refinementValidators ?? {};
+		const refinementValidator = index => callback
+			? index === 0 ? undefined
+				: refinementValidators[`${declaration.id}\0parameter\0${index - 1}`]
+			: refinementValidators[`${declaration.id}\0parameter\0${index
+				- Number(declaration.receiver === 0)}`];
 		const symbol = callback ? `${carriers.symbols.types[declaration.id]}_apply` : carriers.symbols.exports[declaration.id];
 		lines.push(`static inline int ${declaration.symbol}(lb_owned_context *context, ${[...parameters, ...transfers.length ? ["ov_input_transfers *transfer"] : [], ...declaration.anchor !== undefined ? ["const ov_input_anchor *anchor"] : [], `${result.cName} *out`, "ov_result_owner *owner"].join(", ")}) {`
 			, `  if (!ov_pointer(out, sizeof(*out), _Alignof(${result.cName})) || !ov_pointer(owner, sizeof(*owner), _Alignof(ov_result_owner))) return LB_OWNED_INVALID;`
@@ -275,9 +280,9 @@ static inline void ov_callback_fail(ov_callback_frame *frame, int status) {
 				] : []
 				, `    status = ${table.get(type).walker}_in(a${i}, 0, 1, &transaction, &child);`
 				, "    if (status) { lean_dec(arguments); return ov_abort(&transaction, status); }"
-				, ...(!callback && refinementValidators[`${declaration.id}\0parameter\0${i - Number(declaration.receiver === 0)}`] ? [
+				, ...(refinementValidator(i) ? [
 					"    lean_inc(child);"
-					, `    if (!${refinementValidators[`${declaration.id}\0parameter\0${i - Number(declaration.receiver === 0)}`]}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`
+					, `    if (!${refinementValidator(i)}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`
 				] : [])
 				, "    arguments = lean_array_push(arguments, child);", "  }"])
 			, ...hasAnchors ? ["  transaction.anchor_input = 0;"] : []

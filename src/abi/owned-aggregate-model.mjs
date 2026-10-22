@@ -7,7 +7,9 @@
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { canonicalizeJsonValue } from "../binding-ir/canonical.mjs";
 import { sha256Text } from "../binding-ir/sha256.mjs";
-import { declarationRefinements } from "./refinements.mjs";
+import {
+	callbackDefinitionRefinement, callbackSubtypeDirection, declarationRefinements
+} from "./refinements.mjs";
 import { compileOwnedRefinementModel } from "./owned-refinement-model.mjs";
 
 const freeze = value => {
@@ -97,9 +99,22 @@ export const compileOwnedAggregateModel = input => {
 				, aggregate: type.aggregate });
 			else if(type.kind === "alias") node.target = enqueue(type.target);
 			else if(type.kind === "resource") node.resource = type.resource;
-			else if(type.kind === "callback") node.callable = { ...type.callable
-				, parameters: type.callable.parameters.map(site)
-				, result: site(type.callable.result) };
+			else if(type.kind === "callback")
+			{
+				const refinements = callbackDefinitionRefinement(
+					type, ir.types, { ownedStructural: true }
+				);
+				const direction = refinements === null ? null
+					: callbackSubtypeDirection({
+						parameters: type.callable.parameters.map(parameter => parameter.type)
+						, result: type.callable.result.type
+					}, refinements, ir.types, { ownedStructural: true });
+				node.callable = { ...type.callable
+					, parameters: type.callable.parameters.map(site)
+					, result: site(type.callable.result)
+					, ...(refinements === null ? {} : { refinements })
+					, ...(direction === null ? {} : { direction }) };
+			}
 		}
 	}
 	if(![...nodes.values()].some(node => node.representation === "owned")

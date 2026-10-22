@@ -250,8 +250,8 @@ export const nominalRefinementEntries = types => types.flatMap(definition => {
  * a consumed Subtype must name the exact checked constructor. A checked record follows
  * the same rule: a Lean-produced record projects its payload with no constructor, a
  * host-produced record names the exact record constructor, and every payload field
- * keeps its own directional leaf below the record. Owned records and callbacks nested
- * inside callbacks stay outside this surface.
+ * keeps its own directional leaf below the record. Owned records require the
+ * ownership-aware caller's explicit opt-in; nested callbacks stay outside this surface.
  *
  * @param refinement - A validated callback refinement tree.
  * @param produced - Whether Lean, rather than the host, produces this site.
@@ -285,16 +285,19 @@ export const assertCallbackRefinementDirection = (refinement, produced) => {
 
 /**
  * Validate callback constraints against an erased callable signature. Copied
- * nominal trees require the enclosing document's type definitions. Host callbacks
- * receive Lean-produced parameters and return host-produced results; returned Lean
- * closures have the opposite direction.
+ * nominal trees require the enclosing document's type definitions. Owned nominal
+ * trees additionally require an explicit ownership-aware opt-in. Host callbacks receive
+ * Lean-produced parameters and return host-produced results; returned Lean closures
+ * have the opposite direction.
  *
  * @param signature - Erased parameter and result type references.
  * @param value - Optional compiler-owned parameter/result refinement trees.
  * @param types - Definitions used to authenticate copied nominal trees.
  * @param direction - Known callback role, or undefined to infer and authenticate it.
+ * @param options - Explicit transport capabilities.
+ * @param options.ownedStructural - Admit owned nominal roots inside this callback.
  */
-export const callbackRefinement = (signature, value, types = [], direction = undefined) => {
+export const callbackRefinement = (signature, value, types = [], direction = undefined, { ownedStructural = false } = {}) => {
 	if(value === undefined) return null;
 	if(!value || typeof value !== "object" || Array.isArray(value)
 		|| Object.keys(value).length !== 2 || !Object.hasOwn(value, "parameters") || !Object.hasOwn(value, "result")
@@ -324,10 +327,10 @@ export const callbackRefinement = (signature, value, types = [], direction = und
 		for(const [index, refinement] of value.parameters.entries())
 		{
 			assertCallbackRefinementDirection(refinement, producedParameters);
-			assertRefinement(refinement, signature.parameters[index], 1, structural, definitions, producedParameters);
+			assertRefinement(refinement, signature.parameters[index], 1, structural, definitions, producedParameters, ownedStructural);
 		}
 		assertCallbackRefinementDirection(value.result, producedResult);
-		assertRefinement(value.result, signature.result, 1, structural, definitions, producedResult);
+		assertRefinement(value.result, signature.result, 1, structural, definitions, producedResult, ownedStructural);
 	};
 	if(direction !== undefined) validate(direction);
 	else if(!containsSubtype) validate("host");
@@ -354,15 +357,17 @@ export const callbackRefinement = (signature, value, types = [], direction = und
  * @param signature - Erased parameter and result type references.
  * @param value - Compiler-owned callback refinement trees.
  * @param types - Definitions used to authenticate copied nominal trees.
+ * @param options - Explicit transport capabilities.
+ * @param options.ownedStructural - Admit owned nominal roots inside this callback.
  */
-export const callbackSubtypeDirection = (signature, value, types = []) => {
-	callbackRefinement(signature, value, types);
+export const callbackSubtypeDirection = (signature, value, types = [], { ownedStructural = false } = {}) => {
+	callbackRefinement(signature, value, types, undefined, { ownedStructural });
 	if(value === undefined || value === null) return null;
 	for(const role of ["host", "closure"])
 	{
 		try
 		{
-			callbackRefinement(signature, value, types, role);
+			callbackRefinement(signature, value, types, role, { ownedStructural });
 			const leaves = [...value.parameters, value.result];
 			if(leaves.some(refinement => {
 				const visit = child => child !== null && (["subtype", "checked-record"].includes(child.kind)
@@ -383,8 +388,11 @@ export const callbackSubtypeDirection = (signature, value, types = []) => {
  *
  * @param definition - Public Binding IR callback definition.
  * @param types - Definitions used to authenticate copied nominal trees.
+ * @param options - Explicit transport capabilities.
+ * @param options.ownedStructural - Admit owned nominal roots inside this callback.
  */
-export const callbackDefinitionRefinement = (definition, types = []) => callbackRefinement({
+export const callbackDefinitionRefinement = (definition, types = [], { ownedStructural = false } = {}) => callbackRefinement({
 	parameters: definition.callable.parameters.map(parameter => parameter.type)
 	, result: definition.callable.result.type
-}, definition.source?.extensions?.["lean-lang.org/refinements"], types);
+}, definition.source?.extensions?.["lean-lang.org/refinements"], types
+, undefined, { ownedStructural });

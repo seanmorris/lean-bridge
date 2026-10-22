@@ -7,14 +7,24 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { canonicalizeJsonValue } from "../src/binding-ir/canonical.mjs";
-import { assertRefinement, declarationRefinements } from "../src/abi/refinements.mjs";
+import {
+	assertRefinement, callbackDefinitionRefinement, declarationRefinements
+} from "../src/abi/refinements.mjs";
 import { compileOwnedAggregateModel } from "../src/abi/owned-aggregate-model.mjs";
 import { validateOwnedNativeType } from "../src/analyze/native-types.mjs";
-import { validateReviewedOwnedSource } from "../src/analyze/reviewed-owned-source.mjs";
+import {
+	reviewedOwnedSourceSelection, validateReviewedOwnedSource
+} from "../src/analyze/reviewed-owned-source.mjs";
+import { ownedCCallbacks } from "../src/backends/c/owned-callbacks.mjs";
+import { generateOwnedCValues } from "../src/backends/c/owned-values.mjs";
 import { generateOwnedNativeBindingAdapters } from "../src/backends/native/owned-value-adapters.mjs";
+import { processBuildRunner } from "../src/build/process-runner.mjs";
 import { ownedCheckedRecordModule, ownedCheckedRecordReviewedIr, ownedCheckedRecordTrees } from "./helpers/owned-checked-record-fixture.mjs";
 import "./helpers/owned-checked-record-foundation-source-history-tests.mjs";
 
@@ -65,7 +75,184 @@ test("reviewed side: full and result-only owned builds admit checked records onl
 	assert.deepEqual(validateReviewedOwnedSource(capture(bare)), bare);
 });
 
-test("owned checked records stay outside receivers and callbacks with located refusals", () => {
+const ownedCheckedCallbackIr = role => {
+	const document = ownedCheckedRecordReviewedIr();
+	const claim = { kind: "named", id: `lean:${q("Claim")}` };
+	const host = role === "host";
+	const refinements = {
+		parameters: [ownedCheckedRecordTrees.claim(
+			host ? null : q("mkClaim")
+		)]
+		, result: ownedCheckedRecordTrees.claim(host ? q("mkClaim") : null)
+	};
+	const signature = { parameters: [claim], result: claim, refinements };
+	const name = `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;
+	const failure = { mode: "declared", errors: ["error:native-callback"]
+		, unexpected: "poison-runtime" };
+	const callable = {
+		parameters: [{ name: "arg0", type: claim, ownership: "borrow"
+			, lifetime: { scope: "call", anchor: null }, mutability: "immutable"
+			, optional: false, default: null }]
+		, result: { type: claim, ownership: "lease"
+			, lifetime: { scope: "explicit", anchor: null } }
+		, effects: ["host-call", "fails"], failure, resultMode: "value"
+		, invocation: "many", reentry: "same-agent", selfDisposal: "defer"
+	};
+	document.types.push({ ...structuredClone(type(document, "Ticket"))
+		, id: `bridge:${name}`, name, kind: "callback", representation: "identity"
+		, mutability: "immutable", resource: null, aggregate: null, callable
+		, source: { producer: "corpusReview", declaration: name
+			, extensions: { [refinementKey]: refinements } } });
+	document.errors = [{ id: "error:native-callback", name: "NativeCallbackFailure"
+		, category: "boundary", payload: null
+		, documentation: { summary: "Independent owned checked-record contract."
+			, details: "" } }];
+	const operation = structuredClone(declaration(document, "claimQuota"));
+	operation.id = `lean:${q(host ? "withClaimCallback" : "claimClosure")}`;
+	operation.name = host ? "withClaimCallback" : "claimClosure";
+	operation.overloadKey = q(operation.name);
+	operation.source = { producer: "corpusReview"
+		, declaration: q(operation.name), extensions: {} };
+	const callback = { kind: "named", id: `bridge:${name}` };
+	if(host)
+	{
+		operation.parameters = [{ name: "arg0", type: callback
+			, ownership: "borrow", lifetime: { scope: "call", anchor: null }
+			, mutability: "immutable", optional: false, default: null }];
+		operation.result = { type: { kind: "primitive", name: "nat" }
+			, ownership: "copy", lifetime: null };
+		operation.effects = ["fails", "host-call", "reads-resource"];
+		operation.failure = failure;
+	}
+	else
+	{
+		operation.parameters = [];
+		operation.result = { type: callback, ownership: "lease"
+			, lifetime: { scope: "explicit", anchor: null } };
+		operation.effects = ["allocates"];
+		operation.failure = { mode: "none", errors: []
+			, unexpected: "poison-runtime" };
+	}
+	document.declarations = [operation];
+	return { document, name, operation, refinements };
+};
+
+test("reviewed owned callbacks preserve exact host and closure checked-record directions", () => {
+	const identities = new Set();
+	for(const role of ["host", "closure"])
+	{
+		const { document, name, operation, refinements } = ownedCheckedCallbackIr(role);
+		identities.add(name);
+		assert.deepEqual(validateReviewedOwnedSource(capture(document)), document);
+		const definition = document.types.find(item => item.id === `bridge:${name}`);
+		assert.deepEqual(callbackDefinitionRefinement(
+			definition, document.types, { ownedStructural: true }
+		), refinements);
+		assert.throws(() => callbackDefinitionRefinement(definition, document.types)
+			, /Callback refinement direction is inconsistent/u);
+		const contract = reviewedOwnedSourceSelection(
+			capture(document)
+		).contracts[operation.source.declaration];
+		const site = role === "host" ? contract.parameters[0] : contract.result;
+		assert.equal(site.ownership, role === "host" ? "borrow" : "lease");
+		assert.deepEqual(site.callable.parameters[0].refinement
+			, role === "closure" ? {
+				kind: "checked-record", name: q("Claim")
+				, constructor: q("mkClaim")
+				, fields: [{ name: "holder", refinement: null }
+					, { name: "quota", refinement: null }]
+			} : undefined);
+		assert.deepEqual(site.callable.result.refinement
+			, role === "host" ? {
+				kind: "checked-record", name: q("Claim")
+				, constructor: q("mkClaim")
+				, fields: [{ name: "holder", refinement: null }
+					, { name: "quota", refinement: null }]
+			} : undefined);
+		const model = compileOwnedAggregateModel(document);
+		const callback = model.types.find(item => item.id === `bridge:${name}`);
+		assert.equal(callback.callable.direction, role);
+		assert.deepEqual(model.refinementModel.sites.map(item => ({
+			position: item.position, direction: item.direction
+		})), role === "host" ? [
+			{ position: { kind: "parameter", index: 0 }, direction: "result" }
+			, { position: { kind: "result" }, direction: "input" }
+		] : [
+			{ position: { kind: "parameter", index: 0 }, direction: "input" }
+			, { position: { kind: "result" }, direction: "result" }
+		]);
+		const generated = generateOwnedNativeBindingAdapters({
+			document, sourceIdentity: {}
+			, declarations: [{ name: operation.source.declaration, module }]
+			, metadataSha256: "b".repeat(64), hostCallbacks: true
+		});
+		assert.equal(generated.carriers.hostCallbacks[0].direction, role);
+		const validatorKey = role === "host"
+			? `bridge:${name}\0result\0-1`
+			: `bridge:${name}\0parameter\0${0}`;
+		assert.deepEqual(Object.keys(generated.carriers.refinementValidators)
+			, [validatorKey]);
+		assert.match(generated.carriers.leanSource
+			, new RegExp(`_root_\\.${module}\\.mkClaim`, "u"));
+		const validator = generated.carriers.refinementValidators[validatorKey];
+		if(role === "host")
+		{
+			const values = generateOwnedCValues(document, {
+				hostCallbacks: true, publicPrefix: "checked_callback"
+			});
+			const source = ownedCCallbacks(values, generated.carriers);
+			assert.equal(source.match(new RegExp(
+				`if \\(!${validator}\\((?:returned|recovery)\\)\\)`, "gu"
+			))?.length, 2);
+		}
+		else
+		{
+			assert.match(generated.source
+				, new RegExp(`if \\(!${validator}\\(child\\)\\)`, "u"));
+		}
+	}
+	assert.equal(identities.size, 2);
+});
+
+test("reviewed owned callback carriers elaborate against their proof-carrying Lean values", {
+	skip: process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST !== "1"
+	, timeout: 120000
+}, async t => {
+	const directory = await mkdtemp(join(tmpdir()
+		, "lean-bridge-owned-checked-callbacks-"));
+	t.after(() => rm(directory, { recursive: true, force: true }));
+	const fixture = resolve(
+		"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean"
+	);
+	await writeFile(join(directory, `${module}.lean`)
+		, `${await readFile(fixture, "utf8")}\nnamespace ${module}\n\ndef withClaimCallback (_callback : Claim → Claim) : Nat := 0\n\ndef claimClosure : Claim → Claim := id\n\nend ${module}\n`);
+	const leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX
+		?? ".toolchains/elan/toolchains/leanprover--lean4---v4.32.2");
+	const lean = join(leanPrefix, "bin/lean");
+	const env = { ...process.env, LEAN_PATH: directory
+		, PATH: `${join(leanPrefix, "bin")}:${process.env.PATH}` };
+	const compile = async args => {
+		try
+		{ await processBuildRunner.capture({ command: lean, args, cwd: directory, env }); }
+		catch(error)
+		{ throw new Error(error.details?.stderr || error.details?.stdout || error.message, { cause: error }); }
+	};
+	await compile(["-o", `${module}.olean`, `${module}.lean`]);
+	for(const role of ["host", "closure"])
+	{
+		const { document, operation } = ownedCheckedCallbackIr(role);
+		const generated = generateOwnedNativeBindingAdapters({
+			document, sourceIdentity: {}
+			, declarations: [{ name: operation.source.declaration, module }]
+			, metadataSha256: "b".repeat(64), hostCallbacks: true
+		});
+		const file = `Generated${role === "host" ? "Host" : "Closure"}.lean`;
+		await writeFile(join(directory, file), generated.carriers.leanSource);
+		await compile([file]);
+	}
+});
+
+test("owned checked-record receivers and incomplete callback decisions have located refusals", () => {
 	const receiver = ownedCheckedRecordReviewedIr();
 	const quota = declaration(receiver, "claimQuota");
 	quota.kind = "property"; quota.owner = `lean:${q("Claim")}`;
@@ -90,6 +277,32 @@ test("owned checked records stay outside receivers and callbacks with located re
 		, category: "boundary", payload: null
 		, documentation: { summary: "Independent owned checked-record contract.", details: "" } }];
 	assert.throws(() => validateReviewedOwnedSource(capture(callback)), unsupported(`bridge:${name}.callable`));
+	const wrong = ownedCheckedCallbackIr("host");
+	wrong.operation.parameters = [];
+	wrong.operation.result = { type: { kind: "named", id: `bridge:${wrong.name}` }
+		, ownership: "lease", lifetime: { scope: "explicit", anchor: null } };
+	wrong.operation.effects = ["allocates"];
+	wrong.operation.failure = { mode: "none", errors: []
+		, unexpected: "poison-runtime" };
+	assert.throws(() => validateReviewedOwnedSource(capture(wrong.document))
+		, unsupported(`${wrong.operation.id}.result.type`));
+	const reversed = ownedCheckedCallbackIr("host");
+	reversed.refinements.parameters[0] = ownedCheckedRecordTrees.claim(q("mkClaim"));
+	reversed.refinements.result = ownedCheckedRecordTrees.claim(null);
+	const reversedDefinition = reversed.document.types.find(
+		item => item.id === `bridge:${reversed.name}`
+	);
+	const claimType = { kind: "named", id: `lean:${q("Claim")}` };
+	const reversedName = `Callback${sha256(canonicalJson({
+		parameters: [claimType], result: claimType, refinements: reversed.refinements
+	})).slice(0, 20)}`;
+	assert.notEqual(reversedName, reversed.name);
+	reversedDefinition.id = `bridge:${reversedName}`;
+	reversedDefinition.name = reversedName;
+	reversedDefinition.source.declaration = reversedName;
+	reversed.operation.parameters[0].type.id = reversedDefinition.id;
+	assert.throws(() => validateReviewedOwnedSource(capture(reversed.document))
+		, unsupported(`${reversed.operation.id}.parameters[0].type`));
 });
 
 test("owned checked-record refinement trees require the explicit ownership-aware boundary", () => {

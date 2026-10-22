@@ -91,27 +91,60 @@ export const ownedCallbackRecovery = (model, callback, sourceType) => {
  * @param options.symbols - Private typed carrier symbols.
  * @param options.sourceType - Source Lean type rendering.
  * @param options.carrier - Typed Array rendering.
+ * @param options.refinements - Optional owned refinement carrier conversions.
  */
-export const generateOwnedCallbackCarriers = ({ model, symbols, sourceType, carrier }) => {
+export const generateOwnedCallbackCarriers = ({
+	model, symbols, sourceType, carrier, refinements
+}) => {
 	const lines = [], header = [], callbacks = [];
 	const source = ['#include "carriers.h"', '#include "lean_bridge_native_runtime.h"'];
 	for(const node of model.types.filter(node => node.kind === "callback"))
 	{
 		const index = callbacks.length, symbol = symbols.types[node.id];
-		const parameters = node.callable.parameters.map((site, i) => `(a${i} : ${sourceType(site.type)})`);
+		const valueType = refinements?.sourceValueType ?? sourceType;
+		const parameters = node.callable.parameters.map(
+			(site, i) => `(a${i} : ${valueType(site.type)})`
+		);
 		const names = node.callable.parameters.map((_, i) => `a${i}`);
-		const recovery = ownedCallbackRecovery(model, node, sourceType);
-		if(recovery) lines.push(`def hostRecovery${index} ${parameters.join(" ")} : ${sourceType(node.callable.result.type)} :=`
-			, ...recovery.map(line => `  ${line}`), "");
+		const recovery = ownedCallbackRecovery(model, node, valueType);
+		const parameterSites = names.map((_, position) =>
+			refinements?.byPosition.get(
+				refinements.siteKey(node.id, "parameter", position)
+			)
+		);
+		const resultSite = refinements?.byPosition.get(
+			refinements.siteKey(node.id, "result")
+		);
+		const invokeArguments = names.map((name, position) => {
+			const site = parameterSites[position];
+			const value = site?.direction === "result"
+				? refinements.resultConversion(site.tree, name) : name;
+			return `#[${value}]`;
+		});
+		const invoked = `carrierValue (hostInvoke${index} token ${invokeArguments.join(" ")})`;
+		const checkedResult = resultSite?.direction === "input"
+			? `(do let value ← ${invoked}; ${refinements.inputConversion(
+				resultSite.tree, "value"
+			)})` : invoked;
+		const checkedRecovery = resultSite?.direction === "input"
+			? `(do let value ← carrierValue recovery; ${refinements.inputConversion(
+				resultSite.tree, "value"
+			)})` : "carrierValue recovery";
+		if(recovery && node.callable.direction !== "closure")
+			lines.push(`def hostRecovery${index} ${parameters.join(" ")} : ${valueType(node.callable.result.type)} :=`
+				, ...recovery.map(line => `  ${line}`), "");
 		lines.push(`@[extern "${symbol}_invoke"]`
 			, `opaque hostInvoke${index} (token : _root_.USize) ${node.callable.parameters.map((site, i) => `(a${i} : ${carrier(site.type)})`).join(" ")} : ${carrier(node.callable.result.type)} := #[]`
-			, "", `@[export ${symbol}_wrap]`
-			, `def hostWrap${index} (token : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`
-			, "  match carrierValue recovery with", "  | .some fallback =>"
-			, `    #[fun ${names.join(" ")} => match carrierValue (hostInvoke${index} token ${names.map(name => `#[${name}]`).join(" ")}) with`
+			, "", `@[export ${symbol}_wrap]`);
+		if(node.callable.direction === "closure")
+			lines.push(`def hostWrap${index} (_token : _root_.USize) (_recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} := #[]`, "");
+		else lines.push(
+			`def hostWrap${index} (token : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`
+			, `  match ${checkedRecovery} with`, "  | .some fallback =>"
+			, `    #[fun ${names.join(" ")} => match ${checkedResult} with`
 			, "      | .some value => value", "      | .none => fallback]"
 			, ...recovery ? ["  | .none =>"
-				, `    #[fun ${names.join(" ")} => match carrierValue (hostInvoke${index} token ${names.map(name => `#[${name}]`).join(" ")}) with`
+				, `    #[fun ${names.join(" ")} => match ${checkedResult} with`
 				, "      | .some value => value"
 				, `      | .none => hostRecovery${index} ${names.join(" ")}]`] : ["  | .none => #[]"]
 			, "");
@@ -122,7 +155,11 @@ export const generateOwnedCallbackCarriers = ({ model, symbols, sourceType, carr
 			, "  if (!callback.invoke) {", ...names.map(name => `    lean_dec(${name});`)
 			, "    return lean_alloc_array(0, 0);", "  }"
 			, `  return ((lean_object *(*)(void *${names.map(() => ", lean_object *").join("")}))callback.invoke)(callback.context${names.map(name => `, ${name}`).join("")});`, "}");
-		callbacks.push({ id: node.id, symbol, automaticRecovery: recovery !== null });
+		callbacks.push({ id: node.id, symbol
+			, automaticRecovery: node.callable.direction !== "closure"
+				&& recovery !== null
+			, ...(node.callable.direction === undefined ? {}
+				: { direction: node.callable.direction }) });
 	}
 	return { lines, header, source: source.join("\n") + "\n", callbacks };
 };

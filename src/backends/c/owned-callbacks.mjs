@@ -18,6 +18,9 @@ export const ownedCCallbacks = (values, carriers) => {
 	for(const item of values.callbacks)
 	{
 		const node = nodes.get(item.id), result = nodes.get(item.result);
+		const resultValidator = carriers.refinementValidators?.[
+			`${node.id}\0result\0-1`
+		];
 		const params = item.parameters.slice(1).map(id => nodes.get(id));
 		const name = `oc_host_v${node.index}`, symbol = carriers.symbols.types[node.id];
 		lines.push(`typedef struct ${name} {`
@@ -48,6 +51,9 @@ export const ownedCCallbacks = (values, carriers) => {
 			, "    if (!status) status = lb_owned_scope_ready(&frame->transaction->scope);", "  }"
 			, `  if (!status) status = oc_v${result.index}_to(&reply, &raw_reply, 0, &reply_input);`
 			, `  if (!status) status = ${result.walker}_in(&raw_reply, 0, 1, frame->transaction, &returned);`
+			, ...resultValidator ? [
+				`  if (!status) { lean_inc(returned); if (!${resultValidator}(returned)) { lean_dec(returned); returned = NULL; status = LB_OWNED_INVALID; } }`
+			] : []
 			, `  int cleanup = ${p}_result_release(&reply_owner); if (!status) status = cleanup;`
 			, "  cleanup = ov_owner_clear(&argument_owner); if (!status) status = cleanup;"
 			, ...anchored ? ["  cleanup = oc_views_clear(&argument_views); if (!status) status = cleanup;"] : []
@@ -76,7 +82,11 @@ export const ownedCCallbacks = (values, carriers) => {
 			, "  lean_object *recovery = NULL;"
 			, "  if (!status && input->recovery) {"
 			, `    ${result.nativeName} raw = {0}; status = oc_v${result.index}_to(input->recovery, &raw, 0, &arena);`
-			, `    if (!status) status = ${result.walker}_in(&raw, 0, 1, &transaction, &recovery);`, "  }"
+			, `    if (!status) status = ${result.walker}_in(&raw, 0, 1, &transaction, &recovery);`
+			, ...resultValidator ? [
+				`    if (!status) { lean_inc(recovery); if (!${resultValidator}(recovery)) { lean_dec(recovery); recovery = NULL; status = LB_OWNED_INVALID; } }`
+			] : []
+			, "  }"
 			, "  if (!status) {"
 			, "    if (!recovery) recovery = lean_alloc_array(0, 0);"
 			, `    lean_object *closure = ${symbol}_wrap((size_t)borrow->token, recovery);`

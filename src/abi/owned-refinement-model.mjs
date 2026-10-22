@@ -151,6 +151,31 @@ export const compileOwnedRefinementModel = model => {
 				, direction: "result", type, carrierKey, adapterKey, tree });
 		}
 	}
+	const callbacks = model.types.filter(type => type.kind === "callback"
+		&& type.callable.refinements !== undefined);
+	for(const callback of callbacks)
+	{
+		const { direction, refinements } = callback.callable;
+		if(!["host", "closure"].includes(direction))
+			fail(`${callback.id} requires one checked callback direction`);
+		const add = (refinement, type, position, produced) => {
+			if(refinement === null) return;
+			const adapterDirection = produced ? "result" : "input";
+			const tree = visit(type, refinement, adapterDirection, []);
+			const carrierKey = digest({ type
+				, refinement: carrierShape(refinement) });
+			const adapterKey = digest({ direction: adapterDirection
+				, type, refinement });
+			sites.push({ declaration: callback.id, position
+				, direction: adapterDirection, type, carrierKey, adapterKey, tree });
+		};
+		callback.callable.parameters.forEach((parameter, index) => add(
+			refinements.parameters[index], parameter.type
+			, { kind: "parameter", index }, direction === "host"
+		));
+		add(refinements.result, callback.callable.result.type
+			, { kind: "result" }, direction === "closure");
+	}
 	if(!sites.length) return null;
 	return freeze({ schemaVersion: 1, kind: "owned-refinement-model", sites });
 };

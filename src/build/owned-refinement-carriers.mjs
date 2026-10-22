@@ -44,6 +44,24 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 		if(!definition?.source?.declaration) fail(`missing source declaration for ${id}`);
 		return definition.source.declaration;
 	};
+	const sourceValueType = (id, active = new Set()) => {
+		if(active.has(id)) fail(`recursive callable type ${id}`);
+		const node = nodes.get(id);
+		if(!node) fail(`missing type ${id}`);
+		if(node.kind === "primitive") return `_root_.${primitiveNames[node.name]}`;
+		if(node.kind === "callback")
+		{
+			const seen = new Set([...active, id]);
+			return `(${[...node.callable.parameters, node.callable.result]
+				.map(site => sourceValueType(site.type, seen)).join(" → ")})`;
+		}
+		if(definitions.has(id)) return `_root_.${sourceName(id)}`;
+		const values = node.arguments.map(child => sourceValueType(child, active));
+		if(node.kind === "result")
+			return `(_root_.Except ${values[1]} ${values[0]})`;
+		return `(_root_.${{ array: "Array", list: "List", option: "Option"
+			, tuple: "Prod" }[node.kind]} ${values.join(" ")})`;
+	};
 	const sourceType = (id, active = new Set()) => {
 		if(active.has(id)) fail(`recursive callable type ${id}`);
 		const node = nodes.get(id);
@@ -51,11 +69,7 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 		if(node.kind === "primitive") return `_root_.${primitiveNames[node.name]}`;
 		if(node.kind === "alias") return sourceType(node.target, new Set([...active, id]));
 		if(mirrors.has(id)) return `LbOwnedErased.${sourceName(id)}`;
-		if(node.kind === "callback")
-		{
-			const seen = new Set([...active, id]);
-			return `(${[...node.callable.parameters, node.callable.result].map(site => sourceType(site.type, seen)).join(" → ")})`;
-		}
+		if(node.kind === "callback") return sourceValueType(id, active);
 		if(["record", "variant", "resource"].includes(node.kind)) return `_root_.${sourceName(id)}`;
 		const values = node.arguments.map(child => sourceType(child, active));
 		if(node.kind === "result") return `(_root_.Except ${values[1]} ${values[0]})`;
@@ -82,15 +96,27 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 		if(declaration.receiver && reachesMirror(declaration.receiver.type))
 			fail(`${declaration.id} has a refined receiver without an authenticated receiver adapter`);
 		declaration.parameters.forEach((parameter, index) => {
-			if(reachesMirror(parameter.type) && !byPosition.has(siteKey(declaration.id, "parameter", index)))
+			if(nodes.get(parameter.type)?.kind !== "callback"
+				&& reachesMirror(parameter.type)
+				&& !byPosition.has(siteKey(declaration.id, "parameter", index)))
 				fail(`${declaration.id} parameter ${index} is missing its per-use refinement`);
 		});
-		if(reachesMirror(declaration.result.type) && !byPosition.has(siteKey(declaration.id, "result")))
+		if(nodes.get(declaration.result.type)?.kind !== "callback"
+			&& reachesMirror(declaration.result.type)
+			&& !byPosition.has(siteKey(declaration.id, "result")))
 			fail(`${declaration.id} result is missing its per-use refinement`);
 	}
 	for(const node of model.types.filter(type => type.kind === "callback"))
-		if([...node.callable.parameters, node.callable.result].some(site => reachesMirror(site.type)))
-			fail(`${node.id} requires a directional callback refinement adapter`);
+	{
+		node.callable.parameters.forEach((parameter, index) => {
+			if(reachesMirror(parameter.type)
+				&& !byPosition.has(siteKey(node.id, "parameter", index)))
+				fail(`${node.id} parameter ${index} requires a directional callback refinement adapter`);
+		});
+		if(reachesMirror(node.callable.result.type)
+			&& !byPosition.has(siteKey(node.id, "result")))
+			fail(`${node.id} result requires a directional callback refinement adapter`);
+	}
 
 	const dependencyOrder = [], done = new Set(), active = new Set();
 	const visit = id => {
@@ -165,7 +191,8 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 	for(const site of sites.filter(item => item.direction === "input"))
 	{
 		const symbol = `lean_bridge_owned_refine_${sha256(site.adapterKey).slice(0, 20)}`;
-		validators.set(siteKey(site.declaration, "parameter", site.position.index), symbol);
+		validators.set(siteKey(site.declaration, site.position.kind
+			, site.position.index), symbol);
 		if(emittedValidators.has(symbol)) continue;
 		emittedValidators.add(symbol);
 		lines.push(`@[export ${symbol}]`
@@ -173,7 +200,7 @@ export const createOwnedRefinementCarriers = (model, definitions) => {
 			, "  match carrierValue carrier with", "  | .none => 0", "  | .some value =>"
 			, `    match ${inputConversion(site.tree, "value")} with`, "    | .some _ => 1", "    | .none => 0", "");
 	}
-	return { lines, sourceType, inputConversion, resultConversion
+	return { lines, sourceType, sourceValueType, inputConversion, resultConversion
 		, byPosition, validators, siteKey
 		, header: [...emittedValidators].map(
 			symbol => `uint8_t ${symbol}(lean_object *);`

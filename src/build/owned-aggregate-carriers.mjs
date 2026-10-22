@@ -135,9 +135,33 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		if(node.kind === "callback")
 		{
 			const names = node.callable.parameters.map((_, index) => `a${index}`);
+			const callbackRefined = node.callable.refinements !== undefined;
+			const sourceNames = names.map((name, index) => {
+				const site = refinements?.byPosition.get(
+					refinements.siteKey(node.id, "parameter", index)
+				);
+				return site?.direction === "input" ? `_source${index}` : name;
+			});
+			const guards = names.flatMap((name, index) => {
+				const site = refinements?.byPosition.get(
+					refinements.siteKey(node.id, "parameter", index)
+				);
+				return site?.direction === "input" ? [
+					`let _source${index} ← ${refinements.inputConversion(site.tree, name)}`
+				] : [];
+			});
+			const resultSite = refinements?.byPosition.get(
+				refinements.siteKey(node.id, "result")
+			);
+			const applied = `closure ${sourceNames.join(" ")}`;
+			const result = resultSite?.direction === "result"
+				? refinements.resultConversion(resultSite.tree, applied) : applied;
+			const body = callbackRefined && node.callable.direction !== "closure"
+				? ["#[]"] : checked(["closure", ...names]
+					, [...guards, `pure (${result})`]);
 			emit(`${symbol}_apply`, [`(closure : ${carrier(node.id)})`
 				, ...node.callable.parameters.map((site, index) => `(${names[index]} : ${carrier(site.type)})`)].join(" ")
-			, carrier(node.callable.result.type), checked(["closure", ...names], [`pure (closure ${names.join(" ")})`]), names.length + 1);
+			, carrier(node.callable.result.type), body, names.length + 1);
 			continue;
 		}
 		if(node.kind === "alias")
@@ -222,7 +246,9 @@ export const generateOwnedBindingCarriers = ({ document, sourceIdentity, declara
 		emit(symbols.exports[declaration.id], parameters || "(_bridgeUnit : _root_.Unit)", carrier(declaration.result.type)
 			, checked(names, body), names.length);
 	}
-	const callbacks = hostCallbacks ? generateOwnedCallbackCarriers({ model, symbols, sourceType, carrier }) : null;
+	const callbacks = hostCallbacks ? generateOwnedCallbackCarriers({
+		model, symbols, sourceType, carrier, refinements
+	}) : null;
 	if(callbacks)
 	{ lines.push(...callbacks.lines); header.push(...callbacks.header); }
 	lines.push(`end ${module}`, "");

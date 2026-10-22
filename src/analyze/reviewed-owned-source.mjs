@@ -10,7 +10,10 @@ import { canonicalJson, sha256 } from "../capsule/node.mjs";
 import { canonicalizeJsonValue, BindingIrCanonicalError } from "../binding-ir/canonical.mjs";
 import { validateOwnedAggregateBindingIr } from "../binding-ir/contract.mjs";
 import { compileOwnedAggregateModel } from "../abi/owned-aggregate-model.mjs";
-import { declarationRefinements } from "../abi/refinements.mjs";
+import {
+	callbackDefinitionRefinement, callbackSubtypeDirection
+	, declarationRefinements
+} from "../abi/refinements.mjs";
 import { validateExportConfiguration } from "./export-configuration.mjs";
 import { callbackSemanticSignature } from "./callback-signature.mjs";
 import { checkedRefinementSelection } from "./checked-refinement-selection.mjs";
@@ -40,12 +43,14 @@ const checkReview = document => {
 		if(condition) unsupported(`Reviewed owned builds do not support this decision: ${path}`, { path });
 	};
 	const definitions = new Map(document.types.map(type => [type.id, type]));
-	const isCallback = type => type.kind === "named" && definitions.get(type.id).kind === "callback";
+	const isCallback = type => type.kind === "named"
+		&& definitions.get(type.id)?.kind === "callback";
 	const copied = type => type.kind === "primitive" || (type.kind === "named"
 		? definitions.get(type.id).representation === "copied" : type.arguments.every(copied));
-	const callbacks = document.types.filter(type => type.kind === "callback");
+	const callbacks = new Map(document.types.filter(type => type.kind === "callback")
+		.map(type => [type.id, type]));
 	for(const field of ["capabilities", "assurance"]) reject(document[field].length, field);
-	reject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.length ? [{
+	reject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.size ? [{
 		id: "error:native-callback", name: "NativeCallbackFailure"
 		, category: "boundary", payload: null
 	}] : []), "errors");
@@ -58,7 +63,9 @@ const checkReview = document => {
 		// A checked record names its erased proof fields once, whether its value is copied or
 		// owned; every other definition and every declaration-level key stays closed.
 		const record = !declaration && !callbackName && item.kind === "record";
-		reject(Object.keys(item.source.extensions).some(key => declaration ? key !== refinementKey : !(record && key === erasedProofsKey))
+		const allowed = declaration || callbackName ? [refinementKey]
+			: record ? [erasedProofsKey] : [];
+		reject(Object.keys(item.source.extensions).some(key => !allowed.includes(key))
 			, `${item.id}.source.extensions`);
 		if(record && Object.hasOwn(item.source.extensions, erasedProofsKey))
 		{
@@ -68,13 +75,21 @@ const checkReview = document => {
 				|| erased.fields.some(name => typeof name !== "string" || !/^[A-Za-z_][A-Za-z0-9_']*$/u.test(name) || item.fields.some(field => field.name === name))
 			, `${item.id}.source.extensions.${erasedProofsKey}`);
 		}
-		if(declaration && Object.hasOwn(item.source.extensions, refinementKey))
-		{
+		if((declaration || callbackName)
+			&& Object.hasOwn(item.source.extensions, refinementKey)){
 			try
-			{ declarationRefinements(item, item.source.extensions[refinementKey], document.types, { ownedStructural: true }); }
+			{
+				if(declaration) declarationRefinements(
+					item, item.source.extensions[refinementKey], document.types
+					, { ownedStructural: true }
+				);
+				else callbackDefinitionRefinement(
+					item, document.types, { ownedStructural: true }
+				);
+			}
 			catch
 			{ unsupported("Reviewed owned refinement decisions must match their transport signature", { path: `${item.id}.source.extensions.${refinementKey}` }); }
-		}
+			}
 		reject(item.assurance.length, `${item.id}.assurance`);
 	};
 	const reference = (type, path, nested = false) => {
@@ -92,6 +107,22 @@ const checkReview = document => {
 		if(anchors && !copy && result && value.ownership === "borrow" && ["parameter", "receiver"].includes(value.lifetime?.scope)) return;
 		reject(value.ownership !== (copy ? "copy" : result ? "lease" : "borrow")
 			|| !same(value.lifetime, copy ? null : { scope: result ? "explicit" : "call", anchor: null }), path);
+		if(isCallback(value.type))
+		{
+			const definition = callbacks.get(value.type.id);
+			const refinement = callbackDefinitionRefinement(
+				definition, document.types, { ownedStructural: true }
+			);
+			if(refinement !== null)
+			{
+				const direction = callbackSubtypeDirection({
+					parameters: definition.callable.parameters.map(parameter => parameter.type)
+					, result: definition.callable.result.type
+				}, refinement, document.types, { ownedStructural: true });
+				reject(direction !== null && direction !== (result ? "closure" : "host")
+					, `${path}.type`);
+			}
+		}
 	};
 	const parameter = (value, path, transfers = false) => {
 		reject(value.optional || value.default !== null || value.mutability !== "immutable", path);
@@ -105,7 +136,9 @@ const checkReview = document => {
 		if(definition.kind === "callback")
 		{
 			const callable = definition.callable;
-			const signature = callbackSemanticSignature(callable);
+			const refinement = definition.source.extensions["lean-lang.org/refinements"];
+			const signature = { ...callbackSemanticSignature(callable)
+				, ...(refinement === undefined ? {} : { refinements: refinement }) };
 			source(definition, `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`);
 			reject(callable.invocation !== "many" || callable.reentry !== "same-agent" || callable.selfDisposal !== "defer"
 				|| callable.resultMode !== "value" || !same(callable.effects.toSorted(), ["fails", "host-call"])
@@ -154,7 +187,11 @@ const checkReview = document => {
 		if(!definition) return false;
 		if(seen.has(type.id)) return !checked(definition) || tree === null || tree === undefined;
 		if(definition.kind === "resource") return true;
-		if(definition.kind === "callback") return !reachesChecked(type);
+		if(definition.kind === "callback")
+			return !reachesChecked(type)
+				|| callbackDefinitionRefinement(
+					definition, document.types, { ownedStructural: true }
+				) !== null;
 		const inner = new Set([...seen, type.id]);
 		if(definition.kind === "alias") return checkedRecordCoverage(definition.target, tree, produced, depth, inner);
 		if(checked(definition))
@@ -174,8 +211,11 @@ const checkReview = document => {
 		return definition.cases.every((branch, index) => branch.fields.every((field, position) =>
 			checkedRecordCoverage(field.type, cases[index]?.fields[position]?.refinement ?? null, produced, depth + 1, inner)));
 	};
-	for(const definition of document.types.filter(type => type.kind === "callback"))
-		reject(reachesChecked({ kind: "named", id: definition.id }), `${definition.id}.callable`);
+	for(const definition of callbacks.values())
+		reject(reachesChecked({ kind: "named", id: definition.id })
+			&& callbackDefinitionRefinement(
+				definition, document.types, { ownedStructural: true }
+			) === null, `${definition.id}.callable`);
 	for(const declaration of document.declarations)
 	{
 		const refinements = declaration.source.extensions["lean-lang.org/refinements"];
@@ -245,12 +285,22 @@ export const reviewedOwnedSourceSelection = review => {
 		if(active.has(type.id)) unsupported("Recursive callable signatures require a finite compiler signature", { type: type.id });
 		active.add(type.id);
 		const callable = types.get(type.id).callable;
+		const refinements = types.get(type.id).source.extensions["lean-lang.org/refinements"];
 		const parameters = callable.parameters.map(value => callableDecision(value.type));
 		const result = callableDecision(callable.result.type);
-		const value = parameters.some(Boolean) || result || callable.result.ownership === "borrow" ? {
-			...parameters.some(Boolean) ? { parameters: callable.parameters.map((value, index) => decision(value, callable.parameters, parameters[index])) } : {}
-			, ...result || callable.result.ownership === "borrow" ? { result: decision(callable.result, callable.parameters, result) } : {}
-		} : undefined;
+		const value = parameters.some(Boolean) || result
+			|| callable.result.ownership === "borrow" || refinements ? {
+				...parameters.some(Boolean) || refinements ? {
+					parameters: callable.parameters.map((value, index) => decision(
+						value, callable.parameters, parameters[index]
+						, refinements?.parameters[index]
+					))
+				} : {}
+				, ...result || callable.result.ownership === "borrow" || refinements ? {
+					result: decision(callable.result, callable.parameters, result
+						, refinements?.result)
+				} : {}
+			} : undefined;
 		active.delete(type.id); selected.set(type.id, value); return value;
 	};
 	const contracts = Object.fromEntries(document.declarations
