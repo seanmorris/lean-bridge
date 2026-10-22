@@ -364,9 +364,13 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 		const refinements = conversion ? conversion.refinementsFor(signature.bindingId) : runtimeRefinements(signature, sourceItem.refinements);
 		if(!conversion && refinements && [...refinements.parameters, refinements.result].some(hasComponentNominalRefinements))
 			throw new TypeError("Nominal Subtype selections cannot share a component with callbacks yet");
-		const base = { ...sourceItem };
+		// Compiler-adapter exports carry rendered Lean parameter types, while native and
+		// PHP-Wasm projections deliberately retain only compiler metadata. Validators
+		// must therefore derive their carrier types from the authenticated private ABI,
+		// not from an optional host-projection field.
+		const base = { ...sourceItem
+			, parameters: signature.parameters.map(type => ({ leanType: wire(type) })) };
 		delete base.refinements;
-		if(conversion) base.parameters = conversion.siteFor(signature.bindingId).parameters;
 		const item = refinements ? { ...base, refinements } : base;
 		lines.push(...componentCarrierRefinementValidators(item, constrained));
 		seen.add(item.bindingId);

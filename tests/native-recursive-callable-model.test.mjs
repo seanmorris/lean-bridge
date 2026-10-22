@@ -11,6 +11,7 @@ import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } fr
 import { generateCompiledCallbacks } from "../src/build/native-component.mjs";
 import { compileNativeGraphProjection } from "../src/build/native-graph-projection.mjs";
 import { nativeMetadataFixture } from "./helpers/native-metadata.mjs";
+import { reviewedCallbackFinReview } from "./helpers/reviewed-callback-fin-fixture.mjs";
 import { structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr } from "./helpers/structured-callable-fixture.mjs";
 import { descriptor } from "./helpers/npm-structured-callable-fixture.mjs";
 import { compileNativeCallableGraphPayloads } from "../src/backends/c/native-callable-graph-payloads.mjs";
@@ -100,6 +101,37 @@ test("native callable descriptors retain directional callback Subtypes in their 
 		const changed = structuredClone(descriptor);
 		delete changed.callbacks.find(value => value.id === type.id).refinements;
 		assert.throws(() => nativeCallableGraphCarrierAbi(changed, ir), /differs/);
+	}
+});
+
+test("native Fin callback validators derive carrier types from the authenticated descriptor", () => {
+	const ir = reviewedCallbackFinReview({ hostReply: true });
+	const copiedGraph = createNativeCallableGraphDescriptor(ir);
+	for(const schemaVersion of [4, 5])
+	{
+		const model = {
+			schemaVersion
+			, profile: "native-library-v1"
+			, pointerBits: 64
+			, byteOrder: "little"
+			, component: ir.component, bindingIr: ir, copiedGraph
+			, exports: ir.declarations.map(declaration => {
+				const entry = copiedGraph.exports.find(item => item.bindingId === declaration.id);
+				const refinements = declaration.source.extensions["lean-lang.org/refinements"];
+				return {
+					module: "ReviewedCallbacks", name: declaration.source.declaration
+					, bindingId: declaration.id, symbol: `${entry.symbol}_lean`
+					// Native projections do not carry compiler-adapter `leanType` fields.
+					, parameters: declaration.parameters.map(parameter => ({ name: parameter.name }))
+					, ...refinements ? { refinements } : {}
+				};
+			})
+		};
+		const source = generateCompiledNativeLeanAdapters(model).leanSource;
+		const three = copiedGraph.exports.find(item => item.bindingId === "lean:ReviewedCallbacks.three");
+		assert.doesNotMatch(source, /\bundefined\b/u);
+		assert.match(source, new RegExp(`@\\[export ${three.symbol}_refinement_1\\][\\s\\S]+carrier : _root_\\.Array _root_\\.Nat`, "u"));
+		assert.match(source, /match \(if proof : \(value\) < 3 then/u);
 	}
 });
 
