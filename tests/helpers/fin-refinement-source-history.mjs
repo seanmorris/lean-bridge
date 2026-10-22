@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeRecursivePhpWasmEvidenceReplayRepairSource, recursivePhpWasmEvidenceReplayRepairChangedPaths } from "./recursive-php-wasm-evidence-replay-repair-source-history.mjs";
 import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHostedArchiversChangedPaths } from "./owned-checked-record-hosted-archivers-source-history.mjs";
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
@@ -1926,7 +1927,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordHostedArchiversChangedPaths
+	...recursivePhpWasmEvidenceReplayRepairChangedPaths
+	, ...ownedCheckedRecordHostedArchiversChangedPaths
 	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
@@ -2635,9 +2637,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const recursivePhpWasmEvidenceReplayRepair
+		= beforeRecursivePhpWasmEvidenceReplayRepairSource(
+			path, text, expected
+		);
+	if(sha256(recursivePhpWasmEvidenceReplayRepair) === expected)
+		return recursivePhpWasmEvidenceReplayRepair;
 	const ownedCheckedRecordHostedArchivers
 		= beforeOwnedCheckedRecordHostedArchiversSource(
-			path, text, expected
+			path, recursivePhpWasmEvidenceReplayRepair, expected
 		);
 	if(sha256(ownedCheckedRecordHostedArchivers) === expected)
 		return ownedCheckedRecordHostedArchivers;

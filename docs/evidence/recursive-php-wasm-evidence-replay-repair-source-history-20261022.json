@@ -1,0 +1,145 @@
+{
+  "additions": [
+    {
+      "currentSha256": "d0c22f9ccf8a5e70d0cb97ed558fed39b9647d06dfa33167a43f2969b6fc770b",
+      "path": "scripts/update-recursive-php-wasm-evidence-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "6285d6b550008529b74ebfe2680b06befe7acbe8bc9b35dad45be2feb18b50be",
+      "path": "tests/helpers/recursive-php-wasm-evidence-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "94842a9912a0b86d7ee3bfa6beb5f1d97af1b2f89f63719100ba212b6b8fcaef",
+      "path": "tests/helpers/recursive-php-wasm-evidence-replay-repair-source-history.mjs"
+    }
+  ],
+  "historicalUpdates": [
+    {
+      "currentSha256": "287d843432c8f317ef80feaade0c6b08c85acfcc2b4b5adcf3c29789f9def61e",
+      "edits": [
+        {
+          "current": " * @param callerBlob - Git blob expected at that producer revision. Defaults\n * to the live caller for source-only and new-producer checks.\n",
+          "previous": "",
+          "start": 5238
+        },
+        {
+          "current": "export const recursiveCheckedRecordPhpWasmCallers = (\n\toriginal, callerBlob = recursiveCheckedRecordPhpWasmCallerBlob\n) => {\n\tassert.match(callerBlob, /^[a-f0-9]{40}$/u);\n",
+          "previous": "export const recursiveCheckedRecordPhpWasmCallers = original => {\n",
+          "start": 5382
+        },
+        {
+          "current": "\tassert.equal(recursiveCheckedRecordPhpWasmGitBlob(native), callerBlob, \"Shared native-PHP caller blob\");\n",
+          "previous": "\tassert.equal(recursiveCheckedRecordPhpWasmGitBlob(native), recursiveCheckedRecordPhpWasmCallerBlob, \"Shared native-PHP caller blob\");\n",
+          "start": 5695
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-php-wasm-checks.mjs",
+      "previousSha256": "9e84c61ff961cf6156a1c75d4804a3e5c3d80a6d5955221b3de06808e3486879"
+    },
+    {
+      "currentSha256": "f9fbf1352f1df2485bc1a18ee823c73771b984c6206e9a6af36745198a7851b5",
+      "edits": [
+        {
+          "current": "/** Git blob of the shared native-PHP caller at the immutable producer revision. */\nexport const recursiveCheckedRecordPhpWasmProducerCallerBlob\n\t= \"ffcaefd02d94a939bd91c573a6f11a1075fbd1d9\";\n",
+          "previous": "",
+          "start": 935
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-php-wasm-provenance.mjs",
+      "previousSha256": "fbf32a9e1d8d5aa463aa92932942a0b75b9d9aa538914817ef41e41191b6b576"
+    },
+    {
+      "currentSha256": "5a1d7147db9bc8c5a4047e2bbe06dbcdf1f7d9e2d01e5fe3465062f1fbc44771",
+      "edits": [
+        {
+          "current": "import {\n\trecursiveCheckedRecordPhpWasmProducer\n\t, recursiveCheckedRecordPhpWasmProducerCallerBlob\n} from \"./recursive-checked-record-php-wasm-provenance.mjs\";\n",
+          "previous": "",
+          "start": 1701
+        },
+        {
+          "current": "\tconst callerBlob = producerCommit === recursiveCheckedRecordPhpWasmProducer\n\t\t? recursiveCheckedRecordPhpWasmProducerCallerBlob : undefined;\n\tawait checkRecursiveCheckedRecordPhpWasmConsumers({ text, evidence\n\t\t, callers: recursiveCheckedRecordPhpWasmCallers(original, callerBlob)\n\t\t, fixture });\n",
+          "previous": "\tawait checkRecursiveCheckedRecordPhpWasmConsumers({ text, evidence, callers: recursiveCheckedRecordPhpWasmCallers(original), fixture });\n",
+          "start": 14086
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-php-wasm-report.mjs",
+      "previousSha256": "42210fe1de668cda38b256ba145d8d06e746093ade7e50addda9d84766550654"
+    },
+    {
+      "currentSha256": "f271db57b7b8af9640f5f5e646d8383f46d41bde43df9ad7d0fa77ee4b3676d4",
+      "edits": [
+        {
+          "current": "import {\n\trecursiveCheckedRecordPhpWasmProducer\n\t, recursiveCheckedRecordPhpWasmProducerCallerBlob\n} from \"./recursive-checked-record-php-wasm-provenance.mjs\";\nimport { recursiveCheckedRecordPhpWasmOriginal } from \"./recursive-checked-record-php-wasm-sources.mjs\";\n",
+          "previous": "",
+          "start": 1638
+        },
+        {
+          "current": "\tconst producerOriginal = path => recursiveCheckedRecordPhpWasmOriginal(\n\t\trecursiveCheckedRecordPhpWasmProducer, path);\n\tconst historical = recursiveCheckedRecordPhpWasmCallers(\n\t\tproducerOriginal, recursiveCheckedRecordPhpWasmProducerCallerBlob);\n\tassert.deepEqual(Object.keys(historical), [\"weak\", \"strict\"]);\n\tassert.throws(() => recursiveCheckedRecordPhpWasmCallers(\n\t\tproducerOriginal), /Shared native-PHP caller blob/u);\n",
+          "previous": "",
+          "start": 6404
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-php-wasm-verifier-tests.mjs",
+      "previousSha256": "60b03cd4c94dbbb69170e278c4881933af7b9beb243af3709236a79de701677a"
+    },
+    {
+      "currentSha256": "32e7366dca78a312d989160c17ef669270b546e76b63fed11f5fe416637c7c4e",
+      "edits": [
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 3829
+        }
+      ],
+      "path": "tests/helpers/recursive-checked-record-promotion-source-history-tests.mjs",
+      "previousSha256": "2903349ce99ab63bdf0fe7e5b9b500411220311d63069e732ee61b8a79faf0ee"
+    }
+  ],
+  "implementationCommit": "d574277f4e019b1aba9f15059c1fce44e26143e5",
+  "integrationPredecessorCommit": "acc8d9286f5cca56e5c12e0f8b9c0f3850a8bf03",
+  "integrationUpdates": [
+    {
+      "currentSha256": "e8b0d1e26bd22b10e475c9bdae04678cba1d3a8c9d712ba670e5fc6391c25fcf",
+      "edits": [
+        {
+          "current": "import { beforeRecursivePhpWasmEvidenceReplayRepairSource, recursivePhpWasmEvidenceReplayRepairChangedPaths } from \"./recursive-php-wasm-evidence-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...recursivePhpWasmEvidenceReplayRepairChangedPaths\n\t, ...ownedCheckedRecordHostedArchiversChangedPaths\n",
+          "previous": "\t...ownedCheckedRecordHostedArchiversChangedPaths\n",
+          "start": 148509
+        },
+        {
+          "current": "\tconst recursivePhpWasmEvidenceReplayRepair\n\t\t= beforeRecursivePhpWasmEvidenceReplayRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(recursivePhpWasmEvidenceReplayRepair) === expected)\n\t\treturn recursivePhpWasmEvidenceReplayRepair;\n",
+          "previous": "",
+          "start": 180879
+        },
+        {
+          "current": "\t\t\tpath, recursivePhpWasmEvidenceReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 181208
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "05ae382f77aa1ef3df7a32c69617696c30775f58effd02a4f738962bccef53a0"
+    },
+    {
+      "currentSha256": "494337cad55e98c9a26da835f7787d6d894945207247af300391ca4c9ea14bd2",
+      "edits": [
+        {
+          "current": "import \"./helpers/recursive-php-wasm-evidence-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4269
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "851bfeb0e68209dde6675d33628637e964eededef98bc05e188f88376db792eb"
+    }
+  ],
+  "milestone": "recursive-php-wasm-evidence-replay-repair-v1",
+  "predecessorCommit": "387542894c5f8b9767b6ac2151da4d14680160fb",
+  "schemaVersion": 1,
+  "scope": "Bind immutable recursive PHP-Wasm evidence to the caller blob at its producer revision and keep aggregate promotion additions reconstructable through later history-reader repairs."
+}
