@@ -27,6 +27,7 @@ import { createNativeCallableGraphDescriptor, nativeCallableGraphCarrierAbi } fr
 import {
 	structuredCallableDirectionalCheckedRecordIr, structuredCallableDirectionalSubtypeIr, structuredCallableReviewedIr
 } from "./helpers/structured-callable-fixture.mjs";
+import "./helpers/callable-closure-refusal-source-history-tests.mjs";
 
 const run = promisify(execFile);
 const initializer = "initialize_LeanBridgeNative0123456789abcdef";

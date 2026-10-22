@@ -1,0 +1,278 @@
+{
+  "additions": [
+    {
+      "currentSha256": "261c481705574194a3ff1baf6fc0fd28499fa4fc5e9ba8d0c2c768876c3071d1",
+      "path": "tests/callable-closure-refusal.test.mjs"
+    },
+    {
+      "currentSha256": "4c4254f8cba3e20ada1f50cd5b41318392327225549f79785d1f37396a2d74db",
+      "path": "scripts/update-callable-closure-refusal-source-history.mjs"
+    },
+    {
+      "currentSha256": "322e71160a9fd057c143b87945129eaa6de16a2a9d0ab82b2a76cea5229a3a65",
+      "path": "tests/helpers/callable-closure-refusal-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "296f88d4089b7fb863320dedfc46781134e6c7f4eba57fbdb2d465001754e823",
+      "path": "tests/helpers/callable-closure-refusal-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d98cb39ef941b13c3af6d0080cf1bf0b9585ca97",
+  "milestone": "callable-closure-refusal-v1",
+  "predecessorCommit": "a8a6c351f7ea09a91ee2ccbe4b2e15c9bfb450f1",
+  "schemaVersion": 1,
+  "scope": "Returned Lean closures carrying Subtype, Fin, checked-record and nested checked arguments retain one compiler-derived validation order across Lean and native adapters. A refusing call identifies the first rejected argument and leaf through a private, one-shot thread-local diagnostic. Compiled controls establish exact refusal, stale-state clearing, recovery, disposal, and ordinary-call byte identity; this source milestone makes no installed-package or hosted-runtime claim.",
+  "updates": [
+    {
+      "currentSha256": "82320577a0e89e7781343b85d5e40d631d92215fa39bddc5754a5fd072f5d6ee",
+      "edits": [
+        {
+          "current": "/**\n * Whether a returned Lean closure refuses checked arguments its native caller can locate.\n * The Lean carrier and its native callers pass the same Fin role recovery, so they agree\n * on every such signature, Fin-only ones included where that backend recovers their role.\n *\n * @param abi - Closed callable carrier containing the export sites.\n * @param signature - One callback signature from that carrier.\n * @param inferFinDirection - Recover a Fin-only role from the export table.\n */\nexport const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) =>\n\tcomponentStructuredCallbackDirection(abi, signature, inferFinDirection) === \"closure\"\n\t&& Boolean(signature.refinements?.parameters.some(Boolean));\n\n",
+          "previous": "",
+          "start": 3720
+        }
+      ],
+      "path": "src/abi/component-structured-callables.mjs",
+      "previousSha256": "2c65fe3392f6109f98647a9ee244d427b16c71cd0966bae47bd2d4484000291c"
+    },
+    {
+      "currentSha256": "21a767703cb13e25bdd992b5795270f7e3bafe9c3faaf7d2c48fe5ec6e5684e6",
+      "edits": [
+        {
+          "current": "\t\t, \"callable-closure-refusal\"\n",
+          "previous": "",
+          "start": 243
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "c05af81cea84da0593a28cbcedb7062c23ec770d82a0cfac521a9ac45f4eb53b"
+    },
+    {
+      "currentSha256": "e94062bec0c6e24e90959c8241c363bc61fe945f83139d91495a41a93be36502",
+      "edits": [
+        {
+          "current": "import {\n\tcomponentStructuredCallablePrefix, componentStructuredClosureRefusals\n} from \"../../build/component-structured-callable-lean.mjs\";\n",
+          "previous": "import { componentStructuredCallablePrefix } from \"../../build/component-structured-callable-lean.mjs\";\n",
+          "start": 513
+        },
+        {
+          "current": "import { nativeGraphRefinementDiagnostics } from \"./native-graph-adapters.mjs\";\n",
+          "previous": "",
+          "start": 744
+        },
+        {
+          "current": "\t// A returned closure that refuses a checked argument answers an empty carrier. Only then does\n\t// its lease call walk the arguments in the closure's own conversion order with the exported\n\t// per-leaf checks, recording the first refused position for this thread's next read.\n\tconst refusals = componentStructuredClosureRefusals(abi, { finDirections });\n\tconst table = new Map(generated.layout.nodes.map((node, index) => [node.id, { ...node, index }]));\n\tconst labels = signature => signature.parameters.map((_, index) => ir.types\n\t\t.find(type => type.id === signature.id)?.callable.parameters[index]?.name ?? `arg${index}`);\n\tconst nodes = signature => signature.parameters.map(ref => callback(ref) ? null : copy(ref).id);\n\tconst sites = refusals?.sites.map(item => ({ ...item, diagnosticParameterNames: labels(item.signature) }));\n\tconst diagnostics = refusals && nativeGraphRefinementDiagnostics({\n\t\tabi, exports: [], layout: generated.layout, table\n\t\t, walker: id => `ng_${sha256(id).slice(0, 20)}`\n\t\t, normalized: { cycles: refusals.cycles, sites }\n\t\t, roots: new Map(sites.map(item => [item.bindingId, { parameters: nodes(item.signature) }]))\n\t\t, modes: [\"ordered\"], accessor: `${p}_callable_graph_error`\n\t});\n\t// Every shared refusal site has a pass, so a host projection can rely on the shared sites alone.\n\tif(refusals && refusals.sites.some(item => !diagnostics?.calls.has(item.bindingId)))\n\t\tthrow new TypeError(\"A refusing returned closure lacks a native diagnostic pass\");\n\tconst refuses = signature => Boolean(diagnostics?.calls.has(signature.id));\n\tif(diagnostics) header.push(`const char *${p}_callable_graph_error(void);`);\n",
+          "previous": "",
+          "start": 2713
+        },
+        {
+          "current": "\tconst argument = (ref, index) => `const ${callback(ref) ? callbackName(callback(ref)) : copy(ref).name} *a${index}`;\n\tconst checked = (signature, index) => diagnostics.calls.get(signature.id)\n\t\t.some(pass => pass.checked.some(item => item.index === index));\n\tconst refusal = ({ signature }) => [\n\t\t`static uint32_t ng_closure_refusal_${signature.key}(${signature.parameters.map(argument).join(\", \")}) {`\n\t\t, ...signature.parameters.flatMap((_, index) => checked(signature, index) ? [] : [`  (void)a${index};`])\n\t\t, \"  uint32_t status;\"\n\t\t, \"  ng_refinement_reset();\"\n\t\t, ...diagnostics.checks(signature.id)\n\t\t, \"  return NG_OK;\"\n\t\t, \"}\"];\n\tif(diagnostics) lines.push(diagnostics.support, ...diagnostics.validators\n\t\t, ...diagnostics.bounds, ...diagnostics.prototypes, ...diagnostics.helpers\n\t\t, ...refusals.sites.filter(item => refuses(item.signature)).flatMap(refusal));\n",
+          "previous": "",
+          "start": 8073
+        },
+        {
+          "current": "\t\t// With refusing closures present, every call clears the diagnostic on entry and exit, so it\n\t\t// is set only between a lease call that located a refusal and the next call or read.\n\t\tconst refusing = lease !== null && refuses(lease);\n",
+          "previous": "",
+          "start": 9611
+        },
+        {
+          "current": "\t\t\t, ...diagnostics ? [\"  ng_refinement_reset();\"] : [], ...refusing ? [\"  int refused = 0;\"] : []\n",
+          "previous": "",
+          "start": 9877
+        },
+        {
+          "current": "\t\t\t, ...refusing ? [`    refused = ng_closure_refusal_${lease.key}(${parameters.map((_, index) => `a${index}`).join(\", \")}) == NG_INVALID;`] : []\n",
+          "previous": "",
+          "start": 12732
+        },
+        {
+          "current": "\t\t\t, ...refusing ? [\"  if (status != NG_INVALID || !refused) ng_refinement_reset();\"] : diagnostics ? [\"  ng_refinement_reset();\"] : []\n",
+          "previous": "",
+          "start": 13741
+        }
+      ],
+      "path": "src/backends/c/native-callable-graph-calls.mjs",
+      "previousSha256": "b9b119ca531296e27ebca76668e5feb19c7e1a2a9141608bf0ef1f14ff4a7bc2"
+    },
+    {
+      "currentSha256": "02ebe512d044f74bba88f1dfcdcc30feea90a592ed9e9c5c641278d639b96dc3",
+      "edits": [
+        {
+          "current": " * Export sites check every Fin bound before any constructor, as their Lean adapter does;\n * the \"ordered\" mode instead walks each value once in its Lean conversion order.\n",
+          "previous": "",
+          "start": 1911
+        },
+        {
+          "current": " * @param root0.normalized - Prebuilt normalized sites and cycles, instead of the export mirrors.\n * @param root0.roots - Parameter graph nodes by site, instead of the export layout roots.\n * @param root0.modes - Diagnostic passes in order.\n * @param root0.accessor - Name of the one-shot thread-local diagnostic reader.\n",
+          "previous": "",
+          "start": 2523
+        },
+        {
+          "current": "export const nativeGraphRefinementDiagnostics = ({\n\tabi, exports, nominalRefinements, layout, table, walker\n\t, normalized: prebuilt = null\n\t, roots: siteRoots = null\n\t, modes = [\"fin\", \"constructor\"]\n\t, accessor = `${layout.prefix}_graph_error`\n}) => {\n\tif(!prebuilt && !exports.length) return null;\n\tconst normalized = prebuilt ?? componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);\n",
+          "previous": "const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, table, walker }) => {\n\tif(!exports.length) return null;\n\tconst normalized = componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);\n",
+          "start": 2848
+        },
+        {
+          "current": "\t\tif(tree.kind === \"fin\") return mode !== \"constructor\";\n\t\tif(tree.kind === \"subtype\") return mode !== \"fin\";\n\t\tif(tree.kind === \"checked-record\") return mode !== \"fin\"\n",
+          "previous": "\t\tif(tree.kind === \"fin\") return mode === \"fin\";\n\t\tif(tree.kind === \"subtype\") return mode === \"constructor\";\n\t\tif(tree.kind === \"checked-record\") return mode === \"constructor\"\n",
+          "start": 3531
+        },
+        {
+          "current": "\t\t\tif(mode !== \"constructor\")\n",
+          "previous": "\t\t\tif(mode === \"fin\")\n",
+          "start": 5974
+        },
+        {
+          "current": "\t\t\tif(mode !== \"fin\")\n",
+          "previous": "\t\t\tif(mode === \"constructor\")\n",
+          "start": 6677
+        },
+        {
+          "current": "\t\t\tif(mode !== \"fin\")\n",
+          "previous": "\t\t\tif(mode === \"constructor\")\n",
+          "start": 7762
+        },
+        {
+          "current": "\tconst roots = siteRoots ?? new Map(layout.roots.map(root => [root.bindingId, root]));\n",
+          "previous": "\tconst roots = new Map(layout.roots.map(root => [root.bindingId, root]));\n",
+          "start": 10759
+        },
+        {
+          "current": "\t\tfor(const mode of modes)\n",
+          "previous": "\t\tfor(const mode of [\"fin\", \"constructor\"])\n",
+          "start": 11496
+        },
+        {
+          "current": "const char *${accessor}(void) {\n",
+          "previous": "const char *${layout.prefix}_graph_error(void) {\n",
+          "start": 13797
+        },
+        {
+          "current": "\t// One site's passes: each refused position appends its label and path, restored on success.\n\tconst checks = bindingId => (calls.get(bindingId) ?? []).flatMap((pass, passIndex) => [\n\t\tpassIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`\n\t\t, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {\n\t\t\tconst mark = `refinement_mark_${passIndex}_${checkIndex}`;\n\t\t\treturn [`  size_t ${mark} = ng_refinement_mark();`\n\t\t\t\t, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`\n\t\t\t\t, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`\n\t\t\t\t, `  ng_refinement_restore(${mark});`];\n\t\t})\n\t]);\n",
+          "previous": "",
+          "start": 13955
+        },
+        {
+          "current": "\t\t, calls, checks, support };\n",
+          "previous": "\t\t, calls, support };\n",
+          "start": 15049
+        },
+        {
+          "current": "\tconst diagnostics = nativeGraphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });\n",
+          "previous": "\tconst diagnostics = graphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });\n",
+          "start": 21739
+        },
+        {
+          "current": "\t\tconst refinementCalls = diagnostics?.checks(root.bindingId) ?? [];\n\t\tif(refinementCalls.length) refinementCalls.push(\"  ng_refinement_reset();\");\n",
+          "previous": "\t\tconst refinementPasses = diagnostics?.calls.get(root.bindingId) ?? [];\n\t\tconst refinementCalls = refinementPasses.flatMap((pass, passIndex) => [\n\t\t\tpassIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`\n\t\t\t, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {\n\t\t\t\tconst mark = `refinement_mark_${passIndex}_${checkIndex}`;\n\t\t\t\treturn [`  size_t ${mark} = ng_refinement_mark();`\n\t\t\t\t\t, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`\n\t\t\t\t\t, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`\n\t\t\t\t\t, `  ng_refinement_restore(${mark});`];\n\t\t\t})\n\t\t]);\n\t\tif(refinementPasses.length) refinementCalls.push(\"  ng_refinement_reset();\");\n",
+          "start": 36121
+        }
+      ],
+      "path": "src/backends/c/native-graph-adapters.mjs",
+      "previousSha256": "959d51bce21e4b3d6e3f4d4b13cee152aa1356fc4303207eb28b1f9065150f4d"
+    },
+    {
+      "currentSha256": "b1b224ac7438dd06ba56edddf9321920b2fec3149b7bf509fb81547c85b4541a",
+      "edits": [
+        {
+          "current": "import { componentStructuredClosureRefusals } from \"../../build/component-structured-callable-lean.mjs\";\nimport { nativeCallableGraphCarrierAbi } from \"../../build/native-callable-graph.mjs\";\n",
+          "previous": "",
+          "start": 537
+        },
+        {
+          "current": "const callbackBodies = model => {\n\tconst abi = nativeCallableGraphCarrierAbi(model.native.descriptor, model.ir);\n\tconst refusing = new Set(componentStructuredClosureRefusals(abi)?.sites.map(item => item.bindingId));\n\treturn [...model.callbacks.values()].map(callback => {\n\t\tconst index = tag(model, callback), result = callback.result;\n\t\t// Only a closure whose native call records its first refused position has text to read;\n\t\t// every other failure, and every other closure, keeps the fixed message.\n\t\tconst closureFailure = refusing.has(callback.id)\n\t\t\t? `{ const char *refusal = status == 1 ? ${model.prefix}_callable_graph_error() : NULL;\n      if (refusal) lb_record_text(session, refusal, strlen(refusal));\n      else lb_record_text(session, \"Native Lean closure call failed\", sizeof(\"Native Lean closure call failed\") - 1); }`\n\t\t\t: 'lb_record_text(session, \"Native Lean closure call failed\", sizeof(\"Native Lean closure call failed\") - 1);';\n\t\treturn `\n",
+          "previous": "const callbackBodies = model => [...model.callbacks.values()].map(callback => {\n\tconst index = tag(model, callback), result = callback.result;\n\treturn `\n",
+          "start": 1385
+        },
+        {
+          "current": "    if (status) ${closureFailure}\n",
+          "previous": "    if (status) lb_record_text(session, \"Native Lean closure call failed\", sizeof(\"Native Lean closure call failed\") - 1);\n",
+          "start": 3079
+        },
+        {
+          "current": "\t}).join(\"\\n\");\n};\n",
+          "previous": "}).join(\"\\n\");\n",
+          "start": 5541
+        }
+      ],
+      "path": "src/backends/wit/callable-graph-host.mjs",
+      "previousSha256": "7a020d6d3b493fc322f9f9834870d73e6e9c87ea1cec2a976d39192e40a6bb56"
+    },
+    {
+      "currentSha256": "a7a09a35b9d54922e1d3c313d18facc0df220431066dbba34ce72cda1f919387",
+      "edits": [
+        {
+          "current": "/**\n * Export one pure check per constructor leaf of a checked input tree. Native diagnostic walkers\n * call it at each runtime position of that leaf, keyed exactly as componentRecursiveRefinementLeafKey.\n *\n * @param item - Site with its exported symbol and Lean wrapper prefix.\n * @param index - Parameter position.\n * @param tree - Normalized input refinement tree for that position.\n * @param type - Matching private copied-graph reference.\n * @param definitions - Private nominal definitions, keyed by lean: identity.\n * @param cycles - Authenticated recursive refinement targets.\n * @param carrier - Renderer for the leaf's Array carrier type.\n */\nexport const componentGraphRefinementValidators = (item, index, tree, type, definitions, cycles, carrier) =>\n\tcomponentRecursiveRefinementLeaves(tree, type, definitions, cycles).flatMap(leaf => [\n\t\t`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`\n\t\t, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`\n\t\t, \"  match carrierValue carrier with\"\n\t\t, \"  | .none => 0\"\n\t\t, \"  | .some value =>\"\n\t\t, `    match ${componentRefinementConversion(leaf.refinement, \"value\")} with`\n\t\t, \"    | .some _ => 1\"\n\t\t, \"    | .none => 0\", \"\"]);\n\n",
+          "previous": "",
+          "start": 2226
+        },
+        {
+          "current": "\t\tif(conversion) item.refinements.parameters.forEach((tree, index) => lines.push(...componentGraphRefinementValidators(\n\t\t\titem, index, tree, signature.parameters[index], definitions, conversion.cycles, carrier)));\n",
+          "previous": "\t\tif(conversion) item.refinements.parameters.forEach((tree, index) => {\n\t\t\tfor(const leaf of componentRecursiveRefinementLeaves(tree, signature.parameters[index], definitions, conversion.cycles))\n\t\t\t\tlines.push(`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`\n\t\t\t\t\t, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`\n\t\t\t\t\t, \"  match carrierValue carrier with\"\n\t\t\t\t\t, \"  | .none => 0\"\n\t\t\t\t\t, \"  | .some value =>\"\n\t\t\t\t\t, `    match ${componentRefinementConversion(leaf.refinement, \"value\")} with`\n\t\t\t\t\t, \"    | .some _ => 1\"\n\t\t\t\t\t, \"    | .none => 0\", \"\");\n\t\t});\n",
+          "start": 14412
+        }
+      ],
+      "path": "src/build/component-recursive-lean.mjs",
+      "previousSha256": "acc4cd63a4eb33143d423a3b5da9e5977f892a5a2176337c511665c486da009d"
+    },
+    {
+      "currentSha256": "fbf532e603354032cb519675cd478df605cb5da81e3a05bf60ca56c70c5677cc",
+      "edits": [
+        {
+          "current": "import { componentGraphRefinementValidators, componentRecursiveLeanSource } from \"./component-recursive-lean.mjs\";\n",
+          "previous": "import { componentRecursiveLeanSource } from \"./component-recursive-lean.mjs\";\n",
+          "start": 160
+        },
+        {
+          "current": "import {\n\tassertComponentStructuredCallableAbi, componentStructuredCallbackDirection, componentStructuredClosureRefuses\n} from \"../abi/component-structured-callables.mjs\";\n",
+          "previous": "import { assertComponentStructuredCallableAbi, componentStructuredCallbackDirection } from \"../abi/component-structured-callables.mjs\";\n",
+          "start": 379
+        },
+        {
+          "current": "/**\n * Normalize the argument trees of every returned closure that refuses checked arguments, from\n * the descriptor alone, so its Lean leaf checks and the native diagnostic walkers share one tree\n * and one leaf identity. Each site is normalized exactly as componentStructuredCallableMirrors\n * normalizes that closure's site; the walk order is the closure's own conversion order.\n *\n * @param abi - Authenticated copied-payload callable descriptor.\n * @param options - Backend-specific callback-role recovery controls.\n * @param options.finDirections - Recover Fin-only callback roles from exports.\n */\nexport const componentStructuredClosureRefusals = (abi, { finDirections = false } = {}) => {\n\tconst closures = abi.callbacks.filter(signature => componentStructuredClosureRefuses(abi, signature, finDirections));\n\tif(!closures.length) return null;\n\tconst callbacks = new Set(abi.callbacks.map(type => type.id));\n\tconst unit = { kind: \"primitive\", name: \"unit\" };\n\tconst site = type => type.kind === \"named\" && callbacks.has(type.id) ? unit : type;\n\tconst symbol = signature =>\n\t\t`lean_bridge_${sha256(`${abi.exports[0].symbol}\\0callback\\0${signature.key}`).slice(0, 24)}`;\n\tconst exports = closures.map(signature => ({\n\t\tbindingId: signature.id, symbol: symbol(signature)\n\t\t, parameters: signature.parameters.map(site)\n\t\t, result: site(signature.result), resultMode: \"value\"\n\t}));\n\tconst items = closures.map(signature => ({\n\t\tbindingId: signature.id, symbol: symbol(signature)\n\t\t, parameters: signature.parameters.map(() => ({ leanType: \"\" }))\n\t\t, refinements: signature.refinements\n\t\t, produced: { parameters: signature.parameters.map(() => false), result: true }\n\t}));\n\tconst view = { ...componentStructuredCopiedView(abi), exports };\n\tconst mirrors = componentRefinementMirrors(view, items, componentStructuredLeanType, abi.nominalRefinements ?? []);\n\tconst sites = closures.map((signature, index) => ({\n\t\tsignature, bindingId: signature.id\n\t\t, symbol: `${componentStructuredCallablePrefix(abi, signature)}_closure`\n\t\t, wrapper: `closure_${signature.key}`\n\t\t, refinements: mirrors.sites[index].refinements\n\t}));\n\treturn { cycles: mirrors.cycles, sites };\n};\n\n",
+          "previous": "",
+          "start": 10538
+        },
+        {
+          "current": "\tconst refusals = componentStructuredClosureRefusals(abi, { finDirections });\n\tconst definitions = new Map(abi.types.map(type => [type.id, type]));\n",
+          "previous": "",
+          "start": 13597
+        },
+        {
+          "current": "\t\t\t// After apply refuses, native callers locate the first refused leaf with these pure\n\t\t\t// per-leaf checks; apply itself is unchanged.\n\t\t\tconst refusal = refusals?.sites.find(item => item.bindingId === signature.id);\n\t\t\tif(refusal) refusal.refinements.parameters.forEach((tree, index) => lines.push(...componentGraphRefinementValidators(\n\t\t\t\trefusal, index, tree, signature.parameters[index], definitions, refusals.cycles, carrier)));\n",
+          "previous": "",
+          "start": 17236
+        }
+      ],
+      "path": "src/build/component-structured-callable-lean.mjs",
+      "previousSha256": "1f54e0bcb95f96f6c7be430098e0932845c3dffb645f0502008101560318d43a"
+    },
+    {
+      "currentSha256": "61bd022b356ed649f0337cee07a508eaa2fdcb6b86f475cba06527d7500ad23a",
+      "edits": [
+        {
+          "current": "import { beforeCallableClosureRefusalSource, callableClosureRefusalChangedPaths } from \"./callable-closure-refusal-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callableClosureRefusalChangedPaths\n\t, ...phpWasmCallbackEntryChangedPaths\n",
+          "previous": "\t...phpWasmCallbackEntryChangedPaths\n",
+          "start": 144345
+        },
+        {
+          "current": "\tconst callableClosureRefusal\n\t\t= beforeCallableClosureRefusalSource(path, text, expected);\n\tif(sha256(callableClosureRefusal) === expected)\n\t\treturn callableClosureRefusal;\n",
+          "previous": "",
+          "start": 175449
+        },
+        {
+          "current": "\t\t= beforePhpWasmCallbackEntrySource(path, callableClosureRefusal, expected);\n",
+          "previous": "\t\t= beforePhpWasmCallbackEntrySource(path, text, expected);\n",
+          "start": 175651
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "257a30953b26b611ad7be555b55e7888b97fbffde30fedbd045e73a6f8046ee8"
+    }
+  ]
+}
