@@ -28,8 +28,14 @@ const save = async (root, path, bytes) => {
  * @param options - Retained record root and underlying process runner.
  */
 export const createPhpWasmRefinementEntryBuildObserver = options => {
-	const { recordRoot, runner, headerInputs = [] } = options;
+	const {
+		recordRoot, runner, headerInputs = []
+		, instrumentEntries = instrumentSubtypeCEntries
+		, validateEntries = validateSubtypeEntrySelection
+	} = options;
 	assert.equal(typeof recordRoot, "string"); assert.ok(runner?.capture);
+	assert.equal(typeof instrumentEntries, "function");
+	assert.equal(typeof validateEntries, "function");
 	assert.ok(Array.isArray(headerInputs));
 	assert.equal(new Set(headerInputs).size, headerInputs.length);
 	for(const path of headerInputs)
@@ -38,7 +44,7 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 	let selected = null, linked = false, headerProbeRoot = null;
 	const select = entries => {
 		assert.equal(selected, null, "entry selection is bound once");
-		validateSubtypeEntrySelection(entries); selected = structuredClone(entries);
+		validateEntries(entries); selected = structuredClone(entries);
 		for(const item of selected) counts.set(item.symbol, 0);
 		return structuredClone(selected);
 	};
@@ -63,7 +69,7 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 		for(const path of headerInputs)
 		{
 			const originalPath = join(originalRoot, path), original = await readFile(originalPath, "utf8");
-			const { source, receipt } = instrumentSubtypeCEntries(original, selected);
+			const { source, receipt } = instrumentEntries(original, selected);
 			await save(recordRoot, `header-inputs/${path}`, original);
 			await save(recordRoot, `header-probes/${path}`, source);
 			for(const item of receipt.insertions.filter(item => item.kind !== "preamble"))
@@ -79,7 +85,7 @@ export const createPhpWasmRefinementEntryBuildObserver = options => {
 			assert.ok(selected, "entry selection precedes C compilation");
 			const headerRoot = await instrumentHeaders(args);
 			const originalPath = args[args.indexOf("-c") + 1], original = await readFile(originalPath, "utf8");
-			const { source, receipt } = instrumentSubtypeCEntries(original, selected);
+			const { source, receipt } = instrumentEntries(original, selected);
 			const name = `${compiled.length + 1}-${basename(originalPath)}`;
 			const probePath = join(recordRoot, "c-probes", name);
 			await save(recordRoot, `c-inputs/${name}`, original);
@@ -148,9 +154,15 @@ export const buildPhpWasmRefinementEntryProbe = async options => {
 		projectRoot, outputRoot, recordRoot, leanPrefix, runtimeRoot
 		, emsdkRoot, phpSource
 		, sourceProbe, settings, signal, checkModel, runner = processBuildRunner
+		, selectEntries = phpWasmGraphRefinementEntrySelection
+		, instrumentEntries = instrumentSubtypeCEntries
+		, validateEntries = validateSubtypeEntrySelection
 	} = options;
 	await mkdir(recordRoot); await save(recordRoot, "source-probe.json", canonicalJson(sourceProbe));
-	const observer = createPhpWasmRefinementEntryBuildObserver({ recordRoot, runner });
+	assert.equal(typeof selectEntries, "function");
+	const observer = createPhpWasmRefinementEntryBuildObserver({
+		recordRoot, runner, instrumentEntries, validateEntries
+	});
 	let model;
 	try
 	{
@@ -160,7 +172,7 @@ export const buildPhpWasmRefinementEntryProbe = async options => {
 			, runner: observer
 			, validateModel: value => {
 				model = value;
-				const selected = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries).selected;
+				const selected = selectEntries(model, sourceProbe.entries).selected;
 				observer.select(selected); checkModel?.(model);
 			}
 		});

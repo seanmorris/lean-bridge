@@ -9,6 +9,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { restoreSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
+import {
+	instrumentPhpWasmCallbackEntries, validatePhpWasmCallbackEntrySelection
+} from "./php-wasm-callback-entry-c.mjs";
 import { createPhpWasmRefinementEntryBuildObserver } from "./php-wasm-refinement-entry-build.mjs";
 
 const selected = Object.freeze([
@@ -122,4 +125,32 @@ test("compiler-input observer overlays and restores generated owned headers", as
 		const probe = await readFile(join(records, "header-probes", item.path), "utf8");
 		assert.equal(restoreSubtypeCEntries(probe, item), original);
 	}
+});
+
+test("compiler-input observer accepts a closed callback instrumentation dialect", async t => {
+	const root = await mkdtemp(join(tmpdir(), "lean-bridge-callback-entry-observer-"));
+	t.after(() => rm(root, { recursive: true }));
+	const input = join(root, "input.c"), records = join(root, "records");
+	await mkdir(records);
+	await writeFile(input, "static ZEND_FUNCTION(lgc_call0) { RETURN_NULL(); }\n");
+	const runner = { capture: async request => {
+		if(request.args.includes("-c"))
+		{
+			const source = await readFile(request.args[request.args.indexOf("-c") + 1], "utf8");
+			assert.match(source, /LB_CALLBACK_ENTRY_V1 begin public Probe\.call/u);
+			await writeFile(request.args[request.args.indexOf("-o") + 1], source);
+		}
+		return { stdout: "", stderr: "", code: 0 };
+	} };
+	const observer = createPhpWasmRefinementEntryBuildObserver({
+		recordRoot: records, runner
+		, instrumentEntries: instrumentPhpWasmCallbackEntries
+		, validateEntries: validatePhpWasmCallbackEntrySelection
+	});
+	observer.select([{ symbol: "lgc_call0", kind: "public", label: "Probe.call" }]);
+	await observer.capture({ command: "/tool/emcc"
+		, args: ["-c", input, "-o", join(root, "input.o")] });
+	await observer.capture({ command: "/tool/emcc"
+		, args: ["-sSIDE_MODULE=2", join(root, "input.o"), "-o", join(root, "probe.so")] });
+	assert.deepEqual(observer.snapshot().definitionCounts, { lgc_call0: 1 });
 });
