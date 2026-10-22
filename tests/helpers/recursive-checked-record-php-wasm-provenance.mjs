@@ -19,6 +19,9 @@ export const recursiveCheckedRecordPhpWasmProducer
 	= "a6d16eadd27aa8d9461a9fe3406e324028ac9beb";
 /** Full checker revision; pinned with the producer. */
 export const recursiveCheckedRecordPhpWasmVerifier = recursiveCheckedRecordPhpWasmProducer;
+/** Git blob of the shared native-PHP caller at the immutable producer revision. */
+export const recursiveCheckedRecordPhpWasmProducerCallerBlob
+	= "ffcaefd02d94a939bd91c573a6f11a1075fbd1d9";
 export const recursiveCheckedRecordPhpWasmEvidence
 	= "docs/evidence/recursive-checked-record-php-wasm-20261017";
 export const recursiveCheckedRecordPhpWasmEvidenceLoadCeiling = 8;

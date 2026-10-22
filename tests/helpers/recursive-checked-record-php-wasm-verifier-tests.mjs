@@ -25,6 +25,11 @@ import {
 } from "./recursive-checked-record-php-wasm-checks.mjs";
 import { checkRecursiveCheckedRecordPhpWasmReport } from "./recursive-checked-record-php-wasm-report.mjs";
 import { checkRecursiveCheckedRecordPhpWasmControls } from "./recursive-checked-record-php-wasm-controls.mjs";
+import {
+	recursiveCheckedRecordPhpWasmProducer
+	, recursiveCheckedRecordPhpWasmProducerCallerBlob
+} from "./recursive-checked-record-php-wasm-provenance.mjs";
+import { recursiveCheckedRecordPhpWasmOriginal } from "./recursive-checked-record-php-wasm-sources.mjs";
 import { mutualCheckedRecordRefinements } from "./mutual-checked-record-fixture.mjs";
 import { recursiveCheckedRecordRefinements } from "./recursive-checked-record-fixture.mjs";
 
@@ -93,6 +98,13 @@ test("recursive PHP-Wasm consumer records refuse forked, swapped and substituted
 	const callers = recursiveCheckedRecordPhpWasmCallers(original);
 	for(const strictness of ["weak", "strict"]) assert.equal(callers[strictness], await recursiveCheckedRecordPhpWasmCallerSource(strictness));
 	assert.throws(() => recursiveCheckedRecordPhpWasmCallers(path => Buffer.concat([original(path), Buffer.from("\n")])), /Shared native-PHP caller blob/u);
+	const producerOriginal = path => recursiveCheckedRecordPhpWasmOriginal(
+		recursiveCheckedRecordPhpWasmProducer, path);
+	const historical = recursiveCheckedRecordPhpWasmCallers(
+		producerOriginal, recursiveCheckedRecordPhpWasmProducerCallerBlob);
+	assert.deepEqual(Object.keys(historical), ["weak", "strict"]);
+	assert.throws(() => recursiveCheckedRecordPhpWasmCallers(
+		producerOriginal), /Shared native-PHP caller blob/u);
 	for(const fixture of ["recursive", "mutual"])
 	{
 		const texts = {}, evidence = { consumerSources: {}, requests: {}, deployment: {} };

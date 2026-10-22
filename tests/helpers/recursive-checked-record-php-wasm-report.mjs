@@ -25,6 +25,10 @@ import {
 import { assertNestedCheckedRecordPhpResources as assertRecursiveCheckedRecordPhpWasmResources } from "./nested-checked-record-php-resources.mjs";
 import { assertPhpWasmRefinementPackage } from "./php-wasm-fin-direct-report.mjs";
 import { phpWasmDriverHashes, phpWasmIsolationFlags } from "./type-corpus-php-wasm-evidence.mjs";
+import {
+	recursiveCheckedRecordPhpWasmProducer
+	, recursiveCheckedRecordPhpWasmProducerCallerBlob
+} from "./recursive-checked-record-php-wasm-provenance.mjs";
 import { recursiveCheckedRecordPhpWasmOriginal, recursiveCheckedRecordPhpWasmGenerators } from "./recursive-checked-record-php-wasm-sources.mjs";
 import { readClosedPackageZip } from "./closed-package-zip.mjs";
 import { readOwnedPerlCallbackVariantTar } from "./owned-perl-callback-result-variant-archives.mjs";
@@ -172,7 +176,11 @@ export const checkRecursiveCheckedRecordPhpWasmReport = async (read, { route, fi
 	}
 	for(const path of deploymentRecords) assert.deepEqual(deployment[path], identity(await bytes("deployment/" + path)));
 	// One pinned native-PHP caller serves both strictness modes; only host entry adapts.
-	await checkRecursiveCheckedRecordPhpWasmConsumers({ text, evidence, callers: recursiveCheckedRecordPhpWasmCallers(original), fixture });
+	const callerBlob = producerCommit === recursiveCheckedRecordPhpWasmProducer
+		? recursiveCheckedRecordPhpWasmProducerCallerBlob : undefined;
+	await checkRecursiveCheckedRecordPhpWasmConsumers({ text, evidence
+		, callers: recursiveCheckedRecordPhpWasmCallers(original, callerBlob)
+		, fixture });
 	validateBrickMathInstall(evidence.composer, deployment);
 	const { generateCopiedPhpGraphZendAdapter, bundledBrickMath } = await recursiveCheckedRecordPhpWasmGenerators(producerCommit);
 	const embedded = `node_modules/${settings.npm.name}/php/`;

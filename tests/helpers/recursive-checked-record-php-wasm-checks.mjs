@@ -97,11 +97,16 @@ export const checkRecursiveCheckedRecordPhpWasmContext = (context, report) => {
  * Reconstruct both adapted callers from the frozen producer's pinned native caller blob.
  *
  * @param original - Frozen producer byte reader.
+ * @param callerBlob - Git blob expected at that producer revision. Defaults
+ * to the live caller for source-only and new-producer checks.
  */
-export const recursiveCheckedRecordPhpWasmCallers = original => {
+export const recursiveCheckedRecordPhpWasmCallers = (
+	original, callerBlob = recursiveCheckedRecordPhpWasmCallerBlob
+) => {
+	assert.match(callerBlob, /^[a-f0-9]{40}$/u);
 	const native = original(recursiveCheckedRecordPhpWasmCaller);
 	// Both PHP lanes carry this exact caller; any other blob is a forked corpus.
-	assert.equal(recursiveCheckedRecordPhpWasmGitBlob(native), recursiveCheckedRecordPhpWasmCallerBlob, "Shared native-PHP caller blob");
+	assert.equal(recursiveCheckedRecordPhpWasmGitBlob(native), callerBlob, "Shared native-PHP caller blob");
 	return Object.freeze(Object.fromEntries(["weak", "strict"].map(strictness =>
 		[strictness, adaptRecursiveCheckedRecordPhpWasm(native.toString(), strictness)])));
 };

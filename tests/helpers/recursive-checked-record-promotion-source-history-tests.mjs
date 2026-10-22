@@ -89,7 +89,8 @@ test("recursive checked-record promotion closes additions", async () => {
 		recursiveCheckedRecordPromotionHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${recursiveCheckedRecordPromotionPredecessor}:${addition.path}`]
