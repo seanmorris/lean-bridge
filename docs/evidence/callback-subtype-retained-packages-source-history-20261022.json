@@ -1,69 +1,25 @@
 {
   "additions": [
     {
-      "currentSha256": "60f2493206c2f57383a8b3e1ef855c3c82eb3eb9f7d1891ccfbdc6d2871b9ddc",
-      "path": "tests/helpers/callback-subtype-retained-packages.mjs"
-    },
-    {
-      "currentSha256": "cdd4a6e38efaa97d33088376c9bcf4464701f30e9844f6fa50c73b7f799d3b6c",
+      "currentSha256": "d329621f4e658e060e610e76cd468c5062cb491bb6cbbabb4a1db7ef530d4a93",
       "path": "scripts/update-callback-subtype-retained-packages-source-history.mjs"
     },
     {
-      "currentSha256": "22d316f4510c037b1e00de49a393efb87b7474614fa444ac61ff8c71ac41009f",
+      "currentSha256": "cd60495898beea35e81ec9fc5d144c0b22e3f09f3a6310a6123e780f17359ebc",
       "path": "tests/helpers/callback-subtype-retained-packages-source-history-tests.mjs"
     },
     {
-      "currentSha256": "b0b03a2a3754697a3505443f3e5cd9f918f8c050b51191c7e61bae446532aece",
+      "currentSha256": "2083205c9cb79ffc4d1c5fc50504d09b0dbcbd0fb1cdd246ec033262d53f71f1",
       "path": "tests/helpers/callback-subtype-retained-packages-source-history.mjs"
     }
   ],
-  "implementationCommit": "d98d58e5a8bf564fa4e3cc1a90b66d63fca3683e",
-  "integrationUpdates": [
+  "historicalAdditions": [
     {
-      "currentSha256": "a41776d46ebdd560c7356918708c943a6510dcdbd19b2dca661d9bc38a326f47",
-      "edits": [
-        {
-          "current": "import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from \"./callback-subtype-retained-packages-source-history.mjs\";\n",
-          "previous": "",
-          "start": 392
-        },
-        {
-          "current": "\t...callbackSubtypeRetainedPackagesChangedPaths\n\t, ...zeroPayloadMatrixClosureChangedPaths\n",
-          "previous": "\t...zeroPayloadMatrixClosureChangedPaths\n",
-          "start": 148321
-        },
-        {
-          "current": "\tconst callbackSubtypeRetainedPackages\n\t\t= beforeCallbackSubtypeRetainedPackagesSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackSubtypeRetainedPackages) === expected)\n\t\treturn callbackSubtypeRetainedPackages;\n",
-          "previous": "",
-          "start": 180634
-        },
-        {
-          "current": "\t\t= beforeZeroPayloadMatrixClosureSource(\n\t\t\tpath, callbackSubtypeRetainedPackages, expected\n\t\t);\n",
-          "previous": "\t\t= beforeZeroPayloadMatrixClosureSource(path, text, expected);\n",
-          "start": 180883
-        }
-      ],
-      "path": "tests/helpers/fin-refinement-source-history.mjs",
-      "previousSha256": "d95c34dd8679a4c3eaeabd257e8ff1d058ddb6945358a415d060f421a8d2cbab"
-    },
-    {
-      "currentSha256": "e25a7ec51c6e9b5d63585b710285a454300cfbf26529aba2c934042c2136f1b1",
-      "edits": [
-        {
-          "current": "import \"./helpers/callback-subtype-retained-packages-source-history-tests.mjs\";\n",
-          "previous": "",
-          "start": 4097
-        }
-      ],
-      "path": "tests/php-wasm-fin.test.mjs",
-      "previousSha256": "7020a9e71a483b043c60f7bd1305e1e4727633b29810848f3599b54792f8763d"
+      "currentSha256": "60f2493206c2f57383a8b3e1ef855c3c82eb3eb9f7d1891ccfbdc6d2871b9ddc",
+      "path": "tests/helpers/callback-subtype-retained-packages.mjs"
     }
   ],
-  "milestone": "callback-subtype-retained-packages-v1",
-  "predecessorCommit": "387542894c5f8b9767b6ac2151da4d14680160fb",
-  "schemaVersion": 1,
-  "scope": "Retain every callback Subtype route's receipt-named package set beside its hosted report before installation, install from the retained copy, and verify the retained bytes in the CI checkers, hosted archiver and hosted evidence replay.",
-  "updates": [
+  "historicalUpdates": [
     {
       "currentSha256": "18322cb30d983075f4c516d749a4499021d6615e68e4906b93bcb5b4ee720822",
       "edits": [
@@ -341,5 +297,81 @@
       "path": "tests/helpers/callback-subtype-hosted-evidence.mjs",
       "previousSha256": "978cc1190e44df47b13b7a150e765bd07f90e64fda0e5f5e1ef2a67ef9d5b59a"
     }
-  ]
+  ],
+  "historyParentCommit": "f759f3c11294cad29a8d61224054430c6862c93f",
+  "implementationCommit": "d98d58e5a8bf564fa4e3cc1a90b66d63fca3683e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "32f2c06b5b313c0f4812a59847bd785a3509bfbdabeda80a79aa02d4fd19f9f8",
+      "edits": [
+        {
+          "current": "\tappendFile, mkdir, mkdtemp, readFile, rm, writeFile\n",
+          "previous": "\tappendFile, mkdtemp, readFile, rm, writeFile\n",
+          "start": 138
+        },
+        {
+          "current": "\tawait rejects(({ outputRoot }) => mkdir(join(outputRoot\n\t\t, \"evidence/ordinary/handoff/empty\"))\n\t, /must not contain empty directories/u);\n",
+          "previous": "",
+          "start": 15598
+        }
+      ],
+      "path": "tests/callback-subtype-native-ci.test.mjs",
+      "previousSha256": "42699c6c1b87d74d3dc628dba7468cd5b391e24cf81df1c34dbcec7432c9ca13"
+    },
+    {
+      "currentSha256": "76f88e9be5673055d657adf539047ce287a14d83f0f9844701fd16c02621a821",
+      "edits": [
+        {
+          "current": "\t\tif(information.isDirectory())\n\t\t{\n\t\t\tconst nested = await regularFiles(root, path);\n\t\t\tassert.ok(nested.length > 0\n\t\t\t\t, `Retained packages must not contain empty directories: ${path}`);\n\t\t\tfiles.push(...nested);\n\t\t}\n",
+          "previous": "\t\tif(information.isDirectory()) files.push(...await regularFiles(root, path));\n",
+          "start": 1370
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-retained-packages.mjs",
+      "previousSha256": "60f2493206c2f57383a8b3e1ef855c3c82eb3eb9f7d1891ccfbdc6d2871b9ddc"
+    },
+    {
+      "currentSha256": "0256caa6313c0e4f8be3dff50e9220599eb8451229d0fcafd8c4ca5147da19f3",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeRetainedPackagesSource, callbackSubtypeRetainedPackagesChangedPaths } from \"./callback-subtype-retained-packages-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeRetainedPackagesChangedPaths\n\t, ...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
+          "previous": "\t...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
+          "start": 148673
+        },
+        {
+          "current": "\tconst callbackSubtypeRetainedPackages\n\t\t= beforeCallbackSubtypeRetainedPackagesSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackSubtypeRetainedPackages) === expected)\n\t\treturn callbackSubtypeRetainedPackages;\n",
+          "previous": "",
+          "start": 181093
+        },
+        {
+          "current": "\t\t\tpath, callbackSubtypeRetainedPackages, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 181408
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "e8b0d1e26bd22b10e475c9bdae04678cba1d3a8c9d712ba670e5fc6391c25fcf"
+    },
+    {
+      "currentSha256": "dd4175fc1aac72facc5d1162818496a00e0ff6266f13c6530738320738ca1f06",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-retained-packages-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4097
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "494337cad55e98c9a26da835f7787d6d894945207247af300391ca4c9ea14bd2"
+    }
+  ],
+  "milestone": "callback-subtype-retained-packages-v1",
+  "predecessorCommit": "387542894c5f8b9767b6ac2151da4d14680160fb",
+  "schemaVersion": 1,
+  "scope": "Retain every callback Subtype route's receipt-named package set beside its hosted report before installation, install from the retained copy, and verify the retained bytes in the CI checkers, hosted archiver and hosted evidence replay."
 }

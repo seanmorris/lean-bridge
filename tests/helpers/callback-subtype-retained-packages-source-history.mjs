@@ -13,7 +13,9 @@ export const callbackSubtypeRetainedPackagesPredecessor
 	= "387542894c5f8b9767b6ac2151da4d14680160fb";
 export const callbackSubtypeRetainedPackagesImplementation
 	= "d98d58e5a8bf564fa4e3cc1a90b66d63fca3683e";
-const implementationAdditions = Object.freeze([
+export const callbackSubtypeRetainedPackagesHistoryParent
+	= "f759f3c11294cad29a8d61224054430c6862c93f";
+export const callbackSubtypeRetainedPackagesHistoricalAdditions = Object.freeze([
 	"tests/helpers/callback-subtype-retained-packages.mjs"
 ]);
 export const callbackSubtypeRetainedPackagesModifiedPaths = Object.freeze([
@@ -32,21 +34,22 @@ export const callbackSubtypeRetainedPackagesModifiedPaths = Object.freeze([
 export const callbackSubtypeRetainedPackagesImplementationPaths
 	= Object.freeze([
 		...callbackSubtypeRetainedPackagesModifiedPaths
-		, ...implementationAdditions
+		, ...callbackSubtypeRetainedPackagesHistoricalAdditions
 	]);
 export const callbackSubtypeRetainedPackagesIntegrationPaths
 	= Object.freeze([
-		"tests/helpers/fin-refinement-source-history.mjs"
+		"tests/callback-subtype-native-ci.test.mjs"
+		, "tests/helpers/callback-subtype-retained-packages.mjs"
+		, "tests/helpers/fin-refinement-source-history.mjs"
 		, "tests/php-wasm-fin.test.mjs"
 	]);
 export const callbackSubtypeRetainedPackagesChangedPaths
-	= Object.freeze([
+	= Object.freeze([...new Set([
 		...callbackSubtypeRetainedPackagesModifiedPaths
 		, ...callbackSubtypeRetainedPackagesIntegrationPaths
-	]);
+	])]);
 export const callbackSubtypeRetainedPackagesAddedPaths = Object.freeze([
-	...implementationAdditions
-	, "scripts/update-callback-subtype-retained-packages-source-history.mjs"
+	"scripts/update-callback-subtype-retained-packages-source-history.mjs"
 	, "tests/helpers/callback-subtype-retained-packages-source-history-tests.mjs"
 	, "tests/helpers/callback-subtype-retained-packages-source-history.mjs"
 ]);
@@ -102,9 +105,16 @@ export const beforeCallbackSubtypeRetainedPackagesSource = (
 	const digest = sha256(source);
 	if(digest === expected) return source;
 	const data = record();
-	const update = [...data.updates, ...data.integrationUpdates]
-		.find(item => item.path === path && item.currentSha256 === digest);
-	return update
-		? reverseCallbackSubtypeRetainedPackagesUpdate(source, update)
+	const integration = data.integrationUpdates.find(item =>
+		item.path === path && item.currentSha256 === digest);
+	if(integration)
+	{
+		source = reverseCallbackSubtypeRetainedPackagesUpdate(source, integration);
+		if(sha256(source) === expected) return source;
+	}
+	const historical = data.historicalUpdates.find(item =>
+		item.path === path && item.currentSha256 === sha256(source));
+	return historical
+		? reverseCallbackSubtypeRetainedPackagesUpdate(source, historical)
 		: source;
 };

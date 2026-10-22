@@ -12,7 +12,9 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
 	callbackSubtypeRetainedPackagesAddedPaths
+	, callbackSubtypeRetainedPackagesHistoricalAdditions
 	, callbackSubtypeRetainedPackagesHistoryPath
+	, callbackSubtypeRetainedPackagesHistoryParent
 	, callbackSubtypeRetainedPackagesImplementation
 	, callbackSubtypeRetainedPackagesImplementationPaths
 	, callbackSubtypeRetainedPackagesIntegrationPaths
@@ -24,8 +26,8 @@ import {
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 assert.equal(git(["rev-parse", "HEAD"]).trim()
-	, callbackSubtypeRetainedPackagesImplementation
-	, "Callback Subtype retained package history requires its implementation commit");
+	, "39e512f4863b2ff5e4f33d6e17a005bbac60f2cd"
+	, "Callback Subtype retained package history requires its integration staging commit after the implementation commit");
 assert.equal(git(["rev-parse"
 	, `${callbackSubtypeRetainedPackagesImplementation}^`]).trim()
 , callbackSubtypeRetainedPackagesPredecessor);
@@ -33,7 +35,8 @@ assert.deepEqual(git(["diff", "--name-only"
 	, callbackSubtypeRetainedPackagesPredecessor
 	, callbackSubtypeRetainedPackagesImplementation]).trim().split("\n").sort()
 , [...callbackSubtypeRetainedPackagesImplementationPaths].sort());
-assert.equal(git(["ls-tree", "--name-only", "HEAD", "--"
+assert.equal(git(["ls-tree", "--name-only"
+	, callbackSubtypeRetainedPackagesHistoryParent, "--"
 	, callbackSubtypeRetainedPackagesHistoryPath]).trim(), "");
 
 const directory = await mkdtemp(join(
@@ -83,21 +86,31 @@ const transitionSources = async (path, previous, current) => {
 
 try
 {
-	const updates = [];
+	const historicalUpdates = [];
 	for(const path of callbackSubtypeRetainedPackagesModifiedPaths)
-		updates.push(await transitionSources(path
+		historicalUpdates.push(await transitionSources(path
 			, git(["show", `${callbackSubtypeRetainedPackagesPredecessor}:${path}`])
 			, git(["show", `${callbackSubtypeRetainedPackagesImplementation}:${path}`])));
+	const historicalAdditions = [];
+	for(const path of callbackSubtypeRetainedPackagesHistoricalAdditions)
+	{
+		assert.equal(git(["ls-tree", "--name-only"
+			, callbackSubtypeRetainedPackagesPredecessor, "--", path]).trim()
+		, "", path);
+		historicalAdditions.push({ path
+			, currentSha256: sha256(git(["show"
+				, `${callbackSubtypeRetainedPackagesImplementation}:${path}`])) });
+	}
 	const integrationUpdates = [];
 	for(const path of callbackSubtypeRetainedPackagesIntegrationPaths)
 		integrationUpdates.push(await transitionSources(path
-			, git(["show", `${callbackSubtypeRetainedPackagesImplementation}:${path}`])
+			, git(["show", `${callbackSubtypeRetainedPackagesHistoryParent}:${path}`])
 			, await readFile(path, "utf8")));
 	const additions = [];
 	for(const path of callbackSubtypeRetainedPackagesAddedPaths)
 	{
 		assert.equal(git(["ls-tree", "--name-only"
-			, callbackSubtypeRetainedPackagesPredecessor, "--", path]).trim()
+			, callbackSubtypeRetainedPackagesHistoryParent, "--", path]).trim()
 		, "", path);
 		additions.push({ path, currentSha256: sha256(await readFile(path)) });
 	}
@@ -107,10 +120,12 @@ try
 			, milestone: "callback-subtype-retained-packages-v1"
 			, predecessorCommit: callbackSubtypeRetainedPackagesPredecessor
 			, implementationCommit: callbackSubtypeRetainedPackagesImplementation
+			, historyParentCommit: callbackSubtypeRetainedPackagesHistoryParent
 			, scope: "Retain every callback Subtype route's receipt-named package set beside its hosted report before installation, install from the retained copy, and verify the retained bytes in the CI checkers, hosted archiver and hosted evidence replay."
-			, additions, updates, integrationUpdates
-		}), { flag: "wx" });
-	process.stdout.write(`Recorded ${updates.length} implementation and `
+			, historicalAdditions, historicalUpdates
+			, additions, integrationUpdates
+		}), { flag: "w" });
+	process.stdout.write(`Recorded ${historicalUpdates.length} historical and `
 		+ `${integrationUpdates.length} integration updates.\n`);
 }
 finally

@@ -15,7 +15,9 @@ import {
 import {
 	beforeCallbackSubtypeRetainedPackagesSource
 	, callbackSubtypeRetainedPackagesAddedPaths
+	, callbackSubtypeRetainedPackagesHistoricalAdditions
 	, callbackSubtypeRetainedPackagesHistoryPath
+	, callbackSubtypeRetainedPackagesHistoryParent
 	, callbackSubtypeRetainedPackagesImplementation
 	, callbackSubtypeRetainedPackagesImplementationPaths
 	, callbackSubtypeRetainedPackagesIntegrationPaths
@@ -39,24 +41,37 @@ test("callback Subtype retained package history restores every source", async ()
 		, callbackSubtypeRetainedPackagesPredecessor);
 	assert.equal(record.implementationCommit
 		, callbackSubtypeRetainedPackagesImplementation);
-	assert.deepEqual(record.updates.map(item => item.path)
+	assert.equal(record.historyParentCommit
+		, callbackSubtypeRetainedPackagesHistoryParent);
+	assert.deepEqual(record.historicalUpdates.map(item => item.path)
 		, callbackSubtypeRetainedPackagesModifiedPaths);
+	assert.deepEqual(record.historicalAdditions.map(item => item.path)
+		, callbackSubtypeRetainedPackagesHistoricalAdditions);
 	assert.deepEqual(record.integrationUpdates.map(item => item.path)
 		, callbackSubtypeRetainedPackagesIntegrationPaths);
 	assert.deepEqual(record.additions.map(item => item.path)
 		, callbackSubtypeRetainedPackagesAddedPaths);
-	for(const update of record.updates)
+	for(const update of record.historicalUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(update.path
-			, update.currentSha256
-			, beforeCallbackSubtypeRetainedPackagesSource);
+		const current = git(["show"
+			, `${callbackSubtypeRetainedPackagesImplementation}:${update.path}`]);
 		const previous = git(["show"
 			, `${callbackSubtypeRetainedPackagesPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseCallbackSubtypeRetainedPackagesUpdate(
 			current, update), previous, update.path);
 		assert.equal(beforeFinRefinementSource(
 			update.path, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path), update.path);
+	}
+	for(const addition of record.historicalAdditions)
+	{
+		assert.equal(git(["ls-tree", "--name-only"
+			, callbackSubtypeRetainedPackagesPredecessor
+			, "--", addition.path]).trim(), "", addition.path);
+		assert.equal(sha256(git(["show"
+			, `${callbackSubtypeRetainedPackagesImplementation}:${addition.path}`]))
+		, addition.currentSha256, addition.path);
 	}
 	for(const update of record.integrationUpdates)
 	{
@@ -64,7 +79,7 @@ test("callback Subtype retained package history restores every source", async ()
 			, update.currentSha256
 			, beforeCallbackSubtypeRetainedPackagesSource);
 		const previous = git(["show"
-			, `${callbackSubtypeRetainedPackagesImplementation}:${update.path}`]);
+			, `${callbackSubtypeRetainedPackagesHistoryParent}:${update.path}`]);
 		assert.equal(reverseCallbackSubtypeRetainedPackagesUpdate(
 			current, update), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path), update.path);
@@ -88,10 +103,9 @@ test("callback Subtype retained package history range is exact", () => {
 test("callback Subtype retained package history rejects alterations", async () => {
 	const record = JSON.parse(await readFile(
 		callbackSubtypeRetainedPackagesHistoryPath, "utf8"));
-	const update = structuredClone(record.updates[0]);
-	const current = await sourceAtFinHistoryMilestone(update.path
-		, update.currentSha256
-		, beforeCallbackSubtypeRetainedPackagesSource);
+	const update = structuredClone(record.historicalUpdates[0]);
+	const current = git(["show"
+		, `${callbackSubtypeRetainedPackagesImplementation}:${update.path}`]);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() =>
 		reverseCallbackSubtypeRetainedPackagesUpdate(current, update));

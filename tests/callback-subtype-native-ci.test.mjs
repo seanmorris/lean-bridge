@@ -5,7 +5,7 @@
  */
 import assert from "node:assert/strict";
 import {
-	appendFile, mkdtemp, readFile, rm, writeFile
+	appendFile, mkdir, mkdtemp, readFile, rm, writeFile
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -414,6 +414,9 @@ test("callback Subtype retained package verification rejects every tampering", a
 	await rejects(({ outputRoot }) => saveLakeFile(outputRoot
 		, "evidence/stale/handoff/extra.fixture", "stale\n")
 	, /only route package sets/u);
+	await rejects(({ outputRoot }) => mkdir(join(outputRoot
+		, "evidence/ordinary/handoff/empty"))
+	, /must not contain empty directories/u);
 	await rejects(async ({ outputRoot }) => {
 		const path = join(outputRoot, "retained-packages.json");
 		await writeFile(path, JSON.stringify(JSON.parse(await readFile(path, "utf8"))));
