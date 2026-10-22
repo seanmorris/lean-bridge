@@ -7,7 +7,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -20,12 +20,14 @@ import { compileCopiedWitModel } from "../../src/backends/wit/copied-model.mjs";
 import { dependentCheckedRecordSelection } from "./dependent-checked-record-browser-fixture.mjs";
 import {
 	parseDependentCheckedRecordWitResult, dependentCheckedRecordWitCaller
-	, dependentCheckedRecordWitConfiguration, dependentCheckedRecordWitCounts
+	, dependentCheckedRecordWitConfiguration, dependentCheckedRecordWitConsumerFiles
+	, dependentCheckedRecordWitConsumerRoot, dependentCheckedRecordWitCounts
 	, dependentCheckedRecordWitFixtureRoot, dependentCheckedRecordWitLeanModule
 	, dependentCheckedRecordWitModes, dependentCheckedRecordWitRoutes
 	, dependentCheckedRecordWitSelection, dependentCheckedRecordWitTarget
 } from "./dependent-checked-record-wit-fixture.mjs";
 import { saveLakeFile } from "./lake-workspace.mjs";
+import { dependentCheckedRecordWitOriginalCaller } from "./dependent-checked-record-wit-report.mjs";
 
 const capi = resolve(".toolchains/wasmtime42");
 const cc = process.env.CC ?? "/usr/bin/cc";
@@ -108,6 +110,32 @@ test("dependent checked-record WIT selection and complete result receipts are cl
 		for(const key of Object.keys(value))
 			assert.throws(() => parseDependentCheckedRecordWitResult(JSON.stringify({ ...value, [key]: value[key] + 1 }), mode));
 	}
+});
+
+test("dependent checked-record WIT caller files resolve from one committed root and reconstruct from the producer revision", async () => {
+	const git = args => execFileSync("git", args, { encoding: "utf8" });
+	// Both files are committed under the shared root; no second fixture directory exists to drift to.
+	for(const name of dependentCheckedRecordWitConsumerFiles)
+		assert.equal(git(["ls-files", "--error-unmatch", `${dependentCheckedRecordWitConsumerRoot}${name}`]).trim()
+			, `${dependentCheckedRecordWitConsumerRoot}${name}`);
+	assert.equal(existsSync("tests/fixtures/dependent-checked-record-wit"), false);
+	// The report rebuilds each route's caller from git objects at the producer revision, byte-identical
+	// to what the fixture reader inlines from the committed working tree.
+	const revision = git(["rev-parse", "HEAD"]).trim();
+	for(const route of dependentCheckedRecordWitRoutes)
+	{
+		const mode = dependentCheckedRecordSelection(route).resultOnly ? "result-only" : "full";
+		assert.equal(dependentCheckedRecordWitOriginalCaller(revision, route, mode)
+			, await dependentCheckedRecordWitCaller(route), route);
+		assert.throws(() => dependentCheckedRecordWitOriginalCaller(revision, route
+			, mode === "full" ? "result-only" : "full"));
+	}
+	// A revision from before the caller existed cannot be reconstructed from the working tree instead.
+	const introduced = git(["log", "--diff-filter=A", "--format=%H", "--"
+		, `${dependentCheckedRecordWitConsumerRoot}wit-wasi.c`]).trim().split("\n").at(-1);
+	const before = git(["rev-parse", `${introduced}^`]).trim();
+	assert.throws(() => dependentCheckedRecordWitOriginalCaller(before
+		, dependentCheckedRecordWitRoutes[0], "full"));
 });
 
 test("dependent checked-record WIT immutable C caller compiles against the public Wasmtime header", {

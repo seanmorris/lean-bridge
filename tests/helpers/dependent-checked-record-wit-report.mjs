@@ -8,7 +8,7 @@ import { posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { copiedCleanEnvironment } from "./copied-fixture-install.mjs";
 import { dependentCheckedRecordSelection } from "./dependent-checked-record-browser-fixture.mjs";
-import { dependentCheckedRecordWitLeanModule } from "./dependent-checked-record-wit-fixture.mjs";
+import { dependentCheckedRecordWitConsumerRoot, dependentCheckedRecordWitLeanModule } from "./dependent-checked-record-wit-fixture.mjs";
 import { dependentCheckedRecordWitCounts, dependentCheckedRecordWitModes, dependentCheckedRecordWitRoutes, parseDependentCheckedRecordWitResult } from "./dependent-checked-record-wit-fixture.mjs";
 import { nominalSubtypeWitOriginal } from "./nominal-subtype-wit-generators.mjs";
 import { checkDependentCheckedRecordWitModels } from "./dependent-checked-record-wit-model-records.mjs";
@@ -26,7 +26,7 @@ import { assertDependentCheckedRecordWitResources, dependentCheckedRecordWitLoad
  * @param mode - Full or standalone result-only API.
  */
 export const dependentCheckedRecordWitOriginalCaller = (producerCommit, route, mode) => {
-	const root = "tests/fixtures/dependent-checked-record-wit/";
+	const root = dependentCheckedRecordWitConsumerRoot;
 	let caller = nominalSubtypeWitOriginal(producerCommit, root + "wit-wasi.c").toString();
 	const include = '#include "wit-values.h"'; assert.equal(caller.split(include).length, 2);
 	const header = nominalSubtypeWitOriginal(producerCommit, root + "wit-values.h").toString();

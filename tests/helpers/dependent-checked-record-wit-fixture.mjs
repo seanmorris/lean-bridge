@@ -19,6 +19,10 @@ export const dependentCheckedRecordWitTarget = Object.freeze({
 	name: dependentCheckedRecordName, version: "1.0.0"
 });
 export const dependentCheckedRecordWitFixtureRoot = dependentCheckedRecordFixture;
+// The one committed home of the immutable C caller and its value helpers. The fixture reader,
+// the installed git guard and the producer-revision reconstruction all name it from here.
+export const dependentCheckedRecordWitConsumerRoot = "tests/fixtures/dependent-checked-record-consumers/";
+export const dependentCheckedRecordWitConsumerFiles = Object.freeze(["wit-wasi.c", "wit-values.h"]);
 export const dependentCheckedRecordWitLeanModule = "DependentRecords";
 export const dependentCheckedRecordWitModes = Object.freeze(["full", "result-only"]);
 export const dependentCheckedRecordWitLoadCeilings = Object.freeze([8, 12, 16, 20]);
@@ -79,7 +83,7 @@ export const dependentCheckedRecordWitConfiguration = route => {
  */
 export const dependentCheckedRecordWitCaller = async route => {
 	assert.ok(dependentCheckedRecordWitRoutes.includes(route));
-	const root = "tests/fixtures/dependent-checked-record-consumers/";
+	const root = dependentCheckedRecordWitConsumerRoot;
 	let source = await readFile(root + "wit-wasi.c", "utf8");
 	const include = '#include "wit-values.h"'; assert.equal(source.split(include).length, 2);
 	const header = await readFile(root + "wit-values.h", "utf8");

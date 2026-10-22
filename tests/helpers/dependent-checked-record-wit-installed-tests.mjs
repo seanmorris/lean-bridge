@@ -17,7 +17,10 @@ import { reviewedContractDifference } from "../../src/analyze/reviewed-source.mj
 import { buildCanonicalProject } from "../../src/build/canonical-build.mjs";
 import { verifyPackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
 import { dependentCheckedRecordSelection } from "./dependent-checked-record-browser-fixture.mjs";
-import { dependentCheckedRecordWitFixtureRoot, dependentCheckedRecordWitLeanModule } from "./dependent-checked-record-wit-fixture.mjs";
+import {
+	dependentCheckedRecordWitConsumerFiles, dependentCheckedRecordWitConsumerRoot
+	, dependentCheckedRecordWitFixtureRoot, dependentCheckedRecordWitLeanModule
+} from "./dependent-checked-record-wit-fixture.mjs";
 import {
 	dependentCheckedRecordWitCaller, dependentCheckedRecordWitConfiguration
 	, dependentCheckedRecordWitSelection, parseDependentCheckedRecordWitResult
@@ -37,8 +40,8 @@ for(const route of routes) test(`installed dependent checked records reproduce a
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 	for(const name of ["fixture", "resources", "package", "install", "installed-tests"])
 		execFileSync("git", ["ls-files", "--error-unmatch", `tests/helpers/dependent-checked-record-wit-${name}.mjs`]);
-	for(const name of ["wit-wasi.c", "wit-values.h"])
-		execFileSync("git", ["ls-files", "--error-unmatch", `tests/fixtures/dependent-checked-record-wit/${name}`]);
+	for(const name of dependentCheckedRecordWitConsumerFiles)
+		execFileSync("git", ["ls-files", "--error-unmatch", `${dependentCheckedRecordWitConsumerRoot}${name}`]);
 	execFileSync("git", ["diff", "--quiet", "HEAD", "--", "src", "tests", "scripts"]);
 	const selection = dependentCheckedRecordSelection(route);
 	const mode = selection.resultOnly ? "result-only" : "full";
