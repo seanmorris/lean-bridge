@@ -19,7 +19,10 @@ import { callbackCheckedRecordConfiguration, callbackCheckedRecordFixture, callb
 import { callbackCheckedRecordPerlExpected, callbackCheckedRecordPerlTestName } from "./helpers/callback-checked-record-native-ci.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute
+	, writeCallbackCheckedRecordRetainedPackages
+} from "./helpers/callback-checked-record-retained-packages.mjs";
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_TEST === "1";
@@ -37,6 +40,10 @@ test(callbackCheckedRecordPerlTestName, { skip: !enabled, timeout: 3_600_000 }, 
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback checked-record Perl inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_OUTPUT
+		?? "build/callback-checked-records/perl/report.json");
+	await clearCallbackCheckedRecordRetainedPackages(output);
+	const retainedEntries = [];
 	const perls = perlGraphCommands();
 	const environment = { ...nativeFixtureEnvironment(["perl"])
 		, LEAN_BRIDGE_PERLS: JSON.stringify(perls)
@@ -64,7 +71,9 @@ test(callbackCheckedRecordPerlTestName, { skip: !enabled, timeout: 3_600_000 }, 
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		if(route === "ordinary") review = callbackCheckedRecordReviewedIr(model.bindingIr);
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackCheckedRecordRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		await rm(author, { recursive: true, force: true });
 		const pending = [];
@@ -118,8 +127,7 @@ test(callbackCheckedRecordPerlTestName, { skip: !enabled, timeout: 3_600_000 }, 
 		}
 	}
 	assert.equal(reports.length, 2 * perls.length * 2);
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_PERL_OUTPUT
-		?? "build/callback-checked-records/perl.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);
 	complete = true;
 });

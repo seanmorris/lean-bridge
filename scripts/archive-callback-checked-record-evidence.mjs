@@ -26,6 +26,11 @@ import {
 	callbackCheckedRecordRemainingVerification
 } from "../tests/helpers/callback-checked-record-remaining-ci.mjs";
 import {
+	callbackCheckedRecordRetainedPackagesName
+	, callbackCheckedRecordRetentionRequired
+	, verifyCallbackCheckedRecordRetainedPackages
+} from "../tests/helpers/callback-checked-record-retained-packages.mjs";
+import {
 	callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedLanes
 	, callbackCheckedRecordHostedOriginal
@@ -163,10 +168,16 @@ const partsRoot = await mkdtemp(join(
 	tmpdir(), "lean-bridge-callback-checked-record-zip-"));
 try
 {
+	if(lane !== "browser")
+		assert.ok(callbackCheckedRecordRetentionRequired(
+			config.nativeKind ?? "remaining"
+			, path => callbackCheckedRecordHostedOriginal(revision, path))
+		, "New callback checked-record archives require a producer that retains its installed package sets");
 	const required = lane === "browser"
 		? ["acceptance.tap", "records", "runtime-after.json", "runtime-before.json"
 			, "verification.json"]
-		: ["acceptance.tap", "report.json", "verification.json"];
+		: ["acceptance.tap", "evidence", "report.json"
+			, callbackCheckedRecordRetainedPackagesName, "verification.json"];
 	assert.deepEqual((await readdir(extracted.root)).sort()
 		, (config.flat ? required : [config.root, ...config.logs]).sort());
 	const outputRoot = config.flat
@@ -197,11 +208,15 @@ try
 	{
 		const report = JSON.parse(await readFile(
 			join(outputRoot, "report.json"), "utf8"));
-		accepted = config.nativeKind
-			? callbackCheckedRecordNativeVerification(
-				config.nativeKind, revision, tap, report)
-			: callbackCheckedRecordRemainingVerification(
-				revision, config.profiles, tap, report);
+		accepted = {
+			...config.nativeKind
+				? callbackCheckedRecordNativeVerification(
+					config.nativeKind, revision, tap, report)
+				: callbackCheckedRecordRemainingVerification(
+					revision, config.profiles, tap, report)
+			, retainedPackages: await verifyCallbackCheckedRecordRetainedPackages(
+				outputRoot, report)
+		};
 	}
 	assert.equal(verification.toString(), canonicalJson(accepted)
 		, "Hosted checker output must exactly match independent replay");

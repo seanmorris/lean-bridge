@@ -18,7 +18,10 @@ import { callbackCheckedRecordConfiguration, callbackCheckedRecordFixture, callb
 import { callbackCheckedRecordNativeChecks, callbackCheckedRecordNativeTestName } from "./helpers/callback-checked-record-native-ci.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackCheckedRecordRetainedPackages, retainCallbackCheckedRecordRoute
+	, writeCallbackCheckedRecordRetainedPackages
+} from "./helpers/callback-checked-record-retained-packages.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_PROFILES?.split(",").sort() ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)));
@@ -49,6 +52,10 @@ test(callbackCheckedRecordNativeTestName, { skip: !profiles.length, timeout: 2_4
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback checked-record native inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_OUTPUT
+		?? "build/callback-checked-records/native/report.json");
+	await clearCallbackCheckedRecordRetainedPackages(output);
+	const retainedEntries = [];
 	const environment = nativeFixtureEnvironment(profiles), reports = [];
 	let review;
 	for(const route of ["ordinary", "reviewed"])
@@ -67,7 +74,9 @@ test(callbackCheckedRecordNativeTestName, { skip: !profiles.length, timeout: 2_4
 		const ir = JSON.parse(await readFile(join(outputRoot, "native/component/binding-ir.json"), "utf8"));
 		if(route === "ordinary") review = callbackCheckedRecordReviewedIr(ir);
 		else assert.equal(reviewedContractDifference(review, ir), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackCheckedRecordRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		await rm(author, { recursive: true, force: true });
 		const names = cNames(ir);
@@ -92,8 +101,7 @@ test(callbackCheckedRecordNativeTestName, { skip: !profiles.length, timeout: 2_4
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 	}
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_OUTPUT
-		?? "build/callback-checked-records/native.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackCheckedRecordRetainedPackages(output, retainedEntries);
 	complete = true;
 });
