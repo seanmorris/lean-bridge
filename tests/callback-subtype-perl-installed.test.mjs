@@ -17,7 +17,10 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
 import { copiedCleanEnvironment, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackSubtypeRetainedPackages, retainCallbackSubtypeRoute
+	, writeCallbackSubtypeRetainedPackages
+} from "./helpers/callback-subtype-retained-packages.mjs";
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_TEST === "1";
@@ -37,6 +40,10 @@ test("ordinary and reviewed callback Subtypes run on every prepared Perl ABI", {
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback Subtype Perl inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_OUTPUT
+		?? "build/callback-subtypes/perl/report.json");
+	await clearCallbackSubtypeRetainedPackages(output);
+	const retainedEntries = [];
 	const perls = perlGraphCommands();
 	const environment = { ...nativeFixtureEnvironment(["perl"])
 		, LEAN_BRIDGE_PERLS: JSON.stringify(perls)
@@ -64,7 +71,9 @@ test("ordinary and reviewed callback Subtypes run on every prepared Perl ABI", {
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		if(route === "ordinary") review = callbackSubtypeReviewedIr(model.bindingIr);
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackSubtypeRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		await rm(author, { recursive: true, force: true });
 		const pending = [];
@@ -118,8 +127,7 @@ test("ordinary and reviewed callback Subtypes run on every prepared Perl ABI", {
 		}
 	}
 	assert.equal(reports.length, 2 * perls.length * 2);
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_PERL_OUTPUT
-		?? "build/callback-subtypes/perl.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackSubtypeRetainedPackages(output, retainedEntries);
 	complete = true;
 });

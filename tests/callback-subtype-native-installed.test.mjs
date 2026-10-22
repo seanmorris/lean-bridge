@@ -16,7 +16,10 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackSubtypeRetainedPackages, retainCallbackSubtypeRoute
+	, writeCallbackSubtypeRetainedPackages
+} from "./helpers/callback-subtype-retained-packages.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_PROFILES?.split(",").sort() ?? [];
 assert.ok(profiles.every(profile => ["c", "cpp"].includes(profile)));
@@ -42,6 +45,10 @@ test("ordinary and reviewed C-family callback Subtypes install from source-free 
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback Subtype native inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_OUTPUT
+		?? "build/callback-subtypes/native/report.json");
+	await clearCallbackSubtypeRetainedPackages(output);
+	const retainedEntries = [];
 	const environment = nativeFixtureEnvironment(profiles), reports = [];
 	let review;
 	for(const route of ["ordinary", "reviewed"])
@@ -60,7 +67,9 @@ test("ordinary and reviewed C-family callback Subtypes install from source-free 
 		const ir = JSON.parse(await readFile(join(outputRoot, "native/component/binding-ir.json"), "utf8"));
 		if(route === "ordinary") review = callbackSubtypeReviewedIr(ir);
 		else assert.equal(reviewedContractDifference(review, ir), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackSubtypeRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		await rm(author, { recursive: true, force: true });
 		const names = cNames(ir);
@@ -85,8 +94,7 @@ test("ordinary and reviewed C-family callback Subtypes install from source-free 
 			await rm(join(consumer, profile), { recursive: true, force: true });
 		}
 	}
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_NATIVE_OUTPUT
-		?? "build/callback-subtypes/native.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackSubtypeRetainedPackages(output, retainedEntries);
 	complete = true;
 });

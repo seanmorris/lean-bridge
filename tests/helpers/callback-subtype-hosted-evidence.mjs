@@ -20,6 +20,7 @@ import {
 import {
 	callbackSubtypeRemainingVerification
 } from "./callback-subtype-remaining-ci.mjs";
+import { verifyCallbackSubtypeRetainedPackages } from "./callback-subtype-retained-packages.mjs";
 import {
 	callbackSubtypeEvidenceSources
 	, callbackSubtypeHostedOriginal
@@ -152,11 +153,15 @@ const replay = async (lane, root, revision) => {
 		};
 	}
 	const report = JSON.parse(await readFile(join(output, "report.json")));
-	return contract.nativeKind
-		? callbackSubtypeNativeVerification(
-			contract.nativeKind, revision, tap, report)
-		: callbackSubtypeRemainingVerification(
-			revision, contract.profiles, tap, report);
+	return {
+		...contract.nativeKind
+			? callbackSubtypeNativeVerification(
+				contract.nativeKind, revision, tap, report)
+			: callbackSubtypeRemainingVerification(
+				revision, contract.profiles, tap, report)
+		, retainedPackages: await verifyCallbackSubtypeRetainedPackages(
+			output, report)
+	};
 };
 
 /**

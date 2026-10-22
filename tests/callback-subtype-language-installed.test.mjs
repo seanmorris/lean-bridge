@@ -15,7 +15,10 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { callbackSubtypeConfiguration, callbackSubtypeFixture, callbackSubtypeReviewedIr } from "./helpers/callback-subtype-fixture.mjs";
 import { installCopiedConsumer, nativeFixtureEnvironment } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearCallbackSubtypeRetainedPackages, retainCallbackSubtypeRoute
+	, writeCallbackSubtypeRetainedPackages
+} from "./helpers/callback-subtype-retained-packages.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const profiles = process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_PROFILES?.split(",").sort() ?? [];
@@ -35,6 +38,10 @@ test("ordinary and reviewed Python, Ruby and Rust callback Subtypes install offl
 		if(complete) await rm(root, { recursive: true, force: true });
 		else t.diagnostic(`Retained failed callback Subtype language inputs: ${root}`);
 	});
+	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_OUTPUT
+		?? "build/callback-subtypes/languages/report.json");
+	await clearCallbackSubtypeRetainedPackages(output);
+	const retainedEntries = [];
 	const environment = nativeFixtureEnvironment(profiles), reports = [];
 	let review;
 	for(const route of ["ordinary", "reviewed"])
@@ -57,7 +64,9 @@ test("ordinary and reviewed Python, Ruby and Rust callback Subtypes install offl
 		const model = JSON.parse(await readFile(join(outputRoot, "native/component/model.json"), "utf8"));
 		if(route === "ordinary") review = callbackSubtypeReviewedIr(model.bindingIr);
 		else assert.equal(reviewedContractDifference(review, model.bindingIr), null);
-		const receipt = await copyPackageSetHandoff(outputRoot, handoff);
+		const { receipt, entry } = await retainCallbackSubtypeRoute({
+			output, route, source: outputRoot, handoff });
+		retainedEntries.push(entry);
 		await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 		let dependencies;
 		if(profiles.includes("rust")) dependencies = await prepareRustCorpusDependencies({
@@ -87,8 +96,7 @@ test("ordinary and reviewed Python, Ruby and Rust callback Subtypes install offl
 			await rm(consumer, { recursive: true, force: true });
 		}
 	}
-	const output = resolve(process.env.LEAN_BRIDGE_CALLBACK_SUBTYPE_LANGUAGE_OUTPUT
-		?? "build/callback-subtypes/languages.json");
 	await saveLakeFile(dirname(output), basename(output), canonicalJson({ schemaVersion: 1, reports }));
+	await writeCallbackSubtypeRetainedPackages(output, retainedEntries);
 	complete = true;
 });

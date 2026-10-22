@@ -27,6 +27,9 @@ import {
 	callbackSubtypeRemainingVerification
 } from "../tests/helpers/callback-subtype-remaining-ci.mjs";
 import {
+	callbackSubtypeRetainedPackagesName, verifyCallbackSubtypeRetainedPackages
+} from "../tests/helpers/callback-subtype-retained-packages.mjs";
+import {
 	callbackSubtypeEvidenceSources
 	, callbackSubtypeHostedLanes
 	, callbackSubtypeHostedOriginal
@@ -173,7 +176,8 @@ try
 	const required = lane === "browser"
 		? ["acceptance.tap", "records", "runtime-after.json", "runtime-before.json"
 			, "verification.json"]
-		: ["acceptance.tap", "report.json", "verification.json"];
+		: ["acceptance.tap", "evidence", "report.json"
+			, callbackSubtypeRetainedPackagesName, "verification.json"];
 	assert.deepEqual((await readdir(extracted.root)).sort()
 		, (config.flat ? required : [config.root, ...config.logs]).sort());
 	const outputRoot = config.flat
@@ -204,11 +208,15 @@ try
 	{
 		const report = JSON.parse(await readFile(
 			join(outputRoot, "report.json"), "utf8"));
-		accepted = config.nativeKind
-			? callbackSubtypeNativeVerification(
-				config.nativeKind, revision, tap, report)
-			: callbackSubtypeRemainingVerification(
-				revision, config.profiles, tap, report);
+		accepted = {
+			...config.nativeKind
+				? callbackSubtypeNativeVerification(
+					config.nativeKind, revision, tap, report)
+				: callbackSubtypeRemainingVerification(
+					revision, config.profiles, tap, report)
+			, retainedPackages: await verifyCallbackSubtypeRetainedPackages(
+				outputRoot, report)
+		};
 	}
 	assert.equal(verification.toString(), canonicalJson(accepted)
 		, "Hosted checker output must exactly match independent replay");
