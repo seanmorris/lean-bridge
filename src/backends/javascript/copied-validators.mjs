@@ -41,28 +41,11 @@ export const emitCopiedValidators = (ir, typeMap, validatorName) => {
 		, reference(field.type, refinements[index]?.kind === "fin-field"
 			? null : refinements[index])
 	]);
-	const dependentRecordRefinement = (values, refinements = []) => {
-		if(!refinements.some(refinement => refinement?.kind === "fin-field")) return null;
-		return {
-			kind: "record"
-			, fields: values.map((field, index) => ({
-				name: field.name
-				, refinement: refinements[index]?.kind === "fin-field" ? refinements[index] : null
-			}))
-		};
-	};
 	for(const type of ir.types)
 	{
 		const name = `assert${type.name}`;
 		const refinement = constraints.get(type.id);
-		if(type.kind === "record")
-		{
-			const dependent = dependentRecordRefinement(type.fields, refinement?.fields);
-			table.set(name, {
-				kind: "record", fields: fields(type.fields, refinement?.fields)
-				, ...(dependent ? { refinement: dependent } : {})
-			});
-		}
+		if(type.kind === "record") table.set(name, { kind: "record", fields: fields(type.fields, refinement?.fields) });
 		if(type.kind === "variant") table.set(name, { kind: "variant", cases: Object.fromEntries(type.cases.map((item, index) => [item.name, fields(item.fields, refinement?.cases[index])])) });
 		if(type.kind === "alias")
 		{
@@ -124,7 +107,6 @@ const copiedValue = (root, input, path) => {
     if (++nodes > ${componentRecursiveLimits.valueNodes}) throw new RangeError("Component recursive value node budget exceeded");
     let type = copiedTypes[frame.type];
     while (type?.kind === "alias") { ${constraints.size ? "if (type.refinement) (frame.checks ??= []).push(type.refinement); " : ""}frame.type = type.target; type = copiedTypes[frame.type]; }
-    ${constraints.size ? "if (type?.refinement) (frame.checks ??= []).push(type.refinement);" : ""}
     if (Object.hasOwn(scalarValidators, frame.type)) { scalarValidators[frame.type](frame.value, frame.path); ${check}stack.pop(); continue; }
     if (!type) invalid(frame.path, "a declared copied type");
     const value = frame.value, sequence = ["array", "list", "tuple"].includes(type.kind);

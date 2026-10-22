@@ -124,7 +124,7 @@ test("four dependent author selections retain the exact field relation", async (
 			, /Unknown dependent checked-record route/u);
 });
 
-test("generated JavaScript validates Fin fields against their sibling bound"
+test("generated JavaScript leaves sibling Fin authority with the selected constructor"
 	, async () => {
 	const expected = dependentCheckedRecordSelection("ordinary-source").expected;
 	const generated = generateJavaScriptPackage(expected);
@@ -149,9 +149,15 @@ test("generated JavaScript validates Fin fields against their sibling bound"
 	assert.doesNotThrow(() => validators.assertDependent({
 		bound: 3n, below: 2n
 	}, "nominal"));
-	assert.throws(() => validators.assertDependent({
+	assert.doesNotThrow(() => validators.assertDependent({
 		bound: 3n, below: 3n
-	}, "nominal"), /nominal\.below must be bigint below 3/u);
+	}, "nominal"));
+	assert.doesNotThrow(() => validators.assertDependent({
+		bound: 0n, below: 0n
+	}, "nominal"));
+	assert.throws(() => validators.assertDependent({
+		bound: "3", below: 2n
+	}, "nominal"), /nominal\.bound must be bigint/u);
 	}
 );
 
