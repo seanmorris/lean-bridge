@@ -37,7 +37,7 @@ const header = route => renderWitHostHeader(compileCopiedWitModel(
 	dependentCheckedRecordSelection(route).expected, dependentCheckedRecordWitTarget, { callables: true }
 ));
 
-test("dependent checked-record WIT preserves shell-escaped pkg-config paths", () => {
+test("dependent checked-record WIT preserves shell-escaped pkg-config paths", async () => {
 	assert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(
 		"-I/tmp/lean-bridge-dependent\\ checked/include -L/tmp/lean-bridge-dependent\\ checked/lib -ldependent\n"
 	), [
@@ -52,6 +52,14 @@ test("dependent checked-record WIT preserves shell-escaped pkg-config paths", ()
 		, /ends in an escape/u);
 	assert.throws(() => parseDependentCheckedRecordWitPkgConfigFlags("'-I/tmp/open")
 		, /unterminated quote/u);
+	const verifier = await readFile(
+		"tests/helpers/dependent-checked-record-wit-environment-records.mjs"
+		, "utf8"
+	);
+	assert.match(verifier
+		, /parseDependentCheckedRecordWitPkgConfigFlags\(\n\t\tcommands\[5\]\.run\.stdout\n\t\)/u);
+	assert.doesNotMatch(verifier
+		, /commands\[5\]\.run\.stdout\.trim\(\)\.split/u);
 });
 
 test("dependent checked-record WIT retains all four author routes and the limb-list projection", async () => {

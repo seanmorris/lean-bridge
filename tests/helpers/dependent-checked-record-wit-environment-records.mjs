@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import { posix } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { copiedCleanEnvironment } from "./copied-fixture-install.mjs";
+import { parseDependentCheckedRecordWitPkgConfigFlags } from "./dependent-checked-record-wit-install.mjs";
 import { dependentCheckedRecordWitComponent, dependentCheckedRecordWitDirectory, dependentCheckedRecordWitLibrary, dependentCheckedRecordWitPkgConfig, dependentCheckedRecordWitReceipt } from "./dependent-checked-record-wit-package.mjs";
 import { assertNominalSubtypeWitInterfaces } from "./nominal-subtype-wit-interface.mjs";
 import { nominalSubtypeWitAbsolute, nominalSubtypeWitSuccessful } from "./nominal-subtype-wit-tool-records.mjs";
@@ -62,7 +63,9 @@ export const checkDependentCheckedRecordWitEnvironmentRecords = async ({ read, j
 	assert.deepEqual(commands[4].args, ["component", "wit", component, "--json"]);
 	assertNominalSubtypeWitInterfaces(JSON.parse(commands[4].run.stdout), projection);
 	assert.deepEqual(commands[5].args, ["--cflags", "--libs", dependentCheckedRecordWitPkgConfig]);
-	const flags = commands[5].run.stdout.trim().split(/\s+/u);
+	const flags = parseDependentCheckedRecordWitPkgConfigFlags(
+		commands[5].run.stdout
+	);
 	assert.equal(flags.length, 5);
 	const library = "-l" + dependentCheckedRecordWitLibrary.slice(3, -3);
 	assert.deepEqual(flags.map(flag => {
