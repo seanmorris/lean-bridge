@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordCallableSource, ownedCheckedRecordCallableChangedPaths } from "./owned-checked-record-callable-source-history.mjs";
 import { beforeOwnedCheckedRecordFoundationSource, ownedCheckedRecordFoundationChangedPaths, ownedCheckedRecordFoundationIntegrationPaths } from "./owned-checked-record-foundation-source-history.mjs";
 import { beforeDependentRecordConstructorAuthoritySource, dependentRecordConstructorAuthorityChangedPaths, dependentRecordConstructorAuthorityIntegrationPaths } from "./dependent-record-constructor-authority-source-history.mjs";
 import { beforeCallbackCheckedRecordPromotionSource, callbackCheckedRecordPromotionChangedPaths, callbackCheckedRecordPromotionIntegrationPaths } from "./callback-checked-record-promotion-source-history.mjs";
@@ -1887,7 +1888,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordFoundationChangedPaths
+	...ownedCheckedRecordCallableChangedPaths
+	, ...ownedCheckedRecordFoundationChangedPaths
 	, ...ownedCheckedRecordFoundationIntegrationPaths
 	, ...dependentRecordConstructorAuthorityChangedPaths
 	, ...dependentRecordConstructorAuthorityIntegrationPaths
@@ -2557,8 +2559,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordCallable
+		= beforeOwnedCheckedRecordCallableSource(path, text, expected);
+	if(sha256(ownedCheckedRecordCallable) === expected)
+		return ownedCheckedRecordCallable;
 	const ownedCheckedRecordFoundation
-		= beforeOwnedCheckedRecordFoundationSource(path, text, expected);
+		= beforeOwnedCheckedRecordFoundationSource(
+			path, ownedCheckedRecordCallable, expected
+		);
 	if(sha256(ownedCheckedRecordFoundation) === expected)
 		return ownedCheckedRecordFoundation;
 	const dependentRecordConstructorAuthority

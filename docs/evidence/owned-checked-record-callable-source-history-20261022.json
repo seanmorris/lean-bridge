@@ -1,0 +1,776 @@
+{
+  "schemaVersion": 1,
+  "milestone": "owned-checked-record-callable-source-v1",
+  "predecessorCommit": "d5b2b31e640de6be9dc00188de8c793b126b2136",
+  "implementationCommit": "a9945b450e06c61dfe1f3f1523bd36b11975bf03",
+  "repairedTypeSurfacePointers": 32,
+  "pointerUpdates": [
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previous": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "current": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb"
+    }
+  ],
+  "additions": [
+    {
+      "path": "scripts/update-owned-checked-record-callable-source-history.mjs",
+      "currentSha256": "987341ed5ad21f388d2815e113539d6ca7ba573657b43b9665dbb359276d2bfd"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-callable-source-history.mjs",
+      "currentSha256": "6453ce383e7aeddecbfdf06676f3d02d86133596bea1033db2ea55698dcf9c70"
+    },
+    {
+      "path": "tests/helpers/owned-checked-record-callable-source-history-tests.mjs",
+      "currentSha256": "cef656ceb1ae7961336536de4e0cb3a43f8278e4085c570bbe3c581231725776"
+    }
+  ],
+  "updates": [
+    {
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "6fd01c324966ee7b412db4dc6e8224427b31f2fbb17f84a9340069d6cf7c336f",
+      "currentSha256": "74a3c51998cd6c4485616baaa76aa24dcfab02df174c8320b15d724b28e547ff",
+      "edits": [
+        {
+          "start": 25119,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 28490,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1433894,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1439768,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1489885,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1610794,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1614325,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1618116,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1621836,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1625222,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1629076,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1632950,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1637008,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1640898,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1644773,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1648417,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1652158,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1655978,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1659798,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1663618,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1667365,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1671710,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1676067,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1680432,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1684982,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1688736,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1692409,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1695923,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1699599,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1703330,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1706956,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        },
+        {
+          "start": 1710508,
+          "previous": "          \"sha256\": \"98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542\"\n",
+          "current": "          \"sha256\": \"c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb\"\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/dependent-record-constructor-authority-source-history-tests.mjs",
+      "previousSha256": "a729decd364fca9934def1d80a4e699dc917550285888bcbd7b208e222d1aafd",
+      "currentSha256": "9bde23abcacae0b4fda59dd6a51b8527fa9444046dd811fa5d063e6d38b991f4",
+      "edits": [
+        {
+          "start": 1021,
+          "previous": "",
+          "current": "import {\n\tbeforeOwnedCheckedRecordCallableSource\n} from \"./owned-checked-record-callable-source-history.mjs\";\n"
+        },
+        {
+          "start": 2716,
+          "previous": "\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n",
+          "current": "\t\t\tconst callable = beforeOwnedCheckedRecordCallableSource(\n"
+        },
+        {
+          "start": 2829,
+          "previous": "",
+          "current": "\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n\t\t\t\tupdate.path, callable, update.currentSha256\n\t\t\t);\n"
+        },
+        {
+          "start": 3568,
+          "previous": "\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n",
+          "current": "\t\t\tconst callable = beforeOwnedCheckedRecordCallableSource(\n"
+        },
+        {
+          "start": 3685,
+          "previous": "",
+          "current": "\t\t\tconst milestone = beforeOwnedCheckedRecordFoundationSource(\n\t\t\t\taddition.path, callable, addition.currentSha256\n\t\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "226754909cc31b63520c14524fd3989dd5cc0982cbf0cd07c21642007c976a8d",
+      "currentSha256": "d77a2fc486d4bd4c9bbf1fb06241008298bd970b31031a555762bff257fb3ef4",
+      "edits": [
+        {
+          "start": 392,
+          "previous": "",
+          "current": "import { beforeOwnedCheckedRecordCallableSource, ownedCheckedRecordCallableChangedPaths } from \"./owned-checked-record-callable-source-history.mjs\";\n"
+        },
+        {
+          "start": 142136,
+          "previous": "\t...ownedCheckedRecordFoundationChangedPaths\n",
+          "current": "\t...ownedCheckedRecordCallableChangedPaths\n\t, ...ownedCheckedRecordFoundationChangedPaths\n"
+        },
+        {
+          "start": 172575,
+          "previous": "",
+          "current": "\tconst ownedCheckedRecordCallable\n\t\t= beforeOwnedCheckedRecordCallableSource(path, text, expected);\n\tif(sha256(ownedCheckedRecordCallable) === expected)\n\t\treturn ownedCheckedRecordCallable;\n"
+        },
+        {
+          "start": 172801,
+          "previous": "\t\t= beforeOwnedCheckedRecordFoundationSource(path, text, expected);\n",
+          "current": "\t\t= beforeOwnedCheckedRecordFoundationSource(\n\t\t\tpath, ownedCheckedRecordCallable, expected\n\t\t);\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/owned-aggregate-model.mjs",
+      "previousSha256": "6a232afdf962024a1b93c0d6e40c3a53c07982b0e531f2de91ab9e0da13b6dff",
+      "currentSha256": "a75949616a1d2e46d5c7fdbfb1ae23d2b7b4b845313a9df2bc5829066f4f8cab",
+      "edits": [
+        {
+          "start": 376,
+          "previous": "import { declarationRefinements } from \"./refinements.mjs\";\n",
+          "current": "import {\n\tcallbackDefinitionRefinement, callbackSubtypeDirection, declarationRefinements\n} from \"./refinements.mjs\";\n"
+        },
+        {
+          "start": 4945,
+          "previous": "\t\t\telse if(type.kind === \"callback\") node.callable = { ...type.callable\n\t\t\t\t, parameters: type.callable.parameters.map(site)\n\t\t\t\t, result: site(type.callable.result) };\n",
+          "current": "\t\t\telse if(type.kind === \"callback\")\n\t\t\t{\n\t\t\t\tconst refinements = callbackDefinitionRefinement(\n\t\t\t\t\ttype, ir.types, { ownedStructural: true }\n\t\t\t\t);\n\t\t\t\tconst direction = refinements === null ? null\n\t\t\t\t\t: callbackSubtypeDirection({\n\t\t\t\t\t\tparameters: type.callable.parameters.map(parameter => parameter.type)\n\t\t\t\t\t\t, result: type.callable.result.type\n\t\t\t\t\t}, refinements, ir.types, { ownedStructural: true });\n\t\t\t\tnode.callable = { ...type.callable\n\t\t\t\t\t, parameters: type.callable.parameters.map(site)\n\t\t\t\t\t, result: site(type.callable.result)\n\t\t\t\t\t, ...(refinements === null ? {} : { refinements })\n\t\t\t\t\t, ...(direction === null ? {} : { direction }) };\n\t\t\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/owned-refinement-model.mjs",
+      "previousSha256": "37cb99c344cb8ffe5d70dba740f2581cbd241edfce5b40221987e27c58d8b015",
+      "currentSha256": "503adec33376f81c2de92b61855cd1482ffef0124fec9461a05be674b1740488",
+      "edits": [
+        {
+          "start": 6228,
+          "previous": "",
+          "current": "\tconst callbacks = model.types.filter(type => type.kind === \"callback\"\n\t\t&& type.callable.refinements !== undefined);\n\tfor(const callback of callbacks)\n\t{\n\t\tconst { direction, refinements } = callback.callable;\n\t\tif(![\"host\", \"closure\"].includes(direction))\n\t\t\tfail(`${callback.id} requires one checked callback direction`);\n\t\tconst add = (refinement, type, position, produced) => {\n\t\t\tif(refinement === null) return;\n\t\t\tconst adapterDirection = produced ? \"result\" : \"input\";\n\t\t\tconst tree = visit(type, refinement, adapterDirection, []);\n\t\t\tconst carrierKey = digest({ type\n\t\t\t\t, refinement: carrierShape(refinement) });\n\t\t\tconst adapterKey = digest({ direction: adapterDirection\n\t\t\t\t, type, refinement });\n\t\t\tsites.push({ declaration: callback.id, position\n\t\t\t\t, direction: adapterDirection, type, carrierKey, adapterKey, tree });\n\t\t};\n\t\tcallback.callable.parameters.forEach((parameter, index) => add(\n\t\t\trefinements.parameters[index], parameter.type\n\t\t\t, { kind: \"parameter\", index }, direction === \"host\"\n\t\t));\n\t\tadd(refinements.result, callback.callable.result.type\n\t\t\t, { kind: \"result\" }, direction === \"closure\");\n\t}\n"
+        }
+      ]
+    },
+    {
+      "path": "src/abi/refinements.mjs",
+      "previousSha256": "98f76d6758419c189c5e615291b4c808f05d3b485c01c58877ef892914e59542",
+      "currentSha256": "c78ac91ba4eda4c54544fbd4e10ffc3ff50eccc611e38a494a600a3cb3bc4deb",
+      "edits": [
+        {
+          "start": 13276,
+          "previous": " * keeps its own directional leaf below the record. Owned records and callbacks nested\n * inside callbacks stay outside this surface.\n",
+          "current": " * keeps its own directional leaf below the record. Owned records require the\n * ownership-aware caller's explicit opt-in; nested callbacks stay outside this surface.\n"
+        },
+        {
+          "start": 15197,
+          "previous": " * nominal trees require the enclosing document's type definitions. Host callbacks\n * receive Lean-produced parameters and return host-produced results; returned Lean\n * closures have the opposite direction.\n",
+          "current": " * nominal trees require the enclosing document's type definitions. Owned nominal\n * trees additionally require an explicit ownership-aware opt-in. Host callbacks receive\n * Lean-produced parameters and return host-produced results; returned Lean closures\n * have the opposite direction.\n"
+        },
+        {
+          "start": 15791,
+          "previous": "",
+          "current": " * @param options - Explicit transport capabilities.\n * @param options.ownedStructural - Admit owned nominal roots inside this callback.\n"
+        },
+        {
+          "start": 15932,
+          "previous": "export const callbackRefinement = (signature, value, types = [], direction = undefined) => {\n",
+          "current": "export const callbackRefinement = (signature, value, types = [], direction = undefined, { ownedStructural = false } = {}) => {\n"
+        },
+        {
+          "start": 18025,
+          "previous": "\t\t\tassertRefinement(refinement, signature.parameters[index], 1, structural, definitions, producedParameters);\n",
+          "current": "\t\t\tassertRefinement(refinement, signature.parameters[index], 1, structural, definitions, producedParameters, ownedStructural);\n"
+        },
+        {
+          "start": 18223,
+          "previous": "\t\tassertRefinement(value.result, signature.result, 1, structural, definitions, producedResult);\n",
+          "current": "\t\tassertRefinement(value.result, signature.result, 1, structural, definitions, producedResult, ownedStructural);\n"
+        },
+        {
+          "start": 19104,
+          "previous": "",
+          "current": " * @param options - Explicit transport capabilities.\n * @param options.ownedStructural - Admit owned nominal roots inside this callback.\n"
+        },
+        {
+          "start": 19245,
+          "previous": "export const callbackSubtypeDirection = (signature, value, types = []) => {\n\tcallbackRefinement(signature, value, types);\n",
+          "current": "export const callbackSubtypeDirection = (signature, value, types = [], { ownedStructural = false } = {}) => {\n\tcallbackRefinement(signature, value, types, undefined, { ownedStructural });\n"
+        },
+        {
+          "start": 19542,
+          "previous": "\t\t\tcallbackRefinement(signature, value, types, role);\n",
+          "current": "\t\t\tcallbackRefinement(signature, value, types, role, { ownedStructural });\n"
+        },
+        {
+          "start": 20436,
+          "previous": "",
+          "current": " * @param options - Explicit transport capabilities.\n * @param options.ownedStructural - Admit owned nominal roots inside this callback.\n"
+        },
+        {
+          "start": 20577,
+          "previous": "export const callbackDefinitionRefinement = (definition, types = []) => callbackRefinement({\n",
+          "current": "export const callbackDefinitionRefinement = (definition, types = [], { ownedStructural = false } = {}) => callbackRefinement({\n"
+        },
+        {
+          "start": 20824,
+          "previous": "}, definition.source?.extensions?.[\"lean-lang.org/refinements\"], types);\n",
+          "current": "}, definition.source?.extensions?.[\"lean-lang.org/refinements\"], types\n, undefined, { ownedStructural });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/analyze/reviewed-owned-source.mjs",
+      "previousSha256": "451646e853124f4f7cc21ebc800b19abd088c76eaf9cafe12beb85f9b87080e8",
+      "currentSha256": "898d339d131350b8d1580a098a0a7af499c711fae8d3359fc89a5af093f3dc63",
+      "edits": [
+        {
+          "start": 566,
+          "previous": "import { declarationRefinements } from \"../abi/refinements.mjs\";\n",
+          "current": "import {\n\tcallbackDefinitionRefinement, callbackSubtypeDirection\n\t, declarationRefinements\n} from \"../abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 2306,
+          "previous": "\tconst isCallback = type => type.kind === \"named\" && definitions.get(type.id).kind === \"callback\";\n",
+          "current": "\tconst isCallback = type => type.kind === \"named\"\n\t\t&& definitions.get(type.id)?.kind === \"callback\";\n"
+        },
+        {
+          "start": 2574,
+          "previous": "\tconst callbacks = document.types.filter(type => type.kind === \"callback\");\n",
+          "current": "\tconst callbacks = new Map(document.types.filter(type => type.kind === \"callback\")\n\t\t.map(type => [type.id, type]));\n"
+        },
+        {
+          "start": 2781,
+          "previous": "\treject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.length ? [{\n",
+          "current": "\treject(!same(document.errors.map(({ documentation, ...error }) => { void documentation; return error; }), callbacks.size ? [{\n"
+        },
+        {
+          "start": 3895,
+          "previous": "\t\treject(Object.keys(item.source.extensions).some(key => declaration ? key !== refinementKey : !(record && key === erasedProofsKey))\n",
+          "current": "\t\tconst allowed = declaration || callbackName ? [refinementKey]\n\t\t\t: record ? [erasedProofsKey] : [];\n\t\treject(Object.keys(item.source.extensions).some(key => !allowed.includes(key))\n"
+        },
+        {
+          "start": 4730,
+          "previous": "\t\tif(declaration && Object.hasOwn(item.source.extensions, refinementKey))\n\t\t{\n",
+          "current": "\t\tif((declaration || callbackName)\n\t\t\t&& Object.hasOwn(item.source.extensions, refinementKey)){\n"
+        },
+        {
+          "start": 4833,
+          "previous": "\t\t\t{ declarationRefinements(item, item.source.extensions[refinementKey], document.types, { ownedStructural: true }); }\n",
+          "current": "\t\t\t{\n\t\t\t\tif(declaration) declarationRefinements(\n\t\t\t\t\titem, item.source.extensions[refinementKey], document.types\n\t\t\t\t\t, { ownedStructural: true }\n\t\t\t\t);\n\t\t\t\telse callbackDefinitionRefinement(\n\t\t\t\t\titem, document.types, { ownedStructural: true }\n\t\t\t\t);\n\t\t\t}\n"
+        },
+        {
+          "start": 5255,
+          "previous": "\t\t}\n",
+          "current": "\t\t\t}\n"
+        },
+        {
+          "start": 6403,
+          "previous": "",
+          "current": "\t\tif(isCallback(value.type))\n\t\t{\n\t\t\tconst definition = callbacks.get(value.type.id);\n\t\t\tconst refinement = callbackDefinitionRefinement(\n\t\t\t\tdefinition, document.types, { ownedStructural: true }\n\t\t\t);\n\t\t\tif(refinement !== null)\n\t\t\t{\n\t\t\t\tconst direction = callbackSubtypeDirection({\n\t\t\t\t\tparameters: definition.callable.parameters.map(parameter => parameter.type)\n\t\t\t\t\t, result: definition.callable.result.type\n\t\t\t\t}, refinement, document.types, { ownedStructural: true });\n\t\t\t\treject(direction !== null && direction !== (result ? \"closure\" : \"host\")\n\t\t\t\t\t, `${path}.type`);\n\t\t\t}\n\t\t}\n"
+        },
+        {
+          "start": 7573,
+          "previous": "\t\t\tconst signature = callbackSemanticSignature(callable);\n",
+          "current": "\t\t\tconst refinement = definition.source.extensions[\"lean-lang.org/refinements\"];\n\t\t\tconst signature = { ...callbackSemanticSignature(callable)\n\t\t\t\t, ...(refinement === undefined ? {} : { refinements: refinement }) };\n"
+        },
+        {
+          "start": 11078,
+          "previous": "\t\tif(definition.kind === \"callback\") return !reachesChecked(type);\n",
+          "current": "\t\tif(definition.kind === \"callback\")\n\t\t\treturn !reachesChecked(type)\n\t\t\t\t|| callbackDefinitionRefinement(\n\t\t\t\t\tdefinition, document.types, { ownedStructural: true }\n\t\t\t\t) !== null;\n"
+        },
+        {
+          "start": 12636,
+          "previous": "\tfor(const definition of document.types.filter(type => type.kind === \"callback\"))\n\t\treject(reachesChecked({ kind: \"named\", id: definition.id }), `${definition.id}.callable`);\n",
+          "current": "\tfor(const definition of callbacks.values())\n\t\treject(reachesChecked({ kind: \"named\", id: definition.id })\n\t\t\t&& callbackDefinitionRefinement(\n\t\t\t\tdefinition, document.types, { ownedStructural: true }\n\t\t\t) === null, `${definition.id}.callable`);\n"
+        },
+        {
+          "start": 16670,
+          "previous": "",
+          "current": "\t\tconst refinements = types.get(type.id).source.extensions[\"lean-lang.org/refinements\"];\n"
+        },
+        {
+          "start": 16901,
+          "previous": "\t\tconst value = parameters.some(Boolean) || result || callable.result.ownership === \"borrow\" ? {\n\t\t\t...parameters.some(Boolean) ? { parameters: callable.parameters.map((value, index) => decision(value, callable.parameters, parameters[index])) } : {}\n\t\t\t, ...result || callable.result.ownership === \"borrow\" ? { result: decision(callable.result, callable.parameters, result) } : {}\n\t\t} : undefined;\n",
+          "current": "\t\tconst value = parameters.some(Boolean) || result\n\t\t\t|| callable.result.ownership === \"borrow\" || refinements ? {\n\t\t\t\t...parameters.some(Boolean) || refinements ? {\n\t\t\t\t\tparameters: callable.parameters.map((value, index) => decision(\n\t\t\t\t\t\tvalue, callable.parameters, parameters[index]\n\t\t\t\t\t\t, refinements?.parameters[index]\n\t\t\t\t\t))\n\t\t\t\t} : {}\n\t\t\t\t, ...result || callable.result.ownership === \"borrow\" || refinements ? {\n\t\t\t\t\tresult: decision(callable.result, callable.parameters, result\n\t\t\t\t\t\t, refinements?.result)\n\t\t\t\t} : {}\n\t\t\t} : undefined;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/c/owned-callbacks.mjs",
+      "previousSha256": "bc1a7839c4e52c2ab61558080edbc62b506b3ab0dec038f908e3c7a66953c11b",
+      "currentSha256": "b8b04b2dcad08466c2a5f0b7de4f780ceaf4372fea9005860649cb756e6d8594",
+      "edits": [
+        {
+          "start": 781,
+          "previous": "",
+          "current": "\t\tconst resultValidator = carriers.refinementValidators?.[\n\t\t\t`${node.id}\\0result\\0-1`\n\t\t];\n"
+        },
+        {
+          "start": 3497,
+          "previous": "",
+          "current": "\t\t\t, ...resultValidator ? [\n\t\t\t\t`  if (!status) { lean_inc(returned); if (!${resultValidator}(returned)) { lean_dec(returned); returned = NULL; status = LB_OWNED_INVALID; } }`\n\t\t\t] : []\n"
+        },
+        {
+          "start": 5879,
+          "previous": "\t\t\t, `    if (!status) status = ${result.walker}_in(&raw, 0, 1, &transaction, &recovery);`, \"  }\"\n",
+          "current": "\t\t\t, `    if (!status) status = ${result.walker}_in(&raw, 0, 1, &transaction, &recovery);`\n\t\t\t, ...resultValidator ? [\n\t\t\t\t`    if (!status) { lean_inc(recovery); if (!${resultValidator}(recovery)) { lean_dec(recovery); recovery = NULL; status = LB_OWNED_INVALID; } }`\n\t\t\t] : []\n\t\t\t, \"  }\"\n"
+        }
+      ]
+    },
+    {
+      "path": "src/backends/native/owned-value-adapters.mjs",
+      "previousSha256": "e684dee7ac09d3a46cc3c096a8e27539214f917562f6b65b838bd7080d31c6b8",
+      "currentSha256": "90d52c6e6066ece327633863c1e7945e8c95f49a5b88cedf6bb22e1a4fafbd6c",
+      "edits": [
+        {
+          "start": 15650,
+          "previous": "",
+          "current": "\t\tconst refinementValidator = index => callback\n\t\t\t? index === 0 ? undefined\n\t\t\t\t: refinementValidators[`${declaration.id}\\0parameter\\0${index - 1}`]\n\t\t\t: refinementValidators[`${declaration.id}\\0parameter\\0${index\n\t\t\t\t- Number(declaration.receiver === 0)}`];\n"
+        },
+        {
+          "start": 18239,
+          "previous": "\t\t\t\t, ...(!callback && refinementValidators[`${declaration.id}\\0parameter\\0${i - Number(declaration.receiver === 0)}`] ? [\n",
+          "current": "\t\t\t\t, ...(refinementValidator(i) ? [\n"
+        },
+        {
+          "start": 18304,
+          "previous": "\t\t\t\t\t, `    if (!${refinementValidators[`${declaration.id}\\0parameter\\0${i - Number(declaration.receiver === 0)}`]}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`\n",
+          "current": "\t\t\t\t\t, `    if (!${refinementValidator(i)}(child)) { lean_dec(child); lean_dec(arguments); return ov_abort(&transaction, LB_OWNED_INVALID); }`\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-aggregate-carriers.mjs",
+      "previousSha256": "51cf92d6ebde86087ea3134e918c3cf3184730e4f7e023b6e014ffb95294a9b1",
+      "currentSha256": "61fbf0a6c8de295a0fc0586910ee9858440f3ab79b601e98753b5685b5f52383",
+      "edits": [
+        {
+          "start": 8351,
+          "previous": "",
+          "current": "\t\t\tconst callbackRefined = node.callable.refinements !== undefined;\n\t\t\tconst sourceNames = names.map((name, index) => {\n\t\t\t\tconst site = refinements?.byPosition.get(\n\t\t\t\t\trefinements.siteKey(node.id, \"parameter\", index)\n\t\t\t\t);\n\t\t\t\treturn site?.direction === \"input\" ? `_source${index}` : name;\n\t\t\t});\n\t\t\tconst guards = names.flatMap((name, index) => {\n\t\t\t\tconst site = refinements?.byPosition.get(\n\t\t\t\t\trefinements.siteKey(node.id, \"parameter\", index)\n\t\t\t\t);\n\t\t\t\treturn site?.direction === \"input\" ? [\n\t\t\t\t\t`let _source${index} ← ${refinements.inputConversion(site.tree, name)}`\n\t\t\t\t] : [];\n\t\t\t});\n\t\t\tconst resultSite = refinements?.byPosition.get(\n\t\t\t\trefinements.siteKey(node.id, \"result\")\n\t\t\t);\n\t\t\tconst applied = `closure ${sourceNames.join(\" \")}`;\n\t\t\tconst result = resultSite?.direction === \"result\"\n\t\t\t\t? refinements.resultConversion(resultSite.tree, applied) : applied;\n\t\t\tconst body = callbackRefined && node.callable.direction !== \"closure\"\n\t\t\t\t? [\"#[]\"] : checked([\"closure\", ...names]\n\t\t\t\t\t, [...guards, `pure (${result})`]);\n"
+        },
+        {
+          "start": 9562,
+          "previous": "\t\t\t, carrier(node.callable.result.type), checked([\"closure\", ...names], [`pure (closure ${names.join(\" \")})`]), names.length + 1);\n",
+          "current": "\t\t\t, carrier(node.callable.result.type), body, names.length + 1);\n"
+        },
+        {
+          "start": 14468,
+          "previous": "\tconst callbacks = hostCallbacks ? generateOwnedCallbackCarriers({ model, symbols, sourceType, carrier }) : null;\n",
+          "current": "\tconst callbacks = hostCallbacks ? generateOwnedCallbackCarriers({\n\t\tmodel, symbols, sourceType, carrier, refinements\n\t}) : null;\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-callback-carriers.mjs",
+      "previousSha256": "a2bb7ddcb79b242ba7330541d9df52a706afbfeca2d8be31935de6fcaee0abe3",
+      "currentSha256": "0f9b019adc52b9702109222d303390e54cd4e44f68d0b35412bc03bbc377d6e1",
+      "edits": [
+        {
+          "start": 3925,
+          "previous": "",
+          "current": " * @param options.refinements - Optional owned refinement carrier conversions.\n"
+        },
+        {
+          "start": 4008,
+          "previous": "export const generateOwnedCallbackCarriers = ({ model, symbols, sourceType, carrier }) => {\n",
+          "current": "export const generateOwnedCallbackCarriers = ({\n\tmodel, symbols, sourceType, carrier, refinements\n}) => {\n"
+        },
+        {
+          "start": 4391,
+          "previous": "\t\tconst parameters = node.callable.parameters.map((site, i) => `(a${i} : ${sourceType(site.type)})`);\n",
+          "current": "\t\tconst valueType = refinements?.sourceValueType ?? sourceType;\n\t\tconst parameters = node.callable.parameters.map(\n\t\t\t(site, i) => `(a${i} : ${valueType(site.type)})`\n\t\t);\n"
+        },
+        {
+          "start": 4628,
+          "previous": "\t\tconst recovery = ownedCallbackRecovery(model, node, sourceType);\n\t\tif(recovery) lines.push(`def hostRecovery${index} ${parameters.join(\" \")} : ${sourceType(node.callable.result.type)} :=`\n\t\t\t, ...recovery.map(line => `  ${line}`), \"\");\n",
+          "current": "\t\tconst recovery = ownedCallbackRecovery(model, node, valueType);\n\t\tconst parameterSites = names.map((_, position) =>\n\t\t\trefinements?.byPosition.get(\n\t\t\t\trefinements.siteKey(node.id, \"parameter\", position)\n\t\t\t)\n\t\t);\n\t\tconst resultSite = refinements?.byPosition.get(\n\t\t\trefinements.siteKey(node.id, \"result\")\n\t\t);\n\t\tconst invokeArguments = names.map((name, position) => {\n\t\t\tconst site = parameterSites[position];\n\t\t\tconst value = site?.direction === \"result\"\n\t\t\t\t? refinements.resultConversion(site.tree, name) : name;\n\t\t\treturn `#[${value}]`;\n\t\t});\n\t\tconst invoked = `carrierValue (hostInvoke${index} token ${invokeArguments.join(\" \")})`;\n\t\tconst checkedResult = resultSite?.direction === \"input\"\n\t\t\t? `(do let value ← ${invoked}; ${refinements.inputConversion(\n\t\t\t\tresultSite.tree, \"value\"\n\t\t\t)})` : invoked;\n\t\tconst checkedRecovery = resultSite?.direction === \"input\"\n\t\t\t? `(do let value ← carrierValue recovery; ${refinements.inputConversion(\n\t\t\t\tresultSite.tree, \"value\"\n\t\t\t)})` : \"carrierValue recovery\";\n\t\tif(recovery && node.callable.direction !== \"closure\")\n\t\t\tlines.push(`def hostRecovery${index} ${parameters.join(\" \")} : ${valueType(node.callable.result.type)} :=`\n\t\t\t\t, ...recovery.map(line => `  ${line}`), \"\");\n"
+        },
+        {
+          "start": 6091,
+          "previous": "\t\t\t, \"\", `@[export ${symbol}_wrap]`\n\t\t\t, `def hostWrap${index} (token : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`\n\t\t\t, \"  match carrierValue recovery with\", \"  | .some fallback =>\"\n\t\t\t, `    #[fun ${names.join(\" \")} => match carrierValue (hostInvoke${index} token ${names.map(name => `#[${name}]`).join(\" \")}) with`\n",
+          "current": "\t\t\t, \"\", `@[export ${symbol}_wrap]`);\n\t\tif(node.callable.direction === \"closure\")\n\t\t\tlines.push(`def hostWrap${index} (_token : _root_.USize) (_recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} := #[]`, \"\");\n\t\telse lines.push(\n\t\t\t`def hostWrap${index} (token : _root_.USize) (recovery : ${carrier(node.callable.result.type)}) : ${carrier(node.id)} :=`\n\t\t\t, `  match ${checkedRecovery} with`, \"  | .some fallback =>\"\n\t\t\t, `    #[fun ${names.join(\" \")} => match ${checkedResult} with`\n"
+        },
+        {
+          "start": 6697,
+          "previous": "\t\t\t\t, `    #[fun ${names.join(\" \")} => match carrierValue (hostInvoke${index} token ${names.map(name => `#[${name}]`).join(\" \")}) with`\n",
+          "current": "\t\t\t\t, `    #[fun ${names.join(\" \")} => match ${checkedResult} with`\n"
+        },
+        {
+          "start": 7558,
+          "previous": "\t\tcallbacks.push({ id: node.id, symbol, automaticRecovery: recovery !== null });\n",
+          "current": "\t\tcallbacks.push({ id: node.id, symbol\n\t\t\t, automaticRecovery: node.callable.direction !== \"closure\"\n\t\t\t\t&& recovery !== null\n\t\t\t, ...(node.callable.direction === undefined ? {}\n\t\t\t\t: { direction: node.callable.direction }) });\n"
+        }
+      ]
+    },
+    {
+      "path": "src/build/owned-refinement-carriers.mjs",
+      "previousSha256": "37ecea4228a50269e0e1118eff359e68cc2c209109daeffce2f3b537f5f6aef2",
+      "currentSha256": "ae2acd885b01fad1e7b3bdc6ea0674ef7de3ee64a13f2a8c30c86b8d904615b7",
+      "edits": [
+        {
+          "start": 2045,
+          "previous": "",
+          "current": "\tconst sourceValueType = (id, active = new Set()) => {\n\t\tif(active.has(id)) fail(`recursive callable type ${id}`);\n\t\tconst node = nodes.get(id);\n\t\tif(!node) fail(`missing type ${id}`);\n\t\tif(node.kind === \"primitive\") return `_root_.${primitiveNames[node.name]}`;\n\t\tif(node.kind === \"callback\")\n\t\t{\n\t\t\tconst seen = new Set([...active, id]);\n\t\t\treturn `(${[...node.callable.parameters, node.callable.result]\n\t\t\t\t.map(site => sourceValueType(site.type, seen)).join(\" → \")})`;\n\t\t}\n\t\tif(definitions.has(id)) return `_root_.${sourceName(id)}`;\n\t\tconst values = node.arguments.map(child => sourceValueType(child, active));\n\t\tif(node.kind === \"result\")\n\t\t\treturn `(_root_.Except ${values[1]} ${values[0]})`;\n\t\treturn `(_root_.${{ array: \"Array\", list: \"List\", option: \"Option\"\n\t\t\t, tuple: \"Prod\" }[node.kind]} ${values.join(\" \")})`;\n\t};\n"
+        },
+        {
+          "start": 3282,
+          "previous": "\t\tif(node.kind === \"callback\")\n\t\t{\n\t\t\tconst seen = new Set([...active, id]);\n\t\t\treturn `(${[...node.callable.parameters, node.callable.result].map(site => sourceType(site.type, seen)).join(\" → \")})`;\n\t\t}\n",
+          "current": "\t\tif(node.kind === \"callback\") return sourceValueType(id, active);\n"
+        },
+        {
+          "start": 4972,
+          "previous": "\t\t\tif(reachesMirror(parameter.type) && !byPosition.has(siteKey(declaration.id, \"parameter\", index)))\n",
+          "current": "\t\t\tif(nodes.get(parameter.type)?.kind !== \"callback\"\n\t\t\t\t&& reachesMirror(parameter.type)\n\t\t\t\t&& !byPosition.has(siteKey(declaration.id, \"parameter\", index)))\n"
+        },
+        {
+          "start": 5221,
+          "previous": "\t\tif(reachesMirror(declaration.result.type) && !byPosition.has(siteKey(declaration.id, \"result\")))\n",
+          "current": "\t\tif(nodes.get(declaration.result.type)?.kind !== \"callback\"\n\t\t\t&& reachesMirror(declaration.result.type)\n\t\t\t&& !byPosition.has(siteKey(declaration.id, \"result\")))\n"
+        },
+        {
+          "start": 5532,
+          "previous": "\t\tif([...node.callable.parameters, node.callable.result].some(site => reachesMirror(site.type)))\n\t\t\tfail(`${node.id} requires a directional callback refinement adapter`);\n",
+          "current": "\t{\n\t\tnode.callable.parameters.forEach((parameter, index) => {\n\t\t\tif(reachesMirror(parameter.type)\n\t\t\t\t&& !byPosition.has(siteKey(node.id, \"parameter\", index)))\n\t\t\t\tfail(`${node.id} parameter ${index} requires a directional callback refinement adapter`);\n\t\t});\n\t\tif(reachesMirror(node.callable.result.type)\n\t\t\t&& !byPosition.has(siteKey(node.id, \"result\")))\n\t\t\tfail(`${node.id} result requires a directional callback refinement adapter`);\n\t}\n"
+        },
+        {
+          "start": 11551,
+          "previous": "\t\tvalidators.set(siteKey(site.declaration, \"parameter\", site.position.index), symbol);\n",
+          "current": "\t\tvalidators.set(siteKey(site.declaration, site.position.kind\n\t\t\t, site.position.index), symbol);\n"
+        },
+        {
+          "start": 12045,
+          "previous": "\treturn { lines, sourceType, inputConversion, resultConversion\n",
+          "current": "\treturn { lines, sourceType, sourceValueType, inputConversion, resultConversion\n"
+        }
+      ]
+    },
+    {
+      "path": "tests/owned-checked-record-foundation.test.mjs",
+      "previousSha256": "65e88d490acb2b45db3487a80d9e69963f144b76d0b51a6ed1ac068de00a70b7",
+      "currentSha256": "550a9cd30efb7c307f1ddde862ebf328af6f711f7c41e789dcf3b7dd28de9a8f",
+      "edits": [
+        {
+          "start": 362,
+          "previous": "",
+          "current": "import { mkdtemp, readFile, rm, writeFile } from \"node:fs/promises\";\nimport { tmpdir } from \"node:os\";\nimport { join, resolve } from \"node:path\";\n"
+        },
+        {
+          "start": 676,
+          "previous": "import { assertRefinement, declarationRefinements } from \"../src/abi/refinements.mjs\";\n",
+          "current": "import {\n\tassertRefinement, callbackDefinitionRefinement, declarationRefinements\n} from \"../src/abi/refinements.mjs\";\n"
+        },
+        {
+          "start": 952,
+          "previous": "import { validateReviewedOwnedSource } from \"../src/analyze/reviewed-owned-source.mjs\";\n",
+          "current": "import {\n\treviewedOwnedSourceSelection, validateReviewedOwnedSource\n} from \"../src/analyze/reviewed-owned-source.mjs\";\nimport { ownedCCallbacks } from \"../src/backends/c/owned-callbacks.mjs\";\nimport { generateOwnedCValues } from \"../src/backends/c/owned-values.mjs\";\n"
+        },
+        {
+          "start": 1321,
+          "previous": "",
+          "current": "import { processBuildRunner } from \"../src/build/process-runner.mjs\";\n"
+        },
+        {
+          "start": 1533,
+          "previous": "",
+          "current": "import \"./helpers/owned-checked-record-callable-source-history-tests.mjs\";\n"
+        },
+        {
+          "start": 5478,
+          "previous": "test(\"owned checked records stay outside receivers and callbacks with located refusals\", () => {\n",
+          "current": "const ownedCheckedCallbackIr = role => {\n\tconst document = ownedCheckedRecordReviewedIr();\n\tconst claim = { kind: \"named\", id: `lean:${q(\"Claim\")}` };\n\tconst host = role === \"host\";\n\tconst refinements = {\n\t\tparameters: [ownedCheckedRecordTrees.claim(\n\t\t\thost ? null : q(\"mkClaim\")\n\t\t)]\n\t\t, result: ownedCheckedRecordTrees.claim(host ? q(\"mkClaim\") : null)\n\t};\n\tconst signature = { parameters: [claim], result: claim, refinements };\n\tconst name = `Callback${sha256(canonicalJson(signature)).slice(0, 20)}`;\n\tconst failure = { mode: \"declared\", errors: [\"error:native-callback\"]\n\t\t, unexpected: \"poison-runtime\" };\n\tconst callable = {\n\t\tparameters: [{ name: \"arg0\", type: claim, ownership: \"borrow\"\n\t\t\t, lifetime: { scope: \"call\", anchor: null }, mutability: \"immutable\"\n\t\t\t, optional: false, default: null }]\n\t\t, result: { type: claim, ownership: \"lease\"\n\t\t\t, lifetime: { scope: \"explicit\", anchor: null } }\n\t\t, effects: [\"host-call\", \"fails\"], failure, resultMode: \"value\"\n\t\t, invocation: \"many\", reentry: \"same-agent\", selfDisposal: \"defer\"\n\t};\n\tdocument.types.push({ ...structuredClone(type(document, \"Ticket\"))\n\t\t, id: `bridge:${name}`, name, kind: \"callback\", representation: \"identity\"\n\t\t, mutability: \"immutable\", resource: null, aggregate: null, callable\n\t\t, source: { producer: \"corpusReview\", declaration: name\n\t\t\t, extensions: { [refinementKey]: refinements } } });\n\tdocument.errors = [{ id: \"error:native-callback\", name: \"NativeCallbackFailure\"\n\t\t, category: \"boundary\", payload: null\n\t\t, documentation: { summary: \"Independent owned checked-record contract.\"\n\t\t\t, details: \"\" } }];\n\tconst operation = structuredClone(declaration(document, \"claimQuota\"));\n\toperation.id = `lean:${q(host ? \"withClaimCallback\" : \"claimClosure\")}`;\n\toperation.name = host ? \"withClaimCallback\" : \"claimClosure\";\n\toperation.overloadKey = q(operation.name);\n\toperation.source = { producer: \"corpusReview\"\n\t\t, declaration: q(operation.name), extensions: {} };\n\tconst callback = { kind: \"named\", id: `bridge:${name}` };\n\tif(host)\n\t{\n\t\toperation.parameters = [{ name: \"arg0\", type: callback\n\t\t\t, ownership: \"borrow\", lifetime: { scope: \"call\", anchor: null }\n\t\t\t, mutability: \"immutable\", optional: false, default: null }];\n\t\toperation.result = { type: { kind: \"primitive\", name: \"nat\" }\n\t\t\t, ownership: \"copy\", lifetime: null };\n\t\toperation.effects = [\"fails\", \"host-call\", \"reads-resource\"];\n\t\toperation.failure = failure;\n\t}\n\telse\n\t{\n\t\toperation.parameters = [];\n\t\toperation.result = { type: callback, ownership: \"lease\"\n\t\t\t, lifetime: { scope: \"explicit\", anchor: null } };\n\t\toperation.effects = [\"allocates\"];\n\t\toperation.failure = { mode: \"none\", errors: []\n\t\t\t, unexpected: \"poison-runtime\" };\n\t}\n\tdocument.declarations = [operation];\n\treturn { document, name, operation, refinements };\n};\n\ntest(\"reviewed owned callbacks preserve exact host and closure checked-record directions\", () => {\n\tconst identities = new Set();\n\tfor(const role of [\"host\", \"closure\"])\n\t{\n\t\tconst { document, name, operation, refinements } = ownedCheckedCallbackIr(role);\n\t\tidentities.add(name);\n\t\tassert.deepEqual(validateReviewedOwnedSource(capture(document)), document);\n\t\tconst definition = document.types.find(item => item.id === `bridge:${name}`);\n\t\tassert.deepEqual(callbackDefinitionRefinement(\n\t\t\tdefinition, document.types, { ownedStructural: true }\n\t\t), refinements);\n\t\tassert.throws(() => callbackDefinitionRefinement(definition, document.types)\n\t\t\t, /Callback refinement direction is inconsistent/u);\n\t\tconst contract = reviewedOwnedSourceSelection(\n\t\t\tcapture(document)\n\t\t).contracts[operation.source.declaration];\n\t\tconst site = role === \"host\" ? contract.parameters[0] : contract.result;\n\t\tassert.equal(site.ownership, role === \"host\" ? \"borrow\" : \"lease\");\n\t\tassert.deepEqual(site.callable.parameters[0].refinement\n\t\t\t, role === \"closure\" ? {\n\t\t\t\tkind: \"checked-record\", name: q(\"Claim\")\n\t\t\t\t, constructor: q(\"mkClaim\")\n\t\t\t\t, fields: [{ name: \"holder\", refinement: null }\n\t\t\t\t\t, { name: \"quota\", refinement: null }]\n\t\t\t} : undefined);\n\t\tassert.deepEqual(site.callable.result.refinement\n\t\t\t, role === \"host\" ? {\n\t\t\t\tkind: \"checked-record\", name: q(\"Claim\")\n\t\t\t\t, constructor: q(\"mkClaim\")\n\t\t\t\t, fields: [{ name: \"holder\", refinement: null }\n\t\t\t\t\t, { name: \"quota\", refinement: null }]\n\t\t\t} : undefined);\n\t\tconst model = compileOwnedAggregateModel(document);\n\t\tconst callback = model.types.find(item => item.id === `bridge:${name}`);\n\t\tassert.equal(callback.callable.direction, role);\n\t\tassert.deepEqual(model.refinementModel.sites.map(item => ({\n\t\t\tposition: item.position, direction: item.direction\n\t\t})), role === \"host\" ? [\n\t\t\t{ position: { kind: \"parameter\", index: 0 }, direction: \"result\" }\n\t\t\t, { position: { kind: \"result\" }, direction: \"input\" }\n\t\t] : [\n\t\t\t{ position: { kind: \"parameter\", index: 0 }, direction: \"input\" }\n\t\t\t, { position: { kind: \"result\" }, direction: \"result\" }\n\t\t]);\n\t\tconst generated = generateOwnedNativeBindingAdapters({\n\t\t\tdocument, sourceIdentity: {}\n\t\t\t, declarations: [{ name: operation.source.declaration, module }]\n\t\t\t, metadataSha256: \"b\".repeat(64), hostCallbacks: true\n\t\t});\n\t\tassert.equal(generated.carriers.hostCallbacks[0].direction, role);\n\t\tconst validatorKey = role === \"host\"\n\t\t\t? `bridge:${name}\\0result\\0-1`\n\t\t\t: `bridge:${name}\\0parameter\\0${0}`;\n\t\tassert.deepEqual(Object.keys(generated.carriers.refinementValidators)\n\t\t\t, [validatorKey]);\n\t\tassert.match(generated.carriers.leanSource\n\t\t\t, new RegExp(`_root_\\\\.${module}\\\\.mkClaim`, \"u\"));\n\t\tconst validator = generated.carriers.refinementValidators[validatorKey];\n\t\tif(role === \"host\")\n\t\t{\n\t\t\tconst values = generateOwnedCValues(document, {\n\t\t\t\thostCallbacks: true, publicPrefix: \"checked_callback\"\n\t\t\t});\n\t\t\tconst source = ownedCCallbacks(values, generated.carriers);\n\t\t\tassert.equal(source.match(new RegExp(\n\t\t\t\t`if \\\\(!${validator}\\\\((?:returned|recovery)\\\\)\\\\)`, \"gu\"\n\t\t\t))?.length, 2);\n\t\t}\n\t\telse\n\t\t{\n\t\t\tassert.match(generated.source\n\t\t\t\t, new RegExp(`if \\\\(!${validator}\\\\(child\\\\)\\\\)`, \"u\"));\n\t\t}\n\t}\n\tassert.equal(identities.size, 2);\n});\n\ntest(\"reviewed owned callback carriers elaborate against their proof-carrying Lean values\", {\n\tskip: process.env.LEAN_BRIDGE_ELABORATED_METADATA_TEST !== \"1\"\n\t, timeout: 120000\n}, async t => {\n\tconst directory = await mkdtemp(join(tmpdir()\n\t\t, \"lean-bridge-owned-checked-callbacks-\"));\n\tt.after(() => rm(directory, { recursive: true, force: true }));\n\tconst fixture = resolve(\n\t\t\"tests/fixtures/onboarding/owned-checked-records/OwnedCheckedRecords.lean\"\n\t);\n\tawait writeFile(join(directory, `${module}.lean`)\n\t\t, `${await readFile(fixture, \"utf8\")}\\nnamespace ${module}\\n\\ndef withClaimCallback (_callback : Claim → Claim) : Nat := 0\\n\\ndef claimClosure : Claim → Claim := id\\n\\nend ${module}\\n`);\n\tconst leanPrefix = resolve(process.env.LEAN_BRIDGE_LEAN_PREFIX\n\t\t?? \".toolchains/elan/toolchains/leanprover--lean4---v4.32.2\");\n\tconst lean = join(leanPrefix, \"bin/lean\");\n\tconst env = { ...process.env, LEAN_PATH: directory\n\t\t, PATH: `${join(leanPrefix, \"bin\")}:${process.env.PATH}` };\n\tconst compile = async args => {\n\t\ttry\n\t\t{ await processBuildRunner.capture({ command: lean, args, cwd: directory, env }); }\n\t\tcatch(error)\n\t\t{ throw new Error(error.details?.stderr || error.details?.stdout || error.message, { cause: error }); }\n\t};\n\tawait compile([\"-o\", `${module}.olean`, `${module}.lean`]);\n\tfor(const role of [\"host\", \"closure\"])\n\t{\n\t\tconst { document, operation } = ownedCheckedCallbackIr(role);\n\t\tconst generated = generateOwnedNativeBindingAdapters({\n\t\t\tdocument, sourceIdentity: {}\n\t\t\t, declarations: [{ name: operation.source.declaration, module }]\n\t\t\t, metadataSha256: \"b\".repeat(64), hostCallbacks: true\n\t\t});\n\t\tconst file = `Generated${role === \"host\" ? \"Host\" : \"Closure\"}.lean`;\n\t\tawait writeFile(join(directory, file), generated.carriers.leanSource);\n\t\tawait compile([file]);\n\t}\n});\n\ntest(\"owned checked-record receivers and incomplete callback decisions have located refusals\", () => {\n"
+        },
+        {
+          "start": 15282,
+          "previous": "",
+          "current": "\tconst wrong = ownedCheckedCallbackIr(\"host\");\n\twrong.operation.parameters = [];\n\twrong.operation.result = { type: { kind: \"named\", id: `bridge:${wrong.name}` }\n\t\t, ownership: \"lease\", lifetime: { scope: \"explicit\", anchor: null } };\n\twrong.operation.effects = [\"allocates\"];\n\twrong.operation.failure = { mode: \"none\", errors: []\n\t\t, unexpected: \"poison-runtime\" };\n\tassert.throws(() => validateReviewedOwnedSource(capture(wrong.document))\n\t\t, unsupported(`${wrong.operation.id}.result.type`));\n\tconst reversed = ownedCheckedCallbackIr(\"host\");\n\treversed.refinements.parameters[0] = ownedCheckedRecordTrees.claim(q(\"mkClaim\"));\n\treversed.refinements.result = ownedCheckedRecordTrees.claim(null);\n\tconst reversedDefinition = reversed.document.types.find(\n\t\titem => item.id === `bridge:${reversed.name}`\n\t);\n\tconst claimType = { kind: \"named\", id: `lean:${q(\"Claim\")}` };\n\tconst reversedName = `Callback${sha256(canonicalJson({\n\t\tparameters: [claimType], result: claimType, refinements: reversed.refinements\n\t})).slice(0, 20)}`;\n\tassert.notEqual(reversedName, reversed.name);\n\treversedDefinition.id = `bridge:${reversedName}`;\n\treversedDefinition.name = reversedName;\n\treversedDefinition.source.declaration = reversedName;\n\treversed.operation.parameters[0].type.id = reversedDefinition.id;\n\tassert.throws(() => validateReviewedOwnedSource(capture(reversed.document))\n\t\t, unsupported(`${reversed.operation.id}.parameters[0].type`));\n"
+        }
+      ]
+    }
+  ]
+}

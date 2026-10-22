@@ -24,6 +24,9 @@ import {
 	, finRefinementNormalizationPaths
 } from "./fin-refinement-source-history.mjs";
 import {
+	beforeOwnedCheckedRecordCallableSource
+} from "./owned-checked-record-callable-source-history.mjs";
+import {
 	beforeOwnedCheckedRecordFoundationSource
 } from "./owned-checked-record-foundation-source-history.mjs";
 import { sha256 } from "./source-history-digest.mjs";
@@ -59,8 +62,11 @@ test("dependent-record constructor authority restores every exact source"
 		for(const update of [...record.updates, ...record.integrationUpdates])
 		{
 			const current = await readFile(update.path, "utf8");
-			const milestone = beforeOwnedCheckedRecordFoundationSource(
+			const callable = beforeOwnedCheckedRecordCallableSource(
 				update.path, current, update.currentSha256
+			);
+			const milestone = beforeOwnedCheckedRecordFoundationSource(
+				update.path, callable, update.currentSha256
 			);
 			const previous = reverseDependentRecordConstructorAuthorityUpdate(
 				milestone, update
@@ -76,8 +82,11 @@ test("dependent-record constructor authority restores every exact source"
 		for(const addition of record.additions)
 		{
 			const current = await readFile(addition.path, "utf8");
-			const milestone = beforeOwnedCheckedRecordFoundationSource(
+			const callable = beforeOwnedCheckedRecordCallableSource(
 				addition.path, current, addition.currentSha256
+			);
+			const milestone = beforeOwnedCheckedRecordFoundationSource(
+				addition.path, callable, addition.currentSha256
 			);
 			assert.equal(sha256(milestone)
 				, addition.currentSha256, addition.path);
