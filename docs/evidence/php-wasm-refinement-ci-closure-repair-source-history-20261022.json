@@ -1,0 +1,230 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7d22bbf3ea25b1619dcd4d96c1bb0716da0bc998b9393fb364b9648d967d22a4",
+      "path": "scripts/update-php-wasm-refinement-ci-closure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "202e955207b5b3688926690a2de8e624fb018ed7e19a1b786a0043c473018610",
+      "path": "tests/helpers/php-wasm-refinement-ci-closure-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "0f3008f47cdc455f9ad86bcf8d449bb14f29755de7363a97f364bf8b387390c3",
+      "path": "tests/helpers/php-wasm-refinement-ci-closure-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "6320d5169469bc7d70a9b2eafb5076c7e744c340",
+  "milestone": "php-wasm-refinement-ci-closure-repair-v1",
+  "predecessorCommit": "ac9b90c77d51c359c863fba4c3303205bae6241a",
+  "schemaVersion": 1,
+  "scope": "The dedicated PHP-Wasm refinement CI audit now derives every measurement cell from the exact YAML matrix axes and rejects include or exclude suppression, extra triggers, job-level conditions, any continue-on-error policy, altered acceptance bodies, artifact-name drift and truncated upload inventories. The entry topology is tied to those workflow matrices and artifact templates and to the exact record/check layouts in all three producer scripts. The aggregate topology remains a consistency gate; the separate hosted verifier authenticates retained artifact bytes.",
+  "updates": [
+    {
+      "currentSha256": "21fde8012bbc740fb1de5270e5afaee4128328374b98d9ec148fcc1f1871d901",
+      "edits": [
+        {
+          "current": "\t\t\t, source.replace(\"  workflow_dispatch:\\n\"\n\t\t\t\t, \"  workflow_dispatch:\\n  merge_group:\\n\")\n",
+          "previous": "",
+          "start": 2066
+        },
+        {
+          "current": "\t\t\t, source.replace(\"    steps:\\n\"\n\t\t\t\t, \"    continue-on-error: ${{ true }}\\n    steps:\\n\")\n\t\t\t, source.replace(`  ${lane.job}:\\n`\n\t\t\t\t, `  ${lane.job}:\\n    if: github.event_name != 'pull_request'\\n`)\n\t\t\t, source.replace(`          ${lane.acceptanceCommand}\\n`\n\t\t\t\t, \"          true\\n\")\n\t\t\t, source.replace(`          name: ${lane.artifactName}\\n`\n\t\t\t\t, \"          name: forged-${{ github.sha }}\\n\")\n\t\t\t, source.replace(`            ${lane.artifactPaths[0]}\\n`, \"\")\n",
+          "previous": "",
+          "start": 3724
+        },
+        {
+          "current": "\t\t\tmutations.push(source.replace(\"      matrix:\\n\"\n\t\t\t\t, \"      matrix:\\n        exclude:\\n          - family: nominal-full\\n\"));\n\t\t\tconst first = Object.values(lane.axes)[0][0];\n\t\t\tmutations.push(source.replace(`          - ${first}\\n`, \"\"));\n",
+          "previous": "",
+          "start": 4464
+        },
+        {
+          "current": "\tassert.equal(controls, 466);\n",
+          "previous": "\tassert.equal(controls, 350);\n",
+          "start": 4982
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-tests.mjs",
+      "previousSha256": "543b4dd1af42de2a194136b7e9e588f0399d4b6304c456f62d6dc8109ecd0432"
+    },
+    {
+      "currentSha256": "f82115e2d4a047e12f7ca55dffbc405fced64b2c3194877a507f44fc9a63f6f4",
+      "edits": [
+        {
+          "current": "const genericRun = id => \"set -euo pipefail\\nsource scripts/env.sh\\n\"\n\t+ `bash scripts/run-${id}-ci.sh\\n`;\nconst genericPaths = (id, kind) => Object.freeze([\n\t`build/${id}-ci/`\n\t, ...(kind === \"measurement\" ? [`build/${id}-ci.tap`] : [])\n\t, `build/${id}-host.log`\n\t, `build/${id}-runtime.log`\n\t, `build/${id}-input/php-wasm-runtime/runtime.json`\n]);\n",
+          "previous": "",
+          "start": 130
+        },
+        {
+          "current": "\t\t, axes: Object.freeze(options.axes ?? {})\n\t\t, acceptanceRun: options.acceptanceRun ?? genericRun(id)\n\t\t, acceptanceCommand: options.acceptanceCommand\n\t\t\t?? `bash scripts/run-${id}-ci.sh`\n\t\t, artifactName: options.artifactName ?? id + \"-${{ github.sha }}\"\n\t\t, artifactPaths: Object.freeze(options.artifactPaths\n\t\t\t?? genericPaths(id, options.kind ?? \"acceptance\"))\n",
+          "previous": "",
+          "start": 776
+        },
+        {
+          "current": "\t\t, \"checked Fin and record callbacks\", [1460, 1483], 360, {\n\t\t\tacceptanceCommand: \"npm run test:callback-refinements-php-wasm 2>&1 | tee build/callback-refinements-php-wasm/run.tap\"\n\t\t\t, acceptanceRun: \"set -euo pipefail\\nsource scripts/env.sh\\n\"\n\t\t\t\t+ \"npm run test:callback-refinements-php-wasm 2>&1 | tee build/callback-refinements-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"rg '^# fail 0$' build/callback-refinements-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"rg '^# skipped 0$' build/callback-refinements-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"test -s build/callback-refinements-php-wasm/records/index.json\\n\"\n\t\t\t\t+ \"node scripts/check-callback-refinements-php-wasm-reports.mjs \\\\\\n  --directory build/callback-refinements-php-wasm/records \\\\\\n  --producer \\\"$GITHUB_SHA\\\" | tee build/callback-refinements-php-wasm/verification.json\\n\"\n\t\t\t, artifactPaths: [\n\t\t\t\t\"build/callback-refinements-php-wasm/host.log\"\n\t\t\t\t, \"build/callback-refinements-php-wasm/runtime.log\"\n\t\t\t\t, \"build/callback-refinements-php-wasm/run.tap\"\n\t\t\t\t, \"build/callback-refinements-php-wasm/verification.json\"\n\t\t\t\t, \"build/callback-refinements-php-wasm/records\"\n\t\t\t]\n\t\t}\n\t)\n",
+          "previous": "\t\t, \"checked Fin and record callbacks\", [1460, 1483], 360)\n",
+          "start": 1556
+        },
+        {
+          "current": "\t\t, \"callback Subtypes\", [1460, 1471], 240, {\n\t\t\tacceptanceCommand: \"npm run test:callback-subtype-php-wasm 2>&1 | tee build/callback-subtype-php-wasm/run.tap\"\n\t\t\t, acceptanceRun: \"set -euo pipefail\\nsource scripts/env.sh\\n\"\n\t\t\t\t+ \"npm run test:callback-subtype-php-wasm 2>&1 | tee build/callback-subtype-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"rg '^# fail 0$' build/callback-subtype-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"rg '^# skipped 0$' build/callback-subtype-php-wasm/run.tap\\n\"\n\t\t\t\t+ \"test -s build/callback-subtype-php-wasm/records/index.json\\n\"\n\t\t\t\t+ \"node scripts/check-callback-subtype-php-wasm-reports.mjs \\\\\\n  --directory build/callback-subtype-php-wasm/records \\\\\\n  --producer \\\"$GITHUB_SHA\\\" | tee build/callback-subtype-php-wasm/verification.json\\n\"\n\t\t\t, artifactPaths: [\n\t\t\t\t\"build/callback-subtype-php-wasm/host.log\"\n\t\t\t\t, \"build/callback-subtype-php-wasm/runtime.log\"\n\t\t\t\t, \"build/callback-subtype-php-wasm/run.tap\"\n\t\t\t\t, \"build/callback-subtype-php-wasm/verification.json\"\n\t\t\t\t, \"build/callback-subtype-php-wasm/records\"\n\t\t\t]\n\t\t}\n\t)\n",
+          "previous": "\t\t, \"callback Subtypes\", [1460, 1471], 240)\n",
+          "start": 2701
+        },
+        {
+          "current": "\t\t, \"owned checked records\", [1459, 1484], 180, {\n\t\t\tacceptanceCommand: \"npm run test:owned-checked-record-php-wasm 2>&1 | tee build/owned-checked-record-php-wasm.log\"\n\t\t\t, acceptanceRun: \"set -euo pipefail\\nsource scripts/env.sh\\n\"\n\t\t\t\t+ \"npm run test:owned-checked-record-php-wasm 2>&1 | tee build/owned-checked-record-php-wasm.log\\n\"\n\t\t\t\t+ \"rg '^# fail 0$' build/owned-checked-record-php-wasm.log\\n\"\n\t\t\t\t+ \"rg '^# skipped 0$' build/owned-checked-record-php-wasm.log\\n\"\n\t\t\t\t+ \"test -s build/owned-checked-record-php-wasm/packages.json\\n\"\n\t\t\t\t+ \"test -s build/owned-checked-record-php-wasm/full.json\\n\"\n\t\t\t\t+ \"test -s build/owned-checked-record-php-wasm/result-only.json\\n\"\n\t\t\t, artifactPaths: [\n\t\t\t\t\"build/owned-checked-record-php-wasm.log\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm-host.log\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm-runtime.log\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm/packages.json\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm/full.json\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm/result-only.json\"\n\t\t\t\t, \"build/owned-checked-record-php-wasm/evidence\"\n\t\t\t]\n\t\t}\n\t)\n",
+          "previous": "\t\t, \"owned checked records\", [1459, 1484], 180)\n",
+          "start": 4440
+        },
+        {
+          "current": "\t\t, \"owned Subtypes\", [1459, 1472], 180, {\n\t\t\tacceptanceCommand: \"npm run test:owned-subtype-php-wasm 2>&1 | tee build/owned-subtype-php-wasm.log\"\n\t\t\t, acceptanceRun: \"set -euo pipefail\\nsource scripts/env.sh\\n\"\n\t\t\t\t+ \"npm run test:owned-subtype-php-wasm 2>&1 | tee build/owned-subtype-php-wasm.log\\n\"\n\t\t\t\t+ \"rg '^# fail 0$' build/owned-subtype-php-wasm.log\\n\"\n\t\t\t\t+ \"rg '^# skipped 0$' build/owned-subtype-php-wasm.log\\n\"\n\t\t\t\t+ \"test -s build/owned-subtype-php-wasm/packages.json\\n\"\n\t\t\t, artifactPaths: [\n\t\t\t\t\"build/owned-subtype-php-wasm.log\"\n\t\t\t\t, \"build/owned-subtype-php-wasm-host.log\"\n\t\t\t\t, \"build/owned-subtype-php-wasm-runtime.log\"\n\t\t\t\t, \"build/owned-subtype-php-wasm/packages.json\"\n\t\t\t\t, \"build/owned-subtype-php-wasm/evidence\"\n\t\t\t]\n\t\t}\n\t)\n",
+          "previous": "\t\t, \"owned Subtypes\", [1459, 1472], 180)\n",
+          "start": 5567
+        },
+        {
+          "current": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 8, maxParallel: 2\n\t\t\t, axes: { family: [\"nominal-full\", \"nominal-result-only\"\n\t\t\t\t, \"recursive-subtype\", \"recursive-checked-record\"]\n\t\t\t, route: [\"ordinary\", \"reviewed\"] }\n\t\t\t, acceptanceRun: \"source scripts/env.sh\\nbash scripts/run-php-wasm-refinement-entry-ci.sh\\n\"\n\t\t\t, acceptanceCommand: \"bash scripts/run-php-wasm-refinement-entry-ci.sh\"\n\t\t\t, artifactName: \"php-wasm-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}\"\n\t\t}\n\t)\n",
+          "previous": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 8, maxParallel: 2 })\n",
+          "start": 6705
+        },
+        {
+          "current": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 4, maxParallel: 2\n\t\t\t, axes: { family: [\"owned-subtype\", \"owned-checked-record\"]\n\t\t\t\t, route: [\"ordinary\", \"reviewed\"] }\n\t\t\t, acceptanceRun: \"source scripts/env.sh\\nbash scripts/run-php-wasm-owned-refinement-entry-ci.sh\\n\"\n\t\t\t, acceptanceCommand: \"bash scripts/run-php-wasm-owned-refinement-entry-ci.sh\"\n\t\t\t, artifactName: \"php-wasm-owned-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}\"\n\t\t}\n\t)\n",
+          "previous": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 4, maxParallel: 2 })\n",
+          "start": 7317
+        },
+        {
+          "current": "\t\t\t, cells: 2, maxParallel: 2\n\t\t\t, axes: { family: [\"callback-fin\", \"callback-checked-record\"] }\n\t\t\t, acceptanceRun: \"source scripts/env.sh\\nbash scripts/run-php-wasm-callback-entry-ci.sh\\n\"\n\t\t\t, acceptanceCommand: \"bash scripts/run-php-wasm-callback-entry-ci.sh\"\n\t\t\t, artifactName: \"php-wasm-callback-entry-${{ matrix.family }}-${{ github.sha }}\"\n\t\t}\n\t)\n",
+          "previous": "\t\t\t, cells: 2, maxParallel: 2 })\n",
+          "start": 7936
+        },
+        {
+          "current": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 12, maxParallel: 2\n\t\t\t, axes: { family: [\"dependent-full\", \"dependent-result-only\"\n\t\t\t\t, \"value-index-full\", \"value-index-result-only\"\n\t\t\t\t, \"zero-payload-full\", \"zero-payload-result-only\"]\n\t\t\t, route: [\"ordinary\", \"reviewed\"] }\n\t\t\t, acceptanceRun: \"source scripts/env.sh\\nbash scripts/run-php-wasm-refinement-entry-ci.sh\\n\"\n\t\t\t, acceptanceCommand: \"bash scripts/run-php-wasm-refinement-entry-ci.sh\"\n\t\t\t, artifactName: \"php-wasm-indexed-refinement-entry-${{ matrix.family }}-${{ matrix.route }}-${{ github.sha }}\"\n\t\t}\n\t)\n",
+          "previous": "\t\t, { job: \"entry-probe\", kind: \"measurement\", cells: 12, maxParallel: 2 })\n",
+          "start": 8403
+        },
+        {
+          "current": "const indented = (source, spaces) => source.split(\"\\n\").slice(0, -1)\n\t.map(line => \" \".repeat(spaces) + line).join(\"\\n\") + \"\\n\";\nconst runBlock = job => {\n\tconst identity = job.indexOf(\"        id: acceptance\\n\");\n\tassert.ok(identity >= 0);\n\tconst marker = \"        run: |\\n\";\n\tconst start = job.indexOf(marker, identity);\n\tassert.ok(start >= 0);\n\tconst body = start + marker.length;\n\tconst end = job.indexOf(\"      - name:\", body);\n\tassert.ok(end >= 0);\n\treturn job.slice(body, end);\n};\nconst uploadPaths = job => {\n\tconst upload = job.indexOf(\"        uses: actions/upload-artifact@v7\\n\");\n\tassert.ok(upload >= 0);\n\tconst marker = \"          path: |\\n\";\n\tconst start = job.indexOf(marker, upload);\n\tassert.ok(start >= 0);\n\tconst body = start + marker.length;\n\tconst end = job.indexOf(\"          if-no-files-found:\", body);\n\tassert.ok(end >= 0);\n\treturn job.slice(body, end);\n};\nconst matrixAxes = job => {\n\tconst marker = \"      matrix:\\n\";\n\tconst start = job.indexOf(marker);\n\tassert.ok(start >= 0);\n\tconst body = start + marker.length;\n\tconst end = job.indexOf(\"    env:\\n\", body);\n\tassert.ok(end >= 0);\n\tconst source = job.slice(body, end);\n\tassert.doesNotMatch(source, /^ {8}(?:include|exclude):/mu);\n\tconst axes = {};\n\tconst lines = source.trimEnd().split(\"\\n\");\n\tfor(let index = 0; index < lines.length;)\n\t{\n\t\tconst head = /^ {8}([a-z][a-z0-9-]*):$/u.exec(lines[index]);\n\t\tassert.ok(head, `matrix axis ${lines[index]}`);\n\t\tconst values = [];\n\t\tfor(++index; index < lines.length; ++index)\n\t\t{\n\t\t\tconst value = /^ {10}- ([a-z0-9-]+)$/u.exec(lines[index]);\n\t\t\tif(!value) break;\n\t\t\tvalues.push(value[1]);\n\t\t}\n\t\tassert.ok(values.length > 0, head[1]);\n\t\tassert.ok(!Object.hasOwn(axes, head[1]), head[1]);\n\t\taxes[head[1]] = values;\n\t}\n\treturn axes;\n};\n",
+          "previous": "",
+          "start": 9133
+        },
+        {
+          "current": "\tconst triggers = /\\non:\\n[\\s\\S]*?\\npermissions:\\n/u.exec(source);\n\tassert.ok(triggers);\n\tassert.equal(triggers[0]\n\t\t, \"\\non:\\n  push:\\n  pull_request:\\n  workflow_dispatch:\\n\\npermissions:\\n\");\n",
+          "previous": "\tassert.match(source, /^name: [^\\n]+\\n\\non:\\n {2}push:\\n {2}pull_request:\\n {2}workflow_dispatch:\\n/u);\n",
+          "start": 11164
+        },
+        {
+          "current": "\tassert.doesNotMatch(source, /^\\s+continue-on-error:/mu);\n",
+          "previous": "\tassert.doesNotMatch(source, /\\n {2}schedule:/u);\n\tassert.doesNotMatch(source, /^\\s+continue-on-error:\\s*true\\s*$/mu);\n\tassert.doesNotMatch(source, /^\\s+if:\\s*false\\s*$/mu);\n",
+          "start": 11592
+        },
+        {
+          "current": "\tassert.doesNotMatch(job, /^ {4}if:/mu);\n",
+          "previous": "",
+          "start": 11885
+        },
+        {
+          "current": "\t\tconst axes = matrixAxes(job);\n\t\tassert.deepEqual(axes, lane.axes);\n\t\tassert.equal(Object.values(axes)\n\t\t\t.reduce((product, values) => product * values.length, 1), lane.cells);\n",
+          "previous": "",
+          "start": 12670
+        },
+        {
+          "current": "\tassert.equal(runBlock(job), indented(lane.acceptanceRun, 10));\n",
+          "previous": "",
+          "start": 13566
+        },
+        {
+          "current": "\tassert.equal(count(job, new RegExp(\"^ {10}name: \"\n\t\t+ escape(lane.artifactName) + \"$\", \"gmu\")), 1);\n\tassert.equal(uploadPaths(job), indented(lane.artifactPaths.join(\"\\n\") + \"\\n\", 12));\n",
+          "previous": "\tassert.equal(count(job, /^ {10}name: .+\\$\\{\\{ github\\.sha \\}\\}$/gmu), 1);\n",
+          "start": 13764
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix.mjs",
+      "previousSha256": "016b474d57ef0605f7e03119239588c8d75f13fa05cb073de1f33323a096a3c0"
+    },
+    {
+      "currentSha256": "ea7f192724717135df3d9ebf975dc35410ee09801808e075231935167460dc3d",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 129
+        },
+        {
+          "current": "import { phpWasmRefinementCiMatrix } from \"./php-wasm-refinement-ci-matrix.mjs\";\n",
+          "previous": "",
+          "start": 204
+        },
+        {
+          "current": "test(\"the entry topology is pinned to workflow matrices, artifacts and run layouts\", async () => {\n\tconst groups = [...new Set(phpWasmRefinementEntryMatrix.map(item => item.workflow))];\n\tassert.deepEqual(groups, [\n\t\t\"php-wasm-refinement-entry\", \"php-wasm-owned-refinement-entry\"\n\t\t, \"php-wasm-callback-entry\", \"php-wasm-indexed-refinement-entry\"\n\t]);\n\tfor(const workflow of groups)\n\t{\n\t\tconst lane = phpWasmRefinementCiMatrix.find(item => item.id === workflow);\n\t\tassert.ok(lane && lane.kind === \"measurement\");\n\t\tconst cells = phpWasmRefinementEntryMatrix.filter(item => item.workflow === workflow);\n\t\tassert.deepEqual([...new Set(cells.map(item => item.family))], lane.axes.family);\n\t\tassert.deepEqual([...new Set(cells.map(item => item.route))]\n\t\t\t, lane.axes.route ?? [\"ordinary\", \"reviewed\"]);\n\t\tassert.equal(cells.length, workflow === \"php-wasm-callback-entry\"\n\t\t\t? lane.cells * 2 : lane.cells);\n\t\tconst source = await readFile(lane.path, \"utf8\");\n\t\tassert.equal([...source.matchAll(\n\t\t\t/^ {10}LEAN_BRIDGE_[A-Z_]+_FAMILIES: \\$\\{\\{ matrix\\.family \\}\\}$/gmu\n\t\t)].length, 1);\n\t\tconst route = workflow === \"php-wasm-callback-entry\"\n\t\t\t? \"ordinary,reviewed\" : \"${{ matrix.route }}\";\n\t\tassert.equal([...source.matchAll(new RegExp(\n\t\t\t\"^ {10}LEAN_BRIDGE_[A-Z_]+_ROUTES: \"\n\t\t\t\t+ route.replace(/[.*+?^${}()|[\\]\\\\]/gu, \"\\\\$&\") + \"$\", \"gmu\"\n\t\t))].length, 1);\n\t\tfor(const item of cells)\n\t\t{\n\t\t\tconst expected = lane.artifactName\n\t\t\t\t.replace(\"${{ matrix.family }}\", item.family)\n\t\t\t\t.replace(\"${{ matrix.route }}\", item.route)\n\t\t\t\t.replace(\"${{ github.sha }}\", revision);\n\t\t\tassert.equal(phpWasmRefinementEntryMatrixLocation(item, revision).artifact\n\t\t\t\t, expected);\n\t\t}\n\t}\n\tconst common = await readFile(\"scripts/run-php-wasm-refinement-entry-ci.sh\", \"utf8\");\n\tassert.match(common, /records=\"\\$output\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\"/u);\n\tassert.match(common, /check=\"\\$output\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES\\/\\$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\\.check\\.json\"/u);\n\tconst owned = await readFile(\"scripts/run-php-wasm-owned-refinement-entry-ci.sh\", \"utf8\");\n\tassert.match(owned, /records=\"\\$output\\/\\$LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_ROUTES\\/\\$LEAN_BRIDGE_OWNED_REFINEMENT_ENTRY_PHP_WASM_FAMILIES\"/u);\n\tassert.match(owned, /check=\"\\$records\\.check\\.json\"/u);\n\tconst callback = await readFile(\"scripts/run-php-wasm-callback-entry-ci.sh\", \"utf8\");\n\tassert.match(callback, /records=\"\\$output\\/\\$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES\\/\\$route\"/u);\n\tassert.match(callback, /check=\"\\$output\\/\\$LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_FAMILIES\\/\\$route\\.check\\.json\"/u);\n\tfor(const item of phpWasmRefinementEntryMatrix)\n\t\tassert.equal(item.recordPath, item.kind === \"callback\"\n\t\t\t? `${item.family}/${item.route}` : `${item.route}/${item.family}`);\n});\n\n",
+          "previous": "",
+          "start": 1815
+        },
+        {
+          "current": "",
+          "previous": "\tconst noAdapter = structuredClone(valid);\n\tnoAdapter[0].result.counts.adapter = 0; mutations.push(noAdapter);\n\tconst noSource = structuredClone(valid);\n\tnoSource[0].result.counts.source = 0; mutations.push(noSource);\n",
+          "start": 6060
+        },
+        {
+          "current": "\tassert.equal(mutations.length, 74);\n",
+          "previous": "\tassert.equal(mutations.length, 76);\n",
+          "start": 6659
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix-tests.mjs",
+      "previousSha256": "f67f3ba3fe097c145e87d8bbece812d9b5c0ce8f23abe2228614fce12c23333a"
+    },
+    {
+      "currentSha256": "feb9a25749a40c63f5e79d716039d26e7bf439f9b17a659ff56aa0a2583599ab",
+      "edits": [
+        {
+          "current": "",
+          "previous": "\tpositive(result.counts.adapter, `${cell_.id} adapter entries`);\n\tpositive(result.counts.source, `${cell_.id} source entries`);\n",
+          "start": 4365
+        },
+        {
+          "current": " * Close the ordered results supplied by every independent per-cell verifier.\n * This consistency gate rejects a missing, reordered or widened selection; the\n * hosted artifact summary reruns the verifiers over retained bytes first.\n",
+          "previous": " * Authenticate the ordered output of every independent per-cell verifier.\n * This gate does not trust a missing, reordered or widened hosted selection.\n",
+          "start": 4909
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-matrix.mjs",
+      "previousSha256": "2f314806897ad513764f95c400644f1e5d9ab0767ce7297be9fd2473f41a90e0"
+    },
+    {
+      "currentSha256": "5b246fe4c93653981cce62bd75f6af0f24253716921fef254b9dd615a75c4491",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementCiClosureRepairSource, phpWasmRefinementCiClosureRepairChangedPaths } from \"./php-wasm-refinement-ci-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementCiClosureRepairChangedPaths\n\t, ...phpWasmRefinementEntryHostedChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryHostedChangedPaths\n",
+          "start": 145312
+        },
+        {
+          "current": "\tconst phpWasmRefinementCiClosureRepair\n\t\t= beforePhpWasmRefinementCiClosureRepairSource(path, text, expected);\n\tif(sha256(phpWasmRefinementCiClosureRepair) === expected)\n\t\treturn phpWasmRefinementCiClosureRepair;\n",
+          "previous": "",
+          "start": 176708
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementEntryHostedSource(\n\t\t\tpath, phpWasmRefinementCiClosureRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementEntryHostedSource(path, text, expected);\n",
+          "start": 176958
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "594f34608cb2f566277669d9fc8122f8814662766f33af328bbb4fab5e3c3a2e"
+    },
+    {
+      "currentSha256": "ebd62564adb5c97786329858b5512e9e37d2b681ef25841e69cd38e4ce7958c8",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-ci-closure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3354
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "b92de8da4965f2da596f3d487234c84426b8fbb5f455896c94d53383cd1996f5"
+    }
+  ]
+}
