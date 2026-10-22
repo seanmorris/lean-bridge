@@ -1,0 +1,183 @@
+{
+  "additions": [
+    {
+      "currentSha256": "80fae52d1f62bbc016a8dcb0138ca9daece170f648794660e67bc2f488b25762",
+      "path": "scripts/update-php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs"
+    },
+    {
+      "currentSha256": "532469f13f7926f60b8ac9dd72e3180760b7a3d1b5789ae7254b13b839be7a3b",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-verifier-root-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "25f93d7529a690f9cfff2ffd6dcd25ed7391a4d6e626bc8f2209f471528bd4a9",
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "05b62b7a6d9a8bb8470b5d7edb58687684a21689",
+  "milestone": "php-wasm-refinement-entry-hosted-verifier-root-v1",
+  "predecessorCommit": "c00b7668f98b167182dc0c7a229e95da4a4b8e6a",
+  "schemaVersion": 1,
+  "scope": "The hosted PHP-Wasm entry aggregator resolves every Git observation against the verifier script's own asserted repository root, labels Node 22 as the aggregate verifier runtime rather than producer TAP evidence, and states that source closure covers tracked plus untracked nonignored paths.",
+  "updates": [
+    {
+      "currentSha256": "e4b7aea83f9c90d956b71c89914830ca52529fa987cf4326c2b58bbe31ed450d",
+      "edits": [
+        {
+          "current": "import { fileURLToPath } from \"node:url\";\n",
+          "previous": "",
+          "start": 319
+        },
+        {
+          "current": "const repositoryRoot = resolve(fileURLToPath(new URL(\"..\", import.meta.url)));\nconst git = args => execFileSync(\"git\", args, {\n\tcwd: repositoryRoot, encoding: \"utf8\"\n}).trim();\nassert.equal(resolve(git([\"rev-parse\", \"--show-toplevel\"])), repositoryRoot\n\t, \"hosted verifier script must belong to the checked repository root\");\nconst gitLines = args => git(args)\n",
+          "previous": "const gitLines = args => execFileSync(\"git\", args, { encoding: \"utf8\" }).trim()\n",
+          "start": 1442
+        },
+        {
+          "current": "\tverifierCommit: git([\"rev-parse\", \"HEAD\"])\n",
+          "previous": "\tverifierCommit: execFileSync(\"git\", [\"rev-parse\", \"HEAD\"], { encoding: \"utf8\" }).trim()\n",
+          "start": 1917
+        },
+        {
+          "current": "\t, verifierNodeVersion: process.versions.node\n",
+          "previous": "\t, nodeVersion: process.versions.node\n",
+          "start": 2181
+        }
+      ],
+      "path": "scripts/summarize-php-wasm-refinement-entry-hosted.mjs",
+      "previousSha256": "ca97859a6d39b3bf5b087162765e8aee22baf3e0c535b07c2fc4cbdcebb4784f"
+    },
+    {
+      "currentSha256": "db03ebd38a0b4ffbe9637f0e55d06a7d4dc556e24d8de1a51531c5281a0667ca",
+      "edits": [
+        {
+          "current": "import { readFileSync } from \"node:fs\";\n",
+          "previous": "",
+          "start": 207
+        },
+        {
+          "current": "const cliSource = readFileSync(new URL(\n\t\"../../scripts/summarize-php-wasm-refinement-entry-hosted.mjs\", import.meta.url\n), \"utf8\");\n",
+          "previous": "",
+          "start": 701
+        },
+        {
+          "current": "\t, verifierNodeVersion: \"22.23.3\"\n",
+          "previous": "\t, nodeVersion: \"22.23.3\"\n",
+          "start": 1525
+        },
+        {
+          "current": "test(\"hosted PHP-Wasm entry promotion closes its source paths and verifier runtime\", () => {\n",
+          "previous": "test(\"hosted PHP-Wasm entry promotion closes the verifier checkout and Node reporter\", () => {\n",
+          "start": 4137
+        },
+        {
+          "current": "\t\t, sourcePathClosure: \"tracked-and-untracked-nonignored\"\n\t\t, verifierNodeVersion: \"22.23.3\", verifierNodeMajor: 22\n",
+          "previous": "\t\t, nodeVersion: \"22.23.3\", nodeMajor: 22\n",
+          "start": 4360
+        },
+        {
+          "current": "\t\t, [state => { state.verifierNodeVersion = \"24.0.0\"; }, /Node 22/u]\n",
+          "previous": "\t\t, [state => { state.nodeVersion = \"24.0.0\"; }, /Node 22/u]\n",
+          "start": 4760
+        },
+        {
+          "current": "\t\t\t, untrackedSourcePaths: [], verifierNodeVersion: \"22.23.3\" };\n",
+          "previous": "\t\t\t, untrackedSourcePaths: [], nodeVersion: \"22.23.3\" };\n",
+          "start": 4903
+        },
+        {
+          "current": "test(\"hosted PHP-Wasm entry promotion anchors Git observations to its repository\", () => {\n\tassert.match(cliSource\n\t\t, /const repositoryRoot = resolve\\(fileURLToPath\\(new URL\\(\"\\.\\.\"/u);\n\tassert.match(cliSource\n\t\t, /execFileSync\\(\"git\", args, \\{\\n\\tcwd: repositoryRoot, encoding: \"utf8\"/u);\n\tassert.match(cliSource\n\t\t, /assert\\.equal\\(resolve\\(git\\(\\[\"rev-parse\", \"--show-toplevel\"\\]\\)\\), repositoryRoot/u);\n\tassert.equal(cliSource.match(/execFileSync\\(\"git\"/gu)?.length, 1\n\t\t, \"all Git observations use the repository-root wrapper\");\n});\n\n",
+          "previous": "",
+          "start": 5079
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary-tests.mjs",
+      "previousSha256": "ed610b56e04855ebefe3a3d8c73b1c76b1f49f87d8acda848a005ac33bf73eae"
+    },
+    {
+      "currentSha256": "631abd0800b98fc1550e6855471b12c720a01c0d1c962c263bc1b36570f18260",
+      "edits": [
+        {
+          "current": " * Close the verifier source checkout and verifier runtime before any hosted\n * artifact is read. Producer TAP remains bound by its exact retained grammar,\n * not by the Node process that runs this aggregate verifier.\n",
+          "previous": " * Close the verifier source checkout and supported Node reporter major before\n * any hosted artifact is read.\n",
+          "start": 3675
+        },
+        {
+          "current": " * @param state - Git source-path observations and the verifier Node version.\n",
+          "previous": " * @param state - Git source-path observations and the active Node version.\n",
+          "start": 3954
+        },
+        {
+          "current": "\t\t, \"verifierNodeVersion\"], \"hosted verifier state\");\n",
+          "previous": "\t\t, \"nodeVersion\"], \"hosted verifier state\");\n",
+          "start": 4245
+        },
+        {
+          "current": "\tassert.match(state.verifierNodeVersion\n\t\t, /^22\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$/u\n\t\t, \"hosted aggregate verifier runs on supported Node 22\");\n",
+          "previous": "\tassert.match(state.nodeVersion, /^22\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$/u\n\t\t, \"hosted verifier uses the supported Node 22 TAP reporter\");\n",
+          "start": 4607
+        },
+        {
+          "current": "\t\t, sourcePathClosure: \"tracked-and-untracked-nonignored\"\n\t\t, verifierNodeVersion: state.verifierNodeVersion, verifierNodeMajor: 22\n",
+          "previous": "\t\t, nodeVersion: state.nodeVersion, nodeMajor: 22\n",
+          "start": 4899
+        },
+        {
+          "current": " * @param verification - Closed verifier-source and verifier-runtime evidence.\n",
+          "previous": " * @param verification - Clean source-checkout and Node reporter evidence.\n",
+          "start": 5672
+        },
+        {
+          "current": "\t\t, \"sourcePathClosure\", \"verifierNodeVersion\", \"verifierNodeMajor\"]\n\t\t, \"hosted verifier evidence\");\n",
+          "previous": "\t\t, \"nodeVersion\", \"nodeMajor\"], \"hosted verifier evidence\");\n",
+          "start": 6108
+        },
+        {
+          "current": "\tassert.equal(verification.sourcePathClosure, \"tracked-and-untracked-nonignored\");\n\tassert.equal(verification.verifierNodeMajor, 22);\n\tassert.match(verification.verifierNodeVersion, /^22\\./u);\n",
+          "previous": "\tassert.equal(verification.nodeMajor, 22);\n\tassert.match(verification.nodeVersion, /^22\\./u);\n",
+          "start": 6396
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs",
+      "previousSha256": "d37c0aafb4c6a86125a965ab85d1255e7b2b4c125c02a4224e005c3113fabfad"
+    },
+    {
+      "currentSha256": "f652db6c6293758f1988435332acbda6e48dc74fd97a227ac177ce3d35bdadf3",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryHostedVerifierRootSource, phpWasmRefinementEntryHostedVerifierRootChangedPaths } from \"./php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryHostedVerifierRootChangedPaths\n\t, ...phpWasmRefinementEntryPromotionChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryPromotionChangedPaths\n",
+          "start": 145874
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryHostedVerifierRoot\n\t\t= beforePhpWasmRefinementEntryHostedVerifierRootSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryHostedVerifierRoot) === expected)\n\t\treturn phpWasmRefinementEntryHostedVerifierRoot;\n",
+          "previous": "",
+          "start": 177441
+        },
+        {
+          "current": "\t\t= beforePhpWasmRefinementEntryPromotionSource(\n\t\t\tpath, phpWasmRefinementEntryHostedVerifierRoot, expected\n\t\t);\n",
+          "previous": "\t\t= beforePhpWasmRefinementEntryPromotionSource(path, text, expected);\n",
+          "start": 177726
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3c630b9871aa2075485d0cd9509216acd120c6126a163069e79fa838557a98f1"
+    },
+    {
+      "currentSha256": "df34dcdc0907cbcbfd624cf0528eeb01d5b022b3ad5d52d4ea5c38a7070ab76a",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-hosted-verifier-root-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3682
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "b0142ea5e48abb1885ea3594a5b69d797750a3de5bb67dbc1bff949f071e2e30"
+    }
+  ]
+}

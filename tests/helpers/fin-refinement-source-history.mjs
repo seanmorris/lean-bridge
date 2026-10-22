@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryHostedVerifierRootSource, phpWasmRefinementEntryHostedVerifierRootChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-root-source-history.mjs";
 import { beforePhpWasmRefinementEntryPromotionSource, phpWasmRefinementEntryPromotionChangedPaths } from "./php-wasm-refinement-entry-promotion-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierClosureSource, phpWasmRefinementEntryHostedVerifierClosureChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs";
 import { beforePhpWasmRefinementCiClosureRepairSource, phpWasmRefinementCiClosureRepairChangedPaths } from "./php-wasm-refinement-ci-closure-repair-source-history.mjs";
@@ -1911,7 +1912,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryPromotionChangedPaths
+	...phpWasmRefinementEntryHostedVerifierRootChangedPaths
+	, ...phpWasmRefinementEntryPromotionChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierClosureChangedPaths
 	, ...phpWasmRefinementCiClosureRepairChangedPaths
 	, ...phpWasmRefinementEntryHostedChangedPaths
@@ -2605,8 +2607,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryHostedVerifierRoot
+		= beforePhpWasmRefinementEntryHostedVerifierRootSource(path, text, expected);
+	if(sha256(phpWasmRefinementEntryHostedVerifierRoot) === expected)
+		return phpWasmRefinementEntryHostedVerifierRoot;
 	const phpWasmRefinementEntryPromotion
-		= beforePhpWasmRefinementEntryPromotionSource(path, text, expected);
+		= beforePhpWasmRefinementEntryPromotionSource(
+			path, phpWasmRefinementEntryHostedVerifierRoot, expected
+		);
 	if(sha256(phpWasmRefinementEntryPromotion) === expected)
 		return phpWasmRefinementEntryPromotion;
 	const phpWasmRefinementEntryHostedVerifierClosure
