@@ -22,6 +22,9 @@ const validatePlan = plan => {
 		, "recursive-subtype"
 		, "recursive-checked-record"
 		, "owned-subtype", "owned-checked-record"
+		, "dependent-full", "dependent-result-only"
+		, "value-index-full", "value-index-result-only"
+		, "zero-payload-full", "zero-payload-result-only"
 	].includes(plan.family), "entry plan family");
 	require(Array.isArray(plan.selected) && plan.selected.length > 0, "entry plan selection");
 	require(Array.isArray(plan.cases) && plan.cases.length > 0, "entry plan cases");

@@ -7,9 +7,14 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { componentRecordDefinitions } from "../../src/abi/component-records.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
+import { createPhpWasmCopiedModel } from "../../src/build/native-model.mjs";
 import { generateCopiedPhpGraphZendAdapter } from "../../src/backends/php/copied-graph-zend.mjs";
+import { generateCopiedPhpZendAdapter } from "../../src/backends/php/copied-zend.mjs";
+import { nominalSubtypeNativeFixture } from "./nominal-subtype-native-fixture.mjs";
 import { instrumentSubtypeCEntries, restoreSubtypeCEntries } from "./php-wasm-subtype-entry-c.mjs";
-import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
+import {
+	phpWasmGraphRefinementEntrySelection, phpWasmRefinementEntrySelection
+} from "./php-wasm-refinement-entry-selection.mjs";
 import { recursiveSubtypeReview } from "./recursive-subtype-fixture.mjs";
 
 const fixtureModel = () => {
@@ -60,4 +65,24 @@ test("Zend macro entries are instrumented and restore byte for byte", () => {
 	assert.equal(receipt.insertions.filter(item => item.kind === "public").length, model.exports.length);
 	assert.equal(restoreSubtypeCEntries(source, receipt), original);
 	assert.throws(() => phpWasmGraphRefinementEntrySelection({ ...model, pointerBits: 64 }), /32/u);
+});
+
+test("acyclic entry selection follows the actual flat copied model and Zend boundary", () => {
+	const model = createPhpWasmCopiedModel(nominalSubtypeNativeFixture());
+	assert.equal(model.schemaVersion, 2); assert.equal(model.copiedGraph, undefined);
+	const { selected, generated } = phpWasmRefinementEntrySelection(model);
+	assert.deepEqual(selected.filter(item => item.kind === "public").map(item => item.symbol)
+		, model.exports.map((_, index) => `lb_call${index}`));
+	assert.deepEqual(selected.filter(item => item.kind === "adapter").map(item => item.symbol)
+		, model.exports.map(item => item.symbol));
+	assert.ok(selected.some(item => item.kind === "validator"));
+	for(const item of selected.filter(value => ["adapter", "validator"].includes(value.kind)))
+		assert.ok(generated.leanSource.includes(`@[export ${item.symbol}]`), item.symbol);
+	const files = generateCopiedPhpZendAdapter(model.bindingIr, { integerBits: 32 });
+	const original = Object.entries(files).find(([name]) => name.startsWith("extension/"))[1];
+	const publicEntries = selected.filter(item => item.kind === "public");
+	const { source, receipt } = instrumentSubtypeCEntries(original, publicEntries);
+	assert.equal(receipt.insertions.filter(item => item.kind === "public").length, model.exports.length);
+	assert.equal(restoreSubtypeCEntries(source, receipt), original);
+	assert.throws(() => phpWasmGraphRefinementEntrySelection(model), /graph transport/u);
 });

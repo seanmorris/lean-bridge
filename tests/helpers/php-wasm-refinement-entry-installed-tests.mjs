@@ -1,6 +1,6 @@
 /**
- * Hosted producer for separately instrumented nominal and recursive PHP-Wasm
- * graph packages. This gate proves compiler-input closure and reproducibility;
+ * Hosted producer for separately instrumented copied PHP-Wasm packages. This
+ * gate proves compiler-input closure and reproducibility;
  * installed call traces are a distinct later gate.
  *
  * @file
@@ -21,6 +21,9 @@ import {
 	, nominalPrimitiveSubtypePhpWasmSettings
 } from "./nominal-primitive-subtype-php-wasm-fixture.mjs";
 import {
+	phpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec
+} from "./php-wasm-indexed-refinement-entry-fixtures.mjs";
+import {
 	nominalPrimitiveSubtypeFixture, nominalPrimitiveSubtypeModule
 } from "./nominal-primitive-subtype-fixture.mjs";
 import {
@@ -40,7 +43,7 @@ import {
 } from "./php-wasm-refinement-entry-callers.mjs";
 import { buildPhpWasmRefinementEntryProbe } from "./php-wasm-refinement-entry-build.mjs";
 import { phpWasmRefinementEntryPlan } from "./php-wasm-refinement-entry-plan.mjs";
-import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
+import { phpWasmRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
 import {
 	phpWasmRefinementEntryHostedSelection, phpWasmRefinementEntrySourceFixture
@@ -57,6 +60,15 @@ const selectedFamilies = hostedSelection.families;
 const selectedRoutes = hostedSelection.routes;
 
 const familySpec = (family, route) => {
+	if(phpWasmIndexedRefinementEntryFamilies.includes(family))
+	{
+		const spec = phpWasmIndexedRefinementEntrySpec(family, route);
+		return {
+			root: spec.root, module: spec.module, settings: spec.settings
+			, configuration: spec.configuration, review: spec.review
+			, verify: spec.verify
+		};
+	}
 	if(family.startsWith("nominal-"))
 	{
 		const mode = family === "nominal-full" ? "full" : "result-only";
@@ -92,7 +104,7 @@ const familySpec = (family, route) => {
 };
 
 for(const family of selectedFamilies) for(const route of selectedRoutes)
-test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler entries`, {
+test(`instrumented PHP-Wasm copied package closes ${family} ${route} compiler entries`, {
 	skip: !enabled, timeout: 3_600_000
 }, async t => {
 	const producerCommit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
@@ -130,7 +142,8 @@ test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler ent
 			, runtimeRoot, emsdkRoot, phpSource
 		});
 		await verifyPackageSetReceipt({ receiptPath: join(outputRoot, "package-set-receipt.json") });
-		assert.equal(built.model.schemaVersion, route === "reviewed" ? 5 : 4);
+		assert.equal(built.model.schemaVersion, route === "reviewed"
+			? (built.model.copiedGraph ? 5 : 3) : (built.model.copiedGraph ? 4 : 2));
 		builds.push(built);
 		if(attempt === 0) await copyPackageSetHandoff(outputRoot, handoff);
 		await rm(author, { recursive: true });
@@ -139,7 +152,7 @@ test(`instrumented PHP-Wasm graph package closes ${family} ${route} compiler ent
 	assert.deepEqual(builds[1].observation.library, builds[0].observation.library);
 	assert.deepEqual(builds[1].observation.selected, builds[0].observation.selected);
 	assert.deepEqual(builds[1].observation.definitionCounts, builds[0].observation.definitionCounts);
-	const selection = phpWasmGraphRefinementEntrySelection(builds[0].model, sourceProbe.entries);
+	const selection = phpWasmRefinementEntrySelection(builds[0].model, sourceProbe.entries);
 	assert.deepEqual(selection.selected, builds[0].observation.selected);
 	const entryPlan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
 	const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [

@@ -1,6 +1,6 @@
 /**
- * Authenticate retained installed call traces for nominal and recursive PHP-Wasm
- * graph entry probes. Compiler output supplies marker identities; the verifier
+ * Authenticate retained installed call traces for copied PHP-Wasm entry probes.
+ * Compiler output supplies marker identities; the verifier
  * independently reconstructs the call plan and replays every retained trace.
  *
  * @file
@@ -15,7 +15,7 @@ import {
 	, phpWasmRefinementEntryRequest
 } from "./php-wasm-refinement-entry-callers.mjs";
 import { phpWasmRefinementEntryPlan } from "./php-wasm-refinement-entry-plan.mjs";
-import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
+import { phpWasmRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
 import {
 	phpWasmRefinementEntryRoutes, phpWasmRefinementEntrySourceFamilies
@@ -53,7 +53,7 @@ const sourceDefinition = family => ownedFamily(family)
 	: phpWasmRefinementEntrySourceFixture(family);
 const selectEntries = (family, model, sourceEntries) => ownedFamily(family)
 	? phpWasmOwnedRefinementEntrySelection(model, sourceEntries)
-	: phpWasmGraphRefinementEntrySelection(model, sourceEntries);
+	: phpWasmRefinementEntrySelection(model, sourceEntries);
 const planEntries = (family, selection) => ownedFamily(family)
 	? phpWasmOwnedRefinementEntryPlan(family, selection.selected, selection.adapters.leanSource)
 	: phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);

@@ -7,6 +7,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import {
+	phpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec
+} from "./php-wasm-indexed-refinement-entry-fixtures.mjs";
+import {
 	nominalPrimitiveSubtypePhpWasmSettings
 } from "./nominal-primitive-subtype-php-wasm-fixture.mjs";
 import {
@@ -32,6 +35,15 @@ const families = Object.freeze({
 		, probe: "first"
 		, settings: recursiveCheckedRecordPhpWasmPackage("recursive").settings
 	})
+	, ...Object.fromEntries(phpWasmIndexedRefinementEntryFamilies.map(family => {
+		const spec = phpWasmIndexedRefinementEntrySpec(family, "ordinary");
+		return [
+			family
+			, Object.freeze({
+			module: spec.namespace, probe: spec.probe, settings: spec.settings
+			})
+		];
+	}))
 });
 
 /**

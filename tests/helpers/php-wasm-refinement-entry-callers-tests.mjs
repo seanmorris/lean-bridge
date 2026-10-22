@@ -1,5 +1,5 @@
 /**
- * Source-only controls for compact installed graph-entry callers.
+ * Source-only controls for compact installed copied-entry callers.
  *
  * @file
  */
@@ -13,13 +13,13 @@ import {
 	phpWasmRefinementEntryCaller, phpWasmRefinementEntryCallerSpec
 	, phpWasmRefinementEntryExpected, phpWasmRefinementEntryRequest
 } from "./php-wasm-refinement-entry-callers.mjs";
+import {
+	phpWasmRefinementEntrySourceFamilies
+} from "./php-wasm-refinement-entry-source-fixtures.mjs";
 
-const families = [
-	"nominal-full", "nominal-result-only", "recursive-subtype"
-	, "recursive-checked-record"
-];
+const families = phpWasmRefinementEntrySourceFamilies;
 
-test("compact graph-entry callers are syntax-valid and differ only by strictness", async t => {
+test("compact copied-entry callers are syntax-valid and differ only by strictness", async t => {
 	const root = await mkdtemp(join(tmpdir(), "lean-bridge-refinement-entry-callers-"));
 	t.after(() => rm(root, { recursive: true }));
 	for(const family of families)
@@ -36,7 +36,7 @@ test("compact graph-entry callers are syntax-valid and differ only by strictness
 	}
 });
 
-test("compact graph-entry requests close arrangement, operation and call plan", () => {
+test("compact copied-entry requests close arrangement, operation and call plan", () => {
 	for(const family of families)
 	{
 		const spec = phpWasmRefinementEntryCallerSpec(family);
@@ -57,7 +57,7 @@ test("compact graph-entry requests close arrangement, operation and call plan", 
 	}
 });
 
-test("compact graph-entry caller selectors reject open choices", async () => {
+test("compact copied-entry caller selectors reject open choices", async () => {
 	for(const family of ["unknown", "", null])
 	{
 		assert.throws(() => phpWasmRefinementEntryCallerSpec(family));

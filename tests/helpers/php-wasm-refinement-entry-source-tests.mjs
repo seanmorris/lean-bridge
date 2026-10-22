@@ -1,5 +1,5 @@
 /**
- * Fixture controls for reversible nominal and recursive Lean entry markers.
+ * Fixture controls for reversible copied-component Lean entry markers.
  *
  * @file
  */
@@ -14,7 +14,7 @@ import {
 
 const fixtures = phpWasmRefinementEntrySourceFamilies.map(phpWasmRefinementEntrySourceFixture);
 
-test("nominal and recursive entry probes name every authored boundary reversibly", async () => {
+test("copied entry probes name every authored boundary reversibly", async () => {
 	for(const fixture of fixtures)
 	{
 		const original = await readFile(fixture.path, "utf8");

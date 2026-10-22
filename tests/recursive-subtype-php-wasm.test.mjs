@@ -9,6 +9,7 @@ import "./helpers/php-wasm-refinement-entry-source-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-build-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-installed-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-ci-tests.mjs";
+import "./helpers/php-wasm-indexed-refinement-entry-ci-tests.mjs";
 import "./helpers/php-wasm-entry-probe-deployment-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-driver-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-plan-tests.mjs";

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Reproduce one explicitly selected nominal/recursive graph entry-probe package pair.
+# Reproduce one explicitly selected copied entry-probe package pair.
 set -euo pipefail
 
 if [[ $# != 0 ]]; then
@@ -18,7 +18,9 @@ if [[ $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_TEST != 1 ]]; then
   exit 2
 fi
 case "$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES" in
-  nominal-full|nominal-result-only|recursive-subtype|recursive-checked-record) ;;
+  nominal-full|nominal-result-only|recursive-subtype|recursive-checked-record|\
+dependent-full|dependent-result-only|value-index-full|value-index-result-only|\
+zero-payload-full|zero-payload-result-only) ;;
   *) printf '%s\n' 'Select exactly one known refinement-entry family.' >&2; exit 2 ;;
 esac
 case "$LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES" in
@@ -33,7 +35,7 @@ if [[ -e $output ]]; then
   exit 2
 fi
 mkdir -p "$(dirname "$output")"
-name="instrumented PHP-Wasm graph package closes $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES compiler entries"
+name="instrumented PHP-Wasm copied package closes $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_FAMILIES $LEAN_BRIDGE_REFINEMENT_ENTRY_PHP_WASM_ROUTES compiler entries"
 node --test --test-concurrency=1 --test-reporter=tap --test-name-pattern="^$name$" \
   tests/helpers/php-wasm-refinement-entry-installed-tests.mjs 2>&1 | tee "$output.tap"
 test "$(git rev-parse HEAD)" = "$revision"

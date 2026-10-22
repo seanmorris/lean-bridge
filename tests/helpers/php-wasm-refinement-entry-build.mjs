@@ -14,7 +14,7 @@ import { processBuildRunner } from "../../src/build/process-runner.mjs";
 import { buildPhpWasmCopiedPackages } from "../../src/release/php-wasm-copied-package.mjs";
 import { writePhpWasmPackageSet } from "../../src/release/package-set-assembly.mjs";
 import { instrumentSubtypeCEntries, validateSubtypeEntrySelection } from "./php-wasm-subtype-entry-c.mjs";
-import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
+import { phpWasmRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
 
 const identity = bytes => ({ bytes: bytes.length, sha256: sha256(bytes) });
 const save = async (root, path, bytes) => {
@@ -154,7 +154,7 @@ export const buildPhpWasmRefinementEntryProbe = async options => {
 		projectRoot, outputRoot, recordRoot, leanPrefix, runtimeRoot
 		, emsdkRoot, phpSource
 		, sourceProbe, settings, signal, checkModel, runner = processBuildRunner
-		, selectEntries = phpWasmGraphRefinementEntrySelection
+		, selectEntries = phpWasmRefinementEntrySelection
 		, instrumentEntries = instrumentSubtypeCEntries
 		, validateEntries = validateSubtypeEntrySelection
 	} = options;

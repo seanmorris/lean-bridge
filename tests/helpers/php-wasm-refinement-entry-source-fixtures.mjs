@@ -5,6 +5,9 @@
  */
 import assert from "node:assert/strict";
 import { nominalPrimitiveSubtypeFields } from "./nominal-primitive-subtype-fixture.mjs";
+import {
+	phpWasmIndexedRefinementEntryFamilies, phpWasmIndexedRefinementEntrySpec
+} from "./php-wasm-indexed-refinement-entry-fixtures.mjs";
 
 const nominalConstructors = Object.freeze([
 	...nominalPrimitiveSubtypeFields.flatMap(item => [item.constructor + "A", item.constructor + "B"])
@@ -22,6 +25,7 @@ const nominalResultSources = Object.freeze([
 export const phpWasmRefinementEntrySourceFamilies = Object.freeze([
 	"nominal-full", "nominal-result-only"
 	, "recursive-subtype", "recursive-checked-record"
+	, ...phpWasmIndexedRefinementEntryFamilies
 ]);
 export const phpWasmRefinementEntryRoutes = Object.freeze(["ordinary", "reviewed"]);
 
@@ -57,6 +61,41 @@ export const phpWasmRefinementEntryHostedSelection = environment => {
  */
 export const phpWasmRefinementEntrySourceFixture = family => {
 	assert.ok(phpWasmRefinementEntrySourceFamilies.includes(family));
+	if(phpWasmIndexedRefinementEntryFamilies.includes(family))
+	{
+		const spec = phpWasmIndexedRefinementEntrySpec(family, "ordinary");
+		const constructors = {
+			dependent: ["mkDependent"]
+			, "value-index": [
+				"mkOn", "mkOff", "mkAb", "mkEmptySized", "mkZeroToken"
+				, "mkWideToken", "mkEmptyToken", "mkUnicodeToken"
+			]
+			, "zero-payload": ["mkWitness", "mkToken", "mkAbsent"]
+		}[spec.name];
+		const sources = {
+			dependent: ["dependentTotal", "dependentRoundtrip", "dependentResult"]
+			, "value-index": [
+				"trueBoolIndex", "falseBoolIndex", "abStringIndex", "emptyStringIndex"
+				, "unicodeStringIndex", "emptySizedIndex", "zeroNatIndex", "wideNatIndex"
+				, "produceTrueBool", "produceFalseBool", "produceAb"
+				, "produceEmptyString", "produceUnicodeString", "produceEmptySized"
+				, "produceZeroNat", "produceWideNat"
+			]
+			, "zero-payload": [
+				"witnessCount", "absentCount", "tokenTag", "produceWitness"
+				, "produceToken", "witnesses", "maybeWitness", "markerCount"
+				, "produceMarker", "markCount", "produceMark"
+			]
+		}[spec.name].filter(name => !spec.resultOnly || name.startsWith("produce")
+			|| name === "dependentResult" || ["witnesses", "maybeWitness"].includes(name));
+		return {
+			path: `${spec.root}/${spec.module}.lean`, namespace: spec.module
+			, prefix: `lb_${family.replaceAll("-", "_")}_probe`
+			// Constructors remain instrumented in result-only packages: their zero
+			// runtime count is part of the proof-erasure measurement.
+			, constructors, sources, wrappers: {}
+		};
+	}
 	if(family.startsWith("nominal-"))
 	{
 		const full = family === "nominal-full";

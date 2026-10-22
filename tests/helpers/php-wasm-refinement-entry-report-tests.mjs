@@ -1,5 +1,5 @@
 /**
- * Adversarial controls for retained installed graph-entry evidence.
+ * Adversarial controls for retained installed copied-entry evidence.
  *
  * @file
  */
@@ -24,7 +24,9 @@ import { phpWasmRefinementEntryPlan } from "./php-wasm-refinement-entry-plan.mjs
 import {
 	checkPhpWasmRefinementEntryReport, parsePhpWasmRefinementEntryReportArgs
 } from "./php-wasm-refinement-entry-report.mjs";
-import { phpWasmGraphRefinementEntrySelection } from "./php-wasm-refinement-entry-selection.mjs";
+import {
+	phpWasmGraphRefinementEntrySelection, phpWasmRefinementEntrySelection
+} from "./php-wasm-refinement-entry-selection.mjs";
 import { phpWasmRefinementEntrySource } from "./php-wasm-refinement-entry-source.mjs";
 import { phpWasmRefinementEntrySourceFixture } from "./php-wasm-refinement-entry-source-fixtures.mjs";
 import { phpWasmExecutionTuples } from "./php-wasm-fin-fixtures.mjs";
@@ -35,6 +37,12 @@ const digest = value => sha256(Buffer.from(value));
 const identity = value => ({ bytes: Buffer.byteLength(value), sha256: digest(value) });
 
 const fixtureModel = family => {
+	if(family === "zero-payload-full")
+	{
+		const native = JSON.parse(execFileSync("git", ["show"
+			, "HEAD:docs/evidence/zero-payload-checked-record-native-20261021/ordinary-source/records/build-0/model.json"]));
+		return { ...native, profile: "php-wasm-copied-v1", pointerBits: 32 };
+	}
 	const nominal = family.startsWith("nominal-");
 	const bindingIr = nominal
 		? nominalPrimitiveSubtypePhpWasmReview(family === "nominal-result-only" ? "result-only" : "full")
@@ -113,7 +121,9 @@ const makeRecords = async (family = "recursive-subtype", route = "ordinary") => 
 		, { encoding: "utf8" });
 	const sourceProbe = phpWasmRefinementEntrySource(original, marker);
 	const model = fixtureModel(family);
-	const selection = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries);
+	const selection = model.copiedGraph
+		? phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries)
+		: phpWasmRefinementEntrySelection(model, sourceProbe.entries);
 	const plan = phpWasmRefinementEntryPlan(family, selection.selected, selection.generated.leanSource);
 	const cInput = selection.selected.map(item => item.kind === "public"
 		? `static ZEND_FUNCTION(${item.symbol}) { RETURN_NULL(); }`
@@ -271,6 +281,14 @@ test("installed graph-entry report reconstructs every compiler input and call tr
 	assert.deepEqual([checked.family, checked.route, checked.executions]
 		, ["recursive-subtype", "ordinary", 12]);
 	assert.ok(checked.records > 10); assert.ok(checked.calls > 1);
+});
+
+test("installed flat copied report reconstructs zero-payload branch dispatch", async () => {
+	const fixture = await makeRecords("zero-payload-full");
+	const checked = await checkPhpWasmRefinementEntryReport(fixture.records(), fixture.options);
+	assert.deepEqual([checked.family, checked.route, checked.executions]
+		, ["zero-payload-full", "ordinary", 12]);
+	assert.ok(checked.counts.validator > 0); assert.ok(checked.counts.constructor > 0);
 });
 
 test("installed graph-entry report refuses substituted claims and incomplete records", async t => {
