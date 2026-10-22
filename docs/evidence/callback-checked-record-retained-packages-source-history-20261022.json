@@ -1,69 +1,25 @@
 {
   "additions": [
     {
-      "currentSha256": "e9bd547b06102076dcd0589d03fbc4bfc60f78a7d6b6b112fc8778ccc60ff0ba",
-      "path": "tests/helpers/callback-checked-record-retained-packages.mjs"
-    },
-    {
-      "currentSha256": "44239dc8e5886bcf581e1283a0a854439155833dad4d813b846c140d6131ff13",
+      "currentSha256": "1b734e6b01ad1fb92774c3c9b9b3ee5bcddd08976934c7511863b2e5e959d020",
       "path": "scripts/update-callback-checked-record-retained-packages-source-history.mjs"
     },
     {
-      "currentSha256": "8b0e769720a3483b0ff7cf775a45747407432fe6db02da21b659be68c3d1cc5a",
+      "currentSha256": "b46d9616675801549ea8b8eb1649d1abcd26050319c13995a1ec039b5983d7e1",
       "path": "tests/helpers/callback-checked-record-retained-packages-source-history-tests.mjs"
     },
     {
-      "currentSha256": "e9c4cda0bbf9d4887f0992486d89589b0be362aac77bf49f790ad8071628ef59",
+      "currentSha256": "f65f44e17fb556e7904126607ecbb1aa7b9028ea0e6982879da40b0e94800add",
       "path": "tests/helpers/callback-checked-record-retained-packages-source-history.mjs"
     }
   ],
-  "implementationCommit": "fc8ed53b543a20a25db19c340769cb59a56086fa",
-  "integrationUpdates": [
+  "historicalAdditions": [
     {
-      "currentSha256": "86f9410b82531f5b47b383533665e068e543340c4dec34541bef29a5e6fd6cc5",
-      "edits": [
-        {
-          "current": "import { beforeCallbackCheckedRecordRetainedPackagesSource, callbackCheckedRecordRetainedPackagesChangedPaths } from \"./callback-checked-record-retained-packages-source-history.mjs\";\n",
-          "previous": "",
-          "start": 392
-        },
-        {
-          "current": "\t...callbackCheckedRecordRetainedPackagesChangedPaths\n\t, ...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
-          "previous": "\t...recursivePhpWasmEvidenceReplayRepairChangedPaths\n",
-          "start": 148692
-        },
-        {
-          "current": "\tconst callbackCheckedRecordRetainedPackages\n\t\t= beforeCallbackCheckedRecordRetainedPackagesSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordRetainedPackages) === expected)\n\t\treturn callbackCheckedRecordRetainedPackages;\n",
-          "previous": "",
-          "start": 181118
-        },
-        {
-          "current": "\t\t\tpath, callbackCheckedRecordRetainedPackages, expected\n",
-          "previous": "\t\t\tpath, text, expected\n",
-          "start": 181457
-        }
-      ],
-      "path": "tests/helpers/fin-refinement-source-history.mjs",
-      "previousSha256": "e8b0d1e26bd22b10e475c9bdae04678cba1d3a8c9d712ba670e5fc6391c25fcf"
-    },
-    {
-      "currentSha256": "d4f09d1142d450627795e6b0cf6b86bc5bda0adee0d18c65042c8bdf71b8a041",
-      "edits": [
-        {
-          "current": "import \"./helpers/callback-checked-record-retained-packages-source-history-tests.mjs\";\n",
-          "previous": "",
-          "start": 4356
-        }
-      ],
-      "path": "tests/php-wasm-fin.test.mjs",
-      "previousSha256": "494337cad55e98c9a26da835f7787d6d894945207247af300391ca4c9ea14bd2"
+      "currentSha256": "e9bd547b06102076dcd0589d03fbc4bfc60f78a7d6b6b112fc8778ccc60ff0ba",
+      "path": "tests/helpers/callback-checked-record-retained-packages.mjs"
     }
   ],
-  "milestone": "callback-checked-record-retained-packages-v1",
-  "predecessorCommit": "921600792ed5c3dcddf2a0b7f1206aede4ed0acb",
-  "schemaVersion": 1,
-  "scope": "Retain every callback checked-record route's receipt-named package set beside its hosted report before installation, install from the retained copy, verify retained bytes in the CI checkers, refuse new archives from non-retaining producers, and keep existing immutable archives replayable.",
-  "updates": [
+  "historicalUpdates": [
     {
       "currentSha256": "ff4559be0b32f3d060be930056c86f18f70b7d0596382be005efcec0e6555c45",
       "edits": [
@@ -351,5 +307,81 @@
       "path": "tests/helpers/callback-checked-record-hosted-evidence.mjs",
       "previousSha256": "19e4455fafc478f879ec4bc70b14902a295145cbc7e0aac5d9f2724d984c4dd2"
     }
-  ]
+  ],
+  "historyParentCommit": "052d9c080451641c5a564e4059642c2a88d24f67",
+  "implementationCommit": "fc8ed53b543a20a25db19c340769cb59a56086fa",
+  "integrationUpdates": [
+    {
+      "currentSha256": "49e7383be6ea5627da330d6aca8cef99732c688b1a25ff8a672856deb68f582a",
+      "edits": [
+        {
+          "current": "\tappendFile, mkdir, mkdtemp, readFile, rm, writeFile\n",
+          "previous": "\tappendFile, mkdtemp, readFile, rm, writeFile\n",
+          "start": 185
+        },
+        {
+          "current": "\tawait rejects(({ outputRoot }) => mkdir(join(outputRoot\n\t\t, \"evidence/ordinary/handoff/empty\"))\n\t, /must not contain empty directories/u);\n",
+          "previous": "",
+          "start": 19672
+        }
+      ],
+      "path": "tests/callback-checked-record-native-ci.test.mjs",
+      "previousSha256": "ac07db3d9b807b567eb6e8db97799d5aab7f23c0b547cb6fee94aef9ac38ffab"
+    },
+    {
+      "currentSha256": "438e7e96b9770f6a19320436fb8c0541cc4c054622f7408aaf3f42757651965a",
+      "edits": [
+        {
+          "current": "\t\tif(information.isDirectory())\n\t\t{\n\t\t\tconst nested = await regularFiles(root, path);\n\t\t\tassert.ok(nested.length > 0\n\t\t\t\t, `Retained packages must not contain empty directories: ${path}`);\n\t\t\tfiles.push(...nested);\n\t\t}\n",
+          "previous": "\t\tif(information.isDirectory()) files.push(...await regularFiles(root, path));\n",
+          "start": 1383
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-retained-packages.mjs",
+      "previousSha256": "e9bd547b06102076dcd0589d03fbc4bfc60f78a7d6b6b112fc8778ccc60ff0ba"
+    },
+    {
+      "currentSha256": "e0f16825edb216de85e4b879ca0103167eae7d8e3df05c9889c2b6f58a9ad099",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordRetainedPackagesSource, callbackCheckedRecordRetainedPackagesChangedPaths } from \"./callback-checked-record-retained-packages-source-history.mjs\";\n",
+          "previous": "",
+          "start": 739
+        },
+        {
+          "current": "\t...callbackCheckedRecordRetainedPackagesChangedPaths\n\t, ...ownedCheckedRecordJavaScriptRetentionChangedPaths\n",
+          "previous": "\t...ownedCheckedRecordJavaScriptRetentionChangedPaths\n",
+          "start": 149039
+        },
+        {
+          "current": "\tconst callbackCheckedRecordRetainedPackages\n\t\t= beforeCallbackCheckedRecordRetainedPackagesSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordRetainedPackages) === expected)\n\t\treturn callbackCheckedRecordRetainedPackages;\n",
+          "previous": "",
+          "start": 181571
+        },
+        {
+          "current": "\t\t\tpath, callbackCheckedRecordRetainedPackages, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 181912
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c57018c3e4f743f8c98b4222092d510e293c33ca8f37c74ed09bcdc90446ce3e"
+    },
+    {
+      "currentSha256": "f86b06438cfaf6146accd2fb47d94b74b59b7ff47a8451ae10d4e0ca1b71c0e5",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-retained-packages-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4523
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "351d346f5a664a56285b231b5f475828089b5289f467e7e97b8efd5d1007ea65"
+    }
+  ],
+  "milestone": "callback-checked-record-retained-packages-v1",
+  "predecessorCommit": "921600792ed5c3dcddf2a0b7f1206aede4ed0acb",
+  "schemaVersion": 1,
+  "scope": "Retain every callback checked-record route's receipt-named package set beside its hosted report before installation, install from the retained copy, verify retained bytes in the CI checkers, refuse new archives from non-retaining producers, and keep existing immutable archives replayable."
 }

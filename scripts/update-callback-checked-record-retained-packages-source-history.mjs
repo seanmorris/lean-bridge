@@ -12,7 +12,9 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
 	callbackCheckedRecordRetainedPackagesAddedPaths
+	, callbackCheckedRecordRetainedPackagesHistoricalAdditions
 	, callbackCheckedRecordRetainedPackagesHistoryPath
+	, callbackCheckedRecordRetainedPackagesHistoryParent
 	, callbackCheckedRecordRetainedPackagesImplementation
 	, callbackCheckedRecordRetainedPackagesImplementationPaths
 	, callbackCheckedRecordRetainedPackagesIntegrationPaths
@@ -24,8 +26,8 @@ import {
 const git = args => execFileSync("git", args
 	, { encoding: "utf8", maxBuffer: 512 * 1024 * 1024 });
 assert.equal(git(["rev-parse", "HEAD"]).trim()
-	, callbackCheckedRecordRetainedPackagesImplementation
-	, "Callback checked-record retained package history requires its implementation commit");
+	, "d37781d49535b7da9205a68377e0b331b23bc18a"
+	, "Callback checked-record retained package history requires its integration staging commit after the implementation commit");
 assert.equal(git(["rev-parse"
 	, `${callbackCheckedRecordRetainedPackagesImplementation}^`]).trim()
 , callbackCheckedRecordRetainedPackagesPredecessor);
@@ -33,7 +35,8 @@ assert.deepEqual(git(["diff", "--name-only"
 	, callbackCheckedRecordRetainedPackagesPredecessor
 	, callbackCheckedRecordRetainedPackagesImplementation]).trim().split("\n").sort()
 , [...callbackCheckedRecordRetainedPackagesImplementationPaths].sort());
-assert.equal(git(["ls-tree", "--name-only", "HEAD", "--"
+assert.equal(git(["ls-tree", "--name-only"
+	, callbackCheckedRecordRetainedPackagesHistoryParent, "--"
 	, callbackCheckedRecordRetainedPackagesHistoryPath]).trim(), "");
 
 const directory = await mkdtemp(join(
@@ -83,21 +86,31 @@ const transitionSources = async (path, previous, current) => {
 
 try
 {
-	const updates = [];
+	const historicalUpdates = [];
 	for(const path of callbackCheckedRecordRetainedPackagesModifiedPaths)
-		updates.push(await transitionSources(path
+		historicalUpdates.push(await transitionSources(path
 			, git(["show", `${callbackCheckedRecordRetainedPackagesPredecessor}:${path}`])
 			, git(["show", `${callbackCheckedRecordRetainedPackagesImplementation}:${path}`])));
+	const historicalAdditions = [];
+	for(const path of callbackCheckedRecordRetainedPackagesHistoricalAdditions)
+	{
+		assert.equal(git(["ls-tree", "--name-only"
+			, callbackCheckedRecordRetainedPackagesPredecessor, "--", path]).trim()
+		, "", path);
+		historicalAdditions.push({ path
+			, currentSha256: sha256(git(["show"
+				, `${callbackCheckedRecordRetainedPackagesImplementation}:${path}`])) });
+	}
 	const integrationUpdates = [];
 	for(const path of callbackCheckedRecordRetainedPackagesIntegrationPaths)
 		integrationUpdates.push(await transitionSources(path
-			, git(["show", `${callbackCheckedRecordRetainedPackagesImplementation}:${path}`])
+			, git(["show", `${callbackCheckedRecordRetainedPackagesHistoryParent}:${path}`])
 			, await readFile(path, "utf8")));
 	const additions = [];
 	for(const path of callbackCheckedRecordRetainedPackagesAddedPaths)
 	{
 		assert.equal(git(["ls-tree", "--name-only"
-			, callbackCheckedRecordRetainedPackagesPredecessor, "--", path]).trim()
+			, callbackCheckedRecordRetainedPackagesHistoryParent, "--", path]).trim()
 		, "", path);
 		additions.push({ path, currentSha256: sha256(await readFile(path)) });
 	}
@@ -107,10 +120,12 @@ try
 			, milestone: "callback-checked-record-retained-packages-v1"
 			, predecessorCommit: callbackCheckedRecordRetainedPackagesPredecessor
 			, implementationCommit: callbackCheckedRecordRetainedPackagesImplementation
+			, historyParentCommit: callbackCheckedRecordRetainedPackagesHistoryParent
 			, scope: "Retain every callback checked-record route's receipt-named package set beside its hosted report before installation, install from the retained copy, verify retained bytes in the CI checkers, refuse new archives from non-retaining producers, and keep existing immutable archives replayable."
-			, additions, updates, integrationUpdates
-		}), { flag: "wx" });
-	process.stdout.write(`Recorded ${updates.length} implementation and `
+			, historicalAdditions, historicalUpdates
+			, additions, integrationUpdates
+		}), { flag: "w" });
+	process.stdout.write(`Recorded ${historicalUpdates.length} historical and `
 		+ `${integrationUpdates.length} integration updates.\n`);
 }
 finally

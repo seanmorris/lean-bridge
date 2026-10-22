@@ -15,7 +15,9 @@ import {
 import {
 	beforeCallbackCheckedRecordRetainedPackagesSource
 	, callbackCheckedRecordRetainedPackagesAddedPaths
+	, callbackCheckedRecordRetainedPackagesHistoricalAdditions
 	, callbackCheckedRecordRetainedPackagesHistoryPath
+	, callbackCheckedRecordRetainedPackagesHistoryParent
 	, callbackCheckedRecordRetainedPackagesImplementation
 	, callbackCheckedRecordRetainedPackagesImplementationPaths
 	, callbackCheckedRecordRetainedPackagesIntegrationPaths
@@ -39,24 +41,37 @@ test("callback checked-record retained package history restores every source", a
 		, callbackCheckedRecordRetainedPackagesPredecessor);
 	assert.equal(record.implementationCommit
 		, callbackCheckedRecordRetainedPackagesImplementation);
-	assert.deepEqual(record.updates.map(item => item.path)
+	assert.equal(record.historyParentCommit
+		, callbackCheckedRecordRetainedPackagesHistoryParent);
+	assert.deepEqual(record.historicalUpdates.map(item => item.path)
 		, callbackCheckedRecordRetainedPackagesModifiedPaths);
+	assert.deepEqual(record.historicalAdditions.map(item => item.path)
+		, callbackCheckedRecordRetainedPackagesHistoricalAdditions);
 	assert.deepEqual(record.integrationUpdates.map(item => item.path)
 		, callbackCheckedRecordRetainedPackagesIntegrationPaths);
 	assert.deepEqual(record.additions.map(item => item.path)
 		, callbackCheckedRecordRetainedPackagesAddedPaths);
-	for(const update of record.updates)
+	for(const update of record.historicalUpdates)
 	{
-		const current = await sourceAtFinHistoryMilestone(update.path
-			, update.currentSha256
-			, beforeCallbackCheckedRecordRetainedPackagesSource);
+		const current = git(["show"
+			, `${callbackCheckedRecordRetainedPackagesImplementation}:${update.path}`]);
 		const previous = git(["show"
 			, `${callbackCheckedRecordRetainedPackagesPredecessor}:${update.path}`]);
+		assert.equal(sha256(current), update.currentSha256, update.path);
 		assert.equal(reverseCallbackCheckedRecordRetainedPackagesUpdate(
 			current, update), previous, update.path);
 		assert.equal(beforeFinRefinementSource(
 			update.path, current, update.previousSha256), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path), update.path);
+	}
+	for(const addition of record.historicalAdditions)
+	{
+		assert.equal(git(["ls-tree", "--name-only"
+			, callbackCheckedRecordRetainedPackagesPredecessor
+			, "--", addition.path]).trim(), "", addition.path);
+		assert.equal(sha256(git(["show"
+			, `${callbackCheckedRecordRetainedPackagesImplementation}:${addition.path}`]))
+		, addition.currentSha256, addition.path);
 	}
 	for(const update of record.integrationUpdates)
 	{
@@ -64,7 +79,7 @@ test("callback checked-record retained package history restores every source", a
 			, update.currentSha256
 			, beforeCallbackCheckedRecordRetainedPackagesSource);
 		const previous = git(["show"
-			, `${callbackCheckedRecordRetainedPackagesImplementation}:${update.path}`]);
+			, `${callbackCheckedRecordRetainedPackagesHistoryParent}:${update.path}`]);
 		assert.equal(reverseCallbackCheckedRecordRetainedPackagesUpdate(
 			current, update), previous, update.path);
 		assert.ok(finRefinementNormalizationPaths.includes(update.path), update.path);
@@ -88,10 +103,9 @@ test("callback checked-record retained package history range is exact", () => {
 test("callback checked-record retained package history rejects alterations", async () => {
 	const record = JSON.parse(await readFile(
 		callbackCheckedRecordRetainedPackagesHistoryPath, "utf8"));
-	const update = structuredClone(record.updates[0]);
-	const current = await sourceAtFinHistoryMilestone(update.path
-		, update.currentSha256
-		, beforeCallbackCheckedRecordRetainedPackagesSource);
+	const update = structuredClone(record.historicalUpdates[0]);
+	const current = git(["show"
+		, `${callbackCheckedRecordRetainedPackagesImplementation}:${update.path}`]);
 	update.currentSha256 = "0".repeat(64);
 	assert.throws(() =>
 		reverseCallbackCheckedRecordRetainedPackagesUpdate(current, update));

@@ -13,7 +13,9 @@ export const callbackCheckedRecordRetainedPackagesPredecessor
 	= "921600792ed5c3dcddf2a0b7f1206aede4ed0acb";
 export const callbackCheckedRecordRetainedPackagesImplementation
 	= "fc8ed53b543a20a25db19c340769cb59a56086fa";
-const implementationAdditions = Object.freeze([
+export const callbackCheckedRecordRetainedPackagesHistoryParent
+	= "052d9c080451641c5a564e4059642c2a88d24f67";
+export const callbackCheckedRecordRetainedPackagesHistoricalAdditions = Object.freeze([
 	"tests/helpers/callback-checked-record-retained-packages.mjs"
 ]);
 export const callbackCheckedRecordRetainedPackagesModifiedPaths = Object.freeze([
@@ -32,21 +34,22 @@ export const callbackCheckedRecordRetainedPackagesModifiedPaths = Object.freeze(
 export const callbackCheckedRecordRetainedPackagesImplementationPaths
 	= Object.freeze([
 		...callbackCheckedRecordRetainedPackagesModifiedPaths
-		, ...implementationAdditions
+		, ...callbackCheckedRecordRetainedPackagesHistoricalAdditions
 	]);
 export const callbackCheckedRecordRetainedPackagesIntegrationPaths
 	= Object.freeze([
-		"tests/helpers/fin-refinement-source-history.mjs"
+		"tests/callback-checked-record-native-ci.test.mjs"
+		, "tests/helpers/callback-checked-record-retained-packages.mjs"
+		, "tests/helpers/fin-refinement-source-history.mjs"
 		, "tests/php-wasm-fin.test.mjs"
 	]);
 export const callbackCheckedRecordRetainedPackagesChangedPaths
-	= Object.freeze([
+	= Object.freeze([...new Set([
 		...callbackCheckedRecordRetainedPackagesModifiedPaths
 		, ...callbackCheckedRecordRetainedPackagesIntegrationPaths
-	]);
+	])]);
 export const callbackCheckedRecordRetainedPackagesAddedPaths = Object.freeze([
-	...implementationAdditions
-	, "scripts/update-callback-checked-record-retained-packages-source-history.mjs"
+	"scripts/update-callback-checked-record-retained-packages-source-history.mjs"
 	, "tests/helpers/callback-checked-record-retained-packages-source-history-tests.mjs"
 	, "tests/helpers/callback-checked-record-retained-packages-source-history.mjs"
 ]);
@@ -102,9 +105,17 @@ export const beforeCallbackCheckedRecordRetainedPackagesSource = (
 	const digest = sha256(source);
 	if(digest === expected) return source;
 	const data = record();
-	const update = [...data.updates, ...data.integrationUpdates]
-		.find(item => item.path === path && item.currentSha256 === digest);
-	return update
-		? reverseCallbackCheckedRecordRetainedPackagesUpdate(source, update)
+	const integration = data.integrationUpdates.find(item =>
+		item.path === path && item.currentSha256 === digest);
+	if(integration)
+	{
+		source = reverseCallbackCheckedRecordRetainedPackagesUpdate(
+			source, integration);
+		if(sha256(source) === expected) return source;
+	}
+	const historical = data.historicalUpdates.find(item =>
+		item.path === path && item.currentSha256 === sha256(source));
+	return historical
+		? reverseCallbackCheckedRecordRetainedPackagesUpdate(source, historical)
 		: source;
 };
