@@ -1,0 +1,75 @@
+{
+  "additions": [
+    {
+      "currentSha256": "39494cc784f4c4f64d7bf90b3458e0be74844453c756bceb98be3f7a2e9e0bf4",
+      "path": "scripts/promote-callback-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "d58405828260d1f6b290b1d6a09493952589b6ffc3b3ec8c38e6a44990b310f6",
+      "path": "scripts/update-callback-subtype-promotion-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "689f4046a340b1380aa1836771dab855e8b839b87a0148f66d18db3a3f84dfc2",
+      "path": "tests/callback-subtype-promotion.test.mjs"
+    },
+    {
+      "currentSha256": "a0db93ec5ca924b569c030d6006907805bec94fe8178b249a0fea8039a1c4c7b",
+      "path": "tests/helpers/callback-subtype-promotion-contract-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "95b4ba92ba1af6c439eceb53485e6b9ffab39a49d6a70dd85a081efc33117b8e",
+      "path": "tests/helpers/callback-subtype-promotion-contract-source-history.mjs"
+    },
+    {
+      "currentSha256": "2b295acca55fba305a1ec44d99c948badbde88f573f2e17d4bafe8dbf1742456",
+      "path": "tests/helpers/callback-subtype-promotion.mjs"
+    }
+  ],
+  "implementationCommit": "83d7e48880117fea3b2bd9c92bba212e374c2235",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f01563d89c824dce7b340bb8156558e16910900861a308ad228e8498627ef094",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypePromotionContractSource, callbackSubtypePromotionContractChangedPaths } from \"./callback-subtype-promotion-contract-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypePromotionContractChangedPaths\n\t, ...callbackSubtypeHostedArchiveFoundationChangedPaths\n",
+          "previous": "\t...callbackSubtypeHostedArchiveFoundationChangedPaths\n",
+          "start": 146609
+        },
+        {
+          "current": "\tconst callbackSubtypePromotionContract\n\t\t= beforeCallbackSubtypePromotionContractSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackSubtypePromotionContract) === expected)\n\t\treturn callbackSubtypePromotionContract;\n",
+          "previous": "",
+          "start": 178401
+        },
+        {
+          "current": "\t\t\tpath, callbackSubtypePromotionContract, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 178724
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3531a2c6f6248f95551dc4198f0b81ee758a4c60ce92923191e3d71a2be3d93e"
+    },
+    {
+      "currentSha256": "d36c0f461a7912fe68f933aa2b17605d0bdf848d9a1203cbeb7145acc26b4c25",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-promotion-contract-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "8d6341ed6312e97eb7064491c5e37cee5c8f07149ff30c2b9d426d8c20ac064e"
+    }
+  ],
+  "milestone": "callback-subtype-promotion-contract-v1",
+  "predecessorCommit": "9f5f9825ff48afa0e052a204f3dcd8bcdb0c47eb",
+  "schemaVersion": 1,
+  "scope": "Eight independently replayed callback Subtype archives promote exactly 64 non-PHP-Wasm cells across sixteen profiles, two author routes and two callback directions while leaving every other type-surface cell unchanged.",
+  "updates": []
+}

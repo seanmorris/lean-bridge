@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypePromotionContractSource, callbackSubtypePromotionContractChangedPaths } from "./callback-subtype-promotion-contract-source-history.mjs";
 import { beforeCallbackSubtypeHostedArchiveFoundationSource, callbackSubtypeHostedArchiveFoundationChangedPaths } from "./callback-subtype-hosted-archive-foundation-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationPrecisionSource, phpWasmRefinementEntryDocumentationPrecisionChangedPaths } from "./php-wasm-refinement-entry-documentation-precision-source-history.mjs";
 import { beforePhpWasmRefinementEntryDocumentationSource, phpWasmRefinementEntryDocumentationChangedPaths } from "./php-wasm-refinement-entry-documentation-source-history.mjs";
@@ -1915,7 +1916,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeHostedArchiveFoundationChangedPaths
+	...callbackSubtypePromotionContractChangedPaths
+	, ...callbackSubtypeHostedArchiveFoundationChangedPaths
 	, ...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
 	, ...phpWasmRefinementEntryDocumentationChangedPaths
 	, ...phpWasmRefinementEntryHostedVerifierRootChangedPaths
@@ -2613,9 +2615,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypePromotionContract
+		= beforeCallbackSubtypePromotionContractSource(
+			path, text, expected
+		);
+	if(sha256(callbackSubtypePromotionContract) === expected)
+		return callbackSubtypePromotionContract;
 	const callbackSubtypeHostedArchiveFoundation
 		= beforeCallbackSubtypeHostedArchiveFoundationSource(
-			path, text, expected
+			path, callbackSubtypePromotionContract, expected
 		);
 	if(sha256(callbackSubtypeHostedArchiveFoundation) === expected)
 		return callbackSubtypeHostedArchiveFoundation;
