@@ -1,0 +1,116 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c2cce4fd54aa318fe7b337635c2e525cd39eef9ca14f85e5927de8d6e5cafbd1",
+      "path": "tests/php-wasm-callback-entry-installed.test.mjs"
+    },
+    {
+      "currentSha256": "8b6247922973cb9a549a09b74cb49baecf403b4139d407725ae9fad3e0709158",
+      "path": "scripts/update-php-wasm-callback-entry-suite-split-source-history.mjs"
+    },
+    {
+      "currentSha256": "c0e62593342bb4deb39dc657bf4b387a44566f717a5e8f59dac110adfd937175",
+      "path": "tests/helpers/php-wasm-callback-entry-suite-split-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "09693be0ed62c29c2f672000c7ab64856339b9f1654cc922c7e1a40e225e747e",
+      "path": "tests/helpers/php-wasm-callback-entry-suite-split-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "672598c391d7224eeb09851f38bc8495227fbd32",
+  "integrationUpdates": [
+    {
+      "currentSha256": "f8f6012f1765a5e9902680ccd7013dafce19eda12b6b36eba834957bc1bf3d5d",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-entry-suite-split-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "52b2b834ca178fbfe1dbe35c6320a375d87b08edf95efa188163c5cf409c6f7b"
+    },
+    {
+      "currentSha256": "df2f03ac085db36292e7bf4f1757e44521dde6b074c274a53c758e9db7aee07c",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackEntrySuiteSplitSource, phpWasmCallbackEntrySuiteSplitChangedPaths, phpWasmCallbackEntrySuiteSplitIntegrationPaths } from \"./php-wasm-callback-entry-suite-split-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmCallbackEntrySuiteSplitChangedPaths\n\t, ...phpWasmCallbackEntrySuiteSplitIntegrationPaths\n\t, ...dependentCheckedRecordPhpArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordPhpArchiveImplementationPaths\n",
+          "start": 152485
+        },
+        {
+          "current": "\tconst phpWasmCallbackEntrySuiteSplit\n\t\t= beforePhpWasmCallbackEntrySuiteSplitSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(phpWasmCallbackEntrySuiteSplit) === expected)\n\t\treturn phpWasmCallbackEntrySuiteSplit;\n",
+          "previous": "",
+          "start": 186705
+        },
+        {
+          "current": "\t\t\tpath, phpWasmCallbackEntrySuiteSplit, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 187008
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "161247e70050b2bf11af343aa2735a1206e35f24c4a29492549c7bd1c78b681c"
+    }
+  ],
+  "milestone": "php-wasm-callback-entry-suite-split-source-v1",
+  "predecessorCommit": "1689f928f7c4d734176d95252b8de159d6c6a078",
+  "schemaVersion": 1,
+  "scope": "Run gated PHP-Wasm callback-entry acceptance only in its dedicated hosted suite while preserving the callback-refinement lane's strict zero-skip contract.",
+  "updates": [
+    {
+      "currentSha256": "06e37756d504137e9f3aee4940a3aeb46099c6b6fc4c511b8f3720bda77d8b11",
+      "edits": [
+        {
+          "current": "  tests/php-wasm-callback-entry-installed.test.mjs 2>&1 | tee \"$output.tap\"\n",
+          "previous": "  tests/helpers/php-wasm-callback-entry-installed-tests.mjs 2>&1 | tee \"$output.tap\"\n",
+          "start": 1327
+        }
+      ],
+      "path": "scripts/run-php-wasm-callback-entry-ci.sh",
+      "previousSha256": "8b486a8f6f7dd4b412db35e707f85e1c887aa5f7e2ca9337e7c8c36270ce6aeb"
+    },
+    {
+      "currentSha256": "7c62011c87b56f4f3f05bf39bac69c349fb654f012aa14ee17c33a080b36c98d",
+      "edits": [
+        {
+          "current": "\t\t, \"php-wasm-callback-entry-installed\"\n",
+          "previous": "",
+          "start": 873
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "93b1b72cbe5604e7c6ab7dee0a5f0be1aaa7e71cc9783e18dad55f2223af1dad"
+    },
+    {
+      "currentSha256": "3beff45d125b4d89907973c2f805a52f80beb042e699f57c18080b16cf8a95c8",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import \"./helpers/php-wasm-callback-entry-installed-tests.mjs\";\n",
+          "start": 874
+        }
+      ],
+      "path": "tests/callback-refinements-php-wasm.test.mjs",
+      "previousSha256": "a1e434b4a301fb4d6e362a8de4b6b7197417104cef2f83b428c1cdb2ace8de22"
+    },
+    {
+      "currentSha256": "14dc10453475ba52786bc13747100558fe7a15c82e7a3872db030d93db709919",
+      "edits": [
+        {
+          "current": "\n// The entry acceptance is gated on its own lane, so it must never be imported by\n// the callback-refinement suite, whose hosted gate requires zero skipped tests.\ntest(\"each hosted PHP-Wasm callback lane runs only the suite its gate admits\", async () => {\n\tconst read = path => readFile(path, \"utf8\");\n\tconst imports = text => [...text.matchAll(/^import \"\\.\\/helpers\\/([^\"]+)\";$/gmu)].map(match => `tests/helpers/${match[1]}`);\n\tconst [shell, entryWorkflow, refinementsWorkflow, entrySuite, refinementsSuite, manifest]\n\t\t= await Promise.all([\n\t\t\t\"scripts/run-php-wasm-callback-entry-ci.sh\"\n\t\t\t, \".github/workflows/php-wasm-callback-entry.yml\"\n\t\t\t, \".github/workflows/callback-refinements-php-wasm.yml\"\n\t\t\t, \"tests/php-wasm-callback-entry-installed.test.mjs\"\n\t\t\t, \"tests/callback-refinements-php-wasm.test.mjs\"\n\t\t\t, \"package.json\"\n\t\t].map(read));\n\tconst installed = \"tests/helpers/php-wasm-callback-entry-installed-tests.mjs\";\n\t// Entry lane: the shell runs exactly the dedicated suite, selected by name.\n\tassert.deepEqual(imports(entrySuite), [installed]);\n\tassert.equal(entrySuite.split(\"\\n\").filter(line => line.startsWith(\"import \")).length, 1);\n\tassert.match(shell, /--test-name-pattern=\"\\^\\$name\\$\" \\\\\\n {2}tests\\/php-wasm-callback-entry-installed\\.test\\.mjs 2>&1 \\| tee \"\\$output\\.tap\"\\n/u);\n\tassert.equal(shell.match(/node --test /gu).length, 1);\n\tassert.doesNotMatch(shell, /callback-refinements-php-wasm|tests\\/helpers\\/php-wasm-callback-entry-installed-tests/u);\n\tassert.match(entryWorkflow, /LEAN_BRIDGE_CALLBACK_ENTRY_PHP_WASM_TEST: \"1\"\\n/u);\n\tassert.match(entryWorkflow, /bash scripts\\/run-php-wasm-callback-entry-ci\\.sh\\n/u);\n\tassert.doesNotMatch(entryWorkflow, /php-wasm-callback-entry-installed|callback-refinements-php-wasm/u);\n\t// Refinement lane: its suite imports no other lane's gated test, its only\n\t// gated import is enabled by its own script, and its gate stays strict.\n\tconst helpers = imports(refinementsSuite);\n\tassert.ok(!helpers.includes(installed));\n\tconst gated = [];\n\tfor(const path of helpers)\n\t\tif(/\\bskip:/u.test(await read(path))) gated.push(path);\n\tassert.deepEqual(gated, [\"tests/helpers/callback-refinements-php-wasm-installed-tests.mjs\"]);\n\tassert.match(await read(gated[0]), /const flag = process\\.env\\.LEAN_BRIDGE_CALLBACK_REFINEMENTS_PHP_WASM_TEST;\\n/u);\n\tassert.equal(JSON.parse(manifest).scripts[\"test:callback-refinements-php-wasm\"]\n\t\t, \"LEAN_BRIDGE_CALLBACK_REFINEMENTS_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/callback-refinements-php-wasm.test.mjs\");\n\tassert.match(refinementsWorkflow, /npm run test:callback-refinements-php-wasm 2>&1 \\| tee build\\/callback-refinements-php-wasm\\/run\\.tap\\n/u);\n\tassert.match(refinementsWorkflow, /rg '\\^# skipped 0\\$' build\\/callback-refinements-php-wasm\\/run\\.tap\\n/u);\n\tassert.doesNotMatch(refinementsWorkflow, /CALLBACK_ENTRY|php-wasm-callback-entry-installed/u);\n});\n",
+          "previous": "",
+          "start": 2025
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-ci-tests.mjs",
+      "previousSha256": "e09139770d18c1d65786459b07231c58bd727fd847f848b06e6edd47ca7cb873"
+    }
+  ]
+}

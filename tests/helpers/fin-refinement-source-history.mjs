@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmCallbackEntrySuiteSplitSource, phpWasmCallbackEntrySuiteSplitChangedPaths, phpWasmCallbackEntrySuiteSplitIntegrationPaths } from "./php-wasm-callback-entry-suite-split-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionContractSource, dependentCheckedRecordPromotionContractChangedPaths, dependentCheckedRecordPromotionContractIntegrationPaths } from "./dependent-checked-record-promotion-contract-source-history.mjs";
 import { beforeHostedRefinementVerifierRepairSource, hostedRefinementVerifierRepairChangedPaths, hostedRefinementVerifierRepairIntegrationPaths } from "./hosted-refinement-verifier-repair-source-history.mjs";
 import { beforeCallbackFinPhpWasmNominalRefusalRepairSource, callbackFinPhpWasmNominalRefusalRepairChangedPaths, callbackFinPhpWasmNominalRefusalRepairIntegrationPaths } from "./callback-fin-php-wasm-nominal-refusal-repair-source-history.mjs";
@@ -1943,7 +1944,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPhpArchiveImplementationPaths
+	...phpWasmCallbackEntrySuiteSplitChangedPaths
+	, ...phpWasmCallbackEntrySuiteSplitIntegrationPaths
+	, ...dependentCheckedRecordPhpArchiveImplementationPaths
 	, ...dependentCheckedRecordPhpArchiveIntegrationPaths
 	, ...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths
 	, ...dependentCheckedRecordWitPkgConfigSpaceRepairIntegrationPaths
@@ -2682,9 +2685,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmCallbackEntrySuiteSplit
+		= beforePhpWasmCallbackEntrySuiteSplitSource(
+			path, text, expected
+		);
+	if(sha256(phpWasmCallbackEntrySuiteSplit) === expected)
+		return phpWasmCallbackEntrySuiteSplit;
 	const dependentCheckedRecordPhpArchive
 		= beforeDependentCheckedRecordPhpArchiveSource(
-			path, text, expected
+			path, phpWasmCallbackEntrySuiteSplit, expected
 		);
 	if(sha256(dependentCheckedRecordPhpArchive) === expected)
 		return dependentCheckedRecordPhpArchive;
