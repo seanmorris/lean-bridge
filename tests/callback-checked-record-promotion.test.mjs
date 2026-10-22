@@ -15,13 +15,19 @@ import {
 	, promoteCallbackCheckedRecords
 	, renderCallbackCheckedRecordPromotion
 } from "./helpers/callback-checked-record-promotion.mjs";
+import {
+	beforeCallbackCheckedRecordPromotionSource
+} from "./helpers/callback-checked-record-promotion-source-history.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const [document, irSchema, consumers] = await Promise.all([
-	readJson("docs/type-surface.v1.json")
+const [surfaceSource, irSchema, consumers] = await Promise.all([
+	readFile("docs/type-surface.v1.json", "utf8")
 	, readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
+const document = JSON.parse(beforeCallbackCheckedRecordPromotionSource(
+	"docs/type-surface.v1.json", surfaceSource
+));
 const contracts = { irSchema, consumers };
 const digest = "0".repeat(64), revision = "0".repeat(40);
 const references = callbackCheckedRecordPromotionLanes.map(item => ({

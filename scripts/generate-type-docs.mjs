@@ -82,7 +82,7 @@ const recursiveCheckedRecordMarker = inheritedCheckedRecord;
 const recursiveCheckedRecord = `${inheritedCheckedRecord} [Recursive checked-record acceptance](../evidence/recursive-checked-record-promotion-20261018.md) covers finite self-recursive Packet and mutually recursive Envelope/Step graphs across all seventeen profiles and both author routes. The retained packages preserve nominal identities and aliases, Array/Option carriers and active branches; validate selected checked fields and Fin bounds; erase proofs; preserve rejected inputs; recover on later valid calls; and return constructor-free copied results. Other recursive graph shapes, value-carrying receiver-dependent fields, other index kinds, open dependent or zero-payload records, callbacks, owned positions, retained identity and cyclic host-object inputs remain separate work.`;
 const checkedRecordValueIndexBrowserMarker = "[Nested checked-record npm/browser packages]";
 const checkedRecordValueIndexBrowser = "[Hosted npm/browser checked-record value-index acceptance](../evidence/checked-record-value-index-browser-promotion-20261019.md) adds closed Bool, String and Nat indices at top-level copied parameters and results across Node JavaScript, strict TypeScript, Chromium, Firefox and WebKit pages, React and workers on both source routes. Full and standalone result-only packages are retained. The [complete hosted value-index matrix](../evidence/checked-record-value-index-matrix-promotion-20261020.md) establishes the same boundary in all 17 consumer profiles. Open or opaque indices, other index kinds, fields, callbacks, owned positions, value-carrying dependent payloads and zero-payload checked records remain separate work.";
-const callbackCheckedRecordMarker = "Generic, recursive and inherited checked records, other indices, open dependent records, callbacks and owned positions remain unverified; targets other than npm, C, C++, .NET, Java and Kotlin need separate nested acceptance.";
+const callbackCheckedRecordMarker = "All seventeen profiles have separate installed acceptance for this tested nested copied boundary.";
 const callbackCheckedRecord = "[Hosted synchronous callback checked-record acceptance](../evidence/callback-checked-record-promotion-20261022.md) adds proof-free host callback arguments and replies and returned Lean closure inputs and results in all sixteen non-PHP-Wasm profiles on both source routes. Host-produced values run the selected nested-field and record constructors with exact typed recovery; Lean-produced values project payloads without proof fields. PHP-Wasm callback positions, retained or asynchronous callbacks, owned records and unarchived indexed or recursive combinations remain separate work.";
 
 /**
@@ -279,11 +279,12 @@ export async function renderTypeDocuments({ root })
 			.replace(nestedCheckedRecordRustMarker
 				, `${nestedCheckedRecordRust} ${nestedCheckedRecordRustMarker}`)
 			.replace(nestedCheckedRecordRustPending
-				, "all seventeen profiles have separate installed acceptance for this tested nested copied boundary")
+				, "All seventeen profiles have separate installed acceptance for this tested nested copied boundary")
 			.replace(inheritedCheckedRecordMarker, inheritedCheckedRecord)
 			.replace(recursiveCheckedRecordMarker, recursiveCheckedRecord)
 			.replace(primitiveNominalMarker,
 				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
-			.replace(callbackCheckedRecordMarker, callbackCheckedRecord)
+			.replace(callbackCheckedRecordMarker
+				, `${callbackCheckedRecordMarker} ${callbackCheckedRecord}`)
 	};
 }

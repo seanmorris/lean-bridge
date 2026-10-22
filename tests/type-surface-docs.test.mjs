@@ -51,6 +51,17 @@ const nestedCheckedRecordGuides = Object.freeze({
 	, rust: ["docs/consume/rust.md"]
 	, wit: ["docs/consume/wit-wasi.md"]
 });
+const callbackCheckedRecordLanes = Object.freeze({
+	browser: ["node-javascript", "node-typescript", "browser-javascript"
+		, "browser-react", "browser-worker"]
+	, native: ["c", "cpp"]
+	, languages: ["python", "ruby", "rust"]
+	, perl: ["perl"]
+	, dotnet: ["dotnet"]
+	, jvm: ["java", "kotlin"]
+	, "php-native": ["php-native"]
+	, "wit-wasi": ["wit-wasi"]
+});
 
 test("every consumer table is generated and includes all 48 source forms exactly once", async () => {
 	const rendered = await renderTypeDocuments({ root });
@@ -77,7 +88,7 @@ test("every consumer table is generated and includes all 48 source forms exactly
 	}
 });
 
-test("nested checked records close the exact copied matrix and retain callback gaps", async () => {
+test("checked records close copied positions and hosted callbacks outside PHP-Wasm", async () => {
 	const laneEntries = Object.entries(nestedCheckedRecordLanes);
 	const profiles = laneEntries.flatMap(([, values]) => values);
 	assert.equal(new Set(profiles).size, 17);
@@ -120,10 +131,34 @@ test("nested checked records close the exact copied matrix and retain callback g
 	const callbacks = cells.filter(cell => cell.shape === "checked-record"
 		&& ["callback-parameter", "callback-result"].includes(cell.position));
 	assert.equal(callbacks.length, 17 * 2 * 2);
+	const callbackLaneByProfile = new Map(Object.entries(callbackCheckedRecordLanes)
+		.flatMap(([lane, values]) => values.map(profile => [profile, lane])));
+	assert.equal(callbackLaneByProfile.size, 16);
 	for(const cell of callbacks) for(const stage of Object.values(cell.stages))
 	{
-		assert.equal(stage.state, "unreviewed", cell.id);
-		assert.deepEqual(stage.evidence, [], cell.id);
+		if(cell.profile === "php-wasm")
+		{
+			assert.equal(stage.state, "unreviewed", cell.id);
+			assert.deepEqual(stage.evidence, [], cell.id);
+			continue;
+		}
+		const lane = callbackLaneByProfile.get(cell.profile);
+		assert.ok(lane, cell.id);
+		assert.equal(stage.state, "passed", `${cell.id} ${stage.note}`);
+		assert.ok(stage.evidence.includes(
+			`callback-checked-record-${lane}-hosted-installed`), cell.id);
+	}
+	const callbackEvidence = document.evidence.filter(item =>
+		/^callback-checked-record-.+-hosted-installed$/u.test(item.id));
+	assert.deepEqual(callbackEvidence.map(item => item.id).sort()
+		, Object.keys(callbackCheckedRecordLanes).map(lane =>
+			`callback-checked-record-${lane}-hosted-installed`).sort());
+	for(const item of callbackEvidence)
+	{
+		assert.equal(item.kind, "installed");
+		assert.match(item.revision, /^[a-f0-9]{40}$/u);
+		assert.ok(item.command.length > 0 && item.scope.length > 0);
+		assert.ok(item.files.length > 0 && item.artifacts.length > 0);
 	}
 	for(const [lane, guides] of Object.entries(nestedCheckedRecordGuides))
 	{
@@ -146,12 +181,24 @@ test("nested checked records close the exact copied matrix and retain callback g
 			assert.ok(guide.includes(
 				`actions/workflows/nested-checked-record-${lane}.yml`), guidePath);
 			const mapping = row(guide, "Checked records and closed Nat indices");
-			assert.ok(mapping.includes(
-				"Installed checks passed (input, result, field)"), guidePath);
-			assert.ok(mapping.includes(
-				"Not audited (callback input, callback result)"), guidePath);
+			if(guidePath === "docs/php.md")
+			{
+				assert.match(mapping, /Native PHP: Installed checks passed/u);
+				assert.match(mapping, /PHP-Wasm: Installed checks passed \(input, result, field\); Not audited \(callback input, callback result\)/u);
+			}
+			else
+			{
+				assert.match(mapping, /Installed checks passed/u, guidePath);
+				assert.doesNotMatch(mapping
+					, /Not audited \(callback input, callback result\)/u, guidePath);
+			}
 		}
 	}
+	const reference = await readFile("docs/reference/types.md", "utf8");
+	assert.match(reference
+		, /callback checked-record acceptance.*all sixteen non-PHP-Wasm profiles/su);
+	assert.match(reference
+		, /PHP-Wasm callback positions.*remain separate work/su);
 });
 
 test("the PHP overview records exact UInt32 values in native and Wasm profiles", async () => {
