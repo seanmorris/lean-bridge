@@ -243,10 +243,15 @@ export const assertPhpWasmRefinementCiWorkflow = (lane, source) => {
 	const triggers = /\non:\n[\s\S]*?\npermissions:\n/u.exec(source);
 	assert.ok(triggers);
 	assert.equal(triggers[0]
-		, "\non:\n  push:\n  pull_request:\n  workflow_dispatch:\n\npermissions:\n");
+		, "\non:\n  push:\n  pull_request:\n  workflow_dispatch:\n"
+			+ (lane.kind === "measurement" ? "  workflow_call:\n" : "")
+			+ "\npermissions:\n");
 	assert.match(source, /\npermissions:\n {2}contents: read\n/u);
 	assert.match(source, new RegExp("\\nconcurrency:\\n {2}group: "
-		+ escape(lane.id) + "-\\$\\{\\{ github\\.ref \\}\\}\\n"
+		+ escape(lane.id)
+		+ (lane.kind === "measurement"
+			? "-\\$\\{\\{ github\\.workflow \\}\\}" : "")
+		+ "-\\$\\{\\{ github\\.ref \\}\\}\\n"
 		+ " {2}cancel-in-progress: true\\n", "u"));
 	assert.doesNotMatch(source, /^\s+continue-on-error:/mu);
 

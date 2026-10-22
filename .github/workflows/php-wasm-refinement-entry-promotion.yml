@@ -1,0 +1,84 @@
+name: Promote the complete PHP-Wasm refinement entry matrix
+
+on:
+  schedule:
+    - cron: "17 5 1 * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: php-wasm-refinement-entry-promotion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  copied:
+    name: Produce copied refinement entry artifacts
+    uses: ./.github/workflows/php-wasm-refinement-entry.yml
+
+  owned:
+    name: Produce owned refinement entry artifacts
+    uses: ./.github/workflows/php-wasm-owned-refinement-entry.yml
+
+  callback:
+    name: Produce callback refinement entry artifacts
+    needs: owned
+    uses: ./.github/workflows/php-wasm-callback-entry.yml
+
+  indexed:
+    name: Produce indexed refinement entry artifacts
+    needs: copied
+    uses: ./.github/workflows/php-wasm-indexed-refinement-entry.yml
+
+  promote:
+    name: Authenticate all 28 refinement entry routes
+    needs:
+      - copied
+      - owned
+      - callback
+      - indexed
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact producer revision and evidence history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install verifier dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Download the exact current-run producer artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: php-wasm-*-entry-*-${{ github.sha }}
+          path: build/php-wasm-refinement-entry-hosted-artifacts
+          merge-multiple: false
+      - name: Recheck every retained record and close the route matrix
+        id: verification
+        shell: bash
+        run: |
+          mkdir -p build/php-wasm-refinement-entry-promotion
+          node scripts/summarize-php-wasm-refinement-entry-hosted.mjs \
+            --producer "$GITHUB_SHA" \
+            --directory "$GITHUB_WORKSPACE/build/php-wasm-refinement-entry-hosted-artifacts" \
+            > build/php-wasm-refinement-entry-promotion/summary.json \
+            2> build/php-wasm-refinement-entry-promotion/verification.log
+          test -s build/php-wasm-refinement-entry-promotion/summary.json
+      - name: Preserve the complete promotion result or verifier diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: complete-php-wasm-refinement-entry-promotion-${{ github.sha }}
+          path: build/php-wasm-refinement-entry-promotion/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce complete route promotion
+        if: always() && steps.verification.outcome != 'success'
+        run: exit 1

@@ -16,6 +16,7 @@ test("the PHP-Wasm refinement CI matrix names every dedicated admitted lane", as
 	const expected = phpWasmRefinementCiMatrix.map(lane => lane.path).toSorted();
 	const actual = (await readdir(".github/workflows"))
 		.filter(path => path.includes("php-wasm") && path.endsWith(".yml"))
+		.filter(path => path !== "php-wasm-refinement-entry-promotion.yml")
 		.map(path => `.github/workflows/${path}`).toSorted();
 	assert.deepEqual(actual, expected);
 	assert.equal(new Set(phpWasmRefinementCiMatrix.map(lane => lane.id)).size
@@ -95,6 +96,7 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 		];
 		if(lane.kind === "measurement")
 		{
+			mutations.push(source.replace("  workflow_call:\n", ""));
 			mutations.push(source.replace("      fail-fast: false\n"
 				, "      fail-fast: true\n"));
 			mutations.push(source.replace(`      max-parallel: ${lane.maxParallel}\n`
@@ -112,6 +114,6 @@ test("the PHP-Wasm refinement CI audit rejects policy suppression", async t => {
 			controls++;
 		}
 	}
-	assert.equal(controls, 466);
+	assert.equal(controls, 470);
 	t.diagnostic(`${controls} workflow suppression controls`);
 });
