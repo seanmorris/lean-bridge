@@ -18,3 +18,13 @@ test("retained languages callback checked-record evidence replays", async () => 
 	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
 	assert.equal(index.accepted.reports, 6);
 });
+
+test("retained perl callback checked-record evidence replays", async () => {
+	const index = await checkCallbackCheckedRecordHostedEvidence(
+		"perl", "docs/evidence/callback-checked-record-perl-20261022"
+	);
+	assert.equal(index.accepted.interpreterCount, 4);
+	assert.deepEqual(index.accepted.modes, ["prebuilt-only", "build-xs"]);
+	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
+	assert.equal(index.accepted.reports, 16);
+});
