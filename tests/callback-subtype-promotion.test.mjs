@@ -19,6 +19,9 @@ import {
 	, promoteCallbackSubtypes
 	, renderCallbackSubtypePromotion
 } from "./helpers/callback-subtype-promotion.mjs";
+import {
+	renderCallbackSubtypeLeanAuthorDocs
+} from "./helpers/callback-subtype-documentation.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const promotionPredecessor = "9f5f9825ff48afa0e052a204f3dcd8bcdb0c47eb";
@@ -143,4 +146,30 @@ test("callback Subtype promotion documents every affected consumer", async () =>
 	assert.doesNotMatch(before.reference, evidence);
 	assert.match(after.reference, evidence);
 	assert.match(after.reference, /sixteen non-PHP-Wasm consumer profiles/u);
+});
+
+test("callback Subtype promotion replaces both stale Lean-author boundaries", async () => {
+	const [existingPackage, exportDecisions] = await Promise.all([
+		readFile("docs/lean/existing-package.md", "utf8")
+		, readFile("docs/lean/export-decisions.md", "utf8")
+	]);
+	const rendered = renderCallbackSubtypeLeanAuthorDocs({
+		existingPackage, exportDecisions
+	});
+	for(const source of Object.values(rendered))
+	{
+		assert.match(source, /callback-subtype-promotion-20261022\.md/u);
+		assert.match(source, /all sixteen non-PHP-Wasm/u);
+		assert.match(source, /Missing or invalid recovery prevents callback entry/u);
+		assert.match(source, /later valid call succeeds/u);
+		assert.match(source, /callback-subtype-php-wasm-local-qualification/u);
+	}
+	assert.doesNotMatch(rendered.existingPackage
+		, /\.NET, JVM, native PHP and WIT\/WASI remain separate work/u);
+	assert.match(rendered.exportDecisions
+		, /The result expires with the selected input owner/u);
+	assert.throws(() => renderCallbackSubtypeLeanAuthorDocs({
+		existingPackage: rendered.existingPackage
+		, exportDecisions: rendered.exportDecisions
+	}), /Expected one documentation marker/u);
 });
