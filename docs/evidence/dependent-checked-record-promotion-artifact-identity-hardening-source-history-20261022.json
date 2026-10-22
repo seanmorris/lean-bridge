@@ -1,0 +1,147 @@
+{
+  "additions": [
+    {
+      "currentSha256": "eb89cd465c96a815f375790b9f0a1938db52d1df7077feac822610458dfd9980",
+      "path": "scripts/update-dependent-checked-record-promotion-artifact-identity-hardening-source-history.mjs"
+    },
+    {
+      "currentSha256": "8899d26be1d6d91d724aea4950c6c25348c162463417b498d21fd4c997647dd3",
+      "path": "tests/helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history.mjs"
+    },
+    {
+      "currentSha256": "96e33e1a7322d8c2d620fb105881041430e8a816ea4d2fd61ee2bfb8f33ee91b",
+      "path": "tests/helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "6afd3282c199418051b7eeb94bd2b2db6160b9a9",
+  "integrationBaseCommit": "6afd3282c199418051b7eeb94bd2b2db6160b9a9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4621168283d851ed61397c666c365a7fa6625bb2027f8eacb70671d5b0e1ef41",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "previous": "          \"sha256\": \"2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "7ae186140bee945e6920a742963435f0bf516485fffae45ab8505f5bb2db2dbe"
+    },
+    {
+      "currentSha256": "f15e49768972e619775195040e155e4b89c90d2c4666b88b3f8ca4a799897307",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource, dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths, dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths } from \"./dependent-checked-record-promotion-artifact-identity-hardening-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths\n\t, ...dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths\n\t, ...dependentCheckedRecordPhpWasmArchiveImplementationPaths\n",
+          "previous": "\t...dependentCheckedRecordPhpWasmArchiveImplementationPaths\n",
+          "start": 151776
+        },
+        {
+          "current": "\tconst dependentCheckedRecordPromotionArtifactIdentityHardening\n\t\t= beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordPromotionArtifactIdentityHardening) === expected)\n\t\treturn dependentCheckedRecordPromotionArtifactIdentityHardening;\n",
+          "previous": "",
+          "start": 185649
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordPromotionArtifactIdentityHardening, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 186064
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2faceb6bd47242504baf3d7b5957b367a45d01c05e21562fc6aa47f6da371931"
+    },
+    {
+      "currentSha256": "1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-promotion-artifact-identity-hardening-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4392
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "2e299aecea91061667c1fb1da25523e26035aca5fc387dd50d53e4907d37a0b5"
+    }
+  ],
+  "milestone": "dependent-checked-record-promotion-artifact-identity-hardening-source-v1",
+  "predecessorCommit": "260aed45728b1d6750c68c645d1bca597f2fa9b5",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent checked-record promotion requires every retained archive artifact to be a hosted part and refuses reuse of any individual artifact digest across language lanes.",
+  "updates": [
+    {
+      "currentSha256": "4a5061a7bec175cf41f81f97fb9b5672a31648bcc1329163e1766ee59146f055",
+      "edits": [
+        {
+          "current": "\t// Artifacts are hosted parts only, even when the cited file is retained.\n\treject(references => {\n\t\tfor(const item of references.slice(0, 4))\n\t\t\titem.artifacts = [structuredClone(references[0].files[1])];\n\t}, /is not a hosted part/u);\n\treject(references => {\n\t\tfor(const item of references.slice(0, 4))\n\t\t\titem.artifacts = [{ path: `${root(\"browser\")}/sources/producer/fixture.lean`, sha256: hex(\"source\", 64) }];\n\t}, /is not a hosted part/u);\n\t// One part of another lane is refused alone, reordered or alongside new parts.\n\tconst shareOnePart = (references, order) => {\n\t\tconst own = { path: `${root(\"native\")}/hosted/artifact.zip.part-001`, sha256: hex(\"native/extra\", 64) };\n\t\tconst borrowed = { path: `${root(\"native\")}/hosted/artifact.zip.part-000`, sha256: references[0].artifacts[0].sha256 };\n\t\tconst parts = order === \"first\" ? [borrowed, own] : [own, borrowed];\n\t\tfor(const item of references.slice(4, 8))\n\t\t{\n\t\t\titem.artifacts = structuredClone(parts);\n\t\t\titem.files = [item.files[0], item.files[1]\n\t\t\t\t, ...structuredClone(parts).sort((left, right) => left.path.localeCompare(right.path))];\n\t\t}\n\t};\n\treject(references => shareOnePart(references, \"first\"), /reuses another lane's artifact part/u);\n\treject(references => shareOnePart(references, \"last\"), /reuses another lane's artifact part/u);\n",
+          "previous": "",
+          "start": 8394
+        }
+      ],
+      "path": "tests/dependent-checked-record-promotion.test.mjs",
+      "previousSha256": "abd1bf0d9da1df9ad0de8fc05e5555c29fe40b3de632b59557363165f085ae24"
+    },
+    {
+      "currentSha256": "31029a55e5824a7532196c14413299505516c83b56323bbc25fd41aac1c59881",
+      "edits": [
+        {
+          "current": "\t\t\t\tassert.ok(artifact.path.startsWith(`${root}/hosted/`)\n\t\t\t\t\t, `${reference.id} artifact is not a hosted part: ${artifact.path}`);\n",
+          "previous": "\t\t\t\tassert.ok(artifact.path.startsWith(`${root}/`), artifact.path);\n",
+          "start": 8658
+        },
+        {
+          "current": "",
+          "previous": "\t\t\tconst parts = reference.artifacts.map(item => item.sha256).join();\n",
+          "start": 9064
+        },
+        {
+          "current": "\t\t\t\t// No single part may recur in another lane, whatever its order\n\t\t\t\t// or company.\n\t\t\t\tfor(const artifact of reference.artifacts)\n\t\t\t\t\tassert.ok(!artifactDigests.has(artifact.sha256)\n\t\t\t\t\t\t, `${reference.id} reuses another lane's artifact part`);\n\t\t\t\tfor(const artifact of reference.artifacts)\n\t\t\t\t\tartifactDigests.add(artifact.sha256);\n",
+          "previous": "\t\t\t\tassert.ok(!artifactDigests.has(parts), `${reference.id} reuses another lane's artifact`);\n\t\t\t\tartifactDigests.add(parts);\n",
+          "start": 9127
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-promotion.mjs",
+      "previousSha256": "4b219a7927620b24d76892f2eab7b315592e52993ccdeb9d94d97f9847bcac31"
+    }
+  ]
+}

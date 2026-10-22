@@ -67,6 +67,7 @@ import { beforeCallbackCheckedRecordNativeSource, callbackCheckedRecordNativeCha
 import { beforeCallbackCheckedRecordNpmBrowserSource, callbackCheckedRecordNpmBrowserChangedPaths, callbackCheckedRecordNpmBrowserIntegrationPaths } from "./callback-checked-record-npm-browser-source-history.mjs";
 import { beforeCallbackCheckedRecordFoundationSource, callbackCheckedRecordFoundationChangedPaths, callbackCheckedRecordFoundationIntegrationPaths } from "./callback-checked-record-foundation-source-history.mjs";
 import { beforeDependentCheckedRecordJvmArchiveSource, dependentCheckedRecordJvmArchiveImplementationPaths, dependentCheckedRecordJvmArchiveIntegrationPaths } from "./dependent-checked-record-jvm-archive-source-history.mjs";
+import { beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource, dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths, dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths } from "./dependent-checked-record-promotion-artifact-identity-hardening-source-history.mjs";
 import { beforeDependentCheckedRecordPhpWasmArchiveSource, dependentCheckedRecordPhpWasmArchiveImplementationPaths, dependentCheckedRecordPhpWasmArchiveIntegrationPaths } from "./dependent-checked-record-php-wasm-archive-source-history.mjs";
 import { beforeDependentCheckedRecordWitExportCountRepairSource, dependentCheckedRecordWitExportCountRepairChangedPaths, dependentCheckedRecordWitExportCountRepairIntegrationPaths } from "./dependent-checked-record-wit-export-count-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserDiagnosticRepairSource, dependentCheckedRecordBrowserDiagnosticRepairChangedPaths, dependentCheckedRecordBrowserDiagnosticRepairIntegrationPaths } from "./dependent-checked-record-browser-diagnostic-repair-source-history.mjs";
@@ -1940,7 +1941,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPhpWasmArchiveImplementationPaths
+	...dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths
+	, ...dependentCheckedRecordPromotionArtifactIdentityHardeningIntegrationPaths
+	, ...dependentCheckedRecordPhpWasmArchiveImplementationPaths
 	, ...dependentCheckedRecordPhpWasmArchiveIntegrationPaths
 	, ...dependentCheckedRecordWitExportCountRepairChangedPaths
 	, ...dependentCheckedRecordWitExportCountRepairIntegrationPaths
@@ -2673,9 +2676,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordPromotionArtifactIdentityHardening
+		= beforeDependentCheckedRecordPromotionArtifactIdentityHardeningSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordPromotionArtifactIdentityHardening) === expected)
+		return dependentCheckedRecordPromotionArtifactIdentityHardening;
 	const dependentCheckedRecordPhpWasmArchive
 		= beforeDependentCheckedRecordPhpWasmArchiveSource(
-			path, text, expected
+			path, dependentCheckedRecordPromotionArtifactIdentityHardening, expected
 		);
 	if(sha256(dependentCheckedRecordPhpWasmArchive) === expected)
 		return dependentCheckedRecordPhpWasmArchive;
