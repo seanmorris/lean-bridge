@@ -61,4 +61,5 @@ test("compiler-input observer refuses a missing definition before linking", asyn
 	const value = await run("adapter"); t.after(() => rm(value.root, { recursive: true }));
 	await assert.rejects(value.link, /adapter: exactly one marked definition required/u);
 	assert.throws(() => value.observer.snapshot(), /completed/u);
+	assert.equal(value.observer.transcript().linked, false);
 });
