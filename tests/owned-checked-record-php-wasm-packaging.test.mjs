@@ -23,15 +23,41 @@ const output = resolve("build/owned-checked-record-php-wasm");
 const reports = [];
 
 test.before(async () => {
-	if(enabled) await rm(output, { recursive: true, force: true });
+	if(!enabled) return;
+	if(modes.length === allModes.length)
+		await rm(output, { recursive: true, force: true });
+	else
+	{
+		await rm(join(output, "packages.json"), { force: true });
+		for(const mode of modes)
+		{
+			await rm(join(output, `${mode}.json`), { force: true });
+			await rm(join(output, "evidence", mode), { recursive: true, force: true });
+		}
+	}
 });
 
 test.after(async () => {
 	if(!enabled || reports.length !== modes.length) return;
+	const complete = [];
+	for(const mode of allModes)
+	{
+		try
+		{
+			const report = JSON.parse(await readFile(join(output, `${mode}.json`), "utf8"));
+			assert.equal(report.mode, mode);
+			complete.push(report);
+		}
+		catch(error)
+		{
+			if(error.code !== "ENOENT") throw error;
+		}
+	}
+	if(complete.length !== allModes.length) return;
 	await saveLakeFile(output, "packages.json", canonicalJson({
 		schemaVersion: 1
 		, profile: "installed-owned-checked-record-php-wasm"
-		, reports: reports.toSorted((left, right) => left.mode.localeCompare(right.mode))
+		, reports: complete.toSorted((left, right) => left.mode.localeCompare(right.mode))
 	}));
 });
 

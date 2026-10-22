@@ -1,0 +1,171 @@
+{
+  "command": "source scripts/env.sh && LEAN_BRIDGE_OWNED_CHECKED_RECORD_PHP_WASM_TEST=1 LEAN_BRIDGE_TEST_PHP_COPIED_RUNTIME=build/owned-checked-record-php-wasm-input/php-wasm-runtime npm run test:owned-checked-record-php-wasm",
+  "implementationCommit": "d19542e89ab9b26db57ea3fdcd88ce135fecb30b",
+  "installedCli": {
+    "archive": {
+      "bytes": 8860744,
+      "path": "lean-bridge-0.1.0-rc.1.tgz",
+      "sha256": "3f56d7ccb525ef3e58c28001866200801d040231f27b99e2054d9da0c05d3aea"
+    },
+    "compilerInputsArchiveSha256": "38f0e04558b5a8e1d58ac6c5a556da10700dc23de35f0448a1b56d2754286c59",
+    "compilerInputsIdentity": "9be3b8e9e3538771e7d156ccf23196a721ce6a8a264db8ecd4bb6c02d551a24c",
+    "installedFilesVerified": 1689,
+    "inventorySha256": "bab2bd26874430b5f01bd23473ded731b5e0053153bce187f1fff5071786fa86",
+    "packagingSourceRemoved": true
+  },
+  "profile": "installed-owned-checked-record-php-wasm-local-qualification",
+  "rawReportSha256": "a431796573d5626905fd42a0456379b3e926bf654f789c13eb6b928e950ad519",
+  "routes": [
+    {
+      "archives": [
+        {
+          "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-1.0.0.tgz",
+          "bytes": 178820,
+          "sha256": "63f5f9101cb46ece4134ea073c89ea41d549f6c03cf1359f6c4a4fe1579a7b82"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-1.0.0-php-wasm.zip",
+          "bytes": 86375,
+          "sha256": "81978e5324183311abc7e256fba57c7f817a3bb6dd782f811eafffbff8f5b614"
+        }
+      ],
+      "authorRoute": "ordinary-source",
+      "browserExecutions": 8,
+      "checksPerExecution": 137,
+      "consumerSha256": "587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc",
+      "deterministicReassembly": true,
+      "handoffRemoved": true,
+      "hostCallbacks": 2,
+      "independentlyRebuiltExactly": true,
+      "inputTransfers": 1,
+      "mode": "full",
+      "modelExports": 9,
+      "modelSchemaVersion": 8,
+      "nodeExecutions": 8,
+      "receiptVerifiedWithoutProducer": true,
+      "requestRecovery": true,
+      "sourceFreeInstallation": true,
+      "tamperRejections": 22,
+      "zeroLiveIdentitiesAfterCleanupAndRefresh": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-1.0.0.tgz",
+          "bytes": 181477,
+          "sha256": "d5bea15893755a1e07f13458b0365d2806e6d6c29da2207b380850f7fb1585da"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-1.0.0-php-wasm.zip",
+          "bytes": 87415,
+          "sha256": "01e439b1de1d1bda29eb5dcbc69bb11d2396e8f4fd72140c3e31abc88cdbbfb1"
+        }
+      ],
+      "authorRoute": "reviewed-ir",
+      "browserExecutions": 8,
+      "checksPerExecution": 137,
+      "consumerSha256": "587502c1489137797675c9c4ecc7f1d9b12a32f2464d6046ed2f33ee9ce18fdc",
+      "deterministicReassembly": true,
+      "handoffRemoved": true,
+      "hostCallbacks": 2,
+      "independentlyRebuiltExactly": true,
+      "inputTransfers": 1,
+      "mode": "full",
+      "modelExports": 9,
+      "modelSchemaVersion": 8,
+      "nodeExecutions": 8,
+      "receiptVerifiedWithoutProducer": true,
+      "requestRecovery": true,
+      "sourceFreeInstallation": true,
+      "tamperRejections": 22,
+      "zeroLiveIdentitiesAfterCleanupAndRefresh": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-result-only-1.0.0.tgz",
+          "bytes": 146999,
+          "sha256": "49d59f69296c438d3eec1eb7ddc95d9eb46ed9bd949aedf740065c6a71cdb8c5"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-result-only-1.0.0-php-wasm.zip",
+          "bytes": 82985,
+          "sha256": "8ac563ece80b0974a2f456fbc1dc3c7c250e718caff5ce33ffe94ed3fe10ffe6"
+        }
+      ],
+      "authorRoute": "ordinary-source",
+      "browserExecutions": 8,
+      "checksPerExecution": 4,
+      "consumerSha256": "152b726f3f1308cb88faf56de0da49abd965775eada7ed8015524e7894bdd2f8",
+      "deterministicReassembly": true,
+      "handoffRemoved": true,
+      "hostCallbacks": 0,
+      "independentlyRebuiltExactly": true,
+      "inputTransfers": 0,
+      "mode": "result-only",
+      "modelExports": 3,
+      "modelSchemaVersion": 6,
+      "nodeExecutions": 8,
+      "receiptVerifiedWithoutProducer": true,
+      "requestRecovery": true,
+      "sourceFreeInstallation": true,
+      "tamperRejections": 15,
+      "zeroLiveIdentitiesAfterCleanupAndRefresh": true
+    },
+    {
+      "archives": [
+        {
+          "archive": "lean-bridge-php-wasm-copied-runtime-0.0.0-copied1.4c88837c0f4e612c0a1c8b345239db679c7bfc7a5e071ee99fc1b059959babba.tgz",
+          "bytes": 1660962,
+          "sha256": "1d08d798d60402880a707a6af2a2becad4edbbcac98ce5c4c9d032c6a1b70927"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-result-only-1.0.0.tgz",
+          "bytes": 149132,
+          "sha256": "c5d57228f4c58d57dd1bf13f236a59b912dad57ce21a77ca9ca62d4a93622c62"
+        },
+        {
+          "archive": "lean-bridge-test-owned-php-wasm-checked-record-result-only-1.0.0-php-wasm.zip",
+          "bytes": 84068,
+          "sha256": "eae0f302618edad6d96a6137e52d1eaca53d47708b374795a77064159d0547d9"
+        }
+      ],
+      "authorRoute": "reviewed-ir",
+      "browserExecutions": 8,
+      "checksPerExecution": 4,
+      "consumerSha256": "152b726f3f1308cb88faf56de0da49abd965775eada7ed8015524e7894bdd2f8",
+      "deterministicReassembly": true,
+      "handoffRemoved": true,
+      "hostCallbacks": 0,
+      "independentlyRebuiltExactly": true,
+      "inputTransfers": 0,
+      "mode": "result-only",
+      "modelExports": 3,
+      "modelSchemaVersion": 6,
+      "nodeExecutions": 8,
+      "receiptVerifiedWithoutProducer": true,
+      "requestRecovery": true,
+      "sourceFreeInstallation": true,
+      "tamperRejections": 15,
+      "zeroLiveIdentitiesAfterCleanupAndRefresh": true
+    }
+  ],
+  "runtimeIdentity": "44535fd7b0e510b50f3aae5e2134970012d90e9f6be04048a04dce85bddbd966",
+  "schemaVersion": 1,
+  "scope": "Acyclic PHP-Wasm owned checked records with copied nested checks, resource fields, exact per-site constructors, borrowed and transferred parameters, leased results, synchronous host callbacks, returned Lean closures, explicit typed recovery, ordinary source and independently reviewed Binding IR. Every source-free offline npm/Composer installation is physically relocated before Node and Chromium execution. Recursive owned graphs, retained or asynchronous callbacks, other predicates, dispatch counts and peak memory remain separate work. The recurring workflow rebuilds the same pinned compiler inputs and retains the original package handoffs."
+}

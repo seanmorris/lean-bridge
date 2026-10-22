@@ -113,10 +113,12 @@ export async function packageReference(projectRoot)
  *
  * @param root0 - Optional source location for isolated checks.
  * @param root0.root - Repository containing the reviewed templates and contracts.
+ * @param root0.inventory - Optional validated inventory for sparse worktrees.
  */
-export async function renderReferenceDocuments({ root = repositoryRoot } = {})
-{
-	const typeDocuments = await renderTypeDocuments({ root });
+export async function renderReferenceDocuments({
+	root = repositoryRoot, inventory = null
+} = {}) {
+	const typeDocuments = await renderTypeDocuments({ root, inventory });
 	const [tutorial, scalars, algorithms, schema] = await Promise.all([
 		packageReference(path.join(root, 'tests/fixtures/documentation/lean-author'))
 		, packageReference(path.join(root, 'tests/fixtures/onboarding/scalars'))
@@ -186,10 +188,12 @@ export async function renderReferenceDocuments({ root = repositoryRoot } = {})
  * @param root0 - Generation mode and source location.
  * @param root0.root - Repository containing canonical reference pages.
  * @param root0.write - Regenerate files when explicitly requested; otherwise only compare.
+ * @param root0.inventory - Optional validated inventory for sparse worktrees.
  */
-export async function generateReferenceDocs({ root = repositoryRoot, write = false } = {})
-{
-	const documents = await renderReferenceDocuments({ root });
+export async function generateReferenceDocs({
+	root = repositoryRoot, write = false, inventory = null
+} = {}) {
+	const documents = await renderReferenceDocuments({ root, inventory });
 	for(const [relative, content] of Object.entries(documents))
 	{
 		const filename = path.join(root, relative);

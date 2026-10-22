@@ -8,6 +8,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeOwnedCheckedRecordPhpWasmSource, ownedCheckedRecordPhpWasmChangedPaths } from "./owned-checked-record-php-wasm-source-history.mjs";
+import { beforeOwnedSubtypePhpWasmQualificationSource, ownedSubtypePhpWasmQualificationChangedPaths } from "./owned-subtype-php-wasm-qualification-source-history.mjs";
 import { beforeOwnedCheckedRecordManagedSource, ownedCheckedRecordManagedChangedPaths } from "./owned-checked-record-managed-source-history.mjs";
 import { beforeOwnedCheckedRecordLanguageSource, ownedCheckedRecordLanguageChangedPaths } from "./owned-checked-record-language-source-history.mjs";
 import { beforeOwnedCheckedRecordNativePerlSource, ownedCheckedRecordNativePerlChangedPaths } from "./owned-checked-record-native-perl-source-history.mjs";
@@ -1892,7 +1894,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordManagedChangedPaths
+	...ownedCheckedRecordPhpWasmChangedPaths
+	, ...ownedSubtypePhpWasmQualificationChangedPaths
+	, ...ownedCheckedRecordManagedChangedPaths
 	, ...ownedCheckedRecordLanguageChangedPaths
 	, ...ownedCheckedRecordNativePerlChangedPaths
 	, ...ownedCheckedRecordJavaScriptChangedPaths
@@ -2567,8 +2571,20 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedCheckedRecordPhpWasm
+		= beforeOwnedCheckedRecordPhpWasmSource(path, text, expected);
+	if(sha256(ownedCheckedRecordPhpWasm) === expected)
+		return ownedCheckedRecordPhpWasm;
+	const ownedSubtypePhpWasmQualification
+		= beforeOwnedSubtypePhpWasmQualificationSource(
+			path, ownedCheckedRecordPhpWasm, expected
+		);
+	if(sha256(ownedSubtypePhpWasmQualification) === expected)
+		return ownedSubtypePhpWasmQualification;
 	const ownedCheckedRecordManaged
-		= beforeOwnedCheckedRecordManagedSource(path, text, expected);
+		= beforeOwnedCheckedRecordManagedSource(
+			path, ownedSubtypePhpWasmQualification, expected
+		);
 	if(sha256(ownedCheckedRecordManaged) === expected)
 		return ownedCheckedRecordManaged;
 	const ownedCheckedRecordLanguage
