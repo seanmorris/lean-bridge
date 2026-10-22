@@ -31,7 +31,13 @@ const regularFiles = async (root, prefix = "") => {
 	{
 		const path = prefix ? `${prefix}/${entry.name}` : entry.name;
 		const information = await lstat(join(root, path));
-		if(information.isDirectory()) files.push(...await regularFiles(root, path));
+		if(information.isDirectory())
+		{
+			const nested = await regularFiles(root, path);
+			assert.ok(nested.length > 0
+				, `Retained packages must not contain empty directories: ${path}`);
+			files.push(...nested);
+		}
 		else
 		{
 			assert.ok(information.isFile(), `Retained packages must be regular: ${path}`);
