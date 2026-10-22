@@ -102,3 +102,19 @@ test("contributor acceptance documents checkout setup and the current exact-inte
 	assert.match(testing, /above `2\^4096`/);
 	assert.doesNotMatch(testing, /records the current runtime failure/);
 });
+
+test("callback checked-record maintenance documents every hosted lane and archive gate", async () => {
+	const testing = await readFile("docs/contributing/testing.md", "utf8");
+	for(const command of [
+		"run-callback-checked-record-browser-ci.sh"
+		, "run-callback-checked-record-native-ci.sh"
+		, "run-callback-checked-record-perl-ci.sh"
+		, "run-callback-checked-record-languages-ci.sh"
+		, "run-callback-checked-record-remaining-ci.sh"
+		, "archive-callback-checked-record-evidence.mjs"
+		, "promote-callback-checked-record-evidence.mjs"
+	]) assert.ok(testing.includes(command), command);
+	assert.ok(testing.includes("Replace `languages` with `browser`, `native`, `perl`, `dotnet`, `jvm`,"));
+	assert.ok(testing.includes("`php-native` or `wit-wasi` for the matching artifact."));
+	assert.match(testing, /promotion command\nruns only after all eight archives exist/u);
+});

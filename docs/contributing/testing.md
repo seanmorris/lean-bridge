@@ -3987,12 +3987,16 @@ installs offline and replays its independent consumer. The reports retain 30
 checks per .NET, Java, Kotlin or native PHP route and 64 per WIT/WASI route,
 plus the host-specific source-free, relocation and repeat-execution facts.
 
-The hosted workflows use the five `run-callback-checked-record-*-ci.sh` entry
-points for browser, C/C++, Perl, Python/Ruby/Rust and the remaining host matrix.
-They reject environment variables that could narrow the selection, keep the
-original TAP and report or browser record tree, and run a closed checker bound
-to the exact producer commit. After a successful job, maintainers retain the
-original artifact ZIP and GitHub run, job and artifact API records with:
+The hosted workflows use
+`scripts/run-callback-checked-record-browser-ci.sh`,
+`scripts/run-callback-checked-record-native-ci.sh`,
+`scripts/run-callback-checked-record-perl-ci.sh`,
+`scripts/run-callback-checked-record-languages-ci.sh` and
+`scripts/run-callback-checked-record-remaining-ci.sh`. They reject environment
+variables that could narrow the selection, keep the original TAP and report or
+browser record tree, and run a closed checker bound to the exact producer
+commit. After a successful job, maintainers retain the original artifact ZIP
+and GitHub run, job and artifact API records with:
 
 ```sh
 node scripts/archive-callback-checked-record-evidence.mjs \
