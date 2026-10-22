@@ -36,6 +36,8 @@ const finBoundLimbs = bound => {
 
 /**
  * Render exact, recoverable checked-refinement diagnostics over native graph values.
+ * Export sites check every Fin bound before any constructor, as their Lean adapter does;
+ * the "ordered" mode instead walks each value once in its Lean conversion order.
  *
  * @param root0 - Native graph layout and checked-refinement inputs.
  * @param root0.abi - Fixed-width component ABI.
@@ -44,17 +46,27 @@ const finBoundLimbs = bound => {
  * @param root0.layout - Generated graph layout.
  * @param root0.table - Graph nodes keyed by node identifier.
  * @param root0.walker - Resolve a graph node to its generated walker name.
+ * @param root0.normalized - Prebuilt normalized sites and cycles, instead of the export mirrors.
+ * @param root0.roots - Parameter graph nodes by site, instead of the export layout roots.
+ * @param root0.modes - Diagnostic passes in order.
+ * @param root0.accessor - Name of the one-shot thread-local diagnostic reader.
  */
-const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, table, walker }) => {
-	if(!exports.length) return null;
-	const normalized = componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);
+export const nativeGraphRefinementDiagnostics = ({
+	abi, exports, nominalRefinements, layout, table, walker
+	, normalized: prebuilt = null
+	, roots: siteRoots = null
+	, modes = ["fin", "constructor"]
+	, accessor = `${layout.prefix}_graph_error`
+}) => {
+	if(!prebuilt && !exports.length) return null;
+	const normalized = prebuilt ?? componentRefinementMirrors(abi, exports, graphLeanType, nominalRefinements);
 	if(!normalized.sites.some(item => item.refinements.parameters.some(Boolean))) return null;
 	const cycles = normalized.cycles, validators = new Set(), bounds = new Map(), helpers = new Map();
 	const contains = (tree, mode, active = new Set()) => {
 		if(!tree) return false;
-		if(tree.kind === "fin") return mode === "fin";
-		if(tree.kind === "subtype") return mode === "constructor";
-		if(tree.kind === "checked-record") return mode === "constructor"
+		if(tree.kind === "fin") return mode !== "constructor";
+		if(tree.kind === "subtype") return mode !== "fin";
+		if(tree.kind === "checked-record") return mode !== "fin"
 			|| (tree.arguments ?? []).some(child => contains(child, mode, active));
 		if(tree.kind === "recursive")
 		{
@@ -97,7 +109,7 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 			, "  --*nodes;"];
 		if(tree.kind === "fin")
 		{
-			if(mode === "fin")
+			if(mode !== "constructor")
 			{
 				if(node.kind !== "primitive" || node.ref.name !== "nat") throw new TypeError("A recursive Fin refinement must erase to Nat");
 				const limbs = finBoundLimbs(tree.bound), constant = `ng_fin_${sha256(tree.bound).slice(0, 20)}`;
@@ -108,7 +120,7 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 		}
 		else if(tree.kind === "subtype")
 		{
-			if(mode === "constructor")
+			if(mode !== "fin")
 			{
 				const leaf = componentRecursiveRefinementLeafKey(tree, node.ref);
 				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
@@ -132,7 +144,7 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 						, `${childName}(${expression}, depth + 1, nodes)`));
 				}
 			}
-			if(mode === "constructor")
+			if(mode !== "fin")
 			{
 				const leaf = componentRecursiveRefinementLeafKey(tree, node.ref);
 				const validator = `${symbol}_graph_refinement_${parameter}_${leaf}`;
@@ -188,7 +200,7 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 		lines.push("  return NG_OK;", "}"); entry.lines = lines;
 		return name;
 	};
-	const roots = new Map(layout.roots.map(root => [root.bindingId, root]));
+	const roots = siteRoots ?? new Map(layout.roots.map(root => [root.bindingId, root]));
 	const calls = new Map();
 	for(const item of normalized.sites)
 	{
@@ -201,7 +213,7 @@ const graphRefinementDiagnostics = ({ abi, exports, nominalRefinements, layout, 
 			|| diagnosticParameterNames.some(name => typeof name !== "string" || !name.length))
 			throw new TypeError("Recursive refinement diagnostic parameters must cover the signature");
 		const passes = [];
-		for(const mode of ["fin", "constructor"])
+		for(const mode of modes)
 		{
 			const checked = item.refinements.parameters.map((tree, index) => tree && contains(tree, mode)
 				? { index, label: diagnosticParameterNames[index]
@@ -242,19 +254,30 @@ static inline int ng_fin_below(const uint32_t *data, size_t length, const uint32
   while (length--) if (data[length] != bound[length]) return data[length] < bound[length];
   return 0;
 }
-const char *${layout.prefix}_graph_error(void) {
+const char *${accessor}(void) {
   const char *result = ng_refinement_length ? ng_refinement_message : NULL;
   ng_refinement_length = 0;
   return result;
 }
 `;
+	// One site's passes: each refused position appends its label and path, restored on success.
+	const checks = bindingId => (calls.get(bindingId) ?? []).flatMap((pass, passIndex) => [
+		passIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`
+		, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {
+			const mark = `refinement_mark_${passIndex}_${checkIndex}`;
+			return [`  size_t ${mark} = ng_refinement_mark();`
+				, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
+				, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`
+				, `  ng_refinement_restore(${mark});`];
+		})
+	]);
 	return {
 		normalized, validators: [...validators].sort()
 		, bounds: [...bounds.values()].sort()
 		, prototypes: [...helpers.values()].map(entry =>
 			`static uint32_t ${entry.name}(const ${table.get(entry.nodeId).name} *, uint32_t, uint32_t *);`)
 		, helpers: [...helpers.values()].map(entry => entry.lines.join("\n"))
-		, calls, support };
+		, calls, checks, support };
 };
 
 const runtime = wordBits => `
@@ -391,7 +414,7 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 	const table = new Map(layout.nodes.map((node, index) => [node.id, { ...node, index }]));
 	const walker = id => `ng_${sha256(id).slice(0, 20)}`;
 	const helper = node => componentRecursiveHelper(abi, node.ref);
-	const diagnostics = graphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });
+	const diagnostics = nativeGraphRefinementDiagnostics({ abi, exports: refinementExports, nominalRefinements, layout, table, walker });
 	const lines = [`#include "${layout.prefix}-graph.h"`, runtime(wordBits)
 		, ...diagnostics ? [diagnostics.support, ...diagnostics.validators, ...diagnostics.bounds, ...diagnostics.prototypes] : []];
 	if(initializer) lines.push('#include "lean_bridge_native_runtime.h"'
@@ -586,18 +609,8 @@ export const generateNativeCopiedGraphAdapters = (ir, abi, { initializer = null,
 		parameters.push(`${result.name} *out`);
 		const signature = `uint32_t ${root.name}_graph(${parameters.join(", ")})`;
 		declarations.push(`${signature};`);
-		const refinementPasses = diagnostics?.calls.get(root.bindingId) ?? [];
-		const refinementCalls = refinementPasses.flatMap((pass, passIndex) => [
-			passIndex ? `  refinement_nodes = ${componentRecursiveLimits.valueNodes};` : `  uint32_t refinement_nodes = ${componentRecursiveLimits.valueNodes};`
-			, ...pass.checked.flatMap(({ index, label, name }, checkIndex) => {
-				const mark = `refinement_mark_${passIndex}_${checkIndex}`;
-				return [`  size_t ${mark} = ng_refinement_mark();`
-					, `  if (!ng_refinement_text(${JSON.stringify(label)}, sizeof(${JSON.stringify(label)}) - 1)) return NG_LIMIT;`
-					, `  if ((status = ${name}(a${index}, 0, &refinement_nodes))) return status;`
-					, `  ng_refinement_restore(${mark});`];
-			})
-		]);
-		if(refinementPasses.length) refinementCalls.push("  ng_refinement_reset();");
+		const refinementCalls = diagnostics?.checks(root.bindingId) ?? [];
+		if(refinementCalls.length) refinementCalls.push("  ng_refinement_reset();");
 		lines.push(`extern lean_object *${item.symbol}_lean(${Array(Math.max(1, root.parameters.length)).fill("lean_object *").join(", ")});`, `${signature} {`
 			, ...diagnostics ? ["  ng_refinement_reset();"] : []
 			, `  if (!ng_pointer(out, sizeof(*out), _Alignof(${result.name}))) return NG_INVALID;`

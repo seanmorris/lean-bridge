@@ -8,6 +8,7 @@
 const profileManifest = Object.freeze({
 	contract: Object.freeze([
 		"archive-subjects"
+		, "callable-closure-refusal"
 		, "callback-checked-record-hosted-archive"
 		, "callback-checked-record-hosted-evidence"
 		, "callback-checked-record-promotion"

@@ -4,9 +4,11 @@
  * @file
  */
 import { canonicalJson, sha256 } from "../capsule/node.mjs";
-import { componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
+import { componentGraphRefinementValidators, componentRecursiveLeanSource } from "./component-recursive-lean.mjs";
 import { componentRecursiveAbi, componentRecursiveDispatch } from "../abi/component-recursive-abi.mjs";
-import { assertComponentStructuredCallableAbi, componentStructuredCallbackDirection } from "../abi/component-structured-callables.mjs";
+import {
+	assertComponentStructuredCallableAbi, componentStructuredCallbackDirection, componentStructuredClosureRefuses
+} from "../abi/component-structured-callables.mjs";
 import { componentStructuredCallableDefaults } from "./component-structured-callable-defaults.mjs";
 import { componentRefinedCall, componentRefinementGuards, componentCarrierRefinementValidators, componentRefinementConversion } from "./component-refinements.mjs";
 import { componentRefinementMirrors, hasComponentNominalRefinements } from "./component-refinement-mirrors.mjs";
@@ -198,6 +200,46 @@ export const componentStructuredCallableMirrors = (abi, sourceExports, direction
 };
 
 /**
+ * Normalize the argument trees of every returned closure that refuses checked arguments, from
+ * the descriptor alone, so its Lean leaf checks and the native diagnostic walkers share one tree
+ * and one leaf identity. Each site is normalized exactly as componentStructuredCallableMirrors
+ * normalizes that closure's site; the walk order is the closure's own conversion order.
+ *
+ * @param abi - Authenticated copied-payload callable descriptor.
+ * @param options - Backend-specific callback-role recovery controls.
+ * @param options.finDirections - Recover Fin-only callback roles from exports.
+ */
+export const componentStructuredClosureRefusals = (abi, { finDirections = false } = {}) => {
+	const closures = abi.callbacks.filter(signature => componentStructuredClosureRefuses(abi, signature, finDirections));
+	if(!closures.length) return null;
+	const callbacks = new Set(abi.callbacks.map(type => type.id));
+	const unit = { kind: "primitive", name: "unit" };
+	const site = type => type.kind === "named" && callbacks.has(type.id) ? unit : type;
+	const symbol = signature =>
+		`lean_bridge_${sha256(`${abi.exports[0].symbol}\0callback\0${signature.key}`).slice(0, 24)}`;
+	const exports = closures.map(signature => ({
+		bindingId: signature.id, symbol: symbol(signature)
+		, parameters: signature.parameters.map(site)
+		, result: site(signature.result), resultMode: "value"
+	}));
+	const items = closures.map(signature => ({
+		bindingId: signature.id, symbol: symbol(signature)
+		, parameters: signature.parameters.map(() => ({ leanType: "" }))
+		, refinements: signature.refinements
+		, produced: { parameters: signature.parameters.map(() => false), result: true }
+	}));
+	const view = { ...componentStructuredCopiedView(abi), exports };
+	const mirrors = componentRefinementMirrors(view, items, componentStructuredLeanType, abi.nominalRefinements ?? []);
+	const sites = closures.map((signature, index) => ({
+		signature, bindingId: signature.id
+		, symbol: `${componentStructuredCallablePrefix(abi, signature)}_closure`
+		, wrapper: `closure_${signature.key}`
+		, refinements: mirrors.sites[index].refinements
+	}));
+	return { cycles: mirrors.cycles, sites };
+};
+
+/**
  * Generate total Array-carried wrappers without relying on source object layout.
  *
  * @param abi - Authenticated copied-payload callable descriptor.
@@ -212,6 +254,8 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 	const runtimeRefinements = componentStructuredRuntimeRefinements(abi);
 	const callbackDirections = new Map(abi.callbacks.map(type => [type.id
 		, componentStructuredCallbackDirection(abi, type, finDirections)]));
+	const refusals = componentStructuredClosureRefusals(abi, { finDirections });
+	const definitions = new Map(abi.types.map(type => [type.id, type]));
 	const conversion = componentStructuredCallableMirrors(abi, sourceExports, callbackDirections, nominalRefinements);
 	const callbackRefinements = new Map(abi.callbacks.map(type => [type.id
 		, conversion ? conversion.refinementsFor(type.id) : runtimeRefinements(type, type.refinements)]));
@@ -268,6 +312,11 @@ export const componentStructuredCallableLeanSource = (abi, sourceExports, { finD
 			lines.push(`@[export ${prefix}_apply]`
 				, `def apply_${key} (closure : ${closure}) ${parameters} : ${carrier(signature.result)} :=`
 				, ...application.map(line => `  ${line}`), "");
+			// After apply refuses, native callers locate the first refused leaf with these pure
+			// per-leaf checks; apply itself is unchanged.
+			const refusal = refusals?.sites.find(item => item.bindingId === signature.id);
+			if(refusal) refusal.refinements.parameters.forEach((tree, index) => lines.push(...componentGraphRefinementValidators(
+				refusal, index, tree, signature.parameters[index], definitions, refusals.cycles, carrier)));
 			continue;
 		}
 		const fallback = defaults.expression(signature.result, refinements?.result);

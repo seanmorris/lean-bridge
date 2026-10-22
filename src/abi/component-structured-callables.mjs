@@ -70,6 +70,19 @@ export const componentStructuredCallbackDirection = (abi, signature, inferFinDir
 };
 
 /**
+ * Whether a returned Lean closure refuses checked arguments its native caller can locate.
+ * The Lean carrier and its native callers pass the same Fin role recovery, so they agree
+ * on every such signature, Fin-only ones included where that backend recovers their role.
+ *
+ * @param abi - Closed callable carrier containing the export sites.
+ * @param signature - One callback signature from that carrier.
+ * @param inferFinDirection - Recover a Fin-only role from the export table.
+ */
+export const componentStructuredClosureRefuses = (abi, signature, inferFinDirection = false) =>
+	componentStructuredCallbackDirection(abi, signature, inferFinDirection) === "closure"
+	&& Boolean(signature.refinements?.parameters.some(Boolean));
+
+/**
  * Bind a callback key to copied definitions as well as its root references.
  * Matching nominal names with different field types cannot share a key.
  *

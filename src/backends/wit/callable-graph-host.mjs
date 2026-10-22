@@ -8,6 +8,8 @@ import { renderCallableHostHeader } from "./callable-host.mjs";
 import { renderWitGraphConversions } from "./copied-graph-conversions.mjs";
 import { renderWitGraphCallableSession, witGraphCallableFunctions } from "./callable-graph-session.mjs";
 import { renderWitGraphCallableTypedHeader, renderWitGraphCallableTypedSource } from "./callable-graph-typed.mjs";
+import { componentStructuredClosureRefusals } from "../../build/component-structured-callable-lean.mjs";
+import { nativeCallableGraphCarrierAbi } from "../../build/native-callable-graph.mjs";
 
 const scope = name => `lb_graph_scope ${name} = {.memory = {.remaining = LB_GRAPH_BYTES}, .nodes = LB_GRAPH_NODES};`;
 const tag = (model, callback) => model.wire.resources.indexOf(callback.resource) + 1;
@@ -23,9 +25,19 @@ export const renderWitGraphCallableHostHeader = model => {
 		+ renderWitGraphCallableTypedHeader(model) + `\n#endif /* ${guard} */\n`;
 };
 
-const callbackBodies = model => [...model.callbacks.values()].map(callback => {
-	const index = tag(model, callback), result = callback.result;
-	return `
+const callbackBodies = model => {
+	const abi = nativeCallableGraphCarrierAbi(model.native.descriptor, model.ir);
+	const refusing = new Set(componentStructuredClosureRefusals(abi)?.sites.map(item => item.bindingId));
+	return [...model.callbacks.values()].map(callback => {
+		const index = tag(model, callback), result = callback.result;
+		// Only a closure whose native call records its first refused position has text to read;
+		// every other failure, and every other closure, keeps the fixed message.
+		const closureFailure = refusing.has(callback.id)
+			? `{ const char *refusal = status == 1 ? ${model.prefix}_callable_graph_error() : NULL;
+      if (refusal) lb_record_text(session, refusal, strlen(refusal));
+      else lb_record_text(session, "Native Lean closure call failed", sizeof("Native Lean closure call failed") - 1); }`
+			: 'lb_record_text(session, "Native Lean closure call failed", sizeof("Native Lean closure call failed") - 1);';
+		return `
 static uint32_t lb_graph_callback_${index}(void *data, ${callback.parameters.map((node, i) => `const ${node.name} *arg${i}`).concat(`${result.name} *out`).join(", ")}) {
   lb_entry *entry = lb_graph_callback_entry(data, ${index});
   if (!entry) return 1;
@@ -34,7 +46,7 @@ static uint32_t lb_graph_callback_${index}(void *data, ${callback.parameters.map
   if (!lb_buffer(out, 1, sizeof(*out), _Alignof(${result.name}))${result.aggregate ? " || out->_bridge_owner || out->_bridge_release" : ""}) return 1;
   ${callback.direction === "host" ? "" : `if (entry->owned) {
     uint32_t status = ${callback.call}(((lb_graph_lease *)entry->owned)->token, ${callback.parameters.map((_, i) => `arg${i}`).concat("out").join(", ")});
-    if (status) lb_record_text(session, "Native Lean closure call failed", sizeof("Native Lean closure call failed") - 1);
+    if (status) ${closureFailure}
     return status;
   }`}
   ${scope("input")}
@@ -70,7 +82,8 @@ done:
 ${callback.direction === "host" ? "" : `static inline void lb_graph_owned_drop_${index}(void *data) {
   lb_graph_lease *lease = data; ${callback.dispose}(lease->token); free(lease);
 }`}`;
-}).join("\n");
+	}).join("\n");
+};
 
 const importBodies = model => witGraphCallableFunctions(model).map((fn, index) => {
 	const returned = fn.result.kind === "callback", result = fn.result;

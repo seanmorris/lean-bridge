@@ -8,8 +8,11 @@ import { sha256 } from "../../capsule/node.mjs";
 import { componentRecursiveLimits } from "../../abi/component-recursive.mjs";
 import { componentStructuredCallbackDirection } from "../../abi/component-structured-callables.mjs";
 import { nativeCallableGraphCarrierAbi, nativeCallableGraphHeader } from "../../build/native-callable-graph.mjs";
-import { componentStructuredCallablePrefix } from "../../build/component-structured-callable-lean.mjs";
+import {
+	componentStructuredCallablePrefix, componentStructuredClosureRefusals
+} from "../../build/component-structured-callable-lean.mjs";
 import { generateNativeCallableGraphBorrows } from "./native-callable-graph-borrows.mjs";
+import { nativeGraphRefinementDiagnostics } from "./native-graph-adapters.mjs";
 
 /**
  * Generate checked calls without exposing Lean objects to host adapters.
@@ -40,6 +43,27 @@ export const generateNativeCallableGraphCalls = (ir, descriptor, {
 	const kind = signature => JSON.stringify(`${ir.component.id}:graph-callback:${signature.key}`);
 	const header = ["#pragma once", `#include "${p}-callable-borrows.h"`
 		, "#ifdef __cplusplus", 'extern "C" {', "#endif"];
+	// A returned closure that refuses a checked argument answers an empty carrier. Only then does
+	// its lease call walk the arguments in the closure's own conversion order with the exported
+	// per-leaf checks, recording the first refused position for this thread's next read.
+	const refusals = componentStructuredClosureRefusals(abi, { finDirections });
+	const table = new Map(generated.layout.nodes.map((node, index) => [node.id, { ...node, index }]));
+	const labels = signature => signature.parameters.map((_, index) => ir.types
+		.find(type => type.id === signature.id)?.callable.parameters[index]?.name ?? `arg${index}`);
+	const nodes = signature => signature.parameters.map(ref => callback(ref) ? null : copy(ref).id);
+	const sites = refusals?.sites.map(item => ({ ...item, diagnosticParameterNames: labels(item.signature) }));
+	const diagnostics = refusals && nativeGraphRefinementDiagnostics({
+		abi, exports: [], layout: generated.layout, table
+		, walker: id => `ng_${sha256(id).slice(0, 20)}`
+		, normalized: { cycles: refusals.cycles, sites }
+		, roots: new Map(sites.map(item => [item.bindingId, { parameters: nodes(item.signature) }]))
+		, modes: ["ordered"], accessor: `${p}_callable_graph_error`
+	});
+	// Every shared refusal site has a pass, so a host projection can rely on the shared sites alone.
+	if(refusals && refusals.sites.some(item => !diagnostics?.calls.has(item.bindingId)))
+		throw new TypeError("A refusing returned closure lacks a native diagnostic pass");
+	const refuses = signature => Boolean(diagnostics?.calls.has(signature.id));
+	if(diagnostics) header.push(`const char *${p}_callable_graph_error(void);`);
 	const lines = ["#include <lean/lean.h>"
 		, nativeCallableGraphHeader(abi, { finDirections }), generated.source
 		, `
@@ -135,6 +159,20 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
   if (value) lean_dec(value);
 }
 `];
+	const argument = (ref, index) => `const ${callback(ref) ? callbackName(callback(ref)) : copy(ref).name} *a${index}`;
+	const checked = (signature, index) => diagnostics.calls.get(signature.id)
+		.some(pass => pass.checked.some(item => item.index === index));
+	const refusal = ({ signature }) => [
+		`static uint32_t ng_closure_refusal_${signature.key}(${signature.parameters.map(argument).join(", ")}) {`
+		, ...signature.parameters.flatMap((_, index) => checked(signature, index) ? [] : [`  (void)a${index};`])
+		, "  uint32_t status;"
+		, "  ng_refinement_reset();"
+		, ...diagnostics.checks(signature.id)
+		, "  return NG_OK;"
+		, "}"];
+	if(diagnostics) lines.push(diagnostics.support, ...diagnostics.validators
+		, ...diagnostics.bounds, ...diagnostics.prototypes, ...diagnostics.helpers
+		, ...refusals.sites.filter(item => refuses(item.signature)).flatMap(refusal));
 	const render = (name, parameters, resultRef, symbol, lease = null) => {
 		const resultCallback = callback(resultRef), result = resultCallback ? null : copy(resultRef);
 		const rejectsInput = lease && direction(lease) === "closure"
@@ -143,7 +181,11 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 		const args = parameters.map((ref, index) => `const ${callback(ref) ? callbackName(callback(ref)) : copy(ref).name} *a${index}`);
 		const signature = `uint32_t ${name}(${[...lease ? ["uint64_t self"] : [], ...args, `${resultName} *out`].join(", ")})`;
 		header.push(signature + ";");
+		// With refusing closures present, every call clears the diagnostic on entry and exit, so it
+		// is set only between a lease call that located a refusal and the next call or read.
+		const refusing = lease !== null && refuses(lease);
 		lines.push(signature + " {"
+			, ...diagnostics ? ["  ng_refinement_reset();"] : [], ...refusing ? ["  int refused = 0;"] : []
 			, `  if (!ng_pointer(out, sizeof(*out), _Alignof(${resultName}))) return NG_INVALID;`
 			, ...result?.aggregate ? ["  if (out->_bridge_owner || out->_bridge_release) return NG_INVALID;"] : []
 			, ...resultCallback ? ["  if (*out) return NG_INVALID;"] : []
@@ -181,6 +223,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 			, "  ng_call_observe(frame);"
 			, "  if (frame->status) goto cleanup;");
 		if(rejectsInput) lines.push("  if (!lean_is_scalar(value) && lean_is_array(value) && lean_array_size(value) == 0) {"
+			, ...refusing ? [`    refused = ng_closure_refusal_${lease.key}(${parameters.map((_, index) => `a${index}`).join(", ")}) == NG_INVALID;`] : []
 			, "    lean_dec(value); value = NULL; ng_borrow_fail(frame, NG_INVALID); goto cleanup;"
 			, "  }");
 		if(resultCallback) lines.push("  if (lean_is_scalar(value) || !lean_is_array(value) || lean_array_size(value) != 1) { ng_borrow_fail(frame, NG_RESULT); goto cleanup; }"
@@ -194,6 +237,7 @@ static void ng_closure_drop(uint64_t token, const char *kind) {
 			, ...lease ? ["  if (closure) lean_dec(closure);"] : []
 			, "  if (frame->status == NG_RESULT) lean_bridge_native_runtime_retire();"
 			, "  uint32_t status = ng_call_leave(call);"
+			, ...refusing ? ["  if (status != NG_INVALID || !refused) ng_refinement_reset();"] : diagnostics ? ["  ng_refinement_reset();"] : []
 			, "  if (status) {"
 			, ...resultCallback ? [`    if (result) ng_closure_drop(result, ${kind(resultCallback)});`] : []
 			, "    ng_release(arena.head); return status;", "  }"

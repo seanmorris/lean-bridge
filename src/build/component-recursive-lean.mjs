@@ -48,6 +48,29 @@ export const componentRecursiveTypes = abi => {
 };
 
 /**
+ * Export one pure check per constructor leaf of a checked input tree. Native diagnostic walkers
+ * call it at each runtime position of that leaf, keyed exactly as componentRecursiveRefinementLeafKey.
+ *
+ * @param item - Site with its exported symbol and Lean wrapper prefix.
+ * @param index - Parameter position.
+ * @param tree - Normalized input refinement tree for that position.
+ * @param type - Matching private copied-graph reference.
+ * @param definitions - Private nominal definitions, keyed by lean: identity.
+ * @param cycles - Authenticated recursive refinement targets.
+ * @param carrier - Renderer for the leaf's Array carrier type.
+ */
+export const componentGraphRefinementValidators = (item, index, tree, type, definitions, cycles, carrier) =>
+	componentRecursiveRefinementLeaves(tree, type, definitions, cycles).flatMap(leaf => [
+		`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`
+		, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`
+		, "  match carrierValue carrier with"
+		, "  | .none => 0"
+		, "  | .some value =>"
+		, `    match ${componentRefinementConversion(leaf.refinement, "value")} with`
+		, "    | .some _ => 1"
+		, "    | .none => 0", ""]);
+
+/**
  * Every source value crosses C in a one-element Array, including primitives.
  * Empty carriers signal failure. No default inhabitant or recursive conversion
  * is required. Sequence conversion is bounded before exposing child carriers.
@@ -202,17 +225,8 @@ export const componentRecursiveLeanSource = (abi, exports, leanType, nominalRefi
 		lines.push(...componentCarrierRefinementValidators(item, nominalRefinements.length > 0 || Boolean(conversion), conversion
 			? (tree, value) => componentFinGuard(tree, value, 0, conversion.cycles) : undefined));
 		const signature = abi.exports.find(value => value.bindingId === item.bindingId);
-		if(conversion) item.refinements.parameters.forEach((tree, index) => {
-			for(const leaf of componentRecursiveRefinementLeaves(tree, signature.parameters[index], definitions, conversion.cycles))
-				lines.push(`@[export ${item.symbol}_graph_refinement_${index}_${leaf.key}]`
-					, `def ${item.wrapper}_graph_refinement_${index}_${leaf.key} (carrier : ${carrier(leaf.type)}) : _root_.UInt8 :=`
-					, "  match carrierValue carrier with"
-					, "  | .none => 0"
-					, "  | .some value =>"
-					, `    match ${componentRefinementConversion(leaf.refinement, "value")} with`
-					, "    | .some _ => 1"
-					, "    | .none => 0", "");
-		});
+		if(conversion) item.refinements.parameters.forEach((tree, index) => lines.push(...componentGraphRefinementValidators(
+			item, index, tree, signature.parameters[index], definitions, conversion.cycles, carrier)));
 		const names = signature.parameters.map((_, index) => `a${index}`);
 		const parameters = signature.parameters.map((type, index) => `(${names[index]} : ${carrier(type)})`).join(" ");
 		const refined = componentRefinedCall(item, names, true);
