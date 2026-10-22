@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmRefinementEntryPromotionSource, phpWasmRefinementEntryPromotionChangedPaths } from "./php-wasm-refinement-entry-promotion-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedVerifierClosureSource, phpWasmRefinementEntryHostedVerifierClosureChangedPaths } from "./php-wasm-refinement-entry-hosted-verifier-closure-source-history.mjs";
 import { beforePhpWasmRefinementCiClosureRepairSource, phpWasmRefinementCiClosureRepairChangedPaths } from "./php-wasm-refinement-ci-closure-repair-source-history.mjs";
 import { beforePhpWasmRefinementEntryHostedSource, phpWasmRefinementEntryHostedChangedPaths } from "./php-wasm-refinement-entry-hosted-source-history.mjs";
@@ -1910,7 +1911,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmRefinementEntryHostedVerifierClosureChangedPaths
+	...phpWasmRefinementEntryPromotionChangedPaths
+	, ...phpWasmRefinementEntryHostedVerifierClosureChangedPaths
 	, ...phpWasmRefinementCiClosureRepairChangedPaths
 	, ...phpWasmRefinementEntryHostedChangedPaths
 	, ...phpWasmRefinementEntryMatrixChangedPaths
@@ -2603,9 +2605,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const phpWasmRefinementEntryPromotion
+		= beforePhpWasmRefinementEntryPromotionSource(path, text, expected);
+	if(sha256(phpWasmRefinementEntryPromotion) === expected)
+		return phpWasmRefinementEntryPromotion;
 	const phpWasmRefinementEntryHostedVerifierClosure
 		= beforePhpWasmRefinementEntryHostedVerifierClosureSource(
-			path, text, expected
+			path, phpWasmRefinementEntryPromotion, expected
 		);
 	if(sha256(phpWasmRefinementEntryHostedVerifierClosure) === expected)
 		return phpWasmRefinementEntryHostedVerifierClosure;

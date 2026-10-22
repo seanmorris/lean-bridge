@@ -53,6 +53,7 @@ import "./helpers/php-wasm-refinement-entry-hosted-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-ci-closure-repair-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-hosted-verifier-closure-source-history-tests.mjs";
 import "./helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs";
+import "./helpers/php-wasm-refinement-entry-promotion-source-history-tests.mjs";
 import "./helpers/php-wasm-subtype-entry-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-tests.mjs";
 import "./helpers/php-wasm-hosted-refinements-history-tests.mjs";

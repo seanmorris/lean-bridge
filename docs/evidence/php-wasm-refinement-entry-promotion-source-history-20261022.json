@@ -1,0 +1,181 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e3921d7f1dde5b9056e15da772b7b8afd0e3d0ec93b82d94a667b46b7145dcc8",
+      "path": ".github/workflows/php-wasm-refinement-entry-promotion.yml"
+    },
+    {
+      "currentSha256": "7a71acb0955dd6277b031cd408ba39441025d9cb1ff422d8d95ea3759b0b1e94",
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "eeb2eaf1f5b5caffea67bfa83a7f03c0b9ec906ca0f058f171755ace62b5cbeb",
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-ci.mjs"
+    },
+    {
+      "currentSha256": "261cfe00955401b72135be7be31fa78ca273034725c5887ad1c9c9770d34c5df",
+      "path": "scripts/update-php-wasm-refinement-entry-promotion-source-history.mjs"
+    },
+    {
+      "currentSha256": "d01a47861b8e205ced436a1d3833f4cf276f93542f66f4ad0516a98425ba58cb",
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c648db050f5f68eef02226fe8cf89ef1d88ca8d75df3f17a96cfeae3267773e9",
+      "path": "tests/helpers/php-wasm-refinement-entry-promotion-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e98ee772d9203aa09c9bcb4e1acb4f2621bc9c23",
+  "milestone": "php-wasm-refinement-entry-promotion-v1",
+  "predecessorCommit": "6f3e029a8bd47893160a82d2a0668e8e17dc5061",
+  "schemaVersion": 1,
+  "scope": "A monthly and manually runnable promotion workflow calls all four exact instrumented producer matrices at one revision, limits the topology to four concurrent producer jobs, preserves the original current-run artifacts, downloads exactly their 26 named directories, and runs the clean-source byte-authenticating verifier before retaining a complete 28-route summary.",
+  "updates": [
+    {
+      "currentSha256": "a5f53db37bf431948d7d7067ed5594744826c389922af8a8ab3182f8ef4bfdc1",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 106
+        },
+        {
+          "current": "  group: php-wasm-callback-entry-${{ github.workflow }}-${{ github.ref }}\n",
+          "previous": "  group: php-wasm-callback-entry-${{ github.ref }}\n",
+          "start": 168
+        }
+      ],
+      "path": ".github/workflows/php-wasm-callback-entry.yml",
+      "previousSha256": "e6450238dc3ac300f7376ebe489c77501f490335cbbc5d29baaaabe4b92f78d0"
+    },
+    {
+      "currentSha256": "915c76ea02c0f0ccd6dc6410e098277bde3be89776e76bd257c1e579a37e1198",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 107
+        },
+        {
+          "current": "  group: php-wasm-indexed-refinement-entry-${{ github.workflow }}-${{ github.ref }}\n",
+          "previous": "  group: php-wasm-indexed-refinement-entry-${{ github.ref }}\n",
+          "start": 169
+        }
+      ],
+      "path": ".github/workflows/php-wasm-indexed-refinement-entry.yml",
+      "previousSha256": "ea9abf51d7465cf7a57f120ee53e201194f29ad9cfa4de93b54ce0fe47e153f2"
+    },
+    {
+      "currentSha256": "4ca5ee4073047e12feafec0f712837e2c9d34f1166ee9e026dacaf3b6ee3053f",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 113
+        },
+        {
+          "current": "  group: php-wasm-owned-refinement-entry-${{ github.workflow }}-${{ github.ref }}\n",
+          "previous": "  group: php-wasm-owned-refinement-entry-${{ github.ref }}\n",
+          "start": 175
+        }
+      ],
+      "path": ".github/workflows/php-wasm-owned-refinement-entry.yml",
+      "previousSha256": "be3969421a2387c69c4a183b315ebeaf3bd0b9f7650a1f8ed3522ca72f1332e4"
+    },
+    {
+      "currentSha256": "391c84616a1c327491fd497af3351194609103af2435f0966c2955451968a659",
+      "edits": [
+        {
+          "current": "  workflow_call:\n",
+          "previous": "",
+          "start": 107
+        },
+        {
+          "current": "  group: php-wasm-refinement-entry-${{ github.workflow }}-${{ github.ref }}\n",
+          "previous": "  group: php-wasm-refinement-entry-${{ github.ref }}\n",
+          "start": 169
+        }
+      ],
+      "path": ".github/workflows/php-wasm-refinement-entry.yml",
+      "previousSha256": "117c1724ccd791b2583d312c08fc5a8ae4171be7aa229bcccf9cf04c103a3680"
+    },
+    {
+      "currentSha256": "37f86b22bcd32fc3201ae538186f2eedcf3d228250b00b561f5493e66b60b8c8",
+      "edits": [
+        {
+          "current": "\t\t.filter(path => path !== \"php-wasm-refinement-entry-promotion.yml\")\n",
+          "previous": "",
+          "start": 665
+        },
+        {
+          "current": "\t\t\tmutations.push(source.replace(\"  workflow_call:\\n\", \"\"));\n",
+          "previous": "",
+          "start": 4305
+        },
+        {
+          "current": "\tassert.equal(controls, 470);\n",
+          "previous": "\tassert.equal(controls, 466);\n",
+          "start": 5113
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix-tests.mjs",
+      "previousSha256": "21fde8012bbc740fb1de5270e5afaee4128328374b98d9ec148fcc1f1871d901"
+    },
+    {
+      "currentSha256": "8b5a74886981aad556e04e301d4ed66bb1edfe2c973b91d200664c7fe8269f64",
+      "edits": [
+        {
+          "current": "\t\t, \"\\non:\\n  push:\\n  pull_request:\\n  workflow_dispatch:\\n\"\n\t\t\t+ (lane.kind === \"measurement\" ? \"  workflow_call:\\n\" : \"\")\n\t\t\t+ \"\\npermissions:\\n\");\n",
+          "previous": "\t\t, \"\\non:\\n  push:\\n  pull_request:\\n  workflow_dispatch:\\n\\npermissions:\\n\");\n",
+          "start": 11279
+        },
+        {
+          "current": "\t\t+ escape(lane.id)\n\t\t+ (lane.kind === \"measurement\"\n\t\t\t? \"-\\\\$\\\\{\\\\{ github\\\\.workflow \\\\}\\\\}\" : \"\")\n\t\t+ \"-\\\\$\\\\{\\\\{ github\\\\.ref \\\\}\\\\}\\\\n\"\n",
+          "previous": "\t\t+ escape(lane.id) + \"-\\\\$\\\\{\\\\{ github\\\\.ref \\\\}\\\\}\\\\n\"\n",
+          "start": 11559
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-ci-matrix.mjs",
+      "previousSha256": "f82115e2d4a047e12f7ca55dffbc405fced64b2c3194877a507f44fc9a63f6f4"
+    },
+    {
+      "currentSha256": "b0142ea5e48abb1885ea3594a5b69d797750a3de5bb67dbc1bff949f071e2e30",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-refinement-entry-promotion-ci-tests.mjs\";\nimport \"./helpers/php-wasm-refinement-entry-promotion-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3532
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "4f7d281ee0d1915d5bf3994cdce3659e9c608d5afec6a4cfe52de456402d1e6c"
+    },
+    {
+      "currentSha256": "3c630b9871aa2075485d0cd9509216acd120c6126a163069e79fa838557a98f1",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmRefinementEntryPromotionSource, phpWasmRefinementEntryPromotionChangedPaths } from \"./php-wasm-refinement-entry-promotion-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmRefinementEntryPromotionChangedPaths\n\t, ...phpWasmRefinementEntryHostedVerifierClosureChangedPaths\n",
+          "previous": "\t...phpWasmRefinementEntryHostedVerifierClosureChangedPaths\n",
+          "start": 145680
+        },
+        {
+          "current": "\tconst phpWasmRefinementEntryPromotion\n\t\t= beforePhpWasmRefinementEntryPromotionSource(path, text, expected);\n\tif(sha256(phpWasmRefinementEntryPromotion) === expected)\n\t\treturn phpWasmRefinementEntryPromotion;\n",
+          "previous": "",
+          "start": 177188
+        },
+        {
+          "current": "\t\t\tpath, phpWasmRefinementEntryPromotion, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 177510
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "dccfeaf9b008dcc6bf128fbb9b0ec258ddafe8364f1521473300c3cfce36b7b1"
+    }
+  ]
+}
