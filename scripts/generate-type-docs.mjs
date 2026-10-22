@@ -43,13 +43,14 @@ const table = (headings, rows) => [headings, headings.map(() => "---"), ...rows]
 	.map(row => `| ${row.map(escapeCell).join(" | ")} |`).join("\n");
 const unique = values => [...new Set(values)];
 const primitiveNominalMarker = "Primitive-base nominal acceptance in the remaining hosts, refined callbacks, owned, recursive, dependent and broader generic Subtypes remain pending.";
-const primitiveNominalPending = "Refined callbacks, owned, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.";
+const primitiveNominalPending = "Refined callbacks, dependent and broader generic Subtypes remain pending. Recursive checked-record combinations remain separate work.";
 const primitiveNominalDotnet = "[Nineteen-base C# checks](../evidence/nominal-primitive-subtype-dotnet-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact C# representations and 64-bit machine words. Full and result-only APIs reproduce complete NuGet packages from two author roots, install offline after author removal, replay after relocation and execute again after deleting all consumer sources on .NET SDK 8.0.424 and shared framework 8.0.30 with Linux x64/glibc 2.36.";
 const primitiveNominalPhp = "[Nineteen-base native PHP checks](../evidence/nominal-primitive-subtype-php-20261015/index.json) extend the same fields and constructor-free results to both author routes with native PHP representations and 64-bit machine words. Full and result-only APIs reproduce complete Composer ZIPs from two author roots, install offline after author and build removal, and run weak and strict callers before and after relocation on PHP 8.2.33 and Composer 2.5.5 with Linux x64/glibc 2.36. Consumer PHP source remains required at runtime.";
 const primitiveNominalWit = "[Nineteen-base WIT checks](../evidence/nominal-primitive-subtype-wit-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact WIT wire representations and 64-bit native machine words. Full and standalone result-only APIs reproduce complete WIT archives from two author roots, install offline after author and build removal, and execute one compiled public C caller through Wasmtime 42.0.1 before and after relocation on Linux x64/glibc 2.36.";
 const primitiveNominalJvm = "[Nineteen-base Java and Kotlin checks](../evidence/nominal-primitive-subtype-jvm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact JVM representations and 64-bit machine words. Full and standalone result-only APIs reproduce complete Maven packages from two author roots, install offline after author removal, and run Java and Kotlin callers after relocation and again from a source-free deployment on JDK 22.0.2 and Kotlin 2.2.0 with Linux x64/glibc 2.36.";
 const primitiveNominalPhpWasm = "[Nineteen-base PHP-Wasm checks](../evidence/nominal-primitive-subtype-php-wasm-20261015/index.json) extend the same fields and constructor-free results to both author routes with exact wasm32 PHP representations and 32-bit machine words. Full and standalone result-only APIs reproduce complete Composer API, npm component and npm shared-runtime archives from two author roots, install offline after author and build removal, and run twelve startup/lazy, weak/strict Node and Chromium contexts twice after relocation on wasm32 PHP 8.4.1, Node 22.23.2 and Chromium 152.0.7977.75. Consumer PHP source remains required at runtime.";
 const recursiveSubtypePhpWasm = "[Recursive PHP-Wasm checks](../evidence/recursive-subtype-php-wasm-20261015.md) add selected constructors and shared Fin bounds inside a recursive variant, its alias and nested array/option carriers on both source routes. All twelve installed Node and Chromium arrangements pass after offline installation and relocation; exact late failures preserve shared caller values and later calls recover.";
+const ownedSubtypePhpWasm = "[PHP-Wasm owned Subtype checks](../evidence/owned-subtype-php-wasm-local-qualification-20261022.md) add one proof-erased `Int` field inside the tested acyclic `Bundle` owner on both source routes. Source-free offline packages are physically relocated before eight Node and eight Chromium executions per route cover borrowed and transferred inputs, leased results, exact constructor selection, rejection before transfer, explicit retain/close behavior, queued-finalizer cleanup and request recovery. PHP-Wasm callbacks, recursive owned graphs and broader predicates remain separate work.";
 const nestedCheckedRecordPerlMarker = "[PHP-Wasm checked-record packages]";
 const zeroPayloadNativeMarker = "[Checked-record browser packages]";
 const zeroPayloadNative = "[Hosted zero-payload C/C++ packages](../evidence/zero-payload-checked-record-native-20261021.md) distinguish proof-only Witness, Unit-bearing Token, plain empty Marker, Option presence, arrays and active or inactive variant branches in all four ordinary/reviewed full/result-only routes. C uses one non-semantic storage byte for a legal nominal structure; C++ uses a nominal empty structure. Checked inputs run the selected nullary constructor, rejected values remain unchanged and later calls recover; Lean-produced results contain no proofs.";
@@ -206,10 +207,11 @@ export function replaceTypeSection(source, section)
  *
  * @param options - Canonical source location.
  * @param options.root - Repository root.
+ * @param options.inventory - Optional already validated inventory for sparse evidence worktrees.
  */
-export async function renderTypeDocuments({ root })
+export async function renderTypeDocuments({ root, inventory = null })
 {
-	const inventory = await readTypeSurface({ repository: root });
+	inventory ??= await readTypeSurface({ repository: root });
 	const documents = {};
 	for(const [filename, profiles] of Object.entries(typeGuideProfiles))
 	{
@@ -283,7 +285,7 @@ export async function renderTypeDocuments({ root })
 			.replace(inheritedCheckedRecordMarker, inheritedCheckedRecord)
 			.replace(recursiveCheckedRecordMarker, recursiveCheckedRecord)
 			.replace(primitiveNominalMarker,
-				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}`)
+				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\n\n${ownedSubtypePhpWasm}`)
 			.replace(callbackCheckedRecordMarker
 				, `${callbackCheckedRecordMarker} ${callbackCheckedRecord}`)
 	};

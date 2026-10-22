@@ -101,6 +101,7 @@ jobs:
             build/owned-subtype-php-wasm-host.log
             build/owned-subtype-php-wasm-runtime.log
             build/owned-subtype-php-wasm/packages.json
+            build/owned-subtype-php-wasm/evidence
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed checked-owner acceptance

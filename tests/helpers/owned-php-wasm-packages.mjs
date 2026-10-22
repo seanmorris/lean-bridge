@@ -4,7 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { cp, readFile, readdir, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, readdir, rm } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { readVerifiedPhpWasmCopiedRuntime, readVerifiedPhpWasmCopiedComponent } from "../../src/build/php-wasm-copied-artifacts.mjs";
@@ -168,8 +168,9 @@ const rejectDrift = async (root, runtimeIdentity) => {
  * @param options.receiverExports - Run nominal members and original receivers.
  * @param options.callbackVariant - Run callback-result owners in no-host, host or combined mode.
  * @param options.checkedRefinements - Run checked fields inside borrowed and transferred owners.
+ * @param options.evidenceRoot - Optional external directory retaining each original handoff.
  */
-export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackVariant = null, checkedRefinements = false } = {}) => {
+export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transferredInputs = false, anchoredResults = false, receiverExports = false, callbackVariant = null, checkedRefinements = false, evidenceRoot = null } = {}) => {
 	if(callbackVariant !== null && !["no-host", "host", "combined"].includes(callbackVariant)) throw new TypeError("Unknown PHP-Wasm callback-result variant");
 	if(checkedRefinements && callbackVariant !== null) throw new TypeError("Checked-refinement ownership acceptance is callback-independent");
 	const callbackResultAnchors = callbackVariant !== null;
@@ -289,6 +290,12 @@ export const checkOwnedPhpWasmPackages = async (directory, diagnostic, { transfe
 		else await rm(author, { recursive: true });
 		await assert.rejects(() => readdir(author), { code: "ENOENT" });
 		const verification = await cli.verify(join(handoff, "package-set-receipt.json"));
+		if(evidenceRoot !== null)
+		{
+			const evidence = join(evidenceRoot, reviewed ? "reviewed" : "ordinary", "handoff");
+			await mkdir(join(evidenceRoot, reviewed ? "reviewed" : "ordinary"), { recursive: true });
+			await cp(handoff, evidence, { recursive: true, errorOnExist: true, force: false });
+		}
 		await rm(handoff, { recursive: true });
 		await saveLakeFile(installed.deployment, "observer.so", observer.bytes);
 		await bundlePhpWasmGraph(installed.deployment, npmSettings.name);
