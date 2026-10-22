@@ -163,17 +163,22 @@ export const assertDependentCheckedRecordPromotionReferences = references => {
 			for(const artifact of reference.artifacts)
 			{
 				assert.deepEqual(Object.keys(artifact).sort(), ["path", "sha256"]);
-				assert.ok(artifact.path.startsWith(`${root}/`), artifact.path);
+				assert.ok(artifact.path.startsWith(`${root}/hosted/`)
+					, `${reference.id} artifact is not a hosted part: ${artifact.path}`);
 				assert.match(artifact.sha256, digestPattern, artifact.path);
 				assert.equal(fileDigests.get(artifact.path), artifact.sha256
 					, `${reference.id} artifact is absent from its authenticated files`);
 			}
 			const exactArtifacts = JSON.stringify(reference.artifacts);
-			const parts = reference.artifacts.map(item => item.sha256).join();
 			if(route === dependentCheckedRecordPromotionRoutes[0])
 			{
-				assert.ok(!artifactDigests.has(parts), `${reference.id} reuses another lane's artifact`);
-				artifactDigests.add(parts);
+				// No single part may recur in another lane, whatever its order
+				// or company.
+				for(const artifact of reference.artifacts)
+					assert.ok(!artifactDigests.has(artifact.sha256)
+						, `${reference.id} reuses another lane's artifact part`);
+				for(const artifact of reference.artifacts)
+					artifactDigests.add(artifact.sha256);
 				laneArtifacts.set(definition.lane, exactArtifacts);
 			}
 			else assert.equal(exactArtifacts, laneArtifacts.get(definition.lane)

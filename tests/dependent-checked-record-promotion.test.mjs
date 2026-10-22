@@ -165,6 +165,29 @@ test("dependent promotion refuses missing, reordered, duplicated and forged refe
 	reject(references => { references[0].artifacts[0].path
 		= `${root("browser")}/hosted/other.zip.part-000`; });
 	reject(references => { references[0].artifacts = []; });
+	// Artifacts are hosted parts only, even when the cited file is retained.
+	reject(references => {
+		for(const item of references.slice(0, 4))
+			item.artifacts = [structuredClone(references[0].files[1])];
+	}, /is not a hosted part/u);
+	reject(references => {
+		for(const item of references.slice(0, 4))
+			item.artifacts = [{ path: `${root("browser")}/sources/producer/fixture.lean`, sha256: hex("source", 64) }];
+	}, /is not a hosted part/u);
+	// One part of another lane is refused alone, reordered or alongside new parts.
+	const shareOnePart = (references, order) => {
+		const own = { path: `${root("native")}/hosted/artifact.zip.part-001`, sha256: hex("native/extra", 64) };
+		const borrowed = { path: `${root("native")}/hosted/artifact.zip.part-000`, sha256: references[0].artifacts[0].sha256 };
+		const parts = order === "first" ? [borrowed, own] : [own, borrowed];
+		for(const item of references.slice(4, 8))
+		{
+			item.artifacts = structuredClone(parts);
+			item.files = [item.files[0], item.files[1]
+				, ...structuredClone(parts).sort((left, right) => left.path.localeCompare(right.path))];
+		}
+	};
+	reject(references => shareOnePart(references, "first"), /reuses another lane's artifact part/u);
+	reject(references => shareOnePart(references, "last"), /reuses another lane's artifact part/u);
 	reject(references => { references[0].scope = "Test-only scope."; });
 	reject(references => { references[0].command = "true"; });
 	reject(references => { references[0].extra = true; });
