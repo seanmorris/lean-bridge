@@ -31,6 +31,9 @@ export const callbackCheckedRecordPromotionLanes = Object.freeze([
 export const callbackCheckedRecordPromotionLimit
 	= "Hosted callback checked-record acceptance covers synchronous copied Interval and Weighted records, the Weighted field's selected Nat Subtype, the fixture's option/result/array containers, host callback replies and inputs to returned Lean closures. Retained or asynchronous callbacks, owned records, arbitrary indexed or recursive records, dispatch cost, peak memory and PHP-Wasm remain separate work. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.";
 
+export const callbackCheckedRecordPromotionPath
+	= "docs/evidence/callback-checked-record-promotion-20261022.md";
+
 const routes = Object.freeze(["ordinary", "reviewed"]);
 const positions = Object.freeze(["callback-parameter", "callback-result"]);
 const archiveRoot = lane =>
@@ -148,6 +151,38 @@ const evidenceEntry = reference => Object.fromEntries(Object.entries(
 ).filter(([key]) => [
 	"id", "kind", "revision", "command", "scope", "files", "artifacts"
 ].includes(key)));
+
+/**
+ * Render the human-readable boundary shared by the exact support inventory and
+ * all eight independently replayed archives.
+ *
+ * @param references - Eight authenticated hosted lane references.
+ */
+export const renderCallbackCheckedRecordPromotion = references => {
+	assert.deepEqual(references.map(reference => reference.lane)
+		, callbackCheckedRecordPromotionLanes.map(item => item.lane));
+	const rows = references.map((reference, index) => {
+		const expected = callbackCheckedRecordPromotionLanes[index];
+		assert.deepEqual(reference.profiles, expected.profiles);
+		assert.deepEqual(reference.routes, routes);
+		assert.match(reference.revision, /^[a-f0-9]{40}$/u);
+		return `| ${reference.lane} | ${reference.profiles.join(", ")} | ${reference.routes.join(", ")} | [archive index](callback-checked-record-${reference.lane}-20261022/index.json) | \`${reference.revision}\` |`;
+	});
+	return `# Synchronous callback checked records
+
+Eight immutable hosted archives establish proof-free checked records across synchronous host callbacks and returned Lean closures in sixteen consumer profiles. Ordinary Lean source and independently reviewed Binding IR use the same selected constructors.
+
+| Evidence lane | Consumer profiles | Author routes | Retained evidence | Producer revision |
+| --- | --- | --- | --- | --- |
+${rows.join("\n")}
+
+The support inventory promotes exactly 64 cells: sixteen profiles, two author routes and two callback positions. A checked record produced by Lean reaches a host callback or a returned closure result without proof fields. A checked record produced by the host is validated at a callback reply or returned closure input. Host replies require one exact typed recovery value; it is validated before callback entry, used only for Lean's failure path and never returned as successful output.
+
+The fixture covers \`Interval\`, \`Weighted\`, the selected positive-\`Nat\` field inside \`Weighted\`, mixed refined and unrefined arguments, and the tested option, result and array containers. Rejection preserves caller values and the first error, suppresses later callbacks in the same call and leaves the synchronous callable usable for a later valid invocation.
+
+This promotion does not cover PHP-Wasm, retained or asynchronous callbacks, owned records, arbitrary indexed or recursive records, dispatch cost or peak memory. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.
+`;
+};
 
 /**
  * Promote exactly sixty-four non-PHP-Wasm copied callback checked-record cells.

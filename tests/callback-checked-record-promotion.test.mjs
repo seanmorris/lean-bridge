@@ -13,6 +13,7 @@ import {
 	callbackCheckedRecordPromotionLanes
 	, callbackCheckedRecordPromotionLimit
 	, promoteCallbackCheckedRecords
+	, renderCallbackCheckedRecordPromotion
 } from "./helpers/callback-checked-record-promotion.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
@@ -91,4 +92,20 @@ test("callback checked-record promotion binds exact lanes and refuses repetition
 	wrong[0].profiles = ["php-wasm"];
 	assert.throws(() => promoteCallbackCheckedRecords(document, wrong)
 		, assert.AssertionError);
+});
+
+test("callback checked-record promotion renders the exact hosted boundary", () => {
+	const summary = renderCallbackCheckedRecordPromotion(references);
+	assert.match(summary, /exactly 64 cells/u);
+	assert.match(summary, /sixteen profiles, two author routes and two callback positions/u);
+	for(const reference of references)
+	{
+		assert.match(summary, new RegExp(
+			`callback-checked-record-${reference.lane}-20261022/index\\.json`, "u"
+		));
+		assert.match(summary, new RegExp(reference.revision, "u"));
+	}
+	assert.match(summary, /does not cover PHP-Wasm/u);
+	assert.match(summary, /retained or asynchronous callbacks/u);
+	assert.match(summary, /owned records/u);
 });
