@@ -99,6 +99,14 @@ const hostedStageNote = references =>
 	`Hosted Ubuntu 24.04 archives independently replay ${references.map(
 		reference => reference.profiles.join(", ")).join("; ")} ordinary and reviewed installed packages at the recorded release floor.`;
 
+const promotedStageSubjects = path => ({
+	analysis: `Fresh Lean analysis and the ${path} selection preserve every selected constructor in both callback directions.`
+	, generation: "Generated proof-free callback types preserve direction and exact typed recovery."
+	, compilation: "The selected package compiles the Lean callback mirror and host adapter at the recorded release floor."
+	, packaging: "Two author routes produce source-free packages that install offline before unchanged caller replay."
+	, installedExecution: "Independent consumers exercise valid values, exact rejection, unchanged caller values and recovery through public package APIs."
+});
+
 const existingGroups = Object.freeze([
 	{
 		prefix: "callback-subtype-native"
@@ -170,7 +178,7 @@ ${rows.join("\n")}
 
 The support inventory promotes exactly 64 cells: sixteen profiles, two author routes and two callback positions. A selected Subtype produced by Lean reaches a host callback or a returned closure result as its proof-erased base value. A base value produced by the host is validated at a callback reply or returned closure input. Host replies require one exact typed recovery value; it is validated before callback entry, used only for Lean's failure path and never returned as successful output.
 
-The fixture covers selected positive-\`Nat\` Subtypes, mixed refined and unrefined arguments, and the admitted option, result and array containers. Rejection preserves caller values and the first error, suppresses later callbacks in the same call and leaves the synchronous callable usable for a later valid invocation.
+The fixture covers selected positive-\`Nat\` Subtypes, mixed refined and unrefined arguments, and the admitted option, result and array containers. Rejection preserves caller values, stops callback entry for missing or invalid recovery and leaves the synchronous callable usable for a later valid invocation.
 
 This promotion does not cover PHP-Wasm, retained or asynchronous callbacks, checked-record callback positions, owned Subtypes, arbitrary predicates, recursive or generic refined payloads, dispatch cost or peak memory. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.
 `;
@@ -217,12 +225,16 @@ export const promoteCallbackSubtypes = (original, references) => {
 			assert.equal(observation.path, route === "ordinary"
 				? "ordinary-source" : "reviewed-ir");
 			observation.scope += ` ${hostedStageNote(selected)}`;
-			for(const stage of Object.values(observation.stages))
+			const notes = hostedStageNote(selected);
+			const subjects = promotedStageSubjects(observation.path);
+			for(const [name, stage] of Object.entries(observation.stages))
 			{
 				assert.ok(["passed", "inspected"].includes(stage.state));
+				const prior = stage.state;
 				stage.state = "passed";
 				stage.evidence = appendUnique(stage.evidence, ids);
-				stage.note += ` ${hostedStageNote(selected)}`;
+				stage.note = prior === "passed"
+					? `${stage.note} ${notes}` : `${subjects[name]} ${notes}`;
 			}
 			observation.limitations = observation.limitations.filter(note =>
 				!(/^(?:Compilation, packaging and installed execution remain inspected|The local reports are retained)/u.test(note)));
@@ -238,9 +250,10 @@ export const promoteCallbackSubtypes = (original, references) => {
 		{
 			const path = route === "ordinary" ? "ordinary-source" : "reviewed-ir";
 			const notes = hostedStageNote(selected);
-			const stage = subject => ({
+			const subjects = promotedStageSubjects(path);
+			const stage = name => ({
 				state: "passed", evidence: ids
-				, note: `${subject} ${notes}`
+				, note: `${subjects[name]} ${notes}`
 			});
 			inventory.observations.push({
 				id: `${group.prefix}-${route}`
@@ -253,11 +266,11 @@ export const promoteCallbackSubtypes = (original, references) => {
 				} }
 				, conversionNotes: { "subtype": group.conversion }
 				, stages: {
-					analysis: stage(`Fresh Lean analysis and the ${path} selection preserve every selected constructor in both callback directions.`)
-					, generation: stage("Generated proof-free callback types preserve direction and exact typed recovery.")
-					, compilation: stage("The selected package compiles the Lean callback mirror and host adapter at the recorded release floor.")
-					, packaging: stage("Two author routes produce source-free packages that install offline before unchanged caller replay.")
-					, installedExecution: stage("Independent consumers exercise valid values, exact rejection, unchanged caller values and recovery through public package APIs.")
+					analysis: stage("analysis")
+					, generation: stage("generation")
+					, compilation: stage("compilation")
+					, packaging: stage("packaging")
+					, installedExecution: stage("installedExecution")
 				}
 				, limitations: [callbackSubtypePromotionLimit]
 			});

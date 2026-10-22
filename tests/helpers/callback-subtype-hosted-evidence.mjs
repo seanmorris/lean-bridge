@@ -90,6 +90,47 @@ const contracts = Object.freeze({
 	}
 });
 
+/**
+ * Derive the exact retained API-byte receipt from inspected API records.
+ *
+ * @param api - Inspected GitHub API byte records.
+ */
+export const callbackSubtypeHostedApiRecords = api => Object.fromEntries(
+	Object.entries(api).map(([name, item]) => [name, {
+		bytes: item.bytes.length, sha256: item.sha256
+	}])
+);
+
+/**
+ * Bind the human-readable hosted-run receipt to the retained API bytes.
+ *
+ * @param index - Retained evidence index.
+ * @param hosted - Independently inspected artifact and API selection.
+ */
+export const assertCallbackSubtypeHostedApiBinding = (index, hosted) => {
+	const { apiRecords, artifact: retainedArtifact, ...retainedRun }
+		= index.hostedRun;
+	const { members, parts, ...artifact } = retainedArtifact;
+	assert.ok(Array.isArray(members));
+	assert.ok(Array.isArray(parts));
+	assert.deepEqual({ ...retainedRun, artifact }, hosted.hostedRun);
+	assert.deepEqual(apiRecords
+		, callbackSubtypeHostedApiRecords(hosted.api));
+};
+
+/**
+ * Require the retained output tree to equal the authenticated ZIP files.
+ *
+ * @param index - Retained evidence index.
+ * @param paths - Regular files extracted from the original artifact ZIP.
+ */
+export const assertCallbackSubtypeHostedOutputSet = (index, paths) => {
+	const retained = index.files.filter(file =>
+		file.path.startsWith("hosted/output/"))
+		.map(file => file.path.slice("hosted/output/".length)).sort();
+	assert.deepEqual(retained, [...paths].sort());
+};
+
 const replay = async (lane, root, revision) => {
 	const contract = contracts[lane], output = contract.flat
 		? root : join(root, contract.root);
@@ -118,7 +159,16 @@ const replay = async (lane, root, revision) => {
 			revision, contract.profiles, tap, report);
 };
 
-const reconstruct = async (root, parts, target) => {
+/**
+ * Reassemble an exact artifact ZIP from ordered authenticated parts.
+ *
+ * @param root - Evidence root containing every part.
+ * @param parts - Ordered byte ranges from the evidence index.
+ * @param target - Fresh output path.
+ */
+export const reconstructCallbackSubtypeHostedArtifact = async (
+	root, parts, target
+) => {
 	const output = await open(target, "wx");
 	try
 	{
@@ -194,7 +244,7 @@ export const checkCallbackSubtypeHostedEvidence = async (
 	try
 	{
 		const zip = join(temporary, "artifact.zip");
-		const bytes = await reconstruct(
+		const bytes = await reconstructCallbackSubtypeHostedArtifact(
 			root, index.hostedRun.artifact.parts, zip);
 		assert.equal(bytes, index.hostedRun.artifact.bytes);
 		assert.equal(await callbackSubtypeHostedDigest(zip)
@@ -208,9 +258,12 @@ export const checkCallbackSubtypeHostedEvidence = async (
 			, artifactPrefix: contracts[lane].prefix
 		});
 		assert.equal(hosted.revision, index.producerCommit);
+		assertCallbackSubtypeHostedApiBinding(index, hosted);
 		extracted = await extractCallbackSubtypeHostedArtifact(zip);
 		assert.deepEqual(extracted.entries, index.hostedRun.artifact.members);
-		for(const path of await nativeArtifactPaths(extracted.root))
+		const extractedPaths = await nativeArtifactPaths(extracted.root);
+		assertCallbackSubtypeHostedOutputSet(index, extractedPaths);
+		for(const path of extractedPaths)
 			assert.deepEqual(await readFile(join(extracted.root, path))
 				, await readFile(join(root, "hosted/output", path)), path);
 		const accepted = await replay(

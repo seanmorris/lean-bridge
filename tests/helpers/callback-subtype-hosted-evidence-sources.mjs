@@ -51,6 +51,12 @@ const consumer = path => `tests/fixtures/callback-subtype-consumers/${path}`;
 const common = [
 	...fixture, "src/analyze/NativeExports.lean", "lean-toolchain"
 	, "package-lock.json", "package.json"
+	, "src/backends/c/gmp.source.tar.xz"
+	, "src/build/ResolveLakeWorkspace.lean"
+];
+const checkerCommon = [
+	".github/actions/bounded-apt/action.yml"
+	, "scripts/bootstrap-toolchains.sh", "scripts/env.sh"
 ];
 
 const lanes = Object.freeze({
@@ -60,6 +66,9 @@ const lanes = Object.freeze({
 		, run: "scripts/run-callback-subtype-browser-ci.sh"
 		, workflow: ".github/workflows/callback-subtype-browser.yml"
 		, consumers: [consumer("javascript.mjs"), consumer("types.mts")]
+		, checkerAssets: ["flake.lock", "flake.nix"
+			, "scripts/build-lean-link-spike.sh"
+			, "scripts/install-playwright-browsers.sh"]
 	}
 	, native: {
 		test: "tests/callback-subtype-native-installed.test.mjs"
@@ -75,6 +84,8 @@ const lanes = Object.freeze({
 		, workflow: ".github/workflows/callback-subtype-languages.yml"
 		, consumers: [consumer("python.py"), consumer("ruby.rb")
 			, consumer("rust.rs")]
+		, producerAssets: ["src/backends/rust/dependencies.lock"]
+		, checkerAssets: ["scripts/bootstrap-rust-ci.sh"]
 	}
 	, perl: {
 		test: "tests/callback-subtype-perl-installed.test.mjs"
@@ -82,6 +93,14 @@ const lanes = Object.freeze({
 		, run: "scripts/run-callback-subtype-perl-ci.sh"
 		, workflow: ".github/workflows/callback-subtype-perl.yml"
 		, consumers: [consumer("perl.pl")]
+		, producerAssets: [
+			"src/backends/perl/Build.pm"
+			, "src/backends/perl/BuildCallbackResults.pm"
+			, "src/backends/perl/Runtime.pm"
+			, "src/backends/perl/Runtime.xs"
+			, "src/backends/perl/runtime.h"
+		]
+		, checkerEntries: ["scripts/build-perl-toolchains.mjs"]
 	}
 	, dotnet: {
 		test: "tests/callback-subtype-remaining-installed.test.mjs"
@@ -110,6 +129,7 @@ const lanes = Object.freeze({
 		, run: "scripts/run-callback-subtype-remaining-ci.sh"
 		, workflow: ".github/workflows/callback-subtype-remaining.yml"
 		, consumers: [consumer("wit-wasi.c")]
+		, checkerAssets: ["flake.lock", "flake.nix"]
 	}
 });
 
@@ -145,6 +165,7 @@ export const callbackSubtypeEvidenceSources = (lane, value) => {
 			, paths: [
 				...closure(value.producer, [selected.test])
 				, ...common, ...selected.consumers
+				, ...(selected.producerAssets ?? [])
 			]
 		}
 		, {
@@ -154,8 +175,10 @@ export const callbackSubtypeEvidenceSources = (lane, value) => {
 		, {
 			role: "checker", revision: value.checker
 			, paths: [
-				...closure(value.checker, [selected.checker])
-				, selected.run, selected.workflow, "scripts/env.sh"
+				...closure(value.checker, [selected.checker
+					, ...(selected.checkerEntries ?? [])])
+				, selected.run, selected.workflow, ...checkerCommon
+				, ...(selected.checkerAssets ?? [])
 			]
 		}
 		, {

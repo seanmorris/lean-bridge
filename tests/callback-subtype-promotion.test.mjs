@@ -4,6 +4,7 @@
  * @file
  */
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
@@ -17,9 +18,15 @@ import {
 } from "./helpers/callback-subtype-promotion.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
-const [document, irSchema, consumers] = await Promise.all([
-	readJson("docs/type-surface.v1.json")
-	, readJson("schema/binding-ir.schema.json")
+const promotionPredecessor = "9f5f9825ff48afa0e052a204f3dcd8bcdb0c47eb";
+const baselineArgs = ["show"
+	, `${promotionPredecessor}:docs/type-surface.v1.json`];
+const baseline = execFileSync(
+	"git", baselineArgs, { encoding: "utf8", maxBuffer: 512 * 1024 ** 2 }
+);
+const document = JSON.parse(baseline);
+const [irSchema, consumers] = await Promise.all([
+	readJson("schema/binding-ir.schema.json")
 	, readJson("docs/consumer-support.v1.json")
 ]);
 const contracts = { irSchema, consumers };
@@ -54,7 +61,11 @@ test("callback Subtype promotion closes exactly 64 non-PHP-Wasm cells", () => {
 		if(target.has(cell.id))
 		{
 			for(const stage of Object.values(cell.stages))
+			{
 				assert.equal(stage.state, "passed", cell.id);
+				assert.doesNotMatch(stage.note
+					, /pending|not claimed|no complete/iu, cell.id);
+			}
 			assert.ok(cell.hostType && cell.conversionNote, cell.id);
 			assert.ok(cell.limitations.includes(
 				callbackSubtypePromotionLimit), cell.id);
@@ -105,4 +116,6 @@ test("callback Subtype promotion renders the exact hosted boundary", () => {
 	assert.match(summary, /does not cover PHP-Wasm/u);
 	assert.match(summary, /retained or asynchronous callbacks/u);
 	assert.match(summary, /owned Subtypes/u);
+	assert.match(summary, /stops callback entry/u);
+	assert.doesNotMatch(summary, /suppresses later callbacks/u);
 });

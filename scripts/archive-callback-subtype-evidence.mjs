@@ -13,6 +13,7 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import {
@@ -37,6 +38,9 @@ import {
 	, parseCallbackSubtypeHostedArchiveArgs
 	, splitCallbackSubtypeHostedArtifact
 } from "../tests/helpers/callback-subtype-hosted-archive.mjs";
+
+const repository = fileURLToPath(new URL("..", import.meta.url));
+process.chdir(repository);
 
 const configs = Object.freeze({
 	browser: {
@@ -125,12 +129,15 @@ catch(error)
 const config = configs[lane];
 const evidence = `docs/evidence/callback-subtype-${lane}-20261022`;
 await assert.rejects(access(evidence), { code: "ENOENT" });
-assert.doesNotThrow(() => execFileSync(
-	"git", ["diff", "--quiet", "HEAD", "--"], { stdio: "ignore" }
-), "Archive generation requires a clean tracked source tree");
-const archiveCommit = execFileSync("git", ["rev-parse", "HEAD"], {
-	encoding: "utf8"
-}).trim();
+const statusArgs = ["-C", repository, "status", "--porcelain=v1"
+	, "--untracked-files=all", "--", "."];
+const status = execFileSync("git", statusArgs, { encoding: "utf8" });
+assert.equal(status, ""
+	, "Archive generation requires a clean tracked and untracked source tree");
+const revisionArgs = ["-C", repository, "rev-parse", "HEAD"];
+const archiveCommit = execFileSync(
+	"git", revisionArgs, { encoding: "utf8" }
+).trim();
 assert.match(archiveCommit, /^[a-f0-9]{40}$/u);
 const hosted = await inspectCallbackSubtypeHostedArtifact(selected, {
 	workflow: config.workflow, jobName: config.job, artifactPrefix: config.prefix
