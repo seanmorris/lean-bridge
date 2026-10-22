@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeDependentCheckedRecordWitRetainedPkgConfigRepairSource, dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths, dependentCheckedRecordWitRetainedPkgConfigRepairIntegrationPaths } from "./dependent-checked-record-wit-retained-pkg-config-repair-source-history.mjs";
 import { beforeCallbackPhpWasmStaticQualityRepairSource, callbackPhpWasmStaticQualityRepairIntegrationPaths, callbackPhpWasmStaticQualityRepairNormalizationPaths } from "./callback-php-wasm-static-quality-repair-source-history.mjs";
 import { beforePhpWasmCallbackEntrySuiteSplitSource, phpWasmCallbackEntrySuiteSplitChangedPaths, phpWasmCallbackEntrySuiteSplitIntegrationPaths } from "./php-wasm-callback-entry-suite-split-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionContractSource, dependentCheckedRecordPromotionContractChangedPaths, dependentCheckedRecordPromotionContractIntegrationPaths } from "./dependent-checked-record-promotion-contract-source-history.mjs";
@@ -1945,7 +1946,9 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackPhpWasmStaticQualityRepairNormalizationPaths
+	...dependentCheckedRecordWitRetainedPkgConfigRepairChangedPaths
+	, ...dependentCheckedRecordWitRetainedPkgConfigRepairIntegrationPaths
+	, ...callbackPhpWasmStaticQualityRepairNormalizationPaths
 	, ...callbackPhpWasmStaticQualityRepairIntegrationPaths
 	, ...phpWasmCallbackEntrySuiteSplitChangedPaths
 	, ...phpWasmCallbackEntrySuiteSplitIntegrationPaths
@@ -2688,9 +2691,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentCheckedRecordWitRetainedPkgConfigRepair
+		= beforeDependentCheckedRecordWitRetainedPkgConfigRepairSource(
+			path, text, expected
+		);
+	if(sha256(dependentCheckedRecordWitRetainedPkgConfigRepair) === expected)
+		return dependentCheckedRecordWitRetainedPkgConfigRepair;
 	const callbackPhpWasmStaticQualityRepair
 		= beforeCallbackPhpWasmStaticQualityRepairSource(
-			path, text, expected
+			path, dependentCheckedRecordWitRetainedPkgConfigRepair, expected
 		);
 	if(sha256(callbackPhpWasmStaticQualityRepair) === expected)
 		return callbackPhpWasmStaticQualityRepair;
