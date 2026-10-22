@@ -11,6 +11,7 @@ const profileManifest = Object.freeze({
 		, "callback-checked-record-browser-ci"
 		, "callback-checked-record-extractor"
 		, "callback-checked-record-foundation"
+		, "callback-checked-record-language-installed"
 		, "callback-checked-record-native"
 		, "callback-checked-record-native-ci"
 		, "callback-checked-record-native-installed"

@@ -731,11 +731,34 @@ owns the pending Ubuntu 24.04/glibc 2.38 release-floor check. [Inherited
 checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
 separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
 or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
+other index kinds, open dependent or zero-payload records, and owned
 positions remain separate work. Constructor dispatch and peak memory were not
 measured.
 
 The [hosted zero-payload archive](../evidence/zero-payload-checked-record-rust-20261021.md) adds proof-only `Witness`, Unit-bearing `Token`, plain empty `Marker`, options, vectors and both `Mark` branches in all four ordinary/reviewed full/result-only Cargo routes. `Witness` is a nominal empty Rust struct, distinct from `()`, absence and the other empty records. Full crates run the selected nullary constructor, preserve rejected values and recover on the next call; result-only crates project the same proof-erased carriers without constructor metadata.
+
+### Checked records across callback boundaries
+
+Synchronous copied-value callbacks use the same generated structs without proof
+fields. If a host closure returns a checked record, pass it through
+`with_recovery(callback, value)`, where `value` is a valid record of the exact
+declared result type. The crate validates the recovery before entering Lean or
+invoking the closure. Lean then runs the selected record constructor on the
+actual `Result` reply. Rejection returns `Error::Native`; the recovery is never
+returned as successful output.
+
+Checked records produced by Lean arrive at the Rust closure as owned proof-free
+structs. Returned `LeanClosure` values run the selected record constructor on
+borrowed Rust arguments before their body. This also works in the tested option,
+result and vector containers, and for a record whose field has its own selected
+`Subtype` constructor. A rejected closure call leaves the closure open for
+reuse. Retained and asynchronous callbacks and owned checked records remain
+unsupported.
+
+The recurring [callback checked-record workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-languages.yml)
+builds ordinary-source and independently reviewed crates, removes the author
+tree, resolves the prepared dependencies offline and runs the independent
+28-check consumer.
 
 ### Checked values
 

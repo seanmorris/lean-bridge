@@ -11,11 +11,15 @@ export const callbackCheckedRecordNativeTestName
 	= "ordinary and reviewed C-family callback checked records install from source-free archives";
 export const callbackCheckedRecordPerlTestName
 	= "ordinary and reviewed callback checked records run on every prepared Perl ABI";
+export const callbackCheckedRecordLanguageTestName
+	= "ordinary and reviewed Python, Ruby and Rust callback checked records install offline";
 
 /** Exact success-path counts the independent C11/GMP and C++20 consumers print. */
 export const callbackCheckedRecordNativeChecks = Object.freeze({ c: 24, cpp: 20 });
 /** Exact counts the independent Perl consumer reports on a faithful package. */
 export const callbackCheckedRecordPerlExpected = Object.freeze({ checks: 61, calls: 10, rejected: 12 });
+/** Exact success-path counts the independent language consumers print. */
+export const callbackCheckedRecordLanguageChecks = Object.freeze({ python: 26, ruby: 26, rust: 28 });
 
 const digest = value => assert.match(value, /^[a-f0-9]{64}$/u);
 const exactKeys = (value, keys) => {
@@ -29,7 +33,7 @@ const exactKeys = (value, keys) => {
  * @param args - Arguments after the checker script name.
  */
 export const parseCallbackCheckedRecordNativeCiArgs = args => {
-	const usage = "Usage: check-callback-checked-record-<native|perl>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>";
+	const usage = "Usage: check-callback-checked-record-<native|perl|languages>-ci.mjs --producer <commit> --tap <original-tap> --report <original-report>";
 	const allowed = ["producer", "tap", "report"], selected = {};
 	assert.ok(Array.isArray(args) && args.length === allowed.length * 2, usage);
 	for(let index = 0; index < args.length; index += 2)
@@ -138,6 +142,35 @@ export const checkCallbackCheckedRecordPerlReport = report => {
 };
 
 /**
+ * Validate both author routes in every prepared language package.
+ *
+ * @param report - Original producer report.
+ */
+export const checkCallbackCheckedRecordLanguageReport = report => {
+	exactKeys(report, ["schemaVersion", "reports"]); assert.equal(report.schemaVersion, 1);
+	assert.equal(report.reports.length, 6);
+	const cells = new Set();
+	for(const item of report.reports)
+	{
+		exactKeys(item, ["bindingIrSha256", "checks", "compilerFreePath"
+			, "consumerSha256", "offlineInstall", "profile", "receiptSha256"
+			, "route", "sourceRemovedBeforeInstallation"]);
+		assert.ok(["ordinary", "reviewed"].includes(item.route));
+		assert.ok(["python", "ruby", "rust"].includes(item.profile));
+		assert.equal(item.checks, callbackCheckedRecordLanguageChecks[item.profile]);
+		for(const flag of ["compilerFreePath", "offlineInstall", "sourceRemovedBeforeInstallation"])
+			assert.equal(item[flag], true);
+		for(const field of ["bindingIrSha256", "consumerSha256", "receiptSha256"])
+			digest(item[field]);
+		const cell = `${item.route}/${item.profile}`;
+		assert.equal(cells.has(cell), false); cells.add(cell);
+	}
+	assert.deepEqual([...cells].sort(), ["ordinary/python", "ordinary/ruby"
+		, "ordinary/rust", "reviewed/python", "reviewed/ruby", "reviewed/rust"]);
+	return { routes: ["ordinary", "reviewed"], profiles: ["python", "ruby", "rust"], reports: 6 };
+};
+
+/**
  * Bind independently checked output to its producer revision.
  *
  * @param kind - Native or Perl acceptance kind.
@@ -147,12 +180,14 @@ export const checkCallbackCheckedRecordPerlReport = report => {
  */
 export const callbackCheckedRecordNativeVerification = (kind, producer, tap, report) => {
 	assert.match(producer, /^[a-f0-9]{40}$/u);
-	assert.ok(["native", "perl"].includes(kind));
-	const name = kind === "native" ? callbackCheckedRecordNativeTestName : callbackCheckedRecordPerlTestName;
+	assert.ok(["native", "perl", "language"].includes(kind));
+	const name = kind === "native" ? callbackCheckedRecordNativeTestName
+		: kind === "perl" ? callbackCheckedRecordPerlTestName : callbackCheckedRecordLanguageTestName;
 	assertCallbackCheckedRecordNativeTap(tap, name);
 	const checked = kind === "native"
 		? checkCallbackCheckedRecordNativeReport(report)
-		: checkCallbackCheckedRecordPerlReport(report);
+		: kind === "perl" ? checkCallbackCheckedRecordPerlReport(report)
+			: checkCallbackCheckedRecordLanguageReport(report);
 	return { schemaVersion: 1, producerCommit: producer, kind
 		, reportSha256: sha256(canonicalJson(report)), ...checked };
 };

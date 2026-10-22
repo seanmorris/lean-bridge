@@ -730,10 +730,32 @@ complete Python object graph, and a later valid call succeeds. [Inherited
 checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
 separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
 or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
+other index kinds, open dependent or zero-payload records, and owned
 positions remain separate work.
 The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-python.yml)
 rebuilds all four selections on both supported Python floors.
+
+### Checked records across callback boundaries
+
+Synchronous copied-value callbacks use the same generated dataclasses without
+proof fields. If a host callback returns a checked record, wrap it with
+`with_recovery(function, value)`, where `value` is a valid record of the exact
+declared result type. The package validates the recovery before entering Lean
+or invoking the function. Lean then runs the selected record constructor on the
+actual reply. Rejection raises `LeanBridgeError`; the recovery is never returned
+as successful output.
+
+Checked records produced by Lean arrive at a Python callback as ordinary
+proof-free dataclasses. Returned `LeanClosure` values run the selected record
+constructor on Python-supplied arguments before their body. This also works in
+the tested option, result and array containers, and for a record whose field has
+its own selected `Subtype` constructor. A rejected closure call leaves the
+closure open for reuse. Retained and asynchronous callbacks and owned checked
+records remain unsupported.
+
+The recurring [callback checked-record workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-languages.yml)
+builds ordinary-source and independently reviewed wheels, removes the author
+tree, installs without a registry and runs the independent 26-check consumer.
 
 ### Checked Lean values
 

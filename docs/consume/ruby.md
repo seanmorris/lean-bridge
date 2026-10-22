@@ -742,10 +742,32 @@ preserve the complete Ruby object graph, and a later valid call succeeds.
 [Inherited checked-record acceptance](../evidence/inherited-checked-record-promotion-20261018.md)
 separately covers the tested proof-free `Span → Ticket → Stamped` chain. Generic
 or recursive checked records, value-carrying receiver-dependent inherited fields,
-other index kinds, open dependent or zero-payload records, callbacks and owned
+other index kinds, open dependent or zero-payload records, and owned
 positions remain separate work.
 The [recurring workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/nested-checked-record-ruby.yml)
 rebuilds all four selections on Ubuntu 24.04.
+
+### Checked records across callback boundaries
+
+Synchronous copied-value callbacks use the same generated record classes
+without proof fields. If a host callable returns a checked record, wrap it with
+`API.with_recovery(callable, value)`, where `value` is a valid record of the
+exact declared result type. The gem validates the recovery before entering Lean
+or invoking the callable. Lean then runs the selected record constructor on the
+actual reply. Rejection raises `API::LeanBridgeError`; the recovery is never
+returned as successful output.
+
+Checked records produced by Lean arrive at the Ruby callable as ordinary
+proof-free records. Returned `LeanClosure` values run the selected record
+constructor on Ruby-supplied arguments before their body. This also works in the
+tested option, result and array containers, and for a record whose field has its
+own selected `Subtype` constructor. A rejected closure call leaves the closure
+open for reuse. Retained and asynchronous callbacks and owned checked records
+remain unsupported.
+
+The recurring [callback checked-record workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/callback-checked-record-languages.yml)
+builds ordinary-source and independently reviewed gems, removes the author
+tree, installs without a registry and runs the independent 26-check consumer.
 
 ### Checked values
 

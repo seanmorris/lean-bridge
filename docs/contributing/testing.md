@@ -3930,9 +3930,30 @@ closure inputs, exception identity and idempotent close, and reports exact
 check, call and rejection counts. The default record is
 `build/callback-checked-records/perl.json`.
 
+Run Python, Ruby and Rust together on Linux x64/glibc 2.38 with Python 3.12,
+MRI Ruby 3.3.12 and the pinned Rust 1.90.0 toolchain:
+
+```sh
+source scripts/env.sh
+LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_PROFILES=python,ruby,rust \
+  node --test --test-concurrency=1 tests/callback-checked-record-language-installed.test.mjs
+```
+
+The test builds ordinary-source and independently reviewed wheels, gems and
+crates in two combined releases. It verifies each package-set receipt, removes
+the author root, installs from copied archives without registry access and runs
+independent consumers. Python and Ruby complete 26 checks per route; Rust
+completes 28. They cover proof-free callback arguments, exact typed recovery,
+recovery validation before callback entry, record and nested `Subtype` field
+constructor rejection, nested option/result replies, returned-closure argument
+checks, error preservation, reuse and idempotent close. The default record is
+`build/callback-checked-records/languages.json`.
+
 The hosted workflows run `scripts/run-callback-checked-record-native-ci.sh` and
-`scripts/run-callback-checked-record-perl-ci.sh`. They refuse environment
+`scripts/run-callback-checked-record-perl-ci.sh`, plus
+`scripts/run-callback-checked-record-languages-ci.sh`. They refuse environment
 variables that would narrow the matrix, pin the release glibc floor, keep the
-original TAP and report, and verify both with the closed checkers in
+original TAP and report, and verify each with the closed checkers in
 `scripts/check-callback-checked-record-native-ci.mjs` and
-`scripts/check-callback-checked-record-perl-ci.mjs`.
+`scripts/check-callback-checked-record-perl-ci.mjs`, plus
+`scripts/check-callback-checked-record-languages-ci.mjs`.

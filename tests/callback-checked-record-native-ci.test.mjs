@@ -7,11 +7,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
-	callbackCheckedRecordNativeChecks
+	callbackCheckedRecordLanguageChecks
+	, callbackCheckedRecordLanguageTestName
+	, callbackCheckedRecordNativeChecks
 	, callbackCheckedRecordNativeTestName
 	, callbackCheckedRecordNativeVerification
 	, callbackCheckedRecordPerlExpected
 	, callbackCheckedRecordPerlTestName
+	, checkCallbackCheckedRecordLanguageReport
 	, checkCallbackCheckedRecordNativeReport
 	, checkCallbackCheckedRecordPerlReport
 	, parseCallbackCheckedRecordNativeCiArgs
@@ -74,6 +77,24 @@ const perlReport = () => {
 	return { schemaVersion: 1, reports };
 };
 
+const languageReport = () => {
+	const reports = [];
+	for(const route of ["ordinary", "reviewed"])
+		for(const [index, profile] of ["python", "ruby", "rust"].entries())
+			reports.push({
+				bindingIrSha256: sha(route === "ordinary" ? "a" : "b")
+				, checks: callbackCheckedRecordLanguageChecks[profile]
+				, compilerFreePath: true
+				, consumerSha256: sha(String(index + 1))
+				, offlineInstall: true
+				, profile
+				, receiptSha256: sha(route === "ordinary" ? "c" : "d")
+				, route
+				, sourceRemovedBeforeInstallation: true
+			});
+	return { schemaVersion: 1, reports };
+};
+
 test("callback checked-record consumers pin their success-path counts", async () => {
 	const count = async name => (await readFile(`tests/fixtures/callback-checked-record-consumers/${name}`, "utf8"))
 		.split("\n").filter(line => /^\s*CHECK\(/u.test(line)).length;
@@ -89,8 +110,8 @@ test("callback checked-record consumers pin their success-path counts", async ()
 	assert.match(perl, /checks => \$checks, calls => \$calls, rejected => \$rejected/u);
 });
 
-test("callback checked-record CI checkers require the closed native and Perl matrices", () => {
-	const native = nativeReport(), perl = perlReport();
+test("callback checked-record CI checkers require the closed native and language matrices", () => {
+	const native = nativeReport(), perl = perlReport(), languages = languageReport();
 	assert.deepEqual(checkCallbackCheckedRecordNativeReport(native), {
 		routes: ["ordinary", "reviewed"]
 		, profiles: ["c", "cpp"]
@@ -102,11 +123,18 @@ test("callback checked-record CI checkers require the closed native and Perl mat
 		, interpreterCount: 4
 		, reports: 16
 	});
+	assert.deepEqual(checkCallbackCheckedRecordLanguageReport(languages), {
+		routes: ["ordinary", "reviewed"]
+		, profiles: ["python", "ruby", "rust"]
+		, reports: 6
+	});
 	const commit = "e".repeat(40);
 	assert.equal(callbackCheckedRecordNativeVerification("native", commit
 		, tap(callbackCheckedRecordNativeTestName), native).reports, 4);
 	assert.equal(callbackCheckedRecordNativeVerification("perl", commit
 		, tap(callbackCheckedRecordPerlTestName), perl).reports, 16);
+	assert.equal(callbackCheckedRecordNativeVerification("language", commit
+		, tap(callbackCheckedRecordLanguageTestName), languages).reports, 6);
 	for(const mutate of [
 		value => { value.reports[0].rejected -= 1; }
 		, value => { value.reports[0].calls += 1; }
@@ -126,11 +154,20 @@ test("callback checked-record CI checkers require the closed native and Perl mat
 		const changed = structuredClone(native); mutate(changed);
 		assert.throws(() => checkCallbackCheckedRecordNativeReport(changed));
 	}
+	for(const mutate of [
+		value => { value.reports[0].checks -= 1; }
+		, value => { value.reports[1].profile = "python"; }
+		, value => { value.reports[2].offlineInstall = false; }
+		, value => { value.reports.pop(); }
+	]) {
+		const changed = structuredClone(languages); mutate(changed);
+		assert.throws(() => checkCallbackCheckedRecordLanguageReport(changed));
+	}
 	assert.throws(() => callbackCheckedRecordNativeVerification("native", commit
 		, tap(callbackCheckedRecordNativeTestName).replace("# pass 1", "# pass 0"), native));
 	assert.throws(() => callbackCheckedRecordNativeVerification("native", commit
 		, tap(callbackCheckedRecordPerlTestName), native));
-	assert.throws(() => callbackCheckedRecordNativeVerification("language", commit
+	assert.throws(() => callbackCheckedRecordNativeVerification("unknown", commit
 		, tap(callbackCheckedRecordNativeTestName), native));
 	assert.deepEqual(parseCallbackCheckedRecordNativeCiArgs([
 		"--producer", commit, "--tap", "run.tap", "--report", "report.json"
@@ -146,6 +183,7 @@ test("callback checked-record CI checkers require the closed native and Perl mat
 test("callback checked-record native workflows preserve failures and cannot narrow the matrix", async () => {
 	const nativeWorkflow = await readFile(".github/workflows/callback-checked-record-native.yml", "utf8");
 	const perlWorkflow = await readFile(".github/workflows/callback-checked-record-perl.yml", "utf8");
+	const languageWorkflow = await readFile(".github/workflows/callback-checked-record-languages.yml", "utf8");
 	const workflows = [
 		[nativeWorkflow, [
 			"group: callback-checked-record-native-${{ github.ref }}"
@@ -162,6 +200,15 @@ test("callback checked-record native workflows preserve failures and cannot narr
 			, "5.38.2 unthreaded"
 			, "bash scripts/run-callback-checked-record-perl-ci.sh"
 			, "build/callback-checked-record-perl-ci/"
+		]]
+		, [languageWorkflow, [
+			"group: callback-checked-record-languages-${{ github.ref }}"
+			, "runs-on: ubuntu-24.04"
+			, "ruby-version: '3.3.12'"
+			, 'python-version: "3.12"'
+			, "bash scripts/bootstrap-rust-ci.sh"
+			, "bash scripts/run-callback-checked-record-languages-ci.sh"
+			, "build/callback-checked-record-languages-ci/"
 		]]
 	];
 	for(const [source, required] of workflows)
@@ -181,6 +228,7 @@ test("callback checked-record native workflows preserve failures and cannot narr
 	}
 	const nativeShell = await readFile("scripts/run-callback-checked-record-native-ci.sh", "utf8");
 	const perlShell = await readFile("scripts/run-callback-checked-record-perl-ci.sh", "utf8");
+	const languageShell = await readFile("scripts/run-callback-checked-record-languages-ci.sh", "utf8");
 	for(const value of [
 		"set -euo pipefail"
 		, "LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_NATIVE_PROFILES=c,cpp"
@@ -199,7 +247,16 @@ test("callback checked-record native workflows preserve failures and cannot narr
 		, "check-callback-checked-record-perl-ci.mjs"
 	]) assert.ok(perlShell.includes(value), value);
 	assert.ok(perlShell.includes(`name='${callbackCheckedRecordPerlTestName}'`));
-	for(const shell of [nativeShell, perlShell])
+	for(const value of [
+		"set -euo pipefail"
+		, "LEAN_BRIDGE_CALLBACK_CHECKED_RECORD_LANGUAGE_PROFILES=python,ruby,rust"
+		, "LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.38"
+		, "--test-concurrency=1"
+		, `--test-name-pattern="^$name$"`
+		, "check-callback-checked-record-languages-ci.mjs"
+	]) assert.ok(languageShell.includes(value), value);
+	assert.ok(languageShell.includes(`name='${callbackCheckedRecordLanguageTestName}'`));
+	for(const shell of [nativeShell, perlShell, languageShell])
 	{
 		assert.match(shell, /if \[\[ -v \$name \]\]; then/u);
 		assert.match(shell, /test "\$\(git rev-parse HEAD\)" = "\$revision"/u);
