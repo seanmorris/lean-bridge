@@ -29,6 +29,18 @@ test("retained perl callback checked-record evidence replays", async () => {
 	assert.equal(index.accepted.reports, 16);
 });
 
+test("retained browser callback checked-record evidence replays", async () => {
+	const index = await checkCallbackCheckedRecordHostedEvidence(
+		"browser", "docs/evidence/callback-checked-record-browser-20261022"
+	);
+	assert.equal(index.accepted.nodeAccepted, true);
+	assert.equal(index.accepted.browserAccepted, true);
+	assert.deepEqual(index.accepted.engines, ["chromium", "firefox", "webkit"]);
+	assert.deepEqual(index.accepted.routes, ["ordinary", "reviewed"]);
+	assert.equal(index.accepted.records.browserReportCount, 6);
+	assert.equal(index.accepted.records.archiveCount, 4);
+});
+
 for(const [lane, profiles, reports] of [
 	["dotnet", ["dotnet"], 2]
 	, ["jvm", ["java", "kotlin"], 4]

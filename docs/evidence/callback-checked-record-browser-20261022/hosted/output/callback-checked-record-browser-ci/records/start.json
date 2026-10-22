@@ -1,0 +1,18 @@
+{
+  "engines": [
+    "chromium",
+    "firefox",
+    "webkit"
+  ],
+  "producerCommit": "250f73d8b2bed5380e7fb7c55b8f1f6ffd746e58",
+  "profiles": [
+    "browser-javascript",
+    "browser-react",
+    "browser-worker"
+  ],
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}
