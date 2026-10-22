@@ -1,0 +1,218 @@
+{
+  "additions": [
+    {
+      "currentSha256": "e6450238dc3ac300f7376ebe489c77501f490335cbbc5d29baaaabe4b92f78d0",
+      "path": ".github/workflows/php-wasm-callback-entry.yml"
+    },
+    {
+      "currentSha256": "fd9efb4ba40f9796b98b55c775d7c17c12905c93c674619f9c1f11835aa3e051",
+      "path": "scripts/check-php-wasm-callback-entry-records.mjs"
+    },
+    {
+      "currentSha256": "8b486a8f6f7dd4b412db35e707f85e1c887aa5f7e2ca9337e7c8c36270ce6aeb",
+      "path": "scripts/run-php-wasm-callback-entry-ci.sh"
+    },
+    {
+      "currentSha256": "e483dce730a065baf546004c1f7acb1f1f1309343199f28340c74ef32cb64db6",
+      "path": "tests/fixtures/php-wasm-callback-entry/callback-checked-record.php"
+    },
+    {
+      "currentSha256": "b53022d08988650285f378c91ef2ac2d0e7a09e1147493779612160a3225e07f",
+      "path": "tests/fixtures/php-wasm-callback-entry/callback-fin.php"
+    },
+    {
+      "currentSha256": "9ddad2483135b7160db7dc8e5d22e9dd3fe8668d180ca903ed6cc32884488914",
+      "path": "tests/fixtures/php-wasm-callback-entry/driver.mjs"
+    },
+    {
+      "currentSha256": "747f072b295292f7b39bf6c58a6d4edea371ef40e4861f67cf08b8b9d366b34a",
+      "path": "tests/helpers/php-wasm-callback-entry-build.mjs"
+    },
+    {
+      "currentSha256": "f6bcb276d2df95e411e9d0e2fb1e55a41789a2a27e5eef3cb47d3489251741bc",
+      "path": "tests/helpers/php-wasm-callback-entry-c-tests.mjs"
+    },
+    {
+      "currentSha256": "7bb0a9263a5df9aee1563e5745432b18582f233c1cba209b91dab01386693fda",
+      "path": "tests/helpers/php-wasm-callback-entry-c.mjs"
+    },
+    {
+      "currentSha256": "e09139770d18c1d65786459b07231c58bd727fd847f848b06e6edd47ca7cb873",
+      "path": "tests/helpers/php-wasm-callback-entry-ci-tests.mjs"
+    },
+    {
+      "currentSha256": "3bf754518351e3d0bc83eab536abb019fba430383aa1edcdd700fe271d044563",
+      "path": "tests/helpers/php-wasm-callback-entry-driver-tests.mjs"
+    },
+    {
+      "currentSha256": "dadbb62181a68c5d9d3bd43f9e9a8c356d6a08f5eaf0b692e7d1da2123a9c2c3",
+      "path": "tests/helpers/php-wasm-callback-entry-fixtures-tests.mjs"
+    },
+    {
+      "currentSha256": "d4785879d2a3c33e808d361c55d1ab7977b25f76010c9133133d14b2e5bd9c6f",
+      "path": "tests/helpers/php-wasm-callback-entry-fixtures.mjs"
+    },
+    {
+      "currentSha256": "fc70e971c93951495708ff933b17326659e3e8304f292d52cf0221dba8d72cfd",
+      "path": "tests/helpers/php-wasm-callback-entry-installed-tests.mjs"
+    },
+    {
+      "currentSha256": "caa1e7b6a07dc3d849b5f00f8fa8cd105734fc09b3993ce341c620f9126e033b",
+      "path": "tests/helpers/php-wasm-callback-entry-plan-tests.mjs"
+    },
+    {
+      "currentSha256": "4aa19a5575298c74e6cf8f2ad47622f0b5aeab2c5aba1603b7aef5ce8a194f04",
+      "path": "tests/helpers/php-wasm-callback-entry-plan.mjs"
+    },
+    {
+      "currentSha256": "b1a3a3a76a8b543169976c9396b26bfed2b5e95897dfcc6663694493340d3b7c",
+      "path": "tests/helpers/php-wasm-callback-entry-report-tests.mjs"
+    },
+    {
+      "currentSha256": "4fdcfa5166481e0231fb29e1750c7a62e7dd0d2ed732e56e87e6d78d7eddd871",
+      "path": "tests/helpers/php-wasm-callback-entry-report.mjs"
+    },
+    {
+      "currentSha256": "7b3279dde2f16a9388281635b5d311a929d1185bce30ce5aae8326e28a8dab15",
+      "path": "tests/helpers/php-wasm-callback-entry-selection-tests.mjs"
+    },
+    {
+      "currentSha256": "f97a2ea4cebb60f94345c4dc4cc9c8175b62655a207385520123a997519fce5a",
+      "path": "tests/helpers/php-wasm-callback-entry-selection.mjs"
+    },
+    {
+      "currentSha256": "ff7583b0e8217b202914410ba40a224e25948b3e5b18d06b48fc810019abb137",
+      "path": "tests/helpers/php-wasm-callback-entry-source-fixtures.mjs"
+    },
+    {
+      "currentSha256": "0a779082605e795a919d18857a86d2e478c35e85784ea6c4a189c60606a7724f",
+      "path": "tests/helpers/php-wasm-callback-entry-source-tests.mjs"
+    },
+    {
+      "currentSha256": "2e3361d604d7f2c30e9110df1995d64cef17441dd0b3d531c62c454cfa4386c6",
+      "path": "tests/helpers/php-wasm-callback-entry-trace.mjs"
+    },
+    {
+      "currentSha256": "4e37fddaf13c345ee4d31767d43f2aab1efe1091da830369730f39af961a6392",
+      "path": "scripts/update-php-wasm-callback-entry-source-history.mjs"
+    },
+    {
+      "currentSha256": "6dda1a9d9d2d47ae9e90443ab9d5070bd2acdc71065664b7236ad1b5121f3b9e",
+      "path": "tests/helpers/php-wasm-callback-entry-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5cab4ca679a4e0023eb024d98f93ee3a1450132a9598df2fa160251079b616e7",
+      "path": "tests/helpers/php-wasm-callback-entry-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "73ccff54a71e4d00efd8b5a1b1fc7153f8e22554",
+  "milestone": "php-wasm-callback-entry-v1",
+  "predecessorCommit": "7bfe1c35be3e3321f37a051870169ab1a58063a4",
+  "schemaVersion": 1,
+  "scope": "Two synchronous callback families reproduce separately instrumented ordinary and reviewed PHP-Wasm packages, install them without author sources, and execute compiler-authenticated public, recovery, callback, rejection, closure, cleanup, constructor and authored-source entries across weak and strict PHP, embedded and Composer loading, eager and lazy initialization, Node and Chromium. Independent plans distinguish zero-native-entry preflight refusal from native reply rejection and later recovery. The lane measures only the separate probe packages and makes no unmodified release-package dispatch claim.",
+  "updates": [
+    {
+      "currentSha256": "a1e434b4a301fb4d6e362a8de4b6b7197417104cef2f83b428c1cdb2ace8de22",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-entry-c-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-source-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-selection-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-plan-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-fixtures-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-driver-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-report-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-ci-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-installed-tests.mjs\";\nimport \"./helpers/php-wasm-callback-entry-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 392
+        }
+      ],
+      "path": "tests/callback-refinements-php-wasm.test.mjs",
+      "previousSha256": "6aa5703f4cb84bd7663f86b4cb1c7fa989b19aa31ee063d7836fd92b421e6d0a"
+    },
+    {
+      "currentSha256": "b82fe24d48da695a95ce4ad0c6bfdc080df36bd8d995d21090a51c3c0bbbfcda",
+      "edits": [
+        {
+          "current": "import {\n\tinstrumentPhpWasmCallbackEntries, validatePhpWasmCallbackEntrySelection\n} from \"./php-wasm-callback-entry-c.mjs\";\n",
+          "previous": "",
+          "start": 376
+        },
+        {
+          "current": "\ntest(\"compiler-input observer accepts a closed callback instrumentation dialect\", async t => {\n\tconst root = await mkdtemp(join(tmpdir(), \"lean-bridge-callback-entry-observer-\"));\n\tt.after(() => rm(root, { recursive: true }));\n\tconst input = join(root, \"input.c\"), records = join(root, \"records\");\n\tawait mkdir(records);\n\tawait writeFile(input, \"static ZEND_FUNCTION(lgc_call0) { RETURN_NULL(); }\\n\");\n\tconst runner = { capture: async request => {\n\t\tif(request.args.includes(\"-c\"))\n\t\t{\n\t\t\tconst source = await readFile(request.args[request.args.indexOf(\"-c\") + 1], \"utf8\");\n\t\t\tassert.match(source, /LB_CALLBACK_ENTRY_V1 begin public Probe\\.call/u);\n\t\t\tawait writeFile(request.args[request.args.indexOf(\"-o\") + 1], source);\n\t\t}\n\t\treturn { stdout: \"\", stderr: \"\", code: 0 };\n\t} };\n\tconst observer = createPhpWasmRefinementEntryBuildObserver({\n\t\trecordRoot: records, runner\n\t\t, instrumentEntries: instrumentPhpWasmCallbackEntries\n\t\t, validateEntries: validatePhpWasmCallbackEntrySelection\n\t});\n\tobserver.select([{ symbol: \"lgc_call0\", kind: \"public\", label: \"Probe.call\" }]);\n\tawait observer.capture({ command: \"/tool/emcc\"\n\t\t, args: [\"-c\", input, \"-o\", join(root, \"input.o\")] });\n\tawait observer.capture({ command: \"/tool/emcc\"\n\t\t, args: [\"-sSIDE_MODULE=2\", join(root, \"input.o\"), \"-o\", join(root, \"probe.so\")] });\n\tassert.deepEqual(observer.snapshot().definitionCounts, { lgc_call0: 1 });\n});\n",
+          "previous": "",
+          "start": 6093
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build-tests.mjs",
+      "previousSha256": "4e7ee4b57e34a44e44d4cd27704429d9809a1b4c1b0f58662028a66a9002f526"
+    },
+    {
+      "currentSha256": "5ee9ce6dc111721c32e519e1a2023a0696a1f33fee77a93b550457525e6ea69f",
+      "edits": [
+        {
+          "current": "\tconst {\n\t\trecordRoot, runner, headerInputs = []\n\t\t, instrumentEntries = instrumentSubtypeCEntries\n\t\t, validateEntries = validateSubtypeEntrySelection\n\t} = options;\n",
+          "previous": "\tconst { recordRoot, runner, headerInputs = [] } = options;\n",
+          "start": 1507
+        },
+        {
+          "current": "\tassert.equal(typeof instrumentEntries, \"function\");\n\tassert.equal(typeof validateEntries, \"function\");\n",
+          "previous": "",
+          "start": 1744
+        },
+        {
+          "current": "\t\tvalidateEntries(entries); selected = structuredClone(entries);\n",
+          "previous": "\t\tvalidateSubtypeEntrySelection(entries); selected = structuredClone(entries);\n",
+          "start": 2297
+        },
+        {
+          "current": "\t\t\tconst { source, receipt } = instrumentEntries(original, selected);\n",
+          "previous": "\t\t\tconst { source, receipt } = instrumentSubtypeCEntries(original, selected);\n",
+          "start": 3244
+        },
+        {
+          "current": "\t\t\tconst { source, receipt } = instrumentEntries(original, selected);\n",
+          "previous": "\t\t\tconst { source, receipt } = instrumentSubtypeCEntries(original, selected);\n",
+          "start": 4053
+        },
+        {
+          "current": "\t\t, selectEntries = phpWasmGraphRefinementEntrySelection\n\t\t, instrumentEntries = instrumentSubtypeCEntries\n\t\t, validateEntries = validateSubtypeEntrySelection\n",
+          "previous": "",
+          "start": 7206
+        },
+        {
+          "current": "\tassert.equal(typeof selectEntries, \"function\");\n\tconst observer = createPhpWasmRefinementEntryBuildObserver({\n\t\trecordRoot, runner, instrumentEntries, validateEntries\n\t});\n",
+          "previous": "\tconst observer = createPhpWasmRefinementEntryBuildObserver({ recordRoot, runner });\n",
+          "start": 7478
+        },
+        {
+          "current": "\t\t\t\tconst selected = selectEntries(model, sourceProbe.entries).selected;\n",
+          "previous": "\t\t\t\tconst selected = phpWasmGraphRefinementEntrySelection(model, sourceProbe.entries).selected;\n",
+          "start": 7925
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-build.mjs",
+      "previousSha256": "5ae31aaf986d6d25d41e7c32ac3f2f90810f6ee4f8624d0f9c71e02e65f23d64"
+    },
+    {
+      "currentSha256": "257a30953b26b611ad7be555b55e7888b97fbffde30fedbd045e73a6f8046ee8",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackEntrySource, phpWasmCallbackEntryChangedPaths } from \"./php-wasm-callback-entry-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmCallbackEntryChangedPaths\n\t, ...phpWasmOwnedRefinementEntryChangedPaths\n",
+          "previous": "\t...phpWasmOwnedRefinementEntryChangedPaths\n",
+          "start": 144209
+        },
+        {
+          "current": "\tconst phpWasmCallbackEntry\n\t\t= beforePhpWasmCallbackEntrySource(path, text, expected);\n\tif(sha256(phpWasmCallbackEntry) === expected)\n\t\treturn phpWasmCallbackEntry;\n",
+          "previous": "",
+          "start": 175272
+        },
+        {
+          "current": "\t\t= beforePhpWasmOwnedRefinementEntrySource(path, phpWasmCallbackEntry, expected);\n",
+          "previous": "\t\t= beforePhpWasmOwnedRefinementEntrySource(path, text, expected);\n",
+          "start": 175473
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "539e9146b0ea615a4fa30ed671035eed6f5e031670d8774acf6c0aaaf49798b4"
+    }
+  ]
+}
