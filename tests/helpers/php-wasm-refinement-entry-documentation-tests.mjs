@@ -15,6 +15,8 @@ import {
 
 const evidenceId = "php-wasm-refinement-entry-instrumented-probe-contract";
 const matrixBoundary = /28\s+ordinary\/reviewed routes in 26 retained artifacts/u;
+const copiedBoundary = /24\s+copied,\s*owned\s+and\s+indexed\s+routes[\s\S]{0,180}(?:count|use)[\s\S]{0,180}validator,\s*constructor,\s*adapter\s+and\s+Lean-source\s+entries/iu;
+const callbackBoundary = /four\s+callback\s+routes\s+record\s+callback\s+control\s+totals/iu;
 const pages = Object.freeze([
 	Object.freeze({ path: "docs/php.md", heading: "### Refinement support and entry measurements" })
 	, Object.freeze({ path: "docs/publish/php.md", heading: "## Refinement checks and measurement probes" })
@@ -29,6 +31,8 @@ test("PHP-Wasm docs separate prepared-package support from entry probes", async 
 		if(page.heading) assert.ok(source.includes(page.heading), page.path);
 		assert.match(source, /unmodified prepared(?: PHP-Wasm)? packages/iu, page.path);
 		assert.match(source, matrixBoundary, page.path);
+		assert.match(source, copiedBoundary, page.path);
+		assert.match(source, callbackBoundary, page.path);
 		assert.match(source
 			, /no hosted (?:entry-)?count claim|not\s+a\s+hosted\s+result|not[^.]*hosted evidence/iu
 			, page.path);

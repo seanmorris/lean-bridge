@@ -90,8 +90,10 @@ Platform integers follow the compiled Lean target: npm and PHP-Wasm use 32-bit w
 
 PHP-Wasm refinement support is established by unmodified prepared packages.
 The separate entry-measurement probes instrument fixture packages only: their
-closed topology has 28 ordinary/reviewed routes in 26 retained artifacts and
-does not widen any type-support cell. The configured [promotion
+24 copied, owned and indexed routes count validator, constructor, adapter and
+Lean-source entries, while four callback routes record callback control totals.
+Together they form 28 ordinary/reviewed routes in 26 retained artifacts and do
+not widen any type-support cell. The configured [promotion
 workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
 is not a hosted result; entry counts become hosted evidence only when a
 completed run publishes a verified summary for one revision.

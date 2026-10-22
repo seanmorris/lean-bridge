@@ -869,10 +869,11 @@ The support statements on this page come from unmodified prepared packages.
 Those packages contain the generated checks that enforce `Fin`, `Subtype` and
 checked-record contracts, but they do not contain diagnostic entry counters.
 
-Entry measurements use separate instrumented fixture packages. They count the
-named validator, constructor, adapter and Lean-source entries for 28
-ordinary/reviewed routes in 26 retained artifacts. The counters do not change a
-consumer package or widen its supported types. The [promotion
+Entry measurements use separate instrumented fixture packages. The 24 copied,
+owned and indexed routes count named validator, constructor, adapter and
+Lean-source entries; the four callback routes record callback control totals.
+Together they form 28 ordinary/reviewed routes in 26 retained artifacts. These
+measurements do not change a consumer package or widen its supported types. The [promotion
 workflow](https://github.com/seanmorris/lean-bridge/actions/workflows/php-wasm-refinement-entry-promotion.yml)
 is configured to rebuild the complete matrix at one revision and recheck the
 retained artifacts. Until a completed run publishes that verified summary, the
