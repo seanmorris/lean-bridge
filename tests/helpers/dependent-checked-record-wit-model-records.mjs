@@ -54,7 +54,7 @@ export const checkDependentCheckedRecordWitModels = async ({ report, read, json,
 		assert.equal(model.profile, "native-library-v1"); assert.equal(model.pointerBits, 64);
 		assert.equal(model.schemaVersion, selection.reviewed ? 3 : 2);
 		assert.equal(model.byteOrder, "little"); assert.equal(model.moduleName, undefined);
-		assert.equal(model.exports.length, selection.resultOnly ? 6 : 11);
+		assert.equal(model.exports.length, expected.declarations.length);
 		assert.deepEqual(model.exports.map(item => item.name).sort(), expected.declarations.map(item => item.id.slice(5)).sort());
 		const source = inputs[`${dependentCheckedRecordWitLeanModule}.lean`], identity = model.sourceIdentity;
 		assert.deepEqual(await read(prefix + `${dependentCheckedRecordWitLeanModule}.lean`), source);

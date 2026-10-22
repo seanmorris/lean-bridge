@@ -93,7 +93,9 @@ for(const route of routes) test(`installed dependent checked records reproduce a
 		assert.deepEqual(await lakeInputState(projectRoot), sourceBefore);
 		const modelBytes = await readFile(join(outputRoot, "native/component/model.json")); model = JSON.parse(modelBytes);
 		assert.equal(reviewedContractDifference(expected, model.bindingIr), null);
-		assert.equal(model.exports.length, selection.resultOnly ? 6 : 11);
+		assert.equal(model.exports.length, expected.declarations.length);
+		assert.deepEqual(model.exports.map(item => item.name).sort()
+			, expected.declarations.map(item => item.id.slice(5)).sort());
 		if(selection.reviewed) assert.equal(model.sourceIdentity.reviewedBindingIr.source, canonicalJson(expected));
 		else assert.equal(model.sourceIdentity.reviewedBindingIr, undefined);
 		const receiptBytes = await readFile(join(outputRoot, "package-set-receipt.json")), receipt = JSON.parse(receiptBytes);
