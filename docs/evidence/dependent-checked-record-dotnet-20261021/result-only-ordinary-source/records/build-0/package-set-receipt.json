@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "dependentrecords@1.0.0",
+    "name": "dependentrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51352679,
+          "path": "archives/Dependentrecords.Api.1.0.0.nupkg",
+          "sha256": "f475fe235bcb3050321b8447873ab2cf61bb11e82959383c3255fddd0799a209"
+        }
+      ],
+      "ecosystem": "nuget",
+      "name": "Dependentrecords.Api",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "nuget",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "8084eee6c163f1dd20ca744936437244c25b2c81506107d9f2d8a87be609bc63",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "f9cd8a5ee2f71d958c430fe7e2a144f13335523f60ef4622c19597f9f7e4a472"
+  }
+}

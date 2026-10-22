@@ -1,0 +1,88 @@
+name: Dependent checked-record checked records in .NET
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      max-load:
+        description: Maximum admitted one-minute host load
+        required: false
+        default: "6"
+        type: choice
+        options:
+          - "6"
+          - "8"
+          - "10"
+          - "12"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependent-checked-record-dotnet-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependent-checked-record-dotnet:
+    name: Four dependent checked-record checked-record routes in .NET
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out exact revision and full source history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and pinned Lean
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/dependent-checked-record-dotnet-toolchain.log
+      - name: Install isolated pinned .NET SDK
+        timeout-minutes: 20
+        uses: actions/setup-dotnet@v6
+        env:
+          DOTNET_INSTALL_DIR: ${{ runner.temp }}/lean-bridge-dependent checked-record-dotnet-8.0.424
+        with:
+          dotnet-version: '8.0.424'
+      - name: Require every source and API route
+        id: acceptance
+        timeout-minutes: 120
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          bash scripts/run-dependent-checked-record-dotnet-ci.sh "$RUNNER_TEMP/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet" "${{ inputs.max-load || '6' }}"
+      - name: Preserve original and partial installed records
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependent-checked-record-dotnet-${{ github.sha }}
+          path: |
+            build/dependent-checked-record-dotnet-ci/
+            build/dependent-checked-record-dotnet-toolchain.log
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed dependent checked-record .NET acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

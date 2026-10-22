@@ -1,0 +1,29 @@
+{
+  "contracts": {
+    "DependentRecords.dependentResult": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    }
+  },
+  "exports": [
+    "DependentRecords.dependentResult"
+  ],
+  "modules": [
+    "DependentRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "nuget": {
+      "name": "Dependentrecords.Api",
+      "version": "1.0.0"
+    }
+  }
+}

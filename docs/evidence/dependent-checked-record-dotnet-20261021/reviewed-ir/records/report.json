@@ -1,0 +1,351 @@
+{
+  "authorInputsUnchanged": true,
+  "builds": [
+    {
+      "archives": {
+        "archives/Dependentrecords.Api.1.0.0.nupkg": "f42d77fa087ae1d9ed7e9315a0fab9693737a29e33b0bb5f26b1d78bf79599ff"
+      },
+      "authorInputsSha256": "04ac5e8700fa689952c40a0e9fbd800dacb40df3596df3071b847bbf4b553f67",
+      "bindingIrSha256": "fdf70b780b8a460f9a02374e31c5a5f4b05ee051d21067635869c73d2917a1ab",
+      "modelSha256": "28d1e07f2ed232de467e10e8bd607ef50507fdd6f24df25aad8b9841795ac9f6",
+      "receiptSha256": "00bb6bc5c1098fbbd65ce5e89d7f42c0ad5ab6ede072c41eedd967a4f9e5070c"
+    },
+    {
+      "archives": {
+        "archives/Dependentrecords.Api.1.0.0.nupkg": "f42d77fa087ae1d9ed7e9315a0fab9693737a29e33b0bb5f26b1d78bf79599ff"
+      },
+      "authorInputsSha256": "04ac5e8700fa689952c40a0e9fbd800dacb40df3596df3071b847bbf4b553f67",
+      "bindingIrSha256": "fdf70b780b8a460f9a02374e31c5a5f4b05ee051d21067635869c73d2917a1ab",
+      "modelSha256": "28d1e07f2ed232de467e10e8bd607ef50507fdd6f24df25aad8b9841795ac9f6",
+      "receiptSha256": "00bb6bc5c1098fbbd65ce5e89d7f42c0ad5ab6ede072c41eedd967a4f9e5070c"
+    }
+  ],
+  "compilerFreeReplay": true,
+  "consumerCommit": "b869fb3f1cbf320c3cb453058f4a7bdf095a49c1",
+  "declaredGlibcFloor": "2.38",
+  "dispatch": {
+    "observed": false,
+    "reason": "No C# constructor/source entry counters in this installed acceptance"
+  },
+  "expectedBindingIrSha256": "7545422156ec73246f01154f09b0262990640f2f27649ae3b7ec7504f226c99f",
+  "independentBuilds": 2,
+  "mode": "full",
+  "observations": [
+    {
+      "closure": {
+        "buildInputsSha256": "91436577d63e1b5c5b25672b9bf43af92797a3732d1a0339f6538688f20bbdd0",
+        "cacheFilesSha256": "0ee16af9b4544527b20d84c5179f0c2b40992e4f9fa381c0b95bfd078ad8de96",
+        "deployedFilesSha256": "970716b1c3c4d321145b99197a09ccebfe5bd93c20c7f6cdcb4f669c3d55509b",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "17322400c74225d48bf8cb652ccab17abbe5a960322f8efb8297284965b60077",
+        "receiptSha256": "e1962aa699d36e7daa37abd1861c745ebc29954d9ed8047e15c7fdfb806cc72f"
+      },
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/consumer",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/consumer",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "stage": "installed"
+    },
+    {
+      "closure": {
+        "buildInputsSha256": "91436577d63e1b5c5b25672b9bf43af92797a3732d1a0339f6538688f20bbdd0",
+        "cacheFilesSha256": "0ee16af9b4544527b20d84c5179f0c2b40992e4f9fa381c0b95bfd078ad8de96",
+        "deployedFilesSha256": "970716b1c3c4d321145b99197a09ccebfe5bd93c20c7f6cdcb4f669c3d55509b",
+        "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+        "packageFileSetSha256": "17322400c74225d48bf8cb652ccab17abbe5a960322f8efb8297284965b60077",
+        "receiptSha256": "e1962aa699d36e7daa37abd1861c745ebc29954d9ed8047e15c7fdfb806cc72f"
+      },
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/consumer-relocated",
+      "framework": {
+        "args": [
+          "out/Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/consumer-relocated",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "stage": "relocated"
+    },
+    {
+      "closure": {
+        "deployedFilesSha256": "970716b1c3c4d321145b99197a09ccebfe5bd93c20c7f6cdcb4f669c3d55509b"
+      },
+      "counts": {
+        "calls": 1289,
+        "checks": 2326,
+        "recoveries": 258,
+        "rejections": 258,
+        "snapshots": 1289
+      },
+      "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/source-free",
+      "framework": {
+        "args": [
+          "Consumer.dll",
+          "--runtime"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/source-free",
+        "facts": {
+          "architecture": "X64",
+          "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+          "description": ".NET 8.0.30",
+          "directory": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+          "littleEndian": true,
+          "os": "Ubuntu 24.04.5 LTS",
+          "version": "8.0.30"
+        },
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+        },
+        "runtimeFiles": {
+          "System.Private.CoreLib.dll": {
+            "bytes": 12773888,
+            "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+          },
+          "libcoreclr.so": {
+            "bytes": 6906008,
+            "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+          }
+        }
+      },
+      "run": {
+        "code": 0,
+        "stderr": "",
+        "stdout": "{\"calls\":1289,\"checks\":2326,\"recoveries\":258,\"rejections\":258,\"snapshots\":1289}\n"
+      },
+      "sourcesRemoved": true,
+      "stage": "source-free"
+    }
+  ],
+  "offlineInstall": true,
+  "producerCommit": "b869fb3f1cbf320c3cb453058f4a7bdf095a49c1",
+  "receipt": {
+    "component": {
+      "id": "dependentrecords@1.0.0",
+      "name": "dependentrecords",
+      "version": "1.0.0"
+    },
+    "kind": "lean-bridge-package-set-receipt",
+    "packages": [
+      {
+        "artifacts": [
+          {
+            "bytes": 51362066,
+            "path": "archives/Dependentrecords.Api.1.0.0.nupkg",
+            "sha256": "f42d77fa087ae1d9ed7e9315a0fab9693737a29e33b0bb5f26b1d78bf79599ff"
+          }
+        ],
+        "ecosystem": "nuget",
+        "name": "Dependentrecords.Api",
+        "profile": "native-library-v1",
+        "requires": [],
+        "role": "component",
+        "runtimeDelivery": "embedded",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+        "target": "nuget",
+        "version": "1.0.0"
+      }
+    ],
+    "profiles": [
+      {
+        "bindingIrSha256": "fdf70b780b8a460f9a02374e31c5a5f4b05ee051d21067635869c73d2917a1ab",
+        "id": "native-library-v1",
+        "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+      }
+    ],
+    "schemaVersion": 1,
+    "source": {
+      "treeSha256": "8e3375e249576a4d0c98986d5e24e757e4c670925d1c384cf588e319ce2d73e0"
+    }
+  },
+  "relocatedInstallation": true,
+  "reproducible": true,
+  "resourceChecks": [
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15512522752,
+          "freeBytes": 56968794112,
+          "load": 1.21
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15492755456,
+          "freeBytes": 56968773632,
+          "load": 1.21
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15250190336,
+          "freeBytes": 56865918976,
+          "load": 1.12
+        }
+      ],
+      "waits": 0
+    },
+    {
+      "maxLoad": 6,
+      "observations": [
+        {
+          "availableBytes": 15123980288,
+          "freeBytes": 56865828864,
+          "load": 1.1
+        }
+      ],
+      "waits": 0
+    }
+  ],
+  "route": "reviewed-ir",
+  "runtime": {
+    "arch": "x64",
+    "glibc": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "glibc 2.39\n"
+    },
+    "platform": "linux"
+  },
+  "schemaVersion": 1,
+  "sourceFreeDeployment": true,
+  "sourceRemovedBeforeInstallation": true,
+  "tools": {
+    "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+    "interpreter": {
+      "bytes": 71744,
+      "sha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6"
+    },
+    "measurements": [
+      {
+        "args": [
+          "--list-sdks"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424 [/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/sdk]\n"
+        }
+      },
+      {
+        "args": [
+          "--version"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "8.0.424\n"
+        }
+      },
+      {
+        "args": [
+          "--list-runtimes"
+        ],
+        "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+        "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-NrOr8O/toolchain",
+        "run": {
+          "code": 0,
+          "stderr": "",
+          "stdout": "Microsoft.AspNetCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.AspNetCore.App]\nMicrosoft.NETCore.App 8.0.30 [/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App]\nMicrosoft.NETCore.App 10.0.13 [/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App]\n"
+        }
+      }
+    ],
+    "sdk": {
+      "directory": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/sdk",
+      "version": "8.0.424"
+    }
+  },
+  "trustedToolchains": "Explicit .NET SDK and shared framework; their complete contents are not authenticated"
+}

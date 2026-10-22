@@ -1,0 +1,56 @@
+{
+  "closure": {
+    "buildInputsSha256": "22289df6a1d1079739208913094a06b50622189af67fd5384b252f8f4470c0fa",
+    "cacheFilesSha256": "58ea715caa40bc695f64e869055c69b50ff40fa54e2e59f0e002158b26de0044",
+    "deployedFilesSha256": "5fdc9083d7a5a9ec16e4f26403d917a51a7397eeb9a8234b313adb2f057b86c7",
+    "interpreterSha256": "8b3d902364f618e31e029d4eba077d52c141dd641e375f4555715604806e44b6",
+    "packageFileSetSha256": "17322400c74225d48bf8cb652ccab17abbe5a960322f8efb8297284965b60077",
+    "receiptSha256": "fd1327c96e3c50c4037006c730c43ebc664f2564f48453d8b3f02cfa60980f1b"
+  },
+  "counts": {
+    "calls": 513,
+    "checks": 516,
+    "recoveries": 0,
+    "rejections": 0,
+    "snapshots": 513
+  },
+  "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-syrzg4/consumer",
+  "framework": {
+    "args": [
+      "out/Consumer.dll",
+      "--runtime"
+    ],
+    "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+    "cwd": "/tmp/lean-bridge-dependent checked-record-dotnet-syrzg4/consumer",
+    "facts": {
+      "architecture": "X64",
+      "command": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet",
+      "description": ".NET 8.0.30",
+      "directory": "/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/",
+      "littleEndian": true,
+      "os": "Ubuntu 24.04.5 LTS",
+      "version": "8.0.30"
+    },
+    "run": {
+      "code": 0,
+      "stderr": "",
+      "stdout": "{\"version\":\"8.0.30\",\"description\":\".NET 8.0.30\",\"directory\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/shared/Microsoft.NETCore.App/8.0.30/\",\"command\":\"/home/runner/work/_temp/lean-bridge-dependent checked-record-dotnet-8.0.424/dotnet\",\"architecture\":\"X64\",\"os\":\"Ubuntu 24.04.5 LTS\",\"littleEndian\":true}\n"
+    },
+    "runtimeFiles": {
+      "System.Private.CoreLib.dll": {
+        "bytes": 12773888,
+        "sha256": "dd6ad973741639a428e367669fd8e32db5ea2b6b20b8805beaa0dd372748e0a8"
+      },
+      "libcoreclr.so": {
+        "bytes": 6906008,
+        "sha256": "fedf4074258e14b425cd3b4209bedc3e102765623445cc1bcfe8361f6193231c"
+      }
+    }
+  },
+  "run": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "{\"calls\":513,\"checks\":516,\"recoveries\":0,\"rejections\":0,\"snapshots\":513}\n"
+  },
+  "stage": "installed"
+}
