@@ -66,12 +66,43 @@ const exact = (value, keys, label) => {
 	assert.ok(value && typeof value === "object" && !Array.isArray(value), label);
 	assert.deepEqual(Object.keys(value).sort(), [...keys].sort(), `${label} fields`);
 };
-const terminalTap = source => {
+const terminalTap = (source, expectedTest) => {
 	assert.ok(source.startsWith("TAP version 13\n"), "artifact TAP header");
+	assert.deepEqual(source.split("\n").filter(line => /^ok [0-9]+ - /u.test(line))
+		, [`ok 1 - ${expectedTest}`], "artifact TAP selected test");
 	const terminal = source.match(/\n1\.\.(\d+)\n# tests (\d+)\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped (\d+)\n# todo 0\n# duration_ms [0-9]+(?:\.[0-9]+)?\n$/u);
 	assert.ok(terminal, "artifact TAP has one passing terminal result");
 	assert.equal(Number(terminal[1]), Number(terminal[2]));
 	assert.equal(Number(terminal[2]), 1 + Number(terminal[3]));
+};
+const tapTestName = cells => cells[0].kind === "callback"
+	? "instrumented PHP-Wasm callbacks close and execute every selected entry"
+	: cells[0].kind === "owned"
+		? `instrumented owned PHP-Wasm package closes ${cells[0].family} ${cells[0].route} dispatch and transfer order`
+		: `instrumented PHP-Wasm copied package closes ${cells[0].family} ${cells[0].route} compiler entries`;
+
+/**
+ * Close the verifier source checkout and supported Node reporter major before
+ * any hosted artifact is read.
+ *
+ * @param producerCommit - Full common producer revision.
+ * @param state - Git source-path observations and the active Node version.
+ */
+export const checkPhpWasmRefinementEntryVerifier = (producerCommit, state) => {
+	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	exact(state, ["verifierCommit", "modifiedSourcePaths", "untrackedSourcePaths"
+		, "nodeVersion"], "hosted verifier state");
+	assert.equal(state.verifierCommit, producerCommit
+		, "artifact verification must run at the producer revision");
+	assert.deepEqual(state.modifiedSourcePaths, [], "verifier source paths are unmodified");
+	assert.deepEqual(state.untrackedSourcePaths, [], "verifier source paths contain no untracked files");
+	assert.match(state.nodeVersion, /^22\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$/u
+		, "hosted verifier uses the supported Node 22 TAP reporter");
+	return Object.freeze({
+		verifierCommit: producerCommit, sourcePathsClean: true
+		, sourcePaths: Object.freeze(["src", "tests", "scripts"])
+		, nodeVersion: state.nodeVersion, nodeMajor: 22
+	});
 };
 
 /**
@@ -89,12 +120,20 @@ export const phpWasmRefinementEntryArtifactNames = producerCommit =>
  *
  * @param producerCommit - Full common producer revision.
  * @param artifacts - Ordered extracted artifacts with exact names and readers.
+ * @param verification - Clean source-checkout and Node reporter evidence.
  * @param checkers - Real per-route verifiers unless a unit control injects fakes.
  */
 export const summarizePhpWasmRefinementEntryHostedArtifacts = async (
-	producerCommit, artifacts, checkers = defaultCheckers
+	producerCommit, artifacts, verification, checkers = defaultCheckers
 ) => {
 	assert.match(producerCommit, /^[a-f0-9]{40}$/u);
+	exact(verification, ["verifierCommit", "sourcePathsClean", "sourcePaths"
+		, "nodeVersion", "nodeMajor"], "hosted verifier evidence");
+	assert.equal(verification.verifierCommit, producerCommit);
+	assert.equal(verification.sourcePathsClean, true);
+	assert.deepEqual(verification.sourcePaths, ["src", "tests", "scripts"]);
+	assert.equal(verification.nodeMajor, 22);
+	assert.match(verification.nodeVersion, /^22\./u);
 	assert.ok(Array.isArray(artifacts));
 	const expectedNames = phpWasmRefinementEntryArtifactNames(producerCommit);
 	assert.deepEqual(artifacts.map(item => item.name), expectedNames
@@ -139,7 +178,7 @@ export const summarizePhpWasmRefinementEntryHostedArtifacts = async (
 			assert.ok((await bytes(path)).length > 0, `empty ${artifact.name}/${path}`);
 		}
 		const tapPath = layout.support.find(path => path.endsWith(".tap"));
-		terminalTap((await bytes(tapPath)).toString());
+		terminalTap((await bytes(tapPath)).toString(), tapTestName(cells));
 		const callbackReports = [];
 		for(const { item, location, prefix, check } of locations)
 		{
@@ -186,6 +225,6 @@ export const summarizePhpWasmRefinementEntryHostedArtifacts = async (
 	const matrix = checkPhpWasmRefinementEntryMatrix(producerCommit, observations);
 	return Object.freeze({
 		schemaVersion: 1, kind: "php-wasm-refinement-entry-hosted-v1"
-		, producerCommit, artifacts: retained, matrix
+		, producerCommit, verification, artifacts: retained, matrix
 	});
 };

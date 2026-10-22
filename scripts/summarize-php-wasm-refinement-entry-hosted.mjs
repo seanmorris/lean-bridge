@@ -11,7 +11,8 @@ import { isAbsolute, join, resolve } from "node:path";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import {
-	phpWasmRefinementEntryArtifactNames
+	checkPhpWasmRefinementEntryVerifier
+	, phpWasmRefinementEntryArtifactNames
 	, summarizePhpWasmRefinementEntryHostedArtifacts
 } from "../tests/helpers/php-wasm-refinement-entry-hosted-summary.mjs";
 
@@ -29,8 +30,16 @@ for(let index = 0; index < args.length; index += 2)
 assert.match(selected["--producer"], /^[a-f0-9]{40}$/u);
 assert.ok(isAbsolute(selected["--directory"])
 	&& resolve(selected["--directory"]) === selected["--directory"], usage);
-assert.equal(execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
-	, selected["--producer"], "artifact verification must run at the producer revision");
+const gitLines = args => execFileSync("git", args, { encoding: "utf8" }).trim()
+	.split("\n").filter(Boolean);
+const verification = checkPhpWasmRefinementEntryVerifier(selected["--producer"], {
+	verifierCommit: execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim()
+	, modifiedSourcePaths: gitLines(["diff", "--name-only", "HEAD", "--"
+		, "src", "tests", "scripts"])
+	, untrackedSourcePaths: gitLines(["ls-files", "--others", "--exclude-standard"
+		, "--", "src", "tests", "scripts"])
+	, nodeVersion: process.versions.node
+});
 const names = phpWasmRefinementEntryArtifactNames(selected["--producer"]);
 const entries = await readdir(selected["--directory"], { withFileTypes: true });
 assert.deepEqual(entries.map(item => item.name).sort(), [...names].sort()
@@ -46,6 +55,6 @@ for(const name of names)
 	});
 }
 const summary = await summarizePhpWasmRefinementEntryHostedArtifacts(
-	selected["--producer"], artifacts
+	selected["--producer"], artifacts, verification
 );
 process.stdout.write(canonicalJson(summary));

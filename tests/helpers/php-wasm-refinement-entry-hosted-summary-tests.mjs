@@ -12,14 +12,24 @@ import {
 	, phpWasmRefinementEntryMatrixLocation
 } from "./php-wasm-refinement-entry-matrix.mjs";
 import {
-	phpWasmRefinementEntryArtifactLayouts
+	checkPhpWasmRefinementEntryVerifier
+	, phpWasmRefinementEntryArtifactLayouts
 	, summarizePhpWasmRefinementEntryHostedArtifacts
 } from "./php-wasm-refinement-entry-hosted-summary.mjs";
 
 const producer = "a".repeat(40);
-const tap = "TAP version 13\n# Subtest: selected\nok 1 - selected\n1..1\n"
+const tapName = item => item.kind === "callback"
+	? "instrumented PHP-Wasm callbacks close and execute every selected entry"
+	: item.kind === "owned"
+		? `instrumented owned PHP-Wasm package closes ${item.family} ${item.route} dispatch and transfer order`
+		: `instrumented PHP-Wasm copied package closes ${item.family} ${item.route} compiler entries`;
+const tap = name => `TAP version 13\n# Subtest: ${name}\nok 1 - ${name}\n1..1\n`
 	+ "# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n"
 	+ "# skipped 0\n# todo 0\n# duration_ms 1\n";
+const verification = checkPhpWasmRefinementEntryVerifier(producer, {
+	verifierCommit: producer, modifiedSourcePaths: [], untrackedSourcePaths: []
+	, nodeVersion: "22.23.3"
+});
 const result = (selection, paths, callback) => callback ? {
 	schemaVersion: 1, family: selection.family, route: selection.route
 	, producerCommit: selection.producerCommit, records: paths.length
@@ -45,7 +55,7 @@ const artifactMaps = () => {
 		maps.set(location.artifact, files);
 		const layout = phpWasmRefinementEntryArtifactLayouts[item.kind];
 		for(const support of layout.support)
-			files.set(support, support.endsWith(".tap") ? tap : "retained\n");
+			files.set(support, support.endsWith(".tap") ? tap(tapName(item)) : "retained\n");
 		const prefix = `${layout.root}/${item.recordPath}/`;
 		const report = canonicalJson({ family: item.family, route: item.route });
 		files.set(prefix + "report.json", report);
@@ -79,13 +89,33 @@ const artifacts = maps => [...maps].map(([name, files]) => ({
 }));
 const run = (maps = artifactMaps(), verifier = checkers) =>
 	summarizePhpWasmRefinementEntryHostedArtifacts(
-		producer, artifacts(maps), verifier
+		producer, artifacts(maps), verification, verifier
 	);
+
+test("hosted PHP-Wasm entry promotion closes the verifier checkout and Node reporter", () => {
+	assert.deepEqual(verification, {
+		verifierCommit: producer, sourcePathsClean: true
+		, sourcePaths: ["src", "tests", "scripts"]
+		, nodeVersion: "22.23.3", nodeMajor: 22
+	});
+	for(const [change, pattern] of [
+		[state => { state.verifierCommit = "b".repeat(40); }, /producer revision/u]
+		, [state => { state.modifiedSourcePaths = ["src/changed.mjs"]; }, /unmodified/u]
+		, [state => { state.untrackedSourcePaths = ["tests/forged.mjs"]; }, /untracked/u]
+		, [state => { state.nodeVersion = "24.0.0"; }, /Node 22/u]
+	]) {
+		const state = { verifierCommit: producer, modifiedSourcePaths: []
+			, untrackedSourcePaths: [], nodeVersion: "22.23.3" };
+		change(state);
+		assert.throws(() => checkPhpWasmRefinementEntryVerifier(producer, state), pattern);
+	}
+});
 
 test("hosted PHP-Wasm entry promotion rechecks the complete closed artifact matrix", async () => {
 	const summary = await run();
 	assert.equal(summary.kind, "php-wasm-refinement-entry-hosted-v1");
 	assert.equal(summary.producerCommit, producer);
+	assert.deepEqual(summary.verification, verification);
 	assert.equal(summary.artifacts.length, 26);
 	assert.equal(summary.artifacts.reduce((sum, item) => sum + item.cells, 0), 28);
 	assert.ok(summary.artifacts.every(item => item.files > 0
@@ -105,17 +135,17 @@ test("hosted PHP-Wasm entry promotion rejects artifact identity and closure drif
 		controls += 1;
 	};
 	await refused((maps, list) => summarizePhpWasmRefinementEntryHostedArtifacts(
-		producer, list.slice(1), checkers), /artifact order and identity/u);
+		producer, list.slice(1), verification, checkers), /artifact order and identity/u);
 	await refused((maps, list) => summarizePhpWasmRefinementEntryHostedArtifacts(
-		producer, [list[1], list[0], ...list.slice(2)], checkers)
+		producer, [list[1], list[0], ...list.slice(2)], verification, checkers)
 	, /artifact order and identity/u);
 	await refused((maps, list) => summarizePhpWasmRefinementEntryHostedArtifacts(
-		producer, [...list, list[0]], checkers), /artifact order and identity/u);
+		producer, [...list, list[0]], verification, checkers), /artifact order and identity/u);
 	await refused((maps, list) => {
 		const changed = structuredClone(list.map(item => ({ name: item.name, paths: item.paths })));
 		changed[0].read = list[0].read; changed[0].name = "forged";
 		for(let index = 1; index < changed.length; ++index) changed[index].read = list[index].read;
-		return summarizePhpWasmRefinementEntryHostedArtifacts(producer, changed, checkers);
+		return summarizePhpWasmRefinementEntryHostedArtifacts(producer, changed, verification, checkers);
 	}, /artifact order and identity/u);
 	await refused(maps => {
 		maps.values().next().value.set("stray.txt", "x"); return run(maps);
@@ -141,10 +171,19 @@ test("hosted PHP-Wasm entry promotion rejects artifact identity and closure drif
 		const [name, files] = maps.entries().next().value;
 		const item = phpWasmRefinementEntryMatrix.find(value =>
 			phpWasmRefinementEntryMatrixLocation(value, producer).artifact === name);
-		files.set(phpWasmRefinementEntryArtifactLayouts[item.kind].support[0]
-			, tap.replace("# fail 0", "# fail 1"));
+		const path = phpWasmRefinementEntryArtifactLayouts[item.kind].support[0];
+		files.set(path, files.get(path).replace("# fail 0", "# fail 1"));
 		return run(maps);
 	}, /terminal result/u);
+	await refused(maps => {
+		const [name, files] = maps.entries().next().value;
+		const item = phpWasmRefinementEntryMatrix.find(value =>
+			phpWasmRefinementEntryMatrixLocation(value, producer).artifact === name);
+		const path = phpWasmRefinementEntryArtifactLayouts[item.kind].support[0];
+		files.set(path, files.get(path).replace(`ok 1 - ${tapName(item)}`
+			, "ok 1 - different passing cell"));
+		return run(maps);
+	}, /selected test/u);
 	await refused(maps => {
 		const [name, files] = maps.entries().next().value;
 		const item = phpWasmRefinementEntryMatrix.find(value =>
@@ -171,13 +210,13 @@ test("hosted PHP-Wasm entry promotion rejects artifact identity and closure drif
 	};
 	await refused(maps => run(maps, { ...checkers, entry: escaping })
 		, /unlisted record/u);
-	assert.equal(controls, 13);
+	assert.equal(controls, 14);
 	t.diagnostic(`${controls} artifact identity, closure and output-binding controls`);
 });
 
 test("hosted PHP-Wasm entry promotion defaults to the real route verifiers", async () => {
 	const maps = artifactMaps();
 	await assert.rejects(summarizePhpWasmRefinementEntryHostedArtifacts(
-		producer, artifacts(maps)
+		producer, artifacts(maps), verification
 	));
 });
