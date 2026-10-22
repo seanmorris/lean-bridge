@@ -7,11 +7,10 @@
 import assert from "node:assert/strict";
 import { readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import { nativeArtifactPaths } from "../../src/build/native-artifacts.mjs";
 import { brickMathSources } from "../../src/backends/php/brick-math.mjs";
-import { brickMathRepository } from "./brick-math.mjs";
+import { brickMathRepository, composerFileUrl } from "./brick-math.mjs";
 import { copiedCleanEnvironment, runCopied } from "./copied-fixture-install.mjs";
 import { readClosedPackageZip } from "./closed-package-zip.mjs";
 import { verifyFinContainerEdgeFileClosure } from "./fin-container-edge-closure.mjs";
@@ -152,7 +151,7 @@ export const installFinContainerEdgePhp = async options => {
 	const runtimeFlags = ["-n", ...(extensions.ffi ? ["-d", `extension=${extensions.ffi}`] : []), "-d", "ffi.enable=1"];
 	const feed = join(root, "feed"), dependency = await brickMathRepository(feed);
 	await writeFile(join(feed, "component.zip"), bytes, { flag: "wx" });
-	const component = { type: "package", package: { ...original.metadata, dist: { type: "zip", url: pathToFileURL(join(feed, "component.zip")).href } } };
+	const component = { type: "package", package: { ...original.metadata, dist: { type: "zip", url: composerFileUrl(join(feed, "component.zip")) } } };
 	const source = await readFile(join(root, "consumer.php"), "utf8");
 	assert.ok(source.includes("declare(strict_types=0);"), "original weak PHP caller required");
 	const contents = { "consumer.php": source

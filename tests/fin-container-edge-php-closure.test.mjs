@@ -47,10 +47,17 @@ test("PHP archive guard authenticates original receipts, member sets and Compose
 	}
 });
 
-test("Composer guard closes original payloads and generated autoloaders before weak, strict and relocated calls", { skip: !enabled }, async t => {
-	const fixture = await finContainerEdgePhpFixture(t), result = await install(fixture, "consumer");
+test("Composer guard closes original payloads and generated autoloaders in paths with spaces", { skip: !enabled }, async t => {
+	const fixture = await finContainerEdgePhpFixture(t), result = await install(fixture, "consumer with space");
 	assert.equal(result.checks, 1);
 	let context = result.phpEnvironment;
+	const lock = JSON.parse(await readFile(join(context.root, "composer.lock")));
+	for(const pkg of lock.packages)
+	{
+		assert.match(pkg.dist.url, /^file:\/\//u);
+		assert.match(pkg.dist.url, /consumer with space/u);
+		assert.doesNotMatch(pkg.dist.url, /%20/u);
+	}
 	const expected = await verifyFinContainerEdgePhpEnvironment(context), call = () => runFinContainerEdgePhp(context);
 	assert.equal((await call()).stdout, "php-closure-ok:1\n");
 	assert.equal((await runFinContainerEdgePhp(context, "strict")).stdout, "php-closure-ok:1\n");

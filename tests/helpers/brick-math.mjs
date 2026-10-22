@@ -13,6 +13,14 @@ import { saveLakeFile } from "./lake-workspace.mjs";
 import { sha256 } from "../../src/capsule/node.mjs";
 
 /**
+ * Preserve filesystem characters that PHP's file stream wrapper consumes
+ * literally. Composer does not URL-decode an encoded local distribution path.
+ *
+ * @param path - Absolute local distribution path.
+ */
+export const composerFileUrl = path => decodeURI(pathToFileURL(path).href);
+
+/**
  * Stage authentic dependency files as a local registry distribution.
  *
  * @param root - Test-owned dependency feed directory.
@@ -25,7 +33,7 @@ export const brickMathRepository = async root => {
 	await saveLakeFile(root, archive, bytes);
 	return { type: "package"
 		, package: { ...JSON.parse(files["composer.json"]), version: "1.0.0"
-			, dist: { type: "zip", url: pathToFileURL(join(root, archive)).href, shasum: createHash("sha1").update(bytes).digest("hex") } } };
+			, dist: { type: "zip", url: composerFileUrl(join(root, archive)), shasum: createHash("sha1").update(bytes).digest("hex") } } };
 };
 
 /** Mount the exact upstream dependency in isolated, unpackaged Zend tests. */
