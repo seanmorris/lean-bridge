@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
+import "./helpers/callback-checked-record-language-source-history-tests.mjs";
 import "./helpers/callback-subtype-remaining-source-history-tests.mjs";
 import "./helpers/callback-subtype-language-source-history-tests.mjs";
 import { assertJsonSchema } from "./helpers/json-schema.mjs";
