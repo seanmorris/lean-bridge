@@ -146,6 +146,12 @@ test("generated JavaScript validates Fin fields against their sibling bound"
 	assert.throws(() => validators.assertNestedFin({
 		bound: 3n, below: -1n
 	}, refinement, "value"), /value\.below must be non-negative bigint/u);
+	assert.doesNotThrow(() => validators.assertDependent({
+		bound: 3n, below: 2n
+	}, "nominal"));
+	assert.throws(() => validators.assertDependent({
+		bound: 3n, below: 3n
+	}, "nominal"), /nominal\.below must be bigint below 3/u);
 	}
 );
 

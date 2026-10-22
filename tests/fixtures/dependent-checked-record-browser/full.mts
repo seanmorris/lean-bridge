@@ -1,3 +1,8 @@
+/**
+ * Type-check the complete dependent checked-record package surface.
+ *
+ * @file
+ */
 import * as api from "dependentrecords";
 
 const input: api.Dependent = { bound: 3n, below: 2n };

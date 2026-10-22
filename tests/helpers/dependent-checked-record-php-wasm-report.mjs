@@ -36,16 +36,22 @@ const subset = (files, prefix) => Object.fromEntries(Object.entries(files)
 	.filter(([path]) => path.startsWith(prefix))
 	.map(([path, value]) => [path.slice(prefix.length), value]));
 
-/** Require the retained field-to-field bound and erased proof provenance. */
+/**
+ * Require the retained field-to-field bound and erased proof provenance.
+ *
+ * @param ir - Reviewed Binding IR for the dependent record package.
+ */
 const assertDependentCheckedRecordProvenance = ir => {
 	assert.equal(ir.types.length, 1);
 	const record = ir.types[0];
 	assert.equal(record.id, "lean:DependentRecords.Dependent");
 	assert.equal(record.name, "Dependent");
-	assert.deepEqual(record.fields.map(field => ({ name: field.name, type: field.type }))
+	assert.deepEqual(
+		record.fields.map(field => ({ name: field.name, type: field.type }))
 		, ["bound", "below"].map(name => ({
 			name, type: { kind: "primitive", name: "nat" }
-		})));
+		}))
+	);
 	assert.deepEqual(record.source.extensions["lean-lang.org/erased-proofs"]
 		, { fields: ["valid"] });
 	assert.deepEqual(record.source.extensions["lean-lang.org/nominal-refinements"]

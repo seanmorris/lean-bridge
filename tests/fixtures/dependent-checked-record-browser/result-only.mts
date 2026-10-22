@@ -1,3 +1,8 @@
+/**
+ * Type-check the result-only dependent checked-record package surface.
+ *
+ * @file
+ */
 import * as api from "dependentrecords";
 
 const generated: api.Dependent = api.dependentResult(4n);
