@@ -1,0 +1,147 @@
+{
+  "additions": [
+    {
+      "currentSha256": "643f190205a5c26f15961e84e783a4b307ac85a9d813fab07a5dd0251dcc7f40",
+      "path": "scripts/update-dependent-checked-record-wit-pkg-config-space-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "66192f715cecd589b7b91ea706c3aaa84c1478d2495e7deeb66bc5ede92c0a69",
+      "path": "tests/helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b1f390a0ee09a73e74f45d97e9e5473a9f103ce16d433cd3441b126c01886cdf",
+      "path": "tests/helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs"
+    }
+  ],
+  "implementationCommit": "657caf5e1b43f839f044b2d17eb5451eff4e1ef9",
+  "integrationBaseCommit": "657caf5e1b43f839f044b2d17eb5451eff4e1ef9",
+  "integrationUpdates": [
+    {
+      "currentSha256": "595546d2261de340d531bb9af9c5f10bdf103a3903a9dce9c11821f217bfa5d4",
+      "edits": [
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 44637
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1545373
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1549505
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1553149
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1557145
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1560762
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1564384
+        },
+        {
+          "current": "          \"sha256\": \"e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7\"\n",
+          "previous": "          \"sha256\": \"1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87\"\n",
+          "start": 1568010
+        }
+      ],
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "4621168283d851ed61397c666c365a7fa6625bb2027f8eacb70671d5b0e1ef41"
+    },
+    {
+      "currentSha256": "cb0c06a824a3b2b4a3463d957206037783c714d5d706f1d644e5c4dcd12178c4",
+      "edits": [
+        {
+          "current": "import { beforeDependentCheckedRecordWitPkgConfigSpaceRepairSource, dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths, dependentCheckedRecordWitPkgConfigSpaceRepairIntegrationPaths } from \"./dependent-checked-record-wit-pkg-config-space-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 10766
+        },
+        {
+          "current": "\t...dependentCheckedRecordWitPkgConfigSpaceRepairChangedPaths\n\t, ...dependentCheckedRecordWitPkgConfigSpaceRepairIntegrationPaths\n\t, ...dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths\n",
+          "previous": "\t...dependentCheckedRecordPromotionArtifactIdentityHardeningChangedPaths\n",
+          "start": 152049
+        },
+        {
+          "current": "\tconst dependentCheckedRecordWitPkgConfigSpaceRepair\n\t\t= beforeDependentCheckedRecordWitPkgConfigSpaceRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentCheckedRecordWitPkgConfigSpaceRepair) === expected)\n\t\treturn dependentCheckedRecordWitPkgConfigSpaceRepair;\n",
+          "previous": "",
+          "start": 186054
+        },
+        {
+          "current": "\t\t\tpath, dependentCheckedRecordWitPkgConfigSpaceRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 186465
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f15e49768972e619775195040e155e4b89c90d2c4666b88b3f8ca4a799897307"
+    },
+    {
+      "currentSha256": "e2f5d1567f681f965a12a38aaecb41e202aff5da7d74304c0991ffd58547a6d7",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-checked-record-wit-pkg-config-space-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4500
+        }
+      ],
+      "path": "tests/native-subtype.test.mjs",
+      "previousSha256": "1383d90df75cd2739ba29462415962f16bcc9a66d79d4b09602be4a66ddd2d87"
+    }
+  ],
+  "milestone": "dependent-checked-record-wit-pkg-config-space-repair-source-v1",
+  "predecessorCommit": "7c17c2362eec983a1bb6d294440ef7b1f150f1a5",
+  "reconciledTypeSurfacePointers": 8,
+  "schemaVersion": 1,
+  "scope": "Dependent checked-record WIT installation parses pkg-config shell escaping into literal compiler arguments, preserving deliberate space-containing relocation paths without invoking a shell.",
+  "updates": [
+    {
+      "currentSha256": "2dea7873d5edca1f397513208f42acf29a5213897325afcfb83bbddc348a664a",
+      "edits": [
+        {
+          "current": "import { parseDependentCheckedRecordWitPkgConfigFlags } from \"./dependent-checked-record-wit-install.mjs\";\n",
+          "previous": "",
+          "start": 1652
+        },
+        {
+          "current": "test(\"dependent checked-record WIT preserves shell-escaped pkg-config paths\", () => {\n\tassert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(\n\t\t\"-I/tmp/lean-bridge-dependent\\\\ checked/include -L/tmp/lean-bridge-dependent\\\\ checked/lib -ldependent\\n\"\n\t), [\n\t\t\"-I/tmp/lean-bridge-dependent checked/include\"\n\t\t, \"-L/tmp/lean-bridge-dependent checked/lib\", \"-ldependent\"\n\t]);\n\tassert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(\n\t\t\"'-I/single quoted' \\\"-L/double quoted\\\" plain\\\\ value empty''\\n\"\n\t), [\"-I/single quoted\", \"-L/double quoted\", \"plain value\", \"empty\"]);\n\tassert.deepEqual(parseDependentCheckedRecordWitPkgConfigFlags(\" \\n\\t\"), []);\n\tassert.throws(() => parseDependentCheckedRecordWitPkgConfigFlags(\"-I/tmp/ending\\\\\")\n\t\t, /ends in an escape/u);\n\tassert.throws(() => parseDependentCheckedRecordWitPkgConfigFlags(\"'-I/tmp/open\")\n\t\t, /unterminated quote/u);\n});\n\n",
+          "previous": "",
+          "start": 2104
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-fixture-tests.mjs",
+      "previousSha256": "c19a10db4c93a66128c1a0c05d99f28fa5bbe7ebde7b3d9a633a87922abda222"
+    },
+    {
+      "currentSha256": "08eb5472035b01523ff06b2a168c5b94fcbedc09abae01b65027abfca5eb54b1",
+      "edits": [
+        {
+          "current": "/**\n * Parse pkg-config's shell-escaped stdout into literal argv entries without\n * invoking a shell. In particular, pkg-config escapes spaces in a relocated\n * prefix with a backslash; splitting on whitespace corrupts that path.\n *\n * @param source - Complete pkg-config stdout.\n */\nexport const parseDependentCheckedRecordWitPkgConfigFlags = source => {\n\tassert.equal(typeof source, \"string\");\n\tconst flags = [];\n\tlet flag = \"\", quote = null, started = false;\n\tfor(let index = 0; index < source.length; index++)\n\t{\n\t\tconst character = source[index];\n\t\tif(quote !== null)\n\t\t{\n\t\t\tif(character === quote)\n\t\t\t{\n\t\t\t\tquote = null;\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tif(character === \"\\\\\" && quote === '\"')\n\t\t\t{\n\t\t\t\tassert.ok(index + 1 < source.length, \"pkg-config ends in an escape\");\n\t\t\t\tflag += source[++index];\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tflag += character;\n\t\t\tcontinue;\n\t\t}\n\t\tif(/\\s/u.test(character))\n\t\t{\n\t\t\tif(started)\n\t\t\t{\n\t\t\t\tflags.push(flag);\n\t\t\t\tflag = \"\";\n\t\t\t\tstarted = false;\n\t\t\t}\n\t\t\tcontinue;\n\t\t}\n\t\tstarted = true;\n\t\tif(character === \"'\" || character === '\"')\n\t\t{\n\t\t\tquote = character;\n\t\t\tcontinue;\n\t\t}\n\t\tif(character === \"\\\\\")\n\t\t{\n\t\t\tassert.ok(index + 1 < source.length, \"pkg-config ends in an escape\");\n\t\t\tflag += source[++index];\n\t\t\tcontinue;\n\t\t}\n\t\tflag += character;\n\t}\n\tassert.equal(quote, null, \"pkg-config contains an unterminated quote\");\n\tif(started) flags.push(flag);\n\treturn flags;\n};\n\n",
+          "previous": "",
+          "start": 1152
+        },
+        {
+          "current": "\tconst flags = parseDependentCheckedRecordWitPkgConfigFlags((await capture(\n\t\t\"pkgConfig\", [\"--cflags\", \"--libs\", dependentCheckedRecordWitPkgConfig]\n\t\t, environment)).stdout);\n",
+          "previous": "\tconst flags = (await capture(\"pkgConfig\", [\"--cflags\", \"--libs\", dependentCheckedRecordWitPkgConfig], environment)).stdout.trim().split(/\\s+/u);\n",
+          "start": 7270
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-wit-install.mjs",
+      "previousSha256": "57cc57576bfac5039adc03f621d4214244f0d849b5ef091bd13e75bf3e0a2bf3"
+    }
+  ]
+}
