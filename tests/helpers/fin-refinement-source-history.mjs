@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from "./callback-subtype-test-registration-source-history.mjs";
 import { beforeCallbackSubtypeReviewRepairSource, callbackSubtypeReviewRepairChangedPaths } from "./callback-subtype-review-repair-source-history.mjs";
 import { beforeCallbackSubtypePromotionContractSource, callbackSubtypePromotionContractChangedPaths } from "./callback-subtype-promotion-contract-source-history.mjs";
 import { beforeCallbackSubtypeHostedArchiveFoundationSource, callbackSubtypeHostedArchiveFoundationChangedPaths } from "./callback-subtype-hosted-archive-foundation-source-history.mjs";
@@ -1917,7 +1918,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackSubtypeReviewRepairChangedPaths
+	...callbackSubtypeTestRegistrationChangedPaths
+	, ...callbackSubtypeReviewRepairChangedPaths
 	, ...callbackSubtypePromotionContractChangedPaths
 	, ...callbackSubtypeHostedArchiveFoundationChangedPaths
 	, ...phpWasmRefinementEntryDocumentationPrecisionChangedPaths
@@ -2617,8 +2619,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackSubtypeTestRegistration
+		= beforeCallbackSubtypeTestRegistrationSource(path, text, expected);
+	if(sha256(callbackSubtypeTestRegistration) === expected)
+		return callbackSubtypeTestRegistration;
 	const callbackSubtypeReviewRepair
-		= beforeCallbackSubtypeReviewRepairSource(path, text, expected);
+		= beforeCallbackSubtypeReviewRepairSource(
+			path, callbackSubtypeTestRegistration, expected
+		);
 	if(sha256(callbackSubtypeReviewRepair) === expected)
 		return callbackSubtypeReviewRepair;
 	const callbackSubtypePromotionContract

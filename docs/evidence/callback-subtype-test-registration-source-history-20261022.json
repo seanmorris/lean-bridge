@@ -1,0 +1,105 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fb6ed4e6c579a6bf51809f7aa08bc8688f21bcae92b639fa76b8b953e85a7ddd",
+      "path": "scripts/update-callback-subtype-test-registration-source-history.mjs"
+    },
+    {
+      "currentSha256": "601ec0e571ce6937515c248c07d0bc68f795ada440395e7b1b76479c32ee7e03",
+      "path": "tests/helpers/callback-subtype-test-registration-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c47e4501a31f2dfed361fcc2ad1fb1d99f49993a2fd0d1a2be29bf2a1a212341",
+      "path": "tests/helpers/callback-subtype-test-registration-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "47859a559694f28bf8256992f770b04862c87627",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d2f7097db7eec92d494cc53c835744c97dcca54e8db8afc552ed851f788d4bd5",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeTestRegistrationSource, callbackSubtypeTestRegistrationChangedPaths } from \"./callback-subtype-test-registration-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackSubtypeTestRegistrationChangedPaths\n\t, ...callbackSubtypeReviewRepairChangedPaths\n",
+          "previous": "\t...callbackSubtypeReviewRepairChangedPaths\n",
+          "start": 146925
+        },
+        {
+          "current": "\tconst callbackSubtypeTestRegistration\n\t\t= beforeCallbackSubtypeTestRegistrationSource(path, text, expected);\n\tif(sha256(callbackSubtypeTestRegistration) === expected)\n\t\treturn callbackSubtypeTestRegistration;\n",
+          "previous": "",
+          "start": 178813
+        },
+        {
+          "current": "\t\t= beforeCallbackSubtypeReviewRepairSource(\n\t\t\tpath, callbackSubtypeTestRegistration, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCallbackSubtypeReviewRepairSource(path, text, expected);\n",
+          "start": 179058
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "b04b2a85591f7c6f2891b3c3dae5c7fb78aaddc723eb782e40050abe930f54a5"
+    },
+    {
+      "currentSha256": "54b6793f6d45a6044a10a98ba543bf840500d370150f0be13d1cd315c0a228d7",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-test-registration-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4112
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "acbf178d932cad48a151dc443e33f89789e830c47ba6eb0ce7e37a2cc73ec5c6"
+    }
+  ],
+  "milestone": "callback-subtype-test-registration-v1",
+  "predecessorCommit": "a3dc121a1bdc0f05474b44ab47e53f4d7eafe55e",
+  "schemaVersion": 1,
+  "scope": "Register callback Subtype evidence gates in the repository contract profile and retain the complete Perl runtime-template identity closure.",
+  "updates": [
+    {
+      "currentSha256": "fbbdda75dd6eb98facb1c935f7a5a39960ae508fad310a7af6b1567b050e8d61",
+      "edits": [
+        {
+          "current": "\t\t, \"callback-subtype-hosted-archive\"\n\t\t, \"callback-subtype-hosted-evidence\"\n",
+          "previous": "",
+          "start": 1026
+        },
+        {
+          "current": "\t\t, \"callback-subtype-promotion\"\n",
+          "previous": "",
+          "start": 1323
+        }
+      ],
+      "path": "src/adoption/test-profiles.mjs",
+      "previousSha256": "21a767703cb13e25bdd992b5795270f7e3bafe9c3faaf7d2c48fe5ec6e5684e6"
+    },
+    {
+      "currentSha256": "6ff27e5d57df688589013834dd14a212a865301b1bfd5bd7b44e45c3ad813db4",
+      "edits": [
+        {
+          "current": "\t\t\t, \"runtime.h\", \"OwnedAssets.pm\", \"Platform.pm\"]\n\t\t\t.map(path => [\"producer\", `src/backends/perl/${path}`])\n",
+          "previous": "\t\t\t, \"runtime.h\"].map(path => [\"producer\", `src/backends/perl/${path}`])\n",
+          "start": 1932
+        }
+      ],
+      "path": "tests/callback-subtype-hosted-archive.test.mjs",
+      "previousSha256": "6566dd808b1bda6d4c0147e178c70f04b968deb33d2087a2b65433cba2656f45"
+    },
+    {
+      "currentSha256": "645bfdca47c13ae4244bdc00e371bf32afa0c485e602d1e2b5d408de0b87b933",
+      "edits": [
+        {
+          "current": "\t\t\t, \"src/backends/perl/OwnedAssets.pm\"\n\t\t\t, \"src/backends/perl/Platform.pm\"\n",
+          "previous": "",
+          "start": 3451
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-hosted-evidence-sources.mjs",
+      "previousSha256": "18d0bc2f70c213d8896564d9ffe42cd09221af33a4d9c5ae568d46e3768a3a3b"
+    }
+  ]
+}
