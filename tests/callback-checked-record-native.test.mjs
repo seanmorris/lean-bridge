@@ -194,6 +194,7 @@ test("C++ callback checked records require an exact record recovery wrapper", { 
 	const hostType = generated.callbacks.get(host.id), closureType = generated.callbacks.get(closure.id);
 	const header = generated.files["include/structured.hpp"];
 	assert.match(header, /inline auto with_recovery\(/u);
+	assert.match(header, /if \(status == 10\) \{[\s\S]*Host callback result failed its Lean constructor[\s\S]*STATUS_INVALID_ARGUMENT/u);
 	assert.match(header, new RegExp(`GraphAccepts${hostType.index} = graph_recovery_matches<std::remove_cvref_t<Function>, Interval>`, "u"));
 	assert.doesNotMatch(header, new RegExp(`GraphAccepts${closureType.index} = graph_recovery_matches`, "u"));
 	assert.doesNotMatch(header, new RegExp(`graph_invoke${hostType.index}\\(`, "u"));

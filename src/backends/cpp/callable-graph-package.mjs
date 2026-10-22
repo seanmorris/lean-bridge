@@ -35,6 +35,11 @@ public:
 namespace detail {
 [[noreturn]] inline void callable_fail(uint32_t status) {
   if (status == 4) ${p}_graph_retire();
+  if (status == 10) {
+    static constexpr char message[] = "Host callback result failed its Lean constructor";
+    ${p}_error error{${m}_ERROR_INVALID_ARGUMENT, message, sizeof(message) - 1};
+    throw Error(${m}_STATUS_INVALID_ARGUMENT, error);
+  }
   ${p}_error error{}; auto code = ${p}_graph_finish(status, &error);
   if (status == 6) { code = ${m}_STATUS_DECLARED_ERROR; error = {${m}_ERROR_UNEXPECTED, "Host callback failed", 20}; }
   throw Error(code, error);
