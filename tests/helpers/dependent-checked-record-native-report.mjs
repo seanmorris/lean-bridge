@@ -197,7 +197,12 @@ const checkModels = async ({
 				pkg.artifacts.map(item => [item.path, item.sha256])))
 		});
 	}
-	for(const path of buildPaths(selection))
+	// File timestamps are observations of the two independent author roots,
+	// not reproducible build inputs. Their semantic projection was compared
+	// above; require byte identity only for deterministic build products and
+	// author-controlled source bytes.
+	for(const path of buildPaths(selection).filter(
+		path => path !== "author-inputs.json"))
 		assert.deepEqual(await read(`build-0/${path}`)
 			, await read(`build-1/${path}`), path);
 	return { model, receipt };
