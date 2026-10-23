@@ -72,6 +72,7 @@ import { beforeOwnedCheckedRecordHostedArchiversSource, ownedCheckedRecordHosted
 import { beforeZeroPayloadMatrixClosureSource, zeroPayloadMatrixClosureChangedPaths } from "./zero-payload-matrix-closure-source-history.mjs";
 import { beforeOwnedCheckedRecordPhpWasmRetainedHandoffSource, ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths } from "./owned-checked-record-php-wasm-retained-handoff-source-history.mjs";
 import { beforeOwnedCheckedRecordEvidenceContractSource, ownedCheckedRecordEvidenceContractChangedPaths } from "./owned-checked-record-evidence-contract-source-history.mjs";
+import { beforeCallbackSubtypeHistoryTraversalRepairSource, callbackSubtypeHistoryTraversalRepairChangedPaths } from "./callback-subtype-history-traversal-repair-source-history.mjs";
 import { beforeOwnedSubtypePerlIdentityRepairSource, ownedSubtypePerlIdentityRepairChangedPaths } from "./owned-subtype-perl-identity-repair-source-history.mjs";
 import { beforeOwnedSubtypeWitResourceRepairSource, ownedSubtypeWitResourceRepairChangedPaths } from "./owned-subtype-wit-resource-repair-source-history.mjs";
 import { beforeOwnedSubtypeJvmFilenameRepairSource, ownedSubtypeJvmFilenameRepairChangedPaths } from "./owned-subtype-jvm-filename-repair-source-history.mjs";
@@ -2148,6 +2149,7 @@ export const finRefinementNormalizationPaths = Object.freeze([...new Set([
 	, ...zeroPayloadMatrixClosureChangedPaths
 	, ...ownedCheckedRecordPhpWasmRetainedHandoffChangedPaths
 	, ...ownedCheckedRecordEvidenceContractChangedPaths
+	, ...callbackSubtypeHistoryTraversalRepairChangedPaths
 	, ...ownedSubtypePerlIdentityRepairChangedPaths
 	, ...ownedSubtypeWitResourceRepairChangedPaths
 	, ...ownedSubtypeJvmFilenameRepairChangedPaths
@@ -2853,6 +2855,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const callbackSubtypeHistoryTraversalRepair
+		= beforeCallbackSubtypeHistoryTraversalRepairSource(
+			path, text, expected);
+	if(sha256(callbackSubtypeHistoryTraversalRepair) === expected)
+		return callbackSubtypeHistoryTraversalRepair;
+	text = callbackSubtypeHistoryTraversalRepair;
 	const ownedSubtypePerlIdentityRepair
 		= beforeOwnedSubtypePerlIdentityRepairSource(path, text, expected);
 	if(sha256(ownedSubtypePerlIdentityRepair) === expected)

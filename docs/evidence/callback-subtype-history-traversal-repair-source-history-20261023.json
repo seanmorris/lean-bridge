@@ -1,0 +1,103 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9c090e9ac6d33059f7f3f546720492f7f7c3436f79cd0473c92e05b059863857",
+      "path": "scripts/update-callback-subtype-history-traversal-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "2723a416a1f1c11913b19404372b5e35878eaccadbeeaa5f030988ae9272e8f5",
+      "path": "tests/helpers/callback-subtype-history-traversal-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "dafc425a9e24e86d6a194ee1b23397ae09b2e5423254af5421850c946cdb61a8",
+      "path": "tests/helpers/callback-subtype-history-traversal-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e3917721921830895c74cf958a7dd2a2b59b398e",
+  "integrationUpdates": [
+    {
+      "currentSha256": "a9fd4c466172d2428644969fc88a6d77986fda5632f32c098bd9d68507914ca9",
+      "edits": [
+        {
+          "current": "import { beforeCallbackSubtypeHistoryTraversalRepairSource, callbackSubtypeHistoryTraversalRepairChangedPaths } from \"./callback-subtype-history-traversal-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...callbackSubtypeHistoryTraversalRepairChangedPaths\n",
+          "previous": "",
+          "start": 171282
+        },
+        {
+          "current": "\tconst callbackSubtypeHistoryTraversalRepair\n\t\t= beforeCallbackSubtypeHistoryTraversalRepairSource(\n\t\t\tpath, text, expected);\n\tif(sha256(callbackSubtypeHistoryTraversalRepair) === expected)\n\t\treturn callbackSubtypeHistoryTraversalRepair;\n\ttext = callbackSubtypeHistoryTraversalRepair;\n",
+          "previous": "",
+          "start": 203639
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "d434c8862ea179452f742bd84d1a1678a1ab9bb1195fc638c9bfde33db0cb2cd"
+    },
+    {
+      "currentSha256": "716fd5fb363ab50d9553ef319bb8a575a2edefab1e8d7922addebfc38b99e842",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-subtype-history-traversal-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "71da64184a88e9d2845b4fc295d306388f6010ebd4d55dcc45a7c11d114d20c2"
+    }
+  ],
+  "milestone": "callback-subtype-history-traversal-repair-v1",
+  "predecessorCommit": "a0e845cf59b3a7fb7a88706c891fcb0d03d88f6a",
+  "schemaVersion": 1,
+  "scope": "Let the callback-Subtype promotion layer reverse its own exact transition before the history hub continues toward older requested milestones.",
+  "updates": [
+    {
+      "currentSha256": "41a74aa851f6406642202f608ff130535160642cee6dac983a9e7fe4469b4f72",
+      "edits": [
+        {
+          "current": "\tvoid expected;\n",
+          "previous": "",
+          "start": 2790
+        },
+        {
+          "current": "\treturn reverseCallbackSubtypePromotionUpdate(source, update);\n",
+          "previous": "\tconst previous = reverseCallbackSubtypePromotionUpdate(source, update);\n\treturn expected === undefined || sha256(previous) === expected\n\t\t? previous : source;\n",
+          "start": 3035
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-promotion-source-history.mjs",
+      "previousSha256": "8788fbd5f9618b74b56db3988efa87b073184a50930d18468758e54338b692ef"
+    },
+    {
+      "currentSha256": "3ae7a9f0130b73850f24b73a1259375d387f9725acb34655368c7073e2a8d4cc",
+      "edits": [
+        {
+          "current": "import { sourceAtFinHistoryMilestone } from \"./source-at-fin-history-milestone.mjs\";\n",
+          "previous": "",
+          "start": 808
+        },
+        {
+          "current": "\t\tconst current = await sourceAtFinHistoryMilestone(\n\t\t\tupdate.path, update.currentSha256);\n",
+          "previous": "\t\tconst current = await readFile(update.path, \"utf8\");\n",
+          "start": 1590
+        },
+        {
+          "current": "\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\taddition.path, addition.currentSha256))\n\t\t, addition.currentSha256, addition.path);\n",
+          "previous": "\t\tassert.equal(sha256(await readFile(addition.path))\n\t\t\t, addition.currentSha256, addition.path);\n",
+          "start": 2246
+        },
+        {
+          "current": "});\n\ntest(\"callback Subtype promotion traverses older milestones\", async () => {\n\tconst expected\n\t\t= \"1825f34e6589cf0629b026bfb1bae0c415932ba5fcf99cbbda81fa8620820d0f\";\n\tconst source = await sourceAtFinHistoryMilestone(\n\t\t\"tests/helpers/fin-refinement-source-history.mjs\", expected);\n\tassert.equal(sha256(source), expected);\n",
+          "previous": "",
+          "start": 4246
+        }
+      ],
+      "path": "tests/helpers/callback-subtype-promotion-source-history-tests.mjs",
+      "previousSha256": "5ee92eef9e659427c58524222e2a85b40f0c56e2430ae56c0378b247080bd1e4"
+    }
+  ]
+}
