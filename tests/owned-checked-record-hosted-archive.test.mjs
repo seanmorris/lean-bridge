@@ -424,7 +424,9 @@ test("owned checked-record hosted output replay rejects every tampered retention
 	}, /package targets/u);
 });
 
-const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
+const archiveInputs = async (t, laneName, {
+	enforce = "skipped", runConclusion = "success"
+} = {}) => {
 	const { root, lane } = await synthesize(t, laneName);
 	const inputs = await temporary(t, `lean-owned-hosted-inputs-${laneName}-`);
 	const zip = join(inputs, "artifact.zip");
@@ -432,7 +434,7 @@ const archiveInputs = async (t, laneName, { enforce = "skipped" } = {}) => {
 	execFileSync("/usr/bin/zip", ["-X", "-r", "-q", zip, ...roots]
 		, { cwd: root });
 	const bytes = await readFile(zip);
-	const run = { id: 4242, status: "completed", conclusion: "success"
+	const run = { id: 4242, status: "completed", conclusion: runConclusion
 		, head_sha: revision, path: lane.workflow
 		, repository: { full_name: "seanmorris/lean-bridge" }
 		, head_repository: { full_name: "seanmorris/lean-bridge" }
@@ -502,6 +504,22 @@ test("owned checked-record hosted archives authenticate, retain and replay origi
 	await assert.rejects(writeOwnedCheckedRecordHostedEvidence({ lane: "rust"
 		, selected: forged.selected, destination: join(forged.inputs, "evidence")
 		, archiveCommit: revision }));
+	const failedMatrix = await archiveInputs(t, "javascript"
+		, { runConclusion: "failure" });
+	const failedMatrixIndex = await writeOwnedCheckedRecordHostedEvidence({
+		lane: "javascript", selected: failedMatrix.selected
+		, destination: join(failedMatrix.inputs, "evidence")
+		, archiveCommit: revision
+	});
+	assert.deepEqual(failedMatrixIndex.hostedRun.conclusions
+		, { run: "failure", job: "success" });
+	const cancelledMatrix = await archiveInputs(t, "javascript"
+		, { runConclusion: "cancelled" });
+	await assert.rejects(writeOwnedCheckedRecordHostedEvidence({
+		lane: "javascript", selected: cancelledMatrix.selected
+		, destination: join(cancelledMatrix.inputs, "evidence")
+		, archiveCommit: revision
+	}), /Ineligible hosted run conclusion/u);
 });
 
 test("owned checked-record hosted steps require acceptance and skipped enforcement", () => {

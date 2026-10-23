@@ -171,6 +171,7 @@ const javascriptLane = freeze({
 	, prefix: "owned-javascript-wasm"
 	, acceptanceStep: "Build and install owned npm packages through the standalone CLI"
 	, archiveStep: "Preserve owned JavaScript and runtime execution logs"
+	, runConclusions: ["success", "failure"]
 	, test: "tests/owned-checked-record-javascript-packaging.test.mjs"
 	, packaging: "owned-checked-record-javascript-packaging"
 	, report: "report.json"

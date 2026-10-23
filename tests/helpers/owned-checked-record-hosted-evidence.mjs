@@ -16,7 +16,7 @@ import {
 	copyFile, lstat, mkdir, mkdtemp, readFile, readdir, realpath, rm, stat
 	, writeFile
 } from "node:fs/promises";
-import { constants } from "node:fs";
+import { constants, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
@@ -101,6 +101,21 @@ const retainedOutputPaths = (lane, paths) => lane.retainedRoots
 	? paths.filter(path => lane.retainedRoots.some(root => path.startsWith(root)))
 	: paths;
 
+const hostedContract = (lane, selected, retainedConclusions) => {
+	const expected = { workflow: lane.workflow, jobName: lane.job
+		, artifactPrefix: lane.prefix };
+	if(!lane.runConclusions) return expected;
+	const conclusions = retainedConclusions ?? (() => {
+		const run = JSON.parse(readFileSync(selected["run-json"], "utf8"));
+		return { run: run.conclusion, job: "success" };
+	})();
+	assert.deepEqual(Object.keys(conclusions).sort(), ["job", "run"]);
+	assert.ok(lane.runConclusions.includes(conclusions.run)
+		, `Ineligible hosted run conclusion: ${conclusions.run}`);
+	assert.equal(conclusions.job, "success");
+	return { ...expected, conclusions };
+};
+
 /**
  * Authenticate, replay and write one immutable hosted evidence directory.
  *
@@ -118,9 +133,8 @@ export const writeOwnedCheckedRecordHostedEvidence = async ({
 	await assert.rejects(lstat(destination), { code: "ENOENT" }
 		, "Hosted evidence destination must be new");
 	const lane = ownedCheckedRecordHostedLanes[laneName];
-	const hosted = await inspectCallbackSubtypeHostedArtifact(selected, {
-		workflow: lane.workflow, jobName: lane.job, artifactPrefix: lane.prefix
-	});
+	const hosted = await inspectCallbackSubtypeHostedArtifact(
+		selected, hostedContract(lane, selected));
 	assertOwnedCheckedRecordHostedSteps(lane, hosted.api.job.bytes);
 	const revision = hosted.revision, revisions = {
 		producer: revision, consumer: revision
@@ -283,12 +297,13 @@ export const checkOwnedCheckedRecordHostedEvidence = async (
 		assert.equal(await callbackSubtypeHostedDigest(zip)
 			, index.hostedRun.artifact.sha256);
 		const api = name => join(root, `hosted/api/${name}.json`);
-		const hosted = await inspectCallbackSubtypeHostedArtifact({
+		const selection = {
 			"artifact-zip": zip, "run-json": api("run")
 			, "job-json": api("job"), "artifact-json": api("artifact")
-		}, {
-			workflow: lane.workflow, jobName: lane.job, artifactPrefix: lane.prefix
-		});
+		};
+		const hosted = await inspectCallbackSubtypeHostedArtifact(selection
+			, hostedContract(lane, selection
+				, lane.runConclusions ? index.hostedRun.conclusions : undefined));
 		assert.equal(hosted.revision, index.producerCommit);
 		assertCallbackSubtypeHostedApiBinding(index, hosted);
 		assertOwnedCheckedRecordHostedSteps(lane, hosted.api.job.bytes);
