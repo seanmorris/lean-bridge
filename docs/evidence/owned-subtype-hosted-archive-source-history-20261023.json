@@ -1,0 +1,107 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b8a700ba6dfdf95558e59976012e9715de87c4c64b325a2294034f5c0a5f578c",
+      "path": "scripts/update-owned-subtype-hosted-archive-source-history.mjs"
+    },
+    {
+      "currentSha256": "74c9b6a0040dbd3fc451d6e2a2146af2df6f0c361043f27993bb97e8254eea43",
+      "path": "tests/helpers/owned-subtype-hosted-archive-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e47be8d0cb3508893dbd9c5af9dec29bf4942dc9aba5d8965a7b474790d41692",
+      "path": "tests/helpers/owned-subtype-hosted-archive-source-history.mjs"
+    }
+  ],
+  "implementationAdditions": [
+    {
+      "currentSha256": "a6f10dda598f0f318b12a747659caa6b8e845e9aa658783f567667c52215a4a1",
+      "path": "scripts/archive-owned-subtype-evidence.mjs"
+    },
+    {
+      "currentSha256": "688396c520c4de367dbb6475651d1779c9f15c5f2c0f4ce50418c95e54f95d49",
+      "path": "tests/helpers/owned-subtype-hosted-contracts.mjs"
+    },
+    {
+      "currentSha256": "7c09710b857698b3dc89852e03e878efd0ff7f6da133344f995840f4ddc24df5",
+      "path": "tests/helpers/owned-subtype-hosted-evidence-sources.mjs"
+    },
+    {
+      "currentSha256": "15a0973a7ac22b83fe86068c12dd01d58856d8e4e6a1e8cba0e500382fd14d3e",
+      "path": "tests/helpers/owned-subtype-hosted-evidence.mjs"
+    },
+    {
+      "currentSha256": "d445c05c1f51bdbd73753480f51ee76d0941abe899b7a64731e1434a169734b8",
+      "path": "tests/helpers/owned-subtype-hosted-output.mjs"
+    }
+  ],
+  "implementationCommit": "9c1bd270ddd793f3b3078bbb4d24c906ae769baa",
+  "implementationCommits": [
+    "e4e170b27d632e61aaa8106d1bb30e28afc3aea7",
+    "9c1bd270ddd793f3b3078bbb4d24c906ae769baa"
+  ],
+  "integrationUpdates": [
+    {
+      "currentSha256": "f20ceb57c20347582b88f5356593b9884f9699c689cf8cf3bf2ba0750b21cb25",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeHostedArchiveSource, ownedSubtypeHostedArchiveChangedPaths } from \"./owned-subtype-hosted-archive-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeHostedArchiveChangedPaths\n",
+          "previous": "",
+          "start": 170461
+        },
+        {
+          "current": "\tconst ownedSubtypeHostedArchive = beforeOwnedSubtypeHostedArchiveSource(\n\t\tpath, text, expected);\n\tif(sha256(ownedSubtypeHostedArchive) === expected)\n\t\treturn ownedSubtypeHostedArchive;\n\ttext = ownedSubtypeHostedArchive;\n",
+          "previous": "",
+          "start": 202569
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "2d583a2c843e0990dac2ca64e867b44a31243eb2639114057aaf4886feedd9c0"
+    },
+    {
+      "currentSha256": "c6006255483f7aa0f650571065fc61e0549b598e7047ad6b03f2e829fd95a3a1",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-hosted-archive-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4436
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "d7bf585432026e4d30515e5f8ec8dcd43c8b5a09d0981e7af72a8a22e0bb6ccf"
+    }
+  ],
+  "milestone": "owned-subtype-hosted-archive-v1",
+  "predecessorCommit": "1353c2c9c509b9dee7ac303c7f0a37f22ee9ea65",
+  "schemaVersion": 1,
+  "scope": "Define seven immutable owned-Subtype hosted archives with original ZIP parts, GitHub API bytes, complete output, retained packages, exact four-role source closures and independent replay.",
+  "updates": [
+    {
+      "currentSha256": "3d895fd5752e81ad31dbd32606311303b967e41d38dfc112bcf143e1b8aeb409",
+      "edits": [
+        {
+          "current": "import { execFileSync } from \"node:child_process\";\nimport { readdirSync } from \"node:fs\";\nimport { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 138
+        },
+        {
+          "current": "import {\n\townedSubtypeHostedContracts, ownedSubtypeHostedLaneNames\n} from \"./helpers/owned-subtype-hosted-contracts.mjs\";\nimport {\n\tassertOwnedSubtypeHostedSteps, checkOwnedSubtypeHostedEvidence\n} from \"./helpers/owned-subtype-hosted-evidence.mjs\";\nimport {\n\townedSubtypeEvidenceSources\n} from \"./helpers/owned-subtype-hosted-evidence-sources.mjs\";\n",
+          "previous": "",
+          "start": 479
+        },
+        {
+          "current": "\ntest(\"owned Subtype archive contracts close all seven hosted lanes\", async () => {\n\tassert.deepEqual(ownedSubtypeHostedLaneNames, [\"native\", \"perl\"\n\t\t, \"languages\", \"dotnet\", \"jvm\", \"php-native\", \"wit-wasi\"]);\n\tassert.deepEqual(ownedSubtypeHostedLaneNames\n\t\t, [...ownedSubtypeHostedLanes]);\n\tconst profiles = ownedSubtypeHostedLaneNames.flatMap(lane =>\n\t\townedSubtypeHostedContracts[lane].profiles).toSorted();\n\tassert.deepEqual(profiles, [\"c\", \"cpp\", \"dotnet\", \"java\", \"kotlin\"\n\t\t, \"perl\", \"php-native\", \"python\", \"ruby\", \"rust\", \"wit-wasi\"]);\n\tfor(const lane of ownedSubtypeHostedLaneNames)\n\t{\n\t\tconst contract = ownedSubtypeHostedContracts[lane];\n\t\tconst workflow = await readFile(contract.workflow, \"utf8\");\n\t\tconst matrix = value => contract.ci === null\n\t\t\t? value.replaceAll(lane, \"${{ matrix.lane }}\") : value;\n\t\tfor(const value of [matrix(contract.job), matrix(contract.prefix)\n\t\t\t, contract.acceptanceStep\n\t\t\t, contract.enforceStep, matrix(contract.tap), matrix(contract.toolchain)\n\t\t\t, `${contract.packaging}/`])\n\t\t\tassert.ok(workflow.includes(value), `${lane}: ${value}`);\n\t\tconst steps = [{ number: 1, name: contract.acceptanceStep\n\t\t\t, status: \"completed\", conclusion: \"success\" }\n\t\t, { number: 2, name: contract.enforceStep\n\t\t\t, status: \"completed\", conclusion: \"skipped\" }];\n\t\tassertOwnedSubtypeHostedSteps(contract, Buffer.from(JSON.stringify({ steps })));\n\t\tassert.throws(() => assertOwnedSubtypeHostedSteps(contract\n\t\t\t, Buffer.from(JSON.stringify({ steps: steps.map(step => ({ ...step\n\t\t\t\t, conclusion: \"success\" })) }))));\n\t}\n});\n\ntest(\"owned Subtype archives retain exact four-role source closures\", () => {\n\tconst revision = execFileSync(\"git\", [\"rev-parse\", \"HEAD\"]\n\t\t, { encoding: \"utf8\" }).trim();\n\tfor(const lane of ownedSubtypeHostedLaneNames)\n\t{\n\t\tconst sources = ownedSubtypeEvidenceSources(lane, {\n\t\t\tproducer: revision, consumer: revision\n\t\t\t, checker: revision, archiver: revision\n\t\t});\n\t\tassert.deepEqual([...new Set(sources.map(source => source.role))]\n\t\t\t, [\"producer\", \"consumer\", \"checker\", \"archiver\"]);\n\t\tassert.equal(new Set(sources.map(source =>\n\t\t\t`${source.role}/${source.path}`)).size, sources.length);\n\t\tconst contract = ownedSubtypeHostedContracts[lane];\n\t\tassert.ok(sources.some(source => source.role === \"producer\"\n\t\t\t&& source.path === contract.workflow));\n\t\tassert.ok(sources.some(source => source.role === \"producer\"\n\t\t\t&& source.path === contract.test));\n\t\tassert.ok(sources.some(source => source.role === \"checker\"\n\t\t\t&& source.path === \"tests/helpers/owned-subtype-hosted-output.mjs\"));\n\t\tassert.ok(sources.some(source => source.role === \"archiver\"\n\t\t\t&& source.path === \"scripts/archive-owned-subtype-evidence.mjs\"));\n\t}\n});\n\nconst evidenceDirectories = readdirSync(\"docs/evidence\", {\n\twithFileTypes: true\n}).filter(entry => entry.isDirectory()).map(entry => entry.name);\n\nfor(const lane of ownedSubtypeHostedLaneNames)\n{\n\tconst roots = evidenceDirectories.filter(name => new RegExp(\n\t\t`^owned-subtype-${lane}-hosted-\\\\d{8}$`, \"u\").test(name));\n\ttest(`retained ${lane} owned Subtype hosted evidence replays`, {\n\t\tskip: roots.length === 0, timeout: 600_000\n\t}, async () => {\n\t\tfor(const root of roots)\n\t\t\tawait checkOwnedSubtypeHostedEvidence(lane, `docs/evidence/${root}`);\n\t});\n}\n",
+          "previous": "",
+          "start": 8904
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "2a1cc309fdb150652a77f3bab1942b5e4879f580ffb2febfee84cb93459ab0bc"
+    }
+  ]
+}
