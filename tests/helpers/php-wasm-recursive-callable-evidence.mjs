@@ -17,7 +17,8 @@ import { phpRecursiveCallableHistoryPath } from "./php-recursive-callable-source
 import { phpWasmRecursiveCallableChangedPaths, reversePhpWasmRecursiveCallableUpdate } from "./php-wasm-recursive-callable-source-history.mjs";
 import { beforeWitRecursiveCallables } from "./wit-recursive-callable-source-history.mjs";
 
-const priorSource = async path => beforeWitRecursiveCallables(path, await readFile(path, "utf8"));
+const priorSource = async (path, expected) => beforeWitRecursiveCallables(
+	path, await readFile(path, "utf8"), expected);
 
 export const phpWasmRecursiveCallableBaseline = "0af020b28bc69bb97f678a814b7b567eac13c559";
 export const phpWasmRecursiveCallableExecutionPath = "docs/evidence/php-wasm-recursive-callables-20260926.json";
@@ -64,7 +65,8 @@ export const assertPhpWasmRecursiveCallableExecution = async record => {
 	passing(record.installed, "npm run test:php-wasm-recursive-packages", 2);
 	passing(record.regressions, "LEAN_BRIDGE_PHP_WASM_GRAPH_PACKAGE_TEST=1 LEAN_BRIDGE_PHP_WASM_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 --test-name-pattern='offline installation|preserve eight copied shapes' tests/php-wasm-graph-package.test.mjs tests/php-wasm-structured-callables.test.mjs", 2);
 	assert.deepEqual(Object.keys(record.projectionSources).sort(), phpWasmRecursiveCallableProjectionPaths);
-	for(const [path, digest] of Object.entries(record.projectionSources)) assert.equal(sha256(await priorSource(path)), digest, path);
+	for(const [path, digest] of Object.entries(record.projectionSources))
+		assert.equal(sha256(await priorSource(path, digest)), digest, path);
 	await assertPhpWasmRecursiveProbes(record.generated.report);
 	assert.deepEqual(Object.keys(record.installed.reports).sort(), ["mixed", "recursive"]);
 	for(const [kind, mixed] of [["recursive", false], ["mixed", true]])
@@ -96,18 +98,21 @@ export const assertPhpWasmRecursiveCallableIntegration = async record => {
 	assert.deepEqual(Object.keys(record.additions).sort(), phpWasmRecursiveCallableAddedPaths);
 	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...phpWasmRecursiveCallableChangedPaths, ...phpWasmRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
-	for(const path of paths) assert.equal(sha256(await priorSource(path)), record.sourceHashes[path], path);
+	for(const path of paths) assert.equal(sha256(await priorSource(
+		path, record.sourceHashes[path])), record.sourceHashes[path], path);
 	const restored = {};
 	for(const update of record.updates)
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reversePhpWasmRecursiveCallableUpdate(await priorSource(update.path), update);
+		restored[update.path] = reversePhpWasmRecursiveCallableUpdate(
+			await priorSource(update.path, update.currentSha256), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
 	const { document: current, ...contracts } = await readTypeSurface(), old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.ok(current.contractVersion);
-	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"));
+	const document = JSON.parse(await priorSource("docs/type-surface.v1.json"
+		, record.sourceHashes["docs/type-surface.v1.json"]));
 	assert.equal(document.contractVersion, "0.106.0"); assert.equal(old.contractVersion, "0.105.0");
 	const cells = typeSurfaceCells(document, contracts), oldCells = typeSurfaceCells(old, contracts);
 	const count = values => values.filter(cell => cell.stages.installedExecution.state === "passed").length;

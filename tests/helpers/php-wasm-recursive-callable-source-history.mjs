@@ -69,11 +69,14 @@ export const reversePhpWasmRecursiveCallableUpdate = (source, update) => {
  * @param expected - Optional exact predecessor at which normalization stops.
  */
 export const beforePhpWasmRecursiveCallables = (path, source, expected) => {
-	source = beforeWitRecursiveCallables(path, source, expected);
-	if(typeof source === "string" && !phpWasmRecursiveCallableChangedPaths.includes(path)) return source;
-	const digest = sha256(source);
-	if(digest === expected || !phpWasmRecursiveCallableChangedPaths.includes(path)) return source;
 	const record = history ??= JSON.parse(readFileSync(phpWasmRecursiveCallableHistoryPath, "utf8"));
 	const update = record.updates.find(item => item.path === path);
-	return update?.currentSha256 === digest ? reversePhpWasmRecursiveCallableUpdate(source, update) : source;
+	let digest = sha256(source);
+	if(digest === expected) return source;
+	if(update?.currentSha256 === digest)
+		return reversePhpWasmRecursiveCallableUpdate(source, update);
+	source = beforeWitRecursiveCallables(path, source, expected);
+	digest = sha256(source);
+	return digest !== expected && update?.currentSha256 === digest
+		? reversePhpWasmRecursiveCallableUpdate(source, update) : source;
 };

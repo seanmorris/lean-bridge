@@ -96,7 +96,8 @@ test("PHP-Wasm recursive probe records require fault coverage, zero owners and s
 test("PHP-Wasm recursive source transitions reject unknown edits and substituted predecessors", async () => {
 	for(const update of (await json(phpWasmRecursiveCallableHistoryPath)).updates)
 	{
-		const source = beforeWitRecursiveCallables(update.path, await readFile(update.path, "utf8"));
+		const source = beforeWitRecursiveCallables(
+			update.path, await readFile(update.path, "utf8"), update.currentSha256);
 		assert.equal(sha256(reversePhpWasmRecursiveCallableUpdate(source, update)), update.previousSha256);
 		assert.equal(sha256(beforePhpWasmRecursiveCallables(update.path, source)), update.previousSha256);
 		assert.equal(beforePhpWasmRecursiveCallables(update.path, source, update.currentSha256), source);

@@ -7,8 +7,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledPhpWasmModel, generateCompiledPhpWasmLeanAdapters } from "../../src/build/php-wasm-graph-model.mjs";
-import { preOwnedPhpWasmGenerators } from "./pre-owned-php-wasm-generators.mjs";
+import { phpWasmRecursiveGenerators } from "./pre-owned-php-wasm-generators.mjs";
 import { phpWasmCopiedPins } from "../../src/build/php-wasm-copied-artifacts.mjs";
 import { bundledBrickMath, brickMathSources } from "../../src/backends/php/brick-math.mjs";
 import { phpRecursiveCallableDocumentation } from "./php-recursive-callable-docs.mjs";
@@ -50,7 +49,9 @@ const observed = (item, mixed, libraries) => {
  * @param mixed - Whether all primitive and sixteen-argument signatures are included.
  */
 export const assertPhpWasmRecursivePackages = async (report, mixed = false) => {
-	const { generateCompiledPhpWasmGraph } = await preOwnedPhpWasmGenerators();
+	const { createCompiledPhpWasmModel, generateCompiledPhpWasmGraph
+		, generateCompiledPhpWasmLeanAdapters }
+		= await phpWasmRecursiveGenerators();
 	assert.equal(report.schemaVersion, 1); assert.equal(report.mixed, mixed);
 	assert.equal(report.compiledLean, true); assert.equal(report.installedPackage, true);
 	assert.equal(report.runtimeIdentity, sha256(canonicalJson(report.runtimeManifest)));
