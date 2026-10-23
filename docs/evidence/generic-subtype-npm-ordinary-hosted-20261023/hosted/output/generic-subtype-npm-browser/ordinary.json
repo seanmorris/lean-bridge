@@ -1,0 +1,1978 @@
+{
+  "kind": "generic-subtype-npm-browser-installed-v1",
+  "observations": [
+    {
+      "authorInputsUnchanged": true,
+      "browsers": {
+        "observations": [
+          {
+            "browser": {
+              "browser": {
+                "deployments": [
+                  {
+                    "files": [
+                      {
+                        "bytes": 285,
+                        "path": "assets/__vite-browser-external-D513FCGW.js",
+                        "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+                      },
+                      {
+                        "bytes": 7934,
+                        "path": "assets/index-B2zr_MT4.js",
+                        "sha256": "39e7499c81112f4f353d9d5fb2a6bc0ef0b301031f1b5acfc5822c7cd7647add"
+                      },
+                      {
+                        "bytes": 6488025,
+                        "path": "assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                      },
+                      {
+                        "bytes": 115707,
+                        "path": "assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                      },
+                      {
+                        "bytes": 3691504,
+                        "path": "assets/nominalsubtypes-CQRx-HFq.js",
+                        "sha256": "58dbc02e6808d5586dca5f3fd05460df59e7a0925d5c2dcc55a485d9ba5a5c0e"
+                      },
+                      {
+                        "bytes": 2199,
+                        "path": "assets/preload-helper-CZj_vqJa.js",
+                        "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+                      },
+                      {
+                        "bytes": 1180,
+                        "path": "assets/rolldown-runtime-BPOCksWG.js",
+                        "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+                      },
+                      {
+                        "bytes": 396,
+                        "path": "index.html",
+                        "sha256": "4a2f894ee51da2168e21546a92a1ab3e2c2a27e8714f64e1f86ef8c504433f20"
+                      }
+                    ],
+                    "modulePaths": [
+                      "node_modules/@lean-bridge/runtime/index.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/main.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+                      "node_modules/nominalsubtypes/index.mjs",
+                      "node_modules/nominalsubtypes/internal/descriptor.mjs",
+                      "node_modules/nominalsubtypes/internal/runtime.mjs",
+                      "node_modules/nominalsubtypes/internal/validators.mjs"
+                    ],
+                    "sha256": "74fe53b64138ec00143415103632cc34ab44c3c639f7b56940b1682ff0b65f2d",
+                    "variant": "production",
+                    "viteVersion": "8.2.1"
+                  }
+                ],
+                "executions": [
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "chromium",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "rerun": true
+                    },
+                    "observation": {
+                      "hostVersion": "151.0.7922.34",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-javascript",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "firefox",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "rerun": true
+                    },
+                    "observation": {
+                      "hostVersion": "153.0",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-javascript",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "webkit",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "rerun": true
+                    },
+                    "observation": {
+                      "hostVersion": "26.5",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-javascript",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  }
+                ],
+                "externalNetworkBlocked": true,
+                "framework": [],
+                "installedAssets": [
+                  {
+                    "bytes": 115707,
+                    "path": "node_modules/nominalsubtypes/internal/wasm/nominalsubtypes-7f8bfe55e5831a91.so.wasm",
+                    "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                  },
+                  {
+                    "bytes": 6488025,
+                    "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+                    "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                  }
+                ],
+                "installedSourcesRemoved": true,
+                "requestedEngines": [
+                  "chromium",
+                  "firefox",
+                  "webkit"
+                ]
+              },
+              "observation": {
+                "hostVersion": "151.0.7922.34",
+                "module": "nominalsubtypes",
+                "profile": "browser-javascript",
+                "realm": "window",
+                "results": {
+                  "checks": 611,
+                  "genericCompositions": true,
+                  "module": "nominalsubtypes",
+                  "rejections": 5,
+                  "route": "ordinary"
+                },
+                "schemaVersion": 1
+              }
+            },
+            "profile": "browser-javascript"
+          },
+          {
+            "browser": {
+              "browser": {
+                "deployments": [
+                  {
+                    "files": [
+                      {
+                        "bytes": 285,
+                        "path": "assets/__vite-browser-external-D513FCGW.js",
+                        "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+                      },
+                      {
+                        "bytes": 494288,
+                        "path": "assets/index-CGQPb_Ay.js",
+                        "sha256": "2705405f49c2eb8b36ae56278deeefa9906f267c87232ec6205125eaa00dbe58"
+                      },
+                      {
+                        "bytes": 6488025,
+                        "path": "assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                      },
+                      {
+                        "bytes": 115707,
+                        "path": "assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                      },
+                      {
+                        "bytes": 3691504,
+                        "path": "assets/nominalsubtypes-CQRx-HFq.js",
+                        "sha256": "58dbc02e6808d5586dca5f3fd05460df59e7a0925d5c2dcc55a485d9ba5a5c0e"
+                      },
+                      {
+                        "bytes": 2199,
+                        "path": "assets/preload-helper-CZj_vqJa.js",
+                        "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+                      },
+                      {
+                        "bytes": 1180,
+                        "path": "assets/rolldown-runtime-BPOCksWG.js",
+                        "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+                      },
+                      {
+                        "bytes": 493,
+                        "path": "index.html",
+                        "sha256": "0174057d6e30d3cb16ae9cd670d6a961deb6873ad370731f18f6b8395642bb90"
+                      }
+                    ],
+                    "modulePaths": [
+                      "node_modules/@lean-bridge/runtime/index.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/main.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+                      "node_modules/nominalsubtypes/index.mjs",
+                      "node_modules/nominalsubtypes/internal/descriptor.mjs",
+                      "node_modules/nominalsubtypes/internal/runtime.mjs",
+                      "node_modules/nominalsubtypes/internal/validators.mjs",
+                      "node_modules/react-dom/cjs/react-dom-client.production.js",
+                      "node_modules/react-dom/cjs/react-dom.production.js",
+                      "node_modules/react-dom/client.js",
+                      "node_modules/react-dom/index.js",
+                      "node_modules/react/cjs/react.production.js",
+                      "node_modules/react/index.js",
+                      "node_modules/scheduler/cjs/scheduler.production.js",
+                      "node_modules/scheduler/index.js"
+                    ],
+                    "sha256": "ce0b101bfb1f01924cf97e751cab6143e3a5b02c88891d2b33591ae051799c1b",
+                    "variant": "production",
+                    "viteVersion": "8.2.1"
+                  },
+                  {
+                    "files": [
+                      {
+                        "bytes": 285,
+                        "path": "assets/__vite-browser-external-D513FCGW.js",
+                        "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+                      },
+                      {
+                        "bytes": 881938,
+                        "path": "assets/index-DvtegLb0.js",
+                        "sha256": "5e53a3718d9337934715f6239fc95c89313bab9fb17e97a63ae5c79a94f7df9d"
+                      },
+                      {
+                        "bytes": 6488025,
+                        "path": "assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                      },
+                      {
+                        "bytes": 115707,
+                        "path": "assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                      },
+                      {
+                        "bytes": 3691504,
+                        "path": "assets/nominalsubtypes-CQRx-HFq.js",
+                        "sha256": "58dbc02e6808d5586dca5f3fd05460df59e7a0925d5c2dcc55a485d9ba5a5c0e"
+                      },
+                      {
+                        "bytes": 2199,
+                        "path": "assets/preload-helper-CZj_vqJa.js",
+                        "sha256": "946b424c03f3f20989004f90ee0afc60fb0dec4071f964ff71718f4258f9a501"
+                      },
+                      {
+                        "bytes": 1180,
+                        "path": "assets/rolldown-runtime-BPOCksWG.js",
+                        "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+                      },
+                      {
+                        "bytes": 493,
+                        "path": "index.html",
+                        "sha256": "1c5a0d5a8fd73e1f49adf16b40d1c3afd6a909dea0f42de36e1030b7ce0ea8f9"
+                      }
+                    ],
+                    "modulePaths": [
+                      "node_modules/@lean-bridge/runtime/index.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/main.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+                      "node_modules/nominalsubtypes/index.mjs",
+                      "node_modules/nominalsubtypes/internal/descriptor.mjs",
+                      "node_modules/nominalsubtypes/internal/runtime.mjs",
+                      "node_modules/nominalsubtypes/internal/validators.mjs",
+                      "node_modules/react-dom/cjs/react-dom-client.development.js",
+                      "node_modules/react-dom/cjs/react-dom.development.js",
+                      "node_modules/react-dom/client.js",
+                      "node_modules/react-dom/index.js",
+                      "node_modules/react/cjs/react.development.js",
+                      "node_modules/react/index.js",
+                      "node_modules/scheduler/cjs/scheduler.development.js",
+                      "node_modules/scheduler/index.js"
+                    ],
+                    "sha256": "e449033693ceffba52ae3de87117400d81e5fb28c2aaf20412c340f65ad6393e",
+                    "variant": "strict",
+                    "viteVersion": "8.2.1"
+                  }
+                ],
+                "executions": [
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "chromium",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 2,
+                      "commits": 3,
+                      "effects": 3,
+                      "ignored": 0
+                    },
+                    "observation": {
+                      "hostVersion": "151.0.7922.34",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "chromium",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 5,
+                      "commits": 3,
+                      "effects": 6,
+                      "ignored": 3
+                    },
+                    "observation": {
+                      "hostVersion": "151.0.7922.34",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "strict"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "firefox",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 2,
+                      "commits": 3,
+                      "effects": 3,
+                      "ignored": 0
+                    },
+                    "observation": {
+                      "hostVersion": "153.0",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "firefox",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 5,
+                      "commits": 3,
+                      "effects": 6,
+                      "ignored": 3
+                    },
+                    "observation": {
+                      "hostVersion": "153.0",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "strict"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "webkit",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 2,
+                      "commits": 3,
+                      "effects": 3,
+                      "ignored": 0
+                    },
+                    "observation": {
+                      "hostVersion": "26.5",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "webkit",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "cleanups": 5,
+                      "commits": 3,
+                      "effects": 6,
+                      "ignored": 3
+                    },
+                    "observation": {
+                      "hostVersion": "26.5",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-react",
+                      "realm": "window",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "pendingUnmount": true,
+                    "variant": "strict"
+                  }
+                ],
+                "externalNetworkBlocked": true,
+                "framework": [
+                  {
+                    "archive": "framework/react-19.2.8.tgz",
+                    "name": "react",
+                    "sha256": "98194e5c2f9003355b8d0f8fbff5ab90970aeaa2fffc98ebeadcfba4ca201a73",
+                    "version": "19.2.8"
+                  },
+                  {
+                    "archive": "framework/react-dom-19.2.8.tgz",
+                    "name": "react-dom",
+                    "sha256": "9ed0cce3ae338576db9a90ad85eb24e5b40f6079589b10b9fce9dbaed53104c4",
+                    "version": "19.2.8"
+                  },
+                  {
+                    "archive": "framework/scheduler-0.27.0.tgz",
+                    "name": "scheduler",
+                    "sha256": "eee584b9bad43f93d70f3e02dd4e564237ad08230b00e4539e1833fc7f6ab0c9",
+                    "version": "0.27.0"
+                  }
+                ],
+                "installedAssets": [
+                  {
+                    "bytes": 115707,
+                    "path": "node_modules/nominalsubtypes/internal/wasm/nominalsubtypes-7f8bfe55e5831a91.so.wasm",
+                    "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                  },
+                  {
+                    "bytes": 6488025,
+                    "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+                    "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                  }
+                ],
+                "installedSourcesRemoved": true,
+                "requestedEngines": [
+                  "chromium",
+                  "firefox",
+                  "webkit"
+                ]
+              },
+              "observation": {
+                "hostVersion": "151.0.7922.34",
+                "module": "nominalsubtypes",
+                "profile": "browser-react",
+                "realm": "window",
+                "results": {
+                  "checks": 611,
+                  "genericCompositions": true,
+                  "module": "nominalsubtypes",
+                  "rejections": 5,
+                  "route": "ordinary"
+                },
+                "schemaVersion": 1
+              }
+            },
+            "profile": "browser-react"
+          },
+          {
+            "browser": {
+              "browser": {
+                "deployments": [
+                  {
+                    "files": [
+                      {
+                        "bytes": 285,
+                        "path": "assets/__vite-browser-external-D513FCGW.js",
+                        "sha256": "6be8662bb6edfac30fc9d7aab4022a2da16dc516e5443fd68f77f860337e2fff"
+                      },
+                      {
+                        "bytes": 2540,
+                        "path": "assets/index-Bs7IGw2N.js",
+                        "sha256": "37ec5156c8babefcf439a13a62a6c90f2390ad786e479a27d086db9bc779d327"
+                      },
+                      {
+                        "bytes": 6488025,
+                        "path": "assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                      },
+                      {
+                        "bytes": 115707,
+                        "path": "assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                      },
+                      {
+                        "bytes": 3691529,
+                        "path": "assets/nominalsubtypes-8aHdQxFh.js",
+                        "sha256": "b991c05d8a813dbc75362e6389e27b6291a4e471425de3e77f433f85d1c0f25a"
+                      },
+                      {
+                        "bytes": 1180,
+                        "path": "assets/rolldown-runtime-BPOCksWG.js",
+                        "sha256": "5d847676e890d2d0e8664006e0d0bdaf390ffc81b2edb71c17956c311b30c5c4"
+                      },
+                      {
+                        "bytes": 6215,
+                        "path": "assets/worker-_KSIalMa.js",
+                        "sha256": "b98f75bf090070da782208d04937c613c99fe6dbe680b9ee70e62c5c06798b82"
+                      },
+                      {
+                        "bytes": 301,
+                        "path": "index.html",
+                        "sha256": "c6b765574983b4c78bfaa4ea15a29e7a8d11d6e3be194fad557b101900647e87"
+                      }
+                    ],
+                    "modulePaths": [
+                      "node_modules/@lean-bridge/runtime/index.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/canonical.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/contract.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/binding-ir/sha256.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-copied.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-owned-wasm.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-records.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-abi.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive-ownership.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-recursive.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalar-codec.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callable-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/component-structured-callables.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/main.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-bindings.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-borrow-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-callbacks.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-calls.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-component-runtime.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-control.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-registry.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-scalars.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/owned-wasm-values.mjs",
+                      "node_modules/@lean-bridge/runtime/internal/refinements.mjs",
+                      "node_modules/nominalsubtypes/index.mjs",
+                      "node_modules/nominalsubtypes/internal/descriptor.mjs",
+                      "node_modules/nominalsubtypes/internal/runtime.mjs",
+                      "node_modules/nominalsubtypes/internal/validators.mjs"
+                    ],
+                    "sha256": "43d82af4a4193c0d34c0eb4c88fd3bf1517dd1bdacdf7de0d96c6cc3d9e62b93",
+                    "variant": "production",
+                    "viteVersion": "8.2.1"
+                  }
+                ],
+                "executions": [
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "chromium",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "created": 2,
+                      "live": 0,
+                      "terminated": 2
+                    },
+                    "observation": {
+                      "hostVersion": "151.0.7922.34",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-worker",
+                      "realm": "dedicated-worker",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "firefox",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "created": 2,
+                      "live": 0,
+                      "terminated": 2
+                    },
+                    "observation": {
+                      "hostVersion": "153.0",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-worker",
+                      "realm": "dedicated-worker",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  },
+                  {
+                    "assets": [
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 6488025,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/main-DEI6BCfG.wasm",
+                        "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b",
+                        "status": 200
+                      },
+                      {
+                        "bytes": 115707,
+                        "mime": "application/wasm",
+                        "path": "/corpus/nested/assets/nominalsubtypes-7f8bfe55e5831a91.so-BLEqdfWd.wasm",
+                        "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+                        "status": 200
+                      }
+                    ],
+                    "engine": "webkit",
+                    "failedAssetRecovery": true,
+                    "lifecycle": {
+                      "created": 2,
+                      "live": 0,
+                      "terminated": 2
+                    },
+                    "observation": {
+                      "hostVersion": "26.5",
+                      "module": "nominalsubtypes",
+                      "profile": "browser-worker",
+                      "realm": "dedicated-worker",
+                      "results": {
+                        "checks": 611,
+                        "genericCompositions": true,
+                        "module": "nominalsubtypes",
+                        "rejections": 5,
+                        "route": "ordinary"
+                      },
+                      "schemaVersion": 1
+                    },
+                    "variant": "production"
+                  }
+                ],
+                "externalNetworkBlocked": true,
+                "framework": [],
+                "installedAssets": [
+                  {
+                    "bytes": 115707,
+                    "path": "node_modules/nominalsubtypes/internal/wasm/nominalsubtypes-7f8bfe55e5831a91.so.wasm",
+                    "sha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be"
+                  },
+                  {
+                    "bytes": 6488025,
+                    "path": "node_modules/@lean-bridge/runtime/internal/main.wasm",
+                    "sha256": "d8a9f3861d518d8311340b0e02c6a9aa73ba191b09a7ab4d6ac937d5e3e82d0b"
+                  }
+                ],
+                "installedSourcesRemoved": true,
+                "requestedEngines": [
+                  "chromium",
+                  "firefox",
+                  "webkit"
+                ]
+              },
+              "observation": {
+                "hostVersion": "151.0.7922.34",
+                "module": "nominalsubtypes",
+                "profile": "browser-worker",
+                "realm": "dedicated-worker",
+                "results": {
+                  "checks": 611,
+                  "genericCompositions": true,
+                  "module": "nominalsubtypes",
+                  "rejections": 5,
+                  "route": "ordinary"
+                },
+                "schemaVersion": 1
+              }
+            },
+            "profile": "browser-worker"
+          }
+        ],
+        "requestedEngines": [
+          "chromium",
+          "firefox",
+          "webkit"
+        ]
+      },
+      "builds": [
+        {
+          "bindingIrSha256": "2c45eafd24158ca9a75eaf8d97ecce82f5a2269ae71445e1bcceda756364214b",
+          "componentArchiveSha256": "82b9dbc9147854d60eccea8ad5914677856978b967865ed223bda1344ce6e9d0",
+          "receiptSha256": "7ac683731cc0f7e84072ebce3cb08c5c8c4b8cdb68a7e2d079e1818f4ed9c669",
+          "runtimeArchiveSha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+        },
+        {
+          "bindingIrSha256": "2c45eafd24158ca9a75eaf8d97ecce82f5a2269ae71445e1bcceda756364214b",
+          "componentArchiveSha256": "82b9dbc9147854d60eccea8ad5914677856978b967865ed223bda1344ce6e9d0",
+          "receiptSha256": "7ac683731cc0f7e84072ebce3cb08c5c8c4b8cdb68a7e2d079e1818f4ed9c669",
+          "runtimeArchiveSha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+        }
+      ],
+      "compilerFreePath": true,
+      "configuration": {
+        "contracts": {
+          "NominalSubtypes.GenericCompositions.echoGenericFirst": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "marker",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.GenericCompositions.GenericNat"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.GenericCompositions.echoGenericSecond": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "marker",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.GenericCompositions.GenericNat"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.GenericCompositions.genericUse": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "value",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "marker",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.GenericCompositions.GenericNat"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.aliases": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusTwo"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.combine": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.echo": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.echoEvent": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.echoGroups": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "arguments": [
+                    {
+                      "arguments": [
+                        {
+                          "fields": [
+                            {
+                              "name": "payload",
+                              "refinement": {
+                                "constructor": "NominalSubtypes.plusOne"
+                              }
+                            },
+                            {
+                              "name": "digit",
+                              "refinement": null
+                            }
+                          ],
+                          "kind": "record",
+                          "name": "NominalSubtypes.Envelope"
+                        }
+                      ],
+                      "kind": "option"
+                    }
+                  ],
+                  "kind": "array"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.echoPair": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusTwo"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.eventFirst": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusOne"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.eventSecond": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "cases": [
+                    {
+                      "fields": [],
+                      "name": "empty"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "value",
+                          "refinement": {
+                            "fields": [
+                              {
+                                "name": "payload",
+                                "refinement": {
+                                  "constructor": "NominalSubtypes.plusTwo"
+                                }
+                              },
+                              {
+                                "name": "digit",
+                                "refinement": null
+                              }
+                            ],
+                            "kind": "record",
+                            "name": "NominalSubtypes.Envelope"
+                          }
+                        }
+                      ],
+                      "name": "box"
+                    },
+                    {
+                      "fields": [
+                        {
+                          "name": "values",
+                          "refinement": {
+                            "arguments": [
+                              {
+                                "arguments": [
+                                  {
+                                    "arguments": [
+                                      {
+                                        "constructor": "NominalSubtypes.plusTwo"
+                                      },
+                                      {
+                                        "constructor": "NominalSubtypes.plusOne"
+                                      }
+                                    ],
+                                    "kind": "result"
+                                  }
+                                ],
+                                "kind": "option"
+                              }
+                            ],
+                            "kind": "array"
+                          }
+                        }
+                      ],
+                      "name": "choices"
+                    }
+                  ],
+                  "kind": "variant",
+                  "name": "NominalSubtypes.Event"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.first": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusOne"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.inspectAliasPair": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusOne"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "fields": [
+                                  {
+                                    "name": "payload",
+                                    "refinement": {
+                                      "constructor": "NominalSubtypes.plusTwo"
+                                    }
+                                  },
+                                  {
+                                    "name": "digit",
+                                    "refinement": null
+                                  }
+                                ],
+                                "kind": "record",
+                                "name": "NominalSubtypes.Envelope"
+                              }
+                            ],
+                            "kind": "option"
+                          }
+                        ],
+                        "kind": "array"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.AliasPair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.nested": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "left",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusOne"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    },
+                    {
+                      "name": "right",
+                      "refinement": {
+                        "fields": [
+                          {
+                            "name": "payload",
+                            "refinement": {
+                              "constructor": "NominalSubtypes.plusTwo"
+                            }
+                          },
+                          {
+                            "name": "digit",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "record",
+                        "name": "NominalSubtypes.Envelope"
+                      }
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Pair"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          },
+          "NominalSubtypes.second": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy",
+                "refinement": {
+                  "fields": [
+                    {
+                      "name": "payload",
+                      "refinement": {
+                        "constructor": "NominalSubtypes.plusTwo"
+                      }
+                    },
+                    {
+                      "name": "digit",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "record",
+                  "name": "NominalSubtypes.Envelope"
+                }
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy"
+            }
+          }
+        },
+        "exports": [
+          "NominalSubtypes.first",
+          "NominalSubtypes.second",
+          "NominalSubtypes.combine",
+          "NominalSubtypes.nested",
+          "NominalSubtypes.eventFirst",
+          "NominalSubtypes.eventSecond",
+          "NominalSubtypes.echo",
+          "NominalSubtypes.aliases",
+          "NominalSubtypes.inspectAliasPair",
+          "NominalSubtypes.echoGroups",
+          "NominalSubtypes.echoPair",
+          "NominalSubtypes.echoEvent",
+          "NominalSubtypes.plainFin",
+          "NominalSubtypes.GenericCompositions.genericUse",
+          "NominalSubtypes.GenericCompositions.echoGenericFirst",
+          "NominalSubtypes.GenericCompositions.echoGenericSecond",
+          "NominalSubtypes.scalar",
+          "NominalSubtypes.produceEnvelope",
+          "NominalSubtypes.arrayValues",
+          "NominalSubtypes.listValues",
+          "NominalSubtypes.optional",
+          "NominalSubtypes.product",
+          "NominalSubtypes.branch",
+          "NominalSubtypes.groupValues",
+          "NominalSubtypes.pairValues",
+          "NominalSubtypes.eventValue",
+          "NominalSubtypes.eventEmpty",
+          "NominalSubtypes.eventChoices",
+          "NominalSubtypes.noItems"
+        ],
+        "modules": [
+          "NominalSubtypes",
+          "NominalSubtypes.GenericCompositions"
+        ],
+        "schemaVersion": 1,
+        "specializations": [
+          {
+            "declaration": "NominalSubtypes.GenericCompositions.genericEcho",
+            "name": "NominalSubtypes.GenericCompositions.echoGenericFirst",
+            "types": [
+              "NominalSubtypes.GenericCompositions.GenericNat"
+            ]
+          },
+          {
+            "declaration": "NominalSubtypes.GenericCompositions.genericEcho",
+            "name": "NominalSubtypes.GenericCompositions.echoGenericSecond",
+            "types": [
+              "NominalSubtypes.GenericCompositions.GenericNat"
+            ]
+          }
+        ],
+        "targets": {
+          "npm": {
+            "name": "nominalsubtypes",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "expectedBindingIrSha256": "98afde160776cea2d3ece7b977debd1416c171d1006a414bcf37251c5d650c9f",
+      "independentBuilds": 2,
+      "node": {
+        "declarationsSha256": "a0a843e83b97e97fef602ea296300134535c95f1eb27216157876e2a95928ffc",
+        "observations": [
+          {
+            "execution": {
+              "code": 0,
+              "stderr": "",
+              "stdout": "{\"checks\":611,\"rejections\":5}\n"
+            },
+            "relocated": false,
+            "typescript": {
+              "code": 0,
+              "stderr": "",
+              "stdout": ""
+            }
+          },
+          {
+            "execution": {
+              "code": 0,
+              "stderr": "",
+              "stdout": "{\"checks\":611,\"rejections\":5}\n"
+            },
+            "relocated": true,
+            "typescript": {
+              "code": 0,
+              "stderr": "",
+              "stdout": ""
+            }
+          }
+        ],
+        "tree": {
+          "LICENSE": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996",
+          "README.md": "78d6a5d7c0f016c5b5e9a1275ea76c66968e5bdb510ce47e59591e5d6c414e2a",
+          "binding-manifest.json": "05fde80a923553d443645a2a8716bc755db8b35127b2130ffd9c0e8a37719838",
+          "index.d.ts": "a0a843e83b97e97fef602ea296300134535c95f1eb27216157876e2a95928ffc",
+          "index.mjs": "4fa891808ea6c59fc4d112d5d4d77ab785b222d5e6b1a8018911c97b282d7edd",
+          "internal/descriptor.mjs": "5524ba28aaf896ef2d0db14ade617d769f21ceac228e26003ab0103e3e169087",
+          "internal/runtime.mjs": "796a86405ac3d463f1af06a4c056b2ee440a36934f9957cff2058402fac39358",
+          "internal/validators.mjs": "1b8f2d28cd925e53f15bf1b2675ad003cd4a4aacd8dc05b654beb9314285ce52",
+          "internal/wasm/nominalsubtypes-7f8bfe55e5831a91.so.wasm": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+          "metadata/assurance.json": "6174a8e88167f777897af4e7f97044892daa313a49c0a0bff89826b105ea8095",
+          "metadata/binding-ir.json": "f510c33d02bc4c32c4ca3dcb282e38ceb567f40406ef860541bc459fe15084dd",
+          "metadata/component-release-bundle.json": "4b842ef3f37a3e34c45c277af06cc3be6fb26fc5fd95bf915243d61200bb4f79",
+          "metadata/lean-bridge.exports.json": "6dfea79b68acf8bad7b3d4b6f658ebe6c11a8840f8b3743b1f81f72eb5f11f36",
+          "metadata/provenance.json": "8721d4570fab5188d3d8875204dcc3664bc3c067bb28b7054e3ba1d43e590cb2",
+          "metadata/runtime-requirement.json": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+          "metadata/sbom.json": "bc5d77c4291a01328616999a8bcffcff34296b83bb6892446416fb5e4fc8f795",
+          "package.json": "3144998ff83b21e42258ae662f8490f1080054f58de75e26f236f1e8cd4c122e"
+        }
+      },
+      "offlineInstall": true,
+      "producerBuildsRemovedBeforeInstallation": true,
+      "producerCommit": "23ae28e37befcdf245e94f5f841ed50254fc869c",
+      "receipt": {
+        "bindingIrSha256": "2c45eafd24158ca9a75eaf8d97ecce82f5a2269ae71445e1bcceda756364214b",
+        "component": {
+          "id": "nominalsubtypes@1.0.0",
+          "name": "nominalsubtypes",
+          "version": "1.0.0"
+        },
+        "componentArtifactSha256": "6b9de2ce146009ea2809ddb2fc5ac859a1124cf8e853b3114eb018b3f75f26be",
+        "componentBundleSha256": "4b842ef3f37a3e34c45c277af06cc3be6fb26fc5fd95bf915243d61200bb4f79",
+        "componentIdentitySha256": "80fb624180883e0a5540a3b642ae4b7b8068b06ae91a45168d26f605743a2bf7",
+        "kind": "lean-bridge-component-package-receipt",
+        "package": {
+          "archive": "nominalsubtypes-1.0.0.tgz",
+          "package": "nominalsubtypes@1.0.0",
+          "sha256": "82b9dbc9147854d60eccea8ad5914677856978b967865ed223bda1344ce6e9d0"
+        },
+        "policies": {
+          "componentCompiledOnce": true,
+          "nativeCallablesOnly": true,
+          "runtimeBinaryInComponent": false,
+          "runtimeShared": true
+        },
+        "provenanceSha256": "8721d4570fab5188d3d8875204dcc3664bc3c067bb28b7054e3ba1d43e590cb2",
+        "runtime": {
+          "archive": "lean-bridge-runtime-0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1.tgz",
+          "package": "@lean-bridge/runtime@0.0.0-abi2.61c8e5f1e7381182f2d9cac436e1a247efd41cb856443534a238e31515708de1",
+          "sha256": "2d0542b611e1eb34730711e0feb87ab26e3e9cea6f364acd6fc648d0d5976d6a"
+        },
+        "runtimeRequirementSha256": "b3df4a35c4c5b68c496f066bf4bab0bbc6307a760420d02ae275cc94a6c0e4b9",
+        "schemaVersion": 1,
+        "source": {
+          "treeSha256": "ba9938fd4ee7d4d399bee31432121cb6705bced4b5821a87abbd00e91c2817ae"
+        },
+        "verificationCommand": "node verify-component-package-receipt.mjs --receipt component-package-receipt.json"
+      },
+      "relocatedInstallation": true,
+      "reproducible": true,
+      "route": "ordinary",
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "schemaVersion": 1
+}
