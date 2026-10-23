@@ -10,6 +10,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from "./checked-refinement-gate-repair-source-history.mjs";
 import { beforeDependentCheckedRecordPromotionSource, dependentCheckedRecordPromotionChangedPaths } from "./dependent-checked-record-promotion-source-history.mjs";
+import { beforeDependentCheckedRecordDocumentationClosureSource, dependentCheckedRecordDocumentationClosureNormalizationPaths } from "./dependent-checked-record-documentation-closure-source-history.mjs";
 import { beforeValueIndexBrowserPromotionClosureRepairSource, valueIndexBrowserPromotionClosureRepairNormalizationPaths } from "./value-index-browser-promotion-closure-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserArchiveSource, dependentCheckedRecordBrowserArchiveImplementationPaths, dependentCheckedRecordBrowserArchiveIntegrationPaths } from "./dependent-checked-record-browser-archive-source-history.mjs";
 import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from "./staged-php-producer-replay-repair-source-history.mjs";
@@ -2045,7 +2046,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...dependentCheckedRecordPromotionChangedPaths
+	...dependentCheckedRecordDocumentationClosureNormalizationPaths
+	, ...dependentCheckedRecordPromotionChangedPaths
 	, ...checkedRefinementGateRepairNormalizationPaths
 	, ...dependentCheckedRecordBrowserArchiveImplementationPaths
 	, ...dependentCheckedRecordBrowserArchiveIntegrationPaths
@@ -2833,6 +2835,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordDocumentationClosure
+		= beforeDependentCheckedRecordDocumentationClosureSource(
+			path, text, expected);
+	if(sha256(dependentCheckedRecordDocumentationClosure) === expected)
+		return dependentCheckedRecordDocumentationClosure;
+	text = dependentCheckedRecordDocumentationClosure;
 	const dependentCheckedRecordPromotion
 		= beforeDependentCheckedRecordPromotionSource(path, text, expected);
 	if(sha256(dependentCheckedRecordPromotion) === expected)

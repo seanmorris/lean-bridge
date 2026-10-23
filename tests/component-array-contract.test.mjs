@@ -26,6 +26,7 @@ import { beforeRefinementClosureSource } from "./helpers/refinement-closure-sour
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
 import "./helpers/checked-refinement-gate-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-promotion-source-history-tests.mjs";
+import "./helpers/dependent-checked-record-documentation-closure-source-history-tests.mjs";
 import "./helpers/value-index-browser-promotion-closure-repair-source-history-tests.mjs";
 import "./helpers/core-residual-ledger-pointer-replay-repair-source-history-tests.mjs";
 import "./helpers/dependent-record-authority-replay-repair-source-history-tests.mjs";
