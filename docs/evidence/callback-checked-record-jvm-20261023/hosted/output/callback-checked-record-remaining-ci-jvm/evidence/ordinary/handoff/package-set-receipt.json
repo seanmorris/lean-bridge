@@ -1,0 +1,44 @@
+{
+  "component": {
+    "id": "callbackcheckedrecords@1.0.0",
+    "name": "callbackcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51606408,
+          "path": "archives/callbackcheckedrecords-1.0.0.jar",
+          "sha256": "2e563875daa71c8b178a083a189727b8d95ba00acd54fc9b178f87acf259b68f"
+        },
+        {
+          "bytes": 632,
+          "path": "archives/callbackcheckedrecords-1.0.0.pom",
+          "sha256": "6ae4710fa39598d2737841940034f70918f9c972262ad00857e6437d2fc846f5"
+        }
+      ],
+      "ecosystem": "maven",
+      "name": "org.leanbridge:callbackcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "maven",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "5930423cf77ecf9da24bbd719bc0ac9095bb0b69b4025915e4581f5c149bc594",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "8e1e43f7bcbe7052ad4ae8daa4bb291fc39f2ac7886c29e5e031eb9c1e05ca02"
+  }
+}

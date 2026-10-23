@@ -1,0 +1,32 @@
+{
+  "kind": "callback-checked-record-remaining",
+  "producerCommit": "e7d2c268684889dca3c1dae480584a03082c9380",
+  "profiles": [
+    "java",
+    "kotlin"
+  ],
+  "reportSha256": "04d91bee2c74ae7e7144a9439bbc2650f26f10631a2990017bd65f202017fba8",
+  "reports": 4,
+  "retainedPackages": {
+    "routes": [
+      {
+        "archiveBytes": 51607040,
+        "archives": 2,
+        "receiptSha256": "5821274ac247584ebb6ff8d62c5adeebbf030e0c6a9d62c6c13abdc4e6ce1562",
+        "route": "ordinary"
+      },
+      {
+        "archiveBytes": 51613187,
+        "archives": 2,
+        "receiptSha256": "7418bd57c0a19dd74730cb01cd98ceb84b2973e62ca834286f6c02891d643ff0",
+        "route": "reviewed"
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "routes": [
+    "ordinary",
+    "reviewed"
+  ],
+  "schemaVersion": 1
+}

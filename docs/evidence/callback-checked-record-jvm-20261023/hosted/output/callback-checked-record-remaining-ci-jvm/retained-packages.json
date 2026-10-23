@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 51607040,
+      "archives": 2,
+      "files": [
+        "archives/callbackcheckedrecords-1.0.0.jar",
+        "archives/callbackcheckedrecords-1.0.0.pom",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "5821274ac247584ebb6ff8d62c5adeebbf030e0c6a9d62c6c13abdc4e6ce1562",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 51613187,
+      "archives": 2,
+      "files": [
+        "archives/callbackcheckedrecords-1.0.0.jar",
+        "archives/callbackcheckedrecords-1.0.0.pom",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "7418bd57c0a19dd74730cb01cd98ceb84b2973e62ca834286f6c02891d643ff0",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}
