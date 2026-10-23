@@ -12,6 +12,9 @@ import {
 	typeSurfaceCells, validateTypeSurface
 } from "../src/adoption/type-surface.mjs";
 import {
+	renderTypeDocuments
+} from "../scripts/generate-type-docs.mjs";
+import {
 	ownedSubtypeJavaScriptPromotionReference
 	, ownedSubtypePromotionLanes, ownedSubtypePromotionLimit
 	, ownedSubtypePromotionPredecessor, ownedSubtypePromotionReferences
@@ -106,6 +109,31 @@ test("owned Subtype promotion renders the exact boundary", () => {
 	assert.match(summary, /owned checked-record fields/u);
 	for(const reference of references)
 		assert.match(summary, new RegExp(reference.revision, "u"));
+});
+
+test("owned Subtype promotion documents every affected consumer", async () => {
+	const before = await renderTypeDocuments({
+		root: ".", inventory: { document, ...contracts }
+	});
+	const promoted = promoteOwnedSubtypes(document, references);
+	const after = await renderTypeDocuments({
+		root: ".", inventory: { document: promoted, ...contracts }
+	});
+	const evidence = /owned-subtype-promotion-20261023\.md/u;
+	for(const [path, source] of Object.entries(after.documents))
+	{
+		assert.doesNotMatch(before.documents[path], evidence, path);
+		assert.match(source, evidence, path);
+		assert.match(source, /validates host input before a successful ownership transfer/u
+			, path);
+		assert.match(source, /rejection leaves ownership with the caller/u, path);
+		assert.match(source, /explicit close or release performs cleanup/u, path);
+		assert.match(source, /PHP-Wasm keeps its separately audited/u, path);
+	}
+	assert.doesNotMatch(before.reference, evidence);
+	assert.match(after.reference, evidence);
+	assert.match(after.reference, /all sixteen non-PHP-Wasm consumer profiles/u);
+	assert.match(after.reference, /PHP-Wasm retains its separately audited/u);
 });
 
 test("JavaScript owned Subtype promotion rechecks both relocated routes"

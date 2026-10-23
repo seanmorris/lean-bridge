@@ -71,6 +71,25 @@ const hasCallbackSubtypeHostedEvidence = document =>
 	callbackSubtypeHostedEvidenceIds.every(id =>
 		document.evidence.some(item => item.id === id));
 const callbackSubtypeHostedReference = "[Hosted synchronous callback Subtype acceptance](../evidence/callback-subtype-promotion-20261022.md) establishes proof-erased selected Nat Subtypes in host callback replies and returned Lean closure inputs across all sixteen non-PHP-Wasm consumer profiles and both source routes. Lean-produced values cross as base values. Host-produced replies use the target's exact typed recovery wrapper; invalid or missing recovery prevents callback entry, caller values remain unchanged and a later valid call succeeds. Retained or asynchronous callbacks, checked-record and owned callback positions, arbitrary predicates, recursive or generic refined payloads, dispatch cost and peak memory remain separate work.";
+const ownedSubtypeHostedEvidenceIds = Object.freeze([
+	"owned-subtype-javascript-local-installed"
+	, "owned-subtype-native-hosted-installed"
+	, "owned-subtype-perl-hosted-installed"
+	, "owned-subtype-languages-hosted-installed"
+	, "owned-subtype-dotnet-hosted-installed"
+	, "owned-subtype-jvm-hosted-installed"
+	, "owned-subtype-php-native-hosted-installed"
+	, "owned-subtype-wit-wasi-hosted-installed"
+]);
+const ownedSubtypeHostedProfiles = new Set([
+	"node-javascript", "node-typescript", "browser-javascript"
+	, "browser-react", "browser-worker", "c", "cpp", "python", "ruby"
+	, "rust", "perl", "dotnet", "java", "kotlin", "php-native", "wit-wasi"
+]);
+const hasOwnedSubtypeHostedEvidence = document =>
+	ownedSubtypeHostedEvidenceIds.every(id =>
+		document.evidence.some(item => item.id === id));
+const ownedSubtypeHostedReference = "[Hosted owned Subtype acceptance](../evidence/owned-subtype-promotion-20261023.md) establishes one proof-erased selected Nat Subtype field in the tested acyclic `Bundle` owner across all sixteen non-PHP-Wasm consumer profiles and both source routes. Host values are validated before a successful ownership transfer; rejection leaves ownership with the caller. Leased or retained results preserve their owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned checked-record fields, owned callback positions, arbitrary predicates, dispatch cost and peak memory remain separate work. PHP-Wasm retains its separately audited owned-Subtype boundary.";
 const zeroPayloadMatrixLanes = Object.freeze([
 	"browser", "native", "dotnet", "jvm", "rust", "php", "python"
 	, "ruby", "perl", "wit", "php-wasm"
@@ -134,6 +153,15 @@ const callbackSubtypeHostedGuide = (document, profiles, reference) => {
 	const evidence = reference.replace(/reference\/types\.md$/u
 		, "evidence/callback-subtype-promotion-20261022.md");
 	return `[Hosted synchronous callback Subtype acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} on ordinary-source and reviewed-IR packages. A selected Subtype produced by Lean crosses as its proof-erased base value. A host callback reply uses the generated exact typed recovery wrapper, and a returned Lean closure checks its selected Subtype input before entering the closure body. Missing or invalid recovery prevents callback entry, preserves caller values and does not prevent a later valid call. Retained or asynchronous callbacks, arbitrary predicates, checked-record or owned callback positions, recursive or generic refined payloads, dispatch cost and peak memory remain outside this evidence.`;
+};
+const ownedSubtypeHostedGuide = (document, profiles, reference) => {
+	if(!hasOwnedSubtypeHostedEvidence(document)) return null;
+	const selected = profiles.filter(profile =>
+		ownedSubtypeHostedProfiles.has(profile));
+	if(selected.length === 0) return null;
+	const evidence = reference.replace(/reference\/types\.md$/u
+		, "evidence/owned-subtype-promotion-20261023.md");
+	return `[Hosted owned Subtype acceptance](${evidence}) covers ${selected.map(profile => names[profile]).join(", ")} on ordinary-source and reviewed-IR packages. The tested acyclic Bundle carries one selected Nat Subtype field beside explicit resource identities. Its constructor validates host input before a successful ownership transfer; rejection leaves ownership with the caller. Leased or retained results preserve their owner lifetime, explicit close or release performs cleanup, and later valid calls recover. Recursive owned graphs, owned checked-record fields, owned callback positions, arbitrary predicates, dispatch cost and peak memory remain outside this evidence. PHP-Wasm keeps its separately audited owned-Subtype boundary.`;
 };
 const zeroPayloadMatrixGuide = (document, profiles, reference) => {
 	if(!hasZeroPayloadMatrixEvidence(document)) return null;
@@ -275,6 +303,8 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 	});
 	const callbackSubtype = callbackSubtypeHostedGuide(
 		document, profiles, reference);
+	const ownedSubtype = ownedSubtypeHostedGuide(
+		document, profiles, reference);
 	const zeroPayloadMatrix = zeroPayloadMatrixGuide(
 		document, profiles, reference);
 	const dependentCheckedRecordMatrix = dependentCheckedRecordMatrixGuide(
@@ -289,6 +319,7 @@ export function renderTypeTable({ document, ...contracts }, profiles, reference)
 		, ...(dependentCheckedRecordMatrix
 			? ["", dependentCheckedRecordMatrix] : [])
 		, ...(callbackSubtype ? ["", callbackSubtype] : [])
+		, ...(ownedSubtype ? ["", ownedSubtype] : [])
 		, ""
 		, table(["Lean type or source form", "Host representation", "Current evidence", "Conversion rules"], rows)
 		, ""
@@ -397,7 +428,7 @@ export async function renderTypeDocuments({ root, inventory = null })
 			.replace(inheritedCheckedRecordMarker, inheritedCheckedRecord)
 			.replace(recursiveCheckedRecordMarker, recursiveCheckedRecord)
 			.replace(primitiveNominalMarker,
-				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\n\n${ownedSubtypePhpWasm} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : ""}`)
+				`${primitiveNominalDotnet} ${primitiveNominalPhp} ${primitiveNominalPhpWasm} ${recursiveSubtypePhpWasm} ${primitiveNominalWit} ${primitiveNominalJvm} ${primitiveNominalPending}\n\n${ownedSubtypePhpWasm}${hasOwnedSubtypeHostedEvidence(document) ? ` ${ownedSubtypeHostedReference}` : ""} ${callbackSubtypePhpWasm}${hasCallbackSubtypeHostedEvidence(document) ? ` ${callbackSubtypeHostedReference}` : ""}`)
 			.replace(callbackCheckedRecordMarker
 				, `${callbackCheckedRecordMarker} ${callbackCheckedRecord}`)
 	};
