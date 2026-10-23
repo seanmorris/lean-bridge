@@ -3,9 +3,11 @@
  * following the scalar Fin source-entry precedent: a probe variant of the Nat fixture wraps each selected
  * constructor and each measured source in dbgTrace, and the probe consumer brackets every public call on
  * the same stderr stream, so each marker belongs to exactly one step. In the copied-graph frame ABI the
- * selected constructors run once per entered leaf inside the `_lean` adapter guard, in walk order, and
- * the exported carrier validators are not called by the JavaScript runtime. Probe packages are
- * instrumented builds; they are not the unmodified packages the acceptance suites install.
+ * side-module entry first runs each selected constructor through its exported carrier validator. An
+ * accepted call then runs the constructors again inside the `_lean` adapter guard before entering the
+ * complete Lean source call graph; a refused call stops in the validator pass. Package JavaScript does
+ * not call the validator exports directly. Probe packages are instrumented builds; they are not the
+ * unmodified packages the acceptance suites install.
  *
  * @file
  */
@@ -31,35 +33,45 @@ export const instrumentNominalSubtypeLean = lean => {
 	const roles = [...nominalSubtypeDispatchConstructors.map(name => [name, "constructor"]), ...measuredSources.map(name => [name, "source"])];
 	for(const [name, role] of roles)
 	{
-		const index = lines.findIndex(line => line.startsWith(`def ${name} `) || line.startsWith(`def ${name} :`));
+		const definition = new RegExp(`^(?:@\\[[^\\]\\n]+\\] )?def ${name}(?: | :)`, "u");
+		const index = lines.findIndex(line => definition.test(line));
 		assert.ok(index >= 0 && !marked.has(name), `definition ${name}`); marked.add(name);
 		const line = lines[index];
 		if(line.endsWith(" :=")) lines[index] = `${line} ${marker(role, name)}`;
 		else if(line.includes(" := ")) lines[index] = line.replace(" := ", ` := ${marker(role, name)} `);
 		else
 		{
-			const header = /^def (\w+) : (\S+) → (\S+)$/u.exec(line);
+			const header = /^(?<attribute>@\[[^\]\n]+\] )?def (?<name>\w+) : (?<input>\S+) → (?<result>\S+)$/u.exec(line);
 			assert.ok(header, `unsupported definition shape for ${name}: ${line}`);
+			// Keep source-level attributes such as `noinline` on the marked definition being
+			// measured. The renamed equation body is private probe scaffolding.
 			// Lean resolves names in order, so the renamed body keeps its equations in place and the
 			// marked wrapper follows its last equation, before any later definition that calls it.
-			lines[index] = `def ${name}Body : ${header[2]} → ${header[3]}`;
+			lines[index] = `def ${name}Body : ${header.groups.input} → ${header.groups.result}`;
 			const end = lines.findIndex((value, position) => position > index && /^\S/u.test(value));
-			lines.splice(end < 0 ? lines.length : end, 0, `def ${name} (value : ${header[2]}) : ${header[3]} := ${marker(role, name)} ${name}Body value`);
+			lines.splice(end < 0 ? lines.length : end, 0, `${header.groups.attribute ?? ""}def ${name} (value : ${header.groups.input}) : ${header.groups.result} := ${marker(role, name)} ${name}Body value`);
 		}
 	}
 	return lines.join("\n");
 };
 
 /**
- * The entries one step must produce: the constructor of every entered leaf in walk order, then the
- * measured source when the call is accepted. Derived from the same step list and leaf table as the
- * native lane, with no validator pass and each constructor once.
+ * The entries one step must produce, derived from the same step list, leaf table and source call graph
+ * as the native lane. Every reached leaf enters its constructor once in the carrier validator. An
+ * accepted call repeats those constructors in the `_lean` adapter and then enters every measured source
+ * in call order; a refused call has neither the adapter pass nor a source entry.
  */
 export const nominalSubtypeEntryExpected = () => nominalSubtypeDispatchSteps.filter(item => item.step !== "start").map(item => {
 	const target = nominalSubtypeDispatchExports.find(entry => entry.name === item.name);
 	assert.ok(target, item.name); assert.equal(item.entered.length, target.parameters.length, item.step);
-	const entries = target.parameters.flatMap((leaves, index) => item.entered[index].map(leaf => `constructor ${leaves[leaf][1]}`));
-	if(item.status === 0) entries.push(`source ${target.name}`);
+	const validated = target.parameters.flatMap((leaves, index) => item.entered[index].map(leaf => `constructor ${leaves[leaf][1]}`));
+	const entries = [...validated];
+	if(item.status === 0)
+	{
+		assert.ok(Array.isArray(item.sources) && item.sources.length > 0, item.step);
+		entries.push(...validated, ...item.sources.map(source => `source ${source}`));
+	}
+	else assert.equal(item.sources, undefined, item.step);
 	return { step: item.step, status: item.status, entries };
 });
 

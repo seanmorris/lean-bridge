@@ -21,9 +21,10 @@ test("nominal entry instrumentation marks each selected constructor and measured
 	assert.deepEqual(markers.sort(), ["constructor plusOne", "constructor plusTwo", "source combine", "source echo", "source eventFirst", "source first", "source nested", "source second"]);
 	assert.ok(probe.includes('def plusOne (value : Nat) : Option Positive := dbgTrace "lean-bridge-nominal-entry constructor plusOne" fun _ =>\n  if value < 100'));
 	assert.ok(probe.includes('def first (value : Envelope) : Nat := dbgTrace "lean-bridge-nominal-entry source first" fun _ => value.payload.val'));
+	assert.ok(probe.includes('@[noinline] def plusOne') && probe.includes('@[noinline] def first'));
 	// The renamed body keeps its equations and precedes the wrapper, which precedes its first caller.
 	assert.ok(probe.includes("def eventFirstBody : Event → Nat\n  | .empty => 0"));
-	assert.ok(probe.includes('      | some (.error value) => value.val) 0\ndef eventFirst (value : Event) : Nat := dbgTrace "lean-bridge-nominal-entry source eventFirst" fun _ => eventFirstBody value\ndef eventSecond (value : Event) : Nat := eventFirst value'));
+	assert.ok(probe.includes('      | some (.error value) => value.val) 0\n@[noinline] def eventFirst (value : Event) : Nat := dbgTrace "lean-bridge-nominal-entry source eventFirst" fun _ => eventFirstBody value\ndef eventSecond (value : Event) : Nat := eventFirst value'));
 	assert.ok(probe.indexOf("def eventFirstBody ") < probe.indexOf("def eventFirst ("));
 	// Every other line is byte-identical and the unmeasured definitions keep their bodies.
 	const originalLines = original.split("\n"), probeLines = probe.split("\n");
@@ -36,21 +37,22 @@ test("nominal entry instrumentation marks each selected constructor and measured
 	assert.throws(() => instrumentNominalSubtypeLean(original.replace("def eventFirst : Event → Nat", "def eventFirst :\n    Event → Nat")), /unsupported definition shape/u);
 });
 
-test("nominal entry expectations follow the shared step list with one constructor per entered leaf", () => {
+test("nominal entry expectations require validator and adapter constructor passes plus the source call graph", () => {
 	const expected = nominalSubtypeEntryExpected();
 	assert.deepEqual(expected.map(item => item.step), nominalSubtypeDispatchSteps.slice(1).map(item => item.step));
 	const at = step => expected.find(item => item.step === step);
-	assert.deepEqual(at("public-valid-first").entries, ["constructor plusOne", "source first"]);
-	assert.deepEqual(at("public-valid-second").entries, ["constructor plusTwo", "source second"]);
+	assert.deepEqual(at("public-valid-first").entries, ["constructor plusOne", "constructor plusOne", "source first"]);
+	assert.deepEqual(at("public-valid-second").entries, ["constructor plusTwo", "constructor plusTwo", "source second"]);
 	assert.deepEqual(at("public-invalid-first"), { step: "public-invalid-first", status: 1, entries: ["constructor plusOne"] });
 	assert.deepEqual(at("public-late-combine").entries, ["constructor plusOne", "constructor plusTwo"]);
 	assert.deepEqual(at("public-early-combine").entries, ["constructor plusOne"]);
 	assert.deepEqual(at("public-late-nested").entries, ["constructor plusOne", "constructor plusTwo"]);
+	assert.deepEqual(at("public-valid-nested").entries, ["constructor plusOne", "constructor plusTwo", "constructor plusOne", "constructor plusTwo", "source nested", "source combine"]);
 	assert.deepEqual(at("public-inactive-event").entries, ["source eventFirst"]);
-	assert.deepEqual(at("public-active-event-box").entries, ["constructor plusOne", "source eventFirst"]);
-	assert.deepEqual(at("public-valid-event-choices").entries, ["constructor plusOne", "constructor plusTwo", "source eventFirst"]);
+	assert.deepEqual(at("public-active-event-box").entries, ["constructor plusOne", "constructor plusOne", "source eventFirst", "source first"]);
+	assert.deepEqual(at("public-valid-event-choices").entries, ["constructor plusOne", "constructor plusTwo", "constructor plusOne", "constructor plusTwo", "source eventFirst"]);
 	assert.deepEqual(at("public-invalid-event-choices").entries, ["constructor plusOne"]);
-	assert.deepEqual(at("public-recovery-first").entries, ["constructor plusOne", "source first"]);
+	assert.deepEqual(at("public-recovery-first").entries, ["constructor plusOne", "constructor plusOne", "source first"]);
 	assert.ok(expected.every(item => (item.status === 0) === item.entries.some(entry => entry.startsWith("source "))));
 });
 
@@ -74,7 +76,7 @@ test("nominal entry accounting requires exactly the expected entries inside each
 	const expected = nominalSubtypeEntryExpected(), stderr = trace(expected);
 	const { observed, counts } = accountNominalSubtypeEntry(stderr, rows(expected));
 	assert.deepEqual(observed, expected);
-	assert.equal(counts["source first"], 2); assert.equal(counts["constructor plusTwo"], 6); assert.equal(counts["constructor plusOne"], 12);
+	assert.equal(counts["source first"], 3); assert.equal(counts["constructor plusTwo"], 10); assert.equal(counts["constructor plusOne"], 19);
 	const broken = [
 		[stderr.slice(0, -1), /newline/u]
 		, [stderr.replace(`${nominalSubtypeEntryMarker} constructor plusOne\n`, ""), /public-valid-first/u]
