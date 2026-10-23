@@ -322,6 +322,10 @@ test("dependent checked-record browser CI requires all four routes", async () =>
 	const runner = await readFile(
 		"scripts/run-dependent-checked-record-browser-ci.sh", "utf8"
 	);
+	const installed = await readFile(
+		"tests/helpers/dependent-checked-record-browser-installed-tests.mjs"
+		, "utf8"
+	);
 	for(const required of [
 		"runs-on: ubuntu-24.04", "timeout-minutes: 180"
 		, "bash scripts/install-playwright-browsers.sh chromium firefox webkit"
@@ -334,8 +338,14 @@ test("dependent checked-record browser CI requires all four routes", async () =>
 		, "LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_NPM_TEST=1"
 		, "LEAN_BRIDGE_DEPENDENT_CHECKED_RECORD_BROWSER_TEST=1"
 		, "chromium,firefox,webkit"
-		, "--test-concurrency=1"
-		, 'test -s "$records/$route/report.json"'
-		, 'test -s "$records/$route/browser.json"'
+			, "--test-concurrency=1"
+			, 'test -s "$records/$route/report.json"'
+			, 'test -s "$records/$route/browser.json"'
+			, "scripts/check-dependent-checked-record-browser-ci.mjs"
+			, '--producer "$revision"'
+			, '--checker "$revision"'
 	]) assert.ok(runner.includes(required), required);
+	assert.ok(installed.includes(
+		'await cp(handoff, join(output, "handoff"), { recursive: true });'
+	));
 });

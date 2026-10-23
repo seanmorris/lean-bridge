@@ -306,5 +306,6 @@ console.log(JSON.stringify(checkDependentRecords(api, ${resultOnly}, ${reviewed}
 		directory: join(directory, "browsers"), handoff, receipt, records: output
 		, route, producerCommit
 	});
+	await cp(handoff, join(output, "handoff"), { recursive: true });
 		complete = true;}
 );

@@ -18,7 +18,14 @@ node --test --test-concurrency=1 --test-reporter=tap \
   tests/helpers/dependent-checked-record-browser-installed-tests.mjs \
   2>&1 | tee "$output/run.tap"
 
+revision="$(git rev-parse HEAD)"
 for route in ${routes//,/ }; do
   test -s "$records/$route/report.json"
   test -s "$records/$route/browser.json"
+  node scripts/check-dependent-checked-record-browser-ci.mjs \
+    --route "$route" \
+    --producer "$revision" \
+    --checker "$revision" \
+    --directory "$records/$route" \
+    --tap "$output/run.tap" >/dev/null
 done
