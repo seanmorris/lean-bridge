@@ -1,0 +1,71 @@
+{
+  "additions": [
+    {
+      "currentSha256": "b65ebd9c74f408d6c3c3cf955470c73c801fe9551aa73819a6eaeb04549a0391",
+      "path": "scripts/update-value-index-browser-promotion-closure-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "10341dd6cf69a17007295e451cab562ecdceac8f37e0845a0600701a99887340",
+      "path": "tests/helpers/value-index-browser-promotion-closure-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "473a7ea323177bcd44d82f4ddc90577bc8ff41addebbf106157f99c79477580b",
+      "path": "tests/helpers/value-index-browser-promotion-closure-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "88b267add35680f9c9f7b71e5884c53b26bd4262",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5c10620875dd5088605dd74d0bb1d6266105664f2df1ef8e1c5be900ad0ac343",
+      "edits": [
+        {
+          "current": "import \"./helpers/value-index-browser-promotion-closure-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "eb4caf484500a629c137d148e393cc88df89bf07d578b7c84fceb393692c816c"
+    },
+    {
+      "currentSha256": "2b987ef600ea03413eb4ce915e8af5cd859c3374f1441936f5cb692c7407da57",
+      "edits": [
+        {
+          "current": "import { beforeValueIndexBrowserPromotionClosureRepairSource, valueIndexBrowserPromotionClosureRepairNormalizationPaths } from \"./value-index-browser-promotion-closure-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...valueIndexBrowserPromotionClosureRepairNormalizationPaths\n\t, ...stagedPhpProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...stagedPhpProducerReplayRepairNormalizationPaths\n",
+          "start": 163338
+        },
+        {
+          "current": "\tconst valueIndexBrowserPromotionClosureRepair\n\t\t= beforeValueIndexBrowserPromotionClosureRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(valueIndexBrowserPromotionClosureRepair) === expected)\n\t\treturn valueIndexBrowserPromotionClosureRepair;\n\ttext = valueIndexBrowserPromotionClosureRepair;\n",
+          "previous": "",
+          "start": 200378
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "34e18dc3814c4a73cf65269cd6e6b8ac51b739ce4ea6192bb5b9b121fb5fe526"
+    }
+  ],
+  "milestone": "value-index-browser-promotion-closure-repair-source-v1",
+  "predecessorCommit": "f8e47a79cf6b9380e52d05f820dcafac62cf781d",
+  "schemaVersion": 1,
+  "scope": "The historical browser value-index promotion reconstructs every originally added source at its authenticated milestone before checking closure, so later reversible repairs do not invalidate the original promotion evidence.",
+  "updates": [
+    {
+      "currentSha256": "640e86e424cb99321d4e41ab675f54d89b25313206626064e48316306ba9758f",
+      "edits": [
+        {
+          "current": "\t\t\tassert.equal(sha256(await sourceAtFinHistoryMilestone(\n\t\t\t\taddition.path, addition.currentSha256))\n",
+          "previous": "\t\t\tassert.equal(sha256(await readFile(addition.path))\n",
+          "start": 5209
+        }
+      ],
+      "path": "tests/helpers/checked-record-value-index-browser-promotion-source-history-tests.mjs",
+      "previousSha256": "db536e4279da50eb41d53690e4d955733b2414d006b0fb2b01c99c6ff284db03"
+    }
+  ]
+}
