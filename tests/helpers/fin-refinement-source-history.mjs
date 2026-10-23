@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforePhpWasmEntryStructuralEqualityRepairSource, phpWasmEntryStructuralEqualityRepairChangedPaths } from "./php-wasm-entry-structural-equality-repair-source-history.mjs";
 import { beforeOwnedSubtypePerlSourcePathRepairSource, ownedSubtypePerlSourcePathRepairNormalizationPaths } from "./owned-subtype-perl-source-path-repair-source-history.mjs";
 import { beforeGenericSubtypeDocumentationSource, genericSubtypeDocumentationNormalizationPaths } from "./generic-subtype-documentation-source-history.mjs";
 import { beforeGenericSubtypePromotionSource, genericSubtypePromotionNormalizationPaths } from "./generic-subtype-promotion-source-history.mjs";
@@ -2063,7 +2064,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedSubtypePerlSourcePathRepairNormalizationPaths
+	...phpWasmEntryStructuralEqualityRepairChangedPaths
+	, ...ownedSubtypePerlSourcePathRepairNormalizationPaths
 	, ...genericSubtypeDocumentationNormalizationPaths
 	, ...genericSubtypePromotionNormalizationPaths
 	, ...genericSubtypeHostedArchiveNormalizationPaths
@@ -2869,6 +2871,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	let phpWasmEntryStructuralEqualityRepair = text;
+	while(true)
+	{
+		const previous = beforePhpWasmEntryStructuralEqualityRepairSource(
+			path, phpWasmEntryStructuralEqualityRepair, expected);
+		if(sha256(previous) === expected) return previous;
+		if(previous === phpWasmEntryStructuralEqualityRepair) break;
+		phpWasmEntryStructuralEqualityRepair = previous;
+	}
+	text = phpWasmEntryStructuralEqualityRepair;
 	let ownedSubtypePerlSourcePathRepair = text;
 	while(true)
 	{

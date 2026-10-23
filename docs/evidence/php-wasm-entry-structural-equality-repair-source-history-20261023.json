@@ -1,0 +1,83 @@
+{
+  "additions": [
+    {
+      "currentSha256": "7ccd14d35332f6a56f742d16a388311ee23af311ad0f295bb51056fbbf3340f4",
+      "path": "scripts/update-php-wasm-entry-structural-equality-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "8200b15bfdb8a706399c20aaabe5c5de060d2f3e6bfd20fa4d98a92aea2c7a33",
+      "path": "tests/helpers/php-wasm-entry-structural-equality-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "c42ced6e59a6b7afc15fc385484cf401512218f2f461385d77ea66877fff5c36",
+      "path": "tests/helpers/php-wasm-entry-structural-equality-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "cd6a4f39ea6444117894d31d55fa53d71e2dafad",
+  "integrationUpdates": [
+    {
+      "currentSha256": "b5c71613f48e62a9f47a45daa5d65d0096bacd054c01bade898f8821e67f015d",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-entry-structural-equality-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "5704f28e197b2182b9a5e9eb86cf59347b0461fbfab07ae5ea9296d335aa222f"
+    },
+    {
+      "currentSha256": "2c09f831e11d7f2be2eaa5fae7e7a656ba95d5984f9d24ea7087d63be886356c",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmEntryStructuralEqualityRepairSource, phpWasmEntryStructuralEqualityRepairChangedPaths } from \"./php-wasm-entry-structural-equality-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...phpWasmEntryStructuralEqualityRepairChangedPaths\n\t, ...ownedSubtypePerlSourcePathRepairNormalizationPaths\n",
+          "previous": "\t...ownedSubtypePerlSourcePathRepairNormalizationPaths\n",
+          "start": 167147
+        },
+        {
+          "current": "\tlet phpWasmEntryStructuralEqualityRepair = text;\n\twhile(true)\n\t{\n\t\tconst previous = beforePhpWasmEntryStructuralEqualityRepairSource(\n\t\t\tpath, phpWasmEntryStructuralEqualityRepair, expected);\n\t\tif(sha256(previous) === expected) return previous;\n\t\tif(previous === phpWasmEntryStructuralEqualityRepair) break;\n\t\tphpWasmEntryStructuralEqualityRepair = previous;\n\t}\n\ttext = phpWasmEntryStructuralEqualityRepair;\n",
+          "previous": "",
+          "start": 205451
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "26457268ab362566c399ff6c2266b3e0963507b860b305684a9e09f7365982cf"
+    }
+  ],
+  "milestone": "php-wasm-entry-structural-equality-repair-v1",
+  "predecessorCommit": "82d0a10ea7116a57827b995eb92216480f226d83",
+  "schemaVersion": 1,
+  "scope": "Compare authenticated PHP-Wasm entry plans structurally so canonical JSON key ordering cannot reject an identical runtime trace.",
+  "updates": [
+    {
+      "currentSha256": "c2d1b52f212f3c0a932f578c590a0ac6b35d015d07e29be88e6ea7a9adfc24cb",
+      "edits": [
+        {
+          "current": "const normalized = value => Array.isArray(value) ? value.map(normalized)\n\t: value && typeof value === \"object\"\n\t\t? Object.fromEntries(Object.keys(value).sort().map(key => [key, normalized(value[key])]))\n\t\t: value;\nconst same = (left, right) => JSON.stringify(normalized(left)) === JSON.stringify(normalized(right));\n",
+          "previous": "const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);\n",
+          "start": 315
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-refinement-entry/driver.mjs",
+      "previousSha256": "df02ba4dd446718ce2641e73db291abece0d57891430db563730e8ae9ee9951a"
+    },
+    {
+      "currentSha256": "e3e373d566ef8c507434266e7b08793d71c193c5313b12b94bdd8bf5154402f3",
+      "edits": [
+        {
+          "current": "test(\"graph refinement entry driver compares canonical plan objects independent of key order\", async () => {\n\tconst canonicalPlan = { ...plan, cases: [{ ...plan.cases[0], call: { ...call\n\t\t, counts: { adapter: 1, constructor: 0, source: 1, validator: 1 } } }] };\n\tconst { value } = await driver({ plan: canonicalPlan });\n\tassert.equal(value.entryProbe.calls, 1);\n\tassert.deepEqual(value.entryProbe.counts, call.counts);\n});\n\n",
+          "previous": "",
+          "start": 3676
+        }
+      ],
+      "path": "tests/helpers/php-wasm-refinement-entry-driver-tests.mjs",
+      "previousSha256": "28b6e4f3d63519419eb7913dade600ada60d8a370ffd705ac0e94632b159c99d"
+    }
+  ]
+}
