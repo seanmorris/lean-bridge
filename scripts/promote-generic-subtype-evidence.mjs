@@ -11,6 +11,9 @@ import {
 	genericSubtypePromotionPath, genericSubtypePromotionReferences
 	, promoteGenericSubtypes, renderGenericSubtypePromotion
 } from "../tests/helpers/generic-subtype-promotion.mjs";
+import {
+	genericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation
+} from "../tests/helpers/generic-subtype-documentation.mjs";
 
 assert.equal(process.argv.length, 2
 	, "This promotion command accepts no arguments");
@@ -31,6 +34,17 @@ await generateReferenceDocs({
 	root: process.cwd(), write: true
 	, inventory: { document: promoted, irSchema, consumers }
 });
+const documentationSources = Object.fromEntries(await Promise.all(
+	Object.entries(genericSubtypeDocumentationPaths).map(
+		async ([name, documentPath]) => [
+			name, await readFile(documentPath, "utf8")
+		]
+	)
+));
+const documentation = renderGenericSubtypeDocumentation(documentationSources);
+await Promise.all(Object.entries(genericSubtypeDocumentationPaths)
+	.map(([name, documentPath]) => writeFile(documentPath
+		, documentation[name])));
 process.stdout.write(
 	"Promoted 32 closed generic-Subtype field cells from twelve hosted archives.\n"
 );

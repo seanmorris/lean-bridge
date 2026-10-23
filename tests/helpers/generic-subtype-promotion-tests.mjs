@@ -17,6 +17,9 @@ import {
 	genericSubtypePromotionLimit, genericSubtypePromotionReferences
 	, promoteGenericSubtypes, renderGenericSubtypePromotion
 } from "./generic-subtype-promotion.mjs";
+import {
+	genericSubtypeDocumentationPaths, renderGenericSubtypeDocumentation
+} from "./generic-subtype-documentation.mjs";
 
 const readJson = async path => JSON.parse(await readFile(path, "utf8"));
 const [document, irSchema, consumers] = await Promise.all([
@@ -105,6 +108,68 @@ test("generic Subtype promotion renders its exact closed boundary", () => {
 		assert.match(summary, new RegExp(
 			`generic-subtype-${lane}-hosted-20261023/index\\.json`, "u"));
 });
+
+const documentationSources = Object.fromEntries(await Promise.all(Object.entries(
+	genericSubtypeDocumentationPaths
+).map(async ([name, path]) => [name, await readFile(path, "utf8")])));
+const marker = /Expected one generic-Subtype documentation marker/u;
+
+test("generic Subtype promotion repairs exact manual boundaries", () => {
+	const rendered = renderGenericSubtypeDocumentation(documentationSources);
+	for(const [name, path] of Object.entries(genericSubtypeDocumentationPaths))
+	{
+		const source = documentationSources[name], output = rendered[name];
+		const link = path.split("/").length === 2
+			? "evidence/generic-subtype-promotion-20261023.md"
+			: "../evidence/generic-subtype-promotion-20261023.md";
+		assert.ok(!source.includes("generic-subtype-promotion-20261023.md"), name);
+		assert.ok(output.includes(`[hosted generic-Subtype matrix](${link})`)
+			, name);
+		assert.match(output, /closed `GenericNat` alias of `GenericCarrier Nat`/u
+			, name);
+		assert.match(output, /`plusOne` and `plusTwo`/u, name);
+		assert.match(output, /PHP-Wasm, open generic host types, arbitrary type arguments or predicates, generic `Fin` fields, callback and owned positions, recursive generic graphs, dispatch cost and memory remain outside this evidence/u
+			, name);
+		assert.doesNotMatch(output, /broader\s+generic/u, name);
+		// Every byte outside the one exact marker survives the transition.
+		let prefix = 0;
+		while(source[prefix] === output[prefix]) prefix++;
+		let suffix = 0;
+		while(suffix < source.length - prefix
+			&& source.at(-1 - suffix) === output.at(-1 - suffix)) suffix++;
+		assert.ok(source.length - prefix - suffix < 400, name);
+		assert.ok(output.slice(prefix, output.length - suffix)
+			.includes("generic-subtype-promotion-20261023.md"), name);
+	}
+	assert.match(rendered.existingPackage
+		, /\| Installed, both source routes \| Pending \| The \[hosted generic-Subtype matrix\]\([^)]+\) installs the closed `GenericNat` alias[^|\n]+ \|\n/u);
+	assert.match(rendered.existingPackage
+		, /\| `Subtype` inside owned callbacks, recursive owned graphs or other generic record fields \| Rejected/u);
+	assert.match(rendered.exportDecisions
+		, /Subtype fields in other generic records remain unfinished/u);
+	assert.match(rendered.php, /Native PHP is\none of those profiles/u);
+});
+
+test("generic Subtype documentation refuses repeated or ambiguous markers"
+	, () => {
+		const rendered = renderGenericSubtypeDocumentation(documentationSources);
+		assert.throws(() => renderGenericSubtypeDocumentation(rendered), marker);
+		for(const name of Object.keys(genericSubtypeDocumentationPaths))
+		{
+			assert.throws(() => renderGenericSubtypeDocumentation({
+				...documentationSources, [name]: rendered[name]
+			}), marker, name);
+			assert.throws(() => renderGenericSubtypeDocumentation({
+				...documentationSources
+				, [name]: documentationSources[name].repeat(2)
+			}), marker, name);
+		}
+		const { php, ...partial } = documentationSources;
+		assert.ok(php);
+		assert.throws(() => renderGenericSubtypeDocumentation(partial)
+			, assert.AssertionError);
+	}
+);
 
 const hostedAvailable = genericSubtypeHostedLaneNames.every(lane =>
 	existsSync(`docs/evidence/generic-subtype-${lane}-hosted-20261023/index.json`));
