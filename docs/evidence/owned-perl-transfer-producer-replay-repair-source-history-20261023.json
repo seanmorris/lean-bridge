@@ -1,0 +1,131 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c156200f90d55915a85b42ecd86ed974d11f743353e92282926c67adc60e95b2",
+      "path": "scripts/update-owned-perl-transfer-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "490be986905a2edfc3ff13c608a05b256a110ffe0c893e61420d830dbd147721",
+      "path": "tests/helpers/owned-perl-transfer-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "b2a3afd38b45ec5449616072c40085378f90638d8737b2de85a874789ee34da5",
+      "path": "tests/helpers/owned-perl-transfer-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "97f5c56a38696254b0a1e16362adc6d68cbdfda6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "6a2eb9df8a2a4a4596772b2910e456e2778d36bcbcf913447306c01ba20042e1",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPerlTransferProducerReplayRepairSource, ownedPerlTransferProducerReplayRepairNormalizationPaths } from \"./owned-perl-transfer-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedPerlTransferProducerReplayRepairNormalizationPaths\n\t, ...promotionDocMilestoneReplayRepairNormalizationPaths\n",
+          "previous": "\t...promotionDocMilestoneReplayRepairNormalizationPaths\n",
+          "start": 161551
+        },
+        {
+          "current": "\tconst ownedPerlTransferProducerReplayRepair\n\t\t= beforeOwnedPerlTransferProducerReplayRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(ownedPerlTransferProducerReplayRepair) === expected)\n\t\treturn ownedPerlTransferProducerReplayRepair;\n",
+          "previous": "",
+          "start": 198228
+        },
+        {
+          "current": "\t\t= beforePromotionDocMilestoneReplayRepairSource(\n\t\t\tpath, ownedPerlTransferProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforePromotionDocMilestoneReplayRepairSource(path, text, expected);\n",
+          "start": 198510
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a40990e0d805d8d953089f51473ee33abd6f380a9349081fd8ad5027d565a428"
+    },
+    {
+      "currentSha256": "9e68b9daec1d5da854f4abec727ed608cd8a432b677c5bb16d3e72a70b7aad4a",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-perl-transfer-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1841
+        }
+      ],
+      "path": "tests/owned-perl-transfer-evidence.test.mjs",
+      "previousSha256": "b887010d32729488afc02fb0759f08adfca4ffba960630357d81a32d3178cd83"
+    }
+  ],
+  "milestone": "owned-perl-transfer-producer-replay-repair-source-v1",
+  "predecessorCommit": "71610fd406c51066f814e408814d53f3b1b33654",
+  "schemaVersion": 1,
+  "scope": "The frozen owned Perl transfer evidence is replayed with the exact producer's complete static module and source closure, rather than regenerating historical receipts with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "08898769aac7d4c829597d6d76398ce4fdf1d5af38a310f4c6d635ed4a7e4441",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { generateOwnedPerlPackage } from \"../../src/backends/perl/owned-package.mjs\";\nimport { generateOwnedPerlXs } from \"../../src/backends/perl/owned-xs.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { ownedRustTransferSource } from \"./owned-rust-transfer-fixture.mjs\";\n",
+          "start": 331
+        },
+        {
+          "current": "const baselineCommit = \"9591a41dd71d74db92a614cbfa352a712359945c\";\nconst producerCommit = \"cb7ac24d2134c813561fd8369414935c962d0b43\";\n",
+          "previous": "",
+          "start": 1688
+        },
+        {
+          "current": "\tconst producer = Object.assign({}, ...await Promise.all([\n\t\t\"src/backends/perl/owned-package.mjs\"\n\t\t, \"src/backends/perl/owned-xs.mjs\"\n\t\t, \"src/build/native-graph-model.mjs\"\n\t\t, \"src/release/package-set-receipt.mjs\"\n\t\t, \"tests/helpers/owned-rust-transfer-fixture.mjs\"\n\t].map(path => moduleAtProducer(producerCommit, path))));\n\tfor(const name of [\n\t\t\"createCompiledNativeModel\", \"generateCompiledNativeLeanAdapters\"\n\t\t, \"generateOwnedPerlPackage\", \"generateOwnedPerlXs\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 2862
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision, baselineCommit);\n",
+          "previous": "",
+          "start": 3523
+        },
+        {
+          "current": "\tassert.equal(typeof producer.ownedRustTransferSource, \"string\");\n\tconst historical = path => bytesAtProducer(producerCommit, path);\n\tconst lean = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\"\n\t).toString() + producer.ownedRustTransferSource;\n\tconst consumer = sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-perl-transfers.pl\"));\n\tconst assets = sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\") + ownedRustTransferSource;\n\tconst consumer = sha256(await readFile(\"tests/fixtures/structured-types/owned-perl-transfers.pl\"));\n\tconst assets = sha256(await readFile(\"tests/fixtures/structured-types/owned-perl-installed-assets.pl\"));\n",
+          "start": 4169
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedHostCallbacks: true, ownedInputTransfers: true });\n",
+          "start": 5214
+        },
+        {
+          "current": "\t\tconst xs = producer.generateOwnedPerlXs(model.bindingIr, \"LeanBridge::OwnedProbe\", { transferredInputs: true });\n",
+          "previous": "\t\tconst xs = generateOwnedPerlXs(model.bindingIr, \"LeanBridge::OwnedProbe\", { transferredInputs: true });\n",
+          "start": 5502
+        },
+        {
+          "current": "\t\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\t\tconst native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 7845
+        },
+        {
+          "current": "\t\tconst generated = producer.generateOwnedPerlPackage({ model\n",
+          "previous": "\t\tconst generated = generateOwnedPerlPackage({ model\n",
+          "start": 8990
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(item.packageSetReceipt);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(item.packageSetReceipt);\n",
+          "start": 10370
+        },
+        {
+          "current": "\tproducer.validatePackageSetReceipt(documentation.packageSetReceipt);\n",
+          "previous": "\tvalidatePackageSetReceipt(documentation.packageSetReceipt);\n",
+          "start": 12706
+        },
+        {
+          "current": "\tconst author = historical(\"docs/publish/cpan.md\").toString();\n\tconst consumerGuide = historical(\"docs/consume/perl.md\").toString();\n",
+          "previous": "\tconst author = await readFile(\"docs/publish/cpan.md\", \"utf8\");\n\tconst consumerGuide = await readFile(\"docs/consume/perl.md\", \"utf8\");\n",
+          "start": 13137
+        }
+      ],
+      "path": "tests/helpers/owned-perl-transfer-evidence.mjs",
+      "previousSha256": "aefc79eb6a59d6d7af88e96055e8881da75cab56c312fffe8443010eebf7252d"
+    }
+  ]
+}

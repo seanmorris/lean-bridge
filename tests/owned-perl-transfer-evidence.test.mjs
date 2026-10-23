@@ -23,6 +23,7 @@ import { beforeOwnedPerlTransfer, ownedPerlTransferAddedPaths, ownedPerlTransfer
 	, ownedPerlTransferChangedPaths, ownedPerlTransferHistoricalBytes, ownedPerlTransferPath
 	, ownedPerlTransferPrevious, ownedPerlTransferRegisteredSources, reverseOwnedPerlTransferUpdate } from "./helpers/owned-perl-transfer-history.mjs";
 import { beforeOwnedTransferBatchInitialization, historicalOwnedTransferPackage } from "./helpers/owned-transfer-generated-history.mjs";
+import "./helpers/owned-perl-transfer-producer-replay-repair-source-history-tests.mjs";
 
 const read = async () => JSON.parse(await readFile(ownedPerlTransferPath, "utf8"));
 
