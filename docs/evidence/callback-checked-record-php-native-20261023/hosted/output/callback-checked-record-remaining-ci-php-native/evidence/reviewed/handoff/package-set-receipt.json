@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "callbackcheckedrecords@1.0.0",
+    "name": "callbackcheckedrecords",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 51443172,
+          "path": "archives/lean-bridge-callbackcheckedrecords-1.0.0-linux-x86_64.zip",
+          "sha256": "6f598b12641abbdb52e9302e46e2b708c5ad8ec90e3e7fa057fedae8c0d62fe0"
+        }
+      ],
+      "ecosystem": "composer",
+      "name": "lean-bridge/callbackcheckedrecords",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "php-native",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e7a69d7a553c6e5e2a7bcefc0b6ed64dd0d2fab5e5bc0328c36b84e427e5e6dd",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "3586fb5a049890a9b5dbb93aaae09cd6c08ce28e11c89c80f1591cb4039137fd"
+  }
+}
