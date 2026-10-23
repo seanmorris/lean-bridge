@@ -8,7 +8,8 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
-	callbackCheckedRecordEvidenceSources
+	callbackCheckedRecordArchiveRevisions
+	, callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
 	, callbackCheckedRecordHostedOriginal
@@ -17,6 +18,7 @@ import {
 const revision = execFileSync("git", ["rev-parse", "HEAD"], {
 	encoding: "utf8"
 }).trim();
+const hostedRevision = "1".repeat(40);
 
 const expected = Object.freeze({
 	browser: ["javascript.mjs", "types.mts"]
@@ -62,6 +64,18 @@ test("callback checked-record archive lanes retain closed source roles", () => {
 		]) assert.ok(sources.some(item => item.role === "archiver"
 			&& item.path === path), `${lane}/${path}`);
 	}
+});
+
+test("callback archive provenance separates hosted execution from replay", () => {
+	assert.deepEqual(callbackCheckedRecordArchiveRevisions(
+		hostedRevision, revision
+	), {
+		producer: hostedRevision, consumer: hostedRevision
+		, checker: revision, archiver: revision
+	});
+	assert.throws(() => callbackCheckedRecordArchiveRevisions(
+		"HEAD", revision
+	), assert.AssertionError);
 });
 
 test("callback checked-record source selection rejects open lane and revision input", () => {

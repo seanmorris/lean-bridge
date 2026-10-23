@@ -136,6 +136,20 @@ export const callbackCheckedRecordHostedEvidenceRoot = lane => {
 };
 
 /**
+ * Keep hosted execution and independent archive replay revisions distinct.
+ *
+ * @param producer - Hosted producer and consumer commit.
+ * @param archiver - Current independent checker and archiver commit.
+ */
+export const callbackCheckedRecordArchiveRevisions = (producer, archiver) => {
+	assert.match(producer, /^[a-f0-9]{40}$/u);
+	assert.match(archiver, /^[a-f0-9]{40}$/u);
+	return Object.freeze({
+		producer, consumer: producer, checker: archiver, archiver
+	});
+};
+
+/**
  * Select every source needed to explain one hosted artifact and its archive.
  *
  * @param lane - Closed hosted lane name.

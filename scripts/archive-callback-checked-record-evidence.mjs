@@ -31,7 +31,8 @@ import {
 	, verifyCallbackCheckedRecordRetainedPackages
 } from "../tests/helpers/callback-checked-record-retained-packages.mjs";
 import {
-	callbackCheckedRecordEvidenceSources
+	callbackCheckedRecordArchiveRevisions
+	, callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
 	, callbackCheckedRecordHostedOriginal
@@ -141,10 +142,10 @@ assert.match(archiveCommit, /^[a-f0-9]{40}$/u);
 const hosted = await inspectCallbackCheckedRecordHostedArtifact(selected, {
 	workflow: config.workflow, jobName: config.job, artifactPrefix: config.prefix
 });
-const revision = hosted.revision, revisions = {
-	producer: revision, consumer: revision, checker: revision
-	, archiver: archiveCommit
-};
+const revision = hosted.revision;
+const revisions = callbackCheckedRecordArchiveRevisions(
+	revision, archiveCommit
+);
 const descriptors = new Map();
 const putBytes = (path, value) => {
 	assert.ok(!descriptors.has(path), path);
