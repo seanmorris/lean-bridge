@@ -1,0 +1,78 @@
+{
+  "additions": [
+    {
+      "currentSha256": "ff1138988247c5d16cec9f7490cf6c3081ecf4497176068cca790a57ab0006a4",
+      "path": "scripts/update-owned-subtype-test-profile-pin-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "61cc8b0fda83303dec43bdfca16b9c3ee89cec76d1ac3244ff12146a8f12968b",
+      "path": "tests/helpers/owned-subtype-test-profile-pin-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "1cd678198328e50a8f785670c644ae269a53389a51b83e6d5eb930704ec0a551",
+      "path": "tests/helpers/owned-subtype-test-profile-pin-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "45a76a928085ca6b9de9f9f01760ab9d5e74d05f",
+  "integrationUpdates": [
+    {
+      "currentSha256": "1a8d44e459f45e6036e628b0ecc57339ca1ba09510cec63527154f57c866ef36",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-test-profile-pin-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 463
+        }
+      ],
+      "path": "tests/checked-record-perl-acceptance.test.mjs",
+      "previousSha256": "92a54eb517a717ccd8d0af8d585e5263e3c7296faa1c9f6ba86011d5b1a7743e"
+    },
+    {
+      "currentSha256": "3ac526b8029f9d20b09e7c8ce0b23afa84f63da2da518057650659861439b050",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeTestProfilePinRepairSource, ownedSubtypeTestProfilePinRepairNormalizationPaths } from \"./owned-subtype-test-profile-pin-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedSubtypeTestProfilePinRepairNormalizationPaths\n\t, ...witRecursiveReaderTraversalRepairNormalizationPaths\n",
+          "previous": "\t...witRecursiveReaderTraversalRepairNormalizationPaths\n",
+          "start": 168218
+        },
+        {
+          "current": "\tconst ownedSubtypeTestProfilePinRepair\n\t\t= beforeOwnedSubtypeTestProfilePinRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypeTestProfilePinRepair) === expected)\n\t\treturn ownedSubtypeTestProfilePinRepair;\n\ttext = ownedSubtypeTestProfilePinRepair;\n",
+          "previous": "",
+          "start": 206860
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7f5eb7de4be392683ae15fa331ee5186cff91c1dd66efbb1fe1b4df62e7ff1c9"
+    }
+  ],
+  "milestone": "owned-subtype-test-profile-pin-repair-source-v1",
+  "pin": {
+    "count": 98,
+    "currentSha256": "a61f10d548f706386965331b76f5e7a9ca695ac867e7aaf419124aedaa397651",
+    "path": "src/adoption/test-profiles.mjs",
+    "previousSha256": "1755656b9eb9339ea58f6fbc1d9cb2364d5b1a6e869ea49b23998e4abd138b12"
+  },
+  "pinCount": 98,
+  "predecessorCommit": "6dd064096b16a249e168831100a60a48b0853219",
+  "schemaVersion": 1,
+  "scope": "Refresh all 98 live type-surface references to the registered owned-Subtype test profile without changing support claims.",
+  "updates": [
+    {
+      "currentSha256": "73a7e9c18b21f36a51d488a350522785e100424358848da3ef233f6193b98387",
+      "path": "docs/type-surface.v1.json",
+      "previousSha256": "94421f840224bcd9cb59c1f85da150099c6af15773a073abc85e999701ad27cc",
+      "replacements": [
+        {
+          "count": 98,
+          "current": "a61f10d548f706386965331b76f5e7a9ca695ac867e7aaf419124aedaa397651",
+          "previous": "1755656b9eb9339ea58f6fbc1d9cb2364d5b1a6e869ea49b23998e4abd138b12"
+        }
+      ]
+    }
+  ]
+}

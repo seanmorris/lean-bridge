@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedSubtypeTestProfilePinRepairSource, ownedSubtypeTestProfilePinRepairNormalizationPaths } from "./owned-subtype-test-profile-pin-repair-source-history.mjs";
 import { beforeWitRecursiveReaderTraversalRepairSource, witRecursiveReaderTraversalRepairNormalizationPaths } from "./wit-recursive-reader-traversal-repair-source-history.mjs";
 import { beforeGenericSubtypeDotnetRuntimeProbeSource, genericSubtypeDotnetRuntimeProbeNormalizationPaths } from "./generic-subtype-dotnet-runtime-probe-source-history.mjs";
 import { beforeGenericSubtypeEvidenceSourceClosureRepairSource, genericSubtypeEvidenceSourceClosureRepairChangedPaths } from "./generic-subtype-evidence-source-closure-repair-source-history.mjs";
@@ -2069,7 +2070,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...witRecursiveReaderTraversalRepairNormalizationPaths
+	...ownedSubtypeTestProfilePinRepairNormalizationPaths
+	, ...witRecursiveReaderTraversalRepairNormalizationPaths
 	, ...genericSubtypeDotnetRuntimeProbeNormalizationPaths
 	, ...genericSubtypeEvidenceSourceClosureRepairChangedPaths
 	, ...genericSubtypeArtifactPrefixRepairChangedPaths
@@ -2881,6 +2883,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedSubtypeTestProfilePinRepair
+		= beforeOwnedSubtypeTestProfilePinRepairSource(path, text, expected);
+	if(sha256(ownedSubtypeTestProfilePinRepair) === expected)
+		return ownedSubtypeTestProfilePinRepair;
+	text = ownedSubtypeTestProfilePinRepair;
 	const witRecursiveReaderTraversalRepair
 		= beforeWitRecursiveReaderTraversalRepairSource(path, text, expected);
 	if(sha256(witRecursiveReaderTraversalRepair) === expected)
