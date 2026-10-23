@@ -1,0 +1,78 @@
+name: Installed owned Subtypes in C and C++
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-subtype-native-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-subtype-native:
+    name: Ordinary and reviewed owned Subtypes in C and C++
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      LEAN_NUM_THREADS: "1"
+    steps:
+      - name: Check out the exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Bound apt network waits
+        uses: ./.github/actions/bounded-apt
+        timeout-minutes: 1
+      - name: Install compiler and archive dependencies
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git jq libgmp-dev libuv1-dev m4 pkg-config ripgrep xz-utils zstd
+      - name: Install dependencies and the pinned Lean compiler
+        timeout-minutes: 30
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --no-audit --no-fund
+          mkdir -p build/owned-subtype-native-ci
+          bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-subtype-native-ci/toolchain.log
+      - name: Execute source-free C and C++ acceptance
+        id: acceptance
+        timeout-minutes: 100
+        shell: bash
+        run: |
+          set -euo pipefail
+          source scripts/env.sh
+          npm run test:owned-subtype-native 2>&1 | tee build/owned-subtype-native-ci/acceptance.log
+          rg '^# fail 0$' build/owned-subtype-native-ci/acceptance.log
+          rg '^# skipped 0$' build/owned-subtype-native-ci/acceptance.log
+          test -s build/owned-subtype-native-packaging/report.json
+          test -s build/owned-subtype-native-packaging/retained-packages.json
+          node scripts/check-owned-subtype-ci.mjs \
+            --lane native --producer "$GITHUB_SHA" \
+            --tap build/owned-subtype-native-ci/acceptance.log \
+            --report build/owned-subtype-native-packaging/report.json \
+            | tee build/owned-subtype-native-packaging/verification.json
+          test -s build/owned-subtype-native-packaging/verification.json
+      - name: Preserve native acceptance evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: owned-subtype-native-${{ github.sha }}
+          path: |
+            build/owned-subtype-native-ci/
+            build/owned-subtype-native-packaging/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Enforce installed native acceptance
+        if: always() && steps.acceptance.outcome != 'success'
+        run: exit 1

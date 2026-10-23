@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "owned-subtypes@1.0.0",
+    "name": "owned-subtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53896197,
+          "path": "archives/owned-subtypes-c-1.0.0-c.tar.gz",
+          "sha256": "76364388942ae0aad664e813683fc96cae8271bd5cee65a4ccd525a1a7f02879"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "owned-subtypes-c",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 54315301,
+          "path": "archives/owned-subtypes-cpp-1.0.0-cpp.tar.gz",
+          "sha256": "79afc326264782b2f4f740c97e39dae4982a685292281da06e91a939ce91f66c"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "owned-subtypes-cpp",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "bbe082d0776c11894fd31b5454c631696ff43a10a15a4505a7e4ed88e75e5698",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "adb25cf1ade2707745395e8279983d8e49c329a14d0fc3106e3379970fe575fd"
+  }
+}

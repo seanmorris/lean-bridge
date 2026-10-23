@@ -1,0 +1,31 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 108204841,
+      "archives": 2,
+      "files": [
+        "archives/owned-subtypes-c-1.0.0-c.tar.gz",
+        "archives/owned-subtypes-cpp-1.0.0-cpp.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "ff5e24a87c99dcb8383d6201473a81123f9d810645673df54bf0f41b5ce4e123",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 108211498,
+      "archives": 2,
+      "files": [
+        "archives/owned-subtypes-c-1.0.0-c.tar.gz",
+        "archives/owned-subtypes-cpp-1.0.0-cpp.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "3e13ac74fd38bd37a3f3f92c1839fcdd7b22a01332e88990f65a3e9b66ecb984",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}
