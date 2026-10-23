@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import test from "node:test";
 import { collectModuleClosure } from "./helpers/module-closure.mjs";
 import "./helpers/component-engine-closure-history-tests.mjs";
+import "./helpers/core-source-boundary-closure-tests.mjs";
 
 import { analyzeLeanProject } from "../src/analyze/lean-project.mjs";
 import { prepareComponentBuildPlan } from "../src/build/component-plan.mjs";
