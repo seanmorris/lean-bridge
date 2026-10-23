@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource, ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths } from "./owned-checked-record-javascript-hosted-run-outcome-source-history.mjs";
 import { beforeOwnedCheckedRecordJavaScriptHostedLaneSource, ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths } from "./owned-checked-record-javascript-hosted-lane-source-history.mjs";
 import { beforeCoreSourceBoundaryClosureSource, coreSourceBoundaryClosureNormalizationPaths } from "./core-source-boundary-closure-source-history.mjs";
 import { beforeEvidenceCheckoutClosureRepairSource, evidenceCheckoutClosureRepairNormalizationPaths } from "./evidence-checkout-closure-repair-source-history.mjs";
@@ -2078,7 +2079,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths
+	...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths
+	, ...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths
 	, ...coreSourceBoundaryClosureNormalizationPaths
 	, ...evidenceCheckoutClosureRepairNormalizationPaths
 	, ...witAcceptanceStopBoundaryNormalizationPaths
@@ -2899,6 +2901,12 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const ownedCheckedRecordJavaScriptHostedRunOutcome
+		= beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource(
+			path, text, expected);
+	if(sha256(ownedCheckedRecordJavaScriptHostedRunOutcome) === expected)
+		return ownedCheckedRecordJavaScriptHostedRunOutcome;
+	text = ownedCheckedRecordJavaScriptHostedRunOutcome;
 	const ownedCheckedRecordJavaScriptHostedLane
 		= beforeOwnedCheckedRecordJavaScriptHostedLaneSource(
 			path, text, expected);

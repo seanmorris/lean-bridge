@@ -1,0 +1,125 @@
+{
+  "additions": [
+    {
+      "currentSha256": "14d8adf0135edd10ab3f82ab6928ea83958b87d1b4af2ca6a170b324aa4ea77a",
+      "path": "scripts/update-owned-checked-record-javascript-hosted-run-outcome-source-history.mjs"
+    },
+    {
+      "currentSha256": "f77810ec6f7e0220a432869480c3d0036af2c1c76df37ad06f35d2f8309197df",
+      "path": "tests/helpers/owned-checked-record-javascript-hosted-run-outcome-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "85fc6e7038c51fc8cf7c26200a4f6e4a5164652570bf795c130ab30daa445a7d",
+      "path": "tests/helpers/owned-checked-record-javascript-hosted-run-outcome-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c0b8d879e842d1707946e684991cb507f1bd5643",
+  "integrationUpdates": [
+    {
+      "currentSha256": "52a23e254588427e191f87ec70960328a80934c61dd7ad18e64d26ed0f5a3820",
+      "edits": [
+        {
+          "current": "import { beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource, ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths } from \"./owned-checked-record-javascript-hosted-run-outcome-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedCheckedRecordJavaScriptHostedRunOutcomeNormalizationPaths\n\t, ...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths\n",
+          "previous": "\t...ownedCheckedRecordJavaScriptHostedLaneNormalizationPaths\n",
+          "start": 169780
+        },
+        {
+          "current": "\tconst ownedCheckedRecordJavaScriptHostedRunOutcome\n\t\t= beforeOwnedCheckedRecordJavaScriptHostedRunOutcomeSource(\n\t\t\tpath, text, expected);\n\tif(sha256(ownedCheckedRecordJavaScriptHostedRunOutcome) === expected)\n\t\treturn ownedCheckedRecordJavaScriptHostedRunOutcome;\n\ttext = ownedCheckedRecordJavaScriptHostedRunOutcome;\n",
+          "previous": "",
+          "start": 208933
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "22f4c507ae31e5ae6b175f1a6598ef2136d020660d95c47f5dd298256ad30a63"
+    },
+    {
+      "currentSha256": "46b61839ab38d8d89f7db46e8312d174a8e15507b6362b06016bb3d0bed6c7c1",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-checked-record-javascript-hosted-run-outcome-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 5598
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "efdb56dd0f548a47fd552f70c0da98e71a4f7d0b81f5b6391a6bed7a91b74476"
+    }
+  ],
+  "milestone": "owned-checked-record-javascript-hosted-run-outcome-source-v1",
+  "predecessorCommit": "79e6d6839d5a6c8381efb67d0a565f75a35bc4ab",
+  "schemaVersion": 1,
+  "scope": "Accept a successful owned JavaScript producer job from either a successful or failed enclosing consumer matrix, record the exact enclosing conclusion, reject canceled runs, and authenticate the exact source transition.",
+  "updates": [
+    {
+      "currentSha256": "10405a82eb9cd27071a564321e2f173e2018ff3b8a1e2147779292f82daac1a1",
+      "edits": [
+        {
+          "current": "\t, runConclusions: [\"success\", \"failure\"]\n",
+          "previous": "",
+          "start": 8094
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-contracts.mjs",
+      "previousSha256": "772f4c1159d9e73ccd5e73d5ddda00daa0b3159800a702c9d65674d0b5f41b4a"
+    },
+    {
+      "currentSha256": "50466961782845265fb8fa550897ea2d14b35ee9bea4e64bf291ea6f8df85fdb",
+      "edits": [
+        {
+          "current": "import { constants, readFileSync } from \"node:fs\";\n",
+          "previous": "import { constants } from \"node:fs\";\n",
+          "start": 694
+        },
+        {
+          "current": "const hostedContract = (lane, selected, retainedConclusions) => {\n\tconst expected = { workflow: lane.workflow, jobName: lane.job\n\t\t, artifactPrefix: lane.prefix };\n\tif(!lane.runConclusions) return expected;\n\tconst conclusions = retainedConclusions ?? (() => {\n\t\tconst run = JSON.parse(readFileSync(selected[\"run-json\"], \"utf8\"));\n\t\treturn { run: run.conclusion, job: \"success\" };\n\t})();\n\tassert.deepEqual(Object.keys(conclusions).sort(), [\"job\", \"run\"]);\n\tassert.ok(lane.runConclusions.includes(conclusions.run)\n\t\t, `Ineligible hosted run conclusion: ${conclusions.run}`);\n\tassert.equal(conclusions.job, \"success\");\n\treturn { ...expected, conclusions };\n};\n\n",
+          "previous": "",
+          "start": 4621
+        },
+        {
+          "current": "\tconst hosted = await inspectCallbackSubtypeHostedArtifact(\n\t\tselected, hostedContract(lane, selected));\n",
+          "previous": "\tconst hosted = await inspectCallbackSubtypeHostedArtifact(selected, {\n\t\tworkflow: lane.workflow, jobName: lane.job, artifactPrefix: lane.prefix\n\t});\n",
+          "start": 6077
+        },
+        {
+          "current": "\t\tconst selection = {\n",
+          "previous": "\t\tconst hosted = await inspectCallbackSubtypeHostedArtifact({\n",
+          "start": 12875
+        },
+        {
+          "current": "\t\t};\n\t\tconst hosted = await inspectCallbackSubtypeHostedArtifact(selection\n\t\t\t, hostedContract(lane, selection\n\t\t\t\t, lane.runConclusions ? index.hostedRun.conclusions : undefined));\n",
+          "previous": "\t\t}, {\n\t\t\tworkflow: lane.workflow, jobName: lane.job, artifactPrefix: lane.prefix\n\t\t});\n",
+          "start": 13006
+        }
+      ],
+      "path": "tests/helpers/owned-checked-record-hosted-evidence.mjs",
+      "previousSha256": "0b01c2a3830647e8ea1b39e5fa628bfc4501bb68169f72943e4d4922072df17b"
+    },
+    {
+      "currentSha256": "2a74b5994b184f428de60860835d91263b6bed5ac5c5593b555e746956153747",
+      "edits": [
+        {
+          "current": "const archiveInputs = async (t, laneName, {\n\tenforce = \"skipped\", runConclusion = \"success\"\n} = {}) => {\n",
+          "previous": "const archiveInputs = async (t, laneName, { enforce = \"skipped\" } = {}) => {\n",
+          "start": 19916
+        },
+        {
+          "current": "\tconst run = { id: 4242, status: \"completed\", conclusion: runConclusion\n",
+          "previous": "\tconst run = { id: 4242, status: \"completed\", conclusion: \"success\"\n",
+          "start": 20387
+        },
+        {
+          "current": "\tconst failedMatrix = await archiveInputs(t, \"javascript\"\n\t\t, { runConclusion: \"failure\" });\n\tconst failedMatrixIndex = await writeOwnedCheckedRecordHostedEvidence({\n\t\tlane: \"javascript\", selected: failedMatrix.selected\n\t\t, destination: join(failedMatrix.inputs, \"evidence\")\n\t\t, archiveCommit: revision\n\t});\n\tassert.deepEqual(failedMatrixIndex.hostedRun.conclusions\n\t\t, { run: \"failure\", job: \"success\" });\n\tconst cancelledMatrix = await archiveInputs(t, \"javascript\"\n\t\t, { runConclusion: \"cancelled\" });\n\tawait assert.rejects(writeOwnedCheckedRecordHostedEvidence({\n\t\tlane: \"javascript\", selected: cancelledMatrix.selected\n\t\t, destination: join(cancelledMatrix.inputs, \"evidence\")\n\t\t, archiveCommit: revision\n\t}), /Ineligible hosted run conclusion/u);\n",
+          "previous": "",
+          "start": 24242
+        }
+      ],
+      "path": "tests/owned-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "63df2d46ef86b288cf2f268026e5b732a9c48fc87e4f88a2e297e696505926cd"
+    }
+  ]
+}
