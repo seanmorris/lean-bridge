@@ -155,7 +155,7 @@ const assertPerl = report => {
 			assert.ok(["prebuilt-only", "build-xs"].includes(observation.mode));
 			assert.equal(observation.runtimeOnlyRuns, 2);
 			assert.ok(observation.observed.checks >= 72);
-			assert.equal(observation.observed.live_identities, 0);
+			assert.equal(observation.observed.live_identities, 1);
 			assert.ok(typeof observation.perl === "string"
 				&& observation.perl.length > 0);
 			interpreters.add(observation.perl);

@@ -106,14 +106,14 @@ serial_is($moved->primary, 51, 'successful transfer returns a usable resource');
 
 my $before_abandon = LeanBridge::Runtime::_snapshot()->{live_identities};
 my $abandoned = invoke('new_ticket', Math::BigInt->new(61), 'abandoned');
-check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,
-  'fresh resource creates one native owner');
-my $destruction_survivor = $abandoned->retain;
 check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 2,
-  'independent retain creates a second native owner');
+  'fresh resource creates a result owner and resource identity');
+my $destruction_survivor = $abandoned->retain;
+check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 3,
+  'independent retain creates a second result owner');
 undef $abandoned;
-check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,
-  'implicit destruction releases the original native owner');
+check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 2,
+  'implicit destruction releases the original result owner');
 serial_is($destruction_survivor, 61,
   'implicit destruction preserves an independent retain');
 $destruction_survivor->close;

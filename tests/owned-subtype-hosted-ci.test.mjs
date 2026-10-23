@@ -110,7 +110,7 @@ const reportFor = lane => {
 				, "5.38.2-threaded", "5.38.2-unthreaded"]
 				.flatMap(perl => ["prebuilt-only", "build-xs"].map(mode => ({
 					perl, mode, runtimeOnlyRuns: 2
-					, observed: { checks: 72, live_identities: 0 }
+					, observed: { checks: 74, live_identities: 1 }
 				})))
 		}))
 	};
