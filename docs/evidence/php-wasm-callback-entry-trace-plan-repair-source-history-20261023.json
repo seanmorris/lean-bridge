@@ -1,0 +1,192 @@
+{
+  "additions": [
+    {
+      "currentSha256": "0512744e36a942f1558673bda84a54707daada29074624c982fcb24cc0d6c9cb",
+      "path": "scripts/update-php-wasm-callback-entry-trace-plan-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "85f738b1e44604c5a01cf13d532ec2a306203811c203b45e726015812cf61e6c",
+      "path": "tests/helpers/php-wasm-callback-entry-trace-plan-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "a8f195c4840f48a23ab0414c6dcbb33bbce55db437d8203d17e5273477c99ac3",
+      "path": "tests/helpers/php-wasm-callback-entry-trace-plan-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "119b755afc1a63304eb18e746f789ad286883f48",
+  "integrationUpdates": [
+    {
+      "currentSha256": "42d1bdaab94d72eec3d6fa1f6f34578749849a45fbfca915bebef8927c3c0621",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-entry-trace-plan-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "fa4a5f737537f73d447a1e1bc54a540aebae09c8925ccd2c2c9aa97cfc5a7df6"
+    },
+    {
+      "currentSha256": "0de06efcee44d8016bd9f1aba4b340c05151b305b63bd552ad98ecefe7fb40e5",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackEntryTracePlanRepairSource, phpWasmCallbackEntryTracePlanRepairNormalizationPaths } from \"./php-wasm-callback-entry-trace-plan-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmCallbackEntryTracePlanRepairNormalizationPaths\n\t, ...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths\n",
+          "previous": "\t...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths\n",
+          "start": 155315
+        },
+        {
+          "current": "\tconst callbackEntryTracePlanRepair\n\t\t= beforePhpWasmCallbackEntryTracePlanRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackEntryTracePlanRepair) === expected)\n\t\treturn callbackEntryTracePlanRepair;\n",
+          "previous": "",
+          "start": 190646
+        },
+        {
+          "current": "\t\t\tpath, callbackEntryTracePlanRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 190967
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "984853554065bd653071c6c5c38ceec2b3c81287c46e032e727f0ab04adaf06f"
+    }
+  ],
+  "milestone": "php-wasm-callback-entry-trace-plan-repair-source-v1",
+  "predecessorCommit": "35b604022f30a35de68efec0047ee8d33a08eded",
+  "schemaVersion": 1,
+  "scope": "Callback-entry trace plans match the exact executed adapter, validation, constructor, recovery, callback, closure, and cleanup scopes.",
+  "updates": [
+    {
+      "currentSha256": "2b8818baa25505a7feb7a9e6421e678896d91ba17170ddf308fe4a9bf0745967",
+      "edits": [
+        {
+          "current": "\t\trequire(same(calls, planned.calls), `callback trace differs: ${planned.control}: `\n\t\t\t+ JSON.stringify({ actual: calls, expected: planned.calls }));\n",
+          "previous": "\t\trequire(same(calls, planned.calls), `callback trace differs: ${planned.control}`);\n",
+          "start": 5487
+        }
+      ],
+      "path": "tests/fixtures/php-wasm-callback-entry/driver.mjs",
+      "previousSha256": "9ddad2483135b7160db7dc8e5d22e9dd3fe8668d180ca903ed6cc32884488914"
+    },
+    {
+      "currentSha256": "f7bfacada6dafc7148bb68c06f40afc0ea759aa5ea778bb01c75477841e4671f",
+      "edits": [
+        {
+          "current": "\ntest(\"callback entry trace drift reports the parsed actual and expected calls\"\n\t, async t => {\n\tconst execute = await loadDriver(t);\n\tconst changed = acceptedTrace.replace(\n\t\t\"LB_CALLBACK_ENTRY_V1 enter source Probe.call\\n\", \"\"\n\t);\n\tawait assert.rejects(() => execute({\n\t\tPhp: fakeHost({ trace: changed })\n\t\t, api: { extensions: {}, lazy: { extensions: {} } }\n\t\t, loading: \"startup\", mode: \"weak\", request: request()\n\t\t, source: \"synthetic caller\"\n\t}), error => {\n\t\tassert.match(error.message, /callback trace differs: accepted/u);\n\t\tconst difference = JSON.parse(error.message.slice(\n\t\t\terror.message.indexOf(\"{\")\n\t\t));\n\t\tassert.equal(difference.actual[0].counts.source, 0);\n\t\tassert.equal(difference.expected[0].counts.source, 1);\n\t\treturn true;\n\t});\n\t}\n);\n",
+          "previous": "",
+          "start": 6607
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-driver-tests.mjs",
+      "previousSha256": "3bf754518351e3d0bc83eab536abb019fba430383aa1edcdd700fe271d044563"
+    },
+    {
+      "currentSha256": "8ce36b22ec4f8244178f0b746bd297512cad10523fbdf36873a4b3a60fbeb8d4",
+      "edits": [
+        {
+          "current": "\tassert.deepEqual(plan.cases.find(\n\t\titem => item.control === \"invalid-recovery\"\n\t).calls[0].entries.map(item => item.kind)\n\t, [\"adapter\", \"adapter\", \"recovery\", \"recovery\", \"cleanup\"]);\n\tconst closureInput = plan.cases.find(item => item.control === \"closure-input\");\n\tassert.equal(closureInput.calls[0].counts.source, 0);\n\tassert.deepEqual(closureInput.calls[1].entries.slice(0, 4).map(\n\t\titem => item.kind\n\t), [\"adapter\", \"adapter\", \"source\", \"closure\"]);\n\tassert.deepEqual(plan.cases.find(\n\t\titem => item.control === \"closure-input-refusal\"\n\t).calls[0].entries.map(item => item.kind)\n\t, [\"adapter\", \"adapter\", \"cleanup\"]);\n",
+          "previous": "\tassert.deepEqual(plan.cases.find(item => item.control === \"invalid-recovery\").calls, []);\n",
+          "start": 1891
+        },
+        {
+          "current": "\tlabels.push([\n\t\t\"validator\"\n\t\t, \"CallbackCheckedRecords.makeClosure:callback_validator:\"\n\t\t\t+ \"closure_graph_refinement_0_test\"\n\t]);\n",
+          "previous": "",
+          "start": 4094
+        },
+        {
+          "current": "\tconst closureRefusal = plan.cases.find(\n\t\titem => item.control === \"closure-input-refusal\"\n\t).calls[0];\n\tassert.deepEqual(closureRefusal.entries.map(item => item.kind)\n\t\t, [\"adapter\", \"adapter\", \"constructor\", \"validator\", \"constructor\", \"cleanup\"]);\n\tassert.equal(closureRefusal.entries[3].label\n\t\t, \"CallbackCheckedRecords.makeClosure:callback_validator:\"\n\t\t\t+ \"closure_graph_refinement_0_test\");\n\tassert.deepEqual(closureRefusal.entries.filter(item => item.kind === \"constructor\")\n\t\t.map(item => item.label), [\n\t\t\t\"CallbackCheckedRecords.mkInterval\", \"CallbackCheckedRecords.mkInterval\"\n\t\t]\n\t);\n\tassert.deepEqual(plan.cases.find(\n\t\titem => item.control === \"invalid-recovery\"\n\t).calls[0].entries.map(item => item.kind)\n\t, [\"adapter\", \"adapter\", \"recovery\", \"recovery\", \"constructor\", \"cleanup\"]);\n\tconst rejected = plan.cases.find(\n\t\titem => item.control === \"actual-reply-rejection\"\n\t).calls[0];\n\tassert.equal(rejected.counts.constructor, 3);\n\tassert.deepEqual(rejected.entries.slice(-5).map(item => item.kind)\n\t\t, [\"constructor\", \"rejection\", \"rejection\", \"constructor\", \"cleanup\"]);\n\tconst closureInput = plan.cases.find(item => item.control === \"closure-input\");\n\tassert.equal(closureInput.calls[0].counts.source, 0);\n\tassert.deepEqual(closureInput.calls[1].entries.slice(0, 5).map(\n\t\titem => item.kind\n\t), [\"adapter\", \"adapter\", \"constructor\", \"closure\", \"cleanup\"]);\n\tassert.deepEqual(plan.cases.find(item => item.control === \"mixed-closure\")\n\t\t.calls[1].entries.map(item => item.kind)\n\t\t, [\"adapter\", \"adapter\", \"constructor\", \"cleanup\"]);\n\tassert.deepEqual(plan.cases.find(item => item.control === \"nested-closure\")\n\t\t.calls[1].entries.map(item => item.kind)\n\t\t, [\"adapter\", \"adapter\", \"constructor\", \"constructor\", \"closure\", \"cleanup\"]);\n",
+          "previous": "\tassert.deepEqual(plan.cases.find(item => item.control === \"closure-input-refusal\").calls, []);\n",
+          "start": 4807
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan-tests.mjs",
+      "previousSha256": "caa1e7b6a07dc3d849b5f00f8fa8cd105734fc09b3993ce341c620f9126e033b"
+    },
+    {
+      "currentSha256": "4b30b3991bbaa5fa53ecf83cd8a5bd59d5ef3b7df753d3d5a8994ae5ba6e0d82",
+      "edits": [
+        {
+          "current": "\tconst findPrefix = (kind, prefix) => {\n\t\tconst values = selected.filter(\n\t\t\titem => item.kind === kind && item.label.startsWith(prefix)\n\t\t);\n\t\tassert.equal(values.length, 1, `${kind}/${prefix}*`);\n\t\treturn { kind, label: values[0].label };\n\t};\n",
+          "previous": "",
+          "start": 1157
+        },
+        {
+          "current": "\tconst maker = name => top(name);\n\tconst closure = (\n\t\tname, constructors = [], includeSource = true, includeBody = true\n\t) => call(`${name}:invoke`, [\n\t\tfind(\"adapter\", `${name}:closure:native`)\n\t\t, find(\"adapter\", `${name}:closure:lean`)\n\t\t, ...includeSource ? [find(\"source\", name)] : [], ...constructors\n\t\t, ...includeBody ? [find(\"closure\", `${name}:body`)] : []\n\t\t, find(\"cleanup\", `${name}:invoke:cleanup`)\n\t]);\n\tconst closureRefusal = (name, constructors = []) => call(`${name}:invoke`, [\n",
+          "previous": "\tconst maker = name => top(name, [find(\"source\", name)]);\n\tconst closure = (name, constructors = []) => call(`${name}:invoke`, [\n",
+          "start": 1666
+        },
+        {
+          "current": "",
+          "previous": "\t\t, find(\"closure\", `${name}:body`)\n",
+          "start": 2271
+        },
+        {
+          "current": "\t\t\t, ...recovery\n",
+          "previous": "",
+          "start": 3080
+        },
+        {
+          "current": "\tconst recoveryRefusal = (name, recovery = []) => call(name, [\n\t\tfind(\"adapter\", `${name}:native`), find(\"adapter\", `${name}:lean`)\n\t\t, find(\"recovery\", `${name}:recovery:lean`)\n\t\t, find(\"recovery\", `${name}:recovery:native`)\n\t\t, ...recovery, find(\"cleanup\", `${name}:cleanup`)\n\t]);\n",
+          "previous": "",
+          "start": 3188
+        },
+        {
+          "current": "\t\t\t, { control: \"closure-input-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [closureRefusal(scaler)] }\n",
+          "previous": "\t\t\t, { control: \"closure-input-refusal\", outcome: \"refused\", calls: [] }\n",
+          "start": 3806
+        },
+        {
+          "current": "\t\t\t, { control: \"invalid-recovery\", outcome: \"refused\"\n\t\t\t\t, calls: [recoveryRefusal(three)] }\n",
+          "previous": "\t\t\t, { control: \"invalid-recovery\", outcome: \"refused\", calls: [] }\n",
+          "start": 4206
+        },
+        {
+          "current": "\t\tconst closureValidator = findPrefix(\n\t\t\t\"validator\", `${closureName}:callback_validator:closure_graph_refinement_`\n\t\t);\n",
+          "previous": "",
+          "start": 5033
+        },
+        {
+          "current": "\t\t\t, { control: \"invalid-recovery\", outcome: \"refused\"\n\t\t\t\t, calls: [recoveryRefusal(host, interval)] }\n",
+          "previous": "\t\t\t, { control: \"invalid-recovery\", outcome: \"refused\", calls: [] }\n",
+          "start": 5288
+        },
+        {
+          "current": "\t\t\t\t, calls: [callback(host, { recovery: interval\n\t\t\t\t\t, reply: interval, rejected: true })] }\n",
+          "previous": "\t\t\t\t, calls: [callback(host, { recovery: interval, rejected: true })] }\n",
+          "start": 5453
+        },
+        {
+          "current": "\t\t\t\t, calls: [maker(closureName), closure(closureName, interval, false)] }\n\t\t\t, { control: \"closure-input-refusal\", outcome: \"refused\"\n\t\t\t\t, calls: [\n\t\t\t\t\tclosureRefusal(closureName, [\n\t\t\t\t\t\t...interval, closureValidator, ...interval\n\t\t\t\t\t])\n\t\t\t\t]\n\t\t\t}\n",
+          "previous": "\t\t\t\t, calls: [maker(closureName), closure(closureName, interval)] }\n\t\t\t, { control: \"closure-input-refusal\", outcome: \"refused\", calls: [] }\n",
+          "start": 5994
+        },
+        {
+          "current": "\t\t\t\t, calls: [closure(closureName, interval, false)] }\n",
+          "previous": "\t\t\t\t, calls: [closure(closureName, interval)] }\n",
+          "start": 6309
+        },
+        {
+          "current": "\t\t\t\t, calls: [maker(mixedClosure)\n\t\t\t\t\t, closure(mixedClosure, interval, false, false)] }\n",
+          "previous": "\t\t\t\t, calls: [maker(mixedClosure), closure(mixedClosure, interval)] }\n",
+          "start": 6417
+        },
+        {
+          "current": "\t\t\t\t, calls: [maker(nestedClosure), closure(nestedClosure, weighted, false)] }\n",
+          "previous": "\t\t\t\t, calls: [maker(nestedClosure), closure(nestedClosure, weighted)] }\n",
+          "start": 6561
+        },
+        {
+          "current": "\tassert.ok(cases.some(item => item.outcome === \"refused\"));\n\tassert.ok(cases.filter(item => item.outcome === \"refused\")\n\t\t.every(item => item.calls.length > 0));\n",
+          "previous": "\tassert.ok(cases.some(item => item.outcome === \"refused\" && item.calls.length === 0));\n\tassert.ok(cases.some(item => item.outcome === \"refused\" && item.calls.length > 0));\n",
+          "start": 6648
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-plan.mjs",
+      "previousSha256": "4aa19a5575298c74e6cf8f2ad47622f0b5aeab2c5aba1603b7aef5ce8a194f04"
+    }
+  ]
+}
