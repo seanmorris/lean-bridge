@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeDependentBrowserHandoffRetentionRepairSource, dependentBrowserHandoffRetentionRepairNormalizationPaths } from "./dependent-browser-handoff-retention-repair-source-history.mjs";
 import { beforeWitRecursiveProducerReplayRepairSource, witRecursiveProducerReplayRepairNormalizationPaths } from "./wit-recursive-producer-replay-repair-source-history.mjs";
 import { beforeJvmProducerReplayRepairSource, jvmProducerReplayRepairNormalizationPaths } from "./jvm-producer-replay-repair-source-history.mjs";
 import { beforeOwnedReceiverProducerReplayRepairSource, ownedReceiverProducerReplayRepairNormalizationPaths } from "./owned-receiver-producer-replay-repair-source-history.mjs";
@@ -2039,7 +2040,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...witRecursiveProducerReplayRepairNormalizationPaths
+	...dependentBrowserHandoffRetentionRepairNormalizationPaths
+	, ...witRecursiveProducerReplayRepairNormalizationPaths
 	, ...jvmProducerReplayRepairNormalizationPaths
 	, ...ownedReceiverProducerReplayRepairNormalizationPaths
 	, ...ownedTransferProducerReplayRepairNormalizationPaths
@@ -2828,8 +2830,16 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const dependentBrowserHandoffRetentionRepair
+		= beforeDependentBrowserHandoffRetentionRepairSource(
+			path, text, expected
+		);
+	if(sha256(dependentBrowserHandoffRetentionRepair) === expected)
+		return dependentBrowserHandoffRetentionRepair;
 	const witRecursiveProducerReplayRepair
-		= beforeWitRecursiveProducerReplayRepairSource(path, text, expected);
+		= beforeWitRecursiveProducerReplayRepairSource(
+			path, dependentBrowserHandoffRetentionRepair, expected
+		);
 	if(sha256(witRecursiveProducerReplayRepair) === expected)
 		return witRecursiveProducerReplayRepair;
 	const jvmProducerReplayRepair

@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "fcdb6f0f48a840d56ff5890733d2622f76be253a7ceacae6e855b2656931f572",
+      "path": "scripts/update-dependent-browser-handoff-retention-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "62fe15d8eb50ad8884c85b0c9f6e6f4883ae18e778379c757a5f042daee5b000",
+      "path": "tests/helpers/dependent-browser-handoff-retention-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "6915bbaa816d4735da39052368ab27474a75fc0ba151db8e3a4923ec2b478f58",
+      "path": "tests/helpers/dependent-browser-handoff-retention-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "d4c50232d76dd886cfaf2412d3245ebe3a76f71b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "2d490b35fb9278cef6978c81525e9e9f3dac63da166fcfff897de0d86cf7384d",
+      "edits": [
+        {
+          "current": "import { beforeDependentBrowserHandoffRetentionRepairSource, dependentBrowserHandoffRetentionRepairNormalizationPaths } from \"./dependent-browser-handoff-retention-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...dependentBrowserHandoffRetentionRepairNormalizationPaths\n\t, ...witRecursiveProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...witRecursiveProducerReplayRepairNormalizationPaths\n",
+          "start": 162977
+        },
+        {
+          "current": "\tconst dependentBrowserHandoffRetentionRepair\n\t\t= beforeDependentBrowserHandoffRetentionRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(dependentBrowserHandoffRetentionRepair) === expected)\n\t\treturn dependentBrowserHandoffRetentionRepair;\n",
+          "previous": "",
+          "start": 200121
+        },
+        {
+          "current": "\t\t= beforeWitRecursiveProducerReplayRepairSource(\n\t\t\tpath, dependentBrowserHandoffRetentionRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeWitRecursiveProducerReplayRepairSource(path, text, expected);\n",
+          "start": 200406
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "c4541a60de18300ab97b1fe8987019db132789bfe2951f9ec40e9c6aa243d46b"
+    },
+    {
+      "currentSha256": "bd43d528996e04826681ca4267267429825a6a64c6e8d7b5fdb041a8f72ba016",
+      "edits": [
+        {
+          "current": "import \"./helpers/dependent-browser-handoff-retention-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 236
+        }
+      ],
+      "path": "tests/dependent-checked-record-browser-foundation.test.mjs",
+      "previousSha256": "8b375bb110070483919b395e543ffc31abeff007a43a3c1a5445368a8af96a67"
+    }
+  ],
+  "milestone": "dependent-browser-handoff-retention-repair-source-v1",
+  "predecessorCommit": "b05406dcd855b8dfa61459861e74eacba433c8a7",
+  "schemaVersion": 1,
+  "scope": "Dependent checked-record browser runs retain their exact npm handoff beside every route record, and the hosted runner independently rechecks all four closed inventories before artifact upload.",
+  "updates": [
+    {
+      "currentSha256": "de761ab5927298ad9829a038b59ebd9b43dd0f8a84140d3bc49c96147549f8f2",
+      "edits": [
+        {
+          "current": "revision=\"$(git rev-parse HEAD)\"\n",
+          "previous": "",
+          "start": 708
+        },
+        {
+          "current": "  node scripts/check-dependent-checked-record-browser-ci.mjs \\\n    --route \"$route\" \\\n    --producer \"$revision\" \\\n    --checker \"$revision\" \\\n    --directory \"$records/$route\" \\\n    --tap \"$output/run.tap\" >/dev/null\n",
+          "previous": "",
+          "start": 854
+        }
+      ],
+      "path": "scripts/run-dependent-checked-record-browser-ci.sh",
+      "previousSha256": "2c17f34a10676d56566a30232e89648ea3eec4c5dbf4de30468164fa8db487e5"
+    },
+    {
+      "currentSha256": "16643162f009135cf676695eef670c42f2f58de993a0d8c39cd595e4590fecbd",
+      "edits": [
+        {
+          "current": "\tawait cp(handoff, join(output, \"handoff\"), { recursive: true });\n",
+          "previous": "",
+          "start": 12945
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-installed-tests.mjs",
+      "previousSha256": "de2b03fc18af8b9a4e11ff3991f682ca6fcdebc3223c2855be0ffd87c3f67d34"
+    },
+    {
+      "currentSha256": "5dc5ad8d71cca0200d986a3bb7f2e8623f6aa32e11c6eeedf27dcff292092a00",
+      "edits": [
+        {
+          "current": "\tconst installed = await readFile(\n\t\t\"tests/helpers/dependent-checked-record-browser-installed-tests.mjs\"\n\t\t, \"utf8\"\n\t);\n",
+          "previous": "",
+          "start": 12568
+        },
+        {
+          "current": "\t\t\t, \"--test-concurrency=1\"\n\t\t\t, 'test -s \"$records/$route/report.json\"'\n\t\t\t, 'test -s \"$records/$route/browser.json\"'\n\t\t\t, \"scripts/check-dependent-checked-record-browser-ci.mjs\"\n\t\t\t, '--producer \"$revision\"'\n\t\t\t, '--checker \"$revision\"'\n",
+          "previous": "\t\t, \"--test-concurrency=1\"\n\t\t, 'test -s \"$records/$route/report.json\"'\n\t\t, 'test -s \"$records/$route/browser.json\"'\n",
+          "start": 13290
+        },
+        {
+          "current": "\tassert.ok(installed.includes(\n\t\t'await cp(handoff, join(output, \"handoff\"), { recursive: true });'\n\t));\n",
+          "previous": "",
+          "start": 13581
+        }
+      ],
+      "path": "tests/helpers/dependent-checked-record-browser-tests.mjs",
+      "previousSha256": "e4e9d38e49a23095076fea9db011948f636b122bbc363669236e4c71ff8287c8"
+    }
+  ]
+}
