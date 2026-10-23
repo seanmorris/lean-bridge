@@ -1,0 +1,41 @@
+{
+  "reports": [
+    {
+      "bindingIrSha256": "e4d8dbe7520e9639bd7596c3ebaa29744e7dc93f5f519efff681e20c97631e7b",
+      "checks": 26,
+      "compilerFreePath": true,
+      "consumerSha256": "037f809675c379a9f80b786188283282d6cd010d2f5cba72742664c9fc3b0af0",
+      "handoffRemovedBeforeReplay": true,
+      "libraryClosureSha256": "8e2b016f5140b015337de48ae04f42d1166e99ec2f1c50ef0051a56ab5e4fca9",
+      "offlineInstall": true,
+      "packageFileSetSha256": "3dd984555d16ba1a95682cd87b1a9c7d90b00c41b00e2523187cb8d2e59d2f62",
+      "profile": "wit-wasi",
+      "receiptSha256": "99741d2c766a6c47442670f43020e81c7e3a80071abbd4911d74c89bc5af98f0",
+      "relocatedReplay": true,
+      "repeatExecution": true,
+      "route": "ordinary",
+      "runtimeOnly": true,
+      "sourceFreeExecution": true,
+      "sourceRemovedBeforeInstallation": true
+    },
+    {
+      "bindingIrSha256": "614d21bf44619938202d873ec3c8b5cef2c3ee24964b7e7dc742b49144c380c2",
+      "checks": 26,
+      "compilerFreePath": true,
+      "consumerSha256": "037f809675c379a9f80b786188283282d6cd010d2f5cba72742664c9fc3b0af0",
+      "handoffRemovedBeforeReplay": true,
+      "libraryClosureSha256": "8e2b016f5140b015337de48ae04f42d1166e99ec2f1c50ef0051a56ab5e4fca9",
+      "offlineInstall": true,
+      "packageFileSetSha256": "813bce9d3615f5b2023f24f59a291ac1b12118ebb2380391fab5539eafb114ff",
+      "profile": "wit-wasi",
+      "receiptSha256": "016f59670f33a6bc7cef878b460ccf748e47b436dd57f51e2acbbbe6fd4c43e5",
+      "relocatedReplay": true,
+      "repeatExecution": true,
+      "route": "reviewed",
+      "runtimeOnly": true,
+      "sourceFreeExecution": true,
+      "sourceRemovedBeforeInstallation": true
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,39 @@
+{
+  "component": {
+    "id": "callbacksubtypes@1.0.0",
+    "name": "callbacksubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 59312828,
+          "path": "archives/callback-subtypes-1.0.0-wit-wasi.tar.gz",
+          "sha256": "5b6fffeb781a82a54aa2d2666a19722f2fcecbef60162c9723e844659b010996"
+        }
+      ],
+      "ecosystem": "wit-wasi",
+      "name": "callback-subtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "wit-wasi",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "e4d8dbe7520e9639bd7596c3ebaa29744e7dc93f5f519efff681e20c97631e7b",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "16d3854978a1406d9b40b51228b42e2f35198fbda6531d461508d50841426a0f"
+  }
+}

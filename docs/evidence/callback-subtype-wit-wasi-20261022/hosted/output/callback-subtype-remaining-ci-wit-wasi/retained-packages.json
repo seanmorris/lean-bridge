@@ -1,0 +1,29 @@
+{
+  "routes": [
+    {
+      "archiveBytes": 59312828,
+      "archives": 1,
+      "files": [
+        "archives/callback-subtypes-1.0.0-wit-wasi.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/ordinary/handoff",
+      "receiptSha256": "99741d2c766a6c47442670f43020e81c7e3a80071abbd4911d74c89bc5af98f0",
+      "route": "ordinary"
+    },
+    {
+      "archiveBytes": 59317227,
+      "archives": 1,
+      "files": [
+        "archives/callback-subtypes-1.0.0-wit-wasi.tar.gz",
+        "package-set-receipt.json",
+        "package-set-receipt.json.sha256"
+      ],
+      "path": "evidence/reviewed/handoff",
+      "receiptSha256": "016f59670f33a6bc7cef878b460ccf748e47b436dd57f51e2acbbbe6fd4c43e5",
+      "route": "reviewed"
+    }
+  ],
+  "schemaVersion": 1
+}
