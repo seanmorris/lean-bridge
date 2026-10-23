@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeValueIndexTestProfileLiveReadRepairSource, valueIndexTestProfileLiveReadRepairNormalizationPaths } from "./value-index-test-profile-live-read-repair-source-history.mjs";
 import { beforePhpWasmCallbackEntrySelectionRepairSource, phpWasmCallbackEntrySelectionRepairNormalizationPaths } from "./php-wasm-callback-entry-selection-repair-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmHostedArchiveSource, callbackRefinementsPhpWasmHostedArchiveNormalizationPaths } from "./callback-refinements-php-wasm-hosted-archive-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmPromotionSource, callbackRefinementsPhpWasmPromotionNormalizationPaths } from "./callback-refinements-php-wasm-promotion-source-history.mjs";
@@ -1952,7 +1953,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmCallbackEntrySelectionRepairNormalizationPaths
+	...valueIndexTestProfileLiveReadRepairNormalizationPaths
+	, ...phpWasmCallbackEntrySelectionRepairNormalizationPaths
 	, ...callbackRefinementsPhpWasmPromotionNormalizationPaths
 	, ...testProfilesRegistrationGapIntegrationPaths
 	, ...testProfilesRegistrationGapHistoricalPaths
@@ -2706,9 +2708,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const valueIndexProfileReadRepair
+		= beforeValueIndexTestProfileLiveReadRepairSource(
+			path, text, expected
+		);
+	if(sha256(valueIndexProfileReadRepair) === expected)
+		return valueIndexProfileReadRepair;
 	const callbackEntrySelectionRepair
 		= beforePhpWasmCallbackEntrySelectionRepairSource(
-			path, text, expected
+			path, valueIndexProfileReadRepair, expected
 		);
 	if(sha256(callbackEntrySelectionRepair) === expected)
 		return callbackEntrySelectionRepair;

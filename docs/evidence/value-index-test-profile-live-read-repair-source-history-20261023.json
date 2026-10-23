@@ -1,0 +1,76 @@
+{
+  "additions": [
+    {
+      "currentSha256": "3c121b2b74b1500a65493ea4a05675731da9ac68622b1f8ba99081d8f5406455",
+      "path": "scripts/update-value-index-test-profile-live-read-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "bc399b76d93098ae037ac693dae7a887504923e013aafc883c00e60cae394f84",
+      "path": "tests/helpers/value-index-test-profile-live-read-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "da2710a580444aa94db624db77777a06794b14a43ea4007ffde21dc2ceabe5a0",
+      "path": "tests/helpers/value-index-test-profile-live-read-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "dabfaef19a73c27ce1d391a06648b7e38f007aff",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c087878959357b55ea49242baa900f1392c9806ea67905c2fe8df3da7a169bcd",
+      "edits": [
+        {
+          "current": "import \"./helpers/value-index-test-profile-live-read-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 3319
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "148871ea6f697ae35fe1eef2d14bccfaa3dd33dcc29bd7ebe8cb81bf763cf88c"
+    },
+    {
+      "currentSha256": "782ecf6af96bac2c674c8b878ade92bfc5d86dafaf12f3a1906ae253eb9bd0d8",
+      "edits": [
+        {
+          "current": "import { beforeValueIndexTestProfileLiveReadRepairSource, valueIndexTestProfileLiveReadRepairNormalizationPaths } from \"./value-index-test-profile-live-read-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...valueIndexTestProfileLiveReadRepairNormalizationPaths\n\t, ...phpWasmCallbackEntrySelectionRepairNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackEntrySelectionRepairNormalizationPaths\n",
+          "start": 154515
+        },
+        {
+          "current": "\tconst valueIndexProfileReadRepair\n\t\t= beforeValueIndexTestProfileLiveReadRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(valueIndexProfileReadRepair) === expected)\n\t\treturn valueIndexProfileReadRepair;\n",
+          "previous": "",
+          "start": 189585
+        },
+        {
+          "current": "\t\t\tpath, valueIndexProfileReadRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 189883
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "085bb3abcc519811d8fe2d4e522c828920310eb1927194aa8c915bf132e53d5d"
+    }
+  ],
+  "milestone": "value-index-test-profile-live-read-repair-source-v1",
+  "predecessorCommit": "bab45780d536bad09368e76f9a594eb91756aec0",
+  "schemaVersion": 1,
+  "scope": "The value-index profile-gap test reconstructs its exact recorded registry milestone through the global history hub and refuses to reverse later unrecorded registry bytes.",
+  "updates": [
+    {
+      "currentSha256": "2241d6ace48e1685ee03965a23d3269f70f343d7bf594d4a4725eed77f05d41c",
+      "edits": [
+        {
+          "current": "\t// This layer reverses only its own profile transitions, so it starts from\n\t// its recorded current milestone, never from the live registry, which later\n\t// layers keep changing.\n\tconst milestone = profileTransitions[0].currentSha256;\n\tconst live = await sourceAtFinHistoryMilestone(profilePath, milestone);\n\tassert.equal(sha256(live), milestone);\n\tassert.equal(live, git([\"show\", `${profileTransitions[0].currentCommit}:${profilePath}`]));\n\tassert.equal(beforeValueIndexTestProfileGapSource(profilePath, live, milestone), live);\n\tconst current = await readFile(profilePath, \"utf8\");\n\tif(sha256(current) !== milestone)\n\t\tassert.equal(beforeValueIndexTestProfileGapSource(profilePath, current\n\t\t\t, profileTransitions.at(-1).previousSha256), current\n\t\t, \"the layer must not reverse a registry it never recorded\");\n",
+          "previous": "\tconst live = await readFile(profilePath, \"utf8\");\n",
+          "start": 3963
+        }
+      ],
+      "path": "tests/helpers/value-index-test-profile-gap-source-history-tests.mjs",
+      "previousSha256": "1fa0857839e59503989fc1b86c0c81b8ee9379175d2b258f35cdbe44750219a5"
+    }
+  ]
+}
