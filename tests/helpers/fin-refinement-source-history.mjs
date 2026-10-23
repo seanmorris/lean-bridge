@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforePhpWasmCallbackEntrySelectionRepairSource, phpWasmCallbackEntrySelectionRepairNormalizationPaths } from "./php-wasm-callback-entry-selection-repair-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmHostedArchiveSource, callbackRefinementsPhpWasmHostedArchiveNormalizationPaths } from "./callback-refinements-php-wasm-hosted-archive-source-history.mjs";
 import { beforeCallbackRefinementsPhpWasmPromotionSource, callbackRefinementsPhpWasmPromotionNormalizationPaths } from "./callback-refinements-php-wasm-promotion-source-history.mjs";
 import { beforeDependentCheckedRecordWitArchiveSource, dependentCheckedRecordWitArchiveImplementationPaths, dependentCheckedRecordWitArchiveIntegrationPaths } from "./dependent-checked-record-wit-archive-source-history.mjs";
@@ -1951,7 +1952,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...callbackRefinementsPhpWasmPromotionNormalizationPaths
+	...phpWasmCallbackEntrySelectionRepairNormalizationPaths
+	, ...callbackRefinementsPhpWasmPromotionNormalizationPaths
 	, ...testProfilesRegistrationGapIntegrationPaths
 	, ...testProfilesRegistrationGapHistoricalPaths
 	, ...callbackRefinementsPhpWasmHostedArchiveNormalizationPaths
@@ -2704,9 +2706,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackEntrySelectionRepair
+		= beforePhpWasmCallbackEntrySelectionRepairSource(
+			path, text, expected
+		);
+	if(sha256(callbackEntrySelectionRepair) === expected)
+		return callbackEntrySelectionRepair;
 	const callbackRefinementsPhpWasmPromotion
 		= beforeCallbackRefinementsPhpWasmPromotionSource(
-			path, text, expected
+			path, callbackEntrySelectionRepair, expected
 		);
 	if(sha256(callbackRefinementsPhpWasmPromotion) === expected)
 		return callbackRefinementsPhpWasmPromotion;

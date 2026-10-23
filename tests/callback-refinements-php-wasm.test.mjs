@@ -21,3 +21,4 @@ import "./helpers/php-wasm-callback-entry-driver-tests.mjs";
 import "./helpers/php-wasm-callback-entry-report-tests.mjs";
 import "./helpers/php-wasm-callback-entry-ci-tests.mjs";
 import "./helpers/php-wasm-callback-entry-source-history-tests.mjs";
+import "./helpers/php-wasm-callback-entry-selection-repair-source-history-tests.mjs";

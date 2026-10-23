@@ -1,0 +1,125 @@
+{
+  "additions": [
+    {
+      "currentSha256": "74e838eb4b94bad2fe06b82a8bbf8c634cfa80bb2c30f5eb73f21ed0ea98144b",
+      "path": "scripts/update-php-wasm-callback-entry-selection-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "0e1207d0ab30d2696735de8ceef0ed8fe0de0b4826c2c7f911f12d8f0d2d0dba",
+      "path": "tests/helpers/php-wasm-callback-entry-selection-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "39e02869c4237efa09d672dc3a1ff30fab45791950e10d04d71d06cdf06308e4",
+      "path": "tests/helpers/php-wasm-callback-entry-selection-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e5ac63988e7831f022d496b79f8a26c1d00ebfb4",
+  "integrationUpdates": [
+    {
+      "currentSha256": "30e54d5681f41a14128c931b3f834e25680fd0ecf0dce2639b17f7fbb84b26c7",
+      "edits": [
+        {
+          "current": "import \"./helpers/php-wasm-callback-entry-selection-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1249
+        }
+      ],
+      "path": "tests/callback-refinements-php-wasm.test.mjs",
+      "previousSha256": "9f63903a5ad4b9f965fcd2d00971bd263e64585c543c29637dcd9c540ad6a531"
+    },
+    {
+      "currentSha256": "085bb3abcc519811d8fe2d4e522c828920310eb1927194aa8c915bf132e53d5d",
+      "edits": [
+        {
+          "current": "import { beforePhpWasmCallbackEntrySelectionRepairSource, phpWasmCallbackEntrySelectionRepairNormalizationPaths } from \"./php-wasm-callback-entry-selection-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...phpWasmCallbackEntrySelectionRepairNormalizationPaths\n\t, ...callbackRefinementsPhpWasmPromotionNormalizationPaths\n",
+          "previous": "\t...callbackRefinementsPhpWasmPromotionNormalizationPaths\n",
+          "start": 154330
+        },
+        {
+          "current": "\tconst callbackEntrySelectionRepair\n\t\t= beforePhpWasmCallbackEntrySelectionRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackEntrySelectionRepair) === expected)\n\t\treturn callbackEntrySelectionRepair;\n",
+          "previous": "",
+          "start": 189340
+        },
+        {
+          "current": "\t\t\tpath, callbackEntrySelectionRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 189648
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "f4971c3a25dd5d890dd60ce49f233c0dbe13a6f0a1644829248ec0e89b83e0b6"
+    }
+  ],
+  "milestone": "php-wasm-callback-entry-selection-repair-source-v1",
+  "predecessorCommit": "7c43d3b2d6e0c78b52d5257b529ca4e240dcdd40",
+  "schemaVersion": 1,
+  "scope": "PHP-Wasm callback-entry probes select each generated callback validator exactly once, retain only selected callback owners, use the closed trace-label grammar and preserve subprocess diagnostics on failure.",
+  "updates": [
+    {
+      "currentSha256": "40ed2853fc0a1dc5ba5aa5db8b372318380ebea653f3bc9c8c43253485efad3d",
+      "edits": [
+        {
+          "current": "\t\t\tlet installed;\n\t\t\ttry\n\t\t\t{\n\t\t\t\tinstalled = await installedPhpWasmCorpus({\n\t\t\t\t\tt, library: { id: `${family}-${route}-callback-entry-probe` }\n\t\t\t\t\t, consumer, handoff, receipt: builds[0].receipt\n\t\t\t\t\t, packageSet: builds[0].packageSet, environment, clean\n\t\t\t\t\t, sourcePath: `${family}-${route}-callback-entry-source`\n\t\t\t\t\t, fixture: {\n\t\t\t\t\t\tsettings: fixture.settings, source: mode => sources[mode]\n\t\t\t\t\t\t, request: arrangement => phpWasmCallbackEntryRequest(\n\t\t\t\t\t\t\tfamily, arrangement, entryPlan)\n\t\t\t\t\t\t, removeHandoff: true\n\t\t\t\t\t\t, entryProbe: {\n\t\t\t\t\t\t\tdriver: \"tests/fixtures/php-wasm-callback-entry/driver.mjs\"\n\t\t\t\t\t\t\t, support: [{\n\t\t\t\t\t\t\t\tsource: \"tests/helpers/php-wasm-callback-entry-trace.mjs\"\n\t\t\t\t\t\t\t\t, destination: \"callback-entry-trace.mjs\"\n\t\t\t\t\t\t\t}]\n\t\t\t\t\t\t}\n",
+          "previous": "\t\t\tconst installed = await installedPhpWasmCorpus({\n\t\t\t\tt, library: { id: `${family}-${route}-callback-entry-probe` }\n\t\t\t\t, consumer, handoff, receipt: builds[0].receipt\n\t\t\t\t, packageSet: builds[0].packageSet, environment, clean\n\t\t\t\t, sourcePath: `${family}-${route}-callback-entry-source`\n\t\t\t\t, fixture: {\n\t\t\t\t\tsettings: fixture.settings, source: mode => sources[mode]\n\t\t\t\t\t, request: arrangement => phpWasmCallbackEntryRequest(family, arrangement, entryPlan)\n\t\t\t\t\t, removeHandoff: true\n\t\t\t\t\t, entryProbe: {\n\t\t\t\t\t\tdriver: \"tests/fixtures/php-wasm-callback-entry/driver.mjs\"\n\t\t\t\t\t\t, support: [{\n\t\t\t\t\t\t\tsource: \"tests/helpers/php-wasm-callback-entry-trace.mjs\"\n\t\t\t\t\t\t\t, destination: \"callback-entry-trace.mjs\"\n\t\t\t\t\t\t}]\n",
+          "start": 6877
+        },
+        {
+          "current": "\t\t\t\t});\n\t\t\t}\n\t\t\tcatch(error)\n\t\t\t{\n\t\t\t\tif(error?.details) t.diagnostic(\n\t\t\t\t\t\"Callback entry subprocess diagnostics: \"\n\t\t\t\t\t+ canonicalJson(error.details));\n\t\t\t\tthrow error;\n\t\t\t}\n",
+          "previous": "\t\t\t\t}\n\t\t\t});\n",
+          "start": 7657
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-installed-tests.mjs",
+      "previousSha256": "fc70e971c93951495708ff933b17326659e3e8304f292d52cf0221dba8d72cfd"
+    },
+    {
+      "currentSha256": "493ed8229d50a143e84a7613e2629516331336e65eb8c46a951c19100f292ee6",
+      "edits": [
+        {
+          "current": "import { readFile } from \"node:fs/promises\";\n",
+          "previous": "",
+          "start": 54
+        },
+        {
+          "current": "import {\n\tcallbackRefinementsPhpWasmHostedEvidence\n} from \"./callback-refinements-php-wasm-hosted-evidence.mjs\";\n",
+          "previous": "",
+          "start": 399
+        },
+        {
+          "current": "test(\"callback selection keeps checked-record validator labels in the trace grammar\", async () => {\n\tconst model = JSON.parse(await readFile(\n\t\t`${callbackRefinementsPhpWasmHostedEvidence}/hosted/output/records/checked-record/reviewed/build-0/model.json`\n\t));\n\tconst fixture = await phpWasmCallbackEntrySourceFixture(\n\t\t\"callback-checked-record\");\n\tconst selected = phpWasmCallbackEntrySelection(model, fixture.entries).selected;\n\tconst validators = selected.filter(item => item.kind === \"validator\"\n\t\t&& item.label.includes(\":callback_validator:\"));\n\tassert.ok(validators.length > 0);\n\tassert.ok(validators.every(item =>\n\t\t/^[A-Za-z_][A-Za-z0-9_.:]*$/u.test(item.label)));\n\tassert.ok(selected.filter(item => item.kind === \"validator\")\n\t\t.every(item => !item.label.includes(\":validator:structured_\")));\n});\n\n",
+          "previous": "",
+          "start": 3381
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection-tests.mjs",
+      "previousSha256": "7b3279dde2f16a9388281635b5d311a929d1185bce30ce5aae8326e28a8dab15"
+    },
+    {
+      "currentSha256": "36194ecd43f1b75fa968d72cb1bffcb756cb63d3b47060a5ed7879b1eac05008",
+      "edits": [
+        {
+          "current": "\tconst callbackPrefixes = abi.callbacks.map(signature =>\n\t\tcomponentStructuredCallablePrefix(abi, signature));\n",
+          "previous": "",
+          "start": 2494
+        },
+        {
+          "current": "\t\t\t.filter(value => refinementSymbol(value, base + \"_\")\n\t\t\t\t&& !callbackPrefixes.some(prefix => value.startsWith(prefix + \"_\")))\n\t\t\t.sort())\n",
+          "previous": "\t\t\t.filter(value => refinementSymbol(value, base + \"_\")).sort())\n",
+          "start": 4320
+        },
+        {
+          "current": "\t\t\t\t, label: `${label}:callback_validator:${symbol.slice(prefix.length + 1)}` });\n",
+          "previous": "\t\t\t\t, label: `${label}:callback-validator:${symbol.slice(prefix.length + 1)}` });\n",
+          "start": 5638
+        }
+      ],
+      "path": "tests/helpers/php-wasm-callback-entry-selection.mjs",
+      "previousSha256": "f97a2ea4cebb60f94345c4dc4cc9c8175b62655a207385520123a997519fce5a"
+    }
+  ]
+}
