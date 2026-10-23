@@ -1,5 +1,10 @@
 #include "nominalsubtypes_wasmtime.h"
+/* The shared value helpers serve the nominal caller too; only their unused
+   definitions are exempt, so warnings in this caller still fail. */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 #include "../nominal-subtype-consumers/wit-values.h"
+#pragma GCC diagnostic pop
 #include <stdio.h>
 
 static nominalsubtypes_wasmtime *session;
