@@ -1,0 +1,91 @@
+{
+  "additions": [
+    {
+      "currentSha256": "bb03a3ebd6ad14b044ab3d46a9e19544f128e171ff00b6feb643ce91101996df",
+      "path": "scripts/update-core-ruby-model-availability-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "15186fd33a8b550ef917fc919979ce3cd23278ce8542f9954756ba3f91143fad",
+      "path": "tests/helpers/core-ruby-model-availability-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "d56ad3b34e01edeb57e196f67c043a4c1794eabb677e1e36f3dab9b78bf3562a",
+      "path": "tests/helpers/core-ruby-model-availability-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "0da25ff5e80db9e33afb96bef3b1ace976caaf6b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "38358a4a752558710b679dadb0e6f8a010ec774adc33d32ef25ab87db34b67a9",
+      "edits": [
+        {
+          "current": "import { beforeCoreRubyModelAvailabilityRepairSource, coreRubyModelAvailabilityRepairNormalizationPaths } from \"./core-ruby-model-availability-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...coreRubyModelAvailabilityRepairNormalizationPaths\n\t, ...coreResidualProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...coreResidualProducerReplayRepairNormalizationPaths\n",
+          "start": 160653
+        },
+        {
+          "current": "\tconst coreRubyModelAvailabilityRepair\n\t\t= beforeCoreRubyModelAvailabilityRepairSource(path, text, expected);\n\tif(sha256(coreRubyModelAvailabilityRepair) === expected)\n\t\treturn coreRubyModelAvailabilityRepair;\n",
+          "previous": "",
+          "start": 197036
+        },
+        {
+          "current": "\t\t= beforeCoreResidualProducerReplayRepairSource(\n\t\t\tpath, coreRubyModelAvailabilityRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCoreResidualProducerReplayRepairSource(path, text, expected);\n",
+          "start": 197286
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "3d335e9a7dab2b4cce0a958d191b98542b527df6be14a6d04add4514ce2d0ccb"
+    },
+    {
+      "currentSha256": "9f0ac5ce70c13f63cc7e706491bb9e637cc5ae6da62d409e81b2b7f410ca673b",
+      "edits": [
+        {
+          "current": "import \"./helpers/core-ruby-model-availability-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 136
+        }
+      ],
+      "path": "tests/zero-payload-checked-record-ruby.test.mjs",
+      "previousSha256": "a01885c01e280c3186047706dd2436dc445e9594b7a493f38f5430fb2773662b"
+    }
+  ],
+  "milestone": "core-ruby-model-availability-repair-source-v1",
+  "predecessorCommit": "ef65333a8cb1e83681e919233bf4ef407bbf8b64",
+  "schemaVersion": 1,
+  "scope": "The Core source-contract profile no longer assumes a private Ruby 3.3 toolchain that it does not provision; it executes the independent model when an explicit or compatible system interpreter exists while installed Ruby acceptance remains in its required pinned workflow.",
+  "updates": [
+    {
+      "currentSha256": "00f15422febb833dd0cec0c5ad495ee0372e005a147dbfe5ed48d071d51a7715",
+      "edits": [
+        {
+          "current": "import { execFileSync, spawnSync } from \"node:child_process\";\n",
+          "previous": "import { execFileSync } from \"node:child_process\";\n",
+          "start": 189
+        },
+        {
+          "current": "",
+          "previous": "import { resolve } from \"node:path\";\n",
+          "start": 296
+        },
+        {
+          "current": "const rubyCommand = () => process.env.LEAN_BRIDGE_RUBY ?? \"/usr/bin/ruby\";\nconst rubyModelAvailable = process.env.LEAN_BRIDGE_RUBY !== undefined\n\t|| spawnSync(rubyCommand(), [\"-e\", \"exit defined?(Data) ? 0 : 1\"]\n\t\t, { stdio: \"ignore\" }).status === 0;\n",
+          "previous": "const rubyCommand = () => resolve(process.env.LEAN_BRIDGE_RUBY ?? \".toolchains/ruby33/bin/ruby\");\n",
+          "start": 1379
+        },
+        {
+          "current": "test(\"independent zero-payload Ruby caller refuses faults, preserves rejected inputs and recovers\", {\n\tskip: rubyModelAvailable ? false\n\t\t: \"Ruby 3.2 or newer is exercised by the installed Ruby workflow\"\n}, async t => {\n",
+          "previous": "test(\"independent zero-payload Ruby caller refuses faults, preserves rejected inputs and recovers\", async t => {\n",
+          "start": 8978
+        }
+      ],
+      "path": "tests/helpers/zero-payload-checked-record-ruby-fixture-tests.mjs",
+      "previousSha256": "d9daa228c493e625256fe0528a8cf7bd25d08cb81ca277151ed0d408c6e4e4fb"
+    }
+  ]
+}

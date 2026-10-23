@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCoreRubyModelAvailabilityRepairSource, coreRubyModelAvailabilityRepairNormalizationPaths } from "./core-ruby-model-availability-repair-source-history.mjs";
 import { beforeCoreResidualProducerReplayRepairSource, coreResidualProducerReplayRepairNormalizationPaths } from "./core-residual-producer-replay-repair-source-history.mjs";
 import { beforeCallbackStagingLineageReplayRepairSource, callbackStagingLineageReplayRepairNormalizationPaths } from "./callback-staging-lineage-replay-repair-source-history.mjs";
 import { beforeCallbackStagingProducerReplayRepairSource, callbackStagingProducerReplayRepairNormalizationPaths } from "./callback-staging-producer-replay-repair-source-history.mjs";
@@ -2026,7 +2027,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreResidualProducerReplayRepairNormalizationPaths
+	...coreRubyModelAvailabilityRepairNormalizationPaths
+	, ...coreResidualProducerReplayRepairNormalizationPaths
 	, ...callbackStagingLineageReplayRepairNormalizationPaths
 	, ...callbackStagingProducerReplayRepairNormalizationPaths
 	, ...coreFirstRunPinReplayRepairNormalizationPaths
@@ -2802,8 +2804,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const coreRubyModelAvailabilityRepair
+		= beforeCoreRubyModelAvailabilityRepairSource(path, text, expected);
+	if(sha256(coreRubyModelAvailabilityRepair) === expected)
+		return coreRubyModelAvailabilityRepair;
 	const coreResidualProducerReplayRepair
-		= beforeCoreResidualProducerReplayRepairSource(path, text, expected);
+		= beforeCoreResidualProducerReplayRepairSource(
+			path, coreRubyModelAvailabilityRepair, expected
+		);
 	if(sha256(coreResidualProducerReplayRepair) === expected)
 		return coreResidualProducerReplayRepair;
 	const callbackStagingLineageReplayRepair

@@ -4,6 +4,7 @@
  *
  * @file
  */
+import "./helpers/core-ruby-model-availability-repair-source-history-tests.mjs";
 import "./helpers/zero-payload-checked-record-ruby-fixture-tests.mjs";
 import "./helpers/zero-payload-checked-record-ruby-installed-tests.mjs";
 import "./helpers/zero-payload-ruby-source-history-tests.mjs";
