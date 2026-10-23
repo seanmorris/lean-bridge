@@ -1,0 +1,83 @@
+{
+  "additions": [
+    {
+      "currentSha256": "261f036a863ee7beb23aee2cbd4b0500f6f1278baaa7ac630cca6a46f85991e7",
+      "path": "scripts/update-owned-subtype-jvm-filename-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "ed3c1f0a916291225583f03fb2c092dd9b41d8dcf1d0457e3b8f2f0634779e19",
+      "path": "tests/helpers/owned-subtype-jvm-filename-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "36efb60c10e2f5f7457c33d0a554c1253bca74d96214db728fd06ce578a70b69",
+      "path": "tests/helpers/owned-subtype-jvm-filename-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "e87523ce51706bd84557de498da0b5fd14a5230c",
+  "integrationUpdates": [
+    {
+      "currentSha256": "00a2163e28f0cec92cf20711fd69970de2f7e07a18cd438dd2db19c6be7fef20",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypeJvmFilenameRepairSource, ownedSubtypeJvmFilenameRepairChangedPaths } from \"./owned-subtype-jvm-filename-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypeJvmFilenameRepairChangedPaths\n",
+          "previous": "",
+          "start": 170778
+        },
+        {
+          "current": "\tconst ownedSubtypeJvmFilenameRepair\n\t\t= beforeOwnedSubtypeJvmFilenameRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypeJvmFilenameRepair) === expected)\n\t\treturn ownedSubtypeJvmFilenameRepair;\n\ttext = ownedSubtypeJvmFilenameRepair;\n",
+          "previous": "",
+          "start": 202982
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "675f70cececf8112bbc8f66c78a5e5fc22ce74d030ce3adb7c395d1c353d27c7"
+    },
+    {
+      "currentSha256": "e1ed101994633401c3ac749b4cb135320bca44c443f93968ea9ff9929226714d",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-jvm-filename-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "63aa49b8282622b07afbf042b6e530cce22b59cbacd074d50be4634259a13d75"
+    }
+  ],
+  "milestone": "owned-subtype-jvm-filename-repair-v1",
+  "predecessorCommit": "c366c43c7d11b88e1e281f20c6db60d4a9d83186",
+  "schemaVersion": 1,
+  "scope": "Compile the independent owned-Subtype Java consumer from the shared installer's consumer.java path without weakening its Consumer entry point or the installed Maven acceptance contract.",
+  "updates": [
+    {
+      "currentSha256": "f3c46335c76fd5c8dd2c797048e9e3f0428715e70da435cc625bbc5128747660",
+      "edits": [
+        {
+          "current": "final class Consumer {\n",
+          "previous": "public final class Consumer {\n",
+          "start": 170
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-subtype-java.java",
+      "previousSha256": "81718d2e4c161b8ccce1ec5a453c092ebf6316af478d1941c067536450caa572"
+    },
+    {
+      "currentSha256": "d85820d67c07a9b794bcdc1e46a3a9cf57a2e6c2b376cbad9414f24874783ac9",
+      "edits": [
+        {
+          "current": "\t\tif(profile === \"java\")\n\t\t\tassert.doesNotMatch(source, /public final class Consumer/u\n\t\t\t\t, \"The shared installer writes consumer.java, so its Consumer cannot be public\");\n",
+          "previous": "",
+          "start": 7303
+        }
+      ],
+      "path": "tests/owned-subtype-remaining-packaging.test.mjs",
+      "previousSha256": "12589344cf418bbdfe23c0659a5ec529d81ee26d3e03018bbfdaa1219d4d1832"
+    }
+  ]
+}
