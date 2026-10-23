@@ -4,24 +4,9 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { ownedRubyReceiverHistoricalBytes } from "./owned-ruby-receiver-history.mjs";
-import { generateOwnedCPackage } from "../../src/backends/c/owned-package.mjs";
-import { generateOwnedCppPackage } from "../../src/backends/cpp/owned-package.mjs";
-import { generateOwnedRustPackage } from "../../src/backends/rust/owned-package.mjs";
-import { generateOwnedPythonPackage } from "../../src/backends/python/owned-package.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { validatePackageSetReceipt } from "../../src/release/package-set-receipt.mjs";
-import { ownedRustBorrowNativeSource } from "./owned-rust-borrow-fixture.mjs";
-import { ownedReceiverSource } from "./owned-receiver-fixture.mjs";
-import { ownedPythonReceiverSource, ownedPythonReceiverReviewedIr, ownedPythonReceiverProbe
-	, ownedPythonPlainReceiverProbe, ownedPythonInstalledReceiverProbe } from "./owned-python-receiver-fixture.mjs";
-import { ownedCppReceiverProbe } from "./owned-cpp-receiver-fixture.mjs";
-import { ownedRustReceiverProbe } from "./owned-rust-receiver-fixture.mjs";
-import { ownedPythonInstalledProbe } from "./owned-python-installed-probes.mjs";
-import { pythonTypingWheels } from "./python-wheel-install.mjs";
-import { assertOwnedPythonReceiverCi } from "./owned-python-receiver-ci.mjs";
+import { moduleAtProducer } from "./producer-module.mjs";
+import { bytesAtProducer } from "./producer-source.mjs";
 
 export const ownedPythonReceiverCommand = "LEAN_BRIDGE_COLLECTION_MYPY_PYTHON=/app/build/python-collection-typecheck/bin/python LEAN_BRIDGE_PYTHON_TYPING_WHEELS=/app/build/python-typing-wheels LEAN_BRIDGE_NATIVE_TEST_GLIBC_FLOOR=2.36 npm run test:owned-python-receivers";
 export const ownedPythonReceiverScope = Object.freeze({
@@ -48,15 +33,34 @@ const capabilities = { ownedGraphs: true, ownedHostCallbacks: true
 	, ownedInputTransfers: true, ownedAnchoredResults: true
 	, ownedReceiverExports: true };
 const names = ["3.11-minimum", "3.11-current", "3.12-standard"];
+const producerCommit = "5271f6b8c74d3e4295e6607cd13bd1271204a63e";
+const producerPromise = Promise.all([
+	"src/backends/c/owned-package.mjs"
+	, "src/backends/cpp/owned-package.mjs"
+	, "src/backends/python/owned-package.mjs"
+	, "src/backends/rust/owned-package.mjs"
+	, "src/build/native-graph-model.mjs"
+	, "src/release/package-set-receipt.mjs"
+	, "tests/helpers/owned-rust-borrow-fixture.mjs"
+	, "tests/helpers/owned-receiver-fixture.mjs"
+	, "tests/helpers/owned-python-receiver-fixture.mjs"
+	, "tests/helpers/owned-cpp-receiver-fixture.mjs"
+	, "tests/helpers/owned-rust-receiver-fixture.mjs"
+	, "tests/helpers/owned-python-installed-probes.mjs"
+	, "tests/helpers/python-wheel-install.mjs"
+	, "tests/helpers/owned-python-receiver-ci.mjs"
+].map(path => moduleAtProducer(producerCommit, path))).then(modules =>
+	Object.assign({}, ...modules));
+const historical = path => bytesAtProducer(producerCommit, path);
 const trueFields = (value, fields) => { for(const field of fields) assert.equal(value[field], true, field); };
-const mixed = input => {
+const mixed = (input, producer) => {
 	trueFields(input, ["hostCallbacks", "transferredInputs", "anchoredResults", "receiverExports"]);
-	const model = createCompiledNativeModel(input, capabilities);
+	const model = producer.createCompiledNativeModel(input, capabilities);
 	assert.equal(model.schemaVersion, 10); assert.equal(model.ownedGraph.schemaVersion, 5);
 	assert.equal(model.exports.length, 27); assert.equal(model.ownedGraph.receiverExports.exports.length, 16);
 	assert.equal(model.ownedGraph.resultAnchors.exports.length, 20); assert.equal(model.ownedGraph.inputTransfers.exports.length, 4);
 	assert.deepEqual(model.ownedGraph.resultAnchors.exports.find(item => item.bindingId === "lean:Owned.chooseTicket"), { bindingId: "lean:Owned.chooseTicket", parameter: 0 });
-	return { model, c: generateOwnedCPackage(input), python: generateOwnedPythonPackage(model.bindingIr, null, options) };
+	return { model, c: producer.generateOwnedCPackage(input), python: producer.generateOwnedPythonPackage(model.bindingIr, null, options) };
 };
 const sourceIdentity = (input, mode, source) => {
 	assert.equal(Boolean(input.sourceIdentity.reviewedBindingIr), mode === "reviewed");
@@ -67,23 +71,29 @@ const sourceIdentity = (input, mode, source) => {
  * Regenerate direct APIs and check observations without claiming package acceptance.
  *
  * @param record - Compiled runtime, no-optional-capability and typing reports.
+ * @param exactProducer - Optional already-loaded immutable producer closure.
  */
-export const assertOwnedPythonReceiverInputs = async record => {
+export const assertOwnedPythonReceiverInputs = async (record, exactProducer) => {
+	const producer = exactProducer || await producerPromise;
 	assert.deepEqual(record.runtime.map(item => item.mode), ["ordinary", "reviewed"]);
 	assert.deepEqual(record.plain.map(item => [item.mode, item.consuming]), [
 		["ordinary", false], ["reviewed", false]
 		, ["ordinary", true], ["reviewed", true]
 	]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const probe = await ownedPythonReceiverProbe();
+	const lean = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean").toString();
+	const borrowedProbe = historical("tests/fixtures/structured-types/owned-python-borrows.py").toString();
+	const receiverProbe = historical("tests/fixtures/structured-types/owned-python-receivers.py").toString();
+	const marker = "def owners():";
+	assert.equal(borrowedProbe.split(marker).length, 2);
+	const probe = borrowedProbe.replace(marker, receiverProbe + "\nreceiver_members()\n\n" + marker);
 	for(const item of record.runtime)
 	{
-		sourceIdentity(item.input, item.mode, lean + ownedPythonReceiverSource);
-		const { c, python } = mixed(item.input), runtime = python.files[`${python.packageDir}/_owned.py`];
+		sourceIdentity(item.input, item.mode, lean + producer.ownedPythonReceiverSource);
+		const { c, python } = mixed(item.input, producer), runtime = python.files[`${python.packageDir}/_owned.py`];
 		assert.equal(item.actualLean, true); assert.equal(item.installedPackage, false);
 		assert.equal(item.publicSha256, sha256(python.valuesSource)); assert.equal(item.stubSha256, sha256(python.stub));
 		assert.equal(item.conversionsSha256, sha256(python.source)); assert.equal(item.runtimeSha256, sha256(runtime));
-		assert.equal(item.nativeSha256, sha256(ownedRustBorrowNativeSource(c))); assert.equal(item.probeSha256, sha256(probe));
+		assert.equal(item.nativeSha256, sha256(producer.ownedRustBorrowNativeSource(c))); assert.equal(item.probeSha256, sha256(probe));
 		const choose = python.functions.findIndex(fn => fn.name === "chooseTicket");
 		const mutations = [
 			["receiver-used-as-other-argument-anchor", python.source, `return _call${choose}(self.get(), arg1)`, `return _call${choose}(self.get(), self)`]
@@ -106,20 +116,20 @@ export const assertOwnedPythonReceiverInputs = async record => {
 	}
 	for(const item of record.plain)
 	{
-		sourceIdentity(item.input, item.mode, lean + ownedReceiverSource);
-		const model = createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });
+		sourceIdentity(item.input, item.mode, lean + producer.ownedReceiverSource);
+		const model = producer.createCompiledNativeModel(item.input, { ownedGraphs: true, ownedReceiverExports: true, ownedInputTransfers: item.consuming });
 		assert.deepEqual(item.model, model); assert.equal(model.exports.length, item.consuming ? 4 : 3);
 		assert.equal(model.ownedGraph.receiverExports.exports.length, item.consuming ? 3 : 2);
 		assert.equal(model.ownedGraph.hostCallbacks, undefined); assert.equal(model.ownedGraph.resultAnchors, undefined);
 		if(!item.consuming) assert.equal(model.ownedGraph.inputTransfers, undefined);
-		const python = generateOwnedPythonPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });
-		assert.deepEqual(item.contract, python.contract); assert.equal(item.sourceSha256, sha256(generateOwnedCPackage(item.input).source));
-		assert.equal(item.probe, ownedPythonPlainReceiverProbe(item.consuming)); assert.equal(item.probeSha256, sha256(item.probe));
+		const python = producer.generateOwnedPythonPackage(model.bindingIr, null, { receiverExports: true, transferredInputs: item.consuming, hostCallbacks: false });
+		assert.deepEqual(item.contract, python.contract); assert.equal(item.sourceSha256, sha256(producer.generateOwnedCPackage(item.input).source));
+		assert.equal(item.probe, producer.ownedPythonPlainReceiverProbe(item.consuming)); assert.equal(item.probeSha256, sha256(item.probe));
 		assert.deepEqual(item.observations, names.map((name, index) => ({ name, typing: ["4.6.0", "4.16.0", null][index], checks: item.consuming ? 8 : 7, identities: 0 })));
 	}
-	const typed = generateOwnedPythonPackage(ownedPythonReceiverReviewedIr(), null, options);
+	const typed = producer.generateOwnedPythonPackage(producer.ownedPythonReceiverReviewedIr(), null, options);
 	assert.equal(record.typing.stubSha256, sha256(typed.stub));
-	const testSource = await readFile("tests/owned-python-receivers.test.mjs", "utf8");
+	const testSource = historical("tests/owned-python-receivers.test.mjs").toString();
 	for(const name of ["positive", "invalid"])
 	{
 		const source = testSource.match(new RegExp(`const ${name} = \x60([^\x60]+)\x60;`, "u"))?.[1];
@@ -134,13 +144,23 @@ export const assertOwnedPythonReceiverInputs = async record => {
  * @param record - Source-bound runtime and installed-wheel acceptance record.
  */
 export const assertOwnedPythonReceiverExecution = async record => {
+	const producer = await producerPromise;
+	for(const name of [
+		"assertOwnedPythonReceiverCi", "createCompiledNativeModel"
+		, "generateCompiledNativeLeanAdapters", "generateOwnedCPackage"
+		, "generateOwnedCppPackage", "generateOwnedPythonPackage"
+		, "generateOwnedRustPackage", "ownedPythonPlainReceiverProbe"
+		, "ownedPythonReceiverReviewedIr", "ownedRustBorrowNativeSource"
+		, "validatePackageSetReceipt"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof producer.ownedPythonInstalledProbe, "string");
 	assert.equal(record.acceptance, "passed"); assert.deepEqual(record.scope, ownedPythonReceiverScope);
 	assert.equal(record.run.command, ownedPythonReceiverCommand); assert.equal(record.run.exitCode, 0);
 	assert.equal(record.run.sha256, sha256(record.run.text));
 	for(const [key, count] of Object.entries({ tests: 11, pass: 11, fail: 0, cancelled: 0, skipped: 0, todo: 0 }))
 		assert.match(record.run.text, new RegExp("^# " + key + " " + count + "$", "mu"));
 	assert.doesNotMatch(record.run.text, /^not ok|# SKIP|# TODO/mu);
-	await assertOwnedPythonReceiverInputs(record);
+	await assertOwnedPythonReceiverInputs(record, producer);
 	const observations = record.run.text.split("\n").filter(line => line.startsWith("# {"))
 		.map(line => canonicalJson(JSON.parse(line.slice(2)))).sort();
 	assert.deepEqual(observations, [
@@ -148,13 +168,19 @@ export const assertOwnedPythonReceiverExecution = async record => {
 		, ...record.plain.map(({ mode, consuming, observations }) => ({ mode, consuming, observations }))
 	].map(canonicalJson).sort());
 	assert.deepEqual(record.packages.map(item => item.mode), ["ordinary", "reviewed"]);
-	const lean = await readFile("tests/fixtures/onboarding/owned-aggregates/Owned.lean", "utf8");
-	const consumer = await ownedPythonInstalledReceiverProbe();
-	const example = await readFile("tests/fixtures/documentation/consumers/python/owned-receivers.py", "utf8");
-	assert.equal((await readFile("docs/consume/python.md", "utf8")).match(/```python file=python\/owned-receivers\.py\n([\s\S]*?)```/u)?.[1], example);
-	const loader = ownedPythonInstalledProbe.replaceAll("compatible.serial(ticket)", "compatible.serial(ticket.get())")
+	const lean = historical("tests/fixtures/onboarding/owned-aggregates/Owned.lean").toString();
+	const installedBorrow = historical("tests/fixtures/structured-types/owned-installed-python-borrows.py").toString();
+	const receiverMembers = historical("tests/fixtures/structured-types/owned-python-receivers.py").toString()
+		.replaceAll("r.LeanBridgeError", "api.LeanBridgeError").replaceAll("data()", "payload()");
+	const receiverMarker = "def owners():";
+	assert.equal(installedBorrow.split(receiverMarker).length, 2);
+	const consumer = installedBorrow.replace(receiverMarker,
+		receiverMembers + "\nreceiver_members()\n\n" + receiverMarker);
+	const example = historical("tests/fixtures/documentation/consumers/python/owned-receivers.py").toString();
+	assert.equal(historical("docs/consume/python.md").toString().match(/```python file=python\/owned-receivers\.py\n([\s\S]*?)```/u)?.[1], example);
+	const loader = producer.ownedPythonInstalledProbe.replaceAll("compatible.serial(ticket)", "compatible.serial(ticket.get())")
 		.replaceAll("module.serial(value)", "module.serial(value.get())").replaceAll("api.serial(ticket)", "api.serial(ticket.get())");
-	const cliConfig = JSON.parse(ownedRubyReceiverHistoricalBytes("config/cli-package.v1.json", await readFile("config/cli-package.v1.json"), record.sources["config/cli-package.v1.json"]).toString());
+	const cliConfig = JSON.parse(historical("config/cli-package.v1.json"));
 	for(const item of record.packages)
 	{
 		trueFields(item, ["sourceRemovedBeforeInstall"
@@ -162,8 +188,8 @@ export const assertOwnedPythonReceiverExecution = async record => {
 			, "sourceFreeRelocatedExecution", "handoffRemovedBeforeRelocatedExecution"
 			, "deterministicReassembly", "independentRebuild"]);
 		const input = { metadata: item.metadata, sourceIdentity: item.model.sourceIdentity, component: item.model.component, hostCallbacks: true, ...options };
-		sourceIdentity(input, item.mode, lean + ownedPythonReceiverSource);
-		const { model, c, python } = mixed(input), native = generateCompiledNativeLeanAdapters(model);
+		sourceIdentity(input, item.mode, lean + producer.ownedPythonReceiverSource);
+		const { model, c, python } = mixed(input, producer), native = producer.generateCompiledNativeLeanAdapters(model);
 		assert.deepEqual(item.model, model);
 		const { componentReceipt: component, adapter, runtime, packageSetReceipt: packages } = item;
 		assert.equal(component.schemaVersion, 6); assert.equal(adapter.schemaVersion, 6); assert.equal(adapter.ownedValues.schemaVersion, 5);
@@ -189,7 +215,7 @@ export const assertOwnedPythonReceiverExecution = async record => {
 			, componentId: model.component.id
 			, componentReceiptSha256: sha256(canonicalJson(component))
 			, ownedValues: python.contract, library: adapter.library, libraries };
-		const packaged = generateOwnedPythonPackage(model.bindingIr, evidence, options);
+		const packaged = producer.generateOwnedPythonPackage(model.bindingIr, evidence, options);
 		assert.equal(item.consumerSha256, sha256(consumer)); assert.equal(item.loaderProbeSha256, sha256(loader));
 		assert.equal(item.rejected, 21); assert.equal(item.incapableReadersRejected, 4);
 		assert.deepEqual(item.observations.map(value => value.name), names);
@@ -201,7 +227,7 @@ export const assertOwnedPythonReceiverExecution = async record => {
 			else
 			{
 				const version = index === 0 ? "4.6.0" : "4.16.0";
-				assert.equal(value.installation.dependency.version, version); assert.equal(value.installation.dependency.sha256, pythonTypingWheels[version]);
+				assert.equal(value.installation.dependency.version, version); assert.equal(value.installation.dependency.sha256, producer.pythonTypingWheels[version]);
 			}
 			assert.equal(value.loader.liveIdentities, 0); assert.equal(value.loader.runtimeInitializations, 1); assert.equal(value.loader.componentInitializations, 1);
 			assert.deepEqual(value.loader.consumer, { checks: value.checks, ordinaryImport: true });
@@ -220,14 +246,22 @@ export const assertOwnedPythonReceiverExecution = async record => {
 			for(const [file, hash] of Object.entries(libraries)) assert.equal(manifest.files[`${packaged.packageDir}/native/linux-x64/${file}`].sha256, hash);
 		}
 		assert.ok(record.run.text.includes(`${item.mode}: ${item.observations.map(value => `${value.name} ${value.checks}+${value.relocatedChecks}`).join(", ")} installed and relocated receiver checks`));
-		validatePackageSetReceipt(packages);
+		producer.validatePackageSetReceipt(packages);
 		const targets = item.mode === "reviewed" ? ["c", "cargo", "cpp", "pypi"] : ["pypi"];
 		assert.deepEqual(packages.packages.map(value => value.target).sort(), targets); assert.equal(packages.profiles[0].bindingIrSha256, model.bindingIrSha256);
 		if(item.mode === "reviewed")
 		{
-			assert.deepEqual(adapter.cppValues, generateOwnedCppPackage(model.bindingIr, options).contract);
-			assert.deepEqual(adapter.rustValues, generateOwnedRustPackage(model.bindingIr, null, {}, options).contract);
-			for(const [name, source] of [["cpp", "#define OWNED_BORROW_INSTALLED 1\n" + await ownedCppReceiverProbe()], ["rust", "use owned_receivers::*;\n" + await ownedRustReceiverProbe()]])
+			assert.deepEqual(adapter.cppValues, producer.generateOwnedCppPackage(model.bindingIr, options).contract);
+			assert.deepEqual(adapter.rustValues, producer.generateOwnedRustPackage(model.bindingIr, null, {}, options).contract);
+			const cpp = historical("tests/fixtures/structured-types/owned-cpp-borrows.cpp").toString()
+				.replace("int main() {", historical("tests/fixtures/structured-types/owned-cpp-receivers.cpp").toString() + "\nint main() {")
+				.replace("  test_owners(); check_clean();", "  test_receiver_members(); check_clean();\n  test_owners(); check_clean();")
+				.replaceAll("owned-cpp-borrows-installed", "owned-cpp-receivers-installed");
+			const rust = historical("tests/fixtures/structured-types/owned-rust-borrows.rs").toString()
+				.replace("fn main() {", historical("tests/fixtures/structured-types/owned-rust-receivers.rs").toString() + "\nfn main() {")
+				.replace("[owners, shapes, transfers, depth, callbacks, fork_guard]", "[receiver_members, owners, shapes, transfers, depth, callbacks, fork_guard]")
+				.replaceAll("owned-rust-borrows:", "owned-rust-receivers:");
+			for(const [name, source] of [["cpp", "#define OWNED_BORROW_INSTALLED 1\n" + cpp], ["rust", "use owned_receivers::*;\n" + rust]])
 			{ assert.ok(item.companions[name].checks > 300); assert.equal(item.companions[name].probeSha256, sha256(source)); }
 		} else assert.deepEqual(item.companions, {});
 		const { archive, inventorySha256, externalRegistryWrites, ...inventory } = item.cli;
@@ -240,7 +274,7 @@ export const assertOwnedPythonReceiverExecution = async record => {
 		for(const path of cliConfig.files)
 		{
 			const file = item.cli.files.find(value => value.path === path);
-			const bytes = Buffer.from(ownedRubyReceiverHistoricalBytes(path, await readFile(path), file?.sha256));
+			const bytes = historical(path);
 			assert.ok(file, path); assert.equal(file.bytes, bytes.length); assert.equal(file.sha256, sha256(bytes), path);
 		}
 		assert.equal(item.builds.length, 2);
@@ -249,5 +283,5 @@ export const assertOwnedPythonReceiverExecution = async record => {
 		assert.equal(item.verification.status, "ok"); assert.equal(item.verification.result.verificationType, "local-package-set");
 	}
 	assert.deepEqual(record.packages[0].cli, record.packages[1].cli);
-	assertOwnedPythonReceiverCi(await readFile(".github/workflows/consumer-matrix.yml", "utf8"), JSON.parse(await readFile("package.json", "utf8")));
+	producer.assertOwnedPythonReceiverCi(historical(".github/workflows/consumer-matrix.yml").toString(), JSON.parse(historical("package.json")));
 };
