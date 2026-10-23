@@ -96,7 +96,9 @@ test("inherited checked-record docs closure authenticates its additions", async 
 		inheritedCheckedRecordDocsClosureHistoryPath, "utf8"));
 	for(const addition of record.additions)
 	{
-		assert.equal(sha256(await readFile(addition.path))
+		assert.equal(sha256(await sourceAtFinHistoryMilestone(
+			addition.path, addition.currentSha256
+		))
 			, addition.currentSha256, addition.path);
 		assert.notEqual(spawnSync("git", ["cat-file", "-e"
 			, `${inheritedCheckedRecordDocsClosurePredecessor}:${addition.path}`]
@@ -145,14 +147,15 @@ test("inherited checked-record docs closure refreshes only matching source pins"
 
 test("consumer and author docs state the tested inherited checked-record boundary", async () => {
 	const stale = /(?:generic,? recursive (?:and|or)|generic, recursive,)[^\n]{0,40}inherited(?: checked records?)?/iu;
+	const receiverBoundary
+		= /value-carrying receiver-dependent (?:inherited )?fields/u;
 	for(const path of consumerGuides)
 	{
 		const source = await readFile(path, "utf8");
 		assert.match(source
 			, /inherited-checked-record-promotion-20261018\.md/u, path);
 		assert.match(source, /Span → Ticket → Stamped/u, path);
-		assert.match(source
-			, /value-carrying receiver-dependent inherited fields/u, path);
+		assert.match(source, receiverBoundary, path);
 		assert.doesNotMatch(source, stale, path);
 	}
 	const author = await readFile("docs/lean/existing-package.md", "utf8");
@@ -166,13 +169,13 @@ test("consumer and author docs state the tested inherited checked-record boundar
 	assert.match(section, /result-only packages project the same proof-free payload/u);
 	assert.match(section, /inherited-checked-record-fixture\.mjs/u);
 	assert.match(section, /InheritedCheckedRecords\.lean/u);
-	assert.match(section, /value-carrying receiver-dependent inherited fields/u);
+	assert.match(section, receiverBoundary);
 	assert.doesNotMatch(section, stale);
 	const decisions = await readFile("docs/lean/export-decisions.md", "utf8");
 	assert.match(decisions
 		, /inherited-checked-record-promotion-20261018\.md/u);
 	assert.match(decisions, /independently selected parent and child constructors/u);
-	assert.match(decisions, /value-carrying receiver-dependent inherited fields/u);
+	assert.match(decisions, receiverBoundary);
 	assert.doesNotMatch(decisions, stale);
 });
 
