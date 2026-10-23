@@ -143,6 +143,9 @@ test("remaining owned Subtype fixtures and required matrix stay registered", asy
 			: `tests/fixtures/structured-types/owned-subtype-${sourceProfiles[profile]}.${extension}`;
 		const source = await readFile(path, "utf8");
 		assert.ok(source.includes(profile === "wit-wasi" ? "owned-subtype-c" : markers[profile]), path);
+		if(profile === "java")
+			assert.doesNotMatch(source, /public final class Consumer/u
+				, "The shared installer writes consumer.java, so its Consumer cannot be public");
 		const lifecycleMarker = {
 			dotnet: "GC.WaitForPendingFinalizers()"
 			, java: "System.gc()"

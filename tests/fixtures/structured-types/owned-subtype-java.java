@@ -3,7 +3,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import org.leanbridge.owned_subtypes.*;
 
-public final class Consumer {
+final class Consumer {
     private static int checks;
 
     private static void check(boolean value, String message) {
