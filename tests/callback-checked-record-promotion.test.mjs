@@ -14,6 +14,7 @@ import {
 	callbackCheckedRecordPromotionLanes
 	, callbackCheckedRecordPromotionLimit
 	, promoteCallbackCheckedRecords
+	, refreshCallbackCheckedRecords
 	, renderCallbackCheckedRecordPromotion
 } from "./helpers/callback-checked-record-promotion.mjs";
 import {
@@ -101,6 +102,47 @@ test("callback checked-record promotion binds exact lanes and refuses repetition
 		, assert.AssertionError);
 });
 
+test("callback checked-record promotion refresh replaces only stable evidence", () => {
+	const promoted = promoteCallbackCheckedRecords(document, references);
+	const refreshedReferences = references.map((reference, index) => ({
+		...reference
+		, revision: `${index + 1}`.repeat(40).slice(0, 40)
+		, command: `Replay retained ${reference.lane} archive.`
+		, scope: `Retained-package ${reference.lane} hosted scope.`
+		, files: [{
+			path: `retained/${reference.lane}/index.json`
+			, sha256: `${index + 1}`.repeat(64).slice(0, 64)
+		}]
+		, artifacts: [{
+			path: `retained/${reference.lane}/artifact.zip`
+			, sha256: `${index + 2}`.repeat(64).slice(0, 64)
+		}]
+	}));
+	const refreshed = refreshCallbackCheckedRecords(
+		promoted, refreshedReferences);
+	assert.equal(validateTypeSurface(refreshed, contracts), true);
+	assert.equal(refreshed.evidence.length, promoted.evidence.length);
+	assert.deepEqual(refreshed.observations, promoted.observations);
+	assert.deepEqual(typeSurfaceCells(refreshed, contracts)
+		, typeSurfaceCells(promoted, contracts));
+	for(const reference of refreshedReferences)
+	{
+		const matches = refreshed.evidence.filter(item =>
+			item.id === reference.id);
+		assert.equal(matches.length, 1, reference.id);
+		assert.equal(matches[0].revision, reference.revision);
+		assert.deepEqual(matches[0].files, reference.files);
+		assert.deepEqual(matches[0].artifacts, reference.artifacts);
+	}
+	assert.deepEqual(refreshCallbackCheckedRecords(
+		refreshed, refreshedReferences), refreshed);
+	const missing = structuredClone(promoted);
+	missing.evidence = missing.evidence.filter(item =>
+		item.id !== references[0].id);
+	assert.throws(() => refreshCallbackCheckedRecords(
+		missing, refreshedReferences), /Expected one/u);
+});
+
 test("callback checked-record promotion renders the exact hosted boundary", () => {
 	const summary = renderCallbackCheckedRecordPromotion(references);
 	assert.match(summary, /exactly 64 cells/u);
@@ -108,7 +150,7 @@ test("callback checked-record promotion renders the exact hosted boundary", () =
 	for(const reference of references)
 	{
 		assert.match(summary, new RegExp(
-			`callback-checked-record-${reference.lane}-20261022/index\\.json`, "u"
+			`callback-checked-record-${reference.lane}-20261023/index\\.json`, "u"
 		));
 		assert.match(summary, new RegExp(reference.revision, "u"));
 	}

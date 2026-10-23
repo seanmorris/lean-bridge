@@ -865,7 +865,7 @@ host-supplied checked-record arguments before its body. The tested option,
 result and array containers retain that direction, and `Weighted` runs its
 selected positive-`Nat` field constructor before its record constructor.
 
-The [hosted callback checked-record matrix](evidence/callback-checked-record-promotion-20261022.md)
+The [hosted callback checked-record matrix](evidence/callback-checked-record-promotion-20261023.md)
 covers ordinary-source and independently reviewed Node JavaScript, strict
 TypeScript, browser-page, React and worker packages in Chromium, Firefox and
 WebKit. Retained or asynchronous callbacks, owned checked records and

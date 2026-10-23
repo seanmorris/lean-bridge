@@ -11,6 +11,9 @@ import { sha256 } from "../../src/capsule/node.mjs";
 import {
 	checkCallbackCheckedRecordHostedEvidence
 } from "./callback-checked-record-hosted-evidence.mjs";
+import {
+	callbackCheckedRecordHostedEvidenceRoot
+} from "./callback-checked-record-hosted-evidence-sources.mjs";
 
 export const callbackCheckedRecordPromotionLanes = Object.freeze([
 	{ lane: "browser"
@@ -32,14 +35,16 @@ export const callbackCheckedRecordPromotionLimit
 	= "Hosted callback checked-record acceptance covers synchronous copied Interval and Weighted records, the Weighted field's selected Nat Subtype, the fixture's option/result/array containers, host callback replies and inputs to returned Lean closures. Retained or asynchronous callbacks, owned records, arbitrary indexed or recursive records, dispatch cost, peak memory and PHP-Wasm remain separate work. External runtimes, compilers, package managers and operating-system distributions remain trusted recorded inputs.";
 
 export const callbackCheckedRecordPromotionPath
-	= "docs/evidence/callback-checked-record-promotion-20261022.md";
+	= "docs/evidence/callback-checked-record-promotion-20261023.md";
 
 const routes = Object.freeze(["ordinary", "reviewed"]);
 const positions = Object.freeze(["callback-parameter", "callback-result"]);
-const archiveRoot = lane =>
-	`docs/evidence/callback-checked-record-${lane}-20261022`;
+const archiveRoot = callbackCheckedRecordHostedEvidenceRoot;
 const evidenceId = lane =>
 	`callback-checked-record-${lane}-hosted-installed`;
+export const callbackCheckedRecordPromotionEvidenceIds = Object.freeze(
+	callbackCheckedRecordPromotionLanes.map(item => evidenceId(item.lane))
+);
 const validators = Object.freeze([
 	"scripts/promote-callback-checked-record-evidence.mjs"
 	, "tests/callback-checked-record-hosted-evidence.test.mjs"
@@ -166,7 +171,7 @@ export const renderCallbackCheckedRecordPromotion = references => {
 		assert.deepEqual(reference.profiles, expected.profiles);
 		assert.deepEqual(reference.routes, routes);
 		assert.match(reference.revision, /^[a-f0-9]{40}$/u);
-		return `| ${reference.lane} | ${reference.profiles.join(", ")} | ${reference.routes.join(", ")} | [archive index](callback-checked-record-${reference.lane}-20261022/index.json) | \`${reference.revision}\` |`;
+		return `| ${reference.lane} | ${reference.profiles.join(", ")} | ${reference.routes.join(", ")} | [archive index](callback-checked-record-${reference.lane}-20261023/index.json) | \`${reference.revision}\` |`;
 	});
 	return `# Synchronous callback checked records
 
@@ -269,6 +274,70 @@ export const promoteCallbackCheckedRecords = (original, references) => {
 				}
 				, limitations: [callbackCheckedRecordPromotionLimit]
 			});
+		}
+	}
+	return inventory;
+};
+
+const occurrences = (source, fragment) =>
+	source.split(fragment).length - 1;
+
+/**
+ * Replace the eight hosted references without changing the cells they support.
+ *
+ * @param original - Already-promoted type surface.
+ * @param references - Eight superseding retained-package archive selections.
+ */
+export const refreshCallbackCheckedRecords = (original, references) => {
+	assert.deepEqual(references.map(reference => reference.lane)
+		, callbackCheckedRecordPromotionLanes.map(item => item.lane));
+	for(const [index, definition] of callbackCheckedRecordPromotionLanes.entries())
+	{
+		const reference = references[index];
+		assert.equal(reference.id, evidenceId(definition.lane));
+		assert.deepEqual(reference.profiles, definition.profiles);
+		assert.deepEqual(reference.routes, routes);
+		assert.equal(reference.kind, "installed");
+		assert.ok(reference.artifacts.length > 0);
+	}
+	const inventory = structuredClone(original);
+	assert.equal(new Set(inventory.evidence.map(item => item.id)).size
+		, inventory.evidence.length, "Evidence IDs must remain unique");
+	for(const reference of references)
+	{
+		const matches = inventory.evidence.map((item, index) => ({ item, index }))
+			.filter(value => value.item.id === reference.id);
+		assert.equal(matches.length, 1, `Expected one ${reference.id}`);
+		inventory.evidence[matches[0].index] = evidenceEntry(reference);
+	}
+
+	for(const group of [...existingGroups, ...newGroups])
+	{
+		const selected = referencesFor(references, group.lanes);
+		const ids = selected.map(reference => reference.id);
+		const notes = hostedStageNote(selected);
+		for(const route of routes)
+		{
+			const id = `${group.prefix}-${route}`;
+			const matches = inventory.observations.filter(item => item.id === id);
+			assert.equal(matches.length, 1, `Expected one ${id}`);
+			const observation = matches[0];
+			assert.deepEqual(observation.profiles, group.profiles);
+			assert.deepEqual(observation.shapes, ["checked-record"]);
+			assert.deepEqual(observation.positions, positions);
+			assert.equal(observation.path, route === "ordinary"
+				? "ordinary-source" : "reviewed-ir");
+			assert.equal(occurrences(observation.scope, notes), 1, id);
+			assert.equal(observation.limitations.filter(note =>
+				note === callbackCheckedRecordPromotionLimit).length, 1, id);
+			for(const stage of Object.values(observation.stages))
+			{
+				assert.equal(stage.state, "passed", id);
+				assert.equal(occurrences(stage.note, notes), 1, id);
+				for(const evidence of ids)
+					assert.equal(stage.evidence.filter(value =>
+						value === evidence).length, 1, `${id}/${evidence}`);
+			}
 		}
 	}
 	return inventory;

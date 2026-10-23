@@ -660,7 +660,7 @@ whether a callback argument or a returned closure's result, crosses as the
 same generated record without proof fields. A returned Lean closure runs the
 selected constructors on its checked-record arguments before its body, and a
 record inside `Option`, `Array` or `Except` keeps the direction of its site.
-The generated README and the [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261022.md)
+The generated README and the [hosted callback checked-record matrix](../evidence/callback-checked-record-promotion-20261023.md)
 describe the installed C and C++ acceptance and the separately executed
 managed, language, CPAN, native PHP and WIT/WASI packages. PHP-Wasm remains
 separate.
