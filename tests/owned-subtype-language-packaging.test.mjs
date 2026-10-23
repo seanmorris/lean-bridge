@@ -200,7 +200,14 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} owned Subt
 	assert.deepEqual(built.projections.map(item => item.ecosystem).sort(), ["cargo", "pypi", "rubygems"]);
 	const model = await json(join(output, "native/component/model.json"));
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), route === "reviewed");
-	assert.equal(model.ownedGraph.hostCallbacks, undefined);
+	assert.deepEqual(model.ownedGraph.hostCallbacks, {
+		schemaVersion: 1
+		, lifetime: "call"
+		, recovery: "typed-value-v1"
+		, signatures: []
+		, trampolineSha256: sha256(await readFile(join(output
+			, "native/component/callbacks.c")))
+	});
 	assert.ok(model.ownedGraph.inputTransfers);
 	const echo = model.bindingIr.declarations.find(item => item.name === "echoRecord");
 	const alternate = model.bindingIr.declarations.find(item => item.name === "echoRecordAlternate");

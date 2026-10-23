@@ -292,11 +292,19 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} checked ow
 		, onProgress: event => t.diagnostic(`${route}/${lane}: ${event.message}`) })
 		.catch(error => { throw new Error(`${error.message}: ${JSON.stringify(error.details)}`, { cause: error }); });
 	assert.deepEqual(await lakeInputState(author), before);
-	const projection = built.projections.find(item => item.ecosystem === specification.target);
+	const projection = (built.projections ?? [built]).find(item =>
+		item.ecosystem === specification.target);
 	assert.ok(projection, specification.target);
 	const model = await json(join(output, "native/component/model.json"));
 	assert.equal(Boolean(model.sourceIdentity.reviewedBindingIr), route === "reviewed");
-	assert.equal(model.ownedGraph.hostCallbacks, undefined);
+	assert.deepEqual(model.ownedGraph.hostCallbacks, {
+		schemaVersion: 1
+		, lifetime: "call"
+		, recovery: "typed-value-v1"
+		, signatures: []
+		, trampolineSha256: sha256(await readFile(join(output
+			, "native/component/callbacks.c")))
+	});
 	assert.ok(model.ownedGraph.inputTransfers);
 	const echo = model.bindingIr.declarations.find(item => item.name === "echoRecord");
 	const alternate = model.bindingIr.declarations.find(item => item.name === "echoRecordAlternate");
