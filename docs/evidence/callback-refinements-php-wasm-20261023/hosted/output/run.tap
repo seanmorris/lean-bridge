@@ -1,0 +1,275 @@
+
+> @lean-wasm/bridge-poc@0.0.0-poc test:callback-refinements-php-wasm
+> LEAN_BRIDGE_CALLBACK_REFINEMENTS_PHP_WASM_TEST=1 node --test --test-concurrency=1 tests/callback-refinements-php-wasm.test.mjs
+
+TAP version 13
+# Subtest: PHP-Wasm callback-refinement history restores every source
+ok 1 - PHP-Wasm callback-refinement history restores every source
+  ---
+  duration_ms: 1083.424206
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callback-refinement implementation range is exact
+ok 2 - PHP-Wasm callback-refinement implementation range is exact
+  ---
+  duration_ms: 15.367382
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callback-refinement history rejects alteration
+ok 3 - PHP-Wasm callback-refinement history rejects alteration
+  ---
+  duration_ms: 3.418772
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm callback-refinement history writer refuses unrelated checkouts
+ok 4 - PHP-Wasm callback-refinement history writer refuses unrelated checkouts
+  ---
+  duration_ms: 65.257552
+  type: 'test'
+  ...
+# Subtest: callback C markers are reversible and preserve exact call order
+ok 5 - callback C markers are reversible and preserve exact call order
+  ---
+  duration_ms: 2.133652
+  type: 'test'
+  ...
+# Subtest: callback entry validation and parser refuse open or malformed traces
+ok 6 - callback entry validation and parser refuse open or malformed traces
+  ---
+  duration_ms: 1.164454
+  type: 'test'
+  ...
+# Subtest: callback source probes name source creation and authored closure bodies reversibly
+ok 7 - callback source probes name source creation and authored closure bodies reversibly
+  ---
+  duration_ms: 11.200156
+  type: 'test'
+  ...
+# Subtest: callback checked-record source keeps constructor, Subtype and mixed body identities distinct
+ok 8 - callback checked-record source keeps constructor, Subtype and mixed body identities distinct
+  ---
+  duration_ms: 1.860119
+  type: 'test'
+  ...
+# Subtest: callback hosted selection is opt-in, closed and duplicate-free
+ok 9 - callback hosted selection is opt-in, closed and duplicate-free
+  ---
+  duration_ms: 0.928611
+  type: 'test'
+  ...
+# Subtest: callback entry driver authenticates every isolated control and loading phase
+ok 10 - callback entry driver authenticates every isolated control and loading phase
+  ---
+  duration_ms: 14.27861
+  type: 'test'
+  ...
+# Subtest: callback entry driver refuses protocol, outcome and trace drift
+ok 11 - callback entry driver refuses protocol, outcome and trace drift
+  ---
+  duration_ms: 7.508713
+  type: 'test'
+  ...
+# Subtest: hosted callback-entry workflow covers both families and ordered routes
+ok 12 - hosted callback-entry workflow covers both families and ordered routes
+  ---
+  duration_ms: 1.748231
+  type: 'test'
+  ...
+# Subtest: hosted callback-entry shell refuses ambiguous or incomplete selection
+ok 13 - hosted callback-entry shell refuses ambiguous or incomplete selection
+  ---
+  duration_ms: 0.969226
+  type: 'test'
+  ...
+# Subtest: each hosted PHP-Wasm callback lane runs only the suite its gate admits
+ok 14 - each hosted PHP-Wasm callback lane runs only the suite its gate admits
+  ---
+  duration_ms: 7.220092
+  type: 'test'
+  ...
+# Subtest: callback-entry history restores every exact source
+ok 15 - callback-entry history restores every exact source
+  ---
+  duration_ms: 76.085912
+  type: 'test'
+  ...
+# Subtest: callback-entry implementation range is exact
+ok 16 - callback-entry implementation range is exact
+  ---
+  duration_ms: 19.050928
+  type: 'test'
+  ...
+# Subtest: callback-entry history rejects altered transitions
+ok 17 - callback-entry history rejects altered transitions
+  ---
+  duration_ms: 7.974096
+  type: 'test'
+  ...
+# Subtest: callback-entry history writer refuses unrelated checkouts
+ok 18 - callback-entry history writer refuses unrelated checkouts
+  ---
+  duration_ms: 72.215473
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin callback selections reconcile ordinary and reviewed author routes
+ok 19 - PHP-Wasm Fin callback selections reconcile ordinary and reviewed author routes
+  ---
+  duration_ms: 2.445366
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm Fin callback caller keeps strictness, loading and exact report closed
+ok 20 - PHP-Wasm Fin callback caller keeps strictness, loading and exact report closed
+  ---
+  duration_ms: 4.82003
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm checked-record callbacks preserve constructor selections
+ok 21 - PHP-Wasm checked-record callbacks preserve constructor selections
+  ---
+  duration_ms: 0.831289
+  type: 'test'
+  ...
+# Subtest: PHP-Wasm checked-record caller differs from native PHP only at loading and reporting
+ok 22 - PHP-Wasm checked-record caller differs from native PHP only at loading and reporting
+  ---
+  duration_ms: 3.251888
+  type: 'test'
+  ...
+# Subtest: installed callback refinements PHP-Wasm reproduce and relocate every author route
+ok 23 - installed callback refinements PHP-Wasm reproduce and relocate every author route
+  ---
+  duration_ms: 526093.552768
+  type: 'test'
+  ...
+# fin callback PHP-Wasm ordinary: author 0
+# fin callback PHP-Wasm ordinary: author 1
+# callback-fin-ordinary: PHP-Wasm Node embedded/startup/weak
+# callback-fin-ordinary: PHP-Wasm Node embedded/startup/strict
+# callback-fin-ordinary: PHP-Wasm Node embedded/lazy/weak
+# callback-fin-ordinary: PHP-Wasm Node embedded/lazy/strict
+# callback-fin-ordinary: PHP-Wasm Node composer/startup/weak
+# callback-fin-ordinary: PHP-Wasm Node composer/startup/strict
+# callback-fin-ordinary: PHP-Wasm Node composer/lazy/weak
+# callback-fin-ordinary: PHP-Wasm Node composer/lazy/strict
+# callback-fin-ordinary: PHP-Wasm Chromium bundled/startup/weak
+# callback-fin-ordinary: PHP-Wasm Chromium bundled/startup/strict
+# callback-fin-ordinary: PHP-Wasm Chromium bundled/lazy/weak
+# callback-fin-ordinary: PHP-Wasm Chromium bundled/lazy/strict
+# fin callback PHP-Wasm reviewed: author 0
+# fin callback PHP-Wasm reviewed: author 1
+# callback-fin-reviewed: PHP-Wasm Node embedded/startup/weak
+# callback-fin-reviewed: PHP-Wasm Node embedded/startup/strict
+# callback-fin-reviewed: PHP-Wasm Node embedded/lazy/weak
+# callback-fin-reviewed: PHP-Wasm Node embedded/lazy/strict
+# callback-fin-reviewed: PHP-Wasm Node composer/startup/weak
+# callback-fin-reviewed: PHP-Wasm Node composer/startup/strict
+# callback-fin-reviewed: PHP-Wasm Node composer/lazy/weak
+# callback-fin-reviewed: PHP-Wasm Node composer/lazy/strict
+# callback-fin-reviewed: PHP-Wasm Chromium bundled/startup/weak
+# callback-fin-reviewed: PHP-Wasm Chromium bundled/startup/strict
+# callback-fin-reviewed: PHP-Wasm Chromium bundled/lazy/weak
+# callback-fin-reviewed: PHP-Wasm Chromium bundled/lazy/strict
+# checked-record callback PHP-Wasm ordinary: author 0
+# checked-record callback PHP-Wasm ordinary: author 1
+# callback-checked-record-ordinary: PHP-Wasm Node embedded/startup/weak
+# callback-checked-record-ordinary: PHP-Wasm Node embedded/startup/strict
+# callback-checked-record-ordinary: PHP-Wasm Node embedded/lazy/weak
+# callback-checked-record-ordinary: PHP-Wasm Node embedded/lazy/strict
+# callback-checked-record-ordinary: PHP-Wasm Node composer/startup/weak
+# callback-checked-record-ordinary: PHP-Wasm Node composer/startup/strict
+# callback-checked-record-ordinary: PHP-Wasm Node composer/lazy/weak
+# callback-checked-record-ordinary: PHP-Wasm Node composer/lazy/strict
+# callback-checked-record-ordinary: PHP-Wasm Chromium bundled/startup/weak
+# callback-checked-record-ordinary: PHP-Wasm Chromium bundled/startup/strict
+# callback-checked-record-ordinary: PHP-Wasm Chromium bundled/lazy/weak
+# callback-checked-record-ordinary: PHP-Wasm Chromium bundled/lazy/strict
+# checked-record callback PHP-Wasm reviewed: author 0
+# checked-record callback PHP-Wasm reviewed: author 1
+# callback-checked-record-reviewed: PHP-Wasm Node embedded/startup/weak
+# callback-checked-record-reviewed: PHP-Wasm Node embedded/startup/strict
+# callback-checked-record-reviewed: PHP-Wasm Node embedded/lazy/weak
+# callback-checked-record-reviewed: PHP-Wasm Node embedded/lazy/strict
+# callback-checked-record-reviewed: PHP-Wasm Node composer/startup/weak
+# callback-checked-record-reviewed: PHP-Wasm Node composer/startup/strict
+# callback-checked-record-reviewed: PHP-Wasm Node composer/lazy/weak
+# callback-checked-record-reviewed: PHP-Wasm Node composer/lazy/strict
+# callback-checked-record-reviewed: PHP-Wasm Chromium bundled/startup/weak
+# callback-checked-record-reviewed: PHP-Wasm Chromium bundled/startup/strict
+# callback-checked-record-reviewed: PHP-Wasm Chromium bundled/lazy/weak
+# callback-checked-record-reviewed: PHP-Wasm Chromium bundled/lazy/strict
+# Subtest: callback selection derives every admitted Fin entry from model and generated sources
+ok 24 - callback selection derives every admitted Fin entry from model and generated sources
+  ---
+  duration_ms: 93.25969
+  type: 'test'
+  ...
+# Subtest: callback selection refuses authored identities outside the compiler model
+ok 25 - callback selection refuses authored identities outside the compiler model
+  ---
+  duration_ms: 48.41778
+  type: 'test'
+  ...
+# Subtest: Fin callback plan separates preflight refusal, reply rejection and recovery
+ok 26 - Fin callback plan separates preflight refusal, reply rejection and recovery
+  ---
+  duration_ms: 18.800294
+  type: 'test'
+  ...
+# Subtest: checked-record callback plan keeps Subtype-before-record constructor order
+ok 27 - checked-record callback plan keeps Subtype-before-record constructor order
+  ---
+  duration_ms: 1.182125
+  type: 'test'
+  ...
+# Subtest: callback probe callers bind only lexical strictness and expose one control function
+ok 28 - callback probe callers bind only lexical strictness and expose one control function
+  ---
+  duration_ms: 2.293428
+  type: 'test'
+  ...
+# Subtest: callback probe requests retain the complete independent plan
+ok 29 - callback probe requests retain the complete independent plan
+  ---
+  duration_ms: 0.471915
+  type: 'test'
+  ...
+# Subtest: checked callback PHP-Wasm workflow retains exact reports and runs their verifier
+ok 30 - checked callback PHP-Wasm workflow retains exact reports and runs their verifier
+  ---
+  duration_ms: 2.124522
+  type: 'test'
+  ...
+# Subtest: checked callback PHP-Wasm verifier requires every original route record
+ok 31 - checked callback PHP-Wasm verifier requires every original route record
+  ---
+  duration_ms: 0.466334
+  type: 'test'
+  ...
+# Subtest: callback-entry report CLI requires one closed route selection
+ok 32 - callback-entry report CLI requires one closed route selection
+  ---
+  duration_ms: 3.477417
+  type: 'test'
+  ...
+# Subtest: callback-entry report reconstructs every source, C probe and installed trace
+ok 33 - callback-entry report reconstructs every source, C probe and installed trace
+  ---
+  duration_ms: 369.892057
+  type: 'test'
+  ...
+# Subtest: callback-entry report refuses substituted claims and incomplete records
+ok 34 - callback-entry report refuses substituted claims and incomplete records
+  ---
+  duration_ms: 2690.343651
+  type: 'test'
+  ...
+# 16 substituted or incomplete callback controls
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 532077.274411

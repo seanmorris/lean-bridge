@@ -1,0 +1,405 @@
+{
+  "arities": {
+    "CallbackCheckedRecords.makeClosure": 1,
+    "CallbackCheckedRecords.makeContainerClosure": 1,
+    "CallbackCheckedRecords.makeMixedClosure": 1,
+    "CallbackCheckedRecords.makeNestedClosure": 1
+  },
+  "contracts": {
+    "CallbackCheckedRecords.callHost": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CallbackCheckedRecords.callHostContainer": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "CallbackCheckedRecords.mkInterval",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "CallbackCheckedRecords.Interval"
+                      }
+                    ],
+                    "kind": "option"
+                  },
+                  null
+                ],
+                "kind": "result"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CallbackCheckedRecords.callHostMixed": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              },
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CallbackCheckedRecords.callHostNested": {
+      "parameters": [
+        {
+          "callable": {
+            "parameters": [
+              {
+                "lifetime": null,
+                "ownership": "copy"
+              }
+            ],
+            "result": {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkWeighted",
+                "fields": [
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.checkedPositive"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Weighted"
+              }
+            }
+          },
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "ownership": "borrow"
+        }
+      ],
+      "result": {
+        "lifetime": null,
+        "ownership": "copy"
+      }
+    },
+    "CallbackCheckedRecords.makeClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    },
+    "CallbackCheckedRecords.makeContainerClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "CallbackCheckedRecords.mkInterval",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "CallbackCheckedRecords.Interval"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    },
+    "CallbackCheckedRecords.makeMixedClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy"
+            },
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    },
+    "CallbackCheckedRecords.makeNestedClosure": {
+      "parameters": [
+        {
+          "lifetime": null,
+          "ownership": "copy"
+        }
+      ],
+      "result": {
+        "callable": {
+          "parameters": [
+            {
+              "lifetime": null,
+              "ownership": "copy",
+              "refinement": {
+                "constructor": "CallbackCheckedRecords.mkWeighted",
+                "fields": [
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.checkedPositive"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Weighted"
+              }
+            }
+          ],
+          "result": {
+            "lifetime": null,
+            "ownership": "copy"
+          }
+        },
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease"
+      }
+    }
+  },
+  "exports": [
+    "CallbackCheckedRecords.callHost",
+    "CallbackCheckedRecords.makeClosure",
+    "CallbackCheckedRecords.callHostMixed",
+    "CallbackCheckedRecords.makeMixedClosure",
+    "CallbackCheckedRecords.callHostContainer",
+    "CallbackCheckedRecords.makeContainerClosure",
+    "CallbackCheckedRecords.callHostNested",
+    "CallbackCheckedRecords.makeNestedClosure"
+  ],
+  "modules": [
+    "CallbackCheckedRecords"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-callbackcheckedrecords/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-callbackcheckedrecords-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}

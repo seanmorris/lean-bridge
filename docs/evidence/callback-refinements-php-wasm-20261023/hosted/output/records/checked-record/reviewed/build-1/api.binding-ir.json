@@ -1,0 +1,1448 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "callbackcheckedrecords@1.0.0",
+    "name": "callbackcheckedrecords",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "The host receives a proof-backed interval and must construct the one it replies with. "
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.callHost",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "callHost",
+      "overloadKey": "CallbackCheckedRecords.callHost",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callback96775311ba874014bff2",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.callHost",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked records inside structural containers keep their direction; the export itself\nreturns a plain value so only the callback carries records. "
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.callHostContainer",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "callHostContainer",
+      "overloadKey": "CallbackCheckedRecords.callHostContainer",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callback115f6922f8f3e5b91c8e",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.callHostContainer",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A plain marker before the checked record in both directions. "
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.callHostMixed",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "callHostMixed",
+      "overloadKey": "CallbackCheckedRecords.callHostMixed",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callback44d43ec6a49b0f13f8ab",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.callHostMixed",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A refined payload field keeps its own Subtype direction below the record. "
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.callHostNested",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "callHostNested",
+      "overloadKey": "CallbackCheckedRecords.callHostNested",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callbackb782f62c1be9d8b0085a",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.callHostNested",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A leased closure constructs its interval argument before running; its result is plain. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.makeClosure",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "makeClosure",
+      "overloadKey": "CallbackCheckedRecords.makeClosure",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callback705cd2e64f6f37b7b3c5",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.makeClosure",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call CallbackCheckedRecords.makeContainerClosure."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.makeContainerClosure",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "makeContainerClosure",
+      "overloadKey": "CallbackCheckedRecords.makeContainerClosure",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callbacke974ad5f8e66387c6d39",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.makeContainerClosure",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "A leased closure with a checked argument and a Lean-produced interval result. "
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.makeMixedClosure",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "makeMixedClosure",
+      "overloadKey": "CallbackCheckedRecords.makeMixedClosure",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callbacke7252f0aa280ee0b13ec",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.makeMixedClosure",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call CallbackCheckedRecords.makeNestedClosure."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:CallbackCheckedRecords.makeNestedClosure",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "makeNestedClosure",
+      "overloadKey": "CallbackCheckedRecords.makeNestedClosure",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callback9edd7fa9a1ed11043b7d",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "CallbackCheckedRecords.makeNestedClosure",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Compiler-checked exports for callbackcheckedrecords."
+  },
+  "errors": [
+    {
+      "category": "boundary",
+      "documentation": {
+        "details": "",
+        "summary": "A synchronous host callback failed; the adapter preserves the exception after cleanup."
+      },
+      "id": "error:native-callback",
+      "name": "NativeCallbackFailure",
+      "payload": null
+    }
+  ],
+  "producers": [
+    {
+      "adapter": "independent-callback-checked-record-review",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "review",
+      "tool": "Callback checked-record contract review",
+      "toolVersion": "1"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:CallbackCheckedRecords.Interval",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "option",
+              "kind": "apply"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "arguments": [
+                  {
+                    "id": "lean:CallbackCheckedRecords.Interval",
+                    "kind": "named"
+                  }
+                ],
+                "constructor": "option",
+                "kind": "apply"
+              },
+              {
+                "kind": "primitive",
+                "name": "string"
+              }
+            ],
+            "constructor": "result",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback115f6922f8f3e5b91c8e",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback115f6922f8f3e5b91c8e",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback115f6922f8f3e5b91c8e",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "constructor": null,
+                    "fields": [
+                      {
+                        "name": "lo",
+                        "refinement": null
+                      },
+                      {
+                        "name": "hi",
+                        "refinement": null
+                      }
+                    ],
+                    "kind": "checked-record",
+                    "name": "CallbackCheckedRecords.Interval"
+                  }
+                ],
+                "kind": "option"
+              }
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "constructor": "CallbackCheckedRecords.mkInterval",
+                      "fields": [
+                        {
+                          "name": "lo",
+                          "refinement": null
+                        },
+                        {
+                          "name": "hi",
+                          "refinement": null
+                        }
+                      ],
+                      "kind": "checked-record",
+                      "name": "CallbackCheckedRecords.Interval"
+                    }
+                  ],
+                  "kind": "option"
+                },
+                null
+              ],
+              "kind": "result"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CallbackCheckedRecords.Interval",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback44d43ec6a49b0f13f8ab",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback44d43ec6a49b0f13f8ab",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback44d43ec6a49b0f13f8ab",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null,
+              {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            ],
+            "result": {
+              "constructor": "CallbackCheckedRecords.mkInterval",
+              "fields": [
+                {
+                  "name": "lo",
+                  "refinement": null
+                },
+                {
+                  "name": "hi",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "CallbackCheckedRecords.Interval"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback705cd2e64f6f37b7b3c5",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback705cd2e64f6f37b7b3c5",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback705cd2e64f6f37b7b3c5",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CallbackCheckedRecords.Interval",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback96775311ba874014bff2",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback96775311ba874014bff2",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback96775311ba874014bff2",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            ],
+            "result": {
+              "constructor": "CallbackCheckedRecords.mkInterval",
+              "fields": [
+                {
+                  "name": "lo",
+                  "refinement": null
+                },
+                {
+                  "name": "hi",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "CallbackCheckedRecords.Interval"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Weighted",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback9edd7fa9a1ed11043b7d",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback9edd7fa9a1ed11043b7d",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback9edd7fa9a1ed11043b7d",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": "CallbackCheckedRecords.mkWeighted",
+                "fields": [
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": "CallbackCheckedRecords.checkedPositive",
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Weighted"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Weighted",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CallbackCheckedRecords.Weighted",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbackb782f62c1be9d8b0085a",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbackb782f62c1be9d8b0085a",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbackb782f62c1be9d8b0085a",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "constructor": null,
+                "fields": [
+                  {
+                    "name": "weight",
+                    "refinement": {
+                      "constructor": null,
+                      "kind": "subtype"
+                    }
+                  },
+                  {
+                    "name": "limit",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Weighted"
+              }
+            ],
+            "result": {
+              "constructor": "CallbackCheckedRecords.mkWeighted",
+              "fields": [
+                {
+                  "name": "weight",
+                  "refinement": {
+                    "constructor": "CallbackCheckedRecords.checkedPositive",
+                    "kind": "subtype"
+                  }
+                },
+                {
+                  "name": "limit",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "CallbackCheckedRecords.Weighted"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          },
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg1",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "id": "lean:CallbackCheckedRecords.Interval",
+              "kind": "named"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:CallbackCheckedRecords.Interval",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbacke7252f0aa280ee0b13ec",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbacke7252f0aa280ee0b13ec",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbacke7252f0aa280ee0b13ec",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null,
+              {
+                "constructor": "CallbackCheckedRecords.mkInterval",
+                "fields": [
+                  {
+                    "name": "lo",
+                    "refinement": null
+                  },
+                  {
+                    "name": "hi",
+                    "refinement": null
+                  }
+                ],
+                "kind": "checked-record",
+                "name": "CallbackCheckedRecords.Interval"
+              }
+            ],
+            "result": {
+              "constructor": null,
+              "fields": [
+                {
+                  "name": "lo",
+                  "refinement": null
+                },
+                {
+                  "name": "hi",
+                  "refinement": null
+                }
+              ],
+              "kind": "checked-record",
+              "name": "CallbackCheckedRecords.Interval"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "arguments": [
+                    {
+                      "id": "lean:CallbackCheckedRecords.Interval",
+                      "kind": "named"
+                    }
+                  ],
+                  "constructor": "option",
+                  "kind": "apply"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "arguments": [
+              {
+                "id": "lean:CallbackCheckedRecords.Interval",
+                "kind": "named"
+              }
+            ],
+            "constructor": "option",
+            "kind": "apply"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbacke974ad5f8e66387c6d39",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbacke974ad5f8e66387c6d39",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbacke974ad5f8e66387c6d39",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "arguments": [
+                      {
+                        "constructor": "CallbackCheckedRecords.mkInterval",
+                        "fields": [
+                          {
+                            "name": "lo",
+                            "refinement": null
+                          },
+                          {
+                            "name": "hi",
+                            "refinement": null
+                          }
+                        ],
+                        "kind": "checked-record",
+                        "name": "CallbackCheckedRecords.Interval"
+                      }
+                    ],
+                    "kind": "option"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": {
+              "arguments": [
+                {
+                  "constructor": null,
+                  "fields": [
+                    {
+                      "name": "lo",
+                      "refinement": null
+                    },
+                    {
+                      "name": "hi",
+                      "refinement": null
+                    }
+                  ],
+                  "kind": "checked-record",
+                  "name": "CallbackCheckedRecords.Interval"
+                }
+              ],
+              "kind": "option"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CallbackCheckedRecords.Interval."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "lo"
+          },
+          "mutability": "immutable",
+          "name": "lo",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "hi"
+          },
+          "mutability": "immutable",
+          "name": "hi",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CallbackCheckedRecords.Interval",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Interval",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CallbackCheckedRecords.Interval",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "ordered"
+            ]
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean CallbackCheckedRecords.Weighted."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "weight"
+          },
+          "mutability": "immutable",
+          "name": "weight",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "limit"
+          },
+          "mutability": "immutable",
+          "name": "limit",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:CallbackCheckedRecords.Weighted",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Weighted",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "CallbackCheckedRecords.Weighted",
+        "extensions": {
+          "lean-lang.org/erased-proofs": {
+            "fields": [
+              "within"
+            ]
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

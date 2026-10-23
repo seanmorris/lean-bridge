@@ -1,0 +1,41 @@
+{
+  "kind": "callback-refinements-php-wasm-installed-v1",
+  "producerCommit": "387f1c1897230beb09c05f7eda17faf70a64b415",
+  "profiles": [
+    {
+      "profile": "fin",
+      "reports": [
+        {
+          "bindingIrSha256": "cfcf641f257b669b17b45c236ce6312dc6ec6b8376d56b57876ca1c275361615",
+          "executions": 12,
+          "reportSha256": "3d968308c6bd5c63178a771a383ebd87bc011f90e02fdb27bbb429b57b63cb14",
+          "route": "ordinary"
+        },
+        {
+          "bindingIrSha256": "ca3bc2636c3aa0c3134e81b9cab5ea3998e452d0e990f9a462aa371d515edc83",
+          "executions": 12,
+          "reportSha256": "031fa4072b8181a16221e0de27de75cf515b8026300577921ea6e60be82bab28",
+          "route": "reviewed"
+        }
+      ]
+    },
+    {
+      "profile": "checked-record",
+      "reports": [
+        {
+          "bindingIrSha256": "5716f54e5f376ba86cf8a1e0b08b6a9bcfa05e155c391db363ef1942ad2c0ce2",
+          "executions": 12,
+          "reportSha256": "ab0afd255ccb9650c458eb57ba06d4ff058c4712af6c7dc54475d0d68b81d340",
+          "route": "ordinary"
+        },
+        {
+          "bindingIrSha256": "2ead1e8e515a5dff150a32cfbf141db02992bf94d5d2c382caafbd08c9ab33d9",
+          "executions": 12,
+          "reportSha256": "55b42fa86323e651a5ebe2a261618042eb4f8e385758cf76a0f28c095d2ce3a5",
+          "route": "reviewed"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 1
+}

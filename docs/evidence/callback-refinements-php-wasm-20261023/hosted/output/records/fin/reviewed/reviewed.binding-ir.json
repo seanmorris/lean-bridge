@@ -1,0 +1,1143 @@
+{
+  "assurance": [],
+  "capabilities": [],
+  "component": {
+    "id": "reviewedcallbacks@1.0.0",
+    "name": "reviewedcallbacks",
+    "version": "1.0.0"
+  },
+  "declarations": [
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.scaler."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.scaler",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "scaler",
+      "overloadKey": "ReviewedCallbacks.scaler",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callback1469b3ae2047ff62e64f",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.scaler",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.counter."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.counter",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "counter",
+      "overloadKey": "ReviewedCallbacks.counter",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.counter",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.visit."
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.visit",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "visit",
+      "overloadKey": "ReviewedCallbacks.visit",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callback0b35b98375ec45f097a4",
+            "kind": "named"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.visit",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.digits."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.digits",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "digits",
+      "overloadKey": "ReviewedCallbacks.digits",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.digits",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.tiles."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.tiles",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "tiles",
+      "overloadKey": "ReviewedCallbacks.tiles",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "unit"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.tiles",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.tileMaker."
+      },
+      "effects": [],
+      "failure": {
+        "errors": [],
+        "mode": "none",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.tileMaker",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "tileMaker",
+      "overloadKey": "ReviewedCallbacks.tileMaker",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": {
+          "anchor": null,
+          "scope": "explicit"
+        },
+        "ownership": "lease",
+        "type": {
+          "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+          "kind": "named"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.tileMaker",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.apply."
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.apply",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "apply",
+      "overloadKey": "ReviewedCallbacks.apply",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callbackf2af9db3bda87ab235db",
+            "kind": "named"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.apply",
+        "extensions": {},
+        "producer": "review"
+      },
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "capabilities": [],
+      "documentation": {
+        "details": "",
+        "summary": "Call ReviewedCallbacks.three."
+      },
+      "effects": [
+        "fails",
+        "host-call"
+      ],
+      "failure": {
+        "errors": [
+          "error:native-callback"
+        ],
+        "mode": "declared",
+        "unexpected": "poison-runtime"
+      },
+      "id": "lean:ReviewedCallbacks.three",
+      "kind": "function",
+      "mutability": "immutable",
+      "name": "three",
+      "overloadKey": "ReviewedCallbacks.three",
+      "owner": null,
+      "parameters": [
+        {
+          "default": null,
+          "lifetime": {
+            "anchor": null,
+            "scope": "call"
+          },
+          "mutability": "immutable",
+          "name": "arg0",
+          "optional": false,
+          "ownership": "borrow",
+          "type": {
+            "id": "bridge:Callbackab07c65d8a1ba94ea760",
+            "kind": "named"
+          }
+        },
+        {
+          "default": null,
+          "lifetime": null,
+          "mutability": "immutable",
+          "name": "arg1",
+          "optional": false,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "receiver": null,
+      "result": {
+        "lifetime": null,
+        "ownership": "copy",
+        "type": {
+          "kind": "primitive",
+          "name": "nat"
+        }
+      },
+      "resultMode": "value",
+      "source": {
+        "declaration": "ReviewedCallbacks.three",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null,
+              {
+                "bound": "3",
+                "kind": "fin"
+              }
+            ],
+            "result": {
+              "bound": "3",
+              "kind": "fin"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "typeParameters": []
+    }
+  ],
+  "documentation": {
+    "details": "",
+    "summary": "Independent callback contract."
+  },
+  "errors": [
+    {
+      "category": "boundary",
+      "documentation": {
+        "details": "",
+        "summary": "A host callback failed."
+      },
+      "id": "error:native-callback",
+      "name": "NativeCallbackFailure",
+      "payload": null
+    }
+  ],
+  "producers": [
+    {
+      "adapter": "independent-callback-review",
+      "adapterVersion": 1,
+      "extensions": {},
+      "id": "review",
+      "tool": "Callback contract review",
+      "toolVersion": "1"
+    }
+  ],
+  "schemaVersion": 3,
+  "types": [
+    {
+      "assurance": [],
+      "callable": null,
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "A tile."
+      },
+      "fields": [
+        {
+          "documentation": {
+            "details": "",
+            "summary": "digit"
+          },
+          "mutability": "immutable",
+          "name": "digit",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        {
+          "documentation": {
+            "details": "",
+            "summary": "count"
+          },
+          "mutability": "immutable",
+          "name": "count",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        }
+      ],
+      "host": null,
+      "id": "lean:ReviewedCallbacks.Tile",
+      "kind": "record",
+      "mutability": "immutable",
+      "name": "Tile",
+      "representation": "copied",
+      "resource": null,
+      "source": {
+        "declaration": "ReviewedCallbacks.Tile",
+        "extensions": {
+          "lean-lang.org/nominal-refinements": {
+            "fields": [
+              {
+                "bound": "5",
+                "kind": "fin"
+              },
+              null
+            ],
+            "kind": "record"
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback1469b3ae2047ff62e64f",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback1469b3ae2047ff62e64f",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback1469b3ae2047ff62e64f",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "bound": "10",
+                "kind": "fin"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbacka1b5e4d2cfa3d3e80004",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbacka1b5e4d2cfa3d3e80004",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbacka1b5e4d2cfa3d3e80004",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              null
+            ],
+            "result": {
+              "bound": "10",
+              "kind": "fin"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback0b35b98375ec45f097a4",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback0b35b98375ec45f097a4",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback0b35b98375ec45f097a4",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "bound": "5",
+                "kind": "fin"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "kind": "primitive",
+                  "name": "nat"
+                }
+              ],
+              "constructor": "array",
+              "kind": "apply"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callback4ee3669b3c7a96ffd2d0",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callback4ee3669b3c7a96ffd2d0",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callback4ee3669b3c7a96ffd2d0",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "arguments": [
+                  {
+                    "bound": "3",
+                    "kind": "fin"
+                  }
+                ],
+                "kind": "array"
+              }
+            ],
+            "result": null
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "arguments": [
+                {
+                  "id": "lean:ReviewedCallbacks.Tile",
+                  "kind": "named"
+                }
+              ],
+              "constructor": "list",
+              "kind": "apply"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbacka0d2888f62a2884d0fa6",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbacka0d2888f62a2884d0fa6",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbacka0d2888f62a2884d0fa6",
+        "extensions": {},
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "id": "lean:ReviewedCallbacks.Tile",
+            "kind": "named"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbackb2f90de4d8e7b5a028e6",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbackb2f90de4d8e7b5a028e6",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbackb2f90de4d8e7b5a028e6",
+        "extensions": {},
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbackf2af9db3bda87ab235db",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbackf2af9db3bda87ab235db",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbackf2af9db3bda87ab235db",
+        "extensions": {},
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    },
+    {
+      "assurance": [],
+      "callable": {
+        "effects": [
+          "host-call",
+          "fails"
+        ],
+        "failure": {
+          "errors": [
+            "error:native-callback"
+          ],
+          "mode": "declared",
+          "unexpected": "poison-runtime"
+        },
+        "invocation": "many",
+        "parameters": [
+          {
+            "default": null,
+            "lifetime": null,
+            "mutability": "immutable",
+            "name": "arg0",
+            "optional": false,
+            "ownership": "copy",
+            "type": {
+              "kind": "primitive",
+              "name": "nat"
+            }
+          }
+        ],
+        "reentry": "same-agent",
+        "result": {
+          "lifetime": null,
+          "ownership": "copy",
+          "type": {
+            "kind": "primitive",
+            "name": "nat"
+          }
+        },
+        "resultMode": "value",
+        "selfDisposal": "defer"
+      },
+      "cases": [],
+      "documentation": {
+        "details": "",
+        "summary": "Checked Lean callback."
+      },
+      "fields": [],
+      "host": null,
+      "id": "bridge:Callbackab07c65d8a1ba94ea760",
+      "kind": "callback",
+      "mutability": "immutable",
+      "name": "Callbackab07c65d8a1ba94ea760",
+      "representation": "identity",
+      "resource": null,
+      "source": {
+        "declaration": "Callbackab07c65d8a1ba94ea760",
+        "extensions": {
+          "lean-lang.org/refinements": {
+            "parameters": [
+              {
+                "bound": "3",
+                "kind": "fin"
+              }
+            ],
+            "result": {
+              "bound": "3",
+              "kind": "fin"
+            }
+          }
+        },
+        "producer": "review"
+      },
+      "target": null,
+      "typeParameters": []
+    }
+  ]
+}

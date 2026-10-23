@@ -1,0 +1,35 @@
+{
+  "arities": {
+    "ReviewedCallbacks.counter": 1,
+    "ReviewedCallbacks.digits": 1,
+    "ReviewedCallbacks.scaler": 1,
+    "ReviewedCallbacks.tileMaker": 1,
+    "ReviewedCallbacks.tiles": 1
+  },
+  "exports": [
+    "ReviewedCallbacks.scaler",
+    "ReviewedCallbacks.counter",
+    "ReviewedCallbacks.visit",
+    "ReviewedCallbacks.digits",
+    "ReviewedCallbacks.tiles",
+    "ReviewedCallbacks.tileMaker",
+    "ReviewedCallbacks.apply",
+    "ReviewedCallbacks.three"
+  ],
+  "modules": [
+    "ReviewedCallbacks"
+  ],
+  "schemaVersion": 1,
+  "targets": {
+    "php-wasm": {
+      "composer": {
+        "name": "lean-bridge-reviewedcallbacks/wasm",
+        "version": "1.0.0"
+      },
+      "npm": {
+        "name": "lean-bridge-reviewedcallbacks-wasm",
+        "version": "1.0.0"
+      }
+    }
+  }
+}
