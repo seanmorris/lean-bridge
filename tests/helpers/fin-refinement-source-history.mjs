@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
 import { beforeCheckedRefinementGateRepairSource, checkedRefinementGateRepairNormalizationPaths } from "./checked-refinement-gate-repair-source-history.mjs";
+import { beforeDependentCheckedRecordPromotionSource, dependentCheckedRecordPromotionChangedPaths } from "./dependent-checked-record-promotion-source-history.mjs";
 import { beforeValueIndexBrowserPromotionClosureRepairSource, valueIndexBrowserPromotionClosureRepairNormalizationPaths } from "./value-index-browser-promotion-closure-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserArchiveSource, dependentCheckedRecordBrowserArchiveImplementationPaths, dependentCheckedRecordBrowserArchiveIntegrationPaths } from "./dependent-checked-record-browser-archive-source-history.mjs";
 import { beforeStagedPhpProducerReplayRepairSource, stagedPhpProducerReplayRepairNormalizationPaths } from "./staged-php-producer-replay-repair-source-history.mjs";
@@ -2044,7 +2045,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...checkedRefinementGateRepairNormalizationPaths
+	...dependentCheckedRecordPromotionChangedPaths
+	, ...checkedRefinementGateRepairNormalizationPaths
 	, ...dependentCheckedRecordBrowserArchiveImplementationPaths
 	, ...dependentCheckedRecordBrowserArchiveIntegrationPaths
 	, ...valueIndexBrowserPromotionClosureRepairNormalizationPaths
@@ -2831,6 +2833,11 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 	let text = source.toString();
 	const input = text;
 	if(expected !== undefined && sha256(text) === expected) return source;
+	const dependentCheckedRecordPromotion
+		= beforeDependentCheckedRecordPromotionSource(path, text, expected);
+	if(sha256(dependentCheckedRecordPromotion) === expected)
+		return dependentCheckedRecordPromotion;
+	text = dependentCheckedRecordPromotion;
 	const checkedRefinementGateRepair
 		= beforeCheckedRefinementGateRepairSource(path, text, expected);
 	if(sha256(checkedRefinementGateRepair) === expected)
