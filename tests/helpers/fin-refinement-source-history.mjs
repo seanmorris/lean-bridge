@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeOwnedPhpProducerReplayRepairSource, ownedPhpProducerReplayRepairNormalizationPaths } from "./owned-php-producer-replay-repair-source-history.mjs";
 import { beforeOwnedJavaScriptTransferProducerReplayRepairSource, ownedJavaScriptTransferProducerReplayRepairNormalizationPaths } from "./owned-javascript-transfer-producer-replay-repair-source-history.mjs";
 import { beforeOwnedPerlTransferProducerReplayRepairSource, ownedPerlTransferProducerReplayRepairNormalizationPaths } from "./owned-perl-transfer-producer-replay-repair-source-history.mjs";
 import { beforePromotionDocMilestoneReplayRepairSource, promotionDocMilestoneReplayRepairNormalizationPaths } from "./promotion-doc-milestone-replay-repair-source-history.mjs";
@@ -2033,7 +2034,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths
+	...ownedPhpProducerReplayRepairNormalizationPaths
+	, ...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths
 	, ...ownedPerlTransferProducerReplayRepairNormalizationPaths
 	, ...promotionDocMilestoneReplayRepairNormalizationPaths
 	, ...nestedPromotionDocMilestoneRepairNormalizationPaths
@@ -2816,9 +2818,13 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const ownedPhpProducerReplayRepair
+		= beforeOwnedPhpProducerReplayRepairSource(path, text, expected);
+	if(sha256(ownedPhpProducerReplayRepair) === expected)
+		return ownedPhpProducerReplayRepair;
 	const ownedJavaScriptTransferProducerReplayRepair
 		= beforeOwnedJavaScriptTransferProducerReplayRepairSource(
-			path, text, expected
+			path, ownedPhpProducerReplayRepair, expected
 		);
 	if(sha256(ownedJavaScriptTransferProducerReplayRepair) === expected)
 		return ownedJavaScriptTransferProducerReplayRepair;

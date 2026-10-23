@@ -1,0 +1,313 @@
+{
+  "additions": [
+    {
+      "currentSha256": "731c4940f4666836362db07f3544f18fe0672066fc883a8419344a5592603037",
+      "path": "scripts/update-owned-php-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "b86d96af387f94870cfc441397df7c5b1aeb5f54d69f7ff3759a7ec93f781ccd",
+      "path": "tests/helpers/owned-php-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "e69a49187ef7f683ab0363d6023ee1bf14902e09901f86816ba3a84fdd96e9a0",
+      "path": "tests/helpers/owned-php-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "699fe662539b9de6fe24526866fe875b146fa337",
+  "integrationUpdates": [
+    {
+      "currentSha256": "5dc5d7eeb5870137837bb1bbf704dbcdb4cc9d7e10075e90a0a6fd897af6700e",
+      "edits": [
+        {
+          "current": "import { beforeOwnedPhpProducerReplayRepairSource, ownedPhpProducerReplayRepairNormalizationPaths } from \"./owned-php-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...ownedPhpProducerReplayRepairNormalizationPaths\n\t, ...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths\n",
+          "previous": "\t...ownedJavaScriptTransferProducerReplayRepairNormalizationPaths\n",
+          "start": 161921
+        },
+        {
+          "current": "\tconst ownedPhpProducerReplayRepair\n\t\t= beforeOwnedPhpProducerReplayRepairSource(path, text, expected);\n\tif(sha256(ownedPhpProducerReplayRepair) === expected)\n\t\treturn ownedPhpProducerReplayRepair;\n",
+          "previous": "",
+          "start": 198719
+        },
+        {
+          "current": "\t\t\tpath, ownedPhpProducerReplayRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 199029
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "a628baee70136d8120d4d2ddd50a147ba58ac9c93107bb86530f7c248e3129d2"
+    },
+    {
+      "currentSha256": "3eb55ce0d3cd0160f867a4e5e8f2f6627a93f26f2d09569e4da1281c133144fd",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-php-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 579
+        }
+      ],
+      "path": "tests/owned-php-borrow-evidence.test.mjs",
+      "previousSha256": "9af6bfbd4dbb97c366f4493ad3da858bdab406487eed10a525f568c125f4bb38"
+    }
+  ],
+  "milestone": "owned-php-producer-replay-repair-source-v1",
+  "predecessorCommit": "739dfe583af93dad411be8bf256e6a72ace33722",
+  "schemaVersion": 1,
+  "scope": "The frozen owned PHP package and borrowed-result evidence is replayed with each exact producer's complete static module and source closure rather than regenerating historical observations with current compiler semantics.",
+  "updates": [
+    {
+      "currentSha256": "508c17c869948463688ecf99e62e093995f5a541b30cd08a813501b087afb225",
+      "edits": [
+        {
+          "current": "",
+          "previous": "import { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPhpCalls } from \"../../src/backends/php/owned-calls.mjs\";\nimport { generateOwnedPhpPackage } from \"../../src/backends/php/owned-package.mjs\";\nimport { ownedPhpAdapterSources } from \"../../src/build/owned-php-artifacts.mjs\";\nimport { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { validatePackageSetReceipt } from \"../../src/release/package-set-receipt.mjs\";\nimport { validateBrickMathInstall } from \"./brick-math.mjs\";\nimport { ownedRustBorrowSource } from \"./owned-rust-borrow-fixture.mjs\";\n",
+          "start": 330
+        },
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 385
+        },
+        {
+          "current": "const producerCommit = \"3da93d67603c56529d9b4dce76f53ae60a8fdf51\";\nconst historical = path => bytesAtProducer(producerCommit, path);\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/php/owned-calls.mjs\"\n\t, \"src/backends/php/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-php-artifacts.mjs\"\n\t, \"src/release/package-set-receipt.mjs\"\n\t, \"tests/helpers/brick-math.mjs\"\n\t, \"tests/helpers/owned-php-ci.mjs\"\n\t, \"tests/helpers/owned-rust-borrow-fixture.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1749
+        },
+        {
+          "current": " * @param producer - Immutable producer module closure.\n",
+          "previous": "",
+          "start": 4536
+        },
+        {
+          "current": "const runtime = async (item, model, producer) => {\n",
+          "previous": "const runtime = async (item, model) => {\n",
+          "start": 4596
+        },
+        {
+          "current": "\tconst calls = producer.generateOwnedPhpCalls(model.bindingIr, capabilities);\n\tconst c = producer.generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });\n\tassert.equal(item.consumerSha256, sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-php-borrows.php\")));\n",
+          "previous": "\tconst calls = generateOwnedPhpCalls(model.bindingIr, capabilities);\n\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });\n\tassert.equal(item.consumerSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-php-borrows.php\")));\n",
+          "start": 4729
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"assertOwnedPhpCi\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"generateOwnedCPackage\"\n\t\t, \"generateOwnedPhpCalls\", \"generateOwnedPhpPackage\"\n\t\t, \"ownedPhpAdapterSources\", \"validateBrickMathInstall\"\n\t\t, \"validatePackageSetReceipt\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n\tassert.equal(typeof producer.ownedRustBorrowSource, \"string\");\n",
+          "previous": "",
+          "start": 6940
+        },
+        {
+          "current": "\tconst lean = historical(\n\t\t\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\").toString();\n",
+          "previous": "\tconst lean = await readFile(\"tests/fixtures/onboarding/owned-aggregates/Owned.lean\", \"utf8\");\n",
+          "start": 7560
+        },
+        {
+          "current": "\t\tassert.equal(item.input.sourceIdentity.modules.find(module => module.module === \"Owned\").source.sha256, sha256(lean + producer.ownedRustBorrowSource));\n",
+          "previous": "\t\tassert.equal(item.input.sourceIdentity.modules.find(module => module.module === \"Owned\").source.sha256, sha256(lean + ownedRustBorrowSource));\n",
+          "start": 7957
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(item.input, {\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(item.input, {\n",
+          "start": 8181
+        },
+        {
+          "current": "\t\t\tawait runtime(item, model, producer); continue;\n",
+          "previous": "\t\t\tawait runtime(item, model); continue;\n",
+          "start": 8612
+        },
+        {
+          "current": "\t\tassert.equal(item.sourceSha256, sha256(historical(\n\t\t\t\"tests/fixtures/structured-types/owned-installed-php-borrows.php\")));\n\t\tassert.equal(item.loaderSourceSha256, sha256(historical(\n\t\t\t\"tests/fixtures/structured-types/owned-installed-php-loader.php\")));\n",
+          "previous": "\t\tassert.equal(item.sourceSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-php-borrows.php\")));\n\t\tassert.equal(item.loaderSourceSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-php-loader.php\")));\n",
+          "start": 8904
+        },
+        {
+          "current": "\t\tproducer.validatePackageSetReceipt(item.packageSetReceipt);\n\t\tconst component = item.componentReceipt;\n\t\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n",
+          "previous": "\t\tvalidatePackageSetReceipt(item.packageSetReceipt);\n\t\tconst component = item.componentReceipt, native = generateCompiledNativeLeanAdapters(model);\n",
+          "start": 9331
+        },
+        {
+          "current": "\t\tconst php = producer.generateOwnedPhpPackage(\n\t\t\tmodel.bindingIr, null, capabilities);\n\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...item.input, hostCallbacks: true, ...capabilities\n\t\t});\n",
+          "previous": "\t\tconst php = generateOwnedPhpPackage(model.bindingIr, null, capabilities);\n\t\tconst c = generateOwnedCPackage({ ...item.input, hostCallbacks: true, ...capabilities });\n",
+          "start": 10464
+        },
+        {
+          "current": "\t\tfor(const [path, source] of Object.entries(\n\t\t\tproducer.ownedPhpAdapterSources(c, php)))\n",
+          "previous": "\t\tfor(const [path, source] of Object.entries(ownedPhpAdapterSources(c, php)))\n",
+          "start": 10724
+        },
+        {
+          "current": "\t\tconst packageFiles = producer.generateOwnedPhpPackage(\n\t\t\tmodel.bindingIr, evidence, capabilities).files;\n",
+          "previous": "\t\tconst packageFiles = generateOwnedPhpPackage(model.bindingIr, evidence, capabilities).files;\n",
+          "start": 11443
+        },
+        {
+          "current": "\t\tproducer.validateBrickMathInstall(\n\t\t\titem.installation, item.installation.deployment);\n",
+          "previous": "\t\tvalidateBrickMathInstall(item.installation, item.installation.deployment);\n",
+          "start": 12836
+        },
+        {
+          "current": "\tconst testSource = historical(\"tests/owned-php-borrows.test.mjs\").toString();\n",
+          "previous": "\tconst testSource = await readFile(\"tests/owned-php-borrows.test.mjs\", \"utf8\");\n",
+          "start": 13378
+        },
+        {
+          "current": "\t\tconst model = producer.createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true, ownedAnchoredResults: true });\n",
+          "previous": "\t\tconst model = createCompiledNativeModel(input, { ownedGraphs: true, ownedHostCallbacks: true, ownedAnchoredResults: true });\n",
+          "start": 14041
+        },
+        {
+          "current": "\t\tconst calls = producer.generateOwnedPhpCalls(\n\t\t\tmodel.bindingIr, { anchoredResults: true });\n\t\tconst c = producer.generateOwnedCPackage({\n\t\t\t...input, hostCallbacks: true, anchoredResults: true\n\t\t});\n",
+          "previous": "\t\tconst calls = generateOwnedPhpCalls(model.bindingIr, { anchoredResults: true });\n\t\tconst c = generateOwnedCPackage({ ...input, hostCallbacks: true, anchoredResults: true });\n",
+          "start": 14344
+        },
+        {
+          "current": "\tconst author = historical(\"docs/publish/php.md\").toString();\n\tconst consumer = historical(\"docs/php.md\").toString();\n",
+          "previous": "\tconst author = await readFile(\"docs/publish/php.md\", \"utf8\"), consumer = await readFile(\"docs/php.md\", \"utf8\");\n",
+          "start": 14825
+        },
+        {
+          "current": "\tproducer.validatePackageSetReceipt(doc.packageSetReceipt);\n\tassert.equal(doc.verification.status, \"ok\");\n\tproducer.validateBrickMathInstall(doc.installation, doc.installation.deployment);\n",
+          "previous": "\tvalidatePackageSetReceipt(doc.packageSetReceipt); assert.equal(doc.verification.status, \"ok\");\n\tvalidateBrickMathInstall(doc.installation, doc.installation.deployment);\n",
+          "start": 15648
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n",
+          "previous": "",
+          "start": 16038
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision\n\t\t, \"25745d5f3683a3919b40bbc8ce64f6140e615e39\");\n",
+          "previous": "",
+          "start": 16182
+        },
+        {
+          "current": "\tproducer.assertOwnedPhpCi(historical(\n\t\t\".github/workflows/consumer-matrix.yml\").toString());\n",
+          "previous": "\tassertOwnedPhpCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "start": 16732
+        }
+      ],
+      "path": "tests/helpers/owned-php-borrow-evidence.mjs",
+      "previousSha256": "8238e31689a2ab19291d405fd321d5fe556c2d42e0ace057dac489538111ce12"
+    },
+    {
+      "currentSha256": "a20c1f6e2d754aa60cf38cff37f3cadd58c9aec7553a8733e96fb406289224bb",
+      "edits": [
+        {
+          "current": "import { moduleAtProducer } from \"./producer-module.mjs\";\nimport { bytesAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from \"../../src/build/native-graph-model.mjs\";\nimport { generateOwnedCPackage } from \"../../src/backends/c/owned-package.mjs\";\nimport { generateOwnedPhpPackage } from \"../../src/backends/php/owned-package.mjs\";\nimport { ownedPhpAdapterSources } from \"../../src/build/owned-php-artifacts.mjs\";\nimport { validateBrickMathInstall } from \"./brick-math.mjs\";\nimport { assertOwnedPhpCi } from \"./owned-php-ci.mjs\";\n",
+          "start": 257
+        },
+        {
+          "current": "const producerCommit = \"76856dbb3954bdc7592493cf8bd1269576e3770e\";\nconst historical = path => bytesAtProducer(producerCommit, path);\nlet producerPromise;\nconst producerAtMilestone = () => producerPromise ??= Promise.all([\n\t\"src/backends/c/owned-package.mjs\"\n\t, \"src/backends/php/owned-package.mjs\"\n\t, \"src/build/native-graph-model.mjs\"\n\t, \"src/build/owned-php-artifacts.mjs\"\n\t, \"tests/helpers/brick-math.mjs\"\n\t, \"tests/helpers/owned-php-ci.mjs\"\n].map(path => moduleAtProducer(producerCommit, path))).then(modules =>\n\tObject.assign({}, ...modules));\n",
+          "previous": "",
+          "start": 1702
+        },
+        {
+          "current": "const installation = (report, producer) => {\n",
+          "previous": "const installation = report => {\n",
+          "start": 3062
+        },
+        {
+          "current": "\tproducer.validateBrickMathInstall(report, report.deployment);\n",
+          "previous": "\tvalidateBrickMathInstall(report, report.deployment);\n",
+          "start": 3528
+        },
+        {
+          "current": "const packageSet = (report, targets, producer) => {\n",
+          "previous": "const packageSet = (report, targets) => {\n",
+          "start": 4304
+        },
+        {
+          "current": "\tinstallation(report.installation, producer);\n",
+          "previous": "\tinstallation(report.installation);\n",
+          "start": 5544
+        },
+        {
+          "current": "const packageReport = async (report, mode, producer) => {\n",
+          "previous": "const packageReport = async (report, mode) => {\n",
+          "start": 5593
+        },
+        {
+          "current": "\tassert.equal(report.mode, mode);\n\tpackageSet(report, [\"php-native\"], producer);\n\tconst model = producer.createCompiledNativeModel(\n\t\treport.input, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "previous": "\tassert.equal(report.mode, mode); packageSet(report, [\"php-native\"]);\n\tconst model = createCompiledNativeModel(report.input, { ownedGraphs: true, ownedHostCallbacks: true });\n",
+          "start": 5886
+        },
+        {
+          "current": "\tassert.equal(model.sourceIdentity.modules[0].source.sha256, sha256(historical(\n\t\t\"tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean\")));\n",
+          "previous": "\tassert.equal(model.sourceIdentity.modules[0].source.sha256, sha256(await readFile(\"tests/fixtures/onboarding/owned-dotnet-callables/Owned.lean\")));\n",
+          "start": 6210
+        },
+        {
+          "current": "\tconst native = producer.generateCompiledNativeLeanAdapters(model);\n\tconst component = report.componentReceipt;\n",
+          "previous": "\tconst native = generateCompiledNativeLeanAdapters(model), component = report.componentReceipt;\n",
+          "start": 6573
+        },
+        {
+          "current": "\tconst c = producer.generateOwnedCPackage({\n\t\t...report.input, hostCallbacks: true\n\t});\n\tconst php = producer.generateOwnedPhpPackage(model.bindingIr);\n\tconst adapter = report.adapterReceipt;\n",
+          "previous": "\tconst c = generateOwnedCPackage({ ...report.input, hostCallbacks: true });\n\tconst php = generateOwnedPhpPackage(model.bindingIr), adapter = report.adapterReceipt;\n",
+          "start": 7048
+        },
+        {
+          "current": "\tfor(const [path, source] of Object.entries(\n\t\tproducer.ownedPhpAdapterSources(c, php)))\n",
+          "previous": "\tfor(const [path, source] of Object.entries(ownedPhpAdapterSources(c, php)))\n",
+          "start": 7674
+        },
+        {
+          "current": "\tconst compiled = producer.generateOwnedPhpPackage(model.bindingIr, {\n",
+          "previous": "\tconst compiled = generateOwnedPhpPackage(model.bindingIr, {\n",
+          "start": 8583
+        },
+        {
+          "current": "\tassert.equal(report.sourceSha256, sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-installed-php.php\")));\n\tassert.equal(report.loaderSourceSha256, sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-installed-php-loader.php\")));\n",
+          "previous": "\tassert.equal(report.sourceSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-php.php\")));\n\tassert.equal(report.loaderSourceSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-installed-php-loader.php\")));\n",
+          "start": 9151
+        },
+        {
+          "current": "\tconst producer = await producerAtMilestone();\n\tfor(const name of [\n\t\t\"assertOwnedPhpCi\", \"createCompiledNativeModel\"\n\t\t, \"generateCompiledNativeLeanAdapters\", \"generateOwnedCPackage\"\n\t\t, \"generateOwnedPhpPackage\", \"ownedPhpAdapterSources\"\n\t\t, \"validateBrickMathInstall\"\n\t]) assert.equal(typeof producer[name], \"function\", name);\n",
+          "previous": "",
+          "start": 10989
+        },
+        {
+          "current": "\tassert.equal(record.baselineRevision\n\t\t, \"629557e8179e9e91ba2ecb3fe75a8dcac107c6ce\");\n",
+          "previous": "",
+          "start": 11410
+        },
+        {
+          "current": "\t\tawait packageReport(record.packages[mode], mode, producer);\n",
+          "previous": "\t\tawait packageReport(record.packages[mode], mode);\n",
+          "start": 12827
+        },
+        {
+          "current": "\t\tassert.equal(runtime.probeSha256, sha256(historical(\n\t\t\t\"tests/fixtures/structured-types/owned-php-runtime.php\")));\n",
+          "previous": "\t\tassert.equal(runtime.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-php-runtime.php\")));\n",
+          "start": 13020
+        },
+        {
+          "current": "\t\tassert.equal(report.probeSha256, sha256(historical(\n\t\t\t\"tests/fixtures/structured-types/owned-php-calls.php\")));\n",
+          "previous": "\t\tassert.equal(report.probeSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-php-calls.php\")));\n",
+          "start": 14493
+        },
+        {
+          "current": "\tpackageSet(docs, [\"c\", \"php-native\"], producer);\n",
+          "previous": "\tpackageSet(docs, [\"c\", \"php-native\"]);\n",
+          "start": 14749
+        },
+        {
+          "current": "\tassert.equal(coexist.releases.length, 3);\n\tinstallation(coexist.installation, producer);\n",
+          "previous": "\tassert.equal(coexist.releases.length, 3); installation(coexist.installation);\n",
+          "start": 15884
+        },
+        {
+          "current": "\tassert.equal(coexist.consumerSha256, sha256(historical(\n\t\t\"tests/fixtures/structured-types/owned-php-coexistence.php\")));\n\tproducer.assertOwnedPhpCi(historical(\n\t\t\".github/workflows/consumer-matrix.yml\").toString());\n",
+          "previous": "\tassert.equal(coexist.consumerSha256, sha256(await readFile(\"tests/fixtures/structured-types/owned-php-coexistence.php\")));\n\tassertOwnedPhpCi(await readFile(\".github/workflows/consumer-matrix.yml\", \"utf8\"));\n",
+          "start": 16688
+        }
+      ],
+      "path": "tests/helpers/owned-php-package-evidence.mjs",
+      "previousSha256": "f146d966336d48c12f79abe188776e09f8cb7c8bee8b65f2bd93ec24b5c35fd4"
+    }
+  ]
+}

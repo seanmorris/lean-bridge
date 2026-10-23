@@ -10,6 +10,7 @@ import { sha256 } from "../src/capsule/node.mjs";
 import { classifyRepositoryTest } from "../src/adoption/test-profiles.mjs";
 import { beforeOwnedPhpWasmBorrow, ownedPhpWasmBorrowHistoricalBytes } from "./helpers/owned-php-wasm-borrow-history.mjs";
 import { assertOwnedPhpBorrowExecution, assertOwnedPhpBorrowCi } from "./helpers/owned-php-borrow-evidence.mjs";
+import "./helpers/owned-php-producer-replay-repair-source-history-tests.mjs";
 import { ownedPhpBorrowPath, ownedPhpBorrowBaseline, ownedPhpBorrowPrevious
 	, ownedPhpBorrowChangedPaths, ownedPhpBorrowAddedPaths
 	, beforeOwnedPhpBorrow, reverseOwnedPhpBorrowUpdate } from "./helpers/owned-php-borrow-history.mjs";
