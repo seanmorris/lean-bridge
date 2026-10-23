@@ -1,0 +1,57 @@
+{
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "kind": "lean-bridge-package-set-receipt",
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53953700,
+          "path": "archives/nominalsubtypes-1.0.0-c.tar.gz",
+          "sha256": "6b7acf75bc59b2b2c50a30b9a2af8648d83600b8fce925228b7e4e2f1b766e8e"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 51865069,
+          "path": "archives/nominalsubtypes-1.0.0-cpp.tar.gz",
+          "sha256": "88ab1fd114a69b0cb89c9bb436a131d88099b7f2c92e0eb66b1dd2b8b7d2b879"
+        }
+      ],
+      "ecosystem": "cpp",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "cpp",
+      "version": "1.0.0"
+    }
+  ],
+  "profiles": [
+    {
+      "bindingIrSha256": "ef1a125b44924cf4f942349386ae0bb62c16ddabe65f80d1570960c04f024348",
+      "id": "native-library-v1",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    }
+  ],
+  "schemaVersion": 1,
+  "source": {
+    "treeSha256": "d38856454a0feb75609de9db307dafa8df0d51706643fd068aac5d0fb256d99a"
+  }
+}

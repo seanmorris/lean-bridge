@@ -1,0 +1,59 @@
+{
+  "checks": 14,
+  "compiler": {
+    "code": 0,
+    "stderr": "",
+    "stdout": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "compilerFreePath": true,
+  "compilerFreeReplay": true,
+  "consumerSha256": "d25ec08ba834e31ae8d9320ec748de44375b5973543ad105a2263133424b7c36",
+  "dispatch": {
+    "observed": false,
+    "reason": "Separate constructor/source entry probe remains required (LEAN_BRIDGE_NOMINAL_SUBTYPE_NATIVE_DISPATCH=1)"
+  },
+  "executableSha256": "c72af8a0ca4a56a9bebfd02ec275ac41aea2a39226639b7181b2c5ea133e68ad",
+  "offlineInstall": true,
+  "packages": [
+    {
+      "artifacts": [
+        {
+          "bytes": 53949218,
+          "path": "archives/nominalsubtypes-1.0.0-c.tar.gz",
+          "sha256": "fc6170c9c4470616fd95e6e222aa10352cb5db6cec78dc70fa8916688272dfa0"
+        }
+      ],
+      "ecosystem": "c",
+      "name": "nominalsubtypes",
+      "profile": "native-library-v1",
+      "requires": [],
+      "role": "component",
+      "runtimeDelivery": "embedded",
+      "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+      "target": "c",
+      "version": "1.0.0"
+    }
+  ],
+  "profile": "c",
+  "relocatedInstallation": true,
+  "runs": [
+    {
+      "code": 0,
+      "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+      "receiptSha256": "bccebcca70159f9405c840f0ad29bff48e2afbdb541e5602457ad0b0b90a11ee",
+      "relocated": false,
+      "stderr": "",
+      "stdout": "generic-subtype-ok:14\n"
+    },
+    {
+      "code": 0,
+      "packageFileSetSha256": "8f43c5a61df60a36fbcabaf77d10e6c8e1473f6a88a00a169b93e6f96759164a",
+      "receiptSha256": "bccebcca70159f9405c840f0ad29bff48e2afbdb541e5602457ad0b0b90a11ee",
+      "relocated": true,
+      "stderr": "",
+      "stdout": "generic-subtype-ok:14\n"
+    }
+  ],
+  "sourceRemovedBeforeInstallation": true,
+  "sourceSha256": "d25ec08ba834e31ae8d9320ec748de44375b5973543ad105a2263133424b7c36"
+}

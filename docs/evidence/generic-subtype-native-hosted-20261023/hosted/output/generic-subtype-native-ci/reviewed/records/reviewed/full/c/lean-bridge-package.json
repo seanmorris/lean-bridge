@@ -1,0 +1,164 @@
+{
+  "adapterReceiptSha256": "b65c0044f280ff202599ce1c8d5b0a1d77228f11e000e52430c11aaf27a429b8",
+  "bindingIrSha256": "ef1a125b44924cf4f942349386ae0bb62c16ddabe65f80d1570960c04f024348",
+  "cmakePackage": "LeanBridgeNominalsubtypes",
+  "cmakeTarget": "LeanBridge::nominalsubtypes",
+  "component": {
+    "id": "nominalsubtypes@1.0.0",
+    "name": "nominalsubtypes",
+    "version": "1.0.0"
+  },
+  "componentReceiptSha256": "4ee3bd4fda1a2d60ccf2629d347ffe20f411e3cb56bcac25699ab240af617891",
+  "ecosystem": "c",
+  "exactIntegers": "gmp-6.3.0",
+  "files": {
+    "README.md": {
+      "bytes": 5388,
+      "sha256": "77c54522b110d510ea62854664aaf89095211f154192cf1203d6d46b5fdb5cf9"
+    },
+    "include/detail/nominalsubtypes_gmp.h": {
+      "bytes": 12349,
+      "sha256": "0d09d36d364ac8af25f35b2830a01dba2ce2ad517496d576a773466f7ee4d18b"
+    },
+    "include/gmp.h": {
+      "bytes": 84337,
+      "sha256": "855212f29a6a159f63a90925f445e5d89a6775fd8aa09fd275a4f92b921fcbde"
+    },
+    "include/nominalsubtypes.h": {
+      "bytes": 14630,
+      "sha256": "663dd601b9becfe266510aa938d18be5fa5fb809c985a35a60a8302000453292"
+    },
+    "lib/cmake/LeanBridgeNominalsubtypes/LeanBridgeNominalsubtypesConfig.cmake": {
+      "bytes": 506,
+      "sha256": "3187faa9413a8e0857a4cff2ededbe3f24ef9c4b2e9091e33247cba0b8741fde"
+    },
+    "lib/cmake/LeanBridgeNominalsubtypes/LeanBridgeNominalsubtypesConfigVersion.cmake": {
+      "bytes": 212,
+      "sha256": "08b61a3f510f333a5bbc6a15c8942bf58af57d7f43044fbc2201de061ad97584"
+    },
+    "lib/libcomponent_7f8bfe55e5831a9133c5.so": {
+      "bytes": 159440,
+      "sha256": "44fcf2e793c07c8171ed24f610f8e187c314cb85aca66387ee1222228af1890a"
+    },
+    "lib/libgmp.so.10": {
+      "bytes": 735208,
+      "sha256": "1980c7331f830ab5291a3ec606e03fdc4d00ce7b8a93da6c64da10806ea36cd7"
+    },
+    "lib/liblean_bridge_native.so": {
+      "bytes": 21632,
+      "sha256": "459fcd2098d4b646ab6ae0f4cdccd1f222908cb162562bfc3940a533cd4e4e21"
+    },
+    "lib/libleanshared.so": {
+      "bytes": 158401256,
+      "sha256": "d7768b88d8162736da4305777cd6f147676038fd885bd8a265c958b0ecea00b4"
+    },
+    "lib/libnominalsubtypes.so": {
+      "bytes": 123272,
+      "sha256": "eea40351970265180b2ff97a710bf541bea03396f5f59536810821339877477d"
+    },
+    "lib/libnominalsubtypes_gmp.so": {
+      "bytes": 80360,
+      "sha256": "5c46ab325ed112b3d995a1dd1ec0be25d0f953262dcf2aeb40ba35e7b7a0413e"
+    },
+    "lib/pkgconfig/nominalsubtypes.pc": {
+      "bytes": 266,
+      "sha256": "3b902cd6b3988e82bfe438e0572a05f1697d59c23ff5032e852707b9bc27d606"
+    },
+    "package-metadata.json": {
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    "share/lean-bridge/component/allocation-guard.h": {
+      "bytes": 1309,
+      "sha256": "f4b3c1074ef39c7450a19f4228b2ada093113d9d9338d988d5c63aeed8fdff83"
+    },
+    "share/lean-bridge/component/artifacts.json": {
+      "bytes": 1537,
+      "sha256": "2e91925c99cc5b6a58fdb870a37922db2a840911d06abe8fd8b46a43904d84f7"
+    },
+    "share/lean-bridge/component/binding-ir.json": {
+      "bytes": 129879,
+      "sha256": "b6756b8d9e5d1920468f82da4bb16d46a68877a1ffc593d217579f2d42bc53a0"
+    },
+    "share/lean-bridge/component/component.h": {
+      "bytes": 6743,
+      "sha256": "3b342873233582a7dff9472e7086dfc16f885d5a15114d9d67a46629a3d8ae60"
+    },
+    "share/lean-bridge/component/generated.lean": {
+      "bytes": 34895,
+      "sha256": "776fcdef3e42c306d9da3d8371d561c58ccfce6b9ab3d2c7f082f8af2624880e"
+    },
+    "share/lean-bridge/component/metadata.json": {
+      "bytes": 213933,
+      "sha256": "9986ad18b479a111cab7520d9051217eb4ee1d4d753fa3981b0ec5cff3b94ac6"
+    },
+    "share/lean-bridge/component/model.json": {
+      "bytes": 446108,
+      "sha256": "6300fc09fbf3a147682cb708365698f1b6a631e330df1946bc1b857ffc520aa8"
+    },
+    "share/lean-bridge/component/native-component.json": {
+      "bytes": 140583,
+      "sha256": "4ee3bd4fda1a2d60ccf2629d347ffe20f411e3cb56bcac25699ab240af617891"
+    },
+    "share/lean-bridge/gmp.json": {
+      "bytes": 1621,
+      "sha256": "66ce284ea8fa49c5e2066f31444d843531d04254af6341c62cde5017e9ce971b"
+    },
+    "share/lean-bridge/licenses/GMP-COPYING": {
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    "share/lean-bridge/licenses/GMP-COPYING.LESSERv3": {
+      "bytes": 7639,
+      "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+    },
+    "share/lean-bridge/licenses/GMP-COPYINGv2": {
+      "bytes": 18092,
+      "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643"
+    },
+    "share/lean-bridge/licenses/GMP-COPYINGv3": {
+      "bytes": 35150,
+      "sha256": "e6037104443f9a7829b2aa7c5370d0789a7bda3ca65a0b904cdc0c2e285d9195"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSE": {
+      "bytes": 9160,
+      "sha256": "8b28515ffffc5c0fe2807d8ae3735b00b324d9b7ce807dd63ff6ac8922fbce7e"
+    },
+    "share/lean-bridge/licenses/Lean-LICENSES": {
+      "bytes": 81854,
+      "sha256": "00cce2ac071f63d470a287438a7c6bbc4334706be244384e9af4fc9ead11cdce"
+    },
+    "share/lean-bridge/licenses/LeanBridge-LICENSE": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/licenses/source-notices.json": {
+      "bytes": 2428,
+      "sha256": "17f5fda5505a32e09740acbb365f21a72f772a17988a48e673322f3ee7901fa0"
+    },
+    "share/lean-bridge/licenses/source-notices/0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996.txt": {
+      "bytes": 1093,
+      "sha256": "0228993956219f4b7635fc90bdd7e8713e47973c34b0de1f19f8225ec8907996"
+    },
+    "share/lean-bridge/native-c-adapter.json": {
+      "bytes": 37055,
+      "sha256": "b65c0044f280ff202599ce1c8d5b0a1d77228f11e000e52430c11aaf27a429b8"
+    },
+    "share/lean-bridge/runtime.json": {
+      "bytes": 1466,
+      "sha256": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5"
+    },
+    "share/lean-bridge/sources/gmp-6.3.0.tar.xz": {
+      "bytes": 2094196,
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898"
+    }
+  },
+  "glibcMinimumVersion": "2.38",
+  "kind": "lean-bridge-native-c-package",
+  "name": "nominalsubtypes",
+  "pkgConfig": "nominalsubtypes",
+  "profile": "native-library-v1",
+  "runtimeIdentity": "4b5a7fdf0cb11d4bb429181cfd50b330c5622ed8f5f5382a293955a439b595b5",
+  "schemaVersion": 1,
+  "version": "1.0.0"
+}
