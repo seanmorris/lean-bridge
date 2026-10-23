@@ -370,6 +370,8 @@ const profileManifest = Object.freeze({
 		, "checked-record-browser-ci"
 		, "checked-record-browser-promotion"
 		, "dependent-checked-record-browser-foundation"
+		, "dependent-checked-record-matrix"
+		, "dependent-checked-record-matrix-inventory"
 		, "dependent-checked-record-native-foundation"
 		, "dependent-checked-record-promotion"
 		, "checked-record-value-index-browser"
