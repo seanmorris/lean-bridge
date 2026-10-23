@@ -130,6 +130,10 @@ test("the versioned inventory classifies every profile, IR alternative and requi
 	const expected = document.profiles.length * document.paths.length * document.shapes.reduce((count, shape) => count + document.families[shape.family].positions.length, 0);
 	assert.equal(cells.length, expected);
 	assert.equal(new Set(cells.map(cell => cell.id)).size, expected);
+	const selected = typeSurfaceCells(document, contracts
+		, cell => cell.profile === "c" && cell.shape === "nat");
+	assert.deepEqual(selected, cells.filter(cell =>
+		cell.profile === "c" && cell.shape === "nat"));
 	for(const cell of cells)
 	{
 		assert.ok(cell.owner > 0 && cell.bounds && cell.ownership && cell.absence && cell.failure && cell.platform);

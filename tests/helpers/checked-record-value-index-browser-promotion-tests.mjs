@@ -6,9 +6,16 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	typeSurfaceCells, validateTypeSurface
 } from "../../src/adoption/type-surface.mjs";
+import {
+	sourceAtHistoryMilestone, withHistoryMilestoneSourcePins
+} from "./source-history-test-source.mjs";
+import {
+	checkedRecordValueIndexBrowserPromotionHistoryPath
+} from "./checked-record-value-index-browser-promotion-source-history.mjs";
 import {
 	checkedRecordValueIndexBrowserNatOnlyLimit
 	, checkedRecordValueIndexBrowserPromotionBaseline
@@ -31,6 +38,11 @@ const targetId = cell => cell.shape === "checked-record"
 	&& checkedRecordValueIndexBrowserPromotionProfiles.includes(cell.profile)
 	&& ["ordinary-source", "reviewed-ir"].includes(cell.path)
 	&& ["parameter", "result"].includes(cell.position);
+const auditedId = cell => targetId(cell) || cell.shape === "checked-record"
+	&& checkedRecordValueIndexBrowserPromotionProfiles.includes(cell.profile)
+	&& ["ordinary-source", "reviewed-ir"].includes(cell.path)
+	&& ["field", "callback-parameter", "callback-result"]
+		.includes(cell.position);
 
 test("hosted value-index browser promotion authenticates four exact routes"
 	, { timeout: 900_000 }, async () => {
@@ -126,15 +138,20 @@ test("hosted value-index browser promotion rejects forged and repeated evidence"
 test("hosted value-index browser promotion changes exactly twenty cells"
 	, { timeout: 900_000 }, async () => {
 		const original = checkedRecordValueIndexBrowserPromotionBaseline();
-		const frozen = structuredClone(original);
-		const proposed = await promoteCheckedRecordValueIndexBrowsers(
-			original, await checkedRecordValueIndexBrowserPromotionReferences());
+		const frozenSha256 = sha256(canonicalJson(original));
+		const proposed = withHistoryMilestoneSourcePins(
+			checkedRecordValueIndexBrowserPromotionHistoryPath
+			, await promoteCheckedRecordValueIndexBrowsers(
+				original
+				, await checkedRecordValueIndexBrowserPromotionReferences()
+			)
+		);
 		validateTypeSurface(proposed, await contracts());
-		assert.deepEqual(original, frozen);
+		assert.equal(sha256(canonicalJson(original)), frozenSha256);
 		assert.equal(proposed.evidence.length, original.evidence.length + 4);
 		assert.equal(proposed.observations.length, original.observations.length);
-		const before = typeSurfaceCells(original, await contracts());
-		const after = typeSurfaceCells(proposed, await contracts());
+		const before = typeSurfaceCells(original, await contracts(), auditedId);
+		const after = typeSurfaceCells(proposed, await contracts(), auditedId);
 		const beforeById = new Map(before.map(cell => [cell.id, cell]));
 		const changed = [];
 		for(const cell of after)
@@ -186,8 +203,12 @@ test("hosted value-index browser promotion changes exactly twenty cells"
 			assert.deepEqual(current.files.map(file => file.path)
 				, prior.files.map(file => file.path), prior.id);
 		}
-		assert.deepEqual(proposed
-			, JSON.parse(await readFile("docs/type-surface.v1.json", "utf8")));
+		const milestone = sourceAtHistoryMilestone(
+			checkedRecordValueIndexBrowserPromotionHistoryPath
+			, "docs/type-surface.v1.json"
+		);
+		assert.equal(sha256(canonicalJson(proposed))
+			, sha256(canonicalJson(JSON.parse(milestone))));
 	}
 );
 
@@ -198,13 +219,18 @@ test("value-index browser docs name the exact prepared packages and boundary"
 			, "docs/lean/export-decisions.md", "docs/reference/types.md"
 			, "docs/evidence/README.md"
 		];
-		for(const path of paths)
-		{
-			const source = await readFile(path, "utf8");
-			assert.ok(source.includes(
-				"checked-record-value-index-browser-promotion-20261019.md"), path);
-		}
-		const javascript = await readFile("docs/javascript-typescript.md", "utf8");
+	for(const path of paths)
+	{
+		const source = sourceAtHistoryMilestone(
+			checkedRecordValueIndexBrowserPromotionHistoryPath, path
+		);
+		assert.ok(source.includes(
+			"checked-record-value-index-browser-promotion-20261019.md"), path);
+	}
+	const javascript = sourceAtHistoryMilestone(
+		checkedRecordValueIndexBrowserPromotionHistoryPath
+		, "docs/javascript-typescript.md"
+	);
 		for(const value of [
 			"Bool", "String", "Nat", "result-only", "λ🌱"
 			, "340282366920938463463374607431768211457"

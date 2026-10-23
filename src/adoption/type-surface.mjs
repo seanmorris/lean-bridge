@@ -248,9 +248,12 @@ export async function readTypeSurface({ repository = root } = {})
  *
  * @param document - Inventory that will be validated against the supplied contracts.
  * @param contracts - Independent IR and consumer contracts.
+ * @param select - Optional predicate over a cell identity, evaluated before the
+ * expanded cell copies observation notes, limitations and stages.
  */
-export function typeSurfaceCells(document, contracts)
+export function typeSurfaceCells(document, contracts, select = () => true)
 {
+	assert.equal(typeof select, "function");
 	validateTypeSurface(document, contracts);
 	const unreviewedStages = {};
 	for(const stage of document.stages)
@@ -268,11 +271,16 @@ export function typeSurfaceCells(document, contracts)
 				for(const position of document.families[shape.family].positions)
 				{
 					const key = `${profile.id}/${shape.id}/${sourcePath}/${position}`;
+					const identity = {
+						id: key, profile: profile.id, shape: shape.id
+						, path: sourcePath, position
+					};
+					if(!select(identity)) continue;
 					const observation = observations.get(key);
 					const family = document.families[shape.family];
 					const exclusion = document.baseline.exclusions.find(entry => entry.profile === profile.id && entry.shape === shape.id);
 					cells.push({
-						id: key, profile: profile.id, shape: shape.id, path: sourcePath, position
+						...identity
 						, requirement: exclusion ? "reviewed-exclusion" : shape.family === "proof" ? "required-erasure" : "required"
 						, exclusion: exclusion ?? null, owner: family.owner
 						, lean: shape.lean, meaning: shape.meaning, bounds: shape.bounds
