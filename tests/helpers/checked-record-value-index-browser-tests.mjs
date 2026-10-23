@@ -38,6 +38,7 @@ import {
 } from "./checked-record-value-index-browser-fixture.mjs";
 import {
 	assertCheckedRecordValueIndexBrowserControlsTap
+	, checkedRecordValueIndexBrowserControlContracts
 	, assertCheckedRecordValueIndexBrowserTap
 	, checkedRecordValueIndexBrowserRequiredControlNames
 	, checkCheckedRecordValueIndexBrowserCiRecords
@@ -408,13 +409,30 @@ test("value-index hosted checker closes arguments and complete TAP streams", () 
 		, ciOptions);
 	assertCheckedRecordValueIndexBrowserTap(tap(1), 1);
 	assertCheckedRecordValueIndexBrowserTap(tap(15, 4), 15, 4);
+	const { live, archived20261019: archived }
+		= checkedRecordValueIndexBrowserControlContracts;
+	const { fast, passed } = checkedRecordValueIndexBrowserRequiredControlNames;
+	const counts = { fastPasses: 11, skippedInstalledRoutes: 4 };
 	assert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(
-		controlsTap()), { fastPasses: 11, skippedInstalledRoutes: 4 });
+		controlsTap(), live), counts);
 	assert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(
-		controlsTap(["later authenticated reader"])
-	), { fastPasses: 11, skippedInstalledRoutes: 4 });
+		controlsTap(["later authenticated reader"]), live), counts);
 	assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(
-		controlsTap([], checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1))));
+		controlsTap([], passed.slice(1)), live));
+	for(const contract of [undefined, { ...live }, { ...archived }])
+		assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(
+			controlsTap(), contract), /Explicit value-index browser control contract/u);
+	assert.equal(archived.exactTests, 15);
+	assert.deepEqual(assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap([], fast), archived), counts);
+	assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(
+		controlsTap([], fast), live));
+	for(const changed of [
+		controlsTap(), controlsTap(["later authenticated reader"], fast)
+		, controlsTap([], fast.slice(1))
+		, controlsTap([], [...fast.slice(1), passed.find(name => !fast.includes(name))])
+	]) assert.throws(() => assertCheckedRecordValueIndexBrowserControlsTap(
+		changed, archived));
 	const paths = checkedRecordValueIndexBrowserRecordPaths({
 		package: { archive: "component.tgz" }, runtime: { archive: "runtime.tgz" }
 	});
@@ -459,16 +477,22 @@ test("value-index hosted checker rejects scope before retained-record reads", as
 			throw new Error("records required");
 		}
 	};
+	const { live, archived20261019: archived }
+		= checkedRecordValueIndexBrowserControlContracts;
 	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
-		{ ...ciOptions, route: "unknown" }, original), assert.AssertionError);
+		{ ...ciOptions, route: "unknown" }, original, live), assert.AssertionError);
 	assert.equal(reads, 0);
 	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
 		ciOptions, { ...original, controlsTap: controlsTap([]
 			, checkedRecordValueIndexBrowserRequiredControlNames.passed.slice(1)) }
-	), assert.AssertionError);
+		, live), assert.AssertionError);
+	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
+		ciOptions, original), /Explicit value-index browser control contract/u);
+	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
+		ciOptions, original, archived), assert.AssertionError);
 	assert.equal(reads, 0);
 	await assert.rejects(checkCheckedRecordValueIndexBrowserCiRecords(
-		ciOptions, original), /records required/u);
+		ciOptions, original, live), /records required/u);
 	assert.equal(reads, 1);
 });
 

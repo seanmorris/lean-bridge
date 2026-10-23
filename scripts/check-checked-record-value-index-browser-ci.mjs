@@ -11,6 +11,7 @@ import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import { canonicalJson } from "../src/capsule/node.mjs";
 import {
 	checkCheckedRecordValueIndexBrowserCiRecords
+	, checkedRecordValueIndexBrowserControlContracts
 	, parseCheckedRecordValueIndexBrowserCiArgs
 } from "../tests/helpers/checked-record-value-index-browser-ci-report.mjs";
 
@@ -25,5 +26,5 @@ const result = await checkCheckedRecordValueIndexBrowserCiRecords(selected, {
 		assert.ok(path.split("/").every(part => part !== "." && part !== ".."));
 		return readFile(join(selected.directory, path));
 	}
-});
+}, checkedRecordValueIndexBrowserControlContracts.live);
 process.stdout.write(canonicalJson(result));

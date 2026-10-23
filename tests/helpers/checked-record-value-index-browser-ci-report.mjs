@@ -61,6 +61,25 @@ export const checkedRecordValueIndexBrowserRequiredControlNames = Object.freeze(
 		`installed value-index records reproduce, relocate and reach browsers for ${route}`))
 });
 
+/**
+ * Explicit control contracts. The live producer, checker and archiver require
+ * every current control; the immutable 2026-10-19 archive is replayed against
+ * the exact fast set its hosted run executed, never inferred from the TAP.
+ */
+export const checkedRecordValueIndexBrowserControlContracts = Object.freeze({
+	live: Object.freeze({
+		name: "live"
+		, passed: checkedRecordValueIndexBrowserRequiredControlNames.passed
+		, exactTests: null
+	})
+	, archived20261019: Object.freeze({
+		name: "archived-2026-10-19"
+		, passed: checkedRecordValueIndexBrowserRequiredControlNames.fast
+		, exactTests: checkedRecordValueIndexBrowserRequiredControlNames.fast.length
+			+ checkedRecordValueIndexBrowserRequiredControlNames.skipped.length
+	})
+});
+
 const escapeRegExp = source => source.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 
 /**
@@ -82,11 +101,15 @@ export const assertCheckedRecordValueIndexBrowserTap = (
 };
 
 /**
- * Require the stable fast controls while accepting added authenticated readers.
+ * Require one explicit control contract. The live contract accepts added
+ * authenticated readers; an archived contract requires its exact control set.
  *
  * @param source - Complete node:test TAP stream.
+ * @param contract - One of checkedRecordValueIndexBrowserControlContracts.
  */
-export const assertCheckedRecordValueIndexBrowserControlsTap = source => {
+export const assertCheckedRecordValueIndexBrowserControlsTap = (source, contract) => {
+	assert.ok(Object.values(checkedRecordValueIndexBrowserControlContracts)
+		.includes(contract), "Explicit value-index browser control contract");
 	assert.equal(typeof source, "string");
 	assert.doesNotMatch(source, /^(?:not ok|Bail out!)/gmu);
 	assert.doesNotMatch(source, /^[ \t]+(?:not ok|Bail out!)/gmu);
@@ -98,8 +121,13 @@ export const assertCheckedRecordValueIndexBrowserControlsTap = source => {
 	assert.equal(skipped
 		, checkedRecordValueIndexBrowserRequiredControlNames.skipped.length);
 	assert.equal(passed + skipped, tests);
-	assert.ok(passed
-		>= checkedRecordValueIndexBrowserRequiredControlNames.passed.length);
+	if(contract.exactTests === null)
+		assert.ok(passed >= contract.passed.length);
+	else
+	{
+		assert.equal(tests, contract.exactTests, contract.name);
+		assert.equal(passed, contract.passed.length, contract.name);
+	}
 	const requireResult = (name, shouldSkip) => {
 		assert.equal(source.split(`# Subtest: ${name}\n`).length, 2, name);
 		const suffix = shouldSkip ? " # SKIP(?: .*)?" : "";
@@ -107,8 +135,7 @@ export const assertCheckedRecordValueIndexBrowserControlsTap = source => {
 			`^ok [0-9]+ - ${escapeRegExp(name)}${suffix}$`, "mu"
 		), name);
 	};
-	for(const name of checkedRecordValueIndexBrowserRequiredControlNames.passed)
-		requireResult(name, false);
+	for(const name of contract.passed) requireResult(name, false);
 	for(const name of checkedRecordValueIndexBrowserRequiredControlNames.skipped)
 		requireResult(name, true);
 	return {
@@ -156,16 +183,17 @@ export const parseCheckedRecordValueIndexBrowserCiArgs = args => {
  * @param original.runtime - Independently observed Node identity.
  * @param original.paths - Complete retained regular-file inventory.
  * @param original.read - Closed reader for retained files.
+ * @param controlContract - Explicit control contract for controlsTap.
  */
 export const checkCheckedRecordValueIndexBrowserCiRecords = async (
-	options, original
+	options, original, controlContract
 ) => {
 	const { acceptanceTap, controlsTap, runtime, paths, read } = original;
 	const selected = parseCheckedRecordValueIndexBrowserCiArgs(
 		Object.entries(options).flatMap(([key, value]) => [`--${key}`, value]));
 	assertCheckedRecordValueIndexBrowserTap(acceptanceTap, 1);
 	const controlCounts = assertCheckedRecordValueIndexBrowserControlsTap(
-		controlsTap);
+		controlsTap, controlContract);
 	assert.deepEqual(Object.keys(runtime).sort(), ["arch", "node", "platform"]);
 	const npm = JSON.parse(await read("report.json"));
 	const expectedPaths = checkedRecordValueIndexBrowserRecordPaths(npm.receipt);

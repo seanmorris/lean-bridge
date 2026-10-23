@@ -11,6 +11,7 @@ import { join } from "node:path";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
 import {
 	checkCheckedRecordValueIndexBrowserCiRecords
+	, checkedRecordValueIndexBrowserControlContracts
 } from "./checked-record-value-index-browser-ci-report.mjs";
 import {
 	checkedRecordValueIndexBrowserRoutes
@@ -176,7 +177,7 @@ export const checkCheckedRecordValueIndexBrowserEvidence = async (
 				, read: path => {
 					assert.ok(records.has(path), path); return records.get(path);
 				}
-			});
+			}, checkedRecordValueIndexBrowserControlContracts.archived20261019);
 			assert.equal(run.recordCount, records.size);
 			assert.deepEqual(run.accepted, checked);
 			assert.deepEqual(run.controls, checked.controls);

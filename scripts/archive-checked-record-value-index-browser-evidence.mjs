@@ -18,6 +18,7 @@ import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { nativeArtifactPaths } from "../src/build/native-artifacts.mjs";
 import {
 	checkCheckedRecordValueIndexBrowserCiRecords
+	, checkedRecordValueIndexBrowserControlContracts
 } from "../tests/helpers/checked-record-value-index-browser-ci-report.mjs";
 import {
 	checkedRecordValueIndexBrowserRoutes
@@ -133,7 +134,7 @@ try
 				acceptanceTap: acceptanceTap.toString()
 				, controlsTap: controlsTap.toString(), runtime, paths
 				, read: path => readFile(join(recordsRoot, path))
-			}
+			}, checkedRecordValueIndexBrowserControlContracts.live
 		);
 		browserVersions ??= checked.browserVersions;
 		assert.deepEqual(checked.browserVersions, browserVersions
