@@ -54,6 +54,14 @@ jobs:
           mkdir -p build/owned-subtype-languages-ci
           bash scripts/bootstrap-toolchains.sh --lean-only 2>&1 | tee build/owned-subtype-languages-ci/toolchain.log
           bash scripts/bootstrap-rust-ci.sh 2>&1 | tee -a build/owned-subtype-languages-ci/toolchain.log
+      - name: Prepare the reviewed Python 3.11 dependency wheel
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/python-typing-wheels/4.16.0
+          python -m pip download --disable-pip-version-check --no-deps --only-binary=:all: \
+            --dest build/python-typing-wheels/4.16.0 typing_extensions==4.16.0
       - name: Execute source-free language acceptance
         id: acceptance
         timeout-minutes: 155

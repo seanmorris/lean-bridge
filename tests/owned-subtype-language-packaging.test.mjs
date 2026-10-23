@@ -28,6 +28,7 @@ import {
 	, verifyOwnedSubtypeRetainedPackages
 	, writeOwnedSubtypeRetainedPackages
 } from "./helpers/owned-subtype-retained-packages.mjs";
+import { installPythonWheel } from "./helpers/python-wheel-install.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_LANGUAGE_TEST === "1";
@@ -42,6 +43,14 @@ const reports = [];
 const retainedEntries = [];
 const reportPath = resolve("build/owned-subtype-language-packaging/report.json");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+const installPython = async ({ baseCommand, root, archive }) => {
+	const { command, ...context } = await installPythonWheel({
+		root, archive, python: baseCommand
+	});
+	return { context
+		, run: (args, cwd, environment) => runCopied(command
+			, ["-I", "-B", ...args], cwd, environment) };
+};
 if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);
 
 test.after(async () => {
@@ -65,6 +74,7 @@ test("Python, Ruby and Rust generate callback-free checked transfer copies", () 
 		, ruby: generateOwnedRubyPackage(ir, null, { transferredInputs: true })
 		, rust: generateOwnedRustPackage(ir, null, {}, { transferredInputs: true })
 	};
+	assert.equal(generated.python.requiresTypeAliases, true);
 	assert.deepEqual(ir, before);
 	for(const [profile, output] of Object.entries(generated))
 	{
@@ -96,6 +106,8 @@ test("owned Subtype language consumers and required workflow stay registered", a
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-subtype-language-packaging/report.json"
 		, "test -s build/owned-subtype-language-packaging/retained-packages.json"
+		, "typing_extensions==4.16.0"
+		, "build/python-typing-wheels/4.16.0"
 		, "if: always()\n        uses: actions/upload-artifact@v7"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -253,7 +265,12 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} owned Subt
 		const installOptions = { profile, consumer: consumers, handoff
 			, packages: receipt.packages.filter(item => item.target === targets[profile][0])
 			, environment, dependencies
-			, fixture: { source: () => sources[profile], success: `owned-subtype-${profile}` } };
+			, fixture: {
+				source: () => sources[profile]
+				, success: `owned-subtype-${profile}`
+				, ...(profile === "python" ? { installPython } : {})
+			}
+		};
 		observations[profile] = await installCopiedConsumer(installOptions);
 		assert.ok(observations[profile].checks >= 100);
 	}
