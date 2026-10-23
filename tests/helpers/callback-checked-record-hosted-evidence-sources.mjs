@@ -150,6 +150,25 @@ export const callbackCheckedRecordArchiveRevisions = (producer, archiver) => {
 };
 
 /**
+ * Map replay roles to the public commit fields written into an archive index.
+ *
+ * @param value - Producer/consumer/checker/archiver revisions.
+ */
+export const callbackCheckedRecordArchiveIndexCommits = value => {
+	assert.deepEqual(Object.keys(value).sort(), [
+		"archiver", "checker", "consumer", "producer"
+	]);
+	for(const revision of Object.values(value))
+		assert.match(revision, /^[a-f0-9]{40}$/u);
+	return Object.freeze({
+		producerCommit: value.producer
+		, consumerCommit: value.consumer
+		, checkerCommit: value.checker
+		, archiveCommit: value.archiver
+	});
+};
+
+/**
  * Select every source needed to explain one hosted artifact and its archive.
  *
  * @param lane - Closed hosted lane name.

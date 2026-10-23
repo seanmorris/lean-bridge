@@ -25,7 +25,9 @@ import {
 	, verifyCallbackCheckedRecordRetainedPackages
 } from "./callback-checked-record-retained-packages.mjs";
 import {
-	callbackCheckedRecordEvidenceSources
+	callbackCheckedRecordArchiveIndexCommits
+	, callbackCheckedRecordArchiveRevisions
+	, callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedOriginal
 } from "./callback-checked-record-hosted-evidence-sources.mjs";
 import {
@@ -170,8 +172,12 @@ export const checkCallbackCheckedRecordHostedEvidence = async (
 	for(const key of [
 		"producerCommit", "consumerCommit", "checkerCommit", "archiveCommit"
 	]) assert.match(index[key], /^[a-f0-9]{40}$/u, key);
-	assert.equal(index.producerCommit, index.consumerCommit);
-	assert.equal(index.producerCommit, index.checkerCommit);
+	const revisions = callbackCheckedRecordArchiveRevisions(
+		index.producerCommit, index.archiveCommit);
+	assert.deepEqual(Object.fromEntries([
+		"producerCommit", "consumerCommit", "checkerCommit", "archiveCommit"
+	].map(key => [key, index[key]]))
+	, callbackCheckedRecordArchiveIndexCommits(revisions));
 	assert.deepEqual(index.files, [...index.files].sort((left, right) =>
 		left.path.localeCompare(right.path)));
 	assert.equal(new Set(index.files.map(file => file.path)).size
@@ -186,10 +192,6 @@ export const checkCallbackCheckedRecordHostedEvidence = async (
 		assert.equal(await callbackCheckedRecordHostedDigest(path)
 			, file.sha256, file.path);
 	}
-	const revisions = {
-		producer: index.producerCommit, consumer: index.consumerCommit
-		, checker: index.checkerCommit, archiver: index.archiveCommit
-	};
 	assert.deepEqual(index.selectedSources
 		, callbackCheckedRecordEvidenceSources(lane, revisions));
 	for(const source of index.selectedSources)

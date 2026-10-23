@@ -8,7 +8,8 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import {
-	callbackCheckedRecordArchiveRevisions
+	callbackCheckedRecordArchiveIndexCommits
+	, callbackCheckedRecordArchiveRevisions
 	, callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
@@ -67,12 +68,20 @@ test("callback checked-record archive lanes retain closed source roles", () => {
 });
 
 test("callback archive provenance separates hosted execution from replay", () => {
-	assert.deepEqual(callbackCheckedRecordArchiveRevisions(
-		hostedRevision, revision
-	), {
+	const revisions = callbackCheckedRecordArchiveRevisions(
+		hostedRevision, revision);
+	assert.deepEqual(revisions, {
 		producer: hostedRevision, consumer: hostedRevision
 		, checker: revision, archiver: revision
 	});
+	assert.deepEqual(callbackCheckedRecordArchiveIndexCommits(revisions), {
+		producerCommit: hostedRevision, consumerCommit: hostedRevision
+		, checkerCommit: revision, archiveCommit: revision
+	});
+	assert.throws(() => callbackCheckedRecordArchiveIndexCommits({
+		producer: hostedRevision, consumer: hostedRevision
+		, checker: "HEAD", archiver: revision
+	}), assert.AssertionError);
 	assert.throws(() => callbackCheckedRecordArchiveRevisions(
 		"HEAD", revision
 	), assert.AssertionError);

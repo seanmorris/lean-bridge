@@ -31,7 +31,8 @@ import {
 	, verifyCallbackCheckedRecordRetainedPackages
 } from "../tests/helpers/callback-checked-record-retained-packages.mjs";
 import {
-	callbackCheckedRecordArchiveRevisions
+	callbackCheckedRecordArchiveIndexCommits
+	, callbackCheckedRecordArchiveRevisions
 	, callbackCheckedRecordEvidenceSources
 	, callbackCheckedRecordHostedEvidenceRoot
 	, callbackCheckedRecordHostedLanes
@@ -249,8 +250,8 @@ try
 		schemaVersion: 1
 		, kind: `callback-checked-record-${lane}-installed-v1`
 		, lane, profiles: config.profiles
-		, producerCommit: revision, consumerCommit: revision
-		, checkerCommit: revision, archiveCommit, accepted
+		, ...callbackCheckedRecordArchiveIndexCommits(revisions)
+		, accepted
 		, hostedRun: {
 			...hosted.hostedRun
 			, apiRecords: Object.fromEntries(
