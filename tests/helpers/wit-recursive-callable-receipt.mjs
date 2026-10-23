@@ -4,18 +4,8 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { createCompiledNativeModel, generateCompiledNativeLeanAdapters } from "../../src/build/native-graph-model.mjs";
-import { nativeGraphProjectionSources } from "../../src/build/native-graph-sources.mjs";
-import { wasmtimeCapiIdentity } from "../../src/build/native-wit-artifacts.mjs";
-import { compileCallableWitGraphPackageModel } from "../../src/backends/wit/callable-graph-package.mjs";
-import { renderWitGraphCallableHostSource } from "../../src/backends/wit/callable-graph-host.mjs";
-import { guardWitHostSource, witHostDependencies } from "../../src/backends/wit/host-evidence.mjs";
-import { witRecursiveCallableDocumentation } from "./wit-recursive-callable-docs.mjs";
-import { witRecursiveMixedFixture, witRecursivePrimitiveConsumer } from "./wit-recursive-callable-mixed.mjs";
-import { witRecursiveCallableValues } from "./wit-recursive-callable-values.mjs";
-import { witRecursiveCallableMalformed, witRecursiveResultFaultModes } from "./wit-recursive-callable-malformed.mjs";
+import { witRecursiveCallableProducer, witRecursiveCallableProducerSource } from "./wit-recursive-callable-producer.mjs";
 
 const identity = source => ({ bytes: Buffer.byteLength(source), sha256: sha256(source) });
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
@@ -47,15 +37,16 @@ export const witRecursivePrimitiveObservation = {
  * Require compiler-authenticated source semantics before reading a projection.
  *
  * @param run - Original model, metadata and compilation receipt.
+ * @param producer - Exact immutable recursive WIT producer closure.
  */
-export const assertWitRecursiveCompilerReceipt = run => {
+export const assertWitRecursiveCompilerReceipt = (run, producer) => {
 	const { model, metadata, receipt } = run;
-	assert.deepEqual(model, createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }));
+	assert.deepEqual(model, producer.createCompiledNativeModel({ metadata, component: model.component, moduleName: model.moduleName, sourceIdentity: receipt.sourceIdentity }));
 	assert.equal(receipt.profile, "native-library-v1"); assert.equal(receipt.schemaVersion, 2);
 	assert.equal(receipt.modelSha256, sha256(canonicalJson(model)));
 	assert.equal(receipt.metadataSha256, sha256(canonicalJson(metadata)));
 	assert.equal(receipt.bindingIrSha256, model.bindingIrSha256);
-	const adapters = generateCompiledNativeLeanAdapters(model);
+	const adapters = producer.generateCompiledNativeLeanAdapters(model);
 	assert.equal(receipt.headerSha256, sha256(adapters.header));
 	assert.equal(receipt.adaptersSha256, sha256(adapters.leanSource));
 	assert.equal(receipt.initializer, `initialize_${adapters.module}`);
@@ -69,12 +60,21 @@ export const assertWitRecursiveCompilerReceipt = run => {
  * @param mixed - Include the nineteen-primitive and sixteen-argument companions.
  */
 export const assertWitRecursiveCallablePackages = async (report, mixed = false) => {
+	const producer = await witRecursiveCallableProducer();
+	for(const name of [
+		"compileCallableWitGraphPackageModel", "createCompiledNativeModel"
+		, "generateCompiledNativeLeanAdapters", "guardWitHostSource"
+		, "nativeGraphProjectionSources", "renderWitGraphCallableHostSource"
+		, "witHostDependencies", "witRecursiveCallableDocumentation"
+		, "witRecursiveCallableMalformed", "witRecursiveCallableValues"
+		, "witRecursiveMixedFixture", "witRecursivePrimitiveConsumer"
+	]) assert.equal(typeof producer[name], "function", name);
 	assert.equal(report.schemaVersion, 1); assert.equal(report.mixed, mixed);
 	flags(report, ["compiledLean", "installedPackage"]);
 	assert.deepEqual(report.observations.map(run => run.reviewed), [false, true]);
-	const documentation = await witRecursiveCallableDocumentation();
-	const source = mixed ? (await witRecursiveMixedFixture(documentation.source)).source : documentation.source;
-	const fixture = await readFile("tests/fixtures/structured-callable-consumers/wit-recursive-typed.c", "utf8");
+	const documentation = await producer.witRecursiveCallableDocumentation();
+	const source = mixed ? (await producer.witRecursiveMixedFixture(documentation.source)).source : documentation.source;
+	const fixture = witRecursiveCallableProducerSource("tests/fixtures/structured-callable-consumers/wit-recursive-typed.c").toString();
 	for(const run of report.observations)
 	{
 		flags(run, ["checkedSourceUnchanged", "witOnly", "deterministicReassembly", "compilerFreeReassembly"]);
@@ -92,20 +92,20 @@ export const assertWitRecursiveCallablePackages = async (report, mixed = false) 
 			, standaloneLeanChecked: true, compiledVerbatim: true
 		});
 		const { model, receipt, adapter, runtime, runtimeIdentity, installed } = run;
-		const lean = assertWitRecursiveCompilerReceipt(run);
+		const lean = assertWitRecursiveCompilerReceipt(run, producer);
 		assert.equal(model.schemaVersion, run.reviewed ? 5 : 4);
 		assert.equal(model.exports.length, run.exports); assert.equal(model.copiedGraph.callbacks.length, run.callbacks);
 		assert.equal(receipt.sourceIdentity.modules[0].source.sha256, run.sourceSha256);
 		assert.equal(receipt.runtimeIdentity, runtimeIdentity); assert.equal(runtimeIdentity, sha256(canonicalJson(runtime)));
 		assert.equal(receipt.bindingIrSha256, run.bindingIrSha256); assert.equal(receipt.nativeLibrary.sha256, run.binarySha256);
-		const projection = compileCallableWitGraphPackageModel(model.bindingIr, { name: "structured", version: "1.0.0" });
+		const projection = producer.compileCallableWitGraphPackageModel(model.bindingIr, { name: "structured", version: "1.0.0" });
 		assert.equal(projection.layoutSha256, run.layoutSha256); assert.equal(adapter.copiedGraph.layoutSha256, run.layoutSha256);
 		assert.equal(projection.manifest.backend, "ordinary-wit-native-callable-graph-v1");
 		assert.equal(projection.functions.length, run.exports); assert.equal(projection.callbacks.size, run.callbacks);
 		assert.equal(adapter.bindingIrSha256, run.bindingIrSha256); assert.equal(adapter.runtimeIdentity, runtimeIdentity);
 		assert.equal(adapter.componentReceiptSha256, sha256(canonicalJson(receipt)));
 		assert.equal(adapter.gmp, undefined);
-		for(const [path, text] of Object.entries(nativeGraphProjectionSources(model, receipt))) assert.deepEqual(adapter.files[path], identity(text), path);
+		for(const [path, text] of Object.entries(producer.nativeGraphProjectionSources(model, receipt))) assert.deepEqual(adapter.files[path], identity(text), path);
 		const { packageReceipt, compiled, probes } = installed, files = packageReceipt.files;
 		for(const map of [files, compiled.files, compiled.wasmtime.files, runtime.files, run.componentFiles, adapter.files, installed.libraries]) inventory(map);
 		flags(installed, ["sourceFreeInstallation", "compilerFreeExecution", "sourceAndHandoffRemovedBeforeExecution", "publicHeadersOnly", "offline", "nodelete"]);
@@ -120,8 +120,8 @@ export const assertWitRecursiveCallablePackages = async (report, mixed = false) 
 		assert.equal(compiled.runtimeIdentity, runtimeIdentity); assert.equal(compiled.bindingIrSha256, run.bindingIrSha256);
 		assert.equal(compiled.componentReceiptSha256, sha256(canonicalJson(receipt)));
 		assert.equal(compiled.adapterReceiptSha256, sha256(canonicalJson(adapter)));
-		assert.deepEqual(Object.fromEntries(Object.keys(wasmtimeCapiIdentity).map(key => [key, compiled.wasmtime[key]])), wasmtimeCapiIdentity);
-		assert.equal(sha256(canonicalJson(compiled.wasmtime.files)), wasmtimeCapiIdentity.filesSha256);
+		assert.deepEqual(Object.fromEntries(Object.keys(producer.wasmtimeCapiIdentity).map(key => [key, compiled.wasmtime[key]])), producer.wasmtimeCapiIdentity);
+		assert.equal(sha256(canonicalJson(compiled.wasmtime.files)), producer.wasmtimeCapiIdentity.filesSha256);
 		assert.match(compiled.wasmTools, /^wasm-tools 1\.245\.1(?: |$)/u);
 		const component = Buffer.from(installed.componentBase64, "base64");
 		assert.equal(component.toString("base64"), installed.componentBase64);
@@ -132,7 +132,7 @@ export const assertWitRecursiveCallablePackages = async (report, mixed = false) 
 			, "component/structured.wat": projection.wat
 			, "include/structured_wasmtime.h": projection.hostHeader
 			, "binding-manifest.json": canonicalJson(projection.manifest)
-			, "src/structured_wasmtime.c": guardWitHostSource(renderWitGraphCallableHostSource(projection, component), projection.prefix, witHostDependencies(run, compiled.wasmtime.files))
+			, "src/structured_wasmtime.c": producer.guardWitHostSource(producer.renderWitGraphCallableHostSource(projection, component), projection.prefix, producer.witHostDependencies(run, compiled.wasmtime.files))
 		};
 		for(const [path, text] of Object.entries(generated)) assert.deepEqual(compiled.files[path], identity(text), path);
 		for(const [path, file] of Object.entries(compiled.files))
@@ -172,11 +172,11 @@ export const assertWitRecursiveCallablePackages = async (report, mixed = false) 
 		const fn = name => projection.manifest.cHost.values.find(item => item.declaration === projection.functions.find(fn => fn.declaration.name === name).declaration.id);
 		const bindings = `#define fixture_callback_create ${fn("callRecursive").callbacks[0].create}\n#define fixture_owned_call ${fn("makeRecursive").invoke}`;
 		const callers = { consumer: fixture.replace("/* GENERATED_BINDINGS */", bindings)
-			, values: witRecursiveCallableValues(projection)
+			, values: producer.witRecursiveCallableValues(projection)
 			, documentation: documentation.example.source
-			, boundary: witRecursiveCallableMalformed(projection)
-			, "boundary.so": witRecursiveCallableMalformed(projection)
-			, ...mixed ? { primitives: await witRecursivePrimitiveConsumer(projection) } : {} };
+			, boundary: producer.witRecursiveCallableMalformed(projection)
+			, "boundary.so": producer.witRecursiveCallableMalformed(projection)
+			, ...mixed ? { primitives: await producer.witRecursivePrimitiveConsumer(projection) } : {} };
 		assert.deepEqual(Object.keys(probes).sort(), Object.keys(callers).sort());
 		for(const [name, text] of Object.entries(callers))
 		{ assert.equal(probes[name].sourceSha256, sha256(text), name); hash(probes[name].executableSha256); }
@@ -185,7 +185,7 @@ export const assertWitRecursiveCallablePackages = async (report, mixed = false) 
 			, documentation: { verbatim: true, stdout: documentation.example.stdout }
 			, ...mixed ? { primitives: witRecursivePrimitiveObservation } : {} };
 		assert.deepEqual(installed.observations, [observed, observed]);
-		assert.deepEqual(installed.resultFaults, witRecursiveResultFaultModes.map(mode => ({
+		assert.deepEqual(installed.resultFaults, producer.witRecursiveResultFaultModes.map(mode => ({
 			mode, runtimeRetired: !mode.startsWith("limit-")
 			, twoSessionsChecked: true, outputUnchanged: true
 		})));

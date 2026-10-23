@@ -4,14 +4,16 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { sha256 } from "../../src/capsule/node.mjs";
-import { compileCallableWitGraphModel } from "../../src/backends/wit/callable-graph-model.mjs";
-import { renderWitGraphCallableHostSource } from "../../src/backends/wit/callable-graph-host.mjs";
-import { nativeRecursiveCallableReviewedIr } from "./native-recursive-callable-fixture.mjs";
-import { witRecursiveCallableValues } from "./wit-recursive-callable-values.mjs";
-import { witRecursiveCallableFaults } from "./wit-recursive-callable-faults.mjs";
 import { assertWitRecursiveCompilerReceipt, witRecursiveTypedObservation, witRecursiveValueObservation } from "./wit-recursive-callable-receipt.mjs";
+import { witRecursiveCallableProducer, witRecursiveCallableProducerSource } from "./wit-recursive-callable-producer.mjs";
+
+const producer = await witRecursiveCallableProducer();
+for(const name of [
+	"compileCallableWitGraphModel", "nativeRecursiveCallableReviewedIr"
+	, "renderWitGraphCallableHostSource", "witRecursiveCallableFaults"
+	, "witRecursiveCallableValues"
+]) assert.equal(typeof producer[name], "function", name);
 
 const flags = ["-fsanitize=address,undefined", "-fno-omit-frame-pointer", "-fno-sanitize-recover=all", "-no-pie"];
 const hash = value => assert.match(value, /^[a-f0-9]{64}$/u);
@@ -41,22 +43,22 @@ const sanitizer = (run, expected) => {
 export const assertWitRecursiveNativeProbes = async record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.installedPackage, false);
 	assert.deepEqual(record.observations.map(run => run.path), ["ordinary-source", "reviewed-ir"]);
-	const raw = await readFile("tests/fixtures/structured-callable-consumers/wit-recursive-native.c", "utf8");
-	const typed = await readFile("tests/fixtures/structured-callable-consumers/wit-recursive-typed.c", "utf8");
+	const raw = witRecursiveCallableProducerSource("tests/fixtures/structured-callable-consumers/wit-recursive-native.c").toString();
+	const typed = witRecursiveCallableProducerSource("tests/fixtures/structured-callable-consumers/wit-recursive-typed.c").toString();
 	const expected = { callbacks: 6, releases: 1, nativeIdentities: 0
 		, recursive: true, owned: true, recovery: true, activeClose: true
 		, wrongThread: true, expiredContexts: true, independentResult: true };
 	for(const run of record.observations)
 	{
-		assertWitRecursiveCompilerReceipt(run);
-		const model = compileCallableWitGraphModel(run.model.bindingIr);
+		assertWitRecursiveCompilerReceipt(run, producer);
+		const model = producer.compileCallableWitGraphModel(run.model.bindingIr);
 		assert.equal(model.functions.length, 33); assert.equal(model.callbacks.size, 18);
 		assert.equal(run.bindingIrSha256, model.manifest.bindingIrSha256);
 		assert.equal(run.nativeLibrarySha256, run.receipt.nativeLibrary.sha256);
 		assert.equal(run.runtimeIdentity, run.receipt.runtimeIdentity);
 		const component = Buffer.from(run.componentBase64, "base64");
 		assert.equal(component.toString("base64"), run.componentBase64); assert.equal(sha256(component), run.componentSha256);
-		assert.equal(run.hostSourceSha256, sha256(renderWitGraphCallableHostSource(model, component)));
+		assert.equal(run.hostSourceSha256, sha256(producer.renderWitGraphCallableHostSource(model, component)));
 		const tree = model.nodes.find(node => node.ref.id === "lean:Structured.Tree");
 		const callback = model.functions.find(fn => fn.field === "call_recursive").parameters[1];
 		const owned = model.functions.find(fn => fn.field === "make_recursive").result;
@@ -64,7 +66,7 @@ export const assertWitRecursiveNativeProbes = async record => {
 		assert.equal(run.consumerSourceSha256, sha256(raw.replace("/* GENERATED_BINDINGS */", bindings)));
 		const typedBindings = `#define fixture_callback_create ${model.prefix}_wasmtime_callback_${callback.publicName.slice(model.prefix.length + 1)}_create\n#define fixture_owned_call ${model.prefix}_wasmtime_function_${owned.publicName.slice(model.prefix.length + 1)}_call`;
 		assert.equal(run.typed.sourceSha256, sha256(typed.replace("/* GENERATED_BINDINGS */", typedBindings)));
-		assert.equal(run.values.sourceSha256, sha256(witRecursiveCallableValues(model)));
+		assert.equal(run.values.sourceSha256, sha256(producer.witRecursiveCallableValues(model)));
 		for(const [probe, observation] of [[run, expected], [run.typed, witRecursiveTypedObservation], [run.values, witRecursiveValueObservation]])
 		{
 			assert.deepEqual(probe.observed, observation); sanitizer(probe, observation);
@@ -80,9 +82,9 @@ export const assertWitRecursiveNativeProbes = async record => {
  */
 export const assertWitRecursiveFaultProbes = record => {
 	assert.equal(record.schemaVersion, 1); assert.equal(record.compiledLean, false); assert.equal(record.installedPackage, false);
-	const model = compileCallableWitGraphModel(nativeRecursiveCallableReviewedIr());
-	const host = renderWitGraphCallableHostSource(model, new Uint8Array([0]));
-	assert.equal(record.hostSha256, sha256(host)); assert.equal(record.probeSha256, sha256(witRecursiveCallableFaults(model)));
+	const model = producer.compileCallableWitGraphModel(producer.nativeRecursiveCallableReviewedIr());
+	const host = producer.renderWitGraphCallableHostSource(model, new Uint8Array([0]));
+	assert.equal(record.hostSha256, sha256(host)); assert.equal(record.probeSha256, sha256(producer.witRecursiveCallableFaults(model)));
 	const expected = { checks: 730344, successes: 5904, failures: 10904, injected: 7756, live: 0, retired: 0 };
 	assert.deepEqual(record.observed, expected); assert.deepEqual(record.sanitized, expected);
 	assert.deepEqual(record.diagnostics, { normal: "", sanitized: "" });

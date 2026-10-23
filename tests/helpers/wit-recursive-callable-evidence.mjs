@@ -4,32 +4,16 @@
  * @file
  */
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import { canonicalJson, sha256 } from "../../src/capsule/node.mjs";
-import { readTypeSurface } from "../../src/adoption/type-surface.mjs";
 import { historicalTypeSurfaceCells as typeSurfaceCells } from "./historical-type-surface-cells.mjs";
 import { assertWitRecursiveCallablePackages } from "./wit-recursive-callable-receipt.mjs";
 import { assertWitRecursiveNativeProbes, assertWitRecursiveFaultProbes } from "./wit-recursive-callable-probes.mjs";
-import { assertWitStructuredCallableExecution, witStructuredCallableExecutionPath } from "./wit-structured-callable-evidence.mjs";
-import { assertPhpWasmRecursiveCallableIntegration } from "./php-wasm-recursive-callable-evidence.mjs";
 import { phpWasmRecursiveCallableHistoryPath } from "./php-wasm-recursive-callable-source-history.mjs";
-import { witRecursiveCallableChangedPaths, reverseWitRecursiveCallableUpdate } from "./wit-recursive-callable-source-history.mjs";
-import { beforeOwnedAggregates, ownedAggregateChangedPaths } from "./owned-aggregate-source-history.mjs";
-import { ownedCChangedPaths } from "./owned-c-source-history.mjs";
-import { ownedReviewedChangedPaths } from "./owned-reviewed-source-history.mjs";
-import { ownedPackageChangedPaths } from "./owned-package-source-history.mjs";
-import { ownedHostChangedPaths } from "./owned-host-source-history.mjs";
-import { ownedCiChangedPaths } from "./owned-ci-source-history.mjs";
-import { ownedCppChangedPaths } from "./owned-cpp-source-history.mjs";
-import { ownedRustChangedPaths } from "./owned-rust-source-history.mjs";
-import { ownedPythonChangedPaths } from "./owned-python-source-history.mjs";
-import { ownedRubyChangedPaths } from "./owned-ruby-source-history.mjs";
-import { ownedDotnetNormalizationPaths } from "./owned-dotnet-source-history.mjs";
+import { witRecursiveCallableChangedPaths } from "./wit-recursive-callable-source-history.mjs";
+import { phpWasmRecursiveCallableProducer, witRecursiveCallableProducer, witRecursiveCallableProducerSource } from "./wit-recursive-callable-producer.mjs";
 
 const historicalSource = async (path, text = false) => {
-	const bytes = await readFile(path);
-	const value = ownedAggregateChangedPaths.includes(path) || ownedCChangedPaths.includes(path) || ownedReviewedChangedPaths.includes(path) || ownedPackageChangedPaths.includes(path) || ownedHostChangedPaths.includes(path) || ownedCiChangedPaths.includes(path) || ownedCppChangedPaths.includes(path) || ownedRustChangedPaths.includes(path) || ownedPythonChangedPaths.includes(path) || ownedRubyChangedPaths.includes(path) || ownedDotnetNormalizationPaths.includes(path)
-		? beforeOwnedAggregates(path, bytes.toString("utf8")) : bytes;
+	const value = witRecursiveCallableProducerSource(path);
 	return text ? value.toString("utf8") : value;
 };
 
@@ -56,7 +40,7 @@ export const witRecursiveCallableProjectionPaths = [
 ].sort();
 export const witRecursiveCallableRegressionCommand = "LEAN_BRIDGE_WIT_GRAPH_INSTALLED_TEST=1 LEAN_BRIDGE_WIT_STRUCTURED_CALLABLE_TEST=1 node --test --test-concurrency=1 --test-name-pattern='source-free installation|preserve eight shapes|callback-only nested aliases|documentation execute' tests/wit-copied-graph-package.test.mjs tests/wit-structured-callables.test.mjs tests/wit-structured-aliases.test.mjs tests/wit-structured-documentation.test.mjs";
 const authenticated = async (entry, path) => {
-	assert.equal(entry.path, path); const bytes = await readFile(path);
+	assert.equal(entry.path, path); const bytes = witRecursiveCallableProducerSource(path);
 	assert.equal(sha256(bytes), entry.sha256); return JSON.parse(bytes);
 };
 const passing = (run, command, count) => {
@@ -84,7 +68,7 @@ const copiedRegression = async report => {
 		assert.deepEqual(installed.observations[0].lifetime, { notPreloaded: true, resultAfterClose: true, cleanupAfterDlclose: true });
 		assert.deepEqual(installed.faults, { limit: { limitRecoverable: true, twoSessionsUsable: true }, malformed: { runtimeRetired: true, twoSessionsRejected: true } });
 		for(const [name, fixture] of [["consumer", "wit-installed"], ["lifetime", "wit-library-lifetime"], ["fault", "wit-result-fault"], ["result-fault.so", "wit-result-fault"]])
-			assert.equal(installed.probes[name].sourceSha256, sha256(await readFile(`tests/fixtures/recursive-consumers/${fixture}.c`)));
+			assert.equal(installed.probes[name].sourceSha256, sha256(witRecursiveCallableProducerSource(`tests/fixtures/recursive-consumers/${fixture}.c`)));
 		assert.deepEqual(installed.libraries, Object.fromEntries(Object.entries(installed.packageReceipt.files).filter(([path]) => /^lib\/[^/]+\.so(?:\.\d+)*$/u.test(path))));
 		assert.equal(Object.keys(installed.libraries).length, 6);
 		assert.equal(installed.packageReceipt.files["native-wit-adapter.json"].sha256, sha256(canonicalJson(installed.compiled)));
@@ -97,6 +81,7 @@ const copiedRegression = async report => {
  * @param record - Frozen observations and exact production source identities.
  */
 export const assertWitRecursiveCallableExecution = async record => {
+	const producer = await witRecursiveCallableProducer();
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "wit-recursive-callable-execution");
 	assert.equal(record.baselineRevision, witRecursiveCallableBaseline); assert.deepEqual(record.scope, witRecursiveCallableScope);
@@ -111,8 +96,8 @@ export const assertWitRecursiveCallableExecution = async record => {
 	assert.deepEqual(Object.keys(record.installed.reports).sort(), ["mixed", "recursive"]);
 	for(const [name, mixed] of [["recursive", false], ["mixed", true]]) await assertWitRecursiveCallablePackages(record.installed.reports[name], mixed);
 	await copiedRegression(record.regressions.copied);
-	const previous = await authenticated(record.previousStructured, witStructuredCallableExecutionPath);
-	await assertWitStructuredCallableExecution({ ...previous
+	const previous = await authenticated(record.previousStructured, producer.witStructuredCallableExecutionPath);
+	await producer.assertWitStructuredCallableExecution({ ...previous
 		, report: record.regressions.structured
 		, aliases: record.regressions.aliases
 		, documentation: record.regressions.documentation });
@@ -124,6 +109,14 @@ export const assertWitRecursiveCallableExecution = async record => {
  * @param record - Immutable execution reference and whole-file source transitions.
  */
 export const assertWitRecursiveCallableIntegration = async record => {
+	const producer = await witRecursiveCallableProducer();
+	const phpWasmProducer = await phpWasmRecursiveCallableProducer();
+	for(const name of [
+		"assertWitStructuredCallableExecution", "readTypeSurface"
+		, "reverseWitRecursiveCallableUpdate"
+	]) assert.equal(typeof producer[name], "function", name);
+	assert.equal(typeof phpWasmProducer.assertPhpWasmRecursiveCallableIntegration
+		, "function");
 	assert.equal(record.schemaVersion, 1); assert.equal(record.planNode, 1219);
 	assert.equal(record.kind, "wit-recursive-callable-integration");
 	assert.equal(record.baselineRevision, witRecursiveCallableBaseline); assert.deepEqual(record.scope, witRecursiveCallableScope);
@@ -131,9 +124,9 @@ export const assertWitRecursiveCallableIntegration = async record => {
 	const previous = await authenticated(record.previous, phpWasmRecursiveCallableHistoryPath);
 	const execution = await authenticated(record.execution, witRecursiveCallableExecutionPath);
 	await assertWitRecursiveCallableExecution(execution);
-	assert.deepEqual(record.updates.map(update => update.path).sort(), witRecursiveCallableChangedPaths);
+	assert.deepEqual(record.updates.map(update => update.path).sort(), producer.witRecursiveCallableChangedPaths);
 	assert.deepEqual(Object.keys(record.additions).sort(), witRecursiveCallableAddedPaths);
-	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...witRecursiveCallableChangedPaths, ...witRecursiveCallableAddedPaths])].sort();
+	const paths = [...new Set([...Object.keys(previous.sourceHashes), ...producer.witRecursiveCallableChangedPaths, ...witRecursiveCallableAddedPaths])].sort();
 	assert.deepEqual(Object.keys(record.sourceHashes).sort(), paths);
 	for(const path of paths) assert.equal(sha256(await historicalSource(path)), record.sourceHashes[path], path);
 	const restored = {};
@@ -141,10 +134,10 @@ export const assertWitRecursiveCallableIntegration = async record => {
 	{
 		assert.equal(update.currentSha256, record.sourceHashes[update.path]);
 		if(previous.sourceHashes[update.path]) assert.equal(update.previousSha256, previous.sourceHashes[update.path]);
-		restored[update.path] = reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);
+		restored[update.path] = producer.reverseWitRecursiveCallableUpdate(await historicalSource(update.path, true), update);
 	}
 	for(const [path, digest] of Object.entries(record.additions)) assert.equal(digest, record.sourceHashes[path]);
-	const { irSchema, consumers } = await readTypeSurface(), contracts = { irSchema, consumers };
+	const { irSchema, consumers } = await producer.readTypeSurface(), contracts = { irSchema, consumers };
 	const document = JSON.parse(await historicalSource("docs/type-surface.v1.json", true));
 	const old = JSON.parse(restored["docs/type-surface.v1.json"]);
 	assert.equal(document.contractVersion, "0.107.0"); assert.equal(old.contractVersion, "0.106.0");
@@ -168,5 +161,5 @@ export const assertWitRecursiveCallableIntegration = async record => {
 	const entry = document.evidence.find(item => item.id === id);
 	assert.deepEqual(entry.artifacts, Object.entries(execution.installed.reports).flatMap(([kind, report]) => report.observations.flatMap(run => run.package.artifacts.map(artifact => ({ path: `wit-wasi/${kind}/${run.reviewed ? "reviewed-ir" : "ordinary-source"}/${artifact.path}`, sha256: artifact.sha256 })))));
 	assert.ok(entry.files.some(file => file.path === witRecursiveCallableExecutionPath));
-	await assertPhpWasmRecursiveCallableIntegration(previous);
+	await phpWasmProducer.assertPhpWasmRecursiveCallableIntegration(previous);
 };
