@@ -53,6 +53,8 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 	const generated = generateCompiledPhpWasmLeanAdapters(model);
 	const annotations = exportedSymbols(generated.leanSource);
 	const zend = compileCallablePhpGraphZendModel(model.bindingIr, { finDirections: true });
+	const callbackPrefixes = abi.callbacks.map(signature =>
+		componentStructuredCallablePrefix(abi, signature));
 	assert.equal(zend.functions.length, model.bindingIr.declarations.length);
 	const selected = structuredClone(sourceEntries);
 	const constructors = constructorIdentities(model.bindingIr);
@@ -87,7 +89,9 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		const base = item.symbol.slice(0, -"_lean".length);
 		assert.ok(item.symbol.endsWith("_lean") && annotations.has(item.symbol));
 		for(const symbol of [...annotations]
-			.filter(value => refinementSymbol(value, base + "_")).sort())
+			.filter(value => refinementSymbol(value, base + "_")
+				&& !callbackPrefixes.some(prefix => value.startsWith(prefix + "_")))
+			.sort())
 			selected.push({ symbol, kind: "validator"
 				, label: `${label}:validator:${symbol.slice(base.length + 1)}` });
 		for(const site of [...fn.parameters, fn.result.callback ? fn.result : []].flat())
@@ -112,7 +116,7 @@ export const phpWasmCallbackEntrySelection = (model, sourceEntries) => {
 		for(const symbol of [...annotations]
 			.filter(value => refinementSymbol(value, prefix + "_")).sort())
 			selected.push({ symbol, kind: "validator"
-				, label: `${label}:callback-validator:${symbol.slice(prefix.length + 1)}` });
+				, label: `${label}:callback_validator:${symbol.slice(prefix.length + 1)}` });
 		if(direction === "host")
 		{
 			selected.push(

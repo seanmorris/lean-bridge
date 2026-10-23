@@ -125,24 +125,36 @@ test("instrumented PHP-Wasm callbacks close and execute every selected entry", {
 			const sources = Object.fromEntries(await Promise.all(["weak", "strict"].map(async mode => [
 				mode, await phpWasmCallbackEntryCaller(family, mode)
 			])));
-			const installed = await installedPhpWasmCorpus({
-				t, library: { id: `${family}-${route}-callback-entry-probe` }
-				, consumer, handoff, receipt: builds[0].receipt
-				, packageSet: builds[0].packageSet, environment, clean
-				, sourcePath: `${family}-${route}-callback-entry-source`
-				, fixture: {
-					settings: fixture.settings, source: mode => sources[mode]
-					, request: arrangement => phpWasmCallbackEntryRequest(family, arrangement, entryPlan)
-					, removeHandoff: true
-					, entryProbe: {
-						driver: "tests/fixtures/php-wasm-callback-entry/driver.mjs"
-						, support: [{
-							source: "tests/helpers/php-wasm-callback-entry-trace.mjs"
-							, destination: "callback-entry-trace.mjs"
-						}]
+			let installed;
+			try
+			{
+				installed = await installedPhpWasmCorpus({
+					t, library: { id: `${family}-${route}-callback-entry-probe` }
+					, consumer, handoff, receipt: builds[0].receipt
+					, packageSet: builds[0].packageSet, environment, clean
+					, sourcePath: `${family}-${route}-callback-entry-source`
+					, fixture: {
+						settings: fixture.settings, source: mode => sources[mode]
+						, request: arrangement => phpWasmCallbackEntryRequest(
+							family, arrangement, entryPlan)
+						, removeHandoff: true
+						, entryProbe: {
+							driver: "tests/fixtures/php-wasm-callback-entry/driver.mjs"
+							, support: [{
+								source: "tests/helpers/php-wasm-callback-entry-trace.mjs"
+								, destination: "callback-entry-trace.mjs"
+							}]
+						}
 					}
-				}
-			});
+				});
+			}
+			catch(error)
+			{
+				if(error?.details) t.diagnostic(
+					"Callback entry subprocess diagnostics: "
+					+ canonicalJson(error.details));
+				throw error;
+			}
 			assert.deepEqual(installed.phpWasm.executions.map(item =>
 				`${item.realm}/${item.arrangement}/${item.loading}/${item.mode}`).sort()
 			, phpWasmExecutionTuples);

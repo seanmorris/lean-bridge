@@ -1,9 +1,13 @@
 /** @file */
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { createNativeCallableGraphDescriptor } from "../../src/build/native-callable-graph.mjs";
 import { generateCompiledPhpWasmGraph } from "../../src/build/php-wasm-graph-component.mjs";
 import { callbackFinPhpWasmReview } from "./callback-fin-php-wasm-fixture.mjs";
+import {
+	callbackRefinementsPhpWasmHostedEvidence
+} from "./callback-refinements-php-wasm-hosted-evidence.mjs";
 import {
 	instrumentPhpWasmCallbackEntries
 } from "./php-wasm-callback-entry-c.mjs";
@@ -58,6 +62,22 @@ test("callback selection derives every admitted Fin entry from model and generat
 			counts.set(item.symbol, counts.get(item.symbol) + 1);
 	}
 	for(const [symbol, count] of counts) assert.equal(count, 1, symbol);
+});
+
+test("callback selection keeps checked-record validator labels in the trace grammar", async () => {
+	const model = JSON.parse(await readFile(
+		`${callbackRefinementsPhpWasmHostedEvidence}/hosted/output/records/checked-record/reviewed/build-0/model.json`
+	));
+	const fixture = await phpWasmCallbackEntrySourceFixture(
+		"callback-checked-record");
+	const selected = phpWasmCallbackEntrySelection(model, fixture.entries).selected;
+	const validators = selected.filter(item => item.kind === "validator"
+		&& item.label.includes(":callback_validator:"));
+	assert.ok(validators.length > 0);
+	assert.ok(validators.every(item =>
+		/^[A-Za-z_][A-Za-z0-9_.:]*$/u.test(item.label)));
+	assert.ok(selected.filter(item => item.kind === "validator")
+		.every(item => !item.label.includes(":validator:structured_")));
 });
 
 test("callback selection refuses authored identities outside the compiler model", async () => {
