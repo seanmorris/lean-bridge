@@ -1,0 +1,105 @@
+{
+  "additions": [
+    {
+      "currentSha256": "a0069cb558ddaa3afff03c0ce4dec401a82d8e074af58f0915dad6de453e9e61",
+      "path": "scripts/update-owned-subtype-perl-identity-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "1780583a0579ef89b6b6625074e9ea01bba110ffe93b1875a6125c4b97fed9c7",
+      "path": "tests/helpers/owned-subtype-perl-identity-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "5ee198ff9c089fe10208f7711d13bd00f81c97fab0b06a604a058e0f1a156609",
+      "path": "tests/helpers/owned-subtype-perl-identity-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "f9e9dadee8770a41c2d70403ef72d8ffb527877a",
+  "integrationUpdates": [
+    {
+      "currentSha256": "d434c8862ea179452f742bd84d1a1678a1ab9bb1195fc638c9bfde33db0cb2cd",
+      "edits": [
+        {
+          "current": "import { beforeOwnedSubtypePerlIdentityRepairSource, ownedSubtypePerlIdentityRepairChangedPaths } from \"./owned-subtype-perl-identity-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 12635
+        },
+        {
+          "current": "\t, ...ownedSubtypePerlIdentityRepairChangedPaths\n",
+          "previous": "",
+          "start": 171099
+        },
+        {
+          "current": "\tconst ownedSubtypePerlIdentityRepair\n\t\t= beforeOwnedSubtypePerlIdentityRepairSource(path, text, expected);\n\tif(sha256(ownedSubtypePerlIdentityRepair) === expected)\n\t\treturn ownedSubtypePerlIdentityRepair;\n\ttext = ownedSubtypePerlIdentityRepair;\n",
+          "previous": "",
+          "start": 203400
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "ffb3a4cb311ea1ab4c2f0e872fe027d46e09bd62df7eabd01b1525a6c89b3cca"
+    },
+    {
+      "currentSha256": "71da64184a88e9d2845b4fc295d306388f6010ebd4d55dcc45a7c11d114d20c2",
+      "edits": [
+        {
+          "current": "import \"./helpers/owned-subtype-perl-identity-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 4510
+        }
+      ],
+      "path": "tests/php-wasm-fin.test.mjs",
+      "previousSha256": "8f96c0e6b513d24e37290fe5051e6fff68a82f2f2fb0f1a0ee9d9bf7c41ea3f9"
+    }
+  ],
+  "milestone": "owned-subtype-perl-identity-repair-v1",
+  "predecessorCommit": "55fd7fda672e0782c2ac71ca40af076952cc03ba",
+  "schemaVersion": 1,
+  "scope": "Require the exact Perl lifecycle observed by the installed native runtime: one persistent session identity, one result-owner identity per whole owner, and one shared resource identity.",
+  "updates": [
+    {
+      "currentSha256": "40a3c09650b62e2aaf2d6c43c10840a0c54f751d98ae8b564d30d5bf45aea1bb",
+      "edits": [
+        {
+          "current": "",
+          "previous": "check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,\n  'fresh resource creates one native owner');\nmy $destruction_survivor = $abandoned->retain;\n",
+          "start": 4341
+        },
+        {
+          "current": "  'fresh resource creates a result owner and resource identity');\nmy $destruction_survivor = $abandoned->retain;\ncheck(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 3,\n  'independent retain creates a second result owner');\n",
+          "previous": "  'independent retain creates a second native owner');\n",
+          "start": 4423
+        },
+        {
+          "current": "check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 2,\n  'implicit destruction releases the original result owner');\n",
+          "previous": "check(LeanBridge::Runtime::_snapshot()->{live_identities} == $before_abandon + 1,\n  'implicit destruction releases the original native owner');\n",
+          "start": 4691
+        }
+      ],
+      "path": "tests/fixtures/structured-types/owned-perl-subtype.pl",
+      "previousSha256": "e6f93983f663c23cf8af8a1200ac7905566a6b3a52bbe4dae2262ca9a8936270"
+    },
+    {
+      "currentSha256": "b57c41b1156822f84b4c8497e3d11d9b2a3ad26e83921f0105b47218f9ff41e8",
+      "edits": [
+        {
+          "current": "\t\t\tassert.equal(observation.observed.live_identities, 1);\n",
+          "previous": "\t\t\tassert.equal(observation.observed.live_identities, 0);\n",
+          "start": 6030
+        }
+      ],
+      "path": "tests/helpers/owned-subtype-hosted-ci.mjs",
+      "previousSha256": "947acf1bbb510aebb32c5695d029f5942d2b7c060286206a00ed54c0af71e25c"
+    },
+    {
+      "currentSha256": "7730e6976efa286457b6706d56435c370d402bfa75bfb94b233471da0f093148",
+      "edits": [
+        {
+          "current": "\t\t\t\t\t, observed: { checks: 74, live_identities: 1 }\n",
+          "previous": "\t\t\t\t\t, observed: { checks: 72, live_identities: 0 }\n",
+          "start": 4342
+        }
+      ],
+      "path": "tests/owned-subtype-hosted-ci.test.mjs",
+      "previousSha256": "3d895fd5752e81ad31dbd32606311303b967e41d38dfc112bcf143e1b8aeb409"
+    }
+  ]
+}
