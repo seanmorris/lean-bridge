@@ -1,0 +1,115 @@
+{
+  "additions": [
+    {
+      "currentSha256": "eba7ba59cbe843e3367102b4431a5ada73ae7e18057d44636e4d2cf353b3cfb0",
+      "path": "scripts/update-callback-checked-record-archive-provenance-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "52dfb8dc12632b61cf5c678f561dec776ebe3bee00ca2495672c4b34c9a89a62",
+      "path": "tests/helpers/callback-checked-record-archive-provenance-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "f0ccd44b26a6f62c7a0538b7d2dded59264733669ec30da51a38d25a1ae9f804",
+      "path": "tests/helpers/callback-checked-record-archive-provenance-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "c1b0fbb540f70588c63a1163082d0173fd5b0bb6",
+  "integrationUpdates": [
+    {
+      "currentSha256": "4e9e6d8a3d618e2f3b34144e2461f7983d7f7bba7f652352d6cb5c5eee74dbb5",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-archive-provenance-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "c3f3ef8ff271698bcb1228b8e310b08013fd185c21fb8d4a021776f2272ed9ac"
+    },
+    {
+      "currentSha256": "1c0df71744e2684cb5594dfc9f1fc8a43fff98dbe3d9c5de9e3f49682ff55578",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordArchiveProvenanceRepairSource, callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths } from \"./callback-checked-record-archive-provenance-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackCheckedRecordArchiveProvenanceRepairNormalizationPaths\n\t, ...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths\n",
+          "previous": "\t...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths\n",
+          "start": 155737
+        },
+        {
+          "current": "\tconst callbackCheckedRecordArchiveProvenanceRepair\n\t\t= beforeCallbackCheckedRecordArchiveProvenanceRepairSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordArchiveProvenanceRepair) === expected)\n\t\treturn callbackCheckedRecordArchiveProvenanceRepair;\n",
+          "previous": "",
+          "start": 191206
+        },
+        {
+          "current": "\t\t\tpath, callbackCheckedRecordArchiveProvenanceRepair, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 191589
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "5040d9a6a975ff2443cce5043c5bbc93d056e7e732528f67e318bf8099333c78"
+    }
+  ],
+  "milestone": "callback-checked-record-archive-provenance-repair-source-v1",
+  "predecessorCommit": "ae6337886a156324602f9902c7fccdfabfef472c",
+  "schemaVersion": 1,
+  "scope": "Hosted execution keeps its producer identity while independent archive replay records the exact current checker and archiver revision.",
+  "updates": [
+    {
+      "currentSha256": "8007e1a09946dda38f061262af7e3362d4c877075183bde9ee7cf8b7b9a86dba",
+      "edits": [
+        {
+          "current": "\tcallbackCheckedRecordArchiveRevisions\n\t, callbackCheckedRecordEvidenceSources\n",
+          "previous": "\tcallbackCheckedRecordEvidenceSources\n",
+          "start": 1210
+        },
+        {
+          "current": "const revision = hosted.revision;\nconst revisions = callbackCheckedRecordArchiveRevisions(\n\trevision, archiveCommit\n);\n",
+          "previous": "const revision = hosted.revision, revisions = {\n\tproducer: revision, consumer: revision, checker: revision\n\t, archiver: archiveCommit\n};\n",
+          "start": 6139
+        }
+      ],
+      "path": "scripts/archive-callback-checked-record-evidence.mjs",
+      "previousSha256": "3640d736063018853b08d0f5b28a3f53e04c2610718197ae9f24c06f8ac35366"
+    },
+    {
+      "currentSha256": "8c315f7530a6ba63118941a49d3c8ec6aa4c33c6c1e9c3341594be3119a821f7",
+      "edits": [
+        {
+          "current": "\tcallbackCheckedRecordArchiveRevisions\n\t, callbackCheckedRecordEvidenceSources\n",
+          "previous": "\tcallbackCheckedRecordEvidenceSources\n",
+          "start": 282
+        },
+        {
+          "current": "const hostedRevision = \"1\".repeat(40);\n",
+          "previous": "",
+          "start": 643
+        },
+        {
+          "current": "test(\"callback archive provenance separates hosted execution from replay\", () => {\n\tassert.deepEqual(callbackCheckedRecordArchiveRevisions(\n\t\thostedRevision, revision\n\t), {\n\t\tproducer: hostedRevision, consumer: hostedRevision\n\t\t, checker: revision, archiver: revision\n\t});\n\tassert.throws(() => callbackCheckedRecordArchiveRevisions(\n\t\t\"HEAD\", revision\n\t), assert.AssertionError);\n});\n\n",
+          "previous": "",
+          "start": 2511
+        }
+      ],
+      "path": "tests/callback-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "60f7b7f8dff0e28be9c7487293e75af05e11e57e9b61399494021d679b448073"
+    },
+    {
+      "currentSha256": "0e933a37923d4897f100c80030dbf134a691ee599bd826c338ea496878180d67",
+      "edits": [
+        {
+          "current": "/**\n * Keep hosted execution and independent archive replay revisions distinct.\n *\n * @param producer - Hosted producer and consumer commit.\n * @param archiver - Current independent checker and archiver commit.\n */\nexport const callbackCheckedRecordArchiveRevisions = (producer, archiver) => {\n\tassert.match(producer, /^[a-f0-9]{40}$/u);\n\tassert.match(archiver, /^[a-f0-9]{40}$/u);\n\treturn Object.freeze({\n\t\tproducer, consumer: producer, checker: archiver, archiver\n\t});\n};\n\n",
+          "previous": "",
+          "start": 5170
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "65cc4ca549cbafea890f009d2ff1048da2287216261bd2ecc2db5144472067bc"
+    }
+  ]
+}
