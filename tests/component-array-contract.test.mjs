@@ -24,6 +24,7 @@ import { corpusReviewedIr } from "./helpers/type-corpus-reviewed-ir.mjs";
 import { beforeNestedFinSource, reverseNestedFinUpdate, nestedFinChangedPaths, nestedFinHistoryPath } from "./helpers/nested-fin-source-history.mjs";
 import { beforeRefinementClosureSource } from "./helpers/refinement-closure-source-history.mjs";
 import { sourceAtFinHistoryMilestone } from "./helpers/source-at-fin-history-milestone.mjs";
+import "./helpers/callback-checked-record-retained-archive-rollover-source-history-tests.mjs";
 import "./helpers/php-wasm-callback-entry-trace-plan-repair-source-history-tests.mjs";
 import "./helpers/dependent-checked-record-browser-reviewed-route-repair-source-history-tests.mjs";
 import "./helpers/callback-php-wasm-static-quality-repair-source-history-tests.mjs";

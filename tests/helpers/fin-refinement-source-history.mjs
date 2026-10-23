@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
+import { beforeCallbackCheckedRecordRetainedArchiveRolloverSource, callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths } from "./callback-checked-record-retained-archive-rollover-source-history.mjs";
 import { beforePhpWasmCallbackEntryTracePlanRepairSource, phpWasmCallbackEntryTracePlanRepairNormalizationPaths } from "./php-wasm-callback-entry-trace-plan-repair-source-history.mjs";
 import { beforeDependentCheckedRecordBrowserReviewedRouteRepairSource, dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths } from "./dependent-checked-record-browser-reviewed-route-repair-source-history.mjs";
 import { beforeStructuredCallbackPublicFallbackRepairSource, structuredCallbackPublicFallbackRepairNormalizationPaths } from "./structured-callback-public-fallback-repair-source-history.mjs";
@@ -1957,7 +1958,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...phpWasmCallbackEntryTracePlanRepairNormalizationPaths
+	...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths
+	, ...phpWasmCallbackEntryTracePlanRepairNormalizationPaths
 	, ...dependentCheckedRecordBrowserReviewedRouteRepairNormalizationPaths
 	, ...structuredCallbackPublicFallbackRepairNormalizationPaths
 	, ...callbackCheckedRecordWitDiagnosticRepairNormalizationPaths
@@ -2716,9 +2718,15 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackCheckedRecordRetainedArchiveRollover
+		= beforeCallbackCheckedRecordRetainedArchiveRolloverSource(
+			path, text, expected
+		);
+	if(sha256(callbackCheckedRecordRetainedArchiveRollover) === expected)
+		return callbackCheckedRecordRetainedArchiveRollover;
 	const callbackEntryTracePlanRepair
 		= beforePhpWasmCallbackEntryTracePlanRepairSource(
-			path, text, expected
+			path, callbackCheckedRecordRetainedArchiveRollover, expected
 		);
 	if(sha256(callbackEntryTracePlanRepair) === expected)
 		return callbackEntryTracePlanRepair;

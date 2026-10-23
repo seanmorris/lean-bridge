@@ -1,0 +1,147 @@
+{
+  "additions": [
+    {
+      "currentSha256": "c77ace2655bd179166d19ffd5fc9eb4b057597ecde721fa0c6936c0a70520f3c",
+      "path": "scripts/update-callback-checked-record-retained-archive-rollover-source-history.mjs"
+    },
+    {
+      "currentSha256": "c50978af5b86a6ff019b2fa433fc48c39c6183f347a8eb77b8c33d2e9b3c2b1c",
+      "path": "tests/helpers/callback-checked-record-retained-archive-rollover-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "fe28834cdb79a11b26f50ce8af1ece1ba370e8b9d320ba2d7fd4258151dc8747",
+      "path": "tests/helpers/callback-checked-record-retained-archive-rollover-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "a7ab0e6090f183009bd62bd9294b6ddc047c38ed",
+  "integrationUpdates": [
+    {
+      "currentSha256": "c3f3ef8ff271698bcb1228b8e310b08013fd185c21fb8d4a021776f2272ed9ac",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-checked-record-retained-archive-rollover-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 1837
+        }
+      ],
+      "path": "tests/component-array-contract.test.mjs",
+      "previousSha256": "42d1bdaab94d72eec3d6fa1f6f34578749849a45fbfca915bebef8927c3c0621"
+    },
+    {
+      "currentSha256": "5040d9a6a975ff2443cce5043c5bbc93d056e7e732528f67e318bf8099333c78",
+      "edits": [
+        {
+          "current": "import { beforeCallbackCheckedRecordRetainedArchiveRolloverSource, callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths } from \"./callback-checked-record-retained-archive-rollover-source-history.mjs\";\n",
+          "previous": "",
+          "start": 392
+        },
+        {
+          "current": "\t...callbackCheckedRecordRetainedArchiveRolloverNormalizationPaths\n\t, ...phpWasmCallbackEntryTracePlanRepairNormalizationPaths\n",
+          "previous": "\t...phpWasmCallbackEntryTracePlanRepairNormalizationPaths\n",
+          "start": 155526
+        },
+        {
+          "current": "\tconst callbackCheckedRecordRetainedArchiveRollover\n\t\t= beforeCallbackCheckedRecordRetainedArchiveRolloverSource(\n\t\t\tpath, text, expected\n\t\t);\n\tif(sha256(callbackCheckedRecordRetainedArchiveRollover) === expected)\n\t\treturn callbackCheckedRecordRetainedArchiveRollover;\n",
+          "previous": "",
+          "start": 190926
+        },
+        {
+          "current": "\t\t\tpath, callbackCheckedRecordRetainedArchiveRollover, expected\n",
+          "previous": "\t\t\tpath, text, expected\n",
+          "start": 191284
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "0de06efcee44d8016bd9f1aba4b340c05151b305b63bd552ad98ecefe7fb40e5"
+    }
+  ],
+  "milestone": "callback-checked-record-retained-archive-rollover-source-v1",
+  "predecessorCommit": "3de06613ef656fe2e3d7d1ac168850f3b047fc93",
+  "schemaVersion": 1,
+  "scope": "Fresh immutable archive roots retain installed callback checked-record package sets without replacing the original hosted evidence.",
+  "updates": [
+    {
+      "currentSha256": "3640d736063018853b08d0f5b28a3f53e04c2610718197ae9f24c06f8ac35366",
+      "edits": [
+        {
+          "current": "\t, callbackCheckedRecordHostedEvidenceRoot\n",
+          "previous": "",
+          "start": 1248
+        },
+        {
+          "current": "const evidence = callbackCheckedRecordHostedEvidenceRoot(lane);\n",
+          "previous": "const evidence = `docs/evidence/callback-checked-record-${lane}-20261022`;\n",
+          "start": 5505
+        }
+      ],
+      "path": "scripts/archive-callback-checked-record-evidence.mjs",
+      "previousSha256": "ff4559be0b32f3d060be930056c86f18f70b7d0596382be005efcec0e6555c45"
+    },
+    {
+      "currentSha256": "60f7b7f8dff0e28be9c7487293e75af05e11e57e9b61399494021d679b448073",
+      "edits": [
+        {
+          "current": "\t, callbackCheckedRecordHostedEvidenceRoot\n",
+          "previous": "",
+          "start": 320
+        },
+        {
+          "current": "\tassert.equal(callbackCheckedRecordHostedEvidenceRoot(\"browser\")\n\t\t, \"docs/evidence/callback-checked-record-browser-20261023\");\n\tassert.throws(() => callbackCheckedRecordHostedEvidenceRoot(\"other\")\n\t\t, assert.AssertionError);\n",
+          "previous": "",
+          "start": 1089
+        }
+      ],
+      "path": "tests/callback-checked-record-hosted-archive.test.mjs",
+      "previousSha256": "9cc27b73109e7c3cbde093cc668ece1e112ca45d5421b0bf89f8fee66f1791ba"
+    },
+    {
+      "currentSha256": "3fbcb4da0cf7c3efe8c412b86f1f34cb83202f0ffc0a83bdd751ca3b7a02518c",
+      "edits": [
+        {
+          "current": "import {\n\tcallbackCheckedRecordHostedEvidenceRoot\n} from \"./helpers/callback-checked-record-hosted-evidence-sources.mjs\";\n",
+          "previous": "",
+          "start": 271
+        },
+        {
+          "current": "\t\t\"languages\", callbackCheckedRecordHostedEvidenceRoot(\"languages\")\n",
+          "previous": "\t\t\"languages\"\n\t\t, \"docs/evidence/callback-checked-record-languages-20261022\"\n",
+          "start": 539
+        },
+        {
+          "current": "\t\t\"perl\", callbackCheckedRecordHostedEvidenceRoot(\"perl\")\n",
+          "previous": "\t\t\"perl\", \"docs/evidence/callback-checked-record-perl-20261022\"\n",
+          "start": 938
+        },
+        {
+          "current": "\t\t\"native\", callbackCheckedRecordHostedEvidenceRoot(\"native\")\n",
+          "previous": "\t\t\"native\", \"docs/evidence/callback-checked-record-native-20261022\"\n",
+          "start": 1381
+        },
+        {
+          "current": "\t\t\"browser\", callbackCheckedRecordHostedEvidenceRoot(\"browser\")\n",
+          "previous": "\t\t\"browser\", \"docs/evidence/callback-checked-record-browser-20261022\"\n",
+          "start": 1763
+        },
+        {
+          "current": "\t\tlane, callbackCheckedRecordHostedEvidenceRoot(lane)\n",
+          "previous": "\t\tlane, `docs/evidence/callback-checked-record-${lane}-20261022`\n",
+          "start": 2519
+        }
+      ],
+      "path": "tests/callback-checked-record-hosted-evidence.test.mjs",
+      "previousSha256": "93ec1bd06d37e1d0527ce18c6b347ba5e223a330c3a3fdbe240e35c289b213ee"
+    },
+    {
+      "currentSha256": "65cc4ca549cbafea890f009d2ff1048da2287216261bd2ecc2db5144472067bc",
+      "edits": [
+        {
+          "current": "/**\n * Immutable archive root for the retained-package callback acceptance rerun.\n *\n * @param lane - Closed hosted lane name.\n */\nexport const callbackCheckedRecordHostedEvidenceRoot = lane => {\n\tassert.ok(callbackCheckedRecordHostedLanes.includes(lane));\n\treturn `docs/evidence/callback-checked-record-${lane}-20261023`;\n};\n\n",
+          "previous": "",
+          "start": 4843
+        }
+      ],
+      "path": "tests/helpers/callback-checked-record-hosted-evidence-sources.mjs",
+      "previousSha256": "2a66b79a2100e538089941f78b2df5198b8ef70103ed929644d3df6b8bb3c1c5"
+    }
+  ]
+}
