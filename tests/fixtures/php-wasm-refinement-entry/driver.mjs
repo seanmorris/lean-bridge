@@ -7,7 +7,11 @@
 import { parseSubtypeEntryTrace } from "./entry-trace.mjs";
 
 const require = (condition, message) => { if(!condition) throw new Error(message); };
-const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+const normalized = value => Array.isArray(value) ? value.map(normalized)
+	: value && typeof value === "object"
+		? Object.fromEntries(Object.keys(value).sort().map(key => [key, normalized(value[key])]))
+		: value;
+const same = (left, right) => JSON.stringify(normalized(left)) === JSON.stringify(normalized(right));
 const exact = (value, keys, label) => {
 	require(value && typeof value === "object" && !Array.isArray(value), `invalid ${label}`);
 	require(same(Object.keys(value).sort(), [...keys].sort()), `open ${label}`);

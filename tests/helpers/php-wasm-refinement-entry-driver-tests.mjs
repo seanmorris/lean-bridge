@@ -105,6 +105,14 @@ test("graph refinement entry driver authenticates the complete planned trace", a
 	assert.deepEqual(value.entryProbe.counts, { validator: 1, constructor: 0, adapter: 1, source: 1 });
 });
 
+test("graph refinement entry driver compares canonical plan objects independent of key order", async () => {
+	const canonicalPlan = { ...plan, cases: [{ ...plan.cases[0], call: { ...call
+		, counts: { adapter: 1, constructor: 0, source: 1, validator: 1 } } }] };
+	const { value } = await driver({ plan: canonicalPlan });
+	assert.equal(value.entryProbe.calls, 1);
+	assert.deepEqual(value.entryProbe.counts, call.counts);
+});
+
 test("graph refinement entry driver refuses trace and plan drift", async () => {
 	for(const faults of [
 		{ trace: trace.replace("enter source Probe.first\n", "") }
