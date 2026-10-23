@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
 import { generateOwnedCppPackage } from "../src/backends/cpp/owned-package.mjs";
@@ -15,21 +15,34 @@ import { readVerifiedNativeComponent, readVerifiedNativeRuntime } from "../src/b
 import { packageOwnedNativeC } from "../src/release/owned-c-package.mjs";
 import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs";
 import { ownedSubtypeCallbackPackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
+import {
+	clearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute
+	, verifyOwnedSubtypeRetainedPackages
+	, writeOwnedSubtypeRetainedPackages
+} from "./helpers/owned-subtype-retained-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_NATIVE_TEST === "1";
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const reports = [];
+const retainedEntries = [];
+const reportPath = resolve("build/owned-subtype-native-packaging/report.json");
 const expectedChecks = Object.freeze({ c: 149, cpp: 79 });
+if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
-		await saveLakeFile("build/owned-subtype-native-packaging", "report.json", canonicalJson({
+	{
+		const report = {
 			schemaVersion: 1, profile: "installed-owned-subtype-native"
 			, reports: reports.toSorted((left, right) => Number(left.reviewed) - Number(right.reviewed))
-		}));
+		};
+		await saveLakeFile("build/owned-subtype-native-packaging", "report.json"
+			, canonicalJson(report));
+		await writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);
+		await verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);
+	}
 });
 
 test("owned Subtype and callback native consumers match generated headers", async t => {
@@ -73,6 +86,7 @@ test("owned Subtype native acceptance is a required recurring workflow", async (
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-subtype-native-packaging/report.json"
+		, "test -s build/owned-subtype-native-packaging/retained-packages.json"
 		, "if: always()\n        uses: actions/upload-artifact@v7"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -180,7 +194,10 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 			, await readFile(join(output, "archives", projection.packages[0].archive)));
 		await rm(reassembled, { recursive: true, force: true });
 	}
-	const receipt = await copyPackageSetHandoff(output, handoff);
+	const route = reviewed ? "reviewed" : "ordinary";
+	const { receipt, entry } = await retainOwnedSubtypeRoute({
+		output: reportPath, route, source: output, handoff });
+	retainedEntries.push(entry);
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await rm(project, { recursive: true }); await rm(output, { recursive: true });
 	await assert.rejects(access(project), { code: "ENOENT" });

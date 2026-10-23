@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm, symlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { generateOwnedPerlXs } from "../src/backends/perl/owned-xs.mjs";
 import { canonicalJson, sha256 } from "../src/capsule/node.mjs";
@@ -19,20 +19,33 @@ import { inspectOwnedPerlInstalledAssets } from "./helpers/owned-perl-installed-
 import { perlGraphCommands } from "./helpers/perl-graph-probes.mjs";
 import { copiedCleanEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute
+	, verifyOwnedSubtypeRetainedPackages
+	, writeOwnedSubtypeRetainedPackages
+} from "./helpers/owned-subtype-retained-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_PERL_TEST === "1";
 const reports = [];
+const retainedEntries = [];
+const reportPath = resolve("build/owned-subtype-perl-packaging/report.json");
+if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);
 const explain = error => {
 	throw new Error(`${error.message}: ${JSON.stringify(error.details ?? {})}`, { cause: error });
 };
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
-		await saveLakeFile("build/owned-subtype-perl-packaging", "report.json", canonicalJson({
+	{
+		const report = {
 			schemaVersion: 1, profile: "installed-owned-subtype-perl"
 			, reports: reports.toSorted((left, right) => Number(left.reviewed) - Number(right.reviewed))
-		}));
+		};
+		await saveLakeFile("build/owned-subtype-perl-packaging", "report.json"
+			, canonicalJson(report));
+		await writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);
+		await verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);
+	}
 });
 
 test("owned Subtype Perl transfers coexist with host callbacks", () => {
@@ -74,6 +87,7 @@ test("owned Subtype Perl acceptance is a required recurring workflow", async () 
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-subtype-perl-packaging/report.json"
+		, "test -s build/owned-subtype-perl-packaging/retained-packages.json"
 		, "if: always()\n        uses: actions/upload-artifact@v7"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -131,7 +145,10 @@ for(const reviewed of [false, true]) test(`installed ${reviewed ? "reviewed" : "
 		assert.deepEqual(await readFile(again.path)
 			, await readFile(join(producer, "archives", again.receipt.archive)));
 	}
-	const receipt = await copyPackageSetHandoff(producer, handoff);
+	const route = reviewed ? "reviewed" : "ordinary";
+	const { receipt, entry } = await retainOwnedSubtypeRoute({
+		output: reportPath, route, source: producer, handoff });
+	retainedEntries.push(entry);
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	const verification = await processBuildRunner.capture({ command: process.execPath
 		, args: [cli, "verify", "--receipt", join(handoff, "package-set-receipt.json"), "--json"]

@@ -65,6 +65,7 @@ jobs:
           rg '^# fail 0$' build/owned-subtype-perl-ci/acceptance.log
           rg '^# skipped 0$' build/owned-subtype-perl-ci/acceptance.log
           test -s build/owned-subtype-perl-packaging/report.json
+          test -s build/owned-subtype-perl-packaging/retained-packages.json
       - name: Preserve Perl acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -72,7 +73,7 @@ jobs:
           name: owned-subtype-perl-${{ github.sha }}
           path: |
             build/owned-subtype-perl-ci/
-            build/owned-subtype-perl-packaging/report.json
+            build/owned-subtype-perl-packaging/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed Perl acceptance

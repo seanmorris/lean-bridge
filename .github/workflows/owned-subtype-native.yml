@@ -56,6 +56,7 @@ jobs:
           rg '^# fail 0$' build/owned-subtype-native-ci/acceptance.log
           rg '^# skipped 0$' build/owned-subtype-native-ci/acceptance.log
           test -s build/owned-subtype-native-packaging/report.json
+          test -s build/owned-subtype-native-packaging/retained-packages.json
       - name: Preserve native acceptance evidence
         if: always()
         uses: actions/upload-artifact@v7
@@ -63,7 +64,7 @@ jobs:
           name: owned-subtype-native-${{ github.sha }}
           path: |
             build/owned-subtype-native-ci/
-            build/owned-subtype-native-packaging/report.json
+            build/owned-subtype-native-packaging/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed native acceptance

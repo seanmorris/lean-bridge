@@ -125,6 +125,7 @@ jobs:
           rg '^# fail 0$' build/owned-subtype-remaining-${{ matrix.lane }}.log
           rg '^# skipped 0$' build/owned-subtype-remaining-${{ matrix.lane }}.log
           test -s build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json
+          test -s build/owned-subtype-remaining-packaging/retained-packages.json
       - name: Preserve original and partial installed records
         if: always()
         uses: actions/upload-artifact@v7
@@ -133,7 +134,7 @@ jobs:
           path: |
             build/owned-subtype-remaining-${{ matrix.lane }}.log
             build/owned-subtype-remaining-${{ matrix.lane }}-toolchain.log
-            build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json
+            build/owned-subtype-remaining-packaging/
           if-no-files-found: error
           retention-days: 30
       - name: Enforce installed owned Subtype acceptance

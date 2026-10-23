@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { access, cp, mkdir, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { generateOwnedPythonPackage } from "../src/backends/python/owned-package.mjs";
 import { generateOwnedRubyPackage } from "../src/backends/ruby/owned-package.mjs";
@@ -23,7 +23,11 @@ import { verifyPackageSetReceipt } from "../src/release/package-set-receipt.mjs"
 import { copiedCleanEnvironment, installCopiedConsumer, nativeFixtureEnvironment, runCopied } from "./helpers/copied-fixture-install.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute
+	, verifyOwnedSubtypeRetainedPackages
+	, writeOwnedSubtypeRetainedPackages
+} from "./helpers/owned-subtype-retained-packages.mjs";
 import { prepareRustCorpusDependencies } from "./helpers/type-corpus-rust.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_LANGUAGE_TEST === "1";
@@ -35,14 +39,23 @@ const targets = {
 	, rust: ["cargo", { name: "owned-subtypes", version: "1.0.0" }]
 };
 const reports = [];
+const retainedEntries = [];
+const reportPath = resolve("build/owned-subtype-language-packaging/report.json");
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
-		await saveLakeFile("build/owned-subtype-language-packaging", "report.json", canonicalJson({
+	{
+		const report = {
 			schemaVersion: 1, profile: "installed-owned-subtype-languages"
 			, reports: reports.toSorted((left, right) => left.route.localeCompare(right.route))
-		}));
+		};
+		await saveLakeFile("build/owned-subtype-language-packaging", "report.json"
+			, canonicalJson(report));
+		await writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);
+		await verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);
+	}
 });
 
 test("Python, Ruby and Rust generate callback-free checked transfer copies", () => {
@@ -82,6 +95,7 @@ test("owned Subtype language consumers and required workflow stay registered", a
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-subtype-language-packaging/report.json"
+		, "test -s build/owned-subtype-language-packaging/retained-packages.json"
 		, "if: always()\n        uses: actions/upload-artifact@v7"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -216,7 +230,9 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} owned Subt
 	assert.equal(alternate.source.extensions["lean-lang.org/refinements"].parameters[0]
 		.fields[4].refinement.fields[0].refinement.constructor, "Owned.checkedCountAlternate");
 	const { evidence, reassembled } = await reproduce({ routeRoot: scratch, output, environment, config, built });
-	const receipt = await copyPackageSetHandoff(output, handoff);
+	const { receipt, entry } = await retainOwnedSubtypeRoute({
+		output: reportPath, route, source: output, handoff });
+	retainedEntries.push(entry);
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await mkdir(join(consumers, "dependencies"), { recursive: true });
 	const dependencies = await prepareRustCorpusDependencies({ rustRoot: join(output, "native/rust")

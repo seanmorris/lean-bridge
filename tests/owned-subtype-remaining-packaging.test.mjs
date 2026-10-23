@@ -6,7 +6,7 @@
 import assert from "node:assert/strict";
 import { access, cp, mkdtemp, readFile, rename, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { generateOwnedDotnetPackage } from "../src/backends/dotnet/owned-package.mjs";
 import { generateOwnedJvmPackage } from "../src/backends/jvm/owned-package.mjs";
@@ -30,7 +30,11 @@ import { installFinContainerEdgeJvm, runFinContainerEdgeJvm } from "./helpers/fi
 import { installFinContainerEdgePhp, runFinContainerEdgePhp } from "./helpers/fin-container-edge-php-closure.mjs";
 import { lakeInputState, saveLakeFile } from "./helpers/lake-workspace.mjs";
 import { ownedSubtypePackageReviewedIr } from "./helpers/owned-aggregate-fixture.mjs";
-import { copyPackageSetHandoff } from "./helpers/package-set.mjs";
+import {
+	clearOwnedSubtypeRetainedPackages, retainOwnedSubtypeRoute
+	, verifyOwnedSubtypeRetainedPackages
+	, writeOwnedSubtypeRetainedPackages
+} from "./helpers/owned-subtype-retained-packages.mjs";
 
 const enabled = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_TEST === "1";
 const selectedLane = process.env.LEAN_BRIDGE_OWNED_SUBTYPE_REMAINING_PROFILE;
@@ -76,16 +80,26 @@ const lifecycle = {
 	, "wit-wasi": { fallback: "explicit-release", observation: "independent-owner-survives" }
 };
 const reports = [];
+const retainedEntries = [];
+const reportPath = resolve("build/owned-subtype-remaining-packaging"
+	, `${selectedLane ?? "unselected"}.json`);
 const json = async path => JSON.parse(await readFile(path, "utf8"));
+if(enabled) await clearOwnedSubtypeRetainedPackages(reportPath);
 
 test.after(async () => {
 	if(enabled && reports.length === 2)
-		await saveLakeFile("build/owned-subtype-remaining-packaging", `${selectedLane}.json`, canonicalJson({
+	{
+		const report = {
 			schemaVersion: 1
 			, profile: "installed-owned-subtype-remaining"
 			, lane: selectedLane
 			, reports: reports.toSorted((left, right) => left.route.localeCompare(right.route))
-		}));
+		};
+		await saveLakeFile("build/owned-subtype-remaining-packaging"
+			, `${selectedLane}.json`, canonicalJson(report));
+		await writeOwnedSubtypeRetainedPackages(reportPath, retainedEntries);
+		await verifyOwnedSubtypeRetainedPackages(dirname(reportPath), report);
+	}
 });
 
 test("remaining hosts generate callback-free checked transfer copies", () => {
@@ -147,6 +161,7 @@ test("remaining owned Subtype fixtures and required matrix stay registered", asy
 		, "rg '^# fail 0$'"
 		, "rg '^# skipped 0$'"
 		, "test -s build/owned-subtype-remaining-packaging/${{ matrix.lane }}.json"
+		, "test -s build/owned-subtype-remaining-packaging/retained-packages.json"
 		, "if: always()\n        uses: actions/upload-artifact@v7"
 		, "if: always() && steps.acceptance.outcome != 'success'"
 	]) assert.ok(source.includes(required), required);
@@ -314,7 +329,9 @@ for(const route of ["ordinary", "reviewed"]) test(`installed ${route} checked ow
 		.fields[4].refinement.fields[0].refinement.constructor, "Owned.checkedCountAlternate");
 	const reassembled = await reassemble({ lane, root: scratch, output, environment
 		, settings: specification.settings, projection });
-	const receipt = await copyPackageSetHandoff(output, handoff);
+	const { receipt, entry } = await retainOwnedSubtypeRoute({
+		output: reportPath, route, source: output, handoff });
+	retainedEntries.push(entry);
 	await verifyPackageSetReceipt({ receiptPath: join(handoff, "package-set-receipt.json") });
 	await rm(author, { recursive: true, force: true });
 	await rm(output, { recursive: true, force: true });
