@@ -1,0 +1,214 @@
+{
+  "additions": [
+    {
+      "currentSha256": "9a9f89c3c47e6ab3a061612836836964c7064f4a3c58395ef4f3c43b09ffc345",
+      "path": "scripts/update-callback-staging-producer-replay-repair-source-history.mjs"
+    },
+    {
+      "currentSha256": "23e0adcd39beb057b538d26601dc3c99d98b5e6d7db1e2797c7603ac968fbfd8",
+      "path": "tests/helpers/callback-staging-producer-replay-repair-source-history-tests.mjs"
+    },
+    {
+      "currentSha256": "84c62e665211f213be00d99d0d6e61b3b4f08dd582756734d0aa5ffcc6fc05c5",
+      "path": "tests/helpers/callback-staging-producer-replay-repair-source-history.mjs"
+    }
+  ],
+  "implementationCommit": "70853e3cffc5c68f3b151b001021a2042ee4663b",
+  "integrationUpdates": [
+    {
+      "currentSha256": "151626d8e7d8e4e54331b17f57e735375fa4310bc4e7e3798f3d66b109be0e5c",
+      "edits": [
+        {
+          "current": "import { beforeCallbackStagingProducerReplayRepairSource, callbackStagingProducerReplayRepairNormalizationPaths } from \"./callback-staging-producer-replay-repair-source-history.mjs\";\n",
+          "previous": "",
+          "start": 410
+        },
+        {
+          "current": "\t...callbackStagingProducerReplayRepairNormalizationPaths\n\t, ...coreFirstRunPinReplayRepairNormalizationPaths\n",
+          "previous": "\t...coreFirstRunPinReplayRepairNormalizationPaths\n",
+          "start": 160128
+        },
+        {
+          "current": "\tconst callbackStagingProducerReplayRepair\n\t\t= beforeCallbackStagingProducerReplayRepairSource(path, text, expected);\n\tif(sha256(callbackStagingProducerReplayRepair) === expected)\n\t\treturn callbackStagingProducerReplayRepair;\n",
+          "previous": "",
+          "start": 196339
+        },
+        {
+          "current": "\t\t= beforeCoreFirstRunPinReplayRepairSource(\n\t\t\tpath, callbackStagingProducerReplayRepair, expected\n\t\t);\n",
+          "previous": "\t\t= beforeCoreFirstRunPinReplayRepairSource(path, text, expected);\n",
+          "start": 196600
+        }
+      ],
+      "path": "tests/helpers/fin-refinement-source-history.mjs",
+      "previousSha256": "7d9de2a101103cf03de14d92ded5c17d8e276f9ae97fc547726fe0b79dd8ba9f"
+    },
+    {
+      "currentSha256": "ecd99bbb8bc82b98bf53bf5bdb647e99103e77f2cd9473277e2c680fab368ad2",
+      "edits": [
+        {
+          "current": "import \"./helpers/callback-staging-producer-replay-repair-source-history-tests.mjs\";\n",
+          "previous": "",
+          "start": 923
+        }
+      ],
+      "path": "tests/owned-jvm-callback-result-history.test.mjs",
+      "previousSha256": "3c394ddded5a2ad4c2e00733abbcc05dce664b7d3080a22e03dda544f140acba"
+    }
+  ],
+  "milestone": "callback-staging-producer-replay-repair-source-v1",
+  "predecessorCommit": "f258d858f0058b15562ba8f1ba3c5e9cff1d01ad",
+  "schemaVersion": 1,
+  "scope": "WIT and Perl callback-staging history tests replay exact source and binary bytes from their complete producer commits, and the frozen JVM CLI test isolates the intended source-inventory rejection from unrelated current generator drift.",
+  "updates": [
+    {
+      "currentSha256": "b504f84689052dfd397e46e826e32fab55e6bea6684e5f5d37b490ee5023d2cf",
+      "edits": [
+        {
+          "current": "import { selectCliPackageConfig } from \"./cli-package-config-history.mjs\";\n",
+          "previous": "import { beforePhpCallbackInstalledStaging } from \"./php-callback-installed-staging-history.mjs\";\nimport { beforeWitCallbackRuntimeStaging } from \"./wit-callback-runtime-staging-history.mjs\";\nimport { beforePerlCallbackVariants } from \"./owned-perl-callback-result-variant-history.mjs\";\nimport { beforePostPerlCallbackStaging } from \"./post-perl-callback-staging-history.mjs\";\n",
+          "start": 264
+        },
+        {
+          "current": "import { ownedJvmCallbackEvidencePath } from \"./owned-jvm-callback-result-acceptance.mjs\";\nimport { combinedCliBundleExtras } from \"./owned-jvm-callback-result-combined-evidence.mjs\";\n",
+          "previous": "import { assertOwnedJvmCallbackReport, ownedJvmCallbackEvidencePath } from \"./owned-jvm-callback-result-acceptance.mjs\";\n",
+          "start": 422
+        },
+        {
+          "current": "\t, ownedPerlCallbackProducer, beforeOwnedPerlCallbackResults\n\t, reverseOwnedPerlCallbackUpdate } from \"./owned-perl-callback-result-history.mjs\";\nimport { bytesAtProducer, sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "\t, beforeOwnedPerlCallbackResults, reverseOwnedPerlCallbackUpdate } from \"./owned-perl-callback-result-history.mjs\";\n",
+          "start": 804
+        },
+        {
+          "current": "\t\tconst current = Buffer.from(sourceAtProducer(\n\t\t\townedPerlCallbackProducer, update.path, update.currentSha256\n\t\t));\n",
+          "previous": "\t\tconst current = Buffer.from(beforePostPerlCallbackStaging(update.path, await readFile(update.path)));\n",
+          "start": 2034
+        },
+        {
+          "current": "\tconst history = JSON.parse(await readFile(ownedPerlCallbackHistoryPath));\n\tconst update = history.updates.find(item => item.path === path);\n\tassert.ok(update);\n\tconst current = sourceAtProducer(\n\t\townedPerlCallbackProducer, path, update.currentSha256\n\t);\n\tconst previous = JSON.parse(beforeOwnedPerlCallbackResults(\n\t\tpath, current, update.previousSha256\n\t));\n",
+          "previous": "\tconst source = beforePhpCallbackInstalledStaging(path, await readFile(path, \"utf8\"));\n\tconst current = beforePerlCallbackVariants(path, source);\n\tconst previous = JSON.parse(beforeOwnedPerlCallbackResults(path, current));\n",
+          "start": 3747
+        },
+        {
+          "current": "\t\tfile.sha256 = sha256(bytesAtProducer(\n\t\t\townedPerlCallbackProducer, file.path\n\t\t));\n",
+          "previous": "\t{\n\t\tconst fileSource = beforePhpCallbackInstalledStaging(file.path, await readFile(file.path));\n\t\tfile.sha256 = sha256(beforeWitCallbackRuntimeStaging(file.path, fileSource));\n\t}\n",
+          "start": 4184
+        },
+        {
+          "current": "\tconst readSource = async path => sourceAtProducer(\n\t\townedPerlCallbackProducer, path\n\t);\n",
+          "previous": "",
+          "start": 4651
+        },
+        {
+          "current": "\t\tawait assert.rejects(() => selectCliPackageConfig(\n\t\t\titem.cli, readSource, { extras: combinedCliBundleExtras }\n\t\t), error => {\n",
+          "previous": "\t\tawait assert.rejects(() => assertOwnedJvmCallbackReport(path, item), error => {\n",
+          "start": 4970
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-history-tests.mjs",
+      "previousSha256": "972387f7ec831ef67c86411860b434926b4a3abba9d5ce02a397ceff923421a7"
+    },
+    {
+      "currentSha256": "e79b6f7c8584116647074a7af7b8225ee744cca443db6a6a79e289e52229edac",
+      "edits": [
+        {
+          "current": "export const ownedPerlCallbackProducer\n\t= \"1459c08d3a54340b9980dd62dc7145e01efb3280\";\n",
+          "previous": "",
+          "start": 559
+        }
+      ],
+      "path": "tests/helpers/owned-perl-callback-result-history.mjs",
+      "previousSha256": "58281bd58d6bccd649e8e801c8a99cc84b65e7024c680408ed955d80bb2c1642"
+    },
+    {
+      "currentSha256": "5399739d3ee30b3811612a752d803f74066c00d6d2736ce9eaa765b1eda3e6c6",
+      "edits": [
+        {
+          "current": " * Read immutable source bytes from an exact Git producer revision.\n",
+          "previous": " * Read immutable UTF-8 source bytes from an exact Git producer revision.\n",
+          "start": 4
+        },
+        {
+          "current": " * Return one file's binary bytes exactly as committed by an evidence producer.\n",
+          "previous": " * Return one file exactly as committed by an evidence producer.\n",
+          "start": 670
+        },
+        {
+          "current": "export const bytesAtProducer = (revision, path, expected = undefined) => {\n",
+          "previous": "export const sourceAtProducer = (revision, path, expected = undefined) => {\n",
+          "start": 913
+        },
+        {
+          "current": "\tlet bytes = sources.get(key);\n\tif(bytes === undefined)\n",
+          "previous": "\tlet source = sources.get(key);\n\tif(source === undefined)\n",
+          "start": 1247
+        },
+        {
+          "current": "\t\tbytes = execFileSync(\"git\", [\"show\", key], {\n\t\t\tmaxBuffer: maxSourceBytes\n",
+          "previous": "\t\tsource = execFileSync(\"git\", [\"show\", key], {\n\t\t\tencoding: \"utf8\", maxBuffer: maxSourceBytes\n",
+          "start": 1306
+        },
+        {
+          "current": "\t\tif(bytes.length <= maxSourceBytes)\n",
+          "previous": "\t\tconst bytes = Buffer.byteLength(source);\n\t\tif(bytes <= maxSourceBytes)\n",
+          "start": 1388
+        },
+        {
+          "current": "\t\t\tsources.set(key, bytes);\n\t\t\tretainedSourceBytes += bytes.length;\n",
+          "previous": "\t\t\tsources.set(key, source);\n\t\t\tretainedSourceBytes += bytes;\n",
+          "start": 1429
+        },
+        {
+          "current": "\t\t\t\tretainedSourceBytes -= oldest.length;\n",
+          "previous": "\t\t\t\tretainedSourceBytes -= Buffer.byteLength(oldest);\n",
+          "start": 1674
+        },
+        {
+          "current": "\tif(expected !== undefined) assert.equal(sha256(bytes), expected, path);\n\treturn Buffer.from(bytes);\n",
+          "previous": "\tif(expected !== undefined) assert.equal(sha256(source), expected, path);\n\treturn source;\n",
+          "start": 1728
+        },
+        {
+          "current": "/**\n * Return one UTF-8 file exactly as committed by an evidence producer.\n *\n * @param revision - Full producer commit identity.\n * @param path - Safe repository-relative path.\n * @param expected - Optional recorded content SHA-256.\n */\nexport const sourceAtProducer = (revision, path, expected = undefined) =>\n\tbytesAtProducer(revision, path, expected).toString(\"utf8\");\n\n",
+          "previous": "",
+          "start": 1833
+        }
+      ],
+      "path": "tests/helpers/producer-source.mjs",
+      "previousSha256": "b54de3f29bfeef8c06422f855ede021aa3690f8f9cbd794f2d0fc25029dab330"
+    },
+    {
+      "currentSha256": "7267d37534d625d83320d0f758a2843a9ef81b9627d6bb69ae5881e330466cc2",
+      "edits": [
+        {
+          "current": "\t, witCallbackRuntimeProducer\n",
+          "previous": "",
+          "start": 898
+        },
+        {
+          "current": "import { sourceAtProducer } from \"./producer-source.mjs\";\n",
+          "previous": "",
+          "start": 1116
+        },
+        {
+          "current": "\t\tconst update = [...history.readerUpdates, ...history.updates]\n\t\t\t.find(item => item.path === path);\n\t\tassert.ok(update, path);\n\t\tconst current = Buffer.from(sourceAtProducer(\n\t\t\twitCallbackRuntimeProducer, path, update.currentSha256\n\t\t));\n",
+          "previous": "\t\tconst current = Buffer.from(beforePhpCallbackInstalledStaging(path, await readFile(path)));\n",
+          "start": 7148
+        }
+      ],
+      "path": "tests/helpers/wit-callback-runtime-staging-history-tests.mjs",
+      "previousSha256": "0189eafe980f04a56ea890462292f13f5a935890997cb05e3e6c999fab98e863"
+    },
+    {
+      "currentSha256": "8c7e537505bef5491e5e0787045ace1f3f6f9628db8a4424021da1976a2a3831",
+      "edits": [
+        {
+          "current": "export const witCallbackRuntimeProducer\n\t= \"461fe547921095b45cf7af3b11b702e48b18c9b7\";\n",
+          "previous": "",
+          "start": 754
+        }
+      ],
+      "path": "tests/helpers/wit-callback-runtime-staging-history.mjs",
+      "previousSha256": "c1b278f45eb9cad52ffb36493a2689078e89a50cc15199a6205bf930581c7ea0"
+    }
+  ]
+}

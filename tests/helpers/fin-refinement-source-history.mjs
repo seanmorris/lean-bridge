@@ -8,6 +8,7 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { canonicalJson } from "../../src/capsule/node.mjs";
+import { beforeCallbackStagingProducerReplayRepairSource, callbackStagingProducerReplayRepairNormalizationPaths } from "./callback-staging-producer-replay-repair-source-history.mjs";
 import { beforeCoreFirstRunPinReplayRepairSource, coreFirstRunPinReplayRepairNormalizationPaths } from "./core-first-run-pin-replay-repair-source-history.mjs";
 import { beforeStructuredCallableProducerReplayRepairSource, structuredCallableProducerReplayRepairNormalizationPaths } from "./structured-callable-producer-replay-repair-source-history.mjs";
 import { beforeNativeBudgetReplayRepairSource, nativeBudgetReplayRepairNormalizationPaths } from "./native-budget-replay-repair-source-history.mjs";
@@ -2023,7 +2024,8 @@ const normalizeExactTypeSurfaceHistory = (source, expected) => {
 };
 
 export const finRefinementNormalizationPaths = Object.freeze([...new Set([
-	...coreFirstRunPinReplayRepairNormalizationPaths
+	...callbackStagingProducerReplayRepairNormalizationPaths
+	, ...coreFirstRunPinReplayRepairNormalizationPaths
 	, ...structuredCallableProducerReplayRepairNormalizationPaths
 	, ...nativeBudgetReplayRepairNormalizationPaths
 	, ...inheritedDocsReplayRepairNormalizationPaths
@@ -2796,8 +2798,14 @@ export const beforeFinRefinementSource = (path, source, expected) => {
 			text = exact;
 		}
 	}
+	const callbackStagingProducerReplayRepair
+		= beforeCallbackStagingProducerReplayRepairSource(path, text, expected);
+	if(sha256(callbackStagingProducerReplayRepair) === expected)
+		return callbackStagingProducerReplayRepair;
 	const coreFirstRunPinReplayRepair
-		= beforeCoreFirstRunPinReplayRepairSource(path, text, expected);
+		= beforeCoreFirstRunPinReplayRepairSource(
+			path, callbackStagingProducerReplayRepair, expected
+		);
 	if(sha256(coreFirstRunPinReplayRepair) === expected)
 		return coreFirstRunPinReplayRepair;
 	const structuredCallableProducerReplayRepair
